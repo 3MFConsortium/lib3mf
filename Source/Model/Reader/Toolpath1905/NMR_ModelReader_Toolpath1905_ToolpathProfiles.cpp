@@ -79,10 +79,9 @@ namespace NMR {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_TOOLPATHPROFILE) == 0) {
 
 				PModelReaderNode_Toolpath1905_ToolpathProfile pXMLNode = std::make_shared<CModelReaderNode_Toolpath1905_ToolpathProfile>(
-					m_pModel, m_pWarnings);
+					m_pModel, m_pToolpath, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
-				pXMLNode->createProfile(m_pToolpath);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

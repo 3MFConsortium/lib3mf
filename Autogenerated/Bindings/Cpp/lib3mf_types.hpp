@@ -422,6 +422,13 @@ namespace Lib3MF {
     Double = 2
   };
   
+  enum class eToolpathProfileOverrideFactor : Lib3MF_int32 {
+    Unknown = 0,
+    FactorF = 1,
+    FactorG = 2,
+    FactorH = 3
+  };
+  
   enum class eEncryptionAlgorithm : Lib3MF_int32 {
     AES256_GCM = 1 /** http://www.w3.org/2009/xmlenc11#aes256-gcm */
   };
@@ -628,6 +635,7 @@ typedef Lib3MF::eProgressIdentifier eLib3MFProgressIdentifier;
 typedef Lib3MF::eBlendMethod eLib3MFBlendMethod;
 typedef Lib3MF::eToolpathSegmentType eLib3MFToolpathSegmentType;
 typedef Lib3MF::eToolpathAttributeType eLib3MFToolpathAttributeType;
+typedef Lib3MF::eToolpathProfileOverrideFactor eLib3MFToolpathProfileOverrideFactor;
 typedef Lib3MF::eEncryptionAlgorithm eLib3MFEncryptionAlgorithm;
 typedef Lib3MF::eWrappingAlgorithm eLib3MFWrappingAlgorithm;
 typedef Lib3MF::eMgfAlgorithm eLib3MFMgfAlgorithm;

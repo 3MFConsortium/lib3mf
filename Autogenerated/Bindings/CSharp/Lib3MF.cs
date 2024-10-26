@@ -168,6 +168,13 @@ namespace Lib3MF {
 		Double = 2
 	};
 
+	public enum eToolpathProfileOverrideFactor {
+		Unknown = 0,
+		FactorF = 1,
+		FactorG = 2,
+		FactorH = 3
+	};
+
 	public enum eEncryptionAlgorithm {
 		AES256_GCM = 1
 	};
@@ -1321,6 +1328,36 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_setparameterboolvalue", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathProfile_SetParameterBoolValue (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, Byte AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_removeparameter", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_RemoveParameter (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getmodifiercount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetModifierCount (IntPtr Handle, out UInt32 ACount);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getmodifiernamebyindex", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetModifierNameByIndex (IntPtr Handle, UInt32 AIndex, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getmodifiernamespacebyindex", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetModifierNameSpaceByIndex (IntPtr Handle, UInt32 AIndex, UInt32 sizeNameSpace, out UInt32 neededNameSpace, IntPtr dataNameSpace);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_hasmodifier", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_HasModifier (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, out Byte AValueExists);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getmodifierinformationbyindex", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetModifierInformationByIndex (IntPtr Handle, UInt32 AIndex, UInt32 sizeNameSpaceName, out UInt32 neededNameSpaceName, IntPtr dataNameSpaceName, UInt32 sizeValueName, out UInt32 neededValueName, IntPtr dataValueName, out Int32 AOverrideFactor, out Double ADeltaValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getmodifierinformationbyname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetModifierInformationByName (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, out Int32 AOverrideFactor, out Double ADeltaValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_setmodifier", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_SetModifier (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, Int32 AOverrideFactor, Double ADeltaValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_removemodifier", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_RemoveModifier (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_evaluatedoublevalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_EvaluateDoubleValue (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, Double AFactorF, Double AFactorG, Double AFactorH, out Double AEvaluationResult);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getlayerdatauuid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_GetLayerDataUUID (IntPtr Handle, UInt32 sizeUUID, out UInt32 neededUUID, IntPtr dataUUID);
@@ -5591,6 +5628,120 @@ namespace Lib3MF {
 			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
 
 			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_SetParameterBoolValue (Handle, byteNameSpaceName, byteValueName, (Byte)( AValue ? 1 : 0 )));
+		}
+
+		public void RemoveParameter (String ANameSpaceName, String AValueName)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_RemoveParameter (Handle, byteNameSpaceName, byteValueName));
+		}
+
+		public UInt32 GetModifierCount ()
+		{
+			UInt32 resultCount = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetModifierCount (Handle, out resultCount));
+			return resultCount;
+		}
+
+		public String GetModifierNameByIndex (UInt32 AIndex)
+		{
+			UInt32 sizeName = 0;
+			UInt32 neededName = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetModifierNameByIndex (Handle, AIndex, sizeName, out neededName, IntPtr.Zero));
+			sizeName = neededName;
+			byte[] bytesName = new byte[sizeName];
+			GCHandle dataName = GCHandle.Alloc(bytesName, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetModifierNameByIndex (Handle, AIndex, sizeName, out neededName, dataName.AddrOfPinnedObject()));
+			dataName.Free();
+			return Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
+		}
+
+		public String GetModifierNameSpaceByIndex (UInt32 AIndex)
+		{
+			UInt32 sizeNameSpace = 0;
+			UInt32 neededNameSpace = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetModifierNameSpaceByIndex (Handle, AIndex, sizeNameSpace, out neededNameSpace, IntPtr.Zero));
+			sizeNameSpace = neededNameSpace;
+			byte[] bytesNameSpace = new byte[sizeNameSpace];
+			GCHandle dataNameSpace = GCHandle.Alloc(bytesNameSpace, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetModifierNameSpaceByIndex (Handle, AIndex, sizeNameSpace, out neededNameSpace, dataNameSpace.AddrOfPinnedObject()));
+			dataNameSpace.Free();
+			return Encoding.UTF8.GetString(bytesNameSpace).TrimEnd(char.MinValue);
+		}
+
+		public bool HasModifier (String ANameSpaceName, String AValueName)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+			Byte resultValueExists = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_HasModifier (Handle, byteNameSpaceName, byteValueName, out resultValueExists));
+			return (resultValueExists != 0);
+		}
+
+		public void GetModifierInformationByIndex (UInt32 AIndex, out String ANameSpaceName, out String AValueName, out eToolpathProfileOverrideFactor AOverrideFactor, out Double ADeltaValue)
+		{
+			Int32 resultOverrideFactor = 0;
+			UInt32 sizeNameSpaceName = 0;
+			UInt32 neededNameSpaceName = 0;
+			UInt32 sizeValueName = 0;
+			UInt32 neededValueName = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetModifierInformationByIndex (Handle, AIndex, sizeNameSpaceName, out neededNameSpaceName, IntPtr.Zero, sizeValueName, out neededValueName, IntPtr.Zero, out resultOverrideFactor, out ADeltaValue));
+			sizeNameSpaceName = neededNameSpaceName;
+			byte[] bytesNameSpaceName = new byte[sizeNameSpaceName];
+			GCHandle dataNameSpaceName = GCHandle.Alloc(bytesNameSpaceName, GCHandleType.Pinned);
+			sizeValueName = neededValueName;
+			byte[] bytesValueName = new byte[sizeValueName];
+			GCHandle dataValueName = GCHandle.Alloc(bytesValueName, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetModifierInformationByIndex (Handle, AIndex, sizeNameSpaceName, out neededNameSpaceName, dataNameSpaceName.AddrOfPinnedObject(), sizeValueName, out neededValueName, dataValueName.AddrOfPinnedObject(), out resultOverrideFactor, out ADeltaValue));
+			dataNameSpaceName.Free();
+			ANameSpaceName = Encoding.UTF8.GetString(bytesNameSpaceName).TrimEnd(char.MinValue);
+			dataValueName.Free();
+			AValueName = Encoding.UTF8.GetString(bytesValueName).TrimEnd(char.MinValue);
+			AOverrideFactor = (eToolpathProfileOverrideFactor) (resultOverrideFactor);
+		}
+
+		public void GetModifierInformationByName (String ANameSpaceName, String AValueName, out eToolpathProfileOverrideFactor AOverrideFactor, out Double ADeltaValue)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+			Int32 resultOverrideFactor = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetModifierInformationByName (Handle, byteNameSpaceName, byteValueName, out resultOverrideFactor, out ADeltaValue));
+			AOverrideFactor = (eToolpathProfileOverrideFactor) (resultOverrideFactor);
+		}
+
+		public void SetModifier (String ANameSpaceName, String AValueName, eToolpathProfileOverrideFactor AOverrideFactor, Double ADeltaValue)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+			Int32 enumOverrideFactor = (Int32) AOverrideFactor;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_SetModifier (Handle, byteNameSpaceName, byteValueName, enumOverrideFactor, ADeltaValue));
+		}
+
+		public void RemoveModifier (String ANameSpaceName, String AValueName)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_RemoveModifier (Handle, byteNameSpaceName, byteValueName));
+		}
+
+		public Double EvaluateDoubleValue (String ANameSpaceName, String AValueName, Double AFactorF, Double AFactorG, Double AFactorH)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+			Double resultEvaluationResult = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_EvaluateDoubleValue (Handle, byteNameSpaceName, byteValueName, AFactorF, AFactorG, AFactorH, out resultEvaluationResult));
+			return resultEvaluationResult;
 		}
 
 	}

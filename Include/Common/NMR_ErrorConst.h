@@ -1657,4 +1657,43 @@ Toolpath errors (0xBXXX)
 // Duplicate profile modifier
 #define NMR_ERROR_DUPLICATEPROFILEMODIFIER 0xB01D
 
+// Invalid modifier index
+#define NMR_ERROR_INVALIDMODIFIERINDEX 0xB01E
+
+// Profile modifier not found
+#define NMR_ERROR_PROFILEMODIFIERNOTFOUND 0xB01F
+
+// Profile namespace not registered
+#define NMR_ERROR_PROFILENAMESPACENOTREGISTERED 0xB020
+
+// Duplicate modifier attribute
+#define NMR_ERROR_DUPLICATEMODIFIERATTRIBUTE 0xB021
+
+// Invalid modifier attribute
+#define NMR_ERROR_INVALIDMODIFIERATTRIBUTE 0xB022
+
+// Duplicate modifier delta
+#define NMR_ERROR_DUPLICATEMODIFIERDELTA 0xB023
+
+// Invalid toolpath profile delta
+#define NMR_ERROR_INVALIDTOOLPATHPROFILEDELTA 0xB024
+
+// Duplicate modifier factor
+#define NMR_ERROR_DUPLICATEMODIFIERFACTOR 0xB025
+
+// Invalid override factor
+#define NMR_ERROR_INVALIDOVERRIDEFACTOR 0xB026
+
+// Missing modifier profile attribute
+#define NMR_ERROR_MISSINGMODIFIERPROFILEATTRIBUTE 0xB027
+
+// Missing modifier profile delta
+#define NMR_ERROR_MISSINGMODIFIERPROFILEDELTA 0xB028
+
+// Empty modifier profile attribute
+#define NMR_ERROR_EMPTYMODIFIERPROFILEATTRIBUTE 0xB029
+
+// Invalid profile modifier namespace
+#define NMR_ERROR_INVALIDPROFILEMODIFIERNAMESPACE 0xB02A
+
 #endif // __NMR_ERRORCONST

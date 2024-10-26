@@ -2853,6 +2853,96 @@ Lib3MFResult CCall_lib3mf_toolpathprofile_setparameterboolvalue(Lib3MFHandle lib
 }
 
 
+Lib3MFResult CCall_lib3mf_toolpathprofile_removeparameter(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_RemoveParameter (pToolpathProfile, pNameSpaceName, pValueName);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getmodifiercount(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 * pCount)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetModifierCount (pToolpathProfile, pCount);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getmodifiernamebyindex(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetModifierNameByIndex (pToolpathProfile, nIndex, nNameBufferSize, pNameNeededChars, pNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getmodifiernamespacebyindex(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetModifierNameSpaceByIndex (pToolpathProfile, nIndex, nNameSpaceBufferSize, pNameSpaceNeededChars, pNameSpaceBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_hasmodifier(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, bool * pValueExists)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_HasModifier (pToolpathProfile, pNameSpaceName, pValueName, pValueExists);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getmodifierinformationbyindex(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameSpaceNameBufferSize, Lib3MF_uint32* pNameSpaceNameNeededChars, char * pNameSpaceNameBuffer, const Lib3MF_uint32 nValueNameBufferSize, Lib3MF_uint32* pValueNameNeededChars, char * pValueNameBuffer, eLib3MFToolpathProfileOverrideFactor * pOverrideFactor, Lib3MF_double * pDeltaValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetModifierInformationByIndex (pToolpathProfile, nIndex, nNameSpaceNameBufferSize, pNameSpaceNameNeededChars, pNameSpaceNameBuffer, nValueNameBufferSize, pValueNameNeededChars, pValueNameBuffer, pOverrideFactor, pDeltaValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_getmodifierinformationbyname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, eLib3MFToolpathProfileOverrideFactor * pOverrideFactor, Lib3MF_double * pDeltaValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_GetModifierInformationByName (pToolpathProfile, pNameSpaceName, pValueName, pOverrideFactor, pDeltaValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_setmodifier(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, eLib3MFToolpathProfileOverrideFactor eOverrideFactor, Lib3MF_double dDeltaValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_SetModifier (pToolpathProfile, pNameSpaceName, pValueName, eOverrideFactor, dDeltaValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_removemodifier(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_RemoveModifier (pToolpathProfile, pNameSpaceName, pValueName);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathprofile_evaluatedoublevalue(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName, Lib3MF_double dFactorF, Lib3MF_double dFactorG, Lib3MF_double dFactorH, Lib3MF_double * pEvaluationResult)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathProfile_EvaluateDoubleValue (pToolpathProfile, pNameSpaceName, pValueName, dFactorF, dFactorG, dFactorH, pEvaluationResult);
+}
+
+
 Lib3MFResult CCall_lib3mf_toolpathlayerreader_getlayerdatauuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer)
 {
 	if (libraryHandle == 0) 
@@ -5064,6 +5154,16 @@ const (
 	ToolpathAttributeType_Unknown = 0
 	ToolpathAttributeType_Integer = 1
 	ToolpathAttributeType_Double = 2
+)
+
+// ToolpathProfileOverrideFactor represents a Lib3MF enum.
+type ToolpathProfileOverrideFactor int
+
+const (
+	ToolpathProfileOverrideFactor_Unknown = 0
+	ToolpathProfileOverrideFactor_FactorF = 1
+	ToolpathProfileOverrideFactor_FactorG = 2
+	ToolpathProfileOverrideFactor_FactorH = 3
 )
 
 // EncryptionAlgorithm represents a Lib3MF enum.
@@ -9185,7 +9285,7 @@ func (inst ToolpathProfile) HasParameterValue(nameSpaceName string, valueName st
 	return bool(valueExists), nil
 }
 
-// GetParameterValue retrieves a profile's parameter value. Fails if value does not exist.
+// GetParameterValue retrieves a profile's base parameter value without modifier. Fails if value does not exist.
 func (inst ToolpathProfile) GetParameterValue(nameSpaceName string, valueName string) (string, error) {
 	var neededforvalue C.uint32_t
 	var filledinvalue C.uint32_t
@@ -9202,7 +9302,7 @@ func (inst ToolpathProfile) GetParameterValue(nameSpaceName string, valueName st
 	return string(buffervalue[:(filledinvalue-1)]), nil
 }
 
-// GetParameterValueDef retrieves a profile's parameter value.
+// GetParameterValueDef retrieves a profile's base parameter value without modifier.
 func (inst ToolpathProfile) GetParameterValueDef(nameSpaceName string, valueName string, defaultValue string) (string, error) {
 	var neededforvalue C.uint32_t
 	var filledinvalue C.uint32_t
@@ -9219,7 +9319,7 @@ func (inst ToolpathProfile) GetParameterValueDef(nameSpaceName string, valueName
 	return string(buffervalue[:(filledinvalue-1)]), nil
 }
 
-// GetParameterDoubleValue retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.
+// GetParameterDoubleValue retrieves a profile's base parameter value as double without modifier. Fails if value does not exist or is not a double value.
 func (inst ToolpathProfile) GetParameterDoubleValue(nameSpaceName string, valueName string) (float64, error) {
 	var value C.double
 	ret := C.CCall_lib3mf_toolpathprofile_getparameterdoublevalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), &value)
@@ -9229,7 +9329,7 @@ func (inst ToolpathProfile) GetParameterDoubleValue(nameSpaceName string, valueN
 	return float64(value), nil
 }
 
-// GetParameterDoubleValueDef retrieves a profile's parameter value as double.
+// GetParameterDoubleValueDef retrieves a profile's base parameter value as double without modifier.
 func (inst ToolpathProfile) GetParameterDoubleValueDef(nameSpaceName string, valueName string, defaultValue float64) (float64, error) {
 	var value C.double
 	ret := C.CCall_lib3mf_toolpathprofile_getparameterdoublevaluedef(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.double(defaultValue), &value)
@@ -9239,7 +9339,7 @@ func (inst ToolpathProfile) GetParameterDoubleValueDef(nameSpaceName string, val
 	return float64(value), nil
 }
 
-// GetParameterIntegerValue retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.
+// GetParameterIntegerValue retrieves a profile's base parameter value as integer without modifier. Fails if value does not exist or is not a integer value.
 func (inst ToolpathProfile) GetParameterIntegerValue(nameSpaceName string, valueName string) (int64, error) {
 	var value C.int64_t
 	ret := C.CCall_lib3mf_toolpathprofile_getparameterintegervalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), &value)
@@ -9249,7 +9349,7 @@ func (inst ToolpathProfile) GetParameterIntegerValue(nameSpaceName string, value
 	return int64(value), nil
 }
 
-// GetParameterIntegerValueDef retrieves a profile's parameter value as integer.
+// GetParameterIntegerValueDef retrieves a profile's base parameter value as integer without modifier .
 func (inst ToolpathProfile) GetParameterIntegerValueDef(nameSpaceName string, valueName string, defaultValue int64) (int64, error) {
 	var value C.int64_t
 	ret := C.CCall_lib3mf_toolpathprofile_getparameterintegervaluedef(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.int64_t(defaultValue), &value)
@@ -9259,7 +9359,7 @@ func (inst ToolpathProfile) GetParameterIntegerValueDef(nameSpaceName string, va
 	return int64(value), nil
 }
 
-// GetParameterBoolValue retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.
+// GetParameterBoolValue retrieves a profile's base parameter value as boolean without modifier. Fails if value does not exist or is not a boolean value.
 func (inst ToolpathProfile) GetParameterBoolValue(nameSpaceName string, valueName string) (bool, error) {
 	var value C.bool
 	ret := C.CCall_lib3mf_toolpathprofile_getparameterboolvalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), &value)
@@ -9269,7 +9369,7 @@ func (inst ToolpathProfile) GetParameterBoolValue(nameSpaceName string, valueNam
 	return bool(value), nil
 }
 
-// GetParameterBoolValueDef retrieves a profile's parameter value as boolean.
+// GetParameterBoolValueDef retrieves a profile's base parameter value as boolean without modifier.
 func (inst ToolpathProfile) GetParameterBoolValueDef(nameSpaceName string, valueName string, defaultValue bool) (bool, error) {
 	var value C.bool
 	ret := C.CCall_lib3mf_toolpathprofile_getparameterboolvaluedef(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.bool(defaultValue), &value)
@@ -9288,7 +9388,7 @@ func (inst ToolpathProfile) SetName(name string) error {
 	return nil
 }
 
-// SetParameterValue sets a profile's parameter value.
+// SetParameterValue sets a profile's base parameter value. Fails, if parameter already exists.
 func (inst ToolpathProfile) SetParameterValue(nameSpaceName string, valueName string, value string) error {
 	ret := C.CCall_lib3mf_toolpathprofile_setparametervalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), (*C.char)(unsafe.Pointer(&[]byte(value)[0])))
 	if ret != 0 {
@@ -9297,7 +9397,7 @@ func (inst ToolpathProfile) SetParameterValue(nameSpaceName string, valueName st
 	return nil
 }
 
-// SetParameterDoubleValue sets a profile's parameter value as double.
+// SetParameterDoubleValue sets a profile's base parameter value as double. Fails, if parameter already exists.
 func (inst ToolpathProfile) SetParameterDoubleValue(nameSpaceName string, valueName string, value float64) error {
 	ret := C.CCall_lib3mf_toolpathprofile_setparameterdoublevalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.double(value))
 	if ret != 0 {
@@ -9306,7 +9406,7 @@ func (inst ToolpathProfile) SetParameterDoubleValue(nameSpaceName string, valueN
 	return nil
 }
 
-// SetParameterIntegerValue sets a profile's parameter value as integer.
+// SetParameterIntegerValue sets a profile's parameter value as integer. Fails, if parameter already exists.
 func (inst ToolpathProfile) SetParameterIntegerValue(nameSpaceName string, valueName string, value int64) error {
 	ret := C.CCall_lib3mf_toolpathprofile_setparameterintegervalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.int64_t(value))
 	if ret != 0 {
@@ -9315,13 +9415,138 @@ func (inst ToolpathProfile) SetParameterIntegerValue(nameSpaceName string, value
 	return nil
 }
 
-// SetParameterBoolValue sets a profile's parameter value as boolean.
+// SetParameterBoolValue sets a profile's parameter value as boolean. Fails, if parameter already exists.
 func (inst ToolpathProfile) SetParameterBoolValue(nameSpaceName string, valueName string, value bool) error {
 	ret := C.CCall_lib3mf_toolpathprofile_setparameterboolvalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.bool(value))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
 	return nil
+}
+
+// RemoveParameter removes a parameter, if it exists. Removes any associated modifier that exists.
+func (inst ToolpathProfile) RemoveParameter(nameSpaceName string, valueName string) error {
+	ret := C.CCall_lib3mf_toolpathprofile_removeparameter(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetModifierCount returns the number of modifiers.
+func (inst ToolpathProfile) GetModifierCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_toolpathprofile_getmodifiercount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// GetModifierNameByIndex returns the Name of a modifier by its index.
+func (inst ToolpathProfile) GetModifierNameByIndex(index uint32) (string, error) {
+	var neededforname C.uint32_t
+	var filledinname C.uint32_t
+	ret := C.CCall_lib3mf_toolpathprofile_getmodifiernamebyindex(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededforname, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizename := neededforname
+	buffername := make([]byte, bufferSizename)
+	ret = C.CCall_lib3mf_toolpathprofile_getmodifiernamebyindex(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizename, &filledinname, (*C.char)(unsafe.Pointer(&buffername[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffername[:(filledinname-1)]), nil
+}
+
+// GetModifierNameSpaceByIndex returns the NameSpace of a modifier by its index.
+func (inst ToolpathProfile) GetModifierNameSpaceByIndex(index uint32) (string, error) {
+	var neededfornameSpace C.uint32_t
+	var filledinnameSpace C.uint32_t
+	ret := C.CCall_lib3mf_toolpathprofile_getmodifiernamespacebyindex(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededfornameSpace, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizenameSpace := neededfornameSpace
+	buffernameSpace := make([]byte, bufferSizenameSpace)
+	ret = C.CCall_lib3mf_toolpathprofile_getmodifiernamespacebyindex(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizenameSpace, &filledinnameSpace, (*C.char)(unsafe.Pointer(&buffernameSpace[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffernameSpace[:(filledinnameSpace-1)]), nil
+}
+
+// HasModifier checks if a modifier exists.
+func (inst ToolpathProfile) HasModifier(nameSpaceName string, valueName string) (bool, error) {
+	var valueExists C.bool
+	ret := C.CCall_lib3mf_toolpathprofile_hasmodifier(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), &valueExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(valueExists), nil
+}
+
+// GetModifierInformationByIndex returns modifier by index.
+func (inst ToolpathProfile) GetModifierInformationByIndex(index uint32) (string, string, ToolpathProfileOverrideFactor, float64, error) {
+	var neededfornameSpaceName C.uint32_t
+	var filledinnameSpaceName C.uint32_t
+	var neededforvalueName C.uint32_t
+	var filledinvalueName C.uint32_t
+	var overrideFactor C.eLib3MFToolpathProfileOverrideFactor
+	var deltaValue C.double
+	ret := C.CCall_lib3mf_toolpathprofile_getmodifierinformationbyindex(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), 0, &neededfornameSpaceName, nil, 0, &neededforvalueName, nil, &overrideFactor, &deltaValue)
+	if ret != 0 {
+		return "", "", 0, 0, makeError(uint32(ret))
+	}
+	bufferSizenameSpaceName := neededfornameSpaceName
+	buffernameSpaceName := make([]byte, bufferSizenameSpaceName)
+	bufferSizevalueName := neededforvalueName
+	buffervalueName := make([]byte, bufferSizevalueName)
+	ret = C.CCall_lib3mf_toolpathprofile_getmodifierinformationbyindex(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), bufferSizenameSpaceName, &filledinnameSpaceName, (*C.char)(unsafe.Pointer(&buffernameSpaceName[0])), bufferSizevalueName, &filledinvalueName, (*C.char)(unsafe.Pointer(&buffervalueName[0])), &overrideFactor, &deltaValue)
+	if ret != 0 {
+		return "", "", 0, 0, makeError(uint32(ret))
+	}
+	return string(buffernameSpaceName[:(filledinnameSpaceName-1)]), string(buffervalueName[:(filledinvalueName-1)]), ToolpathProfileOverrideFactor(overrideFactor), float64(deltaValue), nil
+}
+
+// GetModifierInformationByName returns modifier by name.
+func (inst ToolpathProfile) GetModifierInformationByName(nameSpaceName string, valueName string) (ToolpathProfileOverrideFactor, float64, error) {
+	var overrideFactor C.eLib3MFToolpathProfileOverrideFactor
+	var deltaValue C.double
+	ret := C.CCall_lib3mf_toolpathprofile_getmodifierinformationbyname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), &overrideFactor, &deltaValue)
+	if ret != 0 {
+		return 0, 0, makeError(uint32(ret))
+	}
+	return ToolpathProfileOverrideFactor(overrideFactor), float64(deltaValue), nil
+}
+
+// SetModifier adds a new modifier. Replaces the modifier, should it already exist with the same name. Fails if no Parameter exists with this name/namespace. Fails if the parameter does not have a Double value attached.
+func (inst ToolpathProfile) SetModifier(nameSpaceName string, valueName string, overrideFactor ToolpathProfileOverrideFactor, deltaValue float64) error {
+	ret := C.CCall_lib3mf_toolpathprofile_setmodifier(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.eLib3MFToolpathProfileOverrideFactor(overrideFactor), C.double(deltaValue))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// RemoveModifier removes a modifier, if it exists.
+func (inst ToolpathProfile) RemoveModifier(nameSpaceName string, valueName string) error {
+	ret := C.CCall_lib3mf_toolpathprofile_removemodifier(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// EvaluateDoubleValue evaluates a double parameter, taking an optional modifier into account. Fails if neither a parameter nor a modifier exists with this name/namespace.
+func (inst ToolpathProfile) EvaluateDoubleValue(nameSpaceName string, valueName string, factorF float64, factorG float64, factorH float64) (float64, error) {
+	var evaluationResult C.double
+	ret := C.CCall_lib3mf_toolpathprofile_evaluatedoublevalue(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpaceName)[0])), (*C.char)(unsafe.Pointer(&[]byte(valueName)[0])), C.double(factorF), C.double(factorG), C.double(factorH), &evaluationResult)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(evaluationResult), nil
 }
 
 

@@ -3047,70 +3047,70 @@ public:
 	virtual bool HasParameterValue(const std::string & sNameSpaceName, const std::string & sValueName) = 0;
 
 	/**
-	* IToolpathProfile::GetParameterValue - Retrieves a profile's parameter value. Fails if value does not exist.
+	* IToolpathProfile::GetParameterValue - Retrieves a profile's base parameter value without modifier. Fails if value does not exist.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	virtual std::string GetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName) = 0;
 
 	/**
-	* IToolpathProfile::GetParameterValueDef - Retrieves a profile's parameter value
+	* IToolpathProfile::GetParameterValueDef - Retrieves a profile's base parameter value without modifier
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] sDefaultValue - Default value if value does not exist.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	virtual std::string GetParameterValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sDefaultValue) = 0;
 
 	/**
-	* IToolpathProfile::GetParameterDoubleValue - Retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.
+	* IToolpathProfile::GetParameterDoubleValue - Retrieves a profile's base parameter value as double without modifier. Fails if value does not exist or is not a double value.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	virtual Lib3MF_double GetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName) = 0;
 
 	/**
-	* IToolpathProfile::GetParameterDoubleValueDef - Retrieves a profile's parameter value as double.
+	* IToolpathProfile::GetParameterDoubleValueDef - Retrieves a profile's base parameter value as double without modifier.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] dDefaultValue - Default value if value does not exist or is not a double value.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	virtual Lib3MF_double GetParameterDoubleValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dDefaultValue) = 0;
 
 	/**
-	* IToolpathProfile::GetParameterIntegerValue - Retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.
+	* IToolpathProfile::GetParameterIntegerValue - Retrieves a profile's base parameter value as integer without modifier. Fails if value does not exist or is not a integer value.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	virtual Lib3MF_int64 GetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName) = 0;
 
 	/**
-	* IToolpathProfile::GetParameterIntegerValueDef - Retrieves a profile's parameter value as integer.
+	* IToolpathProfile::GetParameterIntegerValueDef - Retrieves a profile's base parameter value as integer without modifier .
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] nDefaultValue - Default value if value does not exist or is not a integer value.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	virtual Lib3MF_int64 GetParameterIntegerValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nDefaultValue) = 0;
 
 	/**
-	* IToolpathProfile::GetParameterBoolValue - Retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.
+	* IToolpathProfile::GetParameterBoolValue - Retrieves a profile's base parameter value as boolean without modifier. Fails if value does not exist or is not a boolean value.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	virtual bool GetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName) = 0;
 
 	/**
-	* IToolpathProfile::GetParameterBoolValueDef - Retrieves a profile's parameter value as boolean.
+	* IToolpathProfile::GetParameterBoolValueDef - Retrieves a profile's base parameter value as boolean without modifier.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] bDefaultValue - Default value if value does not exist or is not a boolean value.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	virtual bool GetParameterBoolValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const bool bDefaultValue) = 0;
 
@@ -3121,7 +3121,7 @@ public:
 	virtual void SetName(const std::string & sName) = 0;
 
 	/**
-	* IToolpathProfile::SetParameterValue - Sets a profile's parameter value.
+	* IToolpathProfile::SetParameterValue - Sets a profile's base parameter value. Fails, if parameter already exists.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] sValue - String value of the parameter.
@@ -3129,7 +3129,7 @@ public:
 	virtual void SetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sValue) = 0;
 
 	/**
-	* IToolpathProfile::SetParameterDoubleValue - Sets a profile's parameter value as double.
+	* IToolpathProfile::SetParameterDoubleValue - Sets a profile's base parameter value as double. Fails, if parameter already exists.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] dValue - Double value of the parameter.
@@ -3137,7 +3137,7 @@ public:
 	virtual void SetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dValue) = 0;
 
 	/**
-	* IToolpathProfile::SetParameterIntegerValue - Sets a profile's parameter value as integer.
+	* IToolpathProfile::SetParameterIntegerValue - Sets a profile's parameter value as integer. Fails, if parameter already exists.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] nValue - Integer value of the parameter.
@@ -3145,12 +3145,93 @@ public:
 	virtual void SetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nValue) = 0;
 
 	/**
-	* IToolpathProfile::SetParameterBoolValue - Sets a profile's parameter value as boolean.
+	* IToolpathProfile::SetParameterBoolValue - Sets a profile's parameter value as boolean. Fails, if parameter already exists.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] bValue - Boolean value of the parameter.
 	*/
 	virtual void SetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName, const bool bValue) = 0;
+
+	/**
+	* IToolpathProfile::RemoveParameter - Removes a parameter, if it exists. Removes any associated modifier that exists.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Parameter key string.
+	*/
+	virtual void RemoveParameter(const std::string & sNameSpaceName, const std::string & sValueName) = 0;
+
+	/**
+	* IToolpathProfile::GetModifierCount - Returns the number of modifiers.
+	* @return Returns the number of modifiers.
+	*/
+	virtual Lib3MF_uint32 GetModifierCount() = 0;
+
+	/**
+	* IToolpathProfile::GetModifierNameByIndex - Returns the Name of a modifier by its index.
+	* @param[in] nIndex - Index of modifier (0-based). Call will fail if an invalid index is given.
+	* @return Returns the name of the modifier.
+	*/
+	virtual std::string GetModifierNameByIndex(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathProfile::GetModifierNameSpaceByIndex - Returns the NameSpace of a modifier by its index.
+	* @param[in] nIndex - Index of modifier (0-based). Call will fail if an invalid index is given.
+	* @return Returns the namespace of the modifier.
+	*/
+	virtual std::string GetModifierNameSpaceByIndex(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathProfile::HasModifier - Checks if a modifier exists.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Parameter key string.
+	* @return Returns if a modifier exists.
+	*/
+	virtual bool HasModifier(const std::string & sNameSpaceName, const std::string & sValueName) = 0;
+
+	/**
+	* IToolpathProfile::GetModifierInformationByIndex - Returns modifier by index.
+	* @param[in] nIndex - Index of modifier (0-based). Call will fail if an invalid index is given.
+	* @param[out] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[out] sValueName - Parameter key string.
+	* @param[out] eOverrideFactor - which type of override factor to use.
+	* @param[out] dDeltaValue - delta value.
+	*/
+	virtual void GetModifierInformationByIndex(const Lib3MF_uint32 nIndex, std::string & sNameSpaceName, std::string & sValueName, Lib3MF::eToolpathProfileOverrideFactor & eOverrideFactor, Lib3MF_double & dDeltaValue) = 0;
+
+	/**
+	* IToolpathProfile::GetModifierInformationByName - Returns modifier by name.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Parameter key string.
+	* @param[out] eOverrideFactor - which type of override factor to use.
+	* @param[out] dDeltaValue - delta value.
+	*/
+	virtual void GetModifierInformationByName(const std::string & sNameSpaceName, const std::string & sValueName, Lib3MF::eToolpathProfileOverrideFactor & eOverrideFactor, Lib3MF_double & dDeltaValue) = 0;
+
+	/**
+	* IToolpathProfile::SetModifier - Adds a new modifier. Replaces the modifier, should it already exist with the same name. Fails if no Parameter exists with this name/namespace. Fails if the parameter does not have a Double value attached.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Parameter key string.
+	* @param[in] eOverrideFactor - which type of override factor to use.
+	* @param[in] dDeltaValue - delta value.
+	*/
+	virtual void SetModifier(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF::eToolpathProfileOverrideFactor eOverrideFactor, const Lib3MF_double dDeltaValue) = 0;
+
+	/**
+	* IToolpathProfile::RemoveModifier - Removes a modifier, if it exists.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Parameter key string.
+	*/
+	virtual void RemoveModifier(const std::string & sNameSpaceName, const std::string & sValueName) = 0;
+
+	/**
+	* IToolpathProfile::EvaluateDoubleValue - Evaluates a double parameter, taking an optional modifier into account. Fails if neither a parameter nor a modifier exists with this name/namespace.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Parameter key string.
+	* @param[in] dFactorF - F Factor value (will be clipped between 0.0 and 1.0)
+	* @param[in] dFactorG - G Factor value (will be clipped between 0.0 and 1.0)
+	* @param[in] dFactorH - H Factor value (will be clipped between 0.0 and 1.0)
+	* @return Evaluation result.
+	*/
+	virtual Lib3MF_double EvaluateDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dFactorF, const Lib3MF_double dFactorG, const Lib3MF_double dFactorH) = 0;
 
 };
 

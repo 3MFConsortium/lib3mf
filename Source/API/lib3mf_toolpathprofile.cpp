@@ -174,27 +174,135 @@ bool CToolpathProfile::GetParameterBoolValueDef(const std::string& sNameSpaceNam
 
 void CToolpathProfile::SetParameterValue(const std::string& sNameSpaceName, const std::string& sValueName, const std::string& sValue)
 {
-	m_pToolpathProfile->addValue(sNameSpaceName, sValueName, sValue);
+	m_pToolpathProfile->addValue(sNameSpaceName, sValueName, sValue, true);
 }
 
 
 void CToolpathProfile::SetParameterDoubleValue(const std::string& sNameSpaceName, const std::string& sValueName, const Lib3MF_double dValue)
 {
-	m_pToolpathProfile->addValue(sNameSpaceName, sValueName, std::to_string(dValue));
+	m_pToolpathProfile->addValue(sNameSpaceName, sValueName, std::to_string(dValue), true);
 }
 
 
 void CToolpathProfile::SetParameterIntegerValue(const std::string& sNameSpaceName, const std::string& sValueName, const Lib3MF_int64 nValue)
 {
-	m_pToolpathProfile->addValue(sNameSpaceName, sValueName, std::to_string(nValue));
+	m_pToolpathProfile->addValue(sNameSpaceName, sValueName, std::to_string(nValue), true);
 
 }
 
 void CToolpathProfile::SetParameterBoolValue(const std::string& sNameSpaceName, const std::string& sValueName, const bool bValue)
 {
 	if (bValue)
-		m_pToolpathProfile->addValue(sNameSpaceName, sValueName, "true");
+		m_pToolpathProfile->addValue(sNameSpaceName, sValueName, "true", true);
 	else
-		m_pToolpathProfile->addValue(sNameSpaceName, sValueName, "false");
+		m_pToolpathProfile->addValue(sNameSpaceName, sValueName, "false", true);
 }
 
+void CToolpathProfile::RemoveParameter(const std::string& sNameSpaceName, const std::string& sValueName)
+{
+	m_pToolpathProfile->removeParameter(sNameSpaceName, sNameSpaceName);
+}
+
+Lib3MF_uint32 CToolpathProfile::GetModifierCount()
+{
+	return m_pToolpathProfile->getModifierCount();
+}
+
+std::string CToolpathProfile::GetModifierNameByIndex(const Lib3MF_uint32 nIndex)
+{
+	return m_pToolpathProfile->getModifierName(nIndex);
+}
+
+std::string CToolpathProfile::GetModifierNameSpaceByIndex(const Lib3MF_uint32 nIndex) 
+{
+	return m_pToolpathProfile->getModifierNameSpace(nIndex);
+}
+
+
+bool CToolpathProfile::HasModifier(const std::string& sNameSpaceName, const std::string& sValueName)
+{
+	auto pModifier = m_pToolpathProfile->findModifier(sNameSpaceName, sValueName, false);
+	return pModifier.get() != nullptr;
+}
+
+void CToolpathProfile::GetModifierInformationByIndex(const Lib3MF_uint32 nIndex, std::string& sNameSpaceName, std::string& sValueName, Lib3MF::eToolpathProfileOverrideFactor& eOverrideFactor, Lib3MF_double& dDeltaValue)
+{
+	auto pModifier = m_pToolpathProfile->getModifier(nIndex);
+	sNameSpaceName = pModifier->getNameSpace();
+	sValueName = pModifier->getName();
+
+	switch (pModifier->getOverrideFactor())
+	{
+		case NMR::eModelToolpathProfileOverrideFactor::pfFactorF:
+			eOverrideFactor = eToolpathProfileOverrideFactor::FactorF;
+			break;
+		case NMR::eModelToolpathProfileOverrideFactor::pfFactorG:
+			eOverrideFactor = eToolpathProfileOverrideFactor::FactorG;
+			break;
+		case NMR::eModelToolpathProfileOverrideFactor::pfFactorH:
+			eOverrideFactor = eToolpathProfileOverrideFactor::FactorH;
+			break;
+		default:
+			eOverrideFactor = eToolpathProfileOverrideFactor::Unknown;
+	}
+
+	dDeltaValue = pModifier->getDeltaValue();
+
+
+}
+
+void CToolpathProfile::GetModifierInformationByName(const std::string& sNameSpaceName, const std::string& sValueName, Lib3MF::eToolpathProfileOverrideFactor& eOverrideFactor, Lib3MF_double& dDeltaValue)
+{
+	auto pModifier = m_pToolpathProfile->findModifier(sNameSpaceName, sValueName, true);
+
+	switch (pModifier->getOverrideFactor())
+	{
+	case NMR::eModelToolpathProfileOverrideFactor::pfFactorF:
+		eOverrideFactor = eToolpathProfileOverrideFactor::FactorF;
+		break;
+	case NMR::eModelToolpathProfileOverrideFactor::pfFactorG:
+		eOverrideFactor = eToolpathProfileOverrideFactor::FactorG;
+		break;
+	case NMR::eModelToolpathProfileOverrideFactor::pfFactorH:
+		eOverrideFactor = eToolpathProfileOverrideFactor::FactorH;
+		break;
+	default:
+		eOverrideFactor = eToolpathProfileOverrideFactor::Unknown;
+	}
+
+	dDeltaValue = pModifier->getDeltaValue();
+
+}
+
+void CToolpathProfile::SetModifier(const std::string& sNameSpaceName, const std::string& sValueName, Lib3MF::eToolpathProfileOverrideFactor eOverrideFactor, Lib3MF_double dDeltaValue) 
+{
+	NMR::eModelToolpathProfileOverrideFactor internalOverrideFactor;
+	switch (eOverrideFactor) {
+		case eToolpathProfileOverrideFactor::FactorF:
+			internalOverrideFactor = NMR::eModelToolpathProfileOverrideFactor::pfFactorF;
+			break;
+		case eToolpathProfileOverrideFactor::FactorG:
+			internalOverrideFactor = NMR::eModelToolpathProfileOverrideFactor::pfFactorG;
+			break;
+		case eToolpathProfileOverrideFactor::FactorH:
+			internalOverrideFactor = NMR::eModelToolpathProfileOverrideFactor::pfFactorH;
+			break;
+		default:
+			internalOverrideFactor = NMR::eModelToolpathProfileOverrideFactor::pfNone;
+
+	}
+
+	m_pToolpathProfile->addModifier(sNameSpaceName, sValueName, dDeltaValue, internalOverrideFactor);
+}
+
+void CToolpathProfile::RemoveModifier(const std::string& sNameSpaceName, const std::string& sValueName)
+{
+	m_pToolpathProfile->removeModifier(sNameSpaceName, sValueName);
+}
+
+Lib3MF_double CToolpathProfile::EvaluateDoubleValue(const std::string& sNameSpaceName, const std::string& sValueName, const Lib3MF_double dFactorF, const Lib3MF_double dFactorG, const Lib3MF_double dFactorH)
+{
+	return m_pToolpathProfile->evaluate(sNameSpaceName, sValueName, dFactorF, dFactorG, dFactorH);
+}
+
+ 

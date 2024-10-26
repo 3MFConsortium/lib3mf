@@ -44,6 +44,7 @@ namespace NMR {
 	class CModelReaderNode_Toolpath1905_ToolpathProfile : public CModelReaderNode {
 	private:
 		CModel * m_pModel;
+		CModelToolpath* m_pToolpath;
 		PModelWarnings m_pWarnings;
 
 		nfBool m_bHasUUID;
@@ -60,7 +61,7 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_Toolpath1905_ToolpathProfile() = delete;
-		CModelReaderNode_Toolpath1905_ToolpathProfile(_In_ CModel * pModel, _In_ PModelWarnings pWarnings);
+		CModelReaderNode_Toolpath1905_ToolpathProfile(_In_ CModel * pModel, _In_ CModelToolpath * pToolpath, _In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 

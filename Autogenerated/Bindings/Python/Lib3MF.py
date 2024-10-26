@@ -458,6 +458,16 @@ class FunctionTable:
 	lib3mf_toolpathprofile_setparameterdoublevalue = None
 	lib3mf_toolpathprofile_setparameterintegervalue = None
 	lib3mf_toolpathprofile_setparameterboolvalue = None
+	lib3mf_toolpathprofile_removeparameter = None
+	lib3mf_toolpathprofile_getmodifiercount = None
+	lib3mf_toolpathprofile_getmodifiernamebyindex = None
+	lib3mf_toolpathprofile_getmodifiernamespacebyindex = None
+	lib3mf_toolpathprofile_hasmodifier = None
+	lib3mf_toolpathprofile_getmodifierinformationbyindex = None
+	lib3mf_toolpathprofile_getmodifierinformationbyname = None
+	lib3mf_toolpathprofile_setmodifier = None
+	lib3mf_toolpathprofile_removemodifier = None
+	lib3mf_toolpathprofile_evaluatedoublevalue = None
 	lib3mf_toolpathlayerreader_getlayerdatauuid = None
 	lib3mf_toolpathlayerreader_getcustomdatacount = None
 	lib3mf_toolpathlayerreader_getcustomdata = None
@@ -803,6 +813,13 @@ class ToolpathAttributeType(CTypesEnum):
 	Unknown = 0
 	Integer = 1
 	Double = 2
+'''Definition of ToolpathProfileOverrideFactor
+'''
+class ToolpathProfileOverrideFactor(CTypesEnum):
+	Unknown = 0
+	FactorF = 1
+	FactorG = 2
+	FactorH = 3
 '''Definition of EncryptionAlgorithm
 '''
 class EncryptionAlgorithm(CTypesEnum):
@@ -2993,6 +3010,66 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_bool)
 			self.lib.lib3mf_toolpathprofile_setparameterboolvalue = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_removeparameter")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
+			self.lib.lib3mf_toolpathprofile_removeparameter = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getmodifiercount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathprofile_getmodifiercount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getmodifiernamebyindex")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathprofile_getmodifiernamebyindex = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getmodifiernamespacebyindex")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathprofile_getmodifiernamespacebyindex = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_hasmodifier")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpathprofile_hasmodifier = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getmodifierinformationbyindex")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_toolpathprofile_getmodifierinformationbyindex = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getmodifierinformationbyname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_toolpathprofile_getmodifierinformationbyname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_setmodifier")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ToolpathProfileOverrideFactor, ctypes.c_double)
+			self.lib.lib3mf_toolpathprofile_setmodifier = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_removemodifier")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
+			self.lib.lib3mf_toolpathprofile_removemodifier = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_evaluatedoublevalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_toolpathprofile_evaluatedoublevalue = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getlayerdatauuid")), methodAddress)
 			if err != 0:
@@ -5218,6 +5295,36 @@ class Wrapper:
 			
 			self.lib.lib3mf_toolpathprofile_setparameterboolvalue.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathprofile_setparameterboolvalue.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_bool]
+			
+			self.lib.lib3mf_toolpathprofile_removeparameter.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_removeparameter.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathprofile_getmodifiercount.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getmodifiercount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathprofile_getmodifiernamebyindex.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getmodifiernamebyindex.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathprofile_getmodifiernamespacebyindex.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getmodifiernamespacebyindex.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathprofile_hasmodifier.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_hasmodifier.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_toolpathprofile_getmodifierinformationbyindex.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getmodifierinformationbyindex.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_toolpathprofile_getmodifierinformationbyname.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getmodifierinformationbyname.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_toolpathprofile_setmodifier.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_setmodifier.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ToolpathProfileOverrideFactor, ctypes.c_double]
+			
+			self.lib.lib3mf_toolpathprofile_removemodifier.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_removemodifier.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathprofile_evaluatedoublevalue.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_evaluatedoublevalue.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.POINTER(ctypes.c_double)]
 			
 			self.lib.lib3mf_toolpathlayerreader_getlayerdatauuid.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getlayerdatauuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
@@ -8798,6 +8905,102 @@ class ToolpathProfile(Base):
 		bValue = ctypes.c_bool(Value)
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_setparameterboolvalue(self._handle, pNameSpaceName, pValueName, bValue))
 		
+	
+	def RemoveParameter(self, NameSpaceName, ValueName):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_removeparameter(self._handle, pNameSpaceName, pValueName))
+		
+	
+	def GetModifierCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getmodifiercount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def GetModifierNameByIndex(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		nNameBufferSize = ctypes.c_uint64(0)
+		nNameNeededChars = ctypes.c_uint64(0)
+		pNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getmodifiernamebyindex(self._handle, nIndex, nNameBufferSize, nNameNeededChars, pNameBuffer))
+		nNameBufferSize = ctypes.c_uint64(nNameNeededChars.value)
+		pNameBuffer = (ctypes.c_char * (nNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getmodifiernamebyindex(self._handle, nIndex, nNameBufferSize, nNameNeededChars, pNameBuffer))
+		
+		return pNameBuffer.value.decode()
+	
+	def GetModifierNameSpaceByIndex(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		nNameSpaceBufferSize = ctypes.c_uint64(0)
+		nNameSpaceNeededChars = ctypes.c_uint64(0)
+		pNameSpaceBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getmodifiernamespacebyindex(self._handle, nIndex, nNameSpaceBufferSize, nNameSpaceNeededChars, pNameSpaceBuffer))
+		nNameSpaceBufferSize = ctypes.c_uint64(nNameSpaceNeededChars.value)
+		pNameSpaceBuffer = (ctypes.c_char * (nNameSpaceNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getmodifiernamespacebyindex(self._handle, nIndex, nNameSpaceBufferSize, nNameSpaceNeededChars, pNameSpaceBuffer))
+		
+		return pNameSpaceBuffer.value.decode()
+	
+	def HasModifier(self, NameSpaceName, ValueName):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		pValueExists = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_hasmodifier(self._handle, pNameSpaceName, pValueName, pValueExists))
+		
+		return pValueExists.value
+	
+	def GetModifierInformationByIndex(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		nNameSpaceNameBufferSize = ctypes.c_uint64(0)
+		nNameSpaceNameNeededChars = ctypes.c_uint64(0)
+		pNameSpaceNameBuffer = ctypes.c_char_p(None)
+		nValueNameBufferSize = ctypes.c_uint64(0)
+		nValueNameNeededChars = ctypes.c_uint64(0)
+		pValueNameBuffer = ctypes.c_char_p(None)
+		pOverrideFactor = ctypes.c_int32()
+		pDeltaValue = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getmodifierinformationbyindex(self._handle, nIndex, nNameSpaceNameBufferSize, nNameSpaceNameNeededChars, pNameSpaceNameBuffer, nValueNameBufferSize, nValueNameNeededChars, pValueNameBuffer, pOverrideFactor, pDeltaValue))
+		nNameSpaceNameBufferSize = ctypes.c_uint64(nNameSpaceNameNeededChars.value)
+		pNameSpaceNameBuffer = (ctypes.c_char * (nNameSpaceNameNeededChars.value))()
+		nValueNameBufferSize = ctypes.c_uint64(nValueNameNeededChars.value)
+		pValueNameBuffer = (ctypes.c_char * (nValueNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getmodifierinformationbyindex(self._handle, nIndex, nNameSpaceNameBufferSize, nNameSpaceNameNeededChars, pNameSpaceNameBuffer, nValueNameBufferSize, nValueNameNeededChars, pValueNameBuffer, pOverrideFactor, pDeltaValue))
+		
+		return pNameSpaceNameBuffer.value.decode(), pValueNameBuffer.value.decode(), ToolpathProfileOverrideFactor(pOverrideFactor.value), pDeltaValue.value
+	
+	def GetModifierInformationByName(self, NameSpaceName, ValueName):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		pOverrideFactor = ctypes.c_int32()
+		pDeltaValue = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getmodifierinformationbyname(self._handle, pNameSpaceName, pValueName, pOverrideFactor, pDeltaValue))
+		
+		return ToolpathProfileOverrideFactor(pOverrideFactor.value), pDeltaValue.value
+	
+	def SetModifier(self, NameSpaceName, ValueName, OverrideFactor, DeltaValue):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		dDeltaValue = ctypes.c_double(DeltaValue)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_setmodifier(self._handle, pNameSpaceName, pValueName, OverrideFactor, dDeltaValue))
+		
+	
+	def RemoveModifier(self, NameSpaceName, ValueName):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_removemodifier(self._handle, pNameSpaceName, pValueName))
+		
+	
+	def EvaluateDoubleValue(self, NameSpaceName, ValueName, FactorF, FactorG, FactorH):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		dFactorF = ctypes.c_double(FactorF)
+		dFactorG = ctypes.c_double(FactorG)
+		dFactorH = ctypes.c_double(FactorH)
+		pEvaluationResult = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_evaluatedoublevalue(self._handle, pNameSpaceName, pValueName, dFactorF, dFactorG, dFactorH, pEvaluationResult))
+		
+		return pEvaluationResult.value
 	
 
 

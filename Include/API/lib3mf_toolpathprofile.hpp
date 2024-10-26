@@ -105,6 +105,26 @@ public:
 
 	void SetParameterBoolValue(const std::string& sNameSpaceName, const std::string& sValueName, const bool bValue) override;
 
+	void RemoveParameter(const std::string& sNameSpaceName, const std::string& sValueName) override;
+
+	Lib3MF_uint32 GetModifierCount() override;
+
+	std::string GetModifierNameByIndex(const Lib3MF_uint32 nIndex) override;
+
+	std::string GetModifierNameSpaceByIndex(const Lib3MF_uint32 nIndex) override;
+
+	bool HasModifier(const std::string& sNameSpaceName, const std::string& sValueName) override;
+
+	void GetModifierInformationByIndex(const Lib3MF_uint32 nIndex, std::string& sNameSpaceName, std::string& sValueName, Lib3MF::eToolpathProfileOverrideFactor& eOverrideFactor, Lib3MF_double& dDeltaValue) override;
+
+	void GetModifierInformationByName(const std::string& sNameSpaceName, const std::string& sValueName, Lib3MF::eToolpathProfileOverrideFactor& eOverrideFactor, Lib3MF_double& dDeltaValue) override;
+
+	void SetModifier(const std::string& sNameSpaceName, const std::string& sValueName, Lib3MF::eToolpathProfileOverrideFactor eOverrideFactor, Lib3MF_double dDeltaValue) override;
+
+	void RemoveModifier(const std::string& sNameSpaceName, const std::string& sValueName) override;
+
+	Lib3MF_double EvaluateDoubleValue(const std::string& sNameSpaceName, const std::string& sValueName, const Lib3MF_double dFactorF, const Lib3MF_double dFactorG, const Lib3MF_double dFactorH) override;
+
 	NMR::PModelToolpathProfile getProfileInstance();
 
 };

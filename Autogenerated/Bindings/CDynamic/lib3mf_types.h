@@ -421,6 +421,13 @@ typedef enum eLib3MFToolpathAttributeType {
   eToolpathAttributeTypeDouble = 2
 } eLib3MFToolpathAttributeType;
 
+typedef enum eLib3MFToolpathProfileOverrideFactor {
+  eToolpathProfileOverrideFactorUnknown = 0,
+  eToolpathProfileOverrideFactorFactorF = 1,
+  eToolpathProfileOverrideFactorFactorG = 2,
+  eToolpathProfileOverrideFactorFactorH = 3
+} eLib3MFToolpathProfileOverrideFactor;
+
 typedef enum eLib3MFEncryptionAlgorithm {
   eEncryptionAlgorithmAES256_GCM = 1 /** http://www.w3.org/2009/xmlenc11#aes256-gcm */
 } eLib3MFEncryptionAlgorithm;
@@ -530,6 +537,11 @@ typedef union {
   eLib3MFToolpathAttributeType m_enum;
   int m_code;
 } structEnumLib3MFToolpathAttributeType;
+
+typedef union {
+  eLib3MFToolpathProfileOverrideFactor m_enum;
+  int m_code;
+} structEnumLib3MFToolpathProfileOverrideFactor;
 
 typedef union {
   eLib3MFEncryptionAlgorithm m_enum;

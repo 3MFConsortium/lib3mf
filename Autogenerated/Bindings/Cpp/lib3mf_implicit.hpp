@@ -1663,6 +1663,16 @@ public:
 	inline void SetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dValue);
 	inline void SetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nValue);
 	inline void SetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName, const bool bValue);
+	inline void RemoveParameter(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline Lib3MF_uint32 GetModifierCount();
+	inline std::string GetModifierNameByIndex(const Lib3MF_uint32 nIndex);
+	inline std::string GetModifierNameSpaceByIndex(const Lib3MF_uint32 nIndex);
+	inline bool HasModifier(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline void GetModifierInformationByIndex(const Lib3MF_uint32 nIndex, std::string & sNameSpaceName, std::string & sValueName, eToolpathProfileOverrideFactor & eOverrideFactor, Lib3MF_double & dDeltaValue);
+	inline void GetModifierInformationByName(const std::string & sNameSpaceName, const std::string & sValueName, eToolpathProfileOverrideFactor & eOverrideFactor, Lib3MF_double & dDeltaValue);
+	inline void SetModifier(const std::string & sNameSpaceName, const std::string & sValueName, const eToolpathProfileOverrideFactor eOverrideFactor, const Lib3MF_double dDeltaValue);
+	inline void RemoveModifier(const std::string & sNameSpaceName, const std::string & sValueName);
+	inline Lib3MF_double EvaluateDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dFactorF, const Lib3MF_double dFactorG, const Lib3MF_double dFactorH);
 };
 	
 /*************************************************************************************************************************
@@ -6198,10 +6208,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathProfile::GetParameterValue - Retrieves a profile's parameter value. Fails if value does not exist.
+	* CToolpathProfile::GetParameterValue - Retrieves a profile's base parameter value without modifier. Fails if value does not exist.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	std::string CToolpathProfile::GetParameterValue(const std::string & sNameSpaceName, const std::string & sValueName)
 	{
@@ -6215,11 +6225,11 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathProfile::GetParameterValueDef - Retrieves a profile's parameter value
+	* CToolpathProfile::GetParameterValueDef - Retrieves a profile's base parameter value without modifier
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] sDefaultValue - Default value if value does not exist.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	std::string CToolpathProfile::GetParameterValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const std::string & sDefaultValue)
 	{
@@ -6233,10 +6243,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathProfile::GetParameterDoubleValue - Retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.
+	* CToolpathProfile::GetParameterDoubleValue - Retrieves a profile's base parameter value as double without modifier. Fails if value does not exist or is not a double value.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	Lib3MF_double CToolpathProfile::GetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName)
 	{
@@ -6247,11 +6257,11 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathProfile::GetParameterDoubleValueDef - Retrieves a profile's parameter value as double.
+	* CToolpathProfile::GetParameterDoubleValueDef - Retrieves a profile's base parameter value as double without modifier.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] dDefaultValue - Default value if value does not exist or is not a double value.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	Lib3MF_double CToolpathProfile::GetParameterDoubleValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dDefaultValue)
 	{
@@ -6262,10 +6272,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathProfile::GetParameterIntegerValue - Retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.
+	* CToolpathProfile::GetParameterIntegerValue - Retrieves a profile's base parameter value as integer without modifier. Fails if value does not exist or is not a integer value.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	Lib3MF_int64 CToolpathProfile::GetParameterIntegerValue(const std::string & sNameSpaceName, const std::string & sValueName)
 	{
@@ -6276,11 +6286,11 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathProfile::GetParameterIntegerValueDef - Retrieves a profile's parameter value as integer.
+	* CToolpathProfile::GetParameterIntegerValueDef - Retrieves a profile's base parameter value as integer without modifier .
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] nDefaultValue - Default value if value does not exist or is not a integer value.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	Lib3MF_int64 CToolpathProfile::GetParameterIntegerValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_int64 nDefaultValue)
 	{
@@ -6291,10 +6301,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathProfile::GetParameterBoolValue - Retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.
+	* CToolpathProfile::GetParameterBoolValue - Retrieves a profile's base parameter value as boolean without modifier. Fails if value does not exist or is not a boolean value.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	bool CToolpathProfile::GetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName)
 	{
@@ -6305,11 +6315,11 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathProfile::GetParameterBoolValueDef - Retrieves a profile's parameter value as boolean.
+	* CToolpathProfile::GetParameterBoolValueDef - Retrieves a profile's base parameter value as boolean without modifier.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] bDefaultValue - Default value if value does not exist or is not a boolean value.
-	* @return Returns the value of the field.
+	* @return Returns the base value of the parameter.
 	*/
 	bool CToolpathProfile::GetParameterBoolValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const bool bDefaultValue)
 	{
@@ -6329,7 +6339,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathProfile::SetParameterValue - Sets a profile's parameter value.
+	* CToolpathProfile::SetParameterValue - Sets a profile's base parameter value. Fails, if parameter already exists.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] sValue - String value of the parameter.
@@ -6340,7 +6350,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathProfile::SetParameterDoubleValue - Sets a profile's parameter value as double.
+	* CToolpathProfile::SetParameterDoubleValue - Sets a profile's base parameter value as double. Fails, if parameter already exists.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] dValue - Double value of the parameter.
@@ -6351,7 +6361,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathProfile::SetParameterIntegerValue - Sets a profile's parameter value as integer.
+	* CToolpathProfile::SetParameterIntegerValue - Sets a profile's parameter value as integer. Fails, if parameter already exists.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] nValue - Integer value of the parameter.
@@ -6362,7 +6372,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathProfile::SetParameterBoolValue - Sets a profile's parameter value as boolean.
+	* CToolpathProfile::SetParameterBoolValue - Sets a profile's parameter value as boolean. Fails, if parameter already exists.
 	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] sValueName - Value key string.
 	* @param[in] bValue - Boolean value of the parameter.
@@ -6370,6 +6380,147 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CToolpathProfile::SetParameterBoolValue(const std::string & sNameSpaceName, const std::string & sValueName, const bool bValue)
 	{
 		CheckError(lib3mf_toolpathprofile_setparameterboolvalue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), bValue));
+	}
+	
+	/**
+	* CToolpathProfile::RemoveParameter - Removes a parameter, if it exists. Removes any associated modifier that exists.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Parameter key string.
+	*/
+	void CToolpathProfile::RemoveParameter(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		CheckError(lib3mf_toolpathprofile_removeparameter(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str()));
+	}
+	
+	/**
+	* CToolpathProfile::GetModifierCount - Returns the number of modifiers.
+	* @return Returns the number of modifiers.
+	*/
+	Lib3MF_uint32 CToolpathProfile::GetModifierCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(lib3mf_toolpathprofile_getmodifiercount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CToolpathProfile::GetModifierNameByIndex - Returns the Name of a modifier by its index.
+	* @param[in] nIndex - Index of modifier (0-based). Call will fail if an invalid index is given.
+	* @return Returns the name of the modifier.
+	*/
+	std::string CToolpathProfile::GetModifierNameByIndex(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(lib3mf_toolpathprofile_getmodifiernamebyindex(m_pHandle, nIndex, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(lib3mf_toolpathprofile_getmodifiernamebyindex(m_pHandle, nIndex, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CToolpathProfile::GetModifierNameSpaceByIndex - Returns the NameSpace of a modifier by its index.
+	* @param[in] nIndex - Index of modifier (0-based). Call will fail if an invalid index is given.
+	* @return Returns the namespace of the modifier.
+	*/
+	std::string CToolpathProfile::GetModifierNameSpaceByIndex(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_uint32 bytesNeededNameSpace = 0;
+		Lib3MF_uint32 bytesWrittenNameSpace = 0;
+		CheckError(lib3mf_toolpathprofile_getmodifiernamespacebyindex(m_pHandle, nIndex, 0, &bytesNeededNameSpace, nullptr));
+		std::vector<char> bufferNameSpace(bytesNeededNameSpace);
+		CheckError(lib3mf_toolpathprofile_getmodifiernamespacebyindex(m_pHandle, nIndex, bytesNeededNameSpace, &bytesWrittenNameSpace, &bufferNameSpace[0]));
+		
+		return std::string(&bufferNameSpace[0]);
+	}
+	
+	/**
+	* CToolpathProfile::HasModifier - Checks if a modifier exists.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Parameter key string.
+	* @return Returns if a modifier exists.
+	*/
+	bool CToolpathProfile::HasModifier(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		bool resultValueExists = 0;
+		CheckError(lib3mf_toolpathprofile_hasmodifier(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), &resultValueExists));
+		
+		return resultValueExists;
+	}
+	
+	/**
+	* CToolpathProfile::GetModifierInformationByIndex - Returns modifier by index.
+	* @param[in] nIndex - Index of modifier (0-based). Call will fail if an invalid index is given.
+	* @param[out] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[out] sValueName - Parameter key string.
+	* @param[out] eOverrideFactor - which type of override factor to use.
+	* @param[out] dDeltaValue - delta value.
+	*/
+	void CToolpathProfile::GetModifierInformationByIndex(const Lib3MF_uint32 nIndex, std::string & sNameSpaceName, std::string & sValueName, eToolpathProfileOverrideFactor & eOverrideFactor, Lib3MF_double & dDeltaValue)
+	{
+		Lib3MF_uint32 bytesNeededNameSpaceName = 0;
+		Lib3MF_uint32 bytesWrittenNameSpaceName = 0;
+		Lib3MF_uint32 bytesNeededValueName = 0;
+		Lib3MF_uint32 bytesWrittenValueName = 0;
+		CheckError(lib3mf_toolpathprofile_getmodifierinformationbyindex(m_pHandle, nIndex, 0, &bytesNeededNameSpaceName, nullptr, 0, &bytesNeededValueName, nullptr, &eOverrideFactor, &dDeltaValue));
+		std::vector<char> bufferNameSpaceName(bytesNeededNameSpaceName);
+		std::vector<char> bufferValueName(bytesNeededValueName);
+		CheckError(lib3mf_toolpathprofile_getmodifierinformationbyindex(m_pHandle, nIndex, bytesNeededNameSpaceName, &bytesWrittenNameSpaceName, &bufferNameSpaceName[0], bytesNeededValueName, &bytesWrittenValueName, &bufferValueName[0], &eOverrideFactor, &dDeltaValue));
+		sNameSpaceName = std::string(&bufferNameSpaceName[0]);
+		sValueName = std::string(&bufferValueName[0]);
+	}
+	
+	/**
+	* CToolpathProfile::GetModifierInformationByName - Returns modifier by name.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Parameter key string.
+	* @param[out] eOverrideFactor - which type of override factor to use.
+	* @param[out] dDeltaValue - delta value.
+	*/
+	void CToolpathProfile::GetModifierInformationByName(const std::string & sNameSpaceName, const std::string & sValueName, eToolpathProfileOverrideFactor & eOverrideFactor, Lib3MF_double & dDeltaValue)
+	{
+		CheckError(lib3mf_toolpathprofile_getmodifierinformationbyname(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), &eOverrideFactor, &dDeltaValue));
+	}
+	
+	/**
+	* CToolpathProfile::SetModifier - Adds a new modifier. Replaces the modifier, should it already exist with the same name. Fails if no Parameter exists with this name/namespace. Fails if the parameter does not have a Double value attached.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Parameter key string.
+	* @param[in] eOverrideFactor - which type of override factor to use.
+	* @param[in] dDeltaValue - delta value.
+	*/
+	void CToolpathProfile::SetModifier(const std::string & sNameSpaceName, const std::string & sValueName, const eToolpathProfileOverrideFactor eOverrideFactor, const Lib3MF_double dDeltaValue)
+	{
+		CheckError(lib3mf_toolpathprofile_setmodifier(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), eOverrideFactor, dDeltaValue));
+	}
+	
+	/**
+	* CToolpathProfile::RemoveModifier - Removes a modifier, if it exists.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Parameter key string.
+	*/
+	void CToolpathProfile::RemoveModifier(const std::string & sNameSpaceName, const std::string & sValueName)
+	{
+		CheckError(lib3mf_toolpathprofile_removemodifier(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str()));
+	}
+	
+	/**
+	* CToolpathProfile::EvaluateDoubleValue - Evaluates a double parameter, taking an optional modifier into account. Fails if neither a parameter nor a modifier exists with this name/namespace.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Parameter key string.
+	* @param[in] dFactorF - F Factor value (will be clipped between 0.0 and 1.0)
+	* @param[in] dFactorG - G Factor value (will be clipped between 0.0 and 1.0)
+	* @param[in] dFactorH - H Factor value (will be clipped between 0.0 and 1.0)
+	* @return Evaluation result.
+	*/
+	Lib3MF_double CToolpathProfile::EvaluateDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dFactorF, const Lib3MF_double dFactorG, const Lib3MF_double dFactorH)
+	{
+		Lib3MF_double resultEvaluationResult = 0;
+		CheckError(lib3mf_toolpathprofile_evaluatedoublevalue(m_pHandle, sNameSpaceName.c_str(), sValueName.c_str(), dFactorF, dFactorG, dFactorH, &resultEvaluationResult));
+		
+		return resultEvaluationResult;
 	}
 	
 	/**

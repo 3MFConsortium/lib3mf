@@ -579,6 +579,19 @@ namespace NMR {
 		case NMR_ERROR_INVALIDOVERRIDEFRACTION: return "Invalid override fraction";
 		case NMR_ERROR_DUPLICATEPROFILEVALUE: return "Duplicate profile value";
 		case NMR_ERROR_DUPLICATEPROFILEMODIFIER: return "Duplicate profile modifier";
+		case NMR_ERROR_INVALIDMODIFIERINDEX: return "Invalid modifier index";
+		case NMR_ERROR_PROFILEMODIFIERNOTFOUND: return "Profile modifier not found";
+		case NMR_ERROR_PROFILENAMESPACENOTREGISTERED: return "Profile namespace not registered";
+		case NMR_ERROR_DUPLICATEMODIFIERATTRIBUTE: return "Duplicate modifier attribute";
+		case NMR_ERROR_INVALIDMODIFIERATTRIBUTE: return "Invalid modifier attribute";
+		case NMR_ERROR_DUPLICATEMODIFIERDELTA: return "Duplicate modifier delta";
+		case NMR_ERROR_INVALIDTOOLPATHPROFILEDELTA: return "Invalid toolpath profile delta";
+		case NMR_ERROR_DUPLICATEMODIFIERFACTOR: return "Duplicate modifier factor";
+		case NMR_ERROR_INVALIDOVERRIDEFACTOR: return "Invalid override factor";
+		case NMR_ERROR_MISSINGMODIFIERPROFILEATTRIBUTE: return "Missing modifier profile attribute";
+		case NMR_ERROR_MISSINGMODIFIERPROFILEDELTA: return "Missing modifier profile delta";
+		case NMR_ERROR_EMPTYMODIFIERPROFILEATTRIBUTE: return "Empty modifier profile attribute";
+		case NMR_ERROR_INVALIDPROFILEMODIFIERNAMESPACE: return "Invalid profile modifier namespace";
 
 		default:
 			return "unknown error";

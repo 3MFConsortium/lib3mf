@@ -275,6 +275,13 @@ type
 		eToolpathAttributeTypeDouble
 	);
 
+	TLib3MFToolpathProfileOverrideFactor = (
+		eToolpathProfileOverrideFactorUnknown,
+		eToolpathProfileOverrideFactorFactorF,
+		eToolpathProfileOverrideFactorFactorG,
+		eToolpathProfileOverrideFactorFactorH
+	);
+
 	TLib3MFEncryptionAlgorithm = (
 		eEncryptionAlgorithmAES256_GCM
 	);
@@ -3597,20 +3604,20 @@ type
 	TLib3MFToolpathProfile_HasParameterValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pValueExists: Byte): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves a profile's parameter value. Fails if value does not exist.
+	* Retrieves a profile's base parameter value without modifier. Fails if value does not exist.
 	*
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
 	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] pValueName - Value key string.
 	* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
 	* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pValueBuffer -  buffer of Returns the value of the field., may be NULL
+	* @param[out] pValueBuffer -  buffer of Returns the base value of the parameter., may be NULL
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathProfile_GetParameterValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const nValueBufferSize: Cardinal; out pValueNeededChars: Cardinal; pValueBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves a profile's parameter value
+	* Retrieves a profile's base parameter value without modifier
 	*
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
 	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
@@ -3618,76 +3625,76 @@ type
 	* @param[in] pDefaultValue - Default value if value does not exist.
 	* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
 	* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pValueBuffer -  buffer of Returns the value of the field., may be NULL
+	* @param[out] pValueBuffer -  buffer of Returns the base value of the parameter., may be NULL
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathProfile_GetParameterValueDefFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const pDefaultValue: PAnsiChar; const nValueBufferSize: Cardinal; out pValueNeededChars: Cardinal; pValueBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.
+	* Retrieves a profile's base parameter value as double without modifier. Fails if value does not exist or is not a double value.
 	*
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
 	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] pValueName - Value key string.
-	* @param[out] pValue - Returns the value of the field.
+	* @param[out] pValue - Returns the base value of the parameter.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathProfile_GetParameterDoubleValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pValue: Double): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves a profile's parameter value as double.
+	* Retrieves a profile's base parameter value as double without modifier.
 	*
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
 	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] pValueName - Value key string.
 	* @param[in] dDefaultValue - Default value if value does not exist or is not a double value.
-	* @param[out] pValue - Returns the value of the field.
+	* @param[out] pValue - Returns the base value of the parameter.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathProfile_GetParameterDoubleValueDefFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const dDefaultValue: Double; out pValue: Double): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.
+	* Retrieves a profile's base parameter value as integer without modifier. Fails if value does not exist or is not a integer value.
 	*
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
 	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] pValueName - Value key string.
-	* @param[out] pValue - Returns the value of the field.
+	* @param[out] pValue - Returns the base value of the parameter.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathProfile_GetParameterIntegerValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pValue: Int64): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves a profile's parameter value as integer.
+	* Retrieves a profile's base parameter value as integer without modifier .
 	*
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
 	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] pValueName - Value key string.
 	* @param[in] nDefaultValue - Default value if value does not exist or is not a integer value.
-	* @param[out] pValue - Returns the value of the field.
+	* @param[out] pValue - Returns the base value of the parameter.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathProfile_GetParameterIntegerValueDefFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const nDefaultValue: Int64; out pValue: Int64): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.
+	* Retrieves a profile's base parameter value as boolean without modifier. Fails if value does not exist or is not a boolean value.
 	*
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
 	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] pValueName - Value key string.
-	* @param[out] pValue - Returns the value of the field.
+	* @param[out] pValue - Returns the base value of the parameter.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathProfile_GetParameterBoolValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pValue: Byte): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves a profile's parameter value as boolean.
+	* Retrieves a profile's base parameter value as boolean without modifier.
 	*
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
 	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
 	* @param[in] pValueName - Value key string.
 	* @param[in] bDefaultValue - Default value if value does not exist or is not a boolean value.
-	* @param[out] pValue - Returns the value of the field.
+	* @param[out] pValue - Returns the base value of the parameter.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathProfile_GetParameterBoolValueDefFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const bDefaultValue: Byte; out pValue: Byte): TLib3MFResult; cdecl;
@@ -3702,7 +3709,7 @@ type
 	TLib3MFToolpathProfile_SetNameFunc = function(pToolpathProfile: TLib3MFHandle; const pName: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets a profile's parameter value.
+	* Sets a profile's base parameter value. Fails, if parameter already exists.
 	*
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
 	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
@@ -3713,7 +3720,7 @@ type
 	TLib3MFToolpathProfile_SetParameterValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const pValue: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets a profile's parameter value as double.
+	* Sets a profile's base parameter value as double. Fails, if parameter already exists.
 	*
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
 	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
@@ -3724,7 +3731,7 @@ type
 	TLib3MFToolpathProfile_SetParameterDoubleValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const dValue: Double): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets a profile's parameter value as integer.
+	* Sets a profile's parameter value as integer. Fails, if parameter already exists.
 	*
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
 	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
@@ -3735,7 +3742,7 @@ type
 	TLib3MFToolpathProfile_SetParameterIntegerValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const nValue: Int64): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets a profile's parameter value as boolean.
+	* Sets a profile's parameter value as boolean. Fails, if parameter already exists.
 	*
 	* @param[in] pToolpathProfile - ToolpathProfile instance.
 	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
@@ -3744,6 +3751,125 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathProfile_SetParameterBoolValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const bValue: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes a parameter, if it exists. Removes any associated modifier that exists.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Parameter key string.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_RemoveParameterFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the number of modifiers.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[out] pCount - Returns the number of modifiers.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetModifierCountFunc = function(pToolpathProfile: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the Name of a modifier by its index.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] nIndex - Index of modifier (0-based). Call will fail if an invalid index is given.
+	* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameBuffer -  buffer of Returns the name of the modifier., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetModifierNameByIndexFunc = function(pToolpathProfile: TLib3MFHandle; const nIndex: Cardinal; const nNameBufferSize: Cardinal; out pNameNeededChars: Cardinal; pNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the NameSpace of a modifier by its index.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] nIndex - Index of modifier (0-based). Call will fail if an invalid index is given.
+	* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameSpaceBuffer -  buffer of Returns the namespace of the modifier., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetModifierNameSpaceByIndexFunc = function(pToolpathProfile: TLib3MFHandle; const nIndex: Cardinal; const nNameSpaceBufferSize: Cardinal; out pNameSpaceNeededChars: Cardinal; pNameSpaceBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Checks if a modifier exists.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Parameter key string.
+	* @param[out] pValueExists - Returns if a modifier exists.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_HasModifierFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pValueExists: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns modifier by index.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] nIndex - Index of modifier (0-based). Call will fail if an invalid index is given.
+	* @param[in] nNameSpaceNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameSpaceNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameSpaceNameBuffer -  buffer of Name of the Parameter Namespace., may be NULL
+	* @param[in] nValueNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pValueNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pValueNameBuffer -  buffer of Parameter key string., may be NULL
+	* @param[out] pOverrideFactor - which type of override factor to use.
+	* @param[out] pDeltaValue - delta value.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetModifierInformationByIndexFunc = function(pToolpathProfile: TLib3MFHandle; const nIndex: Cardinal; const nNameSpaceNameBufferSize: Cardinal; out pNameSpaceNameNeededChars: Cardinal; pNameSpaceNameBuffer: PAnsiChar; const nValueNameBufferSize: Cardinal; out pValueNameNeededChars: Cardinal; pValueNameBuffer: PAnsiChar; out pOverrideFactor: Integer; out pDeltaValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns modifier by name.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Parameter key string.
+	* @param[out] pOverrideFactor - which type of override factor to use.
+	* @param[out] pDeltaValue - delta value.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetModifierInformationByNameFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pOverrideFactor: Integer; out pDeltaValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds a new modifier. Replaces the modifier, should it already exist with the same name. Fails if no Parameter exists with this name/namespace. Fails if the parameter does not have a Double value attached.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Parameter key string.
+	* @param[in] eOverrideFactor - which type of override factor to use.
+	* @param[in] dDeltaValue - delta value.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_SetModifierFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const eOverrideFactor: Integer; const dDeltaValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes a modifier, if it exists.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Parameter key string.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_RemoveModifierFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Evaluates a double parameter, taking an optional modifier into account. Fails if neither a parameter nor a modifier exists with this name/namespace.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Parameter key string.
+	* @param[in] dFactorF - F Factor value (will be clipped between 0.0 and 1.0)
+	* @param[in] dFactorG - G Factor value (will be clipped between 0.0 and 1.0)
+	* @param[in] dFactorH - H Factor value (will be clipped between 0.0 and 1.0)
+	* @param[out] pEvaluationResult - Evaluation result.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_EvaluateDoubleValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const dFactorF: Double; const dFactorG: Double; const dFactorH: Double; out pEvaluationResult: Double): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -6958,6 +7084,16 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure SetParameterDoubleValue(const ANameSpaceName: String; const AValueName: String; const AValue: Double);
 		procedure SetParameterIntegerValue(const ANameSpaceName: String; const AValueName: String; const AValue: Int64);
 		procedure SetParameterBoolValue(const ANameSpaceName: String; const AValueName: String; const AValue: Boolean);
+		procedure RemoveParameter(const ANameSpaceName: String; const AValueName: String);
+		function GetModifierCount(): Cardinal;
+		function GetModifierNameByIndex(const AIndex: Cardinal): String;
+		function GetModifierNameSpaceByIndex(const AIndex: Cardinal): String;
+		function HasModifier(const ANameSpaceName: String; const AValueName: String): Boolean;
+		procedure GetModifierInformationByIndex(const AIndex: Cardinal; out ANameSpaceName: String; out AValueName: String; out AOverrideFactor: TLib3MFToolpathProfileOverrideFactor; out ADeltaValue: Double);
+		procedure GetModifierInformationByName(const ANameSpaceName: String; const AValueName: String; out AOverrideFactor: TLib3MFToolpathProfileOverrideFactor; out ADeltaValue: Double);
+		procedure SetModifier(const ANameSpaceName: String; const AValueName: String; const AOverrideFactor: TLib3MFToolpathProfileOverrideFactor; const ADeltaValue: Double);
+		procedure RemoveModifier(const ANameSpaceName: String; const AValueName: String);
+		function EvaluateDoubleValue(const ANameSpaceName: String; const AValueName: String; const AFactorF: Double; const AFactorG: Double; const AFactorH: Double): Double;
 	end;
 
 
@@ -7614,6 +7750,16 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFToolpathProfile_SetParameterDoubleValueFunc: TLib3MFToolpathProfile_SetParameterDoubleValueFunc;
 		FLib3MFToolpathProfile_SetParameterIntegerValueFunc: TLib3MFToolpathProfile_SetParameterIntegerValueFunc;
 		FLib3MFToolpathProfile_SetParameterBoolValueFunc: TLib3MFToolpathProfile_SetParameterBoolValueFunc;
+		FLib3MFToolpathProfile_RemoveParameterFunc: TLib3MFToolpathProfile_RemoveParameterFunc;
+		FLib3MFToolpathProfile_GetModifierCountFunc: TLib3MFToolpathProfile_GetModifierCountFunc;
+		FLib3MFToolpathProfile_GetModifierNameByIndexFunc: TLib3MFToolpathProfile_GetModifierNameByIndexFunc;
+		FLib3MFToolpathProfile_GetModifierNameSpaceByIndexFunc: TLib3MFToolpathProfile_GetModifierNameSpaceByIndexFunc;
+		FLib3MFToolpathProfile_HasModifierFunc: TLib3MFToolpathProfile_HasModifierFunc;
+		FLib3MFToolpathProfile_GetModifierInformationByIndexFunc: TLib3MFToolpathProfile_GetModifierInformationByIndexFunc;
+		FLib3MFToolpathProfile_GetModifierInformationByNameFunc: TLib3MFToolpathProfile_GetModifierInformationByNameFunc;
+		FLib3MFToolpathProfile_SetModifierFunc: TLib3MFToolpathProfile_SetModifierFunc;
+		FLib3MFToolpathProfile_RemoveModifierFunc: TLib3MFToolpathProfile_RemoveModifierFunc;
+		FLib3MFToolpathProfile_EvaluateDoubleValueFunc: TLib3MFToolpathProfile_EvaluateDoubleValueFunc;
 		FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc: TLib3MFToolpathLayerReader_GetLayerDataUUIDFunc;
 		FLib3MFToolpathLayerReader_GetCustomDataCountFunc: TLib3MFToolpathLayerReader_GetCustomDataCountFunc;
 		FLib3MFToolpathLayerReader_GetCustomDataFunc: TLib3MFToolpathLayerReader_GetCustomDataFunc;
@@ -8158,6 +8304,16 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFToolpathProfile_SetParameterDoubleValueFunc: TLib3MFToolpathProfile_SetParameterDoubleValueFunc read FLib3MFToolpathProfile_SetParameterDoubleValueFunc;
 		property Lib3MFToolpathProfile_SetParameterIntegerValueFunc: TLib3MFToolpathProfile_SetParameterIntegerValueFunc read FLib3MFToolpathProfile_SetParameterIntegerValueFunc;
 		property Lib3MFToolpathProfile_SetParameterBoolValueFunc: TLib3MFToolpathProfile_SetParameterBoolValueFunc read FLib3MFToolpathProfile_SetParameterBoolValueFunc;
+		property Lib3MFToolpathProfile_RemoveParameterFunc: TLib3MFToolpathProfile_RemoveParameterFunc read FLib3MFToolpathProfile_RemoveParameterFunc;
+		property Lib3MFToolpathProfile_GetModifierCountFunc: TLib3MFToolpathProfile_GetModifierCountFunc read FLib3MFToolpathProfile_GetModifierCountFunc;
+		property Lib3MFToolpathProfile_GetModifierNameByIndexFunc: TLib3MFToolpathProfile_GetModifierNameByIndexFunc read FLib3MFToolpathProfile_GetModifierNameByIndexFunc;
+		property Lib3MFToolpathProfile_GetModifierNameSpaceByIndexFunc: TLib3MFToolpathProfile_GetModifierNameSpaceByIndexFunc read FLib3MFToolpathProfile_GetModifierNameSpaceByIndexFunc;
+		property Lib3MFToolpathProfile_HasModifierFunc: TLib3MFToolpathProfile_HasModifierFunc read FLib3MFToolpathProfile_HasModifierFunc;
+		property Lib3MFToolpathProfile_GetModifierInformationByIndexFunc: TLib3MFToolpathProfile_GetModifierInformationByIndexFunc read FLib3MFToolpathProfile_GetModifierInformationByIndexFunc;
+		property Lib3MFToolpathProfile_GetModifierInformationByNameFunc: TLib3MFToolpathProfile_GetModifierInformationByNameFunc read FLib3MFToolpathProfile_GetModifierInformationByNameFunc;
+		property Lib3MFToolpathProfile_SetModifierFunc: TLib3MFToolpathProfile_SetModifierFunc read FLib3MFToolpathProfile_SetModifierFunc;
+		property Lib3MFToolpathProfile_RemoveModifierFunc: TLib3MFToolpathProfile_RemoveModifierFunc read FLib3MFToolpathProfile_RemoveModifierFunc;
+		property Lib3MFToolpathProfile_EvaluateDoubleValueFunc: TLib3MFToolpathProfile_EvaluateDoubleValueFunc read FLib3MFToolpathProfile_EvaluateDoubleValueFunc;
 		property Lib3MFToolpathLayerReader_GetLayerDataUUIDFunc: TLib3MFToolpathLayerReader_GetLayerDataUUIDFunc read FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc;
 		property Lib3MFToolpathLayerReader_GetCustomDataCountFunc: TLib3MFToolpathLayerReader_GetCustomDataCountFunc read FLib3MFToolpathLayerReader_GetCustomDataCountFunc;
 		property Lib3MFToolpathLayerReader_GetCustomDataFunc: TLib3MFToolpathLayerReader_GetCustomDataFunc read FLib3MFToolpathLayerReader_GetCustomDataFunc;
@@ -8445,6 +8601,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function convertConstToToolpathSegmentType(const AValue: Integer): TLib3MFToolpathSegmentType;
 	function convertToolpathAttributeTypeToConst(const AValue: TLib3MFToolpathAttributeType): Integer;
 	function convertConstToToolpathAttributeType(const AValue: Integer): TLib3MFToolpathAttributeType;
+	function convertToolpathProfileOverrideFactorToConst(const AValue: TLib3MFToolpathProfileOverrideFactor): Integer;
+	function convertConstToToolpathProfileOverrideFactor(const AValue: Integer): TLib3MFToolpathProfileOverrideFactor;
 	function convertEncryptionAlgorithmToConst(const AValue: TLib3MFEncryptionAlgorithm): Integer;
 	function convertConstToEncryptionAlgorithm(const AValue: Integer): TLib3MFEncryptionAlgorithm;
 	function convertWrappingAlgorithmToConst(const AValue: TLib3MFWrappingAlgorithm): Integer;
@@ -8947,6 +9105,31 @@ implementation
 			0: Result := eToolpathAttributeTypeUnknown;
 			1: Result := eToolpathAttributeTypeInteger;
 			2: Result := eToolpathAttributeTypeDouble;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
+		end;
+	end;
+	
+	
+	function convertToolpathProfileOverrideFactorToConst(const AValue: TLib3MFToolpathProfileOverrideFactor): Integer;
+	begin
+		case AValue of
+			eToolpathProfileOverrideFactorUnknown: Result := 0;
+			eToolpathProfileOverrideFactorFactorF: Result := 1;
+			eToolpathProfileOverrideFactorFactorG: Result := 2;
+			eToolpathProfileOverrideFactorFactorH: Result := 3;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
+		end;
+	end;
+	
+	function convertConstToToolpathProfileOverrideFactor(const AValue: Integer): TLib3MFToolpathProfileOverrideFactor;
+	begin
+		case AValue of
+			0: Result := eToolpathProfileOverrideFactorUnknown;
+			1: Result := eToolpathProfileOverrideFactorFactorF;
+			2: Result := eToolpathProfileOverrideFactorFactorG;
+			3: Result := eToolpathProfileOverrideFactorFactorH;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -12673,6 +12856,101 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_SetParameterBoolValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), Ord(AValue)));
 	end;
 
+	procedure TLib3MFToolpathProfile.RemoveParameter(const ANameSpaceName: String; const AValueName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_RemoveParameterFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName)));
+	end;
+
+	function TLib3MFToolpathProfile.GetModifierCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetModifierCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpathProfile.GetModifierNameByIndex(const AIndex: Cardinal): String;
+	var
+		bytesNeededName: Cardinal;
+		bytesWrittenName: Cardinal;
+		bufferName: array of Char;
+	begin
+		bytesNeededName:= 0;
+		bytesWrittenName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetModifierNameByIndexFunc(FHandle, AIndex, 0, bytesNeededName, nil));
+		SetLength(bufferName, bytesNeededName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetModifierNameByIndexFunc(FHandle, AIndex, bytesNeededName, bytesWrittenName, @bufferName[0]));
+		Result := StrPas(@bufferName[0]);
+	end;
+
+	function TLib3MFToolpathProfile.GetModifierNameSpaceByIndex(const AIndex: Cardinal): String;
+	var
+		bytesNeededNameSpace: Cardinal;
+		bytesWrittenNameSpace: Cardinal;
+		bufferNameSpace: array of Char;
+	begin
+		bytesNeededNameSpace:= 0;
+		bytesWrittenNameSpace:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetModifierNameSpaceByIndexFunc(FHandle, AIndex, 0, bytesNeededNameSpace, nil));
+		SetLength(bufferNameSpace, bytesNeededNameSpace);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetModifierNameSpaceByIndexFunc(FHandle, AIndex, bytesNeededNameSpace, bytesWrittenNameSpace, @bufferNameSpace[0]));
+		Result := StrPas(@bufferNameSpace[0]);
+	end;
+
+	function TLib3MFToolpathProfile.HasModifier(const ANameSpaceName: String; const AValueName: String): Boolean;
+	var
+		ResultValueExists: Byte;
+	begin
+		ResultValueExists := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_HasModifierFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), ResultValueExists));
+		Result := (ResultValueExists <> 0);
+	end;
+
+	procedure TLib3MFToolpathProfile.GetModifierInformationByIndex(const AIndex: Cardinal; out ANameSpaceName: String; out AValueName: String; out AOverrideFactor: TLib3MFToolpathProfileOverrideFactor; out ADeltaValue: Double);
+	var
+		bytesNeededNameSpaceName: Cardinal;
+		bytesWrittenNameSpaceName: Cardinal;
+		bufferNameSpaceName: array of Char;
+		bytesNeededValueName: Cardinal;
+		bytesWrittenValueName: Cardinal;
+		bufferValueName: array of Char;
+		ResultOverrideFactor: Integer;
+	begin
+		bytesNeededNameSpaceName:= 0;
+		bytesWrittenNameSpaceName:= 0;
+		bytesNeededValueName:= 0;
+		bytesWrittenValueName:= 0;
+		ResultOverrideFactor := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetModifierInformationByIndexFunc(FHandle, AIndex, 0, bytesNeededNameSpaceName, nil, 0, bytesNeededValueName, nil, ResultOverrideFactor, ADeltaValue));
+		SetLength(bufferNameSpaceName, bytesNeededNameSpaceName);
+		SetLength(bufferValueName, bytesNeededValueName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetModifierInformationByIndexFunc(FHandle, AIndex, bytesNeededNameSpaceName, bytesWrittenNameSpaceName, @bufferNameSpaceName[0], bytesNeededValueName, bytesWrittenValueName, @bufferValueName[0], ResultOverrideFactor, ADeltaValue));
+		ANameSpaceName := StrPas(@bufferNameSpaceName[0]);
+		AValueName := StrPas(@bufferValueName[0]);
+		AOverrideFactor := convertConstToToolpathProfileOverrideFactor(ResultOverrideFactor);
+	end;
+
+	procedure TLib3MFToolpathProfile.GetModifierInformationByName(const ANameSpaceName: String; const AValueName: String; out AOverrideFactor: TLib3MFToolpathProfileOverrideFactor; out ADeltaValue: Double);
+	var
+		ResultOverrideFactor: Integer;
+	begin
+		ResultOverrideFactor := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetModifierInformationByNameFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), ResultOverrideFactor, ADeltaValue));
+		AOverrideFactor := convertConstToToolpathProfileOverrideFactor(ResultOverrideFactor);
+	end;
+
+	procedure TLib3MFToolpathProfile.SetModifier(const ANameSpaceName: String; const AValueName: String; const AOverrideFactor: TLib3MFToolpathProfileOverrideFactor; const ADeltaValue: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_SetModifierFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), convertToolpathProfileOverrideFactorToConst(AOverrideFactor), ADeltaValue));
+	end;
+
+	procedure TLib3MFToolpathProfile.RemoveModifier(const ANameSpaceName: String; const AValueName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_RemoveModifierFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName)));
+	end;
+
+	function TLib3MFToolpathProfile.EvaluateDoubleValue(const ANameSpaceName: String; const AValueName: String; const AFactorF: Double; const AFactorG: Double; const AFactorH: Double): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_EvaluateDoubleValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), AFactorF, AFactorG, AFactorH, Result));
+	end;
+
 (*************************************************************************************************************************
  Class implementation for ToolpathLayerReader
 **************************************************************************************************************************)
@@ -15741,6 +16019,16 @@ implementation
 		FLib3MFToolpathProfile_SetParameterDoubleValueFunc := LoadFunction('lib3mf_toolpathprofile_setparameterdoublevalue');
 		FLib3MFToolpathProfile_SetParameterIntegerValueFunc := LoadFunction('lib3mf_toolpathprofile_setparameterintegervalue');
 		FLib3MFToolpathProfile_SetParameterBoolValueFunc := LoadFunction('lib3mf_toolpathprofile_setparameterboolvalue');
+		FLib3MFToolpathProfile_RemoveParameterFunc := LoadFunction('lib3mf_toolpathprofile_removeparameter');
+		FLib3MFToolpathProfile_GetModifierCountFunc := LoadFunction('lib3mf_toolpathprofile_getmodifiercount');
+		FLib3MFToolpathProfile_GetModifierNameByIndexFunc := LoadFunction('lib3mf_toolpathprofile_getmodifiernamebyindex');
+		FLib3MFToolpathProfile_GetModifierNameSpaceByIndexFunc := LoadFunction('lib3mf_toolpathprofile_getmodifiernamespacebyindex');
+		FLib3MFToolpathProfile_HasModifierFunc := LoadFunction('lib3mf_toolpathprofile_hasmodifier');
+		FLib3MFToolpathProfile_GetModifierInformationByIndexFunc := LoadFunction('lib3mf_toolpathprofile_getmodifierinformationbyindex');
+		FLib3MFToolpathProfile_GetModifierInformationByNameFunc := LoadFunction('lib3mf_toolpathprofile_getmodifierinformationbyname');
+		FLib3MFToolpathProfile_SetModifierFunc := LoadFunction('lib3mf_toolpathprofile_setmodifier');
+		FLib3MFToolpathProfile_RemoveModifierFunc := LoadFunction('lib3mf_toolpathprofile_removemodifier');
+		FLib3MFToolpathProfile_EvaluateDoubleValueFunc := LoadFunction('lib3mf_toolpathprofile_evaluatedoublevalue');
 		FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getlayerdatauuid');
 		FLib3MFToolpathLayerReader_GetCustomDataCountFunc := LoadFunction('lib3mf_toolpathlayerreader_getcustomdatacount');
 		FLib3MFToolpathLayerReader_GetCustomDataFunc := LoadFunction('lib3mf_toolpathlayerreader_getcustomdata');
@@ -16902,6 +17190,36 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_setparameterboolvalue'), @FLib3MFToolpathProfile_SetParameterBoolValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_removeparameter'), @FLib3MFToolpathProfile_RemoveParameterFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getmodifiercount'), @FLib3MFToolpathProfile_GetModifierCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getmodifiernamebyindex'), @FLib3MFToolpathProfile_GetModifierNameByIndexFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getmodifiernamespacebyindex'), @FLib3MFToolpathProfile_GetModifierNameSpaceByIndexFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_hasmodifier'), @FLib3MFToolpathProfile_HasModifierFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getmodifierinformationbyindex'), @FLib3MFToolpathProfile_GetModifierInformationByIndexFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getmodifierinformationbyname'), @FLib3MFToolpathProfile_GetModifierInformationByNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_setmodifier'), @FLib3MFToolpathProfile_SetModifierFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_removemodifier'), @FLib3MFToolpathProfile_RemoveModifierFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_evaluatedoublevalue'), @FLib3MFToolpathProfile_EvaluateDoubleValueFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getlayerdatauuid'), @FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc);

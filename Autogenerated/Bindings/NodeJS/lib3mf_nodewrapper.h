@@ -1065,6 +1065,16 @@ private:
 	static void SetParameterDoubleValue(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetParameterIntegerValue(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetParameterBoolValue(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RemoveParameter(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetModifierCount(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetModifierNameByIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetModifierNameSpaceByIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasModifier(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetModifierInformationByIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetModifierInformationByName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetModifier(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RemoveModifier(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void EvaluateDoubleValue(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFToolpathProfile();

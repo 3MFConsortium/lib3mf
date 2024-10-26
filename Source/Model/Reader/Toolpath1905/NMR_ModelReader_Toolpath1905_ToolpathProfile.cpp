@@ -32,6 +32,7 @@ NMR_ModelReaderNode_Toolpath1905_ToolpathProfile.h covers the official 3MF Toolp
 --*/
 
 #include "Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathProfile.h"
+#include "Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathModifier.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
@@ -42,11 +43,12 @@ NMR_ModelReaderNode_Toolpath1905_ToolpathProfile.h covers the official 3MF Toolp
 
 namespace NMR {
 
-	CModelReaderNode_Toolpath1905_ToolpathProfile::CModelReaderNode_Toolpath1905_ToolpathProfile (_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
+	CModelReaderNode_Toolpath1905_ToolpathProfile::CModelReaderNode_Toolpath1905_ToolpathProfile(_In_ CModel* pModel, _In_ CModelToolpath* pToolpath, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings), 
 		m_bHasUUID (false),
 		m_bHasName (false),
-		m_pModel(pModel)
+		m_pModel(pModel),
+		m_pToolpath (pToolpath)
 
 	{
 	}
@@ -59,8 +61,12 @@ namespace NMR {
 		// Parse attribute
 		parseAttributes(pXMLReader);
 
+		// Create Profile object
+		createProfile(m_pToolpath);
+
 		// Parse Content
 		parseContent(pXMLReader);
+
 		
 	}
 
@@ -105,6 +111,18 @@ namespace NMR {
 	
 	void CModelReaderNode_Toolpath1905_ToolpathProfile::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
+
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_TOOLPATHSPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_TOOLPATHPROFILEMODIFIER) == 0) {
+
+				PModelReaderNode_Toolpath1905_ToolpathModifier pXMLNode = std::make_shared<CModelReaderNode_Toolpath1905_ToolpathModifier>(
+					m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		}
 	}
 	
 	void CModelReaderNode_Toolpath1905_ToolpathProfile::createProfile(CModelToolpath * pToolpath)
@@ -119,7 +137,7 @@ namespace NMR {
 		auto pProfile = pToolpath->addExistingProfile(m_sUUID, m_sName);
 
 		for (auto iter : m_Parameters) {
-			pProfile->addValue(iter.first.first, iter.first.second, iter.second);
+			pProfile->addValue(iter.first.first, iter.first.second, iter.second, true);
 		}
 
 	}

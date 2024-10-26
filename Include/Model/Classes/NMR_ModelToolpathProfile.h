@@ -75,7 +75,6 @@ namespace NMR {
 	class CModelToolpathProfileModifier {
 	private:
 		PModelToolpathProfileValue m_pValue;
-		double m_dBaseValue;		
 		double m_dDeltaValue;
 		eModelToolpathProfileOverrideFactor m_OverrideFactor;
 
@@ -85,10 +84,17 @@ namespace NMR {
 
 		virtual ~CModelToolpathProfileModifier();
 
-		double getBaseValue();
+		PModelToolpathProfileValue getBaseValue();
 
 		double evaluate (double dFactorF, double dFactorG, double dFactorH);
 
+		std::string getName();
+
+		std::string getNameSpace();
+
+		double getDeltaValue();
+
+		eModelToolpathProfileOverrideFactor getOverrideFactor ();
 	};
 
 	typedef std::shared_ptr<CModelToolpathProfileModifier> PModelToolpathProfileModifier;
@@ -101,6 +107,7 @@ namespace NMR {
 		std::vector<PModelToolpathProfileValue> m_ValueList;
 		std::map<std::pair<std::string, std::string>, PModelToolpathProfileValue> m_ValueMap;
 
+		std::vector<PModelToolpathProfileModifier> m_ModifierList;
 		std::map<std::pair<std::string, std::string>, PModelToolpathProfileModifier> m_ModifierMap;
 
 	public:
@@ -113,15 +120,27 @@ namespace NMR {
 
 		bool hasValue (const std::string & sNameSpace, const std::string & sValueName);
 		std::string getValue(const std::string& sNameSpace, const std::string& sValueName);
-		void addValue(const std::string& sNameSpace, const std::string& sValueName, const std::string & sValue);
 
-		void addModifier(const std::string& sNameSpace, const std::string& sValueName, double dDelta, eModelToolpathProfileOverrideFactor overrideFactor);
+		// If value does already exist, and failIfValueExists is false, the value and its potential modifier will be deleted first.
+		void addValue(const std::string& sNameSpace, const std::string& sValueName, const std::string & sValue, bool bFailIfValueExists);
 
 		uint32_t getParameterCount();
 		std::string getParameterName(const uint32_t nIndex);
 		std::string getParameterNameSpace(const uint32_t nIndex);
+		void removeParameter(const std::string& sNameSpace, const std::string& sValueName);
+		PModelToolpathProfileValue findParameter (const std::string& sNameSpace, const std::string& sValueName, bool bMustExist);
+
+		void addModifier(const std::string& sNameSpace, const std::string& sValueName, double dDelta, eModelToolpathProfileOverrideFactor overrideFactor);
+
+		uint32_t getModifierCount();
+		std::string getModifierName(const uint32_t nIndex);
+		std::string getModifierNameSpace(const uint32_t nIndex);
+		PModelToolpathProfileModifier getModifier(const uint32_t nIndex);
+		void removeModifier(const std::string& sNameSpace, const std::string& sValueName);
+		PModelToolpathProfileModifier findModifier(const std::string& sNameSpace, const std::string& sValueName, bool bMustExist);
 
 		std::vector<PModelToolpathProfileValue> & getValues ();
+		std::vector<PModelToolpathProfileModifier>& getModifiers();
 
 		double evaluate(const std::string& sNameSpace, const std::string& sValueName, double dFactorF, double dFactorG, double dFactorH);
 

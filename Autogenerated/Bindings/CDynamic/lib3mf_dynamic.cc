@@ -357,6 +357,16 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ToolpathProfile_SetParameterDoubleValue = NULL;
 	pWrapperTable->m_ToolpathProfile_SetParameterIntegerValue = NULL;
 	pWrapperTable->m_ToolpathProfile_SetParameterBoolValue = NULL;
+	pWrapperTable->m_ToolpathProfile_RemoveParameter = NULL;
+	pWrapperTable->m_ToolpathProfile_GetModifierCount = NULL;
+	pWrapperTable->m_ToolpathProfile_GetModifierNameByIndex = NULL;
+	pWrapperTable->m_ToolpathProfile_GetModifierNameSpaceByIndex = NULL;
+	pWrapperTable->m_ToolpathProfile_HasModifier = NULL;
+	pWrapperTable->m_ToolpathProfile_GetModifierInformationByIndex = NULL;
+	pWrapperTable->m_ToolpathProfile_GetModifierInformationByName = NULL;
+	pWrapperTable->m_ToolpathProfile_SetModifier = NULL;
+	pWrapperTable->m_ToolpathProfile_RemoveModifier = NULL;
+	pWrapperTable->m_ToolpathProfile_EvaluateDoubleValue = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetLayerDataUUID = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetCustomDataCount = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetCustomData = NULL;
@@ -3415,6 +3425,96 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ToolpathProfile_SetParameterBoolValue == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathProfile_RemoveParameter = (PLib3MFToolpathProfile_RemoveParameterPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_removeparameter");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathProfile_RemoveParameter = (PLib3MFToolpathProfile_RemoveParameterPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_removeparameter");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathProfile_RemoveParameter == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathProfile_GetModifierCount = (PLib3MFToolpathProfile_GetModifierCountPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getmodifiercount");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathProfile_GetModifierCount = (PLib3MFToolpathProfile_GetModifierCountPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getmodifiercount");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathProfile_GetModifierCount == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathProfile_GetModifierNameByIndex = (PLib3MFToolpathProfile_GetModifierNameByIndexPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getmodifiernamebyindex");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathProfile_GetModifierNameByIndex = (PLib3MFToolpathProfile_GetModifierNameByIndexPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getmodifiernamebyindex");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathProfile_GetModifierNameByIndex == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathProfile_GetModifierNameSpaceByIndex = (PLib3MFToolpathProfile_GetModifierNameSpaceByIndexPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getmodifiernamespacebyindex");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathProfile_GetModifierNameSpaceByIndex = (PLib3MFToolpathProfile_GetModifierNameSpaceByIndexPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getmodifiernamespacebyindex");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathProfile_GetModifierNameSpaceByIndex == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathProfile_HasModifier = (PLib3MFToolpathProfile_HasModifierPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_hasmodifier");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathProfile_HasModifier = (PLib3MFToolpathProfile_HasModifierPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_hasmodifier");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathProfile_HasModifier == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathProfile_GetModifierInformationByIndex = (PLib3MFToolpathProfile_GetModifierInformationByIndexPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getmodifierinformationbyindex");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathProfile_GetModifierInformationByIndex = (PLib3MFToolpathProfile_GetModifierInformationByIndexPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getmodifierinformationbyindex");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathProfile_GetModifierInformationByIndex == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathProfile_GetModifierInformationByName = (PLib3MFToolpathProfile_GetModifierInformationByNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_getmodifierinformationbyname");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathProfile_GetModifierInformationByName = (PLib3MFToolpathProfile_GetModifierInformationByNamePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_getmodifierinformationbyname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathProfile_GetModifierInformationByName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathProfile_SetModifier = (PLib3MFToolpathProfile_SetModifierPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_setmodifier");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathProfile_SetModifier = (PLib3MFToolpathProfile_SetModifierPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_setmodifier");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathProfile_SetModifier == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathProfile_RemoveModifier = (PLib3MFToolpathProfile_RemoveModifierPtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_removemodifier");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathProfile_RemoveModifier = (PLib3MFToolpathProfile_RemoveModifierPtr) dlsym(hLibrary, "lib3mf_toolpathprofile_removemodifier");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathProfile_RemoveModifier == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathProfile_EvaluateDoubleValue = (PLib3MFToolpathProfile_EvaluateDoubleValuePtr) GetProcAddress(hLibrary, "lib3mf_toolpathprofile_evaluatedoublevalue");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathProfile_EvaluateDoubleValue = (PLib3MFToolpathProfile_EvaluateDoubleValuePtr) dlsym(hLibrary, "lib3mf_toolpathprofile_evaluatedoublevalue");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathProfile_EvaluateDoubleValue == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

@@ -245,6 +245,14 @@
 		<option name="Integer" value="1" />
 		<option name="Double" value="2" />
 	</enum>
+	
+	<enum name="ToolpathProfileOverrideFactor">
+		<option name="Unknown" value="0" />
+		<option name="FactorF" value="1" />
+		<option name="FactorG" value="2" />
+		<option name="FactorH" value="3" />
+	</enum>
+	
 
 	<struct name="Triangle">
 		<member name="Indices" type="uint32" rows="3"/>
@@ -1579,86 +1587,148 @@
 			<param name="ValueExists" type="bool" pass="return" description="Returns if a value exists." />
 		</method>
 
-		<method name="GetParameterValue" description="Retrieves a profile's parameter value. Fails if value does not exist.">
+		<method name="GetParameterValue" description="Retrieves a profile's base parameter value without modifier. Fails if value does not exist.">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
-			<param name="Value" type="string" pass="return" description="Returns the value of the field." />
+			<param name="Value" type="string" pass="return" description="Returns the base value of the parameter." />
 		</method>
 
-		<method name="GetParameterValueDef" description="Retrieves a profile's parameter value">
+		<method name="GetParameterValueDef" description="Retrieves a profile's base parameter value without modifier">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
 			<param name="DefaultValue" type="string" pass="in" description="Default value if value does not exist." />
-			<param name="Value" type="string" pass="return" description="Returns the value of the field." />
+			<param name="Value" type="string" pass="return" description="Returns the base value of the parameter."  />
 		</method>
 
-		<method name="GetParameterDoubleValue" description="Retrieves a profile's parameter value as double. Fails if value does not exist or is not a double value.">
+		<method name="GetParameterDoubleValue" description="Retrieves a profile's base parameter value as double without modifier. Fails if value does not exist or is not a double value.">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
-			<param name="Value" type="double" pass="return" description="Returns the value of the field." />
+			<param name="Value" type="double" pass="return" description="Returns the base value of the parameter."  />
 		</method>
 
-		<method name="GetParameterDoubleValueDef" description="Retrieves a profile's parameter value as double.">
+		<method name="GetParameterDoubleValueDef" description="Retrieves a profile's base parameter value as double without modifier.">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
 			<param name="DefaultValue" type="double" pass="in" description="Default value if value does not exist or is not a double value." />
-			<param name="Value" type="double" pass="return" description="Returns the value of the field." />
+			<param name="Value" type="double" pass="return" description="Returns the base value of the parameter."  />
 		</method>
 
-		<method name="GetParameterIntegerValue" description="Retrieves a profile's parameter value as integer. Fails if value does not exist or is not a integer value.">
+		<method name="GetParameterIntegerValue" description="Retrieves a profile's base parameter value as integer without modifier. Fails if value does not exist or is not a integer value.">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
-			<param name="Value" type="int64" pass="return" description="Returns the value of the field." />
+			<param name="Value" type="int64" pass="return" description="Returns the base value of the parameter."  />
 		</method>
 
-		<method name="GetParameterIntegerValueDef" description="Retrieves a profile's parameter value as integer.">
+		<method name="GetParameterIntegerValueDef" description="Retrieves a profile's base parameter value as integer without modifier .">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
 			<param name="DefaultValue" type="int64" pass="in" description="Default value if value does not exist or is not a integer value." />
-			<param name="Value" type="int64" pass="return" description="Returns the value of the field." />
+			<param name="Value" type="int64" pass="return" description="Returns the base value of the parameter."  />
 		</method>
 		
-		<method name="GetParameterBoolValue" description="Retrieves a profile's parameter value as boolean. Fails if value does not exist or is not a boolean value.">
+		<method name="GetParameterBoolValue" description="Retrieves a profile's base parameter value as boolean without modifier. Fails if value does not exist or is not a boolean value.">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
-			<param name="Value" type="bool" pass="return" description="Returns the value of the field." />
+			<param name="Value" type="bool" pass="return" description="Returns the base value of the parameter."  />
 		</method>
 
-		<method name="GetParameterBoolValueDef" description="Retrieves a profile's parameter value as boolean.">
+		<method name="GetParameterBoolValueDef" description="Retrieves a profile's base parameter value as boolean without modifier.">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
 			<param name="DefaultValue" type="bool" pass="in" description="Default value if value does not exist or is not a boolean value." />
-			<param name="Value" type="bool" pass="return" description="Returns the value of the field." />
+			<param name="Value" type="bool" pass="return" description="Returns the base value of the parameter."  />
 		</method>
 		
 		<method name="SetName" description="Sets the profile's name">
 			<param name="Name" type="string" pass="in" description="Returns the name." />
 		</method>
 
-		<method name="SetParameterValue" description="Sets a profile's parameter value.">
+		<method name="SetParameterValue" description="Sets a profile's base parameter value. Fails, if parameter already exists.">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
 			<param name="Value" type="string" pass="in" description="String value of the parameter." />
 		</method>
 
-		<method name="SetParameterDoubleValue" description="Sets a profile's parameter value as double.">
+		<method name="SetParameterDoubleValue" description="Sets a profile's base parameter value as double. Fails, if parameter already exists.">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
 			<param name="Value" type="double" pass="in" description="Double value of the parameter." />
 		</method>
 
-
-		<method name="SetParameterIntegerValue" description="Sets a profile's parameter value as integer.">
+		<method name="SetParameterIntegerValue" description="Sets a profile's parameter value as integer. Fails, if parameter already exists.">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
 			<param name="Value" type="int64" pass="in" description="Integer value of the parameter." />
 		</method>
 
-		<method name="SetParameterBoolValue" description="Sets a profile's parameter value as boolean.">
+		<method name="SetParameterBoolValue" description="Sets a profile's parameter value as boolean. Fails, if parameter already exists.">
 			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
 			<param name="ValueName" type="string" pass="in" description="Value key string." />
 			<param name="Value" type="bool" pass="in" description="Boolean value of the parameter." />
 		</method>
+		
+		<method name="RemoveParameter" description="Removes a parameter, if it exists. Removes any associated modifier that exists.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Parameter key string." />
+		</method>
+		
+
+		<method name="GetModifierCount" description="Returns the number of modifiers.">
+			<param name="Count" type="uint32" pass="return" description="Returns the number of modifiers." />
+		</method>
+
+		<method name="GetModifierNameByIndex" description="Returns the Name of a modifier by its index.">
+			<param name="Index" type="uint32" pass="in" description="Index of modifier (0-based). Call will fail if an invalid index is given." />
+			<param name="Name" type="string" pass="return" description="Returns the name of the modifier." />
+		</method>
+
+		<method name="GetModifierNameSpaceByIndex" description="Returns the NameSpace of a modifier by its index.">
+			<param name="Index" type="uint32" pass="in" description="Index of modifier (0-based). Call will fail if an invalid index is given." />
+			<param name="NameSpace" type="string" pass="return" description="Returns the namespace of the modifier." />
+		</method>
+		
+		<method name="HasModifier" description="Checks if a modifier exists.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Parameter key string." />
+			<param name="ValueExists" type="bool" pass="return" description="Returns if a modifier exists." />
+		</method>
+
+		<method name="GetModifierInformationByIndex" description="Returns modifier by index.">
+			<param name="Index" type="uint32" pass="in" description="Index of modifier (0-based). Call will fail if an invalid index is given." />
+			<param name="NameSpaceName" type="string" pass="out" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="out" description="Parameter key string." />
+			<param name="OverrideFactor" type="enum" class="ToolpathProfileOverrideFactor" pass="out" description="which type of override factor to use." />
+			<param name="DeltaValue" type="double" pass="out" description="delta value." />
+		</method>
+
+		<method name="GetModifierInformationByName" description="Returns modifier by name.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Parameter key string." />
+			<param name="OverrideFactor" type="enum" class="ToolpathProfileOverrideFactor" pass="out" description="which type of override factor to use." />
+			<param name="DeltaValue" type="double" pass="out" description="delta value." />
+		</method>	
+
+		<method name="SetModifier" description="Adds a new modifier. Replaces the modifier, should it already exist with the same name. Fails if no Parameter exists with this name/namespace. Fails if the parameter does not have a Double value attached.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Parameter key string." />
+			<param name="OverrideFactor" type="enum" class="ToolpathProfileOverrideFactor" pass="in" description="which type of override factor to use." />
+			<param name="DeltaValue" type="double" pass="in" description="delta value." />
+		</method>
+
+		<method name="RemoveModifier" description="Removes a modifier, if it exists.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Parameter key string." />
+		</method>
+		
+		<method name="EvaluateDoubleValue" description="Evaluates a double parameter, taking an optional modifier into account. Fails if neither a parameter nor a modifier exists with this name/namespace.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Parameter key string." />
+			<param name="FactorF" type="double" pass="in" description="F Factor value (will be clipped between 0.0 and 1.0)" />
+			<param name="FactorG" type="double" pass="in" description="G Factor value (will be clipped between 0.0 and 1.0)" />
+			<param name="FactorH" type="double" pass="in" description="H Factor value (will be clipped between 0.0 and 1.0)" />
+			<param name="EvaluationResult" type="double" pass="return" description="Evaluation result." />
+		</method>
+
 
 	</class>
 

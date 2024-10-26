@@ -84,8 +84,6 @@ namespace NMR {
 	{
 		if (pValue.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		m_dBaseValue = m_pValue->getBaseDoubleValue();
 		
 	}
 
@@ -94,25 +92,49 @@ namespace NMR {
 
 	}
 
-	double CModelToolpathProfileModifier::getBaseValue()
+	PModelToolpathProfileValue CModelToolpathProfileModifier::getBaseValue()
 	{
-		return m_dBaseValue;
+		return m_pValue;
 	}
 
 	double CModelToolpathProfileModifier::evaluate(double dFactorF, double dFactorG, double dFactorH)
 	{
+
+		double dBaseValue = m_pValue->getBaseDoubleValue();
+
 		switch (m_OverrideFactor) {
 			case eModelToolpathProfileOverrideFactor::pfFactorF:
-				return m_dBaseValue + m_dDeltaValue * dFactorF;
+				return dBaseValue + m_dDeltaValue * dFactorF;
 			case eModelToolpathProfileOverrideFactor::pfFactorG:
-				return m_dBaseValue + m_dDeltaValue * dFactorG;
+				return dBaseValue + m_dDeltaValue * dFactorG;
 			case eModelToolpathProfileOverrideFactor::pfFactorH:
-				return m_dBaseValue + m_dDeltaValue * dFactorH;
+				return dBaseValue + m_dDeltaValue * dFactorH;
 
 			default:
-				return m_dBaseValue;
+				return dBaseValue;
 		}
 	}
+
+	std::string CModelToolpathProfileModifier::getName()
+	{
+		return m_pValue->getValueName();
+	}
+
+	std::string CModelToolpathProfileModifier::getNameSpace()
+	{
+		return m_pValue->getNameSpace();
+	}
+
+	double CModelToolpathProfileModifier::getDeltaValue()
+	{
+		return m_dDeltaValue;
+	}
+
+	eModelToolpathProfileOverrideFactor CModelToolpathProfileModifier::getOverrideFactor()
+	{
+		return m_OverrideFactor;
+	}
+
 
 
 	CModelToolpathProfile::CModelToolpathProfile(std::string sUUID, std::string sName)
@@ -157,6 +179,66 @@ namespace NMR {
 		return m_ValueList.at(nIndex)->getNameSpace ();
 	}
 
+	uint32_t CModelToolpathProfile::getModifierCount()
+	{
+		return (uint32_t)m_ModifierList.size();
+	}
+
+	std::string CModelToolpathProfile::getModifierName(const uint32_t nIndex)
+	{
+		if (nIndex >= m_ModifierList.size())
+			throw CNMRException(NMR_ERROR_INVALIDMODIFIERINDEX);
+
+		return m_ModifierList.at(nIndex)->getName();
+	}
+
+	std::string CModelToolpathProfile::getModifierNameSpace(const uint32_t nIndex)
+	{
+		if (nIndex >= m_ModifierList.size())
+			throw CNMRException(NMR_ERROR_INVALIDMODIFIERINDEX);
+
+		return m_ModifierList.at(nIndex)->getNameSpace();
+
+	}
+
+	PModelToolpathProfileModifier CModelToolpathProfile::getModifier(const uint32_t nIndex)
+	{
+		if (nIndex >= m_ModifierList.size())
+			throw CNMRException(NMR_ERROR_INVALIDMODIFIERINDEX);
+
+		return m_ModifierList.at(nIndex);
+	}
+
+	void CModelToolpathProfile::removeModifier(const std::string& sNameSpace, const std::string& sValueName)
+	{
+		auto key = std::make_pair(sNameSpace, sValueName);
+
+		auto iModifierIter = m_ModifierMap.find(key);
+		if (iModifierIter != m_ModifierMap.end()) {
+			auto pOldModifier = iModifierIter->second;
+			m_ModifierMap.erase(iModifierIter);
+			m_ModifierList.erase(std::remove(m_ModifierList.begin(), m_ModifierList.end(), pOldModifier));
+		}
+
+	}
+
+	PModelToolpathProfileModifier CModelToolpathProfile::findModifier(const std::string& sNameSpace, const std::string& sValueName, bool bMustExist)
+	{
+		auto key = std::make_pair(sNameSpace, sValueName);
+
+		auto iModifierIter = m_ModifierMap.find(key);
+		if (iModifierIter == m_ModifierMap.end()) {
+			if (bMustExist)
+				throw CNMRException(NMR_ERROR_PROFILEMODIFIERNOTFOUND);
+
+			return nullptr;
+		}
+
+		return iModifierIter->second;
+
+	}
+
+
 	bool CModelToolpathProfile::hasValue(const std::string& sNameSpace, const std::string& sValueName)
 	{
 		auto iter = m_ValueMap.find(std::make_pair (sNameSpace, sValueName));
@@ -172,19 +254,66 @@ namespace NMR {
 		return iter->second->getValue ();
 	}
 
-	void CModelToolpathProfile::addValue(const std::string& sNameSpace, const std::string& sValueName, const std::string& sValue)
+	void CModelToolpathProfile::addValue(const std::string& sNameSpace, const std::string& sValueName, const std::string& sValue, bool bFailIfValueExists)
 	{
 		if (m_ValueList.size () >= MODELTOOLPATH_MAXCOUNT)
 			throw CNMRException(NMR_ERROR_TOOMANYPROFILEVALUES);
 
 		auto key = std::make_pair(sNameSpace, sValueName);
 		auto iIter = m_ValueMap.find(key);
-		if (iIter != m_ValueMap.end ())
-			throw CNMRException(NMR_ERROR_DUPLICATEPROFILEVALUE);
+		if (iIter != m_ValueMap.end()) {
+			if (bFailIfValueExists)
+				throw CNMRException(NMR_ERROR_DUPLICATEPROFILEVALUE);
+
+			auto pOldValue = iIter->second;
+			m_ValueMap.erase(iIter);
+			m_ValueList.erase(std::remove(m_ValueList.begin(), m_ValueList.end(), pOldValue));
+		}
+
+		auto iModifierIter = m_ModifierMap.find(key);
+		if (iModifierIter != m_ModifierMap.end()) {
+			auto pOldModifier = iModifierIter->second;
+			m_ModifierMap.erase(iModifierIter);
+			m_ModifierList.erase(std::remove(m_ModifierList.begin(), m_ModifierList.end(), pOldModifier));
+		}
 
 		auto pValue = std::make_shared<CModelToolpathProfileValue>(sNameSpace, sValueName, sValue);
 		m_ValueMap.insert(std::make_pair (key, pValue));
 		m_ValueList.push_back (pValue);
+	}
+
+	void CModelToolpathProfile::removeParameter(const std::string& sNameSpace, const std::string& sValueName)
+	{
+		auto key = std::make_pair(sNameSpace, sValueName);
+
+		auto iModifierIter = m_ModifierMap.find(key);
+		if (iModifierIter != m_ModifierMap.end()) {
+			auto pOldModifier = iModifierIter->second;
+			m_ModifierMap.erase(iModifierIter);
+			m_ModifierList.erase(std::remove(m_ModifierList.begin(), m_ModifierList.end(), pOldModifier));
+		}
+
+		auto iIter = m_ValueMap.find(key);
+		if (iIter != m_ValueMap.end()) {
+			auto pOldValue = iIter->second;
+			m_ValueMap.erase(iIter);
+			m_ValueList.erase(std::remove(m_ValueList.begin(), m_ValueList.end(), pOldValue));
+		}
+
+	}
+
+	PModelToolpathProfileValue CModelToolpathProfile::findParameter(const std::string& sNameSpace, const std::string& sValueName, bool bMustExist)
+	{
+		auto key = std::make_pair(sNameSpace, sValueName);
+		auto iIter = m_ValueMap.find(key);
+		if (iIter == m_ValueMap.end()) {
+			if (bMustExist)
+				throw CNMRException(NMR_ERROR_PROFILEVALUENOTFOUND);
+
+			return nullptr;
+		}
+
+		return iIter->second;
 	}
 
 	void CModelToolpathProfile::addModifier(const std::string& sNameSpace, const std::string& sValueName, double dDelta, eModelToolpathProfileOverrideFactor overrideFactor)
@@ -203,6 +332,7 @@ namespace NMR {
 		auto pModifier = std::make_shared<CModelToolpathProfileModifier>(pValue, dDelta, overrideFactor);
 
 		m_ModifierMap.insert (std::make_pair (key, pModifier));
+		m_ModifierList.push_back (pModifier);
 
 	}
 
@@ -211,6 +341,12 @@ namespace NMR {
 	{
 		return m_ValueList;
 	}
+
+	std::vector<PModelToolpathProfileModifier>& CModelToolpathProfile::getModifiers()
+	{
+		return m_ModifierList;
+	}
+
 
 	double CModelToolpathProfile::evaluate(const std::string& sNameSpace, const std::string& sValueName, double dFactorF, double dFactorG, double dFactorH)
 	{

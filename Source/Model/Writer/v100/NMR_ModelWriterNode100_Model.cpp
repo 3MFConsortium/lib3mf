@@ -1010,6 +1010,42 @@ namespace NMR {
 						}
 					}
 
+					auto modifiers = pProfile->getModifiers();
+					for (auto modifier : modifiers) {
+						writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHPROFILEMODIFIER, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+						std::string sName = modifier->getName();
+						std::string sNameSpace = modifier->getNameSpace();
+						if (sNameSpace.empty()) {
+							writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHMODIFIER_ATTRIBUTE, sName);
+						} else {
+
+							std::string sPrefix;
+							if (m_pXMLWriter->GetNamespacePrefix(sNameSpace, sPrefix)) {
+								writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHMODIFIER_ATTRIBUTE, sPrefix + ":" + sName);
+							}
+							else {
+								throw CNMRException(NMR_ERROR_PROFILENAMESPACENOTREGISTERED);
+							}
+						}
+
+						writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATHMODIFIER_DELTA, (float) modifier->getDeltaValue ());
+						switch (modifier->getOverrideFactor()) {
+							case NMR::eModelToolpathProfileOverrideFactor::pfFactorF:
+								writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHMODIFIER_FACTOR, "f");
+								break;
+							case NMR::eModelToolpathProfileOverrideFactor::pfFactorG:
+								writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHMODIFIER_FACTOR, "g");
+								break;
+							case NMR::eModelToolpathProfileOverrideFactor::pfFactorH:
+								writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHMODIFIER_FACTOR, "");
+								break;
+
+							// For unknown, do not write the factor attribute
+						}
+
+						writeEndElement();
+					}
+
 					writeEndElement();
 
 				}
