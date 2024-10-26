@@ -1696,4 +1696,7 @@ Toolpath errors (0xBXXX)
 // Invalid profile modifier namespace
 #define NMR_ERROR_INVALIDPROFILEMODIFIERNAMESPACE 0xB02A
 
+// Toolpath profile not created
+#define NMR_ERROR_TOOLPATHPROFILENOTCREATED 0xB02B
+
 #endif // __NMR_ERRORCONST

@@ -45,6 +45,7 @@ namespace NMR {
 	private:
 		CModel * m_pModel;
 		CModelToolpath* m_pToolpath;
+		PModelToolpathProfile m_pProfile;
 		PModelWarnings m_pWarnings;
 
 		nfBool m_bHasUUID;

@@ -119,6 +119,11 @@ namespace NMR {
 					m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
+				if (m_pProfile.get() == nullptr)
+					throw CNMRException(NMR_ERROR_TOOLPATHPROFILENOTCREATED);
+
+				pXMLNode->addToProfile(m_pProfile.get(), pXMLReader);
+
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
@@ -134,10 +139,10 @@ namespace NMR {
 		if (!m_bHasName)
 			throw CNMRException(NMR_ERROR_MISSINGNAME);
 
-		auto pProfile = pToolpath->addExistingProfile(m_sUUID, m_sName);
+		m_pProfile = pToolpath->addExistingProfile(m_sUUID, m_sName);
 
 		for (auto iter : m_Parameters) {
-			pProfile->addValue(iter.first.first, iter.first.second, iter.second, true);
+			m_pProfile->addValue(iter.first.first, iter.first.second, iter.second, true);
 		}
 
 	}

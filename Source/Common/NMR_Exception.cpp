@@ -592,6 +592,7 @@ namespace NMR {
 		case NMR_ERROR_MISSINGMODIFIERPROFILEDELTA: return "Missing modifier profile delta";
 		case NMR_ERROR_EMPTYMODIFIERPROFILEATTRIBUTE: return "Empty modifier profile attribute";
 		case NMR_ERROR_INVALIDPROFILEMODIFIERNAMESPACE: return "Invalid profile modifier namespace";
+		case NMR_ERROR_TOOLPATHPROFILENOTCREATED: return "Toolpath profile not created";
 
 		default:
 			return "unknown error";
