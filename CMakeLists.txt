@@ -6,12 +6,17 @@ cmake_policy(SET CMP0048 NEW)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-if (CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
-    set(CMAKE_CXX_COMPILER_WORKS TRUE)
-    set(CMAKE_C_COMPILER_WORKS TRUE)
-    set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
-    set(VCPKG_TARGET_TRIPLET wasm32-emscripten)
-endif()
+set(CMAKE_CXX_COMPILER_WORKS TRUE)
+set(CMAKE_C_COMPILER_WORKS TRUE)
+set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+set(VCPKG_TARGET_TRIPLET wasm32-emscripten)
+
+# if (CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+#     set(CMAKE_CXX_COMPILER_WORKS TRUE)
+#     set(CMAKE_C_COMPILER_WORKS TRUE)
+#     set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+#     set(VCPKG_TARGET_TRIPLET wasm32-emscripten)
+# endif()
 
 # Automatically set the vcpkg toolchain file if vcpkg exists as a submodule
 if (EXISTS "${CMAKE_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake")
