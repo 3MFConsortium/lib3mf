@@ -3159,6 +3159,15 @@ Lib3MFResult CCall_lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid(Lib
 }
 
 
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_segmenthasoverridefactors(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, eLib3MFToolpathProfileOverrideFactor eOverrideFactor, bool * pHasOverrides)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_SegmentHasOverrideFactors (pToolpathLayerReader, nSegmentIndex, eOverrideFactor, pHasOverrides);
+}
+
+
 Lib3MFResult CCall_lib3mf_toolpathlayerreader_segmenthasuniformprofile(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasUniformProfile)
 {
 	if (libraryHandle == 0) 
@@ -3186,6 +3195,15 @@ Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(Lib3MF
 }
 
 
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentpointoverridefactors(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, eLib3MFToolpathProfileOverrideFactor eOverrideFactor, const Lib3MF_uint64 nFactorValuesBufferSize, Lib3MF_uint64* pFactorValuesNeededCount, Lib3MF_double * pFactorValuesBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentPointOverrideFactors (pToolpathLayerReader, nSegmentIndex, eOverrideFactor, nFactorValuesBufferSize, pFactorValuesNeededCount, pFactorValuesBuffer);
+}
+
+
 Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, sLib3MFHatch2D * pHatchDataBuffer)
 {
 	if (libraryHandle == 0) 
@@ -3201,6 +3219,15 @@ Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(Lib3MF
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataDiscrete (pToolpathLayerReader, nSegmentIndex, nHatchDataBufferSize, pHatchDataNeededCount, pHatchDataBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, eLib3MFToolpathProfileOverrideFactor eOverrideFactor, const Lib3MF_uint64 nFactorValuesBufferSize, Lib3MF_uint64* pFactorValuesNeededCount, sLib3MFHatch2DOverrides * pFactorValuesBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentHatchOverrideFactors (pToolpathLayerReader, nSegmentIndex, eOverrideFactor, nFactorValuesBufferSize, pFactorValuesNeededCount, pFactorValuesBuffer);
 }
 
 
@@ -5238,6 +5265,12 @@ type Hatch2D struct {
 	Point1Coordinates[2] float64
 	Point2Coordinates[2] float64
 	Tag int32
+}
+
+// Hatch2DOverrides represents a Lib3MF struct.
+type Hatch2DOverrides struct {
+	Point1Override float64
+	Point2Override float64
 }
 
 // DiscreteHatch2D represents a Lib3MF struct.
@@ -9855,7 +9888,17 @@ func (inst ToolpathLayerReader) GetProfileUUIDByLocalProfileID(localProfileID ui
 	return string(bufferprofileUUID[:(filledinprofileUUID-1)]), nil
 }
 
-// SegmentHasUniformProfile returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. If it is not uniform, the type specific retrieval functions have to be used (or the file has to be rejected). Returns false for delay and sync segments.
+// SegmentHasOverrideFactors retrieves if the segment has specific override factors attached.
+func (inst ToolpathLayerReader) SegmentHasOverrideFactors(segmentIndex uint32, overrideFactor ToolpathProfileOverrideFactor) (bool, error) {
+	var hasOverrides C.bool
+	ret := C.CCall_lib3mf_toolpathlayerreader_segmenthasoverridefactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), C.eLib3MFToolpathProfileOverrideFactor(overrideFactor), &hasOverrides)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(hasOverrides), nil
+}
+
+// SegmentHasUniformProfile returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. If it is not uniform, the type specific retrieval functions have to be used (or the file has to be rejected). Returns false for delay and sync segments. The call is equivalent to SegmentHasOverrideFactors returning false with any possible type (F, G, H).
 func (inst ToolpathLayerReader) SegmentHasUniformProfile(segmentIndex uint32) (bool, error) {
 	var hasUniformProfile C.bool
 	ret := C.CCall_lib3mf_toolpathlayerreader_segmenthasuniformprofile(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), &hasUniformProfile)
@@ -9899,6 +9942,23 @@ func (inst ToolpathLayerReader) GetSegmentPointDataDiscrete(segmentIndex uint32,
 	return pointData[:int(neededforpointData)], nil
 }
 
+// GetSegmentPointOverrideFactors retrieves the assigned segment override factors. Fails if segment type is not loop or polyline. The values are per point, meaning that gradients are given through linear ramping on the polyline vectors.
+func (inst ToolpathLayerReader) GetSegmentPointOverrideFactors(segmentIndex uint32, overrideFactor ToolpathProfileOverrideFactor, factorValues []float64) ([]float64, error) {
+	var neededforfactorValues C.uint64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentpointoverridefactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), C.eLib3MFToolpathProfileOverrideFactor(overrideFactor), 0, &neededforfactorValues, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(factorValues) < int(neededforfactorValues) {
+	 factorValues = append(factorValues, make([]float64, int(neededforfactorValues)-len(factorValues))...)
+	}
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentpointoverridefactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), C.eLib3MFToolpathProfileOverrideFactor(overrideFactor), neededforfactorValues, nil, (*C.double)(unsafe.Pointer(&factorValues[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return factorValues[:int(neededforfactorValues)], nil
+}
+
 // GetSegmentHatchDataInModelUnits retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
 func (inst ToolpathLayerReader) GetSegmentHatchDataInModelUnits(segmentIndex uint32, hatchData []Hatch2D) ([]Hatch2D, error) {
 	var neededforhatchData C.uint64_t
@@ -9931,6 +9991,23 @@ func (inst ToolpathLayerReader) GetSegmentHatchDataDiscrete(segmentIndex uint32,
 		return nil, makeError(uint32(ret))
 	}
 	return hatchData[:int(neededforhatchData)], nil
+}
+
+// GetSegmentHatchOverrideFactors retrieves the assigned segment override factors. Fails if segment type is not hatch. The call will return two values per hatch, one per hatch point.
+func (inst ToolpathLayerReader) GetSegmentHatchOverrideFactors(segmentIndex uint32, overrideFactor ToolpathProfileOverrideFactor, factorValues []Hatch2DOverrides) ([]Hatch2DOverrides, error) {
+	var neededforfactorValues C.uint64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), C.eLib3MFToolpathProfileOverrideFactor(overrideFactor), 0, &neededforfactorValues, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(factorValues) < int(neededforfactorValues) {
+	 factorValues = append(factorValues, make([]Hatch2DOverrides, int(neededforfactorValues)-len(factorValues))...)
+	}
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), C.eLib3MFToolpathProfileOverrideFactor(overrideFactor), neededforfactorValues, nil, (*C.sLib3MFHatch2DOverrides)(unsafe.Pointer(&factorValues[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return factorValues[:int(neededforfactorValues)], nil
 }
 
 

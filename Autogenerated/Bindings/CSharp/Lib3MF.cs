@@ -234,6 +234,12 @@ namespace Lib3MF {
 		public Int32 Tag;
 	}
 
+	public struct sHatch2DOverrides
+	{
+		public Double Point1Override;
+		public Double Point2Override;
+	}
+
 	public struct sDiscreteHatch2D
 	{
 		public Int32[] Point1Coordinates;
@@ -331,6 +337,13 @@ namespace Lib3MF {
 			[FieldOffset(0)] public fixed Double Point1Coordinates[2];
 			[FieldOffset(16)] public fixed Double Point2Coordinates[2];
 			[FieldOffset(32)] public Int32 Tag;
+		}
+
+		[StructLayout(LayoutKind.Explicit, Size=16)]
+		public unsafe struct InternalHatch2DOverrides
+		{
+			[FieldOffset(0)] public Double Point1Override;
+			[FieldOffset(8)] public Double Point2Override;
 		}
 
 		[StructLayout(LayoutKind.Explicit, Size=20)]
@@ -1431,6 +1444,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_GetProfileUUIDByLocalProfileID (IntPtr Handle, UInt32 ALocalProfileID, UInt32 sizeProfileUUID, out UInt32 neededProfileUUID, IntPtr dataProfileUUID);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_segmenthasoverridefactors", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_SegmentHasOverrideFactors (IntPtr Handle, UInt32 ASegmentIndex, Int32 AOverrideFactor, out Byte AHasOverrides);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_segmenthasuniformprofile", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_SegmentHasUniformProfile (IntPtr Handle, UInt32 ASegmentIndex, out Byte AHasUniformProfile);
 
@@ -1440,11 +1456,17 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentPointDataDiscrete (IntPtr Handle, UInt32 ASegmentIndex, UInt64 sizePointData, out UInt64 neededPointData, IntPtr dataPointData);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentpointoverridefactors", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentPointOverrideFactors (IntPtr Handle, UInt32 ASegmentIndex, Int32 AOverrideFactor, UInt64 sizeFactorValues, out UInt64 neededFactorValues, IntPtr dataFactorValues);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentHatchDataInModelUnits (IntPtr Handle, UInt32 ASegmentIndex, UInt64 sizeHatchData, out UInt64 neededHatchData, IntPtr dataHatchData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentHatchDataDiscrete (IntPtr Handle, UInt32 ASegmentIndex, UInt64 sizeHatchData, out UInt64 neededHatchData, IntPtr dataHatchData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentHatchOverrideFactors (IntPtr Handle, UInt32 ASegmentIndex, Int32 AOverrideFactor, UInt64 sizeFactorValues, out UInt64 neededFactorValues, IntPtr dataFactorValues);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_getlayerdatauuid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerData_GetLayerDataUUID (IntPtr Handle, UInt32 sizeUUID, out UInt32 neededUUID, IntPtr dataUUID);
@@ -2171,6 +2193,22 @@ namespace Lib3MF {
 
 				intHatch2D.Tag = Hatch2D.Tag;
 				return intHatch2D;
+			}
+
+			public unsafe static sHatch2DOverrides convertInternalToStruct_Hatch2DOverrides (InternalHatch2DOverrides intHatch2DOverrides)
+			{
+				sHatch2DOverrides Hatch2DOverrides;
+				Hatch2DOverrides.Point1Override = intHatch2DOverrides.Point1Override;
+				Hatch2DOverrides.Point2Override = intHatch2DOverrides.Point2Override;
+				return Hatch2DOverrides;
+			}
+
+			public unsafe static InternalHatch2DOverrides convertStructToInternal_Hatch2DOverrides (sHatch2DOverrides Hatch2DOverrides)
+			{
+				InternalHatch2DOverrides intHatch2DOverrides;
+				intHatch2DOverrides.Point1Override = Hatch2DOverrides.Point1Override;
+				intHatch2DOverrides.Point2Override = Hatch2DOverrides.Point2Override;
+				return intHatch2DOverrides;
 			}
 
 			public unsafe static sDiscreteHatch2D convertInternalToStruct_DiscreteHatch2D (InternalDiscreteHatch2D intDiscreteHatch2D)
@@ -6003,6 +6041,15 @@ namespace Lib3MF {
 			return Encoding.UTF8.GetString(bytesProfileUUID).TrimEnd(char.MinValue);
 		}
 
+		public bool SegmentHasOverrideFactors (UInt32 ASegmentIndex, eToolpathProfileOverrideFactor AOverrideFactor)
+		{
+			Int32 enumOverrideFactor = (Int32) AOverrideFactor;
+			Byte resultHasOverrides = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_SegmentHasOverrideFactors (Handle, ASegmentIndex, enumOverrideFactor, out resultHasOverrides));
+			return (resultHasOverrides != 0);
+		}
+
 		public bool SegmentHasUniformProfile (UInt32 ASegmentIndex)
 		{
 			Byte resultHasUniformProfile = 0;
@@ -6043,6 +6090,20 @@ namespace Lib3MF {
 				APointData[index] = Internal.Lib3MFWrapper.convertInternalToStruct_DiscretePosition2D(arrayPointData[index]);
 		}
 
+		public void GetSegmentPointOverrideFactors (UInt32 ASegmentIndex, eToolpathProfileOverrideFactor AOverrideFactor, out Double[] AFactorValues)
+		{
+			Int32 enumOverrideFactor = (Int32) AOverrideFactor;
+			UInt64 sizeFactorValues = 0;
+			UInt64 neededFactorValues = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentPointOverrideFactors (Handle, ASegmentIndex, enumOverrideFactor, sizeFactorValues, out neededFactorValues, IntPtr.Zero));
+			sizeFactorValues = neededFactorValues;
+			AFactorValues = new Double[sizeFactorValues];
+			GCHandle dataFactorValues = GCHandle.Alloc(AFactorValues, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentPointOverrideFactors (Handle, ASegmentIndex, enumOverrideFactor, sizeFactorValues, out neededFactorValues, dataFactorValues.AddrOfPinnedObject()));
+			dataFactorValues.Free();
+		}
+
 		public void GetSegmentHatchDataInModelUnits (UInt32 ASegmentIndex, out sHatch2D[] AHatchData)
 		{
 			UInt64 sizeHatchData = 0;
@@ -6073,6 +6134,23 @@ namespace Lib3MF {
 			AHatchData = new sDiscreteHatch2D[sizeHatchData];
 			for (int index = 0; index < AHatchData.Length; index++)
 				AHatchData[index] = Internal.Lib3MFWrapper.convertInternalToStruct_DiscreteHatch2D(arrayHatchData[index]);
+		}
+
+		public void GetSegmentHatchOverrideFactors (UInt32 ASegmentIndex, eToolpathProfileOverrideFactor AOverrideFactor, out sHatch2DOverrides[] AFactorValues)
+		{
+			Int32 enumOverrideFactor = (Int32) AOverrideFactor;
+			UInt64 sizeFactorValues = 0;
+			UInt64 neededFactorValues = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentHatchOverrideFactors (Handle, ASegmentIndex, enumOverrideFactor, sizeFactorValues, out neededFactorValues, IntPtr.Zero));
+			sizeFactorValues = neededFactorValues;
+			var arrayFactorValues = new Internal.InternalHatch2DOverrides[sizeFactorValues];
+			GCHandle dataFactorValues = GCHandle.Alloc(arrayFactorValues, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentHatchOverrideFactors (Handle, ASegmentIndex, enumOverrideFactor, sizeFactorValues, out neededFactorValues, dataFactorValues.AddrOfPinnedObject()));
+			dataFactorValues.Free();
+			AFactorValues = new sHatch2DOverrides[sizeFactorValues];
+			for (int index = 0; index < AFactorValues.Length; index++)
+				AFactorValues[index] = Internal.Lib3MFWrapper.convertInternalToStruct_Hatch2DOverrides(arrayFactorValues[index]);
 		}
 
 	}

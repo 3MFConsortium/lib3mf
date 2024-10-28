@@ -13347,6 +13347,42 @@ Lib3MFResult lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid(Lib3MF_To
 	}
 }
 
+Lib3MFResult lib3mf_toolpathlayerreader_segmenthasoverridefactors(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, eLib3MFToolpathProfileOverrideFactor eOverrideFactor, bool * pHasOverrides)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "SegmentHasOverrideFactors");
+			pJournalEntry->addUInt32Parameter("SegmentIndex", nSegmentIndex);
+			pJournalEntry->addEnumParameter("OverrideFactor", "ToolpathProfileOverrideFactor", (Lib3MF_int32)(eOverrideFactor));
+		}
+		if (pHasOverrides == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pHasOverrides = pIToolpathLayerReader->SegmentHasOverrideFactors(nSegmentIndex, eOverrideFactor);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasOverrides", *pHasOverrides);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_toolpathlayerreader_segmenthasuniformprofile(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasUniformProfile)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
@@ -13450,6 +13486,41 @@ Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete(Lib3MF_Toolp
 	}
 }
 
+Lib3MFResult lib3mf_toolpathlayerreader_getsegmentpointoverridefactors(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, eLib3MFToolpathProfileOverrideFactor eOverrideFactor, const Lib3MF_uint64 nFactorValuesBufferSize, Lib3MF_uint64* pFactorValuesNeededCount, Lib3MF_double * pFactorValuesBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentPointOverrideFactors");
+			pJournalEntry->addUInt32Parameter("SegmentIndex", nSegmentIndex);
+			pJournalEntry->addEnumParameter("OverrideFactor", "ToolpathProfileOverrideFactor", (Lib3MF_int32)(eOverrideFactor));
+		}
+		if ((!pFactorValuesBuffer) && !(pFactorValuesNeededCount))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerReader->GetSegmentPointOverrideFactors(nSegmentIndex, eOverrideFactor, nFactorValuesBufferSize, pFactorValuesNeededCount, pFactorValuesBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, sLib3MFHatch2D * pHatchDataBuffer)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
@@ -13501,6 +13572,41 @@ Lib3MFResult lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(Lib3MF_Toolp
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pIToolpathLayerReader->GetSegmentHatchDataDiscrete(nSegmentIndex, nHatchDataBufferSize, pHatchDataNeededCount, pHatchDataBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, eLib3MFToolpathProfileOverrideFactor eOverrideFactor, const Lib3MF_uint64 nFactorValuesBufferSize, Lib3MF_uint64* pFactorValuesNeededCount, sLib3MFHatch2DOverrides * pFactorValuesBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentHatchOverrideFactors");
+			pJournalEntry->addUInt32Parameter("SegmentIndex", nSegmentIndex);
+			pJournalEntry->addEnumParameter("OverrideFactor", "ToolpathProfileOverrideFactor", (Lib3MF_int32)(eOverrideFactor));
+		}
+		if ((!pFactorValuesBuffer) && !(pFactorValuesNeededCount))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerReader->GetSegmentHatchOverrideFactors(nSegmentIndex, eOverrideFactor, nFactorValuesBufferSize, pFactorValuesNeededCount, pFactorValuesBuffer);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -21089,16 +21195,22 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentdefaultprofileid;
 	if (sProcName == "lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid;
+	if (sProcName == "lib3mf_toolpathlayerreader_segmenthasoverridefactors") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_segmenthasoverridefactors;
 	if (sProcName == "lib3mf_toolpathlayerreader_segmenthasuniformprofile") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_segmenthasuniformprofile;
 	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits;
 	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete;
+	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentpointoverridefactors") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentpointoverridefactors;
 	if (sProcName == "lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits;
 	if (sProcName == "lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete;
+	if (sProcName == "lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors;
 	if (sProcName == "lib3mf_toolpathlayerdata_getlayerdatauuid") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_getlayerdatauuid;
 	if (sProcName == "lib3mf_toolpathlayerdata_registerprofile") 

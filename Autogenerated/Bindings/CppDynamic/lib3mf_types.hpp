@@ -488,6 +488,11 @@ namespace Lib3MF {
       Lib3MF_int32 m_Tag;
   } sHatch2D;
   
+  typedef struct sHatch2DOverrides {
+      Lib3MF_double m_Point1Override;
+      Lib3MF_double m_Point2Override;
+  } sHatch2DOverrides;
+  
   typedef struct sDiscreteHatch2D {
       Lib3MF_int32 m_Point1Coordinates[2];
       Lib3MF_int32 m_Point2Coordinates[2];
@@ -647,6 +652,7 @@ typedef Lib3MF::sPosition sLib3MFPosition;
 typedef Lib3MF::sPosition2D sLib3MFPosition2D;
 typedef Lib3MF::sDiscretePosition2D sLib3MFDiscretePosition2D;
 typedef Lib3MF::sHatch2D sLib3MFHatch2D;
+typedef Lib3MF::sHatch2DOverrides sLib3MFHatch2DOverrides;
 typedef Lib3MF::sDiscreteHatch2D sLib3MFDiscreteHatch2D;
 typedef Lib3MF::sCompositeConstituent sLib3MFCompositeConstituent;
 typedef Lib3MF::sMultiPropertyLayer sLib3MFMultiPropertyLayer;

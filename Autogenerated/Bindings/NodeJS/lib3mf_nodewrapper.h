@@ -1116,11 +1116,14 @@ private:
 	static void GetSegmentDefaultProfileUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentDefaultProfileID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetProfileUUIDByLocalProfileID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SegmentHasOverrideFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SegmentHasUniformProfile(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentPointDataInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentPointDataDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentPointOverrideFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentHatchDataInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentHatchDataDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentHatchOverrideFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFToolpathLayerReader();

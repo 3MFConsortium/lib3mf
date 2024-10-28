@@ -1737,11 +1737,14 @@ public:
 	inline std::string GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nSegmentIndex);
 	inline Lib3MF_uint32 GetSegmentDefaultProfileID(const Lib3MF_uint32 nSegmentIndex);
 	inline std::string GetProfileUUIDByLocalProfileID(const Lib3MF_uint32 nLocalProfileID);
+	inline bool SegmentHasOverrideFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileOverrideFactor eOverrideFactor);
 	inline bool SegmentHasUniformProfile(const Lib3MF_uint32 nSegmentIndex);
 	inline void GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nSegmentIndex, std::vector<sPosition2D> & PointDataBuffer);
 	inline void GetSegmentPointDataDiscrete(const Lib3MF_uint32 nSegmentIndex, std::vector<sDiscretePosition2D> & PointDataBuffer);
+	inline void GetSegmentPointOverrideFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileOverrideFactor eOverrideFactor, std::vector<Lib3MF_double> & FactorValuesBuffer);
 	inline void GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nSegmentIndex, std::vector<sHatch2D> & HatchDataBuffer);
 	inline void GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nSegmentIndex, std::vector<sDiscreteHatch2D> & HatchDataBuffer);
+	inline void GetSegmentHatchOverrideFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileOverrideFactor eOverrideFactor, std::vector<sHatch2DOverrides> & FactorValuesBuffer);
 };
 	
 /*************************************************************************************************************************
@@ -2795,11 +2798,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfileUUID = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfileID = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetProfileUUIDByLocalProfileID = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_SegmentHasOverrideFactors = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_SegmentHasUniformProfile = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentPointDataInModelUnits = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentPointDataDiscrete = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentPointOverrideFactors = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataInModelUnits = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataDiscrete = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentHatchOverrideFactors = nullptr;
 		pWrapperTable->m_ToolpathLayerData_GetLayerDataUUID = nullptr;
 		pWrapperTable->m_ToolpathLayerData_RegisterProfile = nullptr;
 		pWrapperTable->m_ToolpathLayerData_RegisterBuildItem = nullptr;
@@ -6134,6 +6140,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_SegmentHasOverrideFactors = (PLib3MFToolpathLayerReader_SegmentHasOverrideFactorsPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_segmenthasoverridefactors");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_SegmentHasOverrideFactors = (PLib3MFToolpathLayerReader_SegmentHasOverrideFactorsPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_segmenthasoverridefactors");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_SegmentHasOverrideFactors == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ToolpathLayerReader_SegmentHasUniformProfile = (PLib3MFToolpathLayerReader_SegmentHasUniformProfilePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_segmenthasuniformprofile");
 		#else // _WIN32
 		pWrapperTable->m_ToolpathLayerReader_SegmentHasUniformProfile = (PLib3MFToolpathLayerReader_SegmentHasUniformProfilePtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_segmenthasuniformprofile");
@@ -6161,6 +6176,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentPointOverrideFactors = (PLib3MFToolpathLayerReader_GetSegmentPointOverrideFactorsPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentpointoverridefactors");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentPointOverrideFactors = (PLib3MFToolpathLayerReader_GetSegmentPointOverrideFactorsPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentpointoverridefactors");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentPointOverrideFactors == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataInModelUnits = (PLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits");
 		#else // _WIN32
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataInModelUnits = (PLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits");
@@ -6176,6 +6200,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataDiscrete == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentHatchOverrideFactors = (PLib3MFToolpathLayerReader_GetSegmentHatchOverrideFactorsPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentHatchOverrideFactors = (PLib3MFToolpathLayerReader_GetSegmentHatchOverrideFactorsPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentHatchOverrideFactors == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -9330,6 +9363,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetProfileUUIDByLocalProfileID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_segmenthasoverridefactors", (void**)&(pWrapperTable->m_ToolpathLayerReader_SegmentHasOverrideFactors));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_SegmentHasOverrideFactors == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_segmenthasuniformprofile", (void**)&(pWrapperTable->m_ToolpathLayerReader_SegmentHasUniformProfile));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_SegmentHasUniformProfile == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -9342,12 +9379,20 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentPointDataDiscrete == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentpointoverridefactors", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentPointOverrideFactors));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentPointOverrideFactors == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataInModelUnits));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataInModelUnits == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataDiscrete));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataDiscrete == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentHatchOverrideFactors));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentHatchOverrideFactors == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_getlayerdatauuid", (void**)&(pWrapperTable->m_ToolpathLayerData_GetLayerDataUUID));
@@ -14594,9 +14639,23 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerReader::SegmentHasUniformProfile - Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. If it is not uniform, the type specific retrieval functions have to be used (or the file has to be rejected). Returns false for delay and sync segments.
+	* CToolpathLayerReader::SegmentHasOverrideFactors - Retrieves if the segment has specific override factors attached.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] eOverrideFactor - Which override factor value to retrieve (F, G or H). Returns an array of 0.0, if override factor type is unknown or not given.
+	* @return Returns true, if the segment has attached any override factors of the given type, false otherwise.
+	*/
+	bool CToolpathLayerReader::SegmentHasOverrideFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileOverrideFactor eOverrideFactor)
+	{
+		bool resultHasOverrides = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_SegmentHasOverrideFactors(m_pHandle, nSegmentIndex, eOverrideFactor, &resultHasOverrides));
+		
+		return resultHasOverrides;
+	}
+	
+	/**
+	* CToolpathLayerReader::SegmentHasUniformProfile - Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. If it is not uniform, the type specific retrieval functions have to be used (or the file has to be rejected). Returns false for delay and sync segments. The call is equivalent to SegmentHasOverrideFactors returning false with any possible type (F, G, H).
 	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and Count - 1.
-	* @return If true, the segment has a uniform profile ID. 
+	* @return If true, the segment has a uniform profile ID.
 	*/
 	bool CToolpathLayerReader::SegmentHasUniformProfile(const Lib3MF_uint32 nSegmentIndex)
 	{
@@ -14635,6 +14694,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CToolpathLayerReader::GetSegmentPointOverrideFactors - Retrieves the assigned segment override factors. Fails if segment type is not loop or polyline. The values are per point, meaning that gradients are given through linear ramping on the polyline vectors.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] eOverrideFactor - Which override factor value to retrieve (F, G or H). Returns an array of 0.0, if override factor type is unknown or not given.
+	* @param[out] FactorValuesBuffer - An target override factor for each point of the segment. In case of Polyline, the first array value describes the override for the initial jump. In case of Loop, the first array value describes the override for the inital jump and the last closing mark movement of the polyline.
+	*/
+	void CToolpathLayerReader::GetSegmentPointOverrideFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileOverrideFactor eOverrideFactor, std::vector<Lib3MF_double> & FactorValuesBuffer)
+	{
+		Lib3MF_uint64 elementsNeededFactorValues = 0;
+		Lib3MF_uint64 elementsWrittenFactorValues = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentPointOverrideFactors(m_pHandle, nSegmentIndex, eOverrideFactor, 0, &elementsNeededFactorValues, nullptr));
+		FactorValuesBuffer.resize((size_t) elementsNeededFactorValues);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentPointOverrideFactors(m_pHandle, nSegmentIndex, eOverrideFactor, elementsNeededFactorValues, &elementsWrittenFactorValues, FactorValuesBuffer.data()));
+	}
+	
+	/**
 	* CToolpathLayerReader::GetSegmentHatchDataInModelUnits - Retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
 	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and Count - 1.
 	* @param[out] HatchDataBuffer - The hatch data array. The point coordinates are in model units.
@@ -14660,6 +14734,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentHatchDataDiscrete(m_pHandle, nSegmentIndex, 0, &elementsNeededHatchData, nullptr));
 		HatchDataBuffer.resize((size_t) elementsNeededHatchData);
 		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentHatchDataDiscrete(m_pHandle, nSegmentIndex, elementsNeededHatchData, &elementsWrittenHatchData, HatchDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentHatchOverrideFactors - Retrieves the assigned segment override factors. Fails if segment type is not hatch. The call will return two values per hatch, one per hatch point.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] eOverrideFactor - Which override factor value to retrieve (F, G or H). Returns an array of 0.0, if override factor type is unknown or not given.
+	* @param[out] FactorValuesBuffer - An target override factor for each point of the segment. In case of Polyline, the first array value describes the override for the initial jump. In case of Loop, the first array value describes the override for the inital jump and the last closing mark movement of the polyline.
+	*/
+	void CToolpathLayerReader::GetSegmentHatchOverrideFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileOverrideFactor eOverrideFactor, std::vector<sHatch2DOverrides> & FactorValuesBuffer)
+	{
+		Lib3MF_uint64 elementsNeededFactorValues = 0;
+		Lib3MF_uint64 elementsWrittenFactorValues = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentHatchOverrideFactors(m_pHandle, nSegmentIndex, eOverrideFactor, 0, &elementsNeededFactorValues, nullptr));
+		FactorValuesBuffer.resize((size_t) elementsNeededFactorValues);
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentHatchOverrideFactors(m_pHandle, nSegmentIndex, eOverrideFactor, elementsNeededFactorValues, &elementsWrittenFactorValues, FactorValuesBuffer.data()));
 	}
 	
 	/**

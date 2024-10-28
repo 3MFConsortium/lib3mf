@@ -589,6 +589,73 @@ Local<Object> convertLib3MFHatch2DToObject(Isolate* isolate, sLib3MFHatch2D sHat
 }
 
 /*************************************************************************************************************************
+ Class sLib3MFHatch2DOverrides Conversion
+**************************************************************************************************************************/
+sLib3MFHatch2DOverrides convertObjectToLib3MFHatch2DOverrides(Isolate* isolate, const Local<Value> & pParamValue)
+{
+	sLib3MFHatch2DOverrides sHatch2DOverrides;
+	Local<Context> context = isolate->GetCurrentContext();
+
+	sHatch2DOverrides.m_Point1Override = 0.0;
+	sHatch2DOverrides.m_Point2Override = 0.0;
+
+	if (pParamValue->IsObject()) {
+		MaybeLocal<Object> maybeObject = pParamValue->ToObject(context);
+
+		if (!maybeObject.IsEmpty()) {
+			Local<Object> obj = maybeObject.ToLocalChecked();
+
+			// Point1Override Member
+			MaybeLocal<Value> maybeValPoint1Override = obj->Get(context, String::NewFromUtf8(isolate, "Point1Override"));
+			if (!maybeValPoint1Override.IsEmpty()) {
+				Local<Value> valPoint1Override = maybeValPoint1Override.ToLocalChecked();
+				if (valPoint1Override->IsNumber()) {
+					MaybeLocal<Number> localValPoint1Override = valPoint1Override->ToNumber(context);
+					sHatch2DOverrides.m_Point1Override = localValPoint1Override.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
+				} else {
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Point1Override member is not a number" )));
+				}
+			} else {
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Point1Override member not found in object" )));
+			}
+
+			// Point2Override Member
+			MaybeLocal<Value> maybeValPoint2Override = obj->Get(context, String::NewFromUtf8(isolate, "Point2Override"));
+			if (!maybeValPoint2Override.IsEmpty()) {
+				Local<Value> valPoint2Override = maybeValPoint2Override.ToLocalChecked();
+				if (valPoint2Override->IsNumber()) {
+					MaybeLocal<Number> localValPoint2Override = valPoint2Override->ToNumber(context);
+					sHatch2DOverrides.m_Point2Override = localValPoint2Override.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
+				} else {
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Point2Override member is not a number" )));
+				}
+			} else {
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Point2Override member not found in object" )));
+			}
+
+
+		} else {
+			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
+		}
+	} else {
+		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter." )));
+	}
+
+	return sHatch2DOverrides;
+}
+
+
+
+Local<Object> convertLib3MFHatch2DOverridesToObject(Isolate* isolate, sLib3MFHatch2DOverrides sHatch2DOverrides)
+{
+	Local<Object> returnInstance = Object::New(isolate);
+	returnInstance->Set(String::NewFromUtf8(isolate, "Point1Override"), Number::New (isolate, sHatch2DOverrides.m_Point1Override));
+	returnInstance->Set(String::NewFromUtf8(isolate, "Point2Override"), Number::New (isolate, sHatch2DOverrides.m_Point2Override));
+
+	return returnInstance;
+}
+
+/*************************************************************************************************************************
  Class sLib3MFDiscreteHatch2D Conversion
 **************************************************************************************************************************/
 sLib3MFDiscreteHatch2D convertObjectToLib3MFDiscreteHatch2D(Isolate* isolate, const Local<Value> & pParamValue)
@@ -12274,11 +12341,14 @@ void CLib3MFToolpathLayerReader::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentDefaultProfileUUID", GetSegmentDefaultProfileUUID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentDefaultProfileID", GetSegmentDefaultProfileID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfileUUIDByLocalProfileID", GetProfileUUIDByLocalProfileID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SegmentHasOverrideFactors", SegmentHasOverrideFactors);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SegmentHasUniformProfile", SegmentHasUniformProfile);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPointDataInModelUnits", GetSegmentPointDataInModelUnits);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPointDataDiscrete", GetSegmentPointDataDiscrete);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPointOverrideFactors", GetSegmentPointOverrideFactors);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentHatchDataInModelUnits", GetSegmentHatchDataInModelUnits);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentHatchDataDiscrete", GetSegmentHatchDataDiscrete);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentHatchOverrideFactors", GetSegmentHatchOverrideFactors);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -13024,6 +13094,36 @@ void CLib3MFToolpathLayerReader::GetProfileUUIDByLocalProfileID(const FunctionCa
 }
 
 
+void CLib3MFToolpathLayerReader::SegmentHasOverrideFactors(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SegmentIndex)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 1 (OverrideFactor)");
+        }
+        unsigned int nSegmentIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eOverrideFactor = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        bool bReturnHasOverrides = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SegmentHasOverrideFactors.");
+        if (wrapperTable->m_ToolpathLayerReader_SegmentHasOverrideFactors == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::SegmentHasOverrideFactors.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_SegmentHasOverrideFactors(instanceHandle, nSegmentIndex, (eLib3MFToolpathProfileOverrideFactor) eOverrideFactor, &bReturnHasOverrides);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasOverrides));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
 void CLib3MFToolpathLayerReader::SegmentHasUniformProfile(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
@@ -13098,6 +13198,34 @@ void CLib3MFToolpathLayerReader::GetSegmentPointDataDiscrete(const FunctionCallb
 }
 
 
+void CLib3MFToolpathLayerReader::GetSegmentPointOverrideFactors(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SegmentIndex)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 1 (OverrideFactor)");
+        }
+        unsigned int nSegmentIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eOverrideFactor = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentPointOverrideFactors.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentPointOverrideFactors == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentPointOverrideFactors.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentPointOverrideFactors(instanceHandle, nSegmentIndex, (eLib3MFToolpathProfileOverrideFactor) eOverrideFactor, 0, nullptr, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
 void CLib3MFToolpathLayerReader::GetSegmentHatchDataInModelUnits(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
@@ -13138,6 +13266,34 @@ void CLib3MFToolpathLayerReader::GetSegmentHatchDataDiscrete(const FunctionCallb
             throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentHatchDataDiscrete.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentHatchDataDiscrete(instanceHandle, nSegmentIndex, 0, nullptr, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetSegmentHatchOverrideFactors(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SegmentIndex)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 1 (OverrideFactor)");
+        }
+        unsigned int nSegmentIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eOverrideFactor = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentHatchOverrideFactors.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentHatchOverrideFactors == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentHatchOverrideFactors.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentHatchOverrideFactors(instanceHandle, nSegmentIndex, (eLib3MFToolpathProfileOverrideFactor) eOverrideFactor, 0, nullptr, nullptr);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {

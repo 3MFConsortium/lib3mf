@@ -3641,11 +3641,22 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentDefaultProfileIDPtr)
 typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nLocalProfileID, const Lib3MF_uint32 nProfileUUIDBufferSize, Lib3MF_uint32* pProfileUUIDNeededChars, char * pProfileUUIDBuffer);
 
 /**
-* Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. If it is not uniform, the type specific retrieval functions have to be used (or the file has to be rejected). Returns false for delay and sync segments.
+* Retrieves if the segment has specific override factors attached.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+* @param[in] eOverrideFactor - Which override factor value to retrieve (F, G or H). Returns an array of 0.0, if override factor type is unknown or not given.
+* @param[out] pHasOverrides - Returns true, if the segment has attached any override factors of the given type, false otherwise.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_SegmentHasOverrideFactorsPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, eLib3MFToolpathProfileOverrideFactor eOverrideFactor, bool * pHasOverrides);
+
+/**
+* Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. If it is not uniform, the type specific retrieval functions have to be used (or the file has to be rejected). Returns false for delay and sync segments. The call is equivalent to SegmentHasOverrideFactors returning false with any possible type (F, G, H).
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
 * @param[in] nSegmentIndex - Segment Index. Must be between 0 and Count - 1.
-* @param[out] pHasUniformProfile - If true, the segment has a uniform profile ID. 
+* @param[out] pHasUniformProfile - If true, the segment has a uniform profile ID.
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpathLayerReader_SegmentHasUniformProfilePtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasUniformProfile);
@@ -3675,6 +3686,19 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnit
 typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentPointDataDiscretePtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, sLib3MFDiscretePosition2D * pPointDataBuffer);
 
 /**
+* Retrieves the assigned segment override factors. Fails if segment type is not loop or polyline. The values are per point, meaning that gradients are given through linear ramping on the polyline vectors.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+* @param[in] eOverrideFactor - Which override factor value to retrieve (F, G or H). Returns an array of 0.0, if override factor type is unknown or not given.
+* @param[in] nFactorValuesBufferSize - Number of elements in buffer
+* @param[out] pFactorValuesNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pFactorValuesBuffer - double  buffer of An target override factor for each point of the segment. In case of Polyline, the first array value describes the override for the initial jump. In case of Loop, the first array value describes the override for the inital jump and the last closing mark movement of the polyline.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentPointOverrideFactorsPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, eLib3MFToolpathProfileOverrideFactor eOverrideFactor, const Lib3MF_uint64 nFactorValuesBufferSize, Lib3MF_uint64* pFactorValuesNeededCount, Lib3MF_double * pFactorValuesBuffer);
+
+/**
 * Retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
@@ -3697,6 +3721,19 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnit
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentHatchDataDiscretePtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, sLib3MFDiscreteHatch2D * pHatchDataBuffer);
+
+/**
+* Retrieves the assigned segment override factors. Fails if segment type is not hatch. The call will return two values per hatch, one per hatch point.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+* @param[in] eOverrideFactor - Which override factor value to retrieve (F, G or H). Returns an array of 0.0, if override factor type is unknown or not given.
+* @param[in] nFactorValuesBufferSize - Number of elements in buffer
+* @param[out] pFactorValuesNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pFactorValuesBuffer - Hatch2DOverrides  buffer of An target override factor for each point of the segment. In case of Polyline, the first array value describes the override for the initial jump. In case of Loop, the first array value describes the override for the inital jump and the last closing mark movement of the polyline.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentHatchOverrideFactorsPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, eLib3MFToolpathProfileOverrideFactor eOverrideFactor, const Lib3MF_uint64 nFactorValuesBufferSize, Lib3MF_uint64* pFactorValuesNeededCount, sLib3MFHatch2DOverrides * pFactorValuesBuffer);
 
 /*************************************************************************************************************************
  Class definition for ToolpathLayerData
@@ -6138,11 +6175,14 @@ typedef struct {
 	PLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDPtr m_ToolpathLayerReader_GetSegmentDefaultProfileUUID;
 	PLib3MFToolpathLayerReader_GetSegmentDefaultProfileIDPtr m_ToolpathLayerReader_GetSegmentDefaultProfileID;
 	PLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDPtr m_ToolpathLayerReader_GetProfileUUIDByLocalProfileID;
+	PLib3MFToolpathLayerReader_SegmentHasOverrideFactorsPtr m_ToolpathLayerReader_SegmentHasOverrideFactors;
 	PLib3MFToolpathLayerReader_SegmentHasUniformProfilePtr m_ToolpathLayerReader_SegmentHasUniformProfile;
 	PLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsPtr m_ToolpathLayerReader_GetSegmentPointDataInModelUnits;
 	PLib3MFToolpathLayerReader_GetSegmentPointDataDiscretePtr m_ToolpathLayerReader_GetSegmentPointDataDiscrete;
+	PLib3MFToolpathLayerReader_GetSegmentPointOverrideFactorsPtr m_ToolpathLayerReader_GetSegmentPointOverrideFactors;
 	PLib3MFToolpathLayerReader_GetSegmentHatchDataInModelUnitsPtr m_ToolpathLayerReader_GetSegmentHatchDataInModelUnits;
 	PLib3MFToolpathLayerReader_GetSegmentHatchDataDiscretePtr m_ToolpathLayerReader_GetSegmentHatchDataDiscrete;
+	PLib3MFToolpathLayerReader_GetSegmentHatchOverrideFactorsPtr m_ToolpathLayerReader_GetSegmentHatchOverrideFactors;
 	PLib3MFToolpathLayerData_GetLayerDataUUIDPtr m_ToolpathLayerData_GetLayerDataUUID;
 	PLib3MFToolpathLayerData_RegisterProfilePtr m_ToolpathLayerData_RegisterProfile;
 	PLib3MFToolpathLayerData_RegisterBuildItemPtr m_ToolpathLayerData_RegisterBuildItem;

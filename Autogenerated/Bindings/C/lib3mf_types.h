@@ -601,6 +601,11 @@ typedef struct sLib3MFHatch2D {
     Lib3MF_int32 m_Tag;
 } sLib3MFHatch2D;
 
+typedef struct sLib3MFHatch2DOverrides {
+    Lib3MF_double m_Point1Override;
+    Lib3MF_double m_Point2Override;
+} sLib3MFHatch2DOverrides;
+
 typedef struct sLib3MFDiscreteHatch2D {
     Lib3MF_int32 m_Point1Coordinates[2];
     Lib3MF_int32 m_Point2Coordinates[2];

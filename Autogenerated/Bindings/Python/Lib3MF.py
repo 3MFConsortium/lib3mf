@@ -492,11 +492,14 @@ class FunctionTable:
 	lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid = None
 	lib3mf_toolpathlayerreader_getsegmentdefaultprofileid = None
 	lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid = None
+	lib3mf_toolpathlayerreader_segmenthasoverridefactors = None
 	lib3mf_toolpathlayerreader_segmenthasuniformprofile = None
 	lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits = None
 	lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete = None
+	lib3mf_toolpathlayerreader_getsegmentpointoverridefactors = None
 	lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits = None
 	lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete = None
+	lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors = None
 	lib3mf_toolpathlayerdata_getlayerdatauuid = None
 	lib3mf_toolpathlayerdata_registerprofile = None
 	lib3mf_toolpathlayerdata_registerbuilditem = None
@@ -893,6 +896,14 @@ class Hatch2D(ctypes.Structure):
 		("Point1Coordinates", ctypes.c_double * 2), 
 		("Point2Coordinates", ctypes.c_double * 2), 
 		("Tag", ctypes.c_int32)
+	]
+'''Definition of Hatch2DOverrides
+'''
+class Hatch2DOverrides(ctypes.Structure):
+	_pack_ = 1
+	_fields_ = [
+		("Point1Override", ctypes.c_double), 
+		("Point2Override", ctypes.c_double)
 	]
 '''Definition of DiscreteHatch2D
 '''
@@ -3215,6 +3226,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
 			self.lib.lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_segmenthasoverridefactors")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ToolpathProfileOverrideFactor, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpathlayerreader_segmenthasoverridefactors = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_segmenthasuniformprofile")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -3233,6 +3250,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(DiscretePosition2D))
 			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentpointoverridefactors")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ToolpathProfileOverrideFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpointoverridefactors = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -3244,6 +3267,12 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(DiscreteHatch2D))
 			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ToolpathProfileOverrideFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Hatch2DOverrides))
+			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_getlayerdatauuid")), methodAddress)
 			if err != 0:
@@ -5398,6 +5427,9 @@ class Wrapper:
 			self.lib.lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
+			self.lib.lib3mf_toolpathlayerreader_segmenthasoverridefactors.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_segmenthasoverridefactors.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ToolpathProfileOverrideFactor, ctypes.POINTER(ctypes.c_bool)]
+			
 			self.lib.lib3mf_toolpathlayerreader_segmenthasuniformprofile.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_segmenthasuniformprofile.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool)]
 			
@@ -5407,11 +5439,17 @@ class Wrapper:
 			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(DiscretePosition2D)]
 			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpointoverridefactors.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpointoverridefactors.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ToolpathProfileOverrideFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_double)]
+			
 			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatainmodelunits.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Hatch2D)]
 			
 			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(DiscreteHatch2D)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ToolpathProfileOverrideFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Hatch2DOverrides)]
 			
 			self.lib.lib3mf_toolpathlayerdata_getlayerdatauuid.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerdata_getlayerdatauuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
@@ -9241,6 +9279,13 @@ class ToolpathLayerReader(Base):
 		
 		return pProfileUUIDBuffer.value.decode()
 	
+	def SegmentHasOverrideFactors(self, SegmentIndex, OverrideFactor):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		pHasOverrides = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_segmenthasoverridefactors(self._handle, nSegmentIndex, OverrideFactor, pHasOverrides))
+		
+		return pHasOverrides.value
+	
 	def SegmentHasUniformProfile(self, SegmentIndex):
 		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
 		pHasUniformProfile = ctypes.c_bool()
@@ -9272,6 +9317,18 @@ class ToolpathLayerReader(Base):
 		
 		return [pPointDataBuffer[i] for i in range(nPointDataNeededCount.value)]
 	
+	def GetSegmentPointOverrideFactors(self, SegmentIndex, OverrideFactor):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		nFactorValuesCount = ctypes.c_uint64(0)
+		nFactorValuesNeededCount = ctypes.c_uint64(0)
+		pFactorValuesBuffer = (ctypes.c_double*0)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpointoverridefactors(self._handle, nSegmentIndex, OverrideFactor, nFactorValuesCount, nFactorValuesNeededCount, pFactorValuesBuffer))
+		nFactorValuesCount = ctypes.c_uint64(nFactorValuesNeededCount.value)
+		pFactorValuesBuffer = (ctypes.c_double * nFactorValuesNeededCount.value)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpointoverridefactors(self._handle, nSegmentIndex, OverrideFactor, nFactorValuesCount, nFactorValuesNeededCount, pFactorValuesBuffer))
+		
+		return [pFactorValuesBuffer[i] for i in range(nFactorValuesNeededCount.value)]
+	
 	def GetSegmentHatchDataInModelUnits(self, SegmentIndex):
 		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
 		nHatchDataCount = ctypes.c_uint64(0)
@@ -9295,6 +9352,18 @@ class ToolpathLayerReader(Base):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(self._handle, nSegmentIndex, nHatchDataCount, nHatchDataNeededCount, pHatchDataBuffer))
 		
 		return [pHatchDataBuffer[i] for i in range(nHatchDataNeededCount.value)]
+	
+	def GetSegmentHatchOverrideFactors(self, SegmentIndex, OverrideFactor):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		nFactorValuesCount = ctypes.c_uint64(0)
+		nFactorValuesNeededCount = ctypes.c_uint64(0)
+		pFactorValuesBuffer = (Hatch2DOverrides*0)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors(self._handle, nSegmentIndex, OverrideFactor, nFactorValuesCount, nFactorValuesNeededCount, pFactorValuesBuffer))
+		nFactorValuesCount = ctypes.c_uint64(nFactorValuesNeededCount.value)
+		pFactorValuesBuffer = (Hatch2DOverrides * nFactorValuesNeededCount.value)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors(self._handle, nSegmentIndex, OverrideFactor, nFactorValuesCount, nFactorValuesNeededCount, pFactorValuesBuffer))
+		
+		return [pFactorValuesBuffer[i] for i in range(nFactorValuesNeededCount.value)]
 	
 
 

@@ -132,6 +132,7 @@ namespace NMR {
 
 		nfUint32 getSegmentCount();
 		void getSegmentInfo (nfUint32 nSegmentIndex, eModelToolpathSegmentType & eType, nfUint32 & nProfileID, nfUint32 & nPartID, nfUint32 & nPointCount);
+		uint32_t getSegmentOverrideDenominator (nfUint32 nSegmentIndex);
 		TOOLPATHREADPOINT & getSegmentPoint (nfUint32 nSegmentIndex, nfUint32 nPointIndex);
 
 		uint32_t getPartCount();
@@ -155,6 +156,7 @@ namespace NMR {
 		std::pair<uint32_t, eModelToolpathSegmentAttributeType> findSegmentAttribute(const std::string& sNameSpace, const std::string& sAttributeName, bool bMustExist);
 
 		bool segmentHasUniformProfile(nfUint32 nSegmentIndex);
+		bool segmentHasOverrideFactors(nfUint32 nSegmentIndex, NMR::eModelToolpathProfileOverrideFactor overrideFactor);
 
 		double getUnits();
 

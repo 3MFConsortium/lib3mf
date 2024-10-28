@@ -1713,11 +1713,14 @@ public:
 	inline std::string GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nSegmentIndex);
 	inline Lib3MF_uint32 GetSegmentDefaultProfileID(const Lib3MF_uint32 nSegmentIndex);
 	inline std::string GetProfileUUIDByLocalProfileID(const Lib3MF_uint32 nLocalProfileID);
+	inline bool SegmentHasOverrideFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileOverrideFactor eOverrideFactor);
 	inline bool SegmentHasUniformProfile(const Lib3MF_uint32 nSegmentIndex);
 	inline void GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nSegmentIndex, std::vector<sPosition2D> & PointDataBuffer);
 	inline void GetSegmentPointDataDiscrete(const Lib3MF_uint32 nSegmentIndex, std::vector<sDiscretePosition2D> & PointDataBuffer);
+	inline void GetSegmentPointOverrideFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileOverrideFactor eOverrideFactor, std::vector<Lib3MF_double> & FactorValuesBuffer);
 	inline void GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nSegmentIndex, std::vector<sHatch2D> & HatchDataBuffer);
 	inline void GetSegmentHatchDataDiscrete(const Lib3MF_uint32 nSegmentIndex, std::vector<sDiscreteHatch2D> & HatchDataBuffer);
+	inline void GetSegmentHatchOverrideFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileOverrideFactor eOverrideFactor, std::vector<sHatch2DOverrides> & FactorValuesBuffer);
 };
 	
 /*************************************************************************************************************************
@@ -6878,9 +6881,23 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerReader::SegmentHasUniformProfile - Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. If it is not uniform, the type specific retrieval functions have to be used (or the file has to be rejected). Returns false for delay and sync segments.
+	* CToolpathLayerReader::SegmentHasOverrideFactors - Retrieves if the segment has specific override factors attached.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] eOverrideFactor - Which override factor value to retrieve (F, G or H). Returns an array of 0.0, if override factor type is unknown or not given.
+	* @return Returns true, if the segment has attached any override factors of the given type, false otherwise.
+	*/
+	bool CToolpathLayerReader::SegmentHasOverrideFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileOverrideFactor eOverrideFactor)
+	{
+		bool resultHasOverrides = 0;
+		CheckError(lib3mf_toolpathlayerreader_segmenthasoverridefactors(m_pHandle, nSegmentIndex, eOverrideFactor, &resultHasOverrides));
+		
+		return resultHasOverrides;
+	}
+	
+	/**
+	* CToolpathLayerReader::SegmentHasUniformProfile - Returns if the segment has a uniform profile. If it is uniform, then the default profile applies to the whole segment. If it is not uniform, the type specific retrieval functions have to be used (or the file has to be rejected). Returns false for delay and sync segments. The call is equivalent to SegmentHasOverrideFactors returning false with any possible type (F, G, H).
 	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and Count - 1.
-	* @return If true, the segment has a uniform profile ID. 
+	* @return If true, the segment has a uniform profile ID.
 	*/
 	bool CToolpathLayerReader::SegmentHasUniformProfile(const Lib3MF_uint32 nSegmentIndex)
 	{
@@ -6919,6 +6936,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CToolpathLayerReader::GetSegmentPointOverrideFactors - Retrieves the assigned segment override factors. Fails if segment type is not loop or polyline. The values are per point, meaning that gradients are given through linear ramping on the polyline vectors.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] eOverrideFactor - Which override factor value to retrieve (F, G or H). Returns an array of 0.0, if override factor type is unknown or not given.
+	* @param[out] FactorValuesBuffer - An target override factor for each point of the segment. In case of Polyline, the first array value describes the override for the initial jump. In case of Loop, the first array value describes the override for the inital jump and the last closing mark movement of the polyline.
+	*/
+	void CToolpathLayerReader::GetSegmentPointOverrideFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileOverrideFactor eOverrideFactor, std::vector<Lib3MF_double> & FactorValuesBuffer)
+	{
+		Lib3MF_uint64 elementsNeededFactorValues = 0;
+		Lib3MF_uint64 elementsWrittenFactorValues = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentpointoverridefactors(m_pHandle, nSegmentIndex, eOverrideFactor, 0, &elementsNeededFactorValues, nullptr));
+		FactorValuesBuffer.resize((size_t) elementsNeededFactorValues);
+		CheckError(lib3mf_toolpathlayerreader_getsegmentpointoverridefactors(m_pHandle, nSegmentIndex, eOverrideFactor, elementsNeededFactorValues, &elementsWrittenFactorValues, FactorValuesBuffer.data()));
+	}
+	
+	/**
 	* CToolpathLayerReader::GetSegmentHatchDataInModelUnits - Retrieves the assigned segment hatch list. Converts any polyline or loop into hatches. Returns an empty array for delay and sync elements.
 	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and Count - 1.
 	* @param[out] HatchDataBuffer - The hatch data array. The point coordinates are in model units.
@@ -6944,6 +6976,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(m_pHandle, nSegmentIndex, 0, &elementsNeededHatchData, nullptr));
 		HatchDataBuffer.resize((size_t) elementsNeededHatchData);
 		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchdatadiscrete(m_pHandle, nSegmentIndex, elementsNeededHatchData, &elementsWrittenHatchData, HatchDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentHatchOverrideFactors - Retrieves the assigned segment override factors. Fails if segment type is not hatch. The call will return two values per hatch, one per hatch point.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] eOverrideFactor - Which override factor value to retrieve (F, G or H). Returns an array of 0.0, if override factor type is unknown or not given.
+	* @param[out] FactorValuesBuffer - An target override factor for each point of the segment. In case of Polyline, the first array value describes the override for the initial jump. In case of Loop, the first array value describes the override for the inital jump and the last closing mark movement of the polyline.
+	*/
+	void CToolpathLayerReader::GetSegmentHatchOverrideFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileOverrideFactor eOverrideFactor, std::vector<sHatch2DOverrides> & FactorValuesBuffer)
+	{
+		Lib3MF_uint64 elementsNeededFactorValues = 0;
+		Lib3MF_uint64 elementsWrittenFactorValues = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors(m_pHandle, nSegmentIndex, eOverrideFactor, 0, &elementsNeededFactorValues, nullptr));
+		FactorValuesBuffer.resize((size_t) elementsNeededFactorValues);
+		CheckError(lib3mf_toolpathlayerreader_getsegmenthatchoverridefactors(m_pHandle, nSegmentIndex, eOverrideFactor, elementsNeededFactorValues, &elementsWrittenFactorValues, FactorValuesBuffer.data()));
 	}
 	
 	/**
