@@ -112,7 +112,7 @@ namespace NMR {
 				m_nPartID = nValue;
 		}
 
-		if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_PARTID) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_OVERRIDEFRACTION) == 0) {
 			if (m_bHasOverrideFraction)
 				throw CNMRException(NMR_ERROR_DUPLICATEOVERRIDEFRACTION);
 

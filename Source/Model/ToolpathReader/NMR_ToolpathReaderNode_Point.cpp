@@ -92,6 +92,15 @@ namespace NMR {
 			m_nY = fnStringToInt32(pAttributeValue);
 			m_bHasY = true;
 		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF) == 0) {
+			m_nFactorF = fnStringToInt32(pAttributeValue);
+		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG) == 0) {
+			m_nFactorG = fnStringToInt32(pAttributeValue);
+		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH) == 0) {
+			m_nFactorH = fnStringToInt32(pAttributeValue);
+		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 

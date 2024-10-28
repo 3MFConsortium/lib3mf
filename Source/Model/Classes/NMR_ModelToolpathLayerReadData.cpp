@@ -392,7 +392,7 @@ namespace NMR {
 							return true;
 					}
 					return false;
-
+	
 				case NMR::eModelToolpathProfileOverrideFactor::pfFactorG:
 					for (uint32_t nPointIndex = 0; nPointIndex < pSegment->m_nPointCount; nPointIndex++) {
 						auto& point = m_Points.getDataRef(pSegment->m_nStartPoint + nPointIndex);
