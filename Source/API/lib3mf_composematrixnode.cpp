@@ -122,7 +122,7 @@ IImplicitPort * CComposeMatrixNode::GetInputM33()
 
 IImplicitPort * CComposeMatrixNode::GetOutputResult()
 {
-	return FindInputOrThrow(NMR::OutputNames::result);
+	return FindOutputOrThrow(NMR::OutputNames::result);
 }
 
 Lib3MF::Impl::CComposeMatrixNode::CComposeMatrixNode(

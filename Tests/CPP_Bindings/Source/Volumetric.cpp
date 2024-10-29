@@ -1352,4 +1352,546 @@ namespace Lib3MF
         verifyFunctionResources(targetModel);
     }
 
+    TEST_F(Volumetric, Volumetric_AddInputsToFunction_InputsAreAdded)
+    {
+        //create a new model
+        auto const model = wrapper->CreateModel();
+
+        auto const function = model->AddImplicitFunction();
+        auto const input = function->AddInput("pos", "position", Lib3MF::eImplicitPortType::Vector);
+        auto const input2 = function->AddInput("pos2", "position2", Lib3MF::eImplicitPortType::Vector);
+        auto const input3 = function->AddInput("pos3", "position3", Lib3MF::eImplicitPortType::Vector);
+
+        auto const inputs = function->GetInputs();
+        auto const inputCount = inputs->Count();
+        ASSERT_EQ(inputCount, 3u);
+
+        inputs->MoveNext();
+        auto const inputPort = inputs->GetCurrent();
+        ASSERT_TRUE(inputPort);
+        EXPECT_EQ(inputPort->GetIdentifier(), "pos");
+        EXPECT_EQ(inputPort->GetDisplayName(), "position");
+        EXPECT_EQ(inputPort->GetType(), Lib3MF::eImplicitPortType::Vector);
+
+       
+        inputs->MoveNext();
+        auto const inputPort2 = inputs->GetCurrent();
+        ASSERT_TRUE(inputPort2);
+        EXPECT_EQ(inputPort2->GetIdentifier(), "pos2");
+        EXPECT_EQ(inputPort2->GetDisplayName(), "position2");
+        EXPECT_EQ(inputPort2->GetType(), Lib3MF::eImplicitPortType::Vector);
+
+        inputs->MoveNext();
+        auto const inputPort3 = inputs->GetCurrent();
+        ASSERT_TRUE(inputPort3);
+        EXPECT_EQ(inputPort3->GetIdentifier(), "pos3");
+        EXPECT_EQ(inputPort3->GetDisplayName(), "position3");
+        EXPECT_EQ(inputPort3->GetType(), Lib3MF::eImplicitPortType::Vector);
+
+    }
+
+    TEST_F(Volumetric, Volumetric_RemoveFunctionInputs_InputsAreRemoved)
+    {
+        //create a new model
+        auto const model = wrapper->CreateModel();
+
+        auto const function = model->AddImplicitFunction();
+        auto const input = function->AddInput("pos", "position", Lib3MF::eImplicitPortType::Vector);
+        auto const input2 = function->AddInput("pos2", "position2", Lib3MF::eImplicitPortType::Vector);
+        auto const input3 = function->AddInput("pos3", "position3", Lib3MF::eImplicitPortType::Vector);
+
+        auto const inputs = function->GetInputs();
+        auto const inputCount = inputs->Count();
+        ASSERT_EQ(inputCount, 3u);
+
+        function->RemoveInput(input2);
+
+        auto const inputsAfterRemoval = function->GetInputs();
+        auto const inputCountAfterRemoval = inputsAfterRemoval->Count();
+        ASSERT_EQ(inputCountAfterRemoval, 2u);
+
+        inputsAfterRemoval->MoveNext();
+        auto const inputPort = inputsAfterRemoval->GetCurrent();
+        ASSERT_TRUE(inputPort);
+        EXPECT_EQ(inputPort->GetIdentifier(), "pos");
+        EXPECT_EQ(inputPort->GetDisplayName(), "position");
+        EXPECT_EQ(inputPort->GetType(), Lib3MF::eImplicitPortType::Vector);
+
+        inputsAfterRemoval->MoveNext();
+        auto const inputPort3 = inputsAfterRemoval->GetCurrent();
+        ASSERT_TRUE(inputPort3);
+        EXPECT_EQ(inputPort3->GetIdentifier(), "pos3");
+        EXPECT_EQ(inputPort3->GetDisplayName(), "position3");
+        EXPECT_EQ(inputPort3->GetType(), Lib3MF::eImplicitPortType::Vector);
+    }
+
+    TEST_F(Volumetric, Volumetric_AddOutputToFunction_OutputIsAdded)
+    {
+        //create a new model
+        auto const model = wrapper->CreateModel();
+
+        auto const function = model->AddImplicitFunction();
+        auto const output = function->AddOutput("shape", "signed distance to the surface", Lib3MF::eImplicitPortType::Scalar);
+
+        auto const outputs = function->GetOutputs();
+        auto const outputCount = outputs->Count();
+        ASSERT_EQ(outputCount, 1u);
+
+        outputs->MoveNext();
+        auto const outputPort = outputs->GetCurrent();
+        ASSERT_TRUE(outputPort);
+        EXPECT_EQ(outputPort->GetIdentifier(), "shape");
+        EXPECT_EQ(outputPort->GetDisplayName(), "signed distance to the surface");
+        EXPECT_EQ(outputPort->GetType(), Lib3MF::eImplicitPortType::Scalar);
+    }
+
+    TEST_F(Volumetric, Volumetric_RemoveFunctionOutput_OutputIsRemoved)
+    {
+        //create a new model
+        auto const model = wrapper->CreateModel();
+
+        auto const function = model->AddImplicitFunction();
+        auto const output = function->AddOutput("shape", "signed distance to the surface", Lib3MF::eImplicitPortType::Scalar);
+        auto const output2 = function->AddOutput("shape2", "signed distance to the surface2", Lib3MF::eImplicitPortType::Scalar);
+        auto const output3 = function->AddOutput("shape3", "signed distance to the surface3", Lib3MF::eImplicitPortType::Scalar);
+
+        auto const outputs = function->GetOutputs();
+        auto const outputCount = outputs->Count();
+        ASSERT_EQ(outputCount, 3u);
+
+        function->RemoveOutput(output2);
+
+        auto const outputsAfterRemoval = function->GetOutputs();
+        auto const outputCountAfterRemoval = outputsAfterRemoval->Count();
+        ASSERT_EQ(outputCountAfterRemoval, 2u);
+
+        outputsAfterRemoval->MoveNext();
+        auto const outputPort = outputsAfterRemoval->GetCurrent();
+        ASSERT_TRUE(outputPort);
+        EXPECT_EQ(outputPort->GetIdentifier(), "shape");
+        EXPECT_EQ(outputPort->GetDisplayName(), "signed distance to the surface");
+        EXPECT_EQ(outputPort->GetType(), Lib3MF::eImplicitPortType::Scalar);
+
+        outputsAfterRemoval->MoveNext();
+        auto const outputPort3 = outputsAfterRemoval->GetCurrent();
+        ASSERT_TRUE(outputPort3);
+        EXPECT_EQ(outputPort3->GetIdentifier(), "shape3");
+        EXPECT_EQ(outputPort3->GetDisplayName(), "signed distance to the surface3");
+        EXPECT_EQ(outputPort3->GetType(), Lib3MF::eImplicitPortType::Scalar);
+    }
+
+    TEST_F(Volumetric, Volumetric_AddSinNodeToFunction_NodeIsAdded)
+    {
+        //create a new model
+        auto const model = wrapper->CreateModel();
+
+        auto const function = model->AddImplicitFunction();
+
+        // add a scalar x input to the function
+
+        auto const input = function->AddInput("x", "x", Lib3MF::eImplicitPortType::Scalar);
+        auto const output = function->AddOutput("result", "result", Lib3MF::eImplicitPortType::Scalar);
+
+        auto const sinNode = function->AddSinNode("sin", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar, "sinus", "group_a");
+
+        auto const sinInput = sinNode->GetInputA();
+        auto const sinOutput = sinNode->GetOutputResult();
+
+        function->AddLink(input, sinInput);
+
+        auto const nodes = function->GetNodes();
+        auto const nodeCount = nodes->Count();
+        ASSERT_EQ(nodeCount, 1u);
+
+        nodes->MoveNext();
+        auto const node = nodes->GetCurrent();
+        ASSERT_TRUE(node);
+        EXPECT_EQ(node->GetNodeType(), Lib3MF::eImplicitNodeType::Sinus);
+        EXPECT_EQ(node->GetIdentifier(), "sin");
+        EXPECT_EQ(node->GetDisplayName(), "sinus");
+        EXPECT_EQ(node->GetTag(), "group_a");
+    }
+
+     TEST_F(Volumetric, Volumetric_AddCosNodeToFunction_NodeIsAdded)
+    {
+        //create a new model
+        auto const model = wrapper->CreateModel();
+
+        auto const function = model->AddImplicitFunction();
+
+        // add a scalar x input to the function
+
+        auto const input = function->AddInput("x", "x", Lib3MF::eImplicitPortType::Scalar);
+        auto const output = function->AddOutput("result", "result", Lib3MF::eImplicitPortType::Scalar);
+
+        auto const cosNode = function->AddCosNode("cos", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar, "cosinus", "group_a");
+
+        auto const cosInput = cosNode->GetInputA();
+        auto const cosOutput = cosNode->GetOutputResult();
+
+        function->AddLink(input, cosInput);
+
+        auto const nodes = function->GetNodes();
+        auto const nodeCount = nodes->Count();
+        ASSERT_EQ(nodeCount, 1u);
+
+        nodes->MoveNext();
+        auto const node = nodes->GetCurrent();
+        ASSERT_TRUE(node);
+        EXPECT_EQ(node->GetNodeType(), Lib3MF::eImplicitNodeType::Cosinus);
+        EXPECT_EQ(node->GetIdentifier(), "cos");
+        EXPECT_EQ(node->GetDisplayName(), "cosinus");
+        EXPECT_EQ(node->GetTag(), "group_a");
+    }
+
+    TEST_F(Volumetric, Volumetric_AddTanNodeToFunction_NodeIsAdded)
+    {
+        //create a new model
+        auto const model = wrapper->CreateModel();
+
+        auto const function = model->AddImplicitFunction();
+
+        // add a scalar x input to the function
+
+        auto const input = function->AddInput("x", "x", Lib3MF::eImplicitPortType::Scalar);
+        auto const output = function->AddOutput("result", "result", Lib3MF::eImplicitPortType::Scalar);
+
+        auto const tanNode = function->AddTanNode("tan", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar, "tangens", "group_a");
+
+        auto const tanInput = tanNode->GetInputA();
+        auto const tanOutput = tanNode->GetOutputResult();
+
+        function->AddLink(input, tanInput);
+
+        auto const nodes = function->GetNodes();
+        auto const nodeCount = nodes->Count();
+        ASSERT_EQ(nodeCount, 1u);
+
+        nodes->MoveNext();
+        auto const node = nodes->GetCurrent();
+        ASSERT_TRUE(node);
+        EXPECT_EQ(node->GetNodeType(), Lib3MF::eImplicitNodeType::Tan);
+        EXPECT_EQ(node->GetIdentifier(), "tan");
+        EXPECT_EQ(node->GetDisplayName(), "tangens");
+        EXPECT_EQ(node->GetTag(), "group_a");
+    }
+
+    TEST_F(Volumetric, Volumetric_AddSinhNodeToFunction_NodeIsAdded)
+    {
+        //create a new model
+        auto const model = wrapper->CreateModel();
+
+        auto const function = model->AddImplicitFunction();
+
+        // add a scalar x input to the function
+
+        auto const input = function->AddInput("x", "x", Lib3MF::eImplicitPortType::Scalar);
+        auto const output = function->AddOutput("result", "result", Lib3MF::eImplicitPortType::Scalar);
+
+        auto const sinhNode = function->AddSinhNode("sinh", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar, "sinus hyperbolicus", "group_a");
+
+        auto const sinhInput = sinhNode->GetInputA();
+        auto const sinhOutput = sinhNode->GetOutputResult();
+
+        function->AddLink(input, sinhInput);
+
+        auto const nodes = function->GetNodes();
+        auto const nodeCount = nodes->Count();
+        ASSERT_EQ(nodeCount, 1u);
+
+        nodes->MoveNext();
+        auto const node = nodes->GetCurrent();
+        ASSERT_TRUE(node);
+        EXPECT_EQ(node->GetNodeType(), Lib3MF::eImplicitNodeType::Sinh);
+        EXPECT_EQ(node->GetIdentifier(), "sinh");
+        EXPECT_EQ(node->GetDisplayName(), "sinus hyperbolicus");
+        EXPECT_EQ(node->GetTag(), "group_a");
+    }
+
+    TEST_F(Volumetric, Volumetric_AddCoshNodeToFunction_NodeIsAdded)
+    {
+        //create a new model
+        auto const model = wrapper->CreateModel();
+
+        auto const function = model->AddImplicitFunction();
+
+        // add a scalar x input to the function
+
+        auto const input = function->AddInput("x", "x", Lib3MF::eImplicitPortType::Scalar);
+        auto const output = function->AddOutput("result", "result", Lib3MF::eImplicitPortType::Scalar);
+
+        auto const coshNode = function->AddCoshNode("cosh", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar, "cosinus hyperbolicus", "group_a");
+
+        auto const coshInput = coshNode->GetInputA();
+        auto const coshOutput = coshNode->GetOutputResult();
+
+        function->AddLink(input, coshInput);
+
+        auto const nodes = function->GetNodes();
+        auto const nodeCount = nodes->Count();
+        ASSERT_EQ(nodeCount, 1u);
+
+        nodes->MoveNext();
+        auto const node = nodes->GetCurrent();
+        ASSERT_TRUE(node);
+        EXPECT_EQ(node->GetNodeType(), Lib3MF::eImplicitNodeType::Cosh);
+        EXPECT_EQ(node->GetIdentifier(), "cosh");
+        EXPECT_EQ(node->GetDisplayName(), "cosinus hyperbolicus");
+        EXPECT_EQ(node->GetTag(), "group_a");
+    }
+
+    TEST_F(Volumetric, Volumetric_AddTanhNodeToFunction_NodeIsAdded)
+    {
+        //create a new model
+        auto const model = wrapper->CreateModel();
+
+        auto const function = model->AddImplicitFunction();
+
+        // add a scalar x input to the function
+
+        auto const input = function->AddInput("x", "x", Lib3MF::eImplicitPortType::Scalar);
+        auto const output = function->AddOutput("result", "result", Lib3MF::eImplicitPortType::Scalar);
+
+        auto const tanhNode = function->AddTanhNode("tanh", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar, "tangens hyperbolicus", "group_a");
+
+        auto const tanhInput = tanhNode->GetInputA();
+        auto const tanhOutput = tanhNode->GetOutputResult();
+
+        function->AddLink(input, tanhInput);
+
+        auto const nodes = function->GetNodes();
+        auto const nodeCount = nodes->Count();
+        ASSERT_EQ(nodeCount, 1u);
+
+        nodes->MoveNext();
+        auto const node = nodes->GetCurrent();
+        ASSERT_TRUE(node);
+        EXPECT_EQ(node->GetNodeType(), Lib3MF::eImplicitNodeType::Tanh);
+        EXPECT_EQ(node->GetIdentifier(), "tanh");
+        EXPECT_EQ(node->GetDisplayName(), "tangens hyperbolicus");
+        EXPECT_EQ(node->GetTag(), "group_a");
+    }
+
+    TEST_F(Volumetric, Volumetric_AddExpNodeToFunction_NodeIsAdded)
+    {
+        //create a new model
+        auto const model = wrapper->CreateModel();
+
+        auto const function = model->AddImplicitFunction();
+
+        // add a scalar x input to the function
+
+        auto const input = function->AddInput("x", "x", Lib3MF::eImplicitPortType::Scalar);
+        auto const output = function->AddOutput("result", "result", Lib3MF::eImplicitPortType::Scalar);
+
+        auto const expNode = function->AddExpNode("exp", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar, "exponential", "group_a");
+
+        auto const expInput = expNode->GetInputA();
+        auto const expOutput = expNode->GetOutputResult();
+
+        function->AddLink(input, expInput);
+
+        auto const nodes = function->GetNodes();
+        auto const nodeCount = nodes->Count();
+        ASSERT_EQ(nodeCount, 1u);
+
+        nodes->MoveNext();
+        auto const node = nodes->GetCurrent();
+        ASSERT_TRUE(node);
+        EXPECT_EQ(node->GetNodeType(), Lib3MF::eImplicitNodeType::Exp);
+        EXPECT_EQ(node->GetIdentifier(), "exp");
+        EXPECT_EQ(node->GetDisplayName(), "exponential");
+        EXPECT_EQ(node->GetTag(), "group_a");
+    }
+
+    TEST_F(Volumetric, Volumetric_AddLogNodeToFunction_NodeIsAdded)
+    {
+        //create a new model
+        auto const model = wrapper->CreateModel();
+
+        auto const function = model->AddImplicitFunction();
+
+        // add a scalar x input to the function
+
+        auto const input = function->AddInput("x", "x", Lib3MF::eImplicitPortType::Scalar);
+        auto const output = function->AddOutput("result", "result", Lib3MF::eImplicitPortType::Scalar);
+
+        auto const logNode = function->AddLogNode("log", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar, "logarithm", "group_a");
+
+        auto const logInput = logNode->GetInputA();
+        auto const logOutput = logNode->GetOutputResult();
+
+        function->AddLink(input, logInput);
+
+        auto const nodes = function->GetNodes();
+        auto const nodeCount = nodes->Count();
+        ASSERT_EQ(nodeCount, 1u);
+
+        nodes->MoveNext();
+        auto const node = nodes->GetCurrent();
+        ASSERT_TRUE(node);
+        EXPECT_EQ(node->GetNodeType(), Lib3MF::eImplicitNodeType::Log);
+        EXPECT_EQ(node->GetIdentifier(), "log");
+        EXPECT_EQ(node->GetDisplayName(), "logarithm");
+        EXPECT_EQ(node->GetTag(), "group_a");
+    }
+
+    TEST_F(Volumetric, Volumetric_AddAbsNodeToFunction_NodeIsAdded)
+    {
+        //create a new model
+        auto const model = wrapper->CreateModel();
+
+        auto const function = model->AddImplicitFunction();
+
+        // add a scalar x input to the function
+
+        auto const input = function->AddInput("x", "x", Lib3MF::eImplicitPortType::Scalar);
+        auto const output = function->AddOutput("result", "result", Lib3MF::eImplicitPortType::Scalar);
+
+        auto const absNode = function->AddAbsNode("abs", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar, "absolute value", "group_a");
+
+        auto const absInput = absNode->GetInputA();
+        auto const absOutput = absNode->GetOutputResult();
+
+        function->AddLink(input, absInput);
+
+        auto const nodes = function->GetNodes();
+        auto const nodeCount = nodes->Count();
+        ASSERT_EQ(nodeCount, 1u);
+
+        nodes->MoveNext();
+        auto const node = nodes->GetCurrent();
+        ASSERT_TRUE(node);
+        EXPECT_EQ(node->GetNodeType(), Lib3MF::eImplicitNodeType::Abs);
+        EXPECT_EQ(node->GetIdentifier(), "abs");
+        EXPECT_EQ(node->GetDisplayName(), "absolute value");
+        EXPECT_EQ(node->GetTag(), "group_a");
+    }
+
+    TEST_F(Volumetric, Volumetric_AddComposeMatrixNode_NodeIsAdded)
+    {
+        //create a new model
+        auto const model = wrapper->CreateModel();
+
+        auto const function = model->AddImplicitFunction();
+
+        // add a vector input to the function
+
+        auto const input = function->AddInput("v", "vector", Lib3MF::eImplicitPortType::Vector);
+        auto const output = function->AddOutput("result", "result", Lib3MF::eImplicitPortType::Matrix);
+
+        auto const composeMatrixNode = function->AddComposeMatrixNode("composeMatrix", "compose matrix", "group_a");
+
+        auto const m00Node = function->AddConstantNode("m00", "m00", "group_a");
+        m00Node->SetConstant(1.0f);
+        auto const m01Node = function->AddConstantNode("m01", "m01", "group_a");
+        m01Node->SetConstant(0.0f);
+        auto const m02Node = function->AddConstantNode("m02", "m02", "group_a");
+        m02Node->SetConstant(0.0f);
+        auto const m03Node = function->AddConstantNode("m03", "m03", "group_a");
+        m03Node->SetConstant(0.0f);
+
+        auto const m10Node = function->AddConstantNode("m10", "m10", "group_a");
+        m10Node->SetConstant(0.0f);
+        auto const m11Node = function->AddConstantNode("m11", "m11", "group_a");
+        m11Node->SetConstant(1.0f);
+        auto const m12Node = function->AddConstantNode("m12", "m12", "group_a");
+        m12Node->SetConstant(0.0f);
+        auto const m13Node = function->AddConstantNode("m13", "m13", "group_a");
+        m13Node->SetConstant(0.0f);
+
+        auto const m20Node = function->AddConstantNode("m20", "m20", "group_a");
+        m20Node->SetConstant(0.0f);
+        auto const m21Node = function->AddConstantNode("m21", "m21", "group_a");
+        m21Node->SetConstant(0.0f);
+        auto const m22Node = function->AddConstantNode("m22", "m22", "group_a");
+        m22Node->SetConstant(1.0f);
+        auto const m23Node = function->AddConstantNode("m23", "m23", "group_a");
+        m23Node->SetConstant(0.0f);
+
+        auto const m30Node = function->AddConstantNode("m30", "m30", "group_a");
+        m30Node->SetConstant(0.0f);
+        auto const m31Node = function->AddConstantNode("m31", "m31", "group_a");
+        m31Node->SetConstant(0.0f);
+        auto const m32Node = function->AddConstantNode("m32", "m32", "group_a");
+        m32Node->SetConstant(0.0f);
+        auto const m33Node = function->AddConstantNode("m33", "m33", "group_a");
+        m33Node->SetConstant(1.0f);
+
+        auto const m00NodeOutput = m00Node->GetOutputValue();
+        auto const m01NodeOutput = m01Node->GetOutputValue();
+        auto const m02NodeOutput = m02Node->GetOutputValue();
+        auto const m03NodeOutput = m03Node->GetOutputValue();
+        auto const m10NodeOutput = m10Node->GetOutputValue();
+        auto const m11NodeOutput = m11Node->GetOutputValue();
+        auto const m12NodeOutput = m12Node->GetOutputValue();
+        auto const m13NodeOutput = m13Node->GetOutputValue();
+        auto const m20NodeOutput = m20Node->GetOutputValue();
+        auto const m21NodeOutput = m21Node->GetOutputValue();
+        auto const m22NodeOutput = m22Node->GetOutputValue();
+        auto const m23NodeOutput = m23Node->GetOutputValue();
+        auto const m30NodeOutput = m30Node->GetOutputValue();
+        auto const m31NodeOutput = m31Node->GetOutputValue();
+        auto const m32NodeOutput = m32Node->GetOutputValue();
+        auto const m33NodeOutput = m33Node->GetOutputValue();
+
+        auto const composeMatrixInputM00 = composeMatrixNode->GetInputM00();
+        auto const composeMatrixInputM01 = composeMatrixNode->GetInputM01();
+        auto const composeMatrixInputM02 = composeMatrixNode->GetInputM02();
+        auto const composeMatrixInputM03 = composeMatrixNode->GetInputM03();
+
+        auto const composeMatrixInputM10 = composeMatrixNode->GetInputM10();
+        auto const composeMatrixInputM11 = composeMatrixNode->GetInputM11();
+        auto const composeMatrixInputM12 = composeMatrixNode->GetInputM12();
+        auto const composeMatrixInputM13 = composeMatrixNode->GetInputM13();
+
+        auto const composeMatrixInputM20 = composeMatrixNode->GetInputM20();
+        auto const composeMatrixInputM21 = composeMatrixNode->GetInputM21();
+        auto const composeMatrixInputM22 = composeMatrixNode->GetInputM22();
+        auto const composeMatrixInputM23 = composeMatrixNode->GetInputM23();
+
+        auto const composeMatrixInputM30 = composeMatrixNode->GetInputM30();
+        auto const composeMatrixInputM31 = composeMatrixNode->GetInputM31();
+        auto const composeMatrixInputM32 = composeMatrixNode->GetInputM32();
+        auto const composeMatrixInputM33 = composeMatrixNode->GetInputM33();
+
+        function->AddLink(m00NodeOutput, composeMatrixInputM00);
+        function->AddLink(m01NodeOutput, composeMatrixInputM01);
+        function->AddLink(m02NodeOutput, composeMatrixInputM02);
+        function->AddLink(m03NodeOutput, composeMatrixInputM03);
+
+        function->AddLink(m10NodeOutput, composeMatrixInputM10);
+        function->AddLink(m11NodeOutput, composeMatrixInputM11);
+        function->AddLink(m12NodeOutput, composeMatrixInputM12);
+        function->AddLink(m13NodeOutput, composeMatrixInputM13);
+
+        function->AddLink(m20NodeOutput, composeMatrixInputM20);
+        function->AddLink(m21NodeOutput, composeMatrixInputM21);
+        function->AddLink(m22NodeOutput, composeMatrixInputM22);
+        function->AddLink(m23NodeOutput, composeMatrixInputM23);
+        
+        function->AddLink(m30NodeOutput, composeMatrixInputM30);
+        function->AddLink(m31NodeOutput, composeMatrixInputM31);
+        function->AddLink(m32NodeOutput, composeMatrixInputM32);
+        function->AddLink(m33NodeOutput, composeMatrixInputM33);
+
+        auto const composeMatrixOutput = composeMatrixNode->GetOutputResult();
+
+        function->AddLink(composeMatrixOutput, output);
+
+        auto const nodes = function->GetNodes();
+        auto const nodeCount = nodes->Count();
+        ASSERT_EQ(nodeCount, 17u);
+
+        nodes->MoveNext();
+        auto const node = nodes->GetCurrent();
+        ASSERT_TRUE(node);
+        EXPECT_EQ(node->GetNodeType(), Lib3MF::eImplicitNodeType::ComposeMatrix);
+        EXPECT_EQ(node->GetIdentifier(), "composeMatrix");
+        EXPECT_EQ(node->GetDisplayName(), "compose matrix");
+        EXPECT_EQ(node->GetTag(), "group_a");
+    }
+
+
+
 }  // namespace Lib3MF

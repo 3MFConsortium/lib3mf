@@ -165,7 +165,7 @@ namespace NMR
                          {"m33", eImplicitPortType::Scalar}},
                       Out{{"result", eImplicitPortType::Matrix}}}}}},
                 {eImplicitNodeType::MatrixFromColumns,
-                 {"ematrixfromcolumns",  // 4x4
+                 {"matrixfromcolumns",  // 4x4
                   {InputOutputRule{
                       Lib3MF::eImplicitNodeConfiguration::Default,
                       In{{"A", eImplicitPortType::Vector},
