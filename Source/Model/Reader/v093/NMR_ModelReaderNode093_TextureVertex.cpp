@@ -96,7 +96,11 @@ namespace NMR {
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE_V) == 0) {
 			m_fV = fnStringToFloat(pAttributeValue);
-			if (std::isnan (m_fV))
+#ifdef __MINGW32__
+			if (isNotANumber(m_fV))
+#else
+			if (std::isnan(m_fV))
+#endif
 				throw CNMRException(NMR_ERROR_INVALIDMODELTEXTURECOORDINATES);
 			if (fabs(m_fV) > XML_3MF_MAXIMUMCOORDINATEVALUE)
 				throw CNMRException(NMR_ERROR_INVALIDMODELTEXTURECOORDINATES);

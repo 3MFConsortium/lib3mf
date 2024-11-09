@@ -34,7 +34,7 @@ resource object.
 
 #include "Model/Classes/NMR_Model.h" 
 #include "Model/Classes/NMR_ModelResource.h" 
-#include "Common/NMR_Exception.h" 
+#include "Common/NMR_Exception.h"
 
 namespace NMR {
 
@@ -64,8 +64,12 @@ namespace NMR {
 
 	void CModelResource::setPackageResourceID(PPackageResourceID pID)
 	{
-		m_pModel->updateUniqueResourceID(m_pPackageResourceID->getUniqueID(), pID->getUniqueID());
+		if (m_pModel)
+		{
+			m_pModel->updateUniqueResourceID(m_pPackageResourceID->getUniqueID(), pID->getUniqueID());
+		}
 		m_pPackageResourceID = pID;
+		
 	}
 
 	_Ret_notnull_ CModel * CModelResource::getModel()
@@ -73,6 +77,15 @@ namespace NMR {
 		return m_pModel;
 	}
 
+    void CModelResource::setModel(CModel* pModel)
+	{
+		m_pModel = pModel;
+	}
+
+	ResourceDependencies CModelResource::getDependencies()
+	{
+		return {};
+	}
 
 	void CModelResource::clearResourceIndexMap()
 	{

@@ -59,7 +59,7 @@ namespace Lib3MF
 			metaDataGroup->AddMetaData("", "NoStandardName", "TheTitle", "xs:string", true);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 	}
@@ -117,7 +117,7 @@ namespace Lib3MF
 			metaDataGroup->AddMetaData("", "Title", "TheTitle", "xs:string", true);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 	}
@@ -129,7 +129,7 @@ namespace Lib3MF
 			md->SetName("INVALIDNAME");
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 	}
@@ -141,7 +141,7 @@ namespace Lib3MF
 			md->SetNameSpace("");
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 	}
@@ -152,7 +152,7 @@ namespace Lib3MF
 			auto md = metaDataGroup->AddMetaData("ANameSpace", "", "TheTitle", "xs:string", true);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 
@@ -160,7 +160,7 @@ namespace Lib3MF
 			auto md = metaDataGroup->AddMetaData("ANameSpace", "SomeName", "TheTitle", "", true);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 
@@ -169,7 +169,7 @@ namespace Lib3MF
 			md->SetName("");
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 
@@ -177,7 +177,7 @@ namespace Lib3MF
 			md->SetType("");
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 	}
