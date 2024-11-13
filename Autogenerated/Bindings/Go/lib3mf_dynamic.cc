@@ -440,7 +440,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitFunction_AddLog10Node = NULL;
 	pWrapperTable->m_ImplicitFunction_AddLengthNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddTransposeNode = NULL;
-	pWrapperTable->m_ImplicitFunction_InverseNode = NULL;
+	pWrapperTable->m_ImplicitFunction_AddInverseNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddSqrtNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddResourceIdNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddAdditionNode = NULL;
@@ -4233,12 +4233,12 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ImplicitFunction_InverseNode = (PLib3MFImplicitFunction_InverseNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_inversenode");
+	pWrapperTable->m_ImplicitFunction_AddInverseNode = (PLib3MFImplicitFunction_AddInverseNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addinversenode");
 	#else // _WIN32
-	pWrapperTable->m_ImplicitFunction_InverseNode = (PLib3MFImplicitFunction_InverseNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_inversenode");
+	pWrapperTable->m_ImplicitFunction_AddInverseNode = (PLib3MFImplicitFunction_AddInverseNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_addinversenode");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_ImplicitFunction_InverseNode == NULL)
+	if (pWrapperTable->m_ImplicitFunction_AddInverseNode == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

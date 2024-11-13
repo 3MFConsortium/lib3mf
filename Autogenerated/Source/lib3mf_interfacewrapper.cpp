@@ -15127,14 +15127,14 @@ Lib3MFResult lib3mf_implicitfunction_addtransposenode(Lib3MF_ImplicitFunction pI
 	}
 }
 
-Lib3MFResult lib3mf_implicitfunction_inversenode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_InverseNode * pNode)
+Lib3MFResult lib3mf_implicitfunction_addinversenode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_InverseNode * pNode)
 {
 	IBase* pIBaseClass = (IBase *)pImplicitFunction;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "InverseNode");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddInverseNode");
 			pJournalEntry->addStringParameter("Identifier", pIdentifier);
 			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
 			pJournalEntry->addStringParameter("Tag", pTag);
@@ -15155,7 +15155,7 @@ Lib3MFResult lib3mf_implicitfunction_inversenode(Lib3MF_ImplicitFunction pImplic
 		if (!pIImplicitFunction)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseNode = pIImplicitFunction->InverseNode(sIdentifier, sDisplayName, sTag);
+		pBaseNode = pIImplicitFunction->AddInverseNode(sIdentifier, sDisplayName, sTag);
 
 		*pNode = (IBase*)(pBaseNode);
 		if (pJournalEntry.get() != nullptr) {
@@ -23443,8 +23443,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_addlengthnode;
 	if (sProcName == "lib3mf_implicitfunction_addtransposenode") 
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_addtransposenode;
-	if (sProcName == "lib3mf_implicitfunction_inversenode") 
-		*ppProcAddress = (void*) &lib3mf_implicitfunction_inversenode;
+	if (sProcName == "lib3mf_implicitfunction_addinversenode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addinversenode;
 	if (sProcName == "lib3mf_implicitfunction_addsqrtnode") 
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_addsqrtnode;
 	if (sProcName == "lib3mf_implicitfunction_addresourceidnode") 

@@ -3020,7 +3020,7 @@ public:
 	inline PLog10Node AddLog10Node(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PLengthNode AddLengthNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PTransposeNode AddTransposeNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
-	inline PInverseNode InverseNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PInverseNode AddInverseNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PSqrtNode AddSqrtNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
 	inline PResourceIdNode AddResourceIdNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PAdditionNode AddAdditionNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag);
@@ -4737,7 +4737,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	* @param[in] sName - the name of the metadata
 	* @param[in] sValue - the value of the metadata
 	* @param[in] sType - the type of the metadata
-	* @param[in] bMustPreserve - shuold the metadata be preserved
+	* @param[in] bMustPreserve - should the metadata be preserved
 	* @return a new instance of the metadata
 	*/
 	PMetaData CMetaDataGroup::AddMetaData(const std::string & sNameSpace, const std::string & sName, const std::string & sValue, const std::string & sType, const bool bMustPreserve)
@@ -8165,7 +8165,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	
 	/**
 	* CComposeMatrixNode::GetInputM13 - Retrieves the input for the element 1 3
-	* @return the input for the m3 element
+	* @return the input for the m13 element
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM13()
 	{
@@ -8180,7 +8180,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	
 	/**
 	* CComposeMatrixNode::GetInputM20 - Retrieves the input for the element 2 0
-	* @return the input for the m2 element
+	* @return the input for the m20 element
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM20()
 	{
@@ -9320,16 +9320,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CImplicitFunction::InverseNode - Add a InverseNode
+	* CImplicitFunction::AddInverseNode - Add a InverseNode
 	* @param[in] sIdentifier - the identifier of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	PInverseNode CImplicitFunction::InverseNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
+	PInverseNode CImplicitFunction::AddInverseNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
 		Lib3MFHandle hNode = nullptr;
-		CheckError(lib3mf_implicitfunction_inversenode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
+		CheckError(lib3mf_implicitfunction_addinversenode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);

@@ -474,9 +474,9 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypeArcCos = 22, /** Calculates the arccosinus */
   eImplicitNodeTypeArcTan = 23, /** Calculates the arctangent */
   eImplicitNodeTypeArcTan2 = 24, /** Calculates the arctangent */
-  eImplicitNodeTypeMin = 25, /** Calculates the minimum tow values */
+  eImplicitNodeTypeMin = 25, /** Calculates the minimum of two values */
   eImplicitNodeTypeMax = 26, /** Calculates the maximum of two values */
-  eImplicitNodeTypeAbs = 27, /** Calcul the absolute value */
+  eImplicitNodeTypeAbs = 27, /** Calculates the absolute value */
   eImplicitNodeTypeFmod = 28, /** Computes the remainder of the divison of the inputs (same behavior as C fmod) */
   eImplicitNodeTypePow = 29, /** Calculates the power A^B */
   eImplicitNodeTypeSqrt = 30, /** Calculates the square root */
@@ -484,7 +484,7 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypeLog = 32, /** Natural logarithmus */
   eImplicitNodeTypeLog2 = 33, /** Logarithmus to the base 2 */
   eImplicitNodeTypeLog10 = 34, /** Logarithmus to the base 10 */
-  eImplicitNodeTypeSelect = 35, /** If A is less B returns C, else D */
+  eImplicitNodeTypeSelect = 35, /** If A is less than B returns C, else D */
   eImplicitNodeTypeClamp = 36, /** Clamps the input value to min and max */
   eImplicitNodeTypeSinh = 37, /** Calculates the hyperbolic sine */
   eImplicitNodeTypeCosh = 38, /** Calculates the hyperbolic cosine */

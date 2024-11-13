@@ -16411,7 +16411,7 @@ void CLib3MFImplicitFunction::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddLog10Node", AddLog10Node);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddLengthNode", AddLengthNode);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddTransposeNode", AddTransposeNode);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "InverseNode", InverseNode);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddInverseNode", AddInverseNode);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddSqrtNode", AddSqrtNode);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddResourceIdNode", AddResourceIdNode);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddAdditionNode", AddAdditionNode);
@@ -17454,7 +17454,7 @@ void CLib3MFImplicitFunction::AddTransposeNode(const FunctionCallbackInfo<Value>
 }
 
 
-void CLib3MFImplicitFunction::InverseNode(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFImplicitFunction::AddInverseNode(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -17477,11 +17477,11 @@ void CLib3MFImplicitFunction::InverseNode(const FunctionCallbackInfo<Value>& arg
         Lib3MFHandle hReturnNode = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method InverseNode.");
-        if (wrapperTable->m_ImplicitFunction_InverseNode == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::InverseNode.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddInverseNode.");
+        if (wrapperTable->m_ImplicitFunction_AddInverseNode == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddInverseNode.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_InverseNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddInverseNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFInverseNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);

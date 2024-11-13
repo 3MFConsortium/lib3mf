@@ -1192,7 +1192,7 @@ public:
 	* @param[in] sName - the name of the metadata
 	* @param[in] sValue - the value of the metadata
 	* @param[in] sType - the type of the metadata
-	* @param[in] bMustPreserve - shuold the metadata be preserved
+	* @param[in] bMustPreserve - should the metadata be preserved
 	* @return a new instance of the metadata
 	*/
 	virtual IMetaData * AddMetaData(const std::string & sNameSpace, const std::string & sName, const std::string & sValue, const std::string & sType, const bool bMustPreserve) = 0;
@@ -4249,13 +4249,13 @@ public:
 
 	/**
 	* IComposeMatrixNode::GetInputM13 - Retrieves the input for the element 1 3
-	* @return the input for the m3 element
+	* @return the input for the m13 element
 	*/
 	virtual IImplicitPort * GetInputM13() = 0;
 
 	/**
 	* IComposeMatrixNode::GetInputM20 - Retrieves the input for the element 2 0
-	* @return the input for the m2 element
+	* @return the input for the m20 element
 	*/
 	virtual IImplicitPort * GetInputM20() = 0;
 
@@ -4990,13 +4990,13 @@ public:
 	virtual ITransposeNode * AddTransposeNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
-	* IImplicitFunction::InverseNode - Add a InverseNode
+	* IImplicitFunction::AddInverseNode - Add a InverseNode
 	* @param[in] sIdentifier - the identifier of the node
 	* @param[in] sDisplayName - the display name of the node
 	* @param[in] sTag - the tag of the node
 	* @return the added node
 	*/
-	virtual IInverseNode * InverseNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
+	virtual IInverseNode * AddInverseNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddSqrtNode - Add a SqrtNode

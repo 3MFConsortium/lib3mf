@@ -527,7 +527,7 @@ class FunctionTable:
 	lib3mf_implicitfunction_addlog10node = None
 	lib3mf_implicitfunction_addlengthnode = None
 	lib3mf_implicitfunction_addtransposenode = None
-	lib3mf_implicitfunction_inversenode = None
+	lib3mf_implicitfunction_addinversenode = None
 	lib3mf_implicitfunction_addsqrtnode = None
 	lib3mf_implicitfunction_addresourceidnode = None
 	lib3mf_implicitfunction_addadditionnode = None
@@ -3594,11 +3594,11 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ImplicitNodeConfiguration, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_implicitfunction_addtransposenode = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_inversenode")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addinversenode")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_implicitfunction_inversenode = methodType(int(methodAddress.value))
+			self.lib.lib3mf_implicitfunction_addinversenode = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addsqrtnode")), methodAddress)
 			if err != 0:
@@ -5978,8 +5978,8 @@ class Wrapper:
 			self.lib.lib3mf_implicitfunction_addtransposenode.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitfunction_addtransposenode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ImplicitNodeConfiguration, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_implicitfunction_inversenode.restype = ctypes.c_int32
-			self.lib.lib3mf_implicitfunction_inversenode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_implicitfunction_addinversenode.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_addinversenode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_implicitfunction_addsqrtnode.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitfunction_addsqrtnode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ImplicitNodeConfiguration, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -10950,12 +10950,12 @@ class ImplicitFunction(Function):
 		
 		return NodeObject
 	
-	def InverseNode(self, Identifier, DisplayName, Tag):
+	def AddInverseNode(self, Identifier, DisplayName, Tag):
 		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
 		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
 		pTag = ctypes.c_char_p(str.encode(Tag))
 		NodeHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_inversenode(self._handle, pIdentifier, pDisplayName, pTag, NodeHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addinversenode(self._handle, pIdentifier, pDisplayName, pTag, NodeHandle))
 		if NodeHandle:
 			NodeObject = self._wrapper._polymorphicFactory(NodeHandle)
 		else:

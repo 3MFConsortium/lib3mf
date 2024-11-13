@@ -774,7 +774,7 @@ typedef Lib3MFResult (*PLib3MFMetaDataGroup_RemoveMetaDataPtr) (Lib3MF_MetaDataG
 * @param[in] pName - the name of the metadata
 * @param[in] pValue - the value of the metadata
 * @param[in] pType - the type of the metadata
-* @param[in] bMustPreserve - shuold the metadata be preserved
+* @param[in] bMustPreserve - should the metadata be preserved
 * @param[out] pMetaData - a new instance of the metadata
 * @return error code or 0 (success)
 */
@@ -3495,7 +3495,7 @@ typedef Lib3MFResult (*PLib3MFComposeMatrixNode_GetInputM12Ptr) (Lib3MF_ComposeM
 * Retrieves the input for the element 1 3
 *
 * @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
-* @param[out] pM13 - the input for the m3 element
+* @param[out] pM13 - the input for the m13 element
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFComposeMatrixNode_GetInputM13Ptr) (Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM13);
@@ -3504,7 +3504,7 @@ typedef Lib3MFResult (*PLib3MFComposeMatrixNode_GetInputM13Ptr) (Lib3MF_ComposeM
 * Retrieves the input for the element 2 0
 *
 * @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
-* @param[out] pM20 - the input for the m2 element
+* @param[out] pM20 - the input for the m20 element
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFComposeMatrixNode_GetInputM20Ptr) (Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM20);
@@ -4284,7 +4284,7 @@ typedef Lib3MFResult (*PLib3MFImplicitFunction_AddTransposeNodePtr) (Lib3MF_Impl
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImplicitFunction_InverseNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_InverseNode * pNode);
+typedef Lib3MFResult (*PLib3MFImplicitFunction_AddInverseNodePtr) (Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_InverseNode * pNode);
 
 /**
 * Add a SqrtNode
@@ -6836,7 +6836,7 @@ typedef struct {
 	PLib3MFImplicitFunction_AddLog10NodePtr m_ImplicitFunction_AddLog10Node;
 	PLib3MFImplicitFunction_AddLengthNodePtr m_ImplicitFunction_AddLengthNode;
 	PLib3MFImplicitFunction_AddTransposeNodePtr m_ImplicitFunction_AddTransposeNode;
-	PLib3MFImplicitFunction_InverseNodePtr m_ImplicitFunction_InverseNode;
+	PLib3MFImplicitFunction_AddInverseNodePtr m_ImplicitFunction_AddInverseNode;
 	PLib3MFImplicitFunction_AddSqrtNodePtr m_ImplicitFunction_AddSqrtNode;
 	PLib3MFImplicitFunction_AddResourceIdNodePtr m_ImplicitFunction_AddResourceIdNode;
 	PLib3MFImplicitFunction_AddAdditionNodePtr m_ImplicitFunction_AddAdditionNode;

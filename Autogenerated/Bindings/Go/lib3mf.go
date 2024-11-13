@@ -3600,12 +3600,12 @@ Lib3MFResult CCall_lib3mf_implicitfunction_addtransposenode(Lib3MFHandle library
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitfunction_inversenode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_InverseNode * pNode)
+Lib3MFResult CCall_lib3mf_implicitfunction_addinversenode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_InverseNode * pNode)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitFunction_InverseNode (pImplicitFunction, pIdentifier, pDisplayName, pTag, pNode);
+	return wrapperTable->m_ImplicitFunction_AddInverseNode (pImplicitFunction, pIdentifier, pDisplayName, pTag, pNode);
 }
 
 
@@ -11366,10 +11366,10 @@ func (inst ImplicitFunction) AddTransposeNode(identifier string, configuration I
 	return inst.wrapperRef.NewTransposeNode(node), nil
 }
 
-// InverseNode add a InverseNode.
-func (inst ImplicitFunction) InverseNode(identifier string, displayName string, tag string) (InverseNode, error) {
+// AddInverseNode add a InverseNode.
+func (inst ImplicitFunction) AddInverseNode(identifier string, displayName string, tag string) (InverseNode, error) {
 	var node ref
-	ret := C.CCall_lib3mf_implicitfunction_inversenode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	ret := C.CCall_lib3mf_implicitfunction_addinversenode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
 	if ret != 0 {
 		return InverseNode{}, makeError(uint32(ret))
 	}

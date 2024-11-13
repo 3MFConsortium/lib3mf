@@ -1611,8 +1611,8 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addtransposenode", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_AddTransposeNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_inversenode", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_InverseNode (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addinversenode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddInverseNode (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addsqrtnode", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_AddSqrtNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
@@ -7038,14 +7038,14 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CTransposeNode>(newNode);
 		}
 
-		public CInverseNode InverseNode (String AIdentifier, String ADisplayName, String ATag)
+		public CInverseNode AddInverseNode (String AIdentifier, String ADisplayName, String ATag)
 		{
 			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
 			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
 			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
 			IntPtr newNode = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_InverseNode (Handle, byteIdentifier, byteDisplayName, byteTag, out newNode));
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddInverseNode (Handle, byteIdentifier, byteDisplayName, byteTag, out newNode));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CInverseNode>(newNode);
 		}
 

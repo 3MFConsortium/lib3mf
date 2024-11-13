@@ -475,9 +475,9 @@ namespace Lib3MF {
     ArcCos = 22, /** Calculates the arccosinus */
     ArcTan = 23, /** Calculates the arctangent */
     ArcTan2 = 24, /** Calculates the arctangent */
-    Min = 25, /** Calculates the minimum tow values */
+    Min = 25, /** Calculates the minimum of two values */
     Max = 26, /** Calculates the maximum of two values */
-    Abs = 27, /** Calcul the absolute value */
+    Abs = 27, /** Calculates the absolute value */
     Fmod = 28, /** Computes the remainder of the divison of the inputs (same behavior as C fmod) */
     Pow = 29, /** Calculates the power A^B */
     Sqrt = 30, /** Calculates the square root */
@@ -485,7 +485,7 @@ namespace Lib3MF {
     Log = 32, /** Natural logarithmus */
     Log2 = 33, /** Logarithmus to the base 2 */
     Log10 = 34, /** Logarithmus to the base 10 */
-    Select = 35, /** If A is less B returns C, else D */
+    Select = 35, /** If A is less than B returns C, else D */
     Clamp = 36, /** Clamps the input value to min and max */
     Sinh = 37, /** Calculates the hyperbolic sine */
     Cosh = 38, /** Calculates the hyperbolic cosine */

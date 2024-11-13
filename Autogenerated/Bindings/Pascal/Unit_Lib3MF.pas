@@ -1344,7 +1344,7 @@ type
 	* @param[in] pName - the name of the metadata
 	* @param[in] pValue - the value of the metadata
 	* @param[in] pType - the type of the metadata
-	* @param[in] bMustPreserve - shuold the metadata be preserved
+	* @param[in] bMustPreserve - should the metadata be preserved
 	* @param[out] pMetaData - a new instance of the metadata
 	* @return error code or 0 (success)
 	*)
@@ -4136,7 +4136,7 @@ type
 	* Retrieves the input for the element 1 3
 	*
 	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
-	* @param[out] pM13 - the input for the m3 element
+	* @param[out] pM13 - the input for the m13 element
 	* @return error code or 0 (success)
 	*)
 	TLib3MFComposeMatrixNode_GetInputM13Func = function(pComposeMatrixNode: TLib3MFHandle; out pM13: TLib3MFHandle): TLib3MFResult; cdecl;
@@ -4145,7 +4145,7 @@ type
 	* Retrieves the input for the element 2 0
 	*
 	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
-	* @param[out] pM20 - the input for the m2 element
+	* @param[out] pM20 - the input for the m20 element
 	* @return error code or 0 (success)
 	*)
 	TLib3MFComposeMatrixNode_GetInputM20Func = function(pComposeMatrixNode: TLib3MFHandle; out pM20: TLib3MFHandle): TLib3MFResult; cdecl;
@@ -4936,7 +4936,7 @@ type
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_InverseNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddInverseNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a SqrtNode
@@ -8650,7 +8650,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddLog10Node(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFLog10Node;
 		function AddLengthNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFLengthNode;
 		function AddTransposeNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFTransposeNode;
-		function InverseNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFInverseNode;
+		function AddInverseNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFInverseNode;
 		function AddSqrtNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSqrtNode;
 		function AddResourceIdNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFResourceIdNode;
 		function AddAdditionNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFAdditionNode;
@@ -9374,7 +9374,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImplicitFunction_AddLog10NodeFunc: TLib3MFImplicitFunction_AddLog10NodeFunc;
 		FLib3MFImplicitFunction_AddLengthNodeFunc: TLib3MFImplicitFunction_AddLengthNodeFunc;
 		FLib3MFImplicitFunction_AddTransposeNodeFunc: TLib3MFImplicitFunction_AddTransposeNodeFunc;
-		FLib3MFImplicitFunction_InverseNodeFunc: TLib3MFImplicitFunction_InverseNodeFunc;
+		FLib3MFImplicitFunction_AddInverseNodeFunc: TLib3MFImplicitFunction_AddInverseNodeFunc;
 		FLib3MFImplicitFunction_AddSqrtNodeFunc: TLib3MFImplicitFunction_AddSqrtNodeFunc;
 		FLib3MFImplicitFunction_AddResourceIdNodeFunc: TLib3MFImplicitFunction_AddResourceIdNodeFunc;
 		FLib3MFImplicitFunction_AddAdditionNodeFunc: TLib3MFImplicitFunction_AddAdditionNodeFunc;
@@ -9986,7 +9986,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImplicitFunction_AddLog10NodeFunc: TLib3MFImplicitFunction_AddLog10NodeFunc read FLib3MFImplicitFunction_AddLog10NodeFunc;
 		property Lib3MFImplicitFunction_AddLengthNodeFunc: TLib3MFImplicitFunction_AddLengthNodeFunc read FLib3MFImplicitFunction_AddLengthNodeFunc;
 		property Lib3MFImplicitFunction_AddTransposeNodeFunc: TLib3MFImplicitFunction_AddTransposeNodeFunc read FLib3MFImplicitFunction_AddTransposeNodeFunc;
-		property Lib3MFImplicitFunction_InverseNodeFunc: TLib3MFImplicitFunction_InverseNodeFunc read FLib3MFImplicitFunction_InverseNodeFunc;
+		property Lib3MFImplicitFunction_AddInverseNodeFunc: TLib3MFImplicitFunction_AddInverseNodeFunc read FLib3MFImplicitFunction_AddInverseNodeFunc;
 		property Lib3MFImplicitFunction_AddSqrtNodeFunc: TLib3MFImplicitFunction_AddSqrtNodeFunc read FLib3MFImplicitFunction_AddSqrtNodeFunc;
 		property Lib3MFImplicitFunction_AddResourceIdNodeFunc: TLib3MFImplicitFunction_AddResourceIdNodeFunc read FLib3MFImplicitFunction_AddResourceIdNodeFunc;
 		property Lib3MFImplicitFunction_AddAdditionNodeFunc: TLib3MFImplicitFunction_AddAdditionNodeFunc read FLib3MFImplicitFunction_AddAdditionNodeFunc;
@@ -16763,13 +16763,13 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFTransposeNode, TLib3MFTransposeNode>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.InverseNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFInverseNode;
+	function TLib3MFImplicitFunction.AddInverseNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFInverseNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_InverseNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddInverseNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFInverseNode, TLib3MFInverseNode>.Make(FWrapper, HNode);
 	end;
@@ -19331,7 +19331,7 @@ implementation
 		FLib3MFImplicitFunction_AddLog10NodeFunc := LoadFunction('lib3mf_implicitfunction_addlog10node');
 		FLib3MFImplicitFunction_AddLengthNodeFunc := LoadFunction('lib3mf_implicitfunction_addlengthnode');
 		FLib3MFImplicitFunction_AddTransposeNodeFunc := LoadFunction('lib3mf_implicitfunction_addtransposenode');
-		FLib3MFImplicitFunction_InverseNodeFunc := LoadFunction('lib3mf_implicitfunction_inversenode');
+		FLib3MFImplicitFunction_AddInverseNodeFunc := LoadFunction('lib3mf_implicitfunction_addinversenode');
 		FLib3MFImplicitFunction_AddSqrtNodeFunc := LoadFunction('lib3mf_implicitfunction_addsqrtnode');
 		FLib3MFImplicitFunction_AddResourceIdNodeFunc := LoadFunction('lib3mf_implicitfunction_addresourceidnode');
 		FLib3MFImplicitFunction_AddAdditionNodeFunc := LoadFunction('lib3mf_implicitfunction_addadditionnode');
@@ -20728,7 +20728,7 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addtransposenode'), @FLib3MFImplicitFunction_AddTransposeNodeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_inversenode'), @FLib3MFImplicitFunction_InverseNodeFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addinversenode'), @FLib3MFImplicitFunction_AddInverseNodeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addsqrtnode'), @FLib3MFImplicitFunction_AddSqrtNodeFunc);

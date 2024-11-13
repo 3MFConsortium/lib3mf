@@ -749,7 +749,7 @@
 			<param name="Value" type="string" pass="in" description="the value of the metadata" />
 			<param name="Type" type="string" pass="in" description="the type of the metadata" />
 			<param name="MustPreserve" type="bool" pass="in"
-				description="shuold the metadata be preserved" />
+				description="should the metadata be preserved" />
 			<param name="MetaData" type="handle" class="MetaData" pass="return"
 				description="a new instance of the metadata" />
 		</method>
@@ -1888,9 +1888,9 @@
 		<option name="ArcCos" description="Calculates the arccosinus" value="22" />
 		<option name="ArcTan" description="Calculates the arctangent" value="23" />
 		<option name="ArcTan2" description="Calculates the arctangent" value="24" />
-		<option name="Min" description="Calculates the minimum tow values" value="25" />
+		<option name="Min" description="Calculates the minimum of two values" value="25" />
 		<option name="Max" description="Calculates the maximum of two values" value="26" />
-		<option name="Abs" description="Calcul the absolute value" value="27" />
+		<option name="Abs" description="Calculates the absolute value" value="27" />
 		<option name="Fmod" description="Computes the remainder of the divison of the inputs (same behavior as C fmod)" value="28" />
 		<option name="Pow" description="Calculates the power A^B" value="29" />
 		<option name="Sqrt" description="Calculates the square root" value="30" />
@@ -1898,7 +1898,7 @@
 		<option name="Log" description="Natural logarithmus" value="32" />
 		<option name="Log2" description="Logarithmus to the base 2" value="33" />
 		<option name="Log10" description="Logarithmus to the base 10" value="34" />
-		<option name="Select" description="If A is less B returns C, else D" value="35" />
+		<option name="Select" description="If A is less than B returns C, else D" value="35" />
 		<option name="Clamp" description="Clamps the input value to min and max" value="36" />
 		<option name="Sinh" description="Calculates the hyperbolic sine" value="37" />
 		<option name="Cosh" description="Calculates the hyperbolic cosine" value="38" />
@@ -2124,7 +2124,7 @@
 	<class name="FractNode" parent="OneInputNode" description="Returns the fractional part">
 	</class>
 
-	<class name="AbsNode" parent="OneInputNode" description="Calcul the absolute value">
+	<class name="AbsNode" parent="OneInputNode" description="Calculates the absolute value">
 	</class>
 
 	<class name="ExpNode" parent="OneInputNode" description="Exponential function">
@@ -2324,15 +2324,15 @@
 		</method>
 		<method name="GetInputM13" description="Retrieves the input for the element 1 3">
 			<param name="M13" type="class" class="ImplicitPort" pass="return"
-				description="the input for the m3 element" />
+				description="the input for the m13 element" />
 		</method>
 		<method name="GetInputM20" description="Retrieves the input for the element 2 0">
 			<param name="M20" type="class" class="ImplicitPort" pass="return"
-				description="the input for the m2 element" />
+				description="the input for the m20 element" />
 		</method>
 		<method name="GetInputM21" description="Retrieves the input for the element 2 1">
 			<param name="M21" type="class" class="ImplicitPort" pass="return"
-				decription="the input fr the m21 eement" />
+				decription="the input fr the m21 element" />
 		</method>
 		<method name="GetInputM22" description="Retrieves the input for the element 2 2">
 			<param name="M22" type="class" class="ImplicitPort" pass="return"
@@ -2866,7 +2866,7 @@
 				description="the added node" />
 		</method>
 
-		<method name="InverseNode" description="Add a InverseNode">
+		<method name="AddInverseNode" description="Add a InverseNode">
 			<param name="Identifier" pass="in" type="string"
 				description="the identifier of the node" />
 			<param name="DisplayName" pass="in" type="string"

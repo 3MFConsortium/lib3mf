@@ -787,7 +787,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_metadatagroup_removemetadata(Lib3MF_MetaData
 * @param[in] pName - the name of the metadata
 * @param[in] pValue - the value of the metadata
 * @param[in] pType - the type of the metadata
-* @param[in] bMustPreserve - shuold the metadata be preserved
+* @param[in] bMustPreserve - should the metadata be preserved
 * @param[out] pMetaData - a new instance of the metadata
 * @return error code or 0 (success)
 */
@@ -3508,7 +3508,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm12(Lib3MF_Compose
 * Retrieves the input for the element 1 3
 *
 * @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
-* @param[out] pM13 - the input for the m3 element
+* @param[out] pM13 - the input for the m13 element
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm13(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM13);
@@ -3517,7 +3517,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm13(Lib3MF_Compose
 * Retrieves the input for the element 2 0
 *
 * @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
-* @param[out] pM20 - the input for the m2 element
+* @param[out] pM20 - the input for the m20 element
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_composematrixnode_getinputm20(Lib3MF_ComposeMatrixNode pComposeMatrixNode, Lib3MF_ImplicitPort * pM20);
@@ -4297,7 +4297,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addtransposenode(Lib3MF_Imp
 * @param[out] pNode - the added node
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_inversenode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_InverseNode * pNode);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addinversenode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_InverseNode * pNode);
 
 /**
 * Add a SqrtNode
