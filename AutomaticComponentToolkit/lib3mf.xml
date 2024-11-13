@@ -1778,13 +1778,17 @@
 			<param name="FileName" type="string" pass="in" description="file to write into." />
 		</method>
 		<method name="ReadFromFile" description="Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.">
-			<param name="FileName" type="string" pass="in" description="file to read from."/>
+			<param name="FileName" type="string" pass="in" description="file to read from." />
 		</method>
 		<method name="ReadFromCallback" description="Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.">
-			<param name="TheReadCallback" type="functiontype" class="ReadCallback" pass="in" description="Callback to call for reading a data chunk"/>
-			<param name="StreamSize" type="uint64" pass="in" description="number of bytes the callback returns"/>
-			<param name="TheSeekCallback" type="functiontype" class="SeekCallback" pass="in" description="Callback to call for seeking in the stream."/>
-			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+			<param name="TheReadCallback" type="functiontype" class="ReadCallback" pass="in"
+				description="Callback to call for reading a data chunk" />
+			<param name="StreamSize" type="uint64" pass="in"
+				description="number of bytes the callback returns" />
+			<param name="TheSeekCallback" type="functiontype" class="SeekCallback" pass="in"
+				description="Callback to call for seeking in the stream." />
+			<param name="UserData" type="pointer" pass="in"
+				description="Userdata that is passed to the callback function" />
 		</method>
 		<method name="GetStreamSize" description="Retrieves the size of the attachment stream">
 			<param name="StreamSize" type="uint64" pass="return" description="the stream size" />
@@ -1794,7 +1798,8 @@
 				description="Buffer to write into" />
 		</method>
 		<method name="ReadFromBuffer" description="Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).">
-			<param name="Buffer" type="basicarray" class="uint8" pass="in" description="Buffer to read from"/>
+			<param name="Buffer" type="basicarray" class="uint8" pass="in"
+				description="Buffer to read from" />
 		</method>
 		<!--
 		<method name="WriteToCallback" description = "Writes out the attachment and passes the data to a
@@ -1855,84 +1860,88 @@
 	</class>
 
 	<enum name="ImplicitNodeType" description="The type of the node">
-		<option name="Addition" description="Adds to values (scalar or vector)" value="1" />
-		<option name="Subtraction" description="Subtracts two values (scalar or vector)" value="2" />
+		<option name="Addition" description="Adds to values (scalar or vector)" value="0" />
+		<option name="Subtraction" description="Subtracts two values (scalar or vector)" value="1" />
 		<option name="Multiplication" description="Multiplies two values (scalar or vector)"
-			value="3" />
-		<option name="Division" description="Divides two values (scalar or vector)" value="4" />
-		<option name="Constant" description="A constant scalar value" value="5" />
-		<option name="ConstVec" description="A constant vector value" value="6" />
-		<option name="ConstMat" description="A constant matrix value" value="7" />
+			value="2" />
+		<option name="Division" description="Divides two values (scalar or vector)" value="3" />
+		<option name="Constant" description="A constant scalar value" value="4" />
+		<option name="ConstVec" description="A constant vector value" value="5" />
+		<option name="ConstMat" description="A constant matrix value" value="6" />
 		<option name="ComposeVector" description="Creates a vector from three scalar values"
-			value="8" />
+			value="7" />
 		<option name="DecomposeVector" description="Decomposes a vector into three scalar values"
-			value="9" />
+			value="8" />
 		<option name="ComposeMatrix" description="Creates a matrix from nine scalar values"
-			value="10" />
+			value="9" />
 		<option name="MatrixFromColumns"
-			description="Creates a matrix from three column vector values" value="11" />
-		<option name="MatrixFromRows"
-			description="Creates a matrix from three row vector values" value="12" />
-		<option name="Dot" description="Calculates the dot product of two vector values"
-			value="13" />
+			description="Creates a matrix from three column vector values" value="10" />
+		<option name="MatrixFromRows" description="Creates a matrix from three row vector values"
+			value="11" />
+		<option name="Dot" description="Calculates the dot product of two vector values" value="12" />
 		<option name="Cross" description="Calculates the cross product of two vector values"
-			value="14" />
+			value="13" />
 		<option name="MatVecMultiplication" description="Multiplies a matrix with a vector"
-			value="15" />
-		<option name="Transpose" description="Transposes a matrix" value="16" />
-		<option name="Inverse" description="Computes the inverse of a matrix" value="17" />
-		<option name="Sinus" description="Calculates the sinus" value="18" />
-		<option name="Cosinus" description="Calculates the cosinus" value="19" />
-		<option name="Tan" description="Calculates the tangent" value="20" />
-		<option name="ArcSin" description="Calculates the arcsinus" value="21" />
-		<option name="ArcCos" description="Calculates the arccosinus" value="22" />
-		<option name="ArcTan" description="Calculates the arctangent" value="23" />
-		<option name="ArcTan2" description="Calculates the arctangent" value="24" />
-		<option name="Min" description="Calculates the minimum of two values" value="25" />
-		<option name="Max" description="Calculates the maximum of two values" value="26" />
-		<option name="Abs" description="Calculates the absolute value" value="27" />
-		<option name="Fmod" description="Computes the remainder of the divison of the inputs (same behavior as C fmod)" value="28" />
-		<option name="Pow" description="Calculates the power A^B" value="29" />
-		<option name="Sqrt" description="Calculates the square root" value="30" />
-		<option name="Exp" description="Exponential function" value="31" />
-		<option name="Log" description="Natural logarithmus" value="32" />
-		<option name="Log2" description="Logarithmus to the base 2" value="33" />
-		<option name="Log10" description="Logarithmus to the base 10" value="34" />
-		<option name="Select" description="If A is less than B returns C, else D" value="35" />
-		<option name="Clamp" description="Clamps the input value to min and max" value="36" />
-		<option name="Sinh" description="Calculates the hyperbolic sine" value="37" />
-		<option name="Cosh" description="Calculates the hyperbolic cosine" value="38" />
-		<option name="Tanh" description="Calculates the hyperbolic tangent" value="39" />
-		<option name="Round" description="Rounds a scalar value to the nearest integer" value="40" />
-		<option name="Ceil" description="Rounds a scalar value up to the nearest integer" value="41" />
+			value="14" />
+		<option name="Transpose" description="Transposes a matrix" value="15" />
+		<option name="Inverse" description="Computes the inverse of a matrix" value="16" />
+		<option name="Sinus" description="Calculates the sinus" value="17" />
+		<option name="Cosinus" description="Calculates the cosinus" value="18" />
+		<option name="Tan" description="Calculates the tangent" value="19" />
+		<option name="ArcSin" description="Calculates the arcsinus" value="20" />
+		<option name="ArcCos" description="Calculates the arccosinus" value="21" />
+		<option name="ArcTan" description="Calculates the arctangent" value="22" />
+		<option name="ArcTan2" description="Calculates the arctangent" value="23" />
+		<option name="Min" description="Calculates the minimum of two values" value="24" />
+		<option name="Max" description="Calculates the maximum of two values" value="25" />
+		<option name="Abs" description="Calculates the absolute value" value="26" />
+		<option name="Fmod"
+			description="Computes the remainder of the divison of the inputs (same behavior as C fmod)"
+			value="27" />
+		<option name="Pow" description="Calculates the power A^B" value="28" />
+		<option name="Sqrt" description="Calculates the square root" value="29" />
+		<option name="Exp" description="Exponential function" value="30" />
+		<option name="Log" description="Natural logarithmus" value="31" />
+		<option name="Log2" description="Logarithmus to the base 2" value="32" />
+		<option name="Log10" description="Logarithmus to the base 10" value="33" />
+		<option name="Select" description="If A is less than B returns C, else D" value="34" />
+		<option name="Clamp" description="Clamps the input value to min and max" value="35" />
+		<option name="Sinh" description="Calculates the hyperbolic sine" value="36" />
+		<option name="Cosh" description="Calculates the hyperbolic cosine" value="37" />
+		<option name="Tanh" description="Calculates the hyperbolic tangent" value="38" />
+		<option name="Round" description="Rounds a scalar value to the nearest integer" value="39" />
+		<option name="Ceil" description="Rounds a scalar value up to the nearest integer" value="40" />
 		<option name="Floor" description="Rounds a scalar value down to the nearest integer"
-			value="42" />
-		<option name="Sign" description="Returns the sign" value="43" />
-		<option name="Fract" description="Returns the fractional part" value="44" />
-		<option name="FunctionCall" description="Calls a function" value="45" />
-		<option name="Mesh" description="Calculates the signed distance to a mesh" value="46" />
-		<option name="Length" description="Calculates the length of a vector" value="47" />
-		<option name="ConstResourceID" description="Selects a resource (function, mesh etc.)" value="48" />
+			value="41" />
+		<option name="Sign" description="Returns the sign" value="42" />
+		<option name="Fract" description="Returns the fractional part" value="43" />
+		<option name="FunctionCall" description="Calls a function" value="44" />
+		<option name="Mesh" description="Calculates the signed distance to a mesh" value="45" />
+		<option name="Length" description="Calculates the length of a vector" value="46" />
+		<option name="ConstResourceID" description="Selects a resource (function, mesh etc.)"
+			value="47" />
 		<option name="VectorFromScalar" description="Creates a vector from one scalar values"
-			value="49" />
+			value="48" />
 		<option name="UnsignedMesh" description="Calculates the unsigned distance to a mesh"
+			value="49" />
+		<option name="Mod"
+			description="Calculates the modulo of two values (same behaviour as glsl mod)"
 			value="50" />
-		<option name="Mod" description="Calculates the modulo of two values (same behaviour as glsl mod)" value="51" />
 	</enum>
 
 	<enum name="ImplicitPortType" description="The type of the port">
-		<option name="Scalar" description="Scalar" value="1" />
-		<option name="Vector" description="Vector" value="2" />
-		<option name="Matrix" description="4x4 Matrix" value="3" />
-		<option name="ResourceID" description="Resource ID" value="4" />
+		<option name="Scalar" description="Scalar" value="0" />
+		<option name="Vector" description="Vector" value="1" />
+		<option name="Matrix" description="4x4 Matrix" value="2" />
+		<option name="ResourceID" description="Resource ID" value="3" />
 	</enum>
 
 	<enum name="ImplicitNodeConfiguration"
 		description="Defines the input and output types of a node">
-		<option name="Default" description="Default" value="1" />
-		<option name="ScalarToScalar" description="Scalar -> Scalar" value="2" />
-		<option name="VectorToVector" description="Vector -> Vector" value="3" />
-		<option name="MatrixToMatrix" description="Matrix -> Matrix" value="4" />
+		<option name="Default" description="Default" value="0" />
+		<option name="ScalarToScalar" description="Scalar -> Scalar" value="1" />
+		<option name="VectorToVector" description="Vector -> Vector" value="2" />
+		<option name="MatrixToMatrix" description="Matrix -> Matrix" value="3" />
 	</enum>
 
 
