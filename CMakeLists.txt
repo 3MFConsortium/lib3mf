@@ -18,7 +18,7 @@ set(VCPKG_TARGET_TRIPLET wasm32-emscripten)
 #     set(VCPKG_TARGET_TRIPLET wasm32-emscripten)
 # endif()
 
-# Automatically set the vcpkg toolchain file if vcpkg exists as a submodule
+# Automatically set the vcpkg toolchain file if vcpkg exists
 if (EXISTS "${CMAKE_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake")
     message("Using VCPKG Toolchain")
     set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
