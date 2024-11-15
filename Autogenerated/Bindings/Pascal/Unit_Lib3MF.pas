@@ -1344,7 +1344,7 @@ type
 	* @param[in] pName - the name of the metadata
 	* @param[in] pValue - the value of the metadata
 	* @param[in] pType - the type of the metadata
-	* @param[in] bMustPreserve - shuold the metadata be preserved
+	* @param[in] bMustPreserve - should the metadata be preserved
 	* @param[out] pMetaData - a new instance of the metadata
 	* @return error code or 0 (success)
 	*)
@@ -4136,7 +4136,7 @@ type
 	* Retrieves the input for the element 1 3
 	*
 	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
-	* @param[out] pM13 - the input for the m3 element
+	* @param[out] pM13 - the input for the m13 element
 	* @return error code or 0 (success)
 	*)
 	TLib3MFComposeMatrixNode_GetInputM13Func = function(pComposeMatrixNode: TLib3MFHandle; out pM13: TLib3MFHandle): TLib3MFResult; cdecl;
@@ -4145,7 +4145,7 @@ type
 	* Retrieves the input for the element 2 0
 	*
 	* @param[in] pComposeMatrixNode - ComposeMatrixNode instance.
-	* @param[out] pM20 - the input for the m2 element
+	* @param[out] pM20 - the input for the m20 element
 	* @return error code or 0 (success)
 	*)
 	TLib3MFComposeMatrixNode_GetInputM20Func = function(pComposeMatrixNode: TLib3MFHandle; out pM20: TLib3MFHandle): TLib3MFResult; cdecl;
@@ -4936,7 +4936,7 @@ type
 	* @param[out] pNode - the added node
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImplicitFunction_InverseNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImplicitFunction_AddInverseNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a SqrtNode
@@ -8650,7 +8650,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddLog10Node(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFLog10Node;
 		function AddLengthNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFLengthNode;
 		function AddTransposeNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFTransposeNode;
-		function InverseNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFInverseNode;
+		function AddInverseNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFInverseNode;
 		function AddSqrtNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFSqrtNode;
 		function AddResourceIdNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFResourceIdNode;
 		function AddAdditionNode(const AIdentifier: String; const AConfiguration: TLib3MFImplicitNodeConfiguration; const ADisplayName: String; const ATag: String): TLib3MFAdditionNode;
@@ -9374,7 +9374,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImplicitFunction_AddLog10NodeFunc: TLib3MFImplicitFunction_AddLog10NodeFunc;
 		FLib3MFImplicitFunction_AddLengthNodeFunc: TLib3MFImplicitFunction_AddLengthNodeFunc;
 		FLib3MFImplicitFunction_AddTransposeNodeFunc: TLib3MFImplicitFunction_AddTransposeNodeFunc;
-		FLib3MFImplicitFunction_InverseNodeFunc: TLib3MFImplicitFunction_InverseNodeFunc;
+		FLib3MFImplicitFunction_AddInverseNodeFunc: TLib3MFImplicitFunction_AddInverseNodeFunc;
 		FLib3MFImplicitFunction_AddSqrtNodeFunc: TLib3MFImplicitFunction_AddSqrtNodeFunc;
 		FLib3MFImplicitFunction_AddResourceIdNodeFunc: TLib3MFImplicitFunction_AddResourceIdNodeFunc;
 		FLib3MFImplicitFunction_AddAdditionNodeFunc: TLib3MFImplicitFunction_AddAdditionNodeFunc;
@@ -9986,7 +9986,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImplicitFunction_AddLog10NodeFunc: TLib3MFImplicitFunction_AddLog10NodeFunc read FLib3MFImplicitFunction_AddLog10NodeFunc;
 		property Lib3MFImplicitFunction_AddLengthNodeFunc: TLib3MFImplicitFunction_AddLengthNodeFunc read FLib3MFImplicitFunction_AddLengthNodeFunc;
 		property Lib3MFImplicitFunction_AddTransposeNodeFunc: TLib3MFImplicitFunction_AddTransposeNodeFunc read FLib3MFImplicitFunction_AddTransposeNodeFunc;
-		property Lib3MFImplicitFunction_InverseNodeFunc: TLib3MFImplicitFunction_InverseNodeFunc read FLib3MFImplicitFunction_InverseNodeFunc;
+		property Lib3MFImplicitFunction_AddInverseNodeFunc: TLib3MFImplicitFunction_AddInverseNodeFunc read FLib3MFImplicitFunction_AddInverseNodeFunc;
 		property Lib3MFImplicitFunction_AddSqrtNodeFunc: TLib3MFImplicitFunction_AddSqrtNodeFunc read FLib3MFImplicitFunction_AddSqrtNodeFunc;
 		property Lib3MFImplicitFunction_AddResourceIdNodeFunc: TLib3MFImplicitFunction_AddResourceIdNodeFunc read FLib3MFImplicitFunction_AddResourceIdNodeFunc;
 		property Lib3MFImplicitFunction_AddAdditionNodeFunc: TLib3MFImplicitFunction_AddAdditionNodeFunc read FLib3MFImplicitFunction_AddAdditionNodeFunc;
@@ -10806,57 +10806,57 @@ implementation
 	function convertImplicitNodeTypeToConst(const AValue: TLib3MFImplicitNodeType): Integer;
 	begin
 		case AValue of
-			eImplicitNodeTypeAddition: Result := 1;
-			eImplicitNodeTypeSubtraction: Result := 2;
-			eImplicitNodeTypeMultiplication: Result := 3;
-			eImplicitNodeTypeDivision: Result := 4;
-			eImplicitNodeTypeConstant: Result := 5;
-			eImplicitNodeTypeConstVec: Result := 6;
-			eImplicitNodeTypeConstMat: Result := 7;
-			eImplicitNodeTypeComposeVector: Result := 8;
-			eImplicitNodeTypeDecomposeVector: Result := 9;
-			eImplicitNodeTypeComposeMatrix: Result := 10;
-			eImplicitNodeTypeMatrixFromColumns: Result := 11;
-			eImplicitNodeTypeMatrixFromRows: Result := 12;
-			eImplicitNodeTypeDot: Result := 13;
-			eImplicitNodeTypeCross: Result := 14;
-			eImplicitNodeTypeMatVecMultiplication: Result := 15;
-			eImplicitNodeTypeTranspose: Result := 16;
-			eImplicitNodeTypeInverse: Result := 17;
-			eImplicitNodeTypeSinus: Result := 18;
-			eImplicitNodeTypeCosinus: Result := 19;
-			eImplicitNodeTypeTan: Result := 20;
-			eImplicitNodeTypeArcSin: Result := 21;
-			eImplicitNodeTypeArcCos: Result := 22;
-			eImplicitNodeTypeArcTan: Result := 23;
-			eImplicitNodeTypeArcTan2: Result := 24;
-			eImplicitNodeTypeMin: Result := 25;
-			eImplicitNodeTypeMax: Result := 26;
-			eImplicitNodeTypeAbs: Result := 27;
-			eImplicitNodeTypeFmod: Result := 28;
-			eImplicitNodeTypePow: Result := 29;
-			eImplicitNodeTypeSqrt: Result := 30;
-			eImplicitNodeTypeExp: Result := 31;
-			eImplicitNodeTypeLog: Result := 32;
-			eImplicitNodeTypeLog2: Result := 33;
-			eImplicitNodeTypeLog10: Result := 34;
-			eImplicitNodeTypeSelect: Result := 35;
-			eImplicitNodeTypeClamp: Result := 36;
-			eImplicitNodeTypeSinh: Result := 37;
-			eImplicitNodeTypeCosh: Result := 38;
-			eImplicitNodeTypeTanh: Result := 39;
-			eImplicitNodeTypeRound: Result := 40;
-			eImplicitNodeTypeCeil: Result := 41;
-			eImplicitNodeTypeFloor: Result := 42;
-			eImplicitNodeTypeSign: Result := 43;
-			eImplicitNodeTypeFract: Result := 44;
-			eImplicitNodeTypeFunctionCall: Result := 45;
-			eImplicitNodeTypeMesh: Result := 46;
-			eImplicitNodeTypeLength: Result := 47;
-			eImplicitNodeTypeConstResourceID: Result := 48;
-			eImplicitNodeTypeVectorFromScalar: Result := 49;
-			eImplicitNodeTypeUnsignedMesh: Result := 50;
-			eImplicitNodeTypeMod: Result := 51;
+			eImplicitNodeTypeAddition: Result := 0;
+			eImplicitNodeTypeSubtraction: Result := 1;
+			eImplicitNodeTypeMultiplication: Result := 2;
+			eImplicitNodeTypeDivision: Result := 3;
+			eImplicitNodeTypeConstant: Result := 4;
+			eImplicitNodeTypeConstVec: Result := 5;
+			eImplicitNodeTypeConstMat: Result := 6;
+			eImplicitNodeTypeComposeVector: Result := 7;
+			eImplicitNodeTypeDecomposeVector: Result := 8;
+			eImplicitNodeTypeComposeMatrix: Result := 9;
+			eImplicitNodeTypeMatrixFromColumns: Result := 10;
+			eImplicitNodeTypeMatrixFromRows: Result := 11;
+			eImplicitNodeTypeDot: Result := 12;
+			eImplicitNodeTypeCross: Result := 13;
+			eImplicitNodeTypeMatVecMultiplication: Result := 14;
+			eImplicitNodeTypeTranspose: Result := 15;
+			eImplicitNodeTypeInverse: Result := 16;
+			eImplicitNodeTypeSinus: Result := 17;
+			eImplicitNodeTypeCosinus: Result := 18;
+			eImplicitNodeTypeTan: Result := 19;
+			eImplicitNodeTypeArcSin: Result := 20;
+			eImplicitNodeTypeArcCos: Result := 21;
+			eImplicitNodeTypeArcTan: Result := 22;
+			eImplicitNodeTypeArcTan2: Result := 23;
+			eImplicitNodeTypeMin: Result := 24;
+			eImplicitNodeTypeMax: Result := 25;
+			eImplicitNodeTypeAbs: Result := 26;
+			eImplicitNodeTypeFmod: Result := 27;
+			eImplicitNodeTypePow: Result := 28;
+			eImplicitNodeTypeSqrt: Result := 29;
+			eImplicitNodeTypeExp: Result := 30;
+			eImplicitNodeTypeLog: Result := 31;
+			eImplicitNodeTypeLog2: Result := 32;
+			eImplicitNodeTypeLog10: Result := 33;
+			eImplicitNodeTypeSelect: Result := 34;
+			eImplicitNodeTypeClamp: Result := 35;
+			eImplicitNodeTypeSinh: Result := 36;
+			eImplicitNodeTypeCosh: Result := 37;
+			eImplicitNodeTypeTanh: Result := 38;
+			eImplicitNodeTypeRound: Result := 39;
+			eImplicitNodeTypeCeil: Result := 40;
+			eImplicitNodeTypeFloor: Result := 41;
+			eImplicitNodeTypeSign: Result := 42;
+			eImplicitNodeTypeFract: Result := 43;
+			eImplicitNodeTypeFunctionCall: Result := 44;
+			eImplicitNodeTypeMesh: Result := 45;
+			eImplicitNodeTypeLength: Result := 46;
+			eImplicitNodeTypeConstResourceID: Result := 47;
+			eImplicitNodeTypeVectorFromScalar: Result := 48;
+			eImplicitNodeTypeUnsignedMesh: Result := 49;
+			eImplicitNodeTypeMod: Result := 50;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
 		end;
@@ -10865,57 +10865,57 @@ implementation
 	function convertConstToImplicitNodeType(const AValue: Integer): TLib3MFImplicitNodeType;
 	begin
 		case AValue of
-			1: Result := eImplicitNodeTypeAddition;
-			2: Result := eImplicitNodeTypeSubtraction;
-			3: Result := eImplicitNodeTypeMultiplication;
-			4: Result := eImplicitNodeTypeDivision;
-			5: Result := eImplicitNodeTypeConstant;
-			6: Result := eImplicitNodeTypeConstVec;
-			7: Result := eImplicitNodeTypeConstMat;
-			8: Result := eImplicitNodeTypeComposeVector;
-			9: Result := eImplicitNodeTypeDecomposeVector;
-			10: Result := eImplicitNodeTypeComposeMatrix;
-			11: Result := eImplicitNodeTypeMatrixFromColumns;
-			12: Result := eImplicitNodeTypeMatrixFromRows;
-			13: Result := eImplicitNodeTypeDot;
-			14: Result := eImplicitNodeTypeCross;
-			15: Result := eImplicitNodeTypeMatVecMultiplication;
-			16: Result := eImplicitNodeTypeTranspose;
-			17: Result := eImplicitNodeTypeInverse;
-			18: Result := eImplicitNodeTypeSinus;
-			19: Result := eImplicitNodeTypeCosinus;
-			20: Result := eImplicitNodeTypeTan;
-			21: Result := eImplicitNodeTypeArcSin;
-			22: Result := eImplicitNodeTypeArcCos;
-			23: Result := eImplicitNodeTypeArcTan;
-			24: Result := eImplicitNodeTypeArcTan2;
-			25: Result := eImplicitNodeTypeMin;
-			26: Result := eImplicitNodeTypeMax;
-			27: Result := eImplicitNodeTypeAbs;
-			28: Result := eImplicitNodeTypeFmod;
-			29: Result := eImplicitNodeTypePow;
-			30: Result := eImplicitNodeTypeSqrt;
-			31: Result := eImplicitNodeTypeExp;
-			32: Result := eImplicitNodeTypeLog;
-			33: Result := eImplicitNodeTypeLog2;
-			34: Result := eImplicitNodeTypeLog10;
-			35: Result := eImplicitNodeTypeSelect;
-			36: Result := eImplicitNodeTypeClamp;
-			37: Result := eImplicitNodeTypeSinh;
-			38: Result := eImplicitNodeTypeCosh;
-			39: Result := eImplicitNodeTypeTanh;
-			40: Result := eImplicitNodeTypeRound;
-			41: Result := eImplicitNodeTypeCeil;
-			42: Result := eImplicitNodeTypeFloor;
-			43: Result := eImplicitNodeTypeSign;
-			44: Result := eImplicitNodeTypeFract;
-			45: Result := eImplicitNodeTypeFunctionCall;
-			46: Result := eImplicitNodeTypeMesh;
-			47: Result := eImplicitNodeTypeLength;
-			48: Result := eImplicitNodeTypeConstResourceID;
-			49: Result := eImplicitNodeTypeVectorFromScalar;
-			50: Result := eImplicitNodeTypeUnsignedMesh;
-			51: Result := eImplicitNodeTypeMod;
+			0: Result := eImplicitNodeTypeAddition;
+			1: Result := eImplicitNodeTypeSubtraction;
+			2: Result := eImplicitNodeTypeMultiplication;
+			3: Result := eImplicitNodeTypeDivision;
+			4: Result := eImplicitNodeTypeConstant;
+			5: Result := eImplicitNodeTypeConstVec;
+			6: Result := eImplicitNodeTypeConstMat;
+			7: Result := eImplicitNodeTypeComposeVector;
+			8: Result := eImplicitNodeTypeDecomposeVector;
+			9: Result := eImplicitNodeTypeComposeMatrix;
+			10: Result := eImplicitNodeTypeMatrixFromColumns;
+			11: Result := eImplicitNodeTypeMatrixFromRows;
+			12: Result := eImplicitNodeTypeDot;
+			13: Result := eImplicitNodeTypeCross;
+			14: Result := eImplicitNodeTypeMatVecMultiplication;
+			15: Result := eImplicitNodeTypeTranspose;
+			16: Result := eImplicitNodeTypeInverse;
+			17: Result := eImplicitNodeTypeSinus;
+			18: Result := eImplicitNodeTypeCosinus;
+			19: Result := eImplicitNodeTypeTan;
+			20: Result := eImplicitNodeTypeArcSin;
+			21: Result := eImplicitNodeTypeArcCos;
+			22: Result := eImplicitNodeTypeArcTan;
+			23: Result := eImplicitNodeTypeArcTan2;
+			24: Result := eImplicitNodeTypeMin;
+			25: Result := eImplicitNodeTypeMax;
+			26: Result := eImplicitNodeTypeAbs;
+			27: Result := eImplicitNodeTypeFmod;
+			28: Result := eImplicitNodeTypePow;
+			29: Result := eImplicitNodeTypeSqrt;
+			30: Result := eImplicitNodeTypeExp;
+			31: Result := eImplicitNodeTypeLog;
+			32: Result := eImplicitNodeTypeLog2;
+			33: Result := eImplicitNodeTypeLog10;
+			34: Result := eImplicitNodeTypeSelect;
+			35: Result := eImplicitNodeTypeClamp;
+			36: Result := eImplicitNodeTypeSinh;
+			37: Result := eImplicitNodeTypeCosh;
+			38: Result := eImplicitNodeTypeTanh;
+			39: Result := eImplicitNodeTypeRound;
+			40: Result := eImplicitNodeTypeCeil;
+			41: Result := eImplicitNodeTypeFloor;
+			42: Result := eImplicitNodeTypeSign;
+			43: Result := eImplicitNodeTypeFract;
+			44: Result := eImplicitNodeTypeFunctionCall;
+			45: Result := eImplicitNodeTypeMesh;
+			46: Result := eImplicitNodeTypeLength;
+			47: Result := eImplicitNodeTypeConstResourceID;
+			48: Result := eImplicitNodeTypeVectorFromScalar;
+			49: Result := eImplicitNodeTypeUnsignedMesh;
+			50: Result := eImplicitNodeTypeMod;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -10925,10 +10925,10 @@ implementation
 	function convertImplicitPortTypeToConst(const AValue: TLib3MFImplicitPortType): Integer;
 	begin
 		case AValue of
-			eImplicitPortTypeScalar: Result := 1;
-			eImplicitPortTypeVector: Result := 2;
-			eImplicitPortTypeMatrix: Result := 3;
-			eImplicitPortTypeResourceID: Result := 4;
+			eImplicitPortTypeScalar: Result := 0;
+			eImplicitPortTypeVector: Result := 1;
+			eImplicitPortTypeMatrix: Result := 2;
+			eImplicitPortTypeResourceID: Result := 3;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
 		end;
@@ -10937,10 +10937,10 @@ implementation
 	function convertConstToImplicitPortType(const AValue: Integer): TLib3MFImplicitPortType;
 	begin
 		case AValue of
-			1: Result := eImplicitPortTypeScalar;
-			2: Result := eImplicitPortTypeVector;
-			3: Result := eImplicitPortTypeMatrix;
-			4: Result := eImplicitPortTypeResourceID;
+			0: Result := eImplicitPortTypeScalar;
+			1: Result := eImplicitPortTypeVector;
+			2: Result := eImplicitPortTypeMatrix;
+			3: Result := eImplicitPortTypeResourceID;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -10950,10 +10950,10 @@ implementation
 	function convertImplicitNodeConfigurationToConst(const AValue: TLib3MFImplicitNodeConfiguration): Integer;
 	begin
 		case AValue of
-			eImplicitNodeConfigurationDefault: Result := 1;
-			eImplicitNodeConfigurationScalarToScalar: Result := 2;
-			eImplicitNodeConfigurationVectorToVector: Result := 3;
-			eImplicitNodeConfigurationMatrixToMatrix: Result := 4;
+			eImplicitNodeConfigurationDefault: Result := 0;
+			eImplicitNodeConfigurationScalarToScalar: Result := 1;
+			eImplicitNodeConfigurationVectorToVector: Result := 2;
+			eImplicitNodeConfigurationMatrixToMatrix: Result := 3;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
 		end;
@@ -10962,10 +10962,10 @@ implementation
 	function convertConstToImplicitNodeConfiguration(const AValue: Integer): TLib3MFImplicitNodeConfiguration;
 	begin
 		case AValue of
-			1: Result := eImplicitNodeConfigurationDefault;
-			2: Result := eImplicitNodeConfigurationScalarToScalar;
-			3: Result := eImplicitNodeConfigurationVectorToVector;
-			4: Result := eImplicitNodeConfigurationMatrixToMatrix;
+			0: Result := eImplicitNodeConfigurationDefault;
+			1: Result := eImplicitNodeConfigurationScalarToScalar;
+			2: Result := eImplicitNodeConfigurationVectorToVector;
+			3: Result := eImplicitNodeConfigurationMatrixToMatrix;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -16763,13 +16763,13 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFTransposeNode, TLib3MFTransposeNode>.Make(FWrapper, HNode);
 	end;
 
-	function TLib3MFImplicitFunction.InverseNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFInverseNode;
+	function TLib3MFImplicitFunction.AddInverseNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFInverseNode;
 	var
 		HNode: TLib3MFHandle;
 	begin
 		Result := nil;
 		HNode := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_InverseNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddInverseNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFInverseNode, TLib3MFInverseNode>.Make(FWrapper, HNode);
 	end;
@@ -19331,7 +19331,7 @@ implementation
 		FLib3MFImplicitFunction_AddLog10NodeFunc := LoadFunction('lib3mf_implicitfunction_addlog10node');
 		FLib3MFImplicitFunction_AddLengthNodeFunc := LoadFunction('lib3mf_implicitfunction_addlengthnode');
 		FLib3MFImplicitFunction_AddTransposeNodeFunc := LoadFunction('lib3mf_implicitfunction_addtransposenode');
-		FLib3MFImplicitFunction_InverseNodeFunc := LoadFunction('lib3mf_implicitfunction_inversenode');
+		FLib3MFImplicitFunction_AddInverseNodeFunc := LoadFunction('lib3mf_implicitfunction_addinversenode');
 		FLib3MFImplicitFunction_AddSqrtNodeFunc := LoadFunction('lib3mf_implicitfunction_addsqrtnode');
 		FLib3MFImplicitFunction_AddResourceIdNodeFunc := LoadFunction('lib3mf_implicitfunction_addresourceidnode');
 		FLib3MFImplicitFunction_AddAdditionNodeFunc := LoadFunction('lib3mf_implicitfunction_addadditionnode');
@@ -20728,7 +20728,7 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addtransposenode'), @FLib3MFImplicitFunction_AddTransposeNodeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_inversenode'), @FLib3MFImplicitFunction_InverseNodeFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addinversenode'), @FLib3MFImplicitFunction_AddInverseNodeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addsqrtnode'), @FLib3MFImplicitFunction_AddSqrtNodeFunc);

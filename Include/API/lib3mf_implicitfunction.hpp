@@ -407,7 +407,7 @@ namespace Lib3MF
              * @param[in] sTag - the tag of the node
              * @return the added node
              */
-            IInverseNode* InverseNode(const std::string& sIdentifier,
+            IInverseNode* AddInverseNode(const std::string& sIdentifier,
                                       const std::string& sDisplayName,
                                       const std::string& sTag) override;
 

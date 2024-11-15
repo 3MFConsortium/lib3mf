@@ -451,77 +451,77 @@ namespace Lib3MF {
   * enum class eImplicitNodeType - The type of the node
   */
   enum class eImplicitNodeType : Lib3MF_int32 {
-    Addition = 1, /** Adds to values (scalar or vector) */
-    Subtraction = 2, /** Subtracts two values (scalar or vector) */
-    Multiplication = 3, /** Multiplies two values (scalar or vector) */
-    Division = 4, /** Divides two values (scalar or vector) */
-    Constant = 5, /** A constant scalar value */
-    ConstVec = 6, /** A constant vector value */
-    ConstMat = 7, /** A constant matrix value */
-    ComposeVector = 8, /** Creates a vector from three scalar values */
-    DecomposeVector = 9, /** Decomposes a vector into three scalar values */
-    ComposeMatrix = 10, /** Creates a matrix from nine scalar values */
-    MatrixFromColumns = 11, /** Creates a matrix from three column vector values */
-    MatrixFromRows = 12, /** Creates a matrix from three row vector values */
-    Dot = 13, /** Calculates the dot product of two vector values */
-    Cross = 14, /** Calculates the cross product of two vector values */
-    MatVecMultiplication = 15, /** Multiplies a matrix with a vector */
-    Transpose = 16, /** Transposes a matrix */
-    Inverse = 17, /** Computes the inverse of a matrix */
-    Sinus = 18, /** Calculates the sinus */
-    Cosinus = 19, /** Calculates the cosinus */
-    Tan = 20, /** Calculates the tangent */
-    ArcSin = 21, /** Calculates the arcsinus */
-    ArcCos = 22, /** Calculates the arccosinus */
-    ArcTan = 23, /** Calculates the arctangent */
-    ArcTan2 = 24, /** Calculates the arctangent */
-    Min = 25, /** Calculates the minimum tow values */
-    Max = 26, /** Calculates the maximum of two values */
-    Abs = 27, /** Calcul the absolute value */
-    Fmod = 28, /** Computes the remainder of the divison of the inputs (same behavior as C fmod) */
-    Pow = 29, /** Calculates the power A^B */
-    Sqrt = 30, /** Calculates the square root */
-    Exp = 31, /** Exponential function */
-    Log = 32, /** Natural logarithmus */
-    Log2 = 33, /** Logarithmus to the base 2 */
-    Log10 = 34, /** Logarithmus to the base 10 */
-    Select = 35, /** If A is less B returns C, else D */
-    Clamp = 36, /** Clamps the input value to min and max */
-    Sinh = 37, /** Calculates the hyperbolic sine */
-    Cosh = 38, /** Calculates the hyperbolic cosine */
-    Tanh = 39, /** Calculates the hyperbolic tangent */
-    Round = 40, /** Rounds a scalar value to the nearest integer */
-    Ceil = 41, /** Rounds a scalar value up to the nearest integer */
-    Floor = 42, /** Rounds a scalar value down to the nearest integer */
-    Sign = 43, /** Returns the sign */
-    Fract = 44, /** Returns the fractional part */
-    FunctionCall = 45, /** Calls a function */
-    Mesh = 46, /** Calculates the signed distance to a mesh */
-    Length = 47, /** Calculates the length of a vector */
-    ConstResourceID = 48, /** Selects a resource (function, mesh etc.) */
-    VectorFromScalar = 49, /** Creates a vector from one scalar values */
-    UnsignedMesh = 50, /** Calculates the unsigned distance to a mesh */
-    Mod = 51 /** Calculates the modulo of two values (same behaviour as glsl mod) */
+    Addition = 0, /** Adds to values (scalar or vector) */
+    Subtraction = 1, /** Subtracts two values (scalar or vector) */
+    Multiplication = 2, /** Multiplies two values (scalar or vector) */
+    Division = 3, /** Divides two values (scalar or vector) */
+    Constant = 4, /** A constant scalar value */
+    ConstVec = 5, /** A constant vector value */
+    ConstMat = 6, /** A constant matrix value */
+    ComposeVector = 7, /** Creates a vector from three scalar values */
+    DecomposeVector = 8, /** Decomposes a vector into three scalar values */
+    ComposeMatrix = 9, /** Creates a matrix from nine scalar values */
+    MatrixFromColumns = 10, /** Creates a matrix from three column vector values */
+    MatrixFromRows = 11, /** Creates a matrix from three row vector values */
+    Dot = 12, /** Calculates the dot product of two vector values */
+    Cross = 13, /** Calculates the cross product of two vector values */
+    MatVecMultiplication = 14, /** Multiplies a matrix with a vector */
+    Transpose = 15, /** Transposes a matrix */
+    Inverse = 16, /** Computes the inverse of a matrix */
+    Sinus = 17, /** Calculates the sinus */
+    Cosinus = 18, /** Calculates the cosinus */
+    Tan = 19, /** Calculates the tangent */
+    ArcSin = 20, /** Calculates the arcsinus */
+    ArcCos = 21, /** Calculates the arccosinus */
+    ArcTan = 22, /** Calculates the arctangent */
+    ArcTan2 = 23, /** Calculates the arctangent */
+    Min = 24, /** Calculates the minimum of two values */
+    Max = 25, /** Calculates the maximum of two values */
+    Abs = 26, /** Calculates the absolute value */
+    Fmod = 27, /** Computes the remainder of the divison of the inputs (same behavior as C fmod) */
+    Pow = 28, /** Calculates the power A^B */
+    Sqrt = 29, /** Calculates the square root */
+    Exp = 30, /** Exponential function */
+    Log = 31, /** Natural logarithmus */
+    Log2 = 32, /** Logarithmus to the base 2 */
+    Log10 = 33, /** Logarithmus to the base 10 */
+    Select = 34, /** If A is less than B returns C, else D */
+    Clamp = 35, /** Clamps the input value to min and max */
+    Sinh = 36, /** Calculates the hyperbolic sine */
+    Cosh = 37, /** Calculates the hyperbolic cosine */
+    Tanh = 38, /** Calculates the hyperbolic tangent */
+    Round = 39, /** Rounds a scalar value to the nearest integer */
+    Ceil = 40, /** Rounds a scalar value up to the nearest integer */
+    Floor = 41, /** Rounds a scalar value down to the nearest integer */
+    Sign = 42, /** Returns the sign */
+    Fract = 43, /** Returns the fractional part */
+    FunctionCall = 44, /** Calls a function */
+    Mesh = 45, /** Calculates the signed distance to a mesh */
+    Length = 46, /** Calculates the length of a vector */
+    ConstResourceID = 47, /** Selects a resource (function, mesh etc.) */
+    VectorFromScalar = 48, /** Creates a vector from one scalar values */
+    UnsignedMesh = 49, /** Calculates the unsigned distance to a mesh */
+    Mod = 50 /** Calculates the modulo of two values (same behaviour as glsl mod) */
   };
   
   /**
   * enum class eImplicitPortType - The type of the port
   */
   enum class eImplicitPortType : Lib3MF_int32 {
-    Scalar = 1, /** Scalar */
-    Vector = 2, /** Vector */
-    Matrix = 3, /** 4x4 Matrix */
-    ResourceID = 4 /** Resource ID */
+    Scalar = 0, /** Scalar */
+    Vector = 1, /** Vector */
+    Matrix = 2, /** 4x4 Matrix */
+    ResourceID = 3 /** Resource ID */
   };
   
   /**
   * enum class eImplicitNodeConfiguration - Defines the input and output types of a node
   */
   enum class eImplicitNodeConfiguration : Lib3MF_int32 {
-    Default = 1, /** Default */
-    ScalarToScalar = 2, /** Scalar -> Scalar */
-    VectorToVector = 3, /** Vector -> Vector */
-    MatrixToMatrix = 4 /** Matrix -> Matrix */
+    Default = 0, /** Default */
+    ScalarToScalar = 1, /** Scalar -> Scalar */
+    VectorToVector = 2, /** Vector -> Vector */
+    MatrixToMatrix = 3 /** Matrix -> Matrix */
   };
   
   enum class eEncryptionAlgorithm : Lib3MF_int32 {

@@ -160,71 +160,71 @@ namespace Lib3MF {
 	};
 
 	public enum eImplicitNodeType {
-		Addition = 1,
-		Subtraction = 2,
-		Multiplication = 3,
-		Division = 4,
-		Constant = 5,
-		ConstVec = 6,
-		ConstMat = 7,
-		ComposeVector = 8,
-		DecomposeVector = 9,
-		ComposeMatrix = 10,
-		MatrixFromColumns = 11,
-		MatrixFromRows = 12,
-		Dot = 13,
-		Cross = 14,
-		MatVecMultiplication = 15,
-		Transpose = 16,
-		Inverse = 17,
-		Sinus = 18,
-		Cosinus = 19,
-		Tan = 20,
-		ArcSin = 21,
-		ArcCos = 22,
-		ArcTan = 23,
-		ArcTan2 = 24,
-		Min = 25,
-		Max = 26,
-		Abs = 27,
-		Fmod = 28,
-		Pow = 29,
-		Sqrt = 30,
-		Exp = 31,
-		Log = 32,
-		Log2 = 33,
-		Log10 = 34,
-		Select = 35,
-		Clamp = 36,
-		Sinh = 37,
-		Cosh = 38,
-		Tanh = 39,
-		Round = 40,
-		Ceil = 41,
-		Floor = 42,
-		Sign = 43,
-		Fract = 44,
-		FunctionCall = 45,
-		Mesh = 46,
-		Length = 47,
-		ConstResourceID = 48,
-		VectorFromScalar = 49,
-		UnsignedMesh = 50,
-		Mod = 51
+		Addition = 0,
+		Subtraction = 1,
+		Multiplication = 2,
+		Division = 3,
+		Constant = 4,
+		ConstVec = 5,
+		ConstMat = 6,
+		ComposeVector = 7,
+		DecomposeVector = 8,
+		ComposeMatrix = 9,
+		MatrixFromColumns = 10,
+		MatrixFromRows = 11,
+		Dot = 12,
+		Cross = 13,
+		MatVecMultiplication = 14,
+		Transpose = 15,
+		Inverse = 16,
+		Sinus = 17,
+		Cosinus = 18,
+		Tan = 19,
+		ArcSin = 20,
+		ArcCos = 21,
+		ArcTan = 22,
+		ArcTan2 = 23,
+		Min = 24,
+		Max = 25,
+		Abs = 26,
+		Fmod = 27,
+		Pow = 28,
+		Sqrt = 29,
+		Exp = 30,
+		Log = 31,
+		Log2 = 32,
+		Log10 = 33,
+		Select = 34,
+		Clamp = 35,
+		Sinh = 36,
+		Cosh = 37,
+		Tanh = 38,
+		Round = 39,
+		Ceil = 40,
+		Floor = 41,
+		Sign = 42,
+		Fract = 43,
+		FunctionCall = 44,
+		Mesh = 45,
+		Length = 46,
+		ConstResourceID = 47,
+		VectorFromScalar = 48,
+		UnsignedMesh = 49,
+		Mod = 50
 	};
 
 	public enum eImplicitPortType {
-		Scalar = 1,
-		Vector = 2,
-		Matrix = 3,
-		ResourceID = 4
+		Scalar = 0,
+		Vector = 1,
+		Matrix = 2,
+		ResourceID = 3
 	};
 
 	public enum eImplicitNodeConfiguration {
-		Default = 1,
-		ScalarToScalar = 2,
-		VectorToVector = 3,
-		MatrixToMatrix = 4
+		Default = 0,
+		ScalarToScalar = 1,
+		VectorToVector = 2,
+		MatrixToMatrix = 3
 	};
 
 	public enum eEncryptionAlgorithm {
@@ -1611,8 +1611,8 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addtransposenode", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_AddTransposeNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_inversenode", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImplicitFunction_InverseNode (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addinversenode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddInverseNode (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addsqrtnode", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_AddSqrtNode (IntPtr Handle, byte[] AIdentifier, Int32 AConfiguration, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
@@ -7038,14 +7038,14 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CTransposeNode>(newNode);
 		}
 
-		public CInverseNode InverseNode (String AIdentifier, String ADisplayName, String ATag)
+		public CInverseNode AddInverseNode (String AIdentifier, String ADisplayName, String ATag)
 		{
 			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
 			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
 			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
 			IntPtr newNode = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_InverseNode (Handle, byteIdentifier, byteDisplayName, byteTag, out newNode));
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddInverseNode (Handle, byteIdentifier, byteDisplayName, byteTag, out newNode));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CInverseNode>(newNode);
 		}
 

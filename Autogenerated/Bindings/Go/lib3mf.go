@@ -3600,12 +3600,12 @@ Lib3MFResult CCall_lib3mf_implicitfunction_addtransposenode(Lib3MFHandle library
 }
 
 
-Lib3MFResult CCall_lib3mf_implicitfunction_inversenode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_InverseNode * pNode)
+Lib3MFResult CCall_lib3mf_implicitfunction_addinversenode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_InverseNode * pNode)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_ImplicitFunction_InverseNode (pImplicitFunction, pIdentifier, pDisplayName, pTag, pNode);
+	return wrapperTable->m_ImplicitFunction_AddInverseNode (pImplicitFunction, pIdentifier, pDisplayName, pTag, pNode);
 }
 
 
@@ -5670,77 +5670,77 @@ const (
 type ImplicitNodeType int
 
 const (
-	ImplicitNodeType_Addition = 1
-	ImplicitNodeType_Subtraction = 2
-	ImplicitNodeType_Multiplication = 3
-	ImplicitNodeType_Division = 4
-	ImplicitNodeType_Constant = 5
-	ImplicitNodeType_ConstVec = 6
-	ImplicitNodeType_ConstMat = 7
-	ImplicitNodeType_ComposeVector = 8
-	ImplicitNodeType_DecomposeVector = 9
-	ImplicitNodeType_ComposeMatrix = 10
-	ImplicitNodeType_MatrixFromColumns = 11
-	ImplicitNodeType_MatrixFromRows = 12
-	ImplicitNodeType_Dot = 13
-	ImplicitNodeType_Cross = 14
-	ImplicitNodeType_MatVecMultiplication = 15
-	ImplicitNodeType_Transpose = 16
-	ImplicitNodeType_Inverse = 17
-	ImplicitNodeType_Sinus = 18
-	ImplicitNodeType_Cosinus = 19
-	ImplicitNodeType_Tan = 20
-	ImplicitNodeType_ArcSin = 21
-	ImplicitNodeType_ArcCos = 22
-	ImplicitNodeType_ArcTan = 23
-	ImplicitNodeType_ArcTan2 = 24
-	ImplicitNodeType_Min = 25
-	ImplicitNodeType_Max = 26
-	ImplicitNodeType_Abs = 27
-	ImplicitNodeType_Fmod = 28
-	ImplicitNodeType_Pow = 29
-	ImplicitNodeType_Sqrt = 30
-	ImplicitNodeType_Exp = 31
-	ImplicitNodeType_Log = 32
-	ImplicitNodeType_Log2 = 33
-	ImplicitNodeType_Log10 = 34
-	ImplicitNodeType_Select = 35
-	ImplicitNodeType_Clamp = 36
-	ImplicitNodeType_Sinh = 37
-	ImplicitNodeType_Cosh = 38
-	ImplicitNodeType_Tanh = 39
-	ImplicitNodeType_Round = 40
-	ImplicitNodeType_Ceil = 41
-	ImplicitNodeType_Floor = 42
-	ImplicitNodeType_Sign = 43
-	ImplicitNodeType_Fract = 44
-	ImplicitNodeType_FunctionCall = 45
-	ImplicitNodeType_Mesh = 46
-	ImplicitNodeType_Length = 47
-	ImplicitNodeType_ConstResourceID = 48
-	ImplicitNodeType_VectorFromScalar = 49
-	ImplicitNodeType_UnsignedMesh = 50
-	ImplicitNodeType_Mod = 51
+	ImplicitNodeType_Addition = 0
+	ImplicitNodeType_Subtraction = 1
+	ImplicitNodeType_Multiplication = 2
+	ImplicitNodeType_Division = 3
+	ImplicitNodeType_Constant = 4
+	ImplicitNodeType_ConstVec = 5
+	ImplicitNodeType_ConstMat = 6
+	ImplicitNodeType_ComposeVector = 7
+	ImplicitNodeType_DecomposeVector = 8
+	ImplicitNodeType_ComposeMatrix = 9
+	ImplicitNodeType_MatrixFromColumns = 10
+	ImplicitNodeType_MatrixFromRows = 11
+	ImplicitNodeType_Dot = 12
+	ImplicitNodeType_Cross = 13
+	ImplicitNodeType_MatVecMultiplication = 14
+	ImplicitNodeType_Transpose = 15
+	ImplicitNodeType_Inverse = 16
+	ImplicitNodeType_Sinus = 17
+	ImplicitNodeType_Cosinus = 18
+	ImplicitNodeType_Tan = 19
+	ImplicitNodeType_ArcSin = 20
+	ImplicitNodeType_ArcCos = 21
+	ImplicitNodeType_ArcTan = 22
+	ImplicitNodeType_ArcTan2 = 23
+	ImplicitNodeType_Min = 24
+	ImplicitNodeType_Max = 25
+	ImplicitNodeType_Abs = 26
+	ImplicitNodeType_Fmod = 27
+	ImplicitNodeType_Pow = 28
+	ImplicitNodeType_Sqrt = 29
+	ImplicitNodeType_Exp = 30
+	ImplicitNodeType_Log = 31
+	ImplicitNodeType_Log2 = 32
+	ImplicitNodeType_Log10 = 33
+	ImplicitNodeType_Select = 34
+	ImplicitNodeType_Clamp = 35
+	ImplicitNodeType_Sinh = 36
+	ImplicitNodeType_Cosh = 37
+	ImplicitNodeType_Tanh = 38
+	ImplicitNodeType_Round = 39
+	ImplicitNodeType_Ceil = 40
+	ImplicitNodeType_Floor = 41
+	ImplicitNodeType_Sign = 42
+	ImplicitNodeType_Fract = 43
+	ImplicitNodeType_FunctionCall = 44
+	ImplicitNodeType_Mesh = 45
+	ImplicitNodeType_Length = 46
+	ImplicitNodeType_ConstResourceID = 47
+	ImplicitNodeType_VectorFromScalar = 48
+	ImplicitNodeType_UnsignedMesh = 49
+	ImplicitNodeType_Mod = 50
 )
 
 // ImplicitPortType represents a Lib3MF enum.
 type ImplicitPortType int
 
 const (
-	ImplicitPortType_Scalar = 1
-	ImplicitPortType_Vector = 2
-	ImplicitPortType_Matrix = 3
-	ImplicitPortType_ResourceID = 4
+	ImplicitPortType_Scalar = 0
+	ImplicitPortType_Vector = 1
+	ImplicitPortType_Matrix = 2
+	ImplicitPortType_ResourceID = 3
 )
 
 // ImplicitNodeConfiguration represents a Lib3MF enum.
 type ImplicitNodeConfiguration int
 
 const (
-	ImplicitNodeConfiguration_Default = 1
-	ImplicitNodeConfiguration_ScalarToScalar = 2
-	ImplicitNodeConfiguration_VectorToVector = 3
-	ImplicitNodeConfiguration_MatrixToMatrix = 4
+	ImplicitNodeConfiguration_Default = 0
+	ImplicitNodeConfiguration_ScalarToScalar = 1
+	ImplicitNodeConfiguration_VectorToVector = 2
+	ImplicitNodeConfiguration_MatrixToMatrix = 3
 )
 
 // EncryptionAlgorithm represents a Lib3MF enum.
@@ -11366,10 +11366,10 @@ func (inst ImplicitFunction) AddTransposeNode(identifier string, configuration I
 	return inst.wrapperRef.NewTransposeNode(node), nil
 }
 
-// InverseNode add a InverseNode.
-func (inst ImplicitFunction) InverseNode(identifier string, displayName string, tag string) (InverseNode, error) {
+// AddInverseNode add a InverseNode.
+func (inst ImplicitFunction) AddInverseNode(identifier string, displayName string, tag string) (InverseNode, error) {
 	var node ref
-	ret := C.CCall_lib3mf_implicitfunction_inversenode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	ret := C.CCall_lib3mf_implicitfunction_addinversenode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
 	if ret != 0 {
 		return InverseNode{}, makeError(uint32(ret))
 	}

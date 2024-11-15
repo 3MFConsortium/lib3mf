@@ -359,7 +359,7 @@ ITransposeNode* CImplicitFunction::AddTransposeNode(
     return new CTransposeNode(newNode);
 }
 
-IInverseNode* CImplicitFunction::InverseNode(const std::string& sIdentifier,
+IInverseNode* CImplicitFunction::AddInverseNode(const std::string& sIdentifier,
                                              const std::string& sDisplayName,
                                              const std::string& sTag)
 {

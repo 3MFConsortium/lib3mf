@@ -2202,7 +2202,7 @@ private:
 	static void AddLog10Node(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddLengthNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddTransposeNode(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void InverseNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddInverseNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddSqrtNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddResourceIdNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddAdditionNode(const v8::FunctionCallbackInfo<v8::Value>& args);

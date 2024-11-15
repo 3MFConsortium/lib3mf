@@ -450,77 +450,77 @@ typedef enum eLib3MFCompositionSpace {
 * enum eLib3MFImplicitNodeType - The type of the node
 */
 typedef enum eLib3MFImplicitNodeType {
-  eImplicitNodeTypeAddition = 1, /** Adds to values (scalar or vector) */
-  eImplicitNodeTypeSubtraction = 2, /** Subtracts two values (scalar or vector) */
-  eImplicitNodeTypeMultiplication = 3, /** Multiplies two values (scalar or vector) */
-  eImplicitNodeTypeDivision = 4, /** Divides two values (scalar or vector) */
-  eImplicitNodeTypeConstant = 5, /** A constant scalar value */
-  eImplicitNodeTypeConstVec = 6, /** A constant vector value */
-  eImplicitNodeTypeConstMat = 7, /** A constant matrix value */
-  eImplicitNodeTypeComposeVector = 8, /** Creates a vector from three scalar values */
-  eImplicitNodeTypeDecomposeVector = 9, /** Decomposes a vector into three scalar values */
-  eImplicitNodeTypeComposeMatrix = 10, /** Creates a matrix from nine scalar values */
-  eImplicitNodeTypeMatrixFromColumns = 11, /** Creates a matrix from three column vector values */
-  eImplicitNodeTypeMatrixFromRows = 12, /** Creates a matrix from three row vector values */
-  eImplicitNodeTypeDot = 13, /** Calculates the dot product of two vector values */
-  eImplicitNodeTypeCross = 14, /** Calculates the cross product of two vector values */
-  eImplicitNodeTypeMatVecMultiplication = 15, /** Multiplies a matrix with a vector */
-  eImplicitNodeTypeTranspose = 16, /** Transposes a matrix */
-  eImplicitNodeTypeInverse = 17, /** Computes the inverse of a matrix */
-  eImplicitNodeTypeSinus = 18, /** Calculates the sinus */
-  eImplicitNodeTypeCosinus = 19, /** Calculates the cosinus */
-  eImplicitNodeTypeTan = 20, /** Calculates the tangent */
-  eImplicitNodeTypeArcSin = 21, /** Calculates the arcsinus */
-  eImplicitNodeTypeArcCos = 22, /** Calculates the arccosinus */
-  eImplicitNodeTypeArcTan = 23, /** Calculates the arctangent */
-  eImplicitNodeTypeArcTan2 = 24, /** Calculates the arctangent */
-  eImplicitNodeTypeMin = 25, /** Calculates the minimum tow values */
-  eImplicitNodeTypeMax = 26, /** Calculates the maximum of two values */
-  eImplicitNodeTypeAbs = 27, /** Calcul the absolute value */
-  eImplicitNodeTypeFmod = 28, /** Computes the remainder of the divison of the inputs (same behavior as C fmod) */
-  eImplicitNodeTypePow = 29, /** Calculates the power A^B */
-  eImplicitNodeTypeSqrt = 30, /** Calculates the square root */
-  eImplicitNodeTypeExp = 31, /** Exponential function */
-  eImplicitNodeTypeLog = 32, /** Natural logarithmus */
-  eImplicitNodeTypeLog2 = 33, /** Logarithmus to the base 2 */
-  eImplicitNodeTypeLog10 = 34, /** Logarithmus to the base 10 */
-  eImplicitNodeTypeSelect = 35, /** If A is less B returns C, else D */
-  eImplicitNodeTypeClamp = 36, /** Clamps the input value to min and max */
-  eImplicitNodeTypeSinh = 37, /** Calculates the hyperbolic sine */
-  eImplicitNodeTypeCosh = 38, /** Calculates the hyperbolic cosine */
-  eImplicitNodeTypeTanh = 39, /** Calculates the hyperbolic tangent */
-  eImplicitNodeTypeRound = 40, /** Rounds a scalar value to the nearest integer */
-  eImplicitNodeTypeCeil = 41, /** Rounds a scalar value up to the nearest integer */
-  eImplicitNodeTypeFloor = 42, /** Rounds a scalar value down to the nearest integer */
-  eImplicitNodeTypeSign = 43, /** Returns the sign */
-  eImplicitNodeTypeFract = 44, /** Returns the fractional part */
-  eImplicitNodeTypeFunctionCall = 45, /** Calls a function */
-  eImplicitNodeTypeMesh = 46, /** Calculates the signed distance to a mesh */
-  eImplicitNodeTypeLength = 47, /** Calculates the length of a vector */
-  eImplicitNodeTypeConstResourceID = 48, /** Selects a resource (function, mesh etc.) */
-  eImplicitNodeTypeVectorFromScalar = 49, /** Creates a vector from one scalar values */
-  eImplicitNodeTypeUnsignedMesh = 50, /** Calculates the unsigned distance to a mesh */
-  eImplicitNodeTypeMod = 51 /** Calculates the modulo of two values (same behaviour as glsl mod) */
+  eImplicitNodeTypeAddition = 0, /** Adds to values (scalar or vector) */
+  eImplicitNodeTypeSubtraction = 1, /** Subtracts two values (scalar or vector) */
+  eImplicitNodeTypeMultiplication = 2, /** Multiplies two values (scalar or vector) */
+  eImplicitNodeTypeDivision = 3, /** Divides two values (scalar or vector) */
+  eImplicitNodeTypeConstant = 4, /** A constant scalar value */
+  eImplicitNodeTypeConstVec = 5, /** A constant vector value */
+  eImplicitNodeTypeConstMat = 6, /** A constant matrix value */
+  eImplicitNodeTypeComposeVector = 7, /** Creates a vector from three scalar values */
+  eImplicitNodeTypeDecomposeVector = 8, /** Decomposes a vector into three scalar values */
+  eImplicitNodeTypeComposeMatrix = 9, /** Creates a matrix from nine scalar values */
+  eImplicitNodeTypeMatrixFromColumns = 10, /** Creates a matrix from three column vector values */
+  eImplicitNodeTypeMatrixFromRows = 11, /** Creates a matrix from three row vector values */
+  eImplicitNodeTypeDot = 12, /** Calculates the dot product of two vector values */
+  eImplicitNodeTypeCross = 13, /** Calculates the cross product of two vector values */
+  eImplicitNodeTypeMatVecMultiplication = 14, /** Multiplies a matrix with a vector */
+  eImplicitNodeTypeTranspose = 15, /** Transposes a matrix */
+  eImplicitNodeTypeInverse = 16, /** Computes the inverse of a matrix */
+  eImplicitNodeTypeSinus = 17, /** Calculates the sinus */
+  eImplicitNodeTypeCosinus = 18, /** Calculates the cosinus */
+  eImplicitNodeTypeTan = 19, /** Calculates the tangent */
+  eImplicitNodeTypeArcSin = 20, /** Calculates the arcsinus */
+  eImplicitNodeTypeArcCos = 21, /** Calculates the arccosinus */
+  eImplicitNodeTypeArcTan = 22, /** Calculates the arctangent */
+  eImplicitNodeTypeArcTan2 = 23, /** Calculates the arctangent */
+  eImplicitNodeTypeMin = 24, /** Calculates the minimum of two values */
+  eImplicitNodeTypeMax = 25, /** Calculates the maximum of two values */
+  eImplicitNodeTypeAbs = 26, /** Calculates the absolute value */
+  eImplicitNodeTypeFmod = 27, /** Computes the remainder of the divison of the inputs (same behavior as C fmod) */
+  eImplicitNodeTypePow = 28, /** Calculates the power A^B */
+  eImplicitNodeTypeSqrt = 29, /** Calculates the square root */
+  eImplicitNodeTypeExp = 30, /** Exponential function */
+  eImplicitNodeTypeLog = 31, /** Natural logarithmus */
+  eImplicitNodeTypeLog2 = 32, /** Logarithmus to the base 2 */
+  eImplicitNodeTypeLog10 = 33, /** Logarithmus to the base 10 */
+  eImplicitNodeTypeSelect = 34, /** If A is less than B returns C, else D */
+  eImplicitNodeTypeClamp = 35, /** Clamps the input value to min and max */
+  eImplicitNodeTypeSinh = 36, /** Calculates the hyperbolic sine */
+  eImplicitNodeTypeCosh = 37, /** Calculates the hyperbolic cosine */
+  eImplicitNodeTypeTanh = 38, /** Calculates the hyperbolic tangent */
+  eImplicitNodeTypeRound = 39, /** Rounds a scalar value to the nearest integer */
+  eImplicitNodeTypeCeil = 40, /** Rounds a scalar value up to the nearest integer */
+  eImplicitNodeTypeFloor = 41, /** Rounds a scalar value down to the nearest integer */
+  eImplicitNodeTypeSign = 42, /** Returns the sign */
+  eImplicitNodeTypeFract = 43, /** Returns the fractional part */
+  eImplicitNodeTypeFunctionCall = 44, /** Calls a function */
+  eImplicitNodeTypeMesh = 45, /** Calculates the signed distance to a mesh */
+  eImplicitNodeTypeLength = 46, /** Calculates the length of a vector */
+  eImplicitNodeTypeConstResourceID = 47, /** Selects a resource (function, mesh etc.) */
+  eImplicitNodeTypeVectorFromScalar = 48, /** Creates a vector from one scalar values */
+  eImplicitNodeTypeUnsignedMesh = 49, /** Calculates the unsigned distance to a mesh */
+  eImplicitNodeTypeMod = 50 /** Calculates the modulo of two values (same behaviour as glsl mod) */
 } eLib3MFImplicitNodeType;
 
 /**
 * enum eLib3MFImplicitPortType - The type of the port
 */
 typedef enum eLib3MFImplicitPortType {
-  eImplicitPortTypeScalar = 1, /** Scalar */
-  eImplicitPortTypeVector = 2, /** Vector */
-  eImplicitPortTypeMatrix = 3, /** 4x4 Matrix */
-  eImplicitPortTypeResourceID = 4 /** Resource ID */
+  eImplicitPortTypeScalar = 0, /** Scalar */
+  eImplicitPortTypeVector = 1, /** Vector */
+  eImplicitPortTypeMatrix = 2, /** 4x4 Matrix */
+  eImplicitPortTypeResourceID = 3 /** Resource ID */
 } eLib3MFImplicitPortType;
 
 /**
 * enum eLib3MFImplicitNodeConfiguration - Defines the input and output types of a node
 */
 typedef enum eLib3MFImplicitNodeConfiguration {
-  eImplicitNodeConfigurationDefault = 1, /** Default */
-  eImplicitNodeConfigurationScalarToScalar = 2, /** Scalar -> Scalar */
-  eImplicitNodeConfigurationVectorToVector = 3, /** Vector -> Vector */
-  eImplicitNodeConfigurationMatrixToMatrix = 4 /** Matrix -> Matrix */
+  eImplicitNodeConfigurationDefault = 0, /** Default */
+  eImplicitNodeConfigurationScalarToScalar = 1, /** Scalar -> Scalar */
+  eImplicitNodeConfigurationVectorToVector = 2, /** Vector -> Vector */
+  eImplicitNodeConfigurationMatrixToMatrix = 3 /** Matrix -> Matrix */
 } eLib3MFImplicitNodeConfiguration;
 
 typedef enum eLib3MFEncryptionAlgorithm {
