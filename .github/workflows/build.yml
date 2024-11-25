@@ -32,6 +32,7 @@ jobs:
           submodules: recursive
           fetch-depth: 0
       - run: sh cmake/GenerateMake.sh
+      - run: cmake --build . --target help
       - run: cmake --build . --target lib3mf_memcheck
         working-directory: ./build
 
