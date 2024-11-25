@@ -5,7 +5,7 @@
   "homepage": "https://github.com/3MFConsortium/lib3mf",
   "license": "BSD-2-Clause",
   "supports": "(windows & (x86 | x64) & !static & !staticcrt) | (linux & x64) | (osx & (x64 | arm64))",
-  "builtin-baseline": "b2cb0da531c2f1f740045bfe7c4dac59f0b2b69c",
+  "builtin-baseline": "5e5d0e1cd7785623065e77eff011afdeec1a3574",
   "dependencies": [
     "cpp-base64",
     {
