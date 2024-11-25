@@ -13,6 +13,7 @@ RUN \
     glibc-langpack-en \
     tar \
     gzip \
+    git \
     zip \
     rpm-build \
     ${GCCTOOLSET} \
@@ -38,6 +39,7 @@ RUN ldd --version
 RUN cmake --version
 RUN cmake3 --version
 RUN gcc --version
+RUN g++ --version
 
 
 ADD . lib3mf-repo
