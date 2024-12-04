@@ -432,6 +432,8 @@ jobs:
           dir
           dir ../
           dir ../../
+          dir Release
+          dir x64
           ./Release/Example_ExtractInfo.exe ../../Files/Helix.3mf
       - name: Build Cpp
         run: |
