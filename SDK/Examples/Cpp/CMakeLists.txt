@@ -16,6 +16,7 @@ else()
 endif()
 
 add_definitions( -DTEXTURESPATH="${CMAKE_CURRENT_SOURCE_DIR}/../Files/Textures/" )
+add_definitions( -DVOLUME_IMAGES_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../Files/volumetricImages/" )
 
 project(Examples)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Bindings/Cpp)
@@ -60,6 +61,25 @@ CopySharedLibrary(Example_Slice)
 
 add_executable(Example_BeamLattice Source/BeamLattice.cpp)
 CopySharedLibrary(Example_BeamLattice)
+
+add_executable(Example_VolumeSphere Source/VolumeCreateSphere.cpp)
+CopySharedLibrary(Example_VolumeSphere)
+
+add_executable(Example_VolumeGyroid Source/VolumeGyroid.cpp)
+CopySharedLibrary(Example_VolumeGyroid)
+
+add_executable(Example_VolumeCylinder Source/VolumeCreateCylinder.cpp)
+CopySharedLibrary(Example_VolumeCylinder)
+
+add_executable(Example_VolumeTorus Source/VolumeCreateTorus.cpp)
+CopySharedLibrary(Example_VolumeTorus)
+
+add_executable(Example_VolumeCombineFunctions Source/VolumeCombineFunctions.cpp)
+CopySharedLibrary(Example_VolumeCombineFunctions)
+
+add_executable(Example_VolumeImageStack Source/VolumeImageStack.cpp)
+CopySharedLibrary(Example_VolumeImageStack)
+
 
 if (${MSVC})
 	IF(${CMAKE_VERSION} VERSION_LESS 3.6.3)
