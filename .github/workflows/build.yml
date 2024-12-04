@@ -424,12 +424,15 @@ jobs:
       - name: Unpack the SDK
         run: |
           unzip lib3mf_sdk.zip/lib3mf_sdk.zip
-      # - name: Build CppDynamic
-      #   run: |
-      #     ./Examples/CppDynamic/GenerateVS2019.bat
-      #     cd Examples/CppDynamic/build
-      #     cmake --build . --config Release
-      #     ./Release/Example_ExtractInfo.exe ../../Files/Helix.3mf
+      - name: Build CppDynamic
+        run: |
+          ./Examples/CppDynamic/GenerateVS2019.bat
+          cd Examples/CppDynamic/build
+          cmake --build . --config Release
+          dir
+          dir ../
+          dir ../../
+          ./Release/Example_ExtractInfo.exe ../../Files/Helix.3mf
       - name: Build Cpp
         run: |
           ./Examples/Cpp/GenerateVS2019.bat
