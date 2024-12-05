@@ -64,9 +64,7 @@ namespace Lib3MF
             auto decomposePosOutputY = decomposePos->GetOutputY();
             gyroidFunction->AddLink(decomposePosOutputY, composeYZXInputY);
 
-            auto composeYZXInputZ = composeYZX->GetInputZ();
-            auto decomposePosOutputX = decomposePos->GetOutputX();
-            gyroidFunction->AddLink(decomposePosOutputX, composeYZXInputZ);
+            gyroidFunction->AddLink(decomposePos->GetOutputX(), composeYZX->GetInputZ());
 
             // Add the nodes and links for the gyroid
             // (dot(sin(pos), cos(composeYZX))
