@@ -17,9 +17,9 @@ Lib3MF::PImplicitFunction createGyroidFunction(Lib3MF::CModel& model)
     auto composeYZX = gyroidFunction->AddComposeVectorNode(
         "composeYZX", "compose yzx", "group_a");
     gyroidFunction->AddLink(decomposePos->GetOutputZ(),
-                            composeYZX->GetInputX());
-    gyroidFunction->AddLink(decomposePos->GetOutputY(),
                             composeYZX->GetInputY());
+    gyroidFunction->AddLink(decomposePos->GetOutputY(),
+                            composeYZX->GetInputX());
     gyroidFunction->AddLink(decomposePos->GetOutputX(),
                             composeYZX->GetInputZ());
 
@@ -38,10 +38,28 @@ Lib3MF::PImplicitFunction createGyroidFunction(Lib3MF::CModel& model)
     gyroidFunction->AddLink(sinNode->GetOutputResult(), dotNode->GetInputA());
     gyroidFunction->AddLink(cosNode->GetOutputResult(), dotNode->GetInputB());
 
+    auto absNode = gyroidFunction->AddAbsNode(
+        "abs", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar, "abs",
+        "group_a");
+    gyroidFunction->AddLink(dotNode->GetOutputResult(), absNode->GetInputA());
+
+    auto substractionNode = gyroidFunction->AddSubtractionNode(
+        "sub", Lib3MF::eImplicitNodeConfiguration::ScalarToScalar, "substract",
+        "group_a");
+
+    auto halfThicknessNode =
+        gyroidFunction->AddConstantNode("half_thickness", "hafl of the thickness", "group_a");
+    halfThicknessNode->SetConstant(0.4);
+
+    gyroidFunction->AddLink(absNode->GetOutputResult(),
+                            substractionNode->GetInputA());
+    gyroidFunction->AddLink(halfThicknessNode->GetOutputValue(),
+                            substractionNode->GetInputB());
+
     auto output =
         gyroidFunction->AddOutput("shape", "signed distance to the surface",
                                   Lib3MF::eImplicitPortType::Scalar);
-    gyroidFunction->AddLink(dotNode->GetOutputResult(), output);
+    gyroidFunction->AddLink(substractionNode->GetOutputResult(), output);
 
     return gyroidFunction;
 }
@@ -95,7 +113,7 @@ int main()
     //==================================================================================================
     // In this example we just create a box as a mesh, but you could as well
     // extend it to load a 3mf file that already contains a mesh object
-    auto box = createBoxAsMesh(*model, 10.0f, 10.0f, 10.0f);
+    auto box = createBoxAsMesh(*model, 50.0f, 23.0f, 45.0f);
 
     auto gyroidFunction = createGyroidFunction(*model);
 
