@@ -80,6 +80,8 @@ CopySharedLibrary(Example_VolumeCombineFunctions)
 add_executable(Example_VolumeImageStack Source/VolumeImageStack.cpp)
 CopySharedLibrary(Example_VolumeImageStack)
 
+add_executable(Example_FillMeshWithGyroid Source/FillMeshWithGyroid.cpp)
+CopySharedLibrary(Example_FillMeshWithGyroid)
 
 if (${MSVC})
 	IF(${CMAKE_VERSION} VERSION_LESS 3.6.3)
