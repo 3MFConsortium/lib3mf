@@ -540,25 +540,26 @@ typedef PModel PLib3MFModel;
 
 template<class T> class classParam {
 private:
-	const T* m_ptr;
+    std::shared_ptr<T> m_sharedPtr;
+    const T* m_ptr;
 
 public:
-	classParam(const T* ptr)
-		: m_ptr (ptr)
-	{
-	}
+    classParam(const T* ptr)
+        : m_ptr(ptr)
+    {
+    }
 
-	classParam(std::shared_ptr <T> sharedPtr)
-		: m_ptr (sharedPtr.get())
-	{
-	}
+    classParam(std::shared_ptr<T> sharedPtr)
+        : m_sharedPtr(sharedPtr), m_ptr(sharedPtr.get())
+    {
+    }
 
-	Lib3MFHandle GetHandle()
-	{
-		if (m_ptr != nullptr)
-			return m_ptr->handle();
-		return nullptr;
-	}
+    Lib3MFHandle GetHandle()
+    {
+        if (m_ptr != nullptr)
+            return m_ptr->handle();
+        return nullptr;
+    }
 };
 
 /*************************************************************************************************************************
