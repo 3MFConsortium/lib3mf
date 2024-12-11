@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -31,7 +31,6 @@ Abstract: This is a stub class definition of CSliceStack
 #include "lib3mf_slicestack.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
-#include "lib3mf_slice.hpp"
 // Include custom headers here.
 
 
@@ -41,76 +40,53 @@ using namespace Lib3MF::Impl;
  Class definition of CSliceStack 
 **************************************************************************************************************************/
 
-CSliceStack::CSliceStack(NMR::PModelSliceStack pSliceStack):
-	CResource(pSliceStack)
+Lib3MF_double CSliceStack::GetBottomZ()
 {
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-NMR::PModelSliceStack CSliceStack::sliceStack()
+Lib3MF_uint64 CSliceStack::GetSliceCount()
 {
-	return std::dynamic_pointer_cast<NMR::CModelSliceStack>(resource());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-double CSliceStack::GetBottomZ()
+ISlice * CSliceStack::GetSlice(const Lib3MF_uint64 nSliceIndex)
 {
-	return sliceStack()->getZBottom();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF_uint64 CSliceStack::GetSliceCount ()
+ISlice * CSliceStack::AddSlice(const Lib3MF_double dZTop)
 {
-	return sliceStack()->getSliceCount();
-}
-
-ISlice * CSliceStack::GetSlice (const Lib3MF_uint64 nSliceIndex)
-{
-	NMR::PSlice pSlice = sliceStack()->getSlice(Lib3MF_uint32(nSliceIndex));
-	return new CSlice(pSlice);
-}
-
-ISlice * CSliceStack::AddSlice (const double fZTop)
-{
-	NMR::PSlice pSlice = sliceStack()->AddSlice(fZTop);
-	return new CSlice(pSlice);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF_uint64 CSliceStack::GetSliceRefCount()
 {
-	return sliceStack()->getSliceRefCount();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CSliceStack::AddSliceStackReference(ISliceStack* pTheSliceStack)
 {
-	NMR::ModelResourceID nID = pTheSliceStack->GetResourceID();
-	
-	std::shared_ptr<IPackagePart> pPackagePart(pTheSliceStack->PackagePart());
-	std::string sPath = pPackagePart->GetPath();
-
-	NMR::PModelResource pResource = sliceStack()->getModel()->findResource(sPath, nID);
-	NMR::PModelSliceStack pModelSliceStack = std::dynamic_pointer_cast<NMR::CModelSliceStack>(pResource);
-	if (!pModelSliceStack)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);
-
-	sliceStack()->AddSliceRef(pModelSliceStack);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 ISliceStack * CSliceStack::GetSliceStackReference(const Lib3MF_uint64 nSliceRefIndex)
 {
-	NMR::PModelSliceStack pModelSliceStack = sliceStack()->getSliceRef(Lib3MF_uint32(nSliceRefIndex));
-	return new CSliceStack(pModelSliceStack);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CSliceStack::CollapseSliceReferences()
 {
-	sliceStack()->CollapseSliceReferences();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CSliceStack::SetOwnPath(const std::string & sPath)
 {
-	sliceStack()->SetOwnPath(sPath);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 std::string CSliceStack::GetOwnPath()
 {
-	return sliceStack()->OwnPath();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

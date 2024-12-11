@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CObject
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelResource.h" 
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -60,76 +60,72 @@ private:
 	*/
 
 protected:
-	NMR::CModelObject* object();
+
+	/**
+	* Put protected members here.
+	*/
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CObject(NMR::PModelResource pResource);
-	CObject() = delete;
 
-	static IObject* fnCreateObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	eLib3MFObjectType GetType ();
+	Lib3MF::eObjectType GetType() override;
 
-	void SetType (const eLib3MFObjectType eObjectType);
+	void SetType(const Lib3MF::eObjectType eObjectType) override;
 
-	std::string GetName ();
+	std::string GetName() override;
 
-	void SetName (const std::string & sName);
+	void SetName(const std::string & sName) override;
 
-	std::string GetPartNumber ();
+	std::string GetPartNumber() override;
 
-	void SetPartNumber (const std::string & sPartNumber);
+	void SetPartNumber(const std::string & sPartNumber) override;
 
-	virtual bool IsMeshObject ();
+	bool IsMeshObject() override;
 
-	virtual bool IsComponentsObject ();
+	bool IsComponentsObject() override;
 
-	virtual bool IsLevelSetObject ();
+	bool IsLevelSetObject() override;
 
-	virtual IMeshObject * AsMeshObject();
+	bool IsValid() override;
 
-	virtual IComponentsObject * AsComponentsObject();
+	void SetAttachmentAsThumbnail(IAttachment* pAttachment) override;
 
-	bool IsValid ();
+	IAttachment * GetThumbnailAttachment() override;
 
-	void SetAttachmentAsThumbnail(IAttachment* pAttachment);
+	void ClearThumbnailAttachment() override;
 
-	IAttachment * GetThumbnailAttachment();
+	Lib3MF::sBox GetOutbox() override;
 
-	void ClearThumbnailAttachment();
+	std::string GetUUID(bool & bHasUUID) override;
 
-	IMetaDataGroup * GetMetaDataGroup ();
+	void SetUUID(const std::string & sUUID) override;
 
-	std::string GetUUID(bool & bHasUUID);
+	IMetaDataGroup * GetMetaDataGroup() override;
 
-	void SetUUID(const std::string & sUUID);
+	void SetSlicesMeshResolution(const Lib3MF::eSlicesMeshResolution eMeshResolution) override;
 
-	void SetSlicesMeshResolution(const eLib3MFSlicesMeshResolution eMeshResolution);
+	Lib3MF::eSlicesMeshResolution GetSlicesMeshResolution() override;
 
-	eLib3MFSlicesMeshResolution GetSlicesMeshResolution();
+	bool HasSlices(const bool bRecursive) override;
 
-	bool HasSlices(const bool bRecursive);
+	void ClearSliceStack() override;
 
-	void ClearSliceStack();
+	ISliceStack * GetSliceStack() override;
 
-	ISliceStack * GetSliceStack();
-
-	void AssignSliceStack(ISliceStack* pSliceStackInstance);
-
-	Lib3MF::sBox GetOutbox();
+	void AssignSliceStack(ISliceStack* pSliceStackInstance) override;
 
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)

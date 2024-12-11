@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -30,62 +30,53 @@ Abstract: This is a stub class definition of CImplicitPort
 
 #include "lib3mf_implicitport.hpp"
 #include "lib3mf_interfaceexception.hpp"
-#include "lib3mf_types.hpp"
 
 // Include custom headers here.
+
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CImplicitPort
+ Class definition of CImplicitPort 
 **************************************************************************************************************************/
-
-Lib3MF::Impl::CImplicitPort::CImplicitPort(NMR::PModelImplicitPort pImplicitPort)
-    : m_pImplicitPort(pImplicitPort)
-{
-}
 
 std::string CImplicitPort::GetIdentifier()
 {
-    return m_pImplicitPort->getIdentifier();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CImplicitPort::SetIdentifier(const std::string & sIdentifier)
 {
-    m_pImplicitPort->setIdentifier(sIdentifier);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 std::string CImplicitPort::GetDisplayName()
 {
-    return m_pImplicitPort->getDisplayName();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CImplicitPort::SetDisplayName(const std::string & sDisplayName)
 {
-    m_pImplicitPort->setDisplayName(sDisplayName);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CImplicitPort::SetType(const Lib3MF::eImplicitPortType eType)
+void CImplicitPort::SetType(const Lib3MF::eImplicitPortType eImplicitPortType)
 {
-    m_pImplicitPort->setType(eType);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF::eImplicitPortType CImplicitPort::GetType()
 {
-    return m_pImplicitPort->getType();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 std::string CImplicitPort::GetReference()
 {
-    return m_pImplicitPort->getReference();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CImplicitPort::SetReference(const std::string & sReference)
 {
-    m_pImplicitPort->setReference(sReference);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-NMR::PModelImplicitPort Lib3MF::Impl::CImplicitPort::getPort()
-{
-    return m_pImplicitPort;
-}

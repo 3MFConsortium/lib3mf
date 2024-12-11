@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -30,7 +30,6 @@ Abstract: This is a stub class definition of CFunctionIterator
 
 #include "lib3mf_functioniterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
-#include "lib3mf_implicitfunction.hpp"
 
 // Include custom headers here.
 
@@ -43,9 +42,6 @@ using namespace Lib3MF::Impl;
 
 IFunction * CFunctionIterator::GetCurrentFunction()
 {
-	auto currentFunction = dynamic_cast<IFunction*>(GetCurrent());
-	if (currentFunction == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-	return currentFunction;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

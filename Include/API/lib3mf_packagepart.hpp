@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -29,8 +29,8 @@ Abstract: This is the class declaration of CPackagePart
 */
 
 
-#ifndef __LIB3MF_MODELPART
-#define __LIB3MF_MODELPART
+#ifndef __LIB3MF_PACKAGEPART
+#define __LIB3MF_PACKAGEPART
 
 #include "lib3mf_interfaces.hpp"
 
@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CPackagePart
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_PackageResourceID.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -58,7 +58,6 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PPackageModelPath m_pPath;
 
 protected:
 
@@ -71,7 +70,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CPackagePart(NMR::PPackageModelPath pPath);
+
 
 	/**
 	* Public member functions to implement.
@@ -89,4 +88,4 @@ public:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_MODELPART
+#endif // __LIB3MF_PACKAGEPART

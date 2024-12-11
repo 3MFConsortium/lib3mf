@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -32,13 +32,6 @@ Abstract: This is a stub class definition of CLevelSet
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_meshobject.hpp"
-#include "lib3mf_utils.hpp"
-#include "lib3mf_function.hpp"
-#include "lib3mf_volumedata.hpp"
-#include "Model/Classes/NMR_ModelLevelSetObject.h"
-#include "Model/Classes/NMR_ModelFunction.h"
-#include "Model/Classes/NMR_ModelMeshObject.h"
 
 
 using namespace Lib3MF::Impl;
@@ -47,232 +40,83 @@ using namespace Lib3MF::Impl;
  Class definition of CLevelSet 
 **************************************************************************************************************************/
 
-
-ILevelSet* CLevelSet::fnCreateLevelSetFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass) {
-
-	if (!pResource.get())
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-
-	NMR::CModelLevelSetObject * LevelSetObject = dynamic_cast<NMR::CModelLevelSetObject *> (pResource.get());
-	if (LevelSetObject) {
-		return new CLevelSet(pResource);
-	}
-
-	if (bFailIfUnkownClass)
-		throw ELib3MFInterfaceException(NMR_ERROR_UNKNOWNMODELRESOURCE);
-
-	return nullptr;
-}
-
-
-
 IFunction * CLevelSet::GetFunction()
 {
-	auto levelSet = levelSetObject();
-	auto function = levelSet->getFunction();
-	if (!function)
-	{
-		return nullptr;
-	}
-	return new CFunction(function);
-}
-
-NMR::PModelLevelSetObject
-Lib3MF::Impl::CLevelSet::levelSetObject()
-{
-    NMR::PModelLevelSetObject pLevelSet = std::dynamic_pointer_cast<NMR::CModelLevelSetObject>(resource());
-	if (pLevelSet.get() == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT, "Resource is not a LevelSet Object");
-	return pLevelSet;
-}
-
-CLevelSet::CLevelSet(NMR::PModelResource pResource)
-    : CResource(pResource), CObject(pResource)
-{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CLevelSet::SetFunction(IFunction* pTheFunction)
 {
-    if(pTheFunction == nullptr)
-	{
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	}
-
-    NMR::CModel* pModel = levelSetObject()->getModel();
-    if(pModel == nullptr)
-	{
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT, "LevelSet Object has no Model");
-	}
-
-    NMR::PModelFunction pFunction =
-        std::dynamic_pointer_cast<NMR::CModelFunction>(
-            pModel->findResource(pTheFunction->GetUniqueResourceID()));
-
-    if(!pFunction)
-	{
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	} 
-	levelSetObject()->setFunction(pFunction);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF::sTransform CLevelSet::GetTransform()
 {
-	return MatrixToTransform(levelSetObject()->getTransform());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CLevelSet::SetTransform(const Lib3MF::sTransform Transform)
 {
-	levelSetObject()->setTransform(TransformToMatrix(Transform));
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 std::string CLevelSet::GetChannelName()
 {
-	return levelSetObject()->getChannelName();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CLevelSet::SetChannelName(const std::string & sChannelName)
 {
-	levelSetObject()->setChannelName(sChannelName);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CLevelSet::SetMinFeatureSize(const Lib3MF_double dMinFeatureSize)
 {
-	levelSetObject()->setMinFeatureSize(dMinFeatureSize);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF_double CLevelSet::GetMinFeatureSize()
 {
-	return levelSetObject()->getMinFeatureSize();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CLevelSet::SetFallBackValue(const Lib3MF_double dFallBackValue)
 {
-	levelSetObject()->setFallBackValue(dFallBackValue);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF_double CLevelSet::GetFallBackValue()
 {
-	return levelSetObject()->getFallBackValue();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CLevelSet::SetMeshBBoxOnly(const bool bMeshBBoxOnly)
 {
-	levelSetObject()->setMeshBBoxOnly(bMeshBBoxOnly);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 bool CLevelSet::GetMeshBBoxOnly()
 {
-	return levelSetObject()->getMeshBBoxOnly();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CLevelSet::SetMesh(IMeshObject* pTheMesh)
 {
-	if(pTheMesh == nullptr)
-	{
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	}
-
-	NMR::CModel* pModel = levelSetObject()->getModel();
-	if(pModel == nullptr)
-        {
-            throw ELib3MFInterfaceException(
-                LIB3MF_ERROR_INVALIDOBJECT,
-                "LevelSet Object " +
-                    std::to_string(levelSetObject()
-                                       ->getPackageResourceID()
-                                       ->getModelResourceID()) +
-                    " has no Model");
-        }
-
-        NMR::PModelMeshObject pMesh =
-		std::dynamic_pointer_cast<NMR::CModelMeshObject>(
-			pModel->findResource(pTheMesh->GetUniqueResourceID()));
-
-        if(!pMesh)
-        {
-            throw ELib3MFInterfaceException(
-                LIB3MF_ERROR_INVALIDPARAM,
-                "Referenced Mesh Object not found with resource ID: " +
-                    std::to_string(pTheMesh->GetModelResourceID()));
-        }
-        levelSetObject()->setMesh(pMesh);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IMeshObject * CLevelSet::GetMesh()
 {
-     NMR::PModelMeshObject meshObject = levelSetObject()->getMesh();
-
-     if(!meshObject)
-     {
-         throw ELib3MFInterfaceException(
-             LIB3MF_ERROR_INVALIDOBJECT,
-             "Referenced Mesh Object of the levelset with the id " +
-                 std::to_string(levelSetObject()
-                                    ->getPackageResourceID()
-                                    ->getModelResourceID()) +
-                 " could not be found");
-     }
-
-         return new CMeshObject(meshObject);
-}
-
-void CLevelSet::SetVolumeData(IVolumeData* pTheVolumeData)
-{
-	NMR::CModel * pModel = levelSetObject()->getModel();
-	if (pModel == nullptr)
-            throw ELib3MFInterfaceException(
-                LIB3MF_ERROR_INVALIDOBJECT,
-                "LevelSet Object " +
-                    std::to_string(levelSetObject()
-                                       ->getPackageResourceID()
-                                       ->getModelResourceID()) +
-                    " has no parent Model");
-
-        NMR::PModelResource pResource = pModel->findResource(pTheVolumeData->GetResourceID());
-	if (pResource == nullptr)
-            throw ELib3MFInterfaceException(
-                LIB3MF_ERROR_INVALIDOBJECT,
-                "Referenced VolumeData Resource with ID " +
-                    std::to_string(pTheVolumeData->GetModelResourceID()) +
-                    " not found");
-
-        NMR::PModelVolumeData pVolumeData = std::dynamic_pointer_cast<NMR::CModelVolumeData>(pResource);
-
-        if(pVolumeData == nullptr)
-            throw ELib3MFInterfaceException(
-                LIB3MF_ERROR_INVALIDOBJECT,
-                "Referenced Resource " +
-                    std::to_string(pTheVolumeData->GetModelResourceID()) +
-                    " by levelset " +
-                    std::to_string(levelSetObject()
-                                       ->getPackageResourceID()
-                                       ->getModelResourceID()) +
-                    " is not of type VolumeData");
-
-        levelSetObject()->setVolumeData(pVolumeData);
-}
-
-bool CLevelSet::IsMeshObject()
-{
-    return false;
-}
-
-bool Lib3MF::Impl::CLevelSet::IsComponentsObject()
-{
-    return false;
-}
-
-bool CLevelSet::IsLevelSetObject()
-{
-    return true;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IVolumeData * CLevelSet::GetVolumeData()
 {
-	NMR::PModelVolumeData pVolumeData = levelSetObject()->getVolumeData();
-	if (!pVolumeData)
-	{
-		return nullptr;
-	}
-	return new CVolumeData(pVolumeData);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
+
+void CLevelSet::SetVolumeData(IVolumeData* pTheVolumeData)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -32,43 +32,64 @@ Abstract: This is the class declaration of CResourceDataGroup
 #ifndef __LIB3MF_RESOURCEDATAGROUP
 #define __LIB3MF_RESOURCEDATAGROUP
 
-
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
-#include "Model/Classes/NMR_KeyStoreResourceDataGroup.h"
-#include "Model/Classes/NMR_KeyStore.h"
+// Include custom headers here.
+
 
 namespace Lib3MF {
-	namespace Impl {
-
-		/*************************************************************************************************************************
-		Class declaration of CResourceData
-		**************************************************************************************************************************/
-
-		class CResourceDataGroup : public virtual IResourceDataGroup, public virtual CBase {
-			NMR::PKeyStoreResourceDataGroup m_pDataGroup;
-		public:
-			CResourceDataGroup(NMR::PKeyStoreResourceDataGroup const & dg);
-
-			// Inherited via IResourceDataGroup
-			virtual IAccessRight * AddAccessRight(IConsumer * pConsumer, const Lib3MF::eWrappingAlgorithm eWrappingAlgorithm, const Lib3MF::eMgfAlgorithm eMgfAlgorithm, const Lib3MF::eDigestMethod eDigestMethod) override;
-			virtual IAccessRight * FindAccessRightByConsumer(IConsumer * pConsumerInstance) override;
-			virtual void RemoveAccessRight(IConsumer * pConsumerInstance) override;
-			virtual std::string GetKeyUUID() override;
+namespace Impl {
 
 
-			inline NMR::PKeyStoreResourceDataGroup resourceDataGroup() const {
-				return m_pDataGroup;
-			}
+/*************************************************************************************************************************
+ Class declaration of CResourceDataGroup 
+**************************************************************************************************************************/
 
-		};
-	}
-}
+class CResourceDataGroup : public virtual IResourceDataGroup, public virtual CBase {
+private:
+
+	/**
+	* Put private members here.
+	*/
+
+protected:
+
+	/**
+	* Put protected members here.
+	*/
+
+public:
+
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
 
 
-#endif // !__LIB3MF_RESOURCEDATAGROUP
+	/**
+	* Public member functions to implement.
+	*/
+
+	std::string GetKeyUUID() override;
+
+	IAccessRight * AddAccessRight(IConsumer* pConsumer, const Lib3MF::eWrappingAlgorithm eWrappingAlgorithm, const Lib3MF::eMgfAlgorithm eMgfAlgorithm, const Lib3MF::eDigestMethod eDigestMethod) override;
+
+	IAccessRight * FindAccessRightByConsumer(IConsumer* pConsumer) override;
+
+	void RemoveAccessRight(IConsumer* pConsumer) override;
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_RESOURCEDATAGROUP

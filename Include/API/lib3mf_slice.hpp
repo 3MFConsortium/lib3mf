@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,15 +33,16 @@ Abstract: This is the class declaration of CSlice
 #define __LIB3MF_SLICE
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
-
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelSlice.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -57,7 +58,6 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PSlice m_pSlice;
 
 protected:
 
@@ -70,29 +70,30 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CSlice(NMR::PSlice);
+
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	void SetVertices (const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition2D * pVerticesBuffer);
+	void SetVertices(const Lib3MF_uint64 nVerticesBufferSize, const Lib3MF::sPosition2D * pVerticesBuffer) override;
 
-	void GetVertices (Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, sLib3MFPosition2D * pVerticesBuffer);
+	void GetVertices(Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, Lib3MF::sPosition2D * pVerticesBuffer) override;
 
-	Lib3MF_uint64 GetVertexCount ();
+	Lib3MF_uint64 GetVertexCount() override;
 
-	Lib3MF_uint64 GetPolygonCount();
+	Lib3MF_uint64 AddPolygon(const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer) override;
 
-	Lib3MF_uint64 AddPolygon(const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer);
+	Lib3MF_uint64 GetPolygonCount() override;
 
-	void SetPolygonIndices (const Lib3MF_uint64 nIndex, const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer);
+	void SetPolygonIndices(const Lib3MF_uint64 nIndex, const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer) override;
 
-	void GetPolygonIndices (const Lib3MF_uint64 nIndex, Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, Lib3MF_uint32 * pIndicesBuffer);
+	void GetPolygonIndices(const Lib3MF_uint64 nIndex, Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, Lib3MF_uint32 * pIndicesBuffer) override;
 
-	Lib3MF_uint64 GetPolygonIndexCount (const Lib3MF_uint64 nIndex);
+	Lib3MF_uint64 GetPolygonIndexCount(const Lib3MF_uint64 nIndex) override;
 
-	double GetZTop();
+	Lib3MF_double GetZTop() override;
+
 };
 
 } // namespace Impl

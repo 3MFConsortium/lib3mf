@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -39,35 +39,29 @@ using namespace Lib3MF::Impl;
 /*************************************************************************************************************************
  Class definition of CMatrixFromColumnsNode 
 **************************************************************************************************************************/
-CMatrixFromColumnsNode::
-    CMatrixFromColumnsNode(NMR::PModelImplicitNode pImplicitNode)
-	: CImplicitNode{pImplicitNode}
-{
-	CImplicitNode::m_pImplicitNode = pImplicitNode;
-}
 
 IImplicitPort * CMatrixFromColumnsNode::GetInputA()
 {
-	return FindInputOrThrow(NMR::InputNames::A);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * CMatrixFromColumnsNode::GetInputB()
 {
-	return FindInputOrThrow(NMR::InputNames::B);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * CMatrixFromColumnsNode::GetInputC()
 {
-	return FindInputOrThrow(NMR::InputNames::C);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * CMatrixFromColumnsNode::GetInputD()
 {
-	return FindInputOrThrow(NMR::InputNames::D);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * CMatrixFromColumnsNode::GetOutputResult()
 {
-	return FindOutputOrThrow(NMR::OutputNames::result);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -32,7 +32,7 @@ Abstract: This is a stub class definition of CSliceStackIterator
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_slicestack.hpp"
+
 
 using namespace Lib3MF::Impl;
 
@@ -40,12 +40,8 @@ using namespace Lib3MF::Impl;
  Class definition of CSliceStackIterator 
 **************************************************************************************************************************/
 
-ISliceStack * CSliceStackIterator::GetCurrentSliceStack ()
+ISliceStack * CSliceStackIterator::GetCurrentSliceStack()
 {
-	return new CSliceStack(std::dynamic_pointer_cast<NMR::CModelSliceStack>(GetCurrentResource()));
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IResource * CSliceStackIterator::GetCurrent()
-{
-	return GetCurrentSliceStack();
-}

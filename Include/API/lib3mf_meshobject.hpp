@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,11 +42,11 @@ Abstract: This is the class declaration of CMeshObject
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelMeshObject.h"
-#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+
 
 namespace Lib3MF {
 namespace Impl {
+
 
 /*************************************************************************************************************************
  Class declaration of CMeshObject 
@@ -58,10 +58,6 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelMeshObject meshObject();
-	NMR::CMesh* mesh();
-
-	NMR::CMeshInformation_Properties* getMeshInformationProperties();
 
 protected:
 
@@ -70,72 +66,64 @@ protected:
 	*/
 
 public:
-	static IMeshObject* fnCreateMeshObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CMeshObject(NMR::PModelResource pResource);
+
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	Lib3MF_uint32 GetVertexCount ();
+	Lib3MF_uint32 GetVertexCount() override;
 
-	Lib3MF_uint32 GetTriangleCount ();
+	Lib3MF_uint32 GetTriangleCount() override;
 
-	void SetVertex (const Lib3MF_uint32 nIndex, const sLib3MFPosition Coordinates);
+	Lib3MF::sPosition GetVertex(const Lib3MF_uint32 nIndex) override;
 
-	sLib3MFPosition GetVertex(const Lib3MF_uint32 nIndex);
+	void SetVertex(const Lib3MF_uint32 nIndex, const Lib3MF::sPosition Coordinates) override;
 
-	Lib3MF_uint32 AddVertex (const sLib3MFPosition Coordinates);
+	Lib3MF_uint32 AddVertex(const Lib3MF::sPosition Coordinates) override;
 
-	virtual void GetVertices(Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, sLib3MFPosition * pVerticesBuffer);
+	void GetVertices(Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, Lib3MF::sPosition * pVerticesBuffer) override;
 
-	sLib3MFTriangle GetTriangle (const Lib3MF_uint32 nIndex);
+	Lib3MF::sTriangle GetTriangle(const Lib3MF_uint32 nIndex) override;
 
-	void SetTriangle (const Lib3MF_uint32 nIndex, const sLib3MFTriangle Indices);
+	void SetTriangle(const Lib3MF_uint32 nIndex, const Lib3MF::sTriangle Indices) override;
 
-	Lib3MF_uint32 AddTriangle (const sLib3MFTriangle Indices);
+	Lib3MF_uint32 AddTriangle(const Lib3MF::sTriangle Indices) override;
 
-	void GetTriangleIndices (Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, sLib3MFTriangle * pIndicesBuffer);
+	void GetTriangleIndices(Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, Lib3MF::sTriangle * pIndicesBuffer) override;
 
-	void SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition * pVerticesBuffer, const Lib3MF_uint64 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer);
+	void SetObjectLevelProperty(const Lib3MF_uint32 nUniqueResourceID, const Lib3MF_uint32 nPropertyID) override;
 
-	bool IsManifoldAndOriented();
+	bool GetObjectLevelProperty(Lib3MF_uint32 & nUniqueResourceID, Lib3MF_uint32 & nPropertyID) override;
 
-	bool IsMeshObject();
+	void SetTriangleProperties(const Lib3MF_uint32 nIndex, const Lib3MF::sTriangleProperties Properties) override;
 
-	bool IsComponentsObject();
+	void GetTriangleProperties(const Lib3MF_uint32 nIndex, Lib3MF::sTriangleProperties & sProperty) override;
 
-    bool IsLevelSetObject() override;
+	void SetAllTriangleProperties(const Lib3MF_uint64 nPropertiesArrayBufferSize, const Lib3MF::sTriangleProperties * pPropertiesArrayBuffer) override;
 
-    bool IsValid();
+	void GetAllTriangleProperties(Lib3MF_uint64 nPropertiesArrayBufferSize, Lib3MF_uint64* pPropertiesArrayNeededCount, Lib3MF::sTriangleProperties * pPropertiesArrayBuffer) override;
 
-	virtual IBeamLattice * BeamLattice();
+	void ClearAllProperties() override;
 
-	void SetObjectLevelProperty(const Lib3MF_uint32 nUniqueResourceID, const Lib3MF_uint32 nPropertyID);
+	void SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, const Lib3MF::sPosition * pVerticesBuffer, const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF::sTriangle * pIndicesBuffer) override;
 
-	bool GetObjectLevelProperty(Lib3MF_uint32 & nUniqueResourceID, Lib3MF_uint32 & nPropertyID);
+	bool IsManifoldAndOriented() override;
 
-	void SetTriangleProperties(const Lib3MF_uint32 nIndex, const sLib3MFTriangleProperties Properties);
-
-	void GetTriangleProperties(const Lib3MF_uint32 nIndex, sLib3MFTriangleProperties & sProperty);
-
-	void SetAllTriangleProperties(const Lib3MF_uint64 nPropertiesArrayBufferSize, const sLib3MFTriangleProperties * pPropertiesArrayBuffer);
-
-	void GetAllTriangleProperties(Lib3MF_uint64 nPropertiesArrayBufferSize, Lib3MF_uint64* pPropertiesArrayNeededCount, sLib3MFTriangleProperties * pPropertiesArrayBuffer);
-
-	void ClearAllProperties();
+	IBeamLattice * BeamLattice() override;
 
 	IVolumeData * GetVolumeData() override;
 
 	void SetVolumeData(IVolumeData* pTheVolumeData) override;
+
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -40,25 +40,18 @@ using namespace Lib3MF::Impl;
  Class definition of CConstMatNode 
 **************************************************************************************************************************/
 
-CConstMatNode::CConstMatNode(
-    NMR::PModelImplicitNode pImplicitNode)
-: CImplicitNode{pImplicitNode}
-{
-	CImplicitNode::m_pImplicitNode = pImplicitNode;
-}
-
 void CConstMatNode::SetMatrix(const Lib3MF::sMatrix4x4 Value)
 {
-	m_pImplicitNode->setMatrix(Value);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF::sMatrix4x4 CConstMatNode::GetMatrix()
 {
-	return m_pImplicitNode->getMatrix();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * CConstMatNode::GetOutputMatrix()
 {
-	return FindOutputOrThrow(NMR::OutputNames::matrix);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

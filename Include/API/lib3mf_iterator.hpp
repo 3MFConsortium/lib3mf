@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -58,14 +58,13 @@ private:
 	/**
 	* Put private members here.
 	*/
-	Lib3MF_int64 m_nCurrentIndex = -1;
+
 protected:
 
 	/**
 	* Put protected members here.
 	*/
-	Lib3MF_int64 getCurrentIndex();
-	void throwIfInvalidIndex();
+
 public:
 
 	/**
@@ -77,22 +76,10 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IIterator::MoveNext - Iterates to the next item in the list.
-	* @return Iterates to the next item in the list.
-	*/
 	bool MoveNext() override;
 
-	/**
-	* IIterator::MovePrevious - Iterates to the previous item in the list.
-	* @return Iterates to the previous item in the list.
-	*/
 	bool MovePrevious() override;
 
-	/**
-	* IIterator::Count - Returns the number of items the iterator captures.
-	* @return returns the number of items the iterator captures.
-	*/
 	Lib3MF_uint64 Count() override;
 
 };

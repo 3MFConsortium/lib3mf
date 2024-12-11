@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -32,17 +32,11 @@ Abstract: This is a stub class definition of CSinNode
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_oneinputnode.hpp"
+
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
  Class definition of CSinNode 
 **************************************************************************************************************************/
-
-Lib3MF::Impl::CSinNode::CSinNode(NMR::PModelImplicitNode pImplicitNode)
-    : COneInputNode{pImplicitNode}
-{
-    CImplicitNode::m_pImplicitNode = pImplicitNode;
-}
 

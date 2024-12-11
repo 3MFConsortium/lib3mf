@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -76,10 +76,6 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IFunctionIterator::GetCurrentFunction - Returns the Function the iterator points at.
-	* @return returns the Function instance.
-	*/
 	IFunction * GetCurrentFunction() override;
 
 };

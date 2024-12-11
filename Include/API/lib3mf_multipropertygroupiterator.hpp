@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -78,7 +78,6 @@ public:
 
 	IMultiPropertyGroup * GetCurrentMultiPropertyGroup() override;
 
-	IResource * GetCurrent() override;
 };
 
 } // namespace Impl

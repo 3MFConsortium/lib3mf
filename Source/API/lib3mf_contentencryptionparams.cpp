@@ -1,73 +1,82 @@
+/*++
+
+Copyright (C) 2024 3MF Consortium (Original Author)
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract: This is a stub class definition of CContentEncryptionParams
+
+*/
+
 #include "lib3mf_contentencryptionparams.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
+// Include custom headers here.
+
+
 using namespace Lib3MF::Impl;
 
+/*************************************************************************************************************************
+ Class definition of CContentEncryptionParams 
+**************************************************************************************************************************/
 
-namespace Lib3MF {
-	namespace Impl {
-		CContentEncryptionParams::CContentEncryptionParams(NMR::PCKeyStoreContentEncryptionParams const & p): m_pParams(p) {
-			if (!p)
-				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-		}
+Lib3MF::eEncryptionAlgorithm CContentEncryptionParams::GetEncryptionAlgorithm()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
 
-		Lib3MF_uint64 CContentEncryptionParams::GetDescriptor() {
-			return m_pParams->getDescriptor();
-		}
+void CContentEncryptionParams::GetKey(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
 
-		eEncryptionAlgorithm CContentEncryptionParams::GetEncryptionAlgorithm() {
-			return(eEncryptionAlgorithm)m_pParams->getEncryptionAlgorithm();
-		}
+void CContentEncryptionParams::GetInitializationVector(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
 
-		void CContentEncryptionParams::GetKey(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer) {
-			const std::vector<NMR::nfByte> & buf = m_pParams->getKey();
-			if (nByteDataBufferSize < buf.size() || nullptr == pByteDataBuffer)
-				*pByteDataNeededCount = buf.size();
-			else {
-				std::copy(buf.begin(), buf.end(), pByteDataBuffer);
-			}
-		}
+void CContentEncryptionParams::GetAuthenticationTag(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
 
-		void CContentEncryptionParams::GetInitializationVector(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer) {
-			const std::vector<NMR::nfByte> & buf = m_pParams->getInitVector();
-			if (nByteDataBufferSize < buf.size() || nullptr == pByteDataBuffer)
-				*pByteDataNeededCount = buf.size();
-			else {
-				std::copy(buf.begin(), buf.end(), pByteDataBuffer);
-			}
-		}
+void CContentEncryptionParams::SetAuthenticationTag(const Lib3MF_uint64 nByteDataBufferSize, const Lib3MF_uint8 * pByteDataBuffer)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
 
-		void CContentEncryptionParams::GetAuthenticationTag(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer) {
-			const std::vector<NMR::nfByte> & buf = m_pParams->getAuthTag();
-			if (nByteDataBufferSize < buf.size() || nullptr == pByteDataBuffer)
-				*pByteDataNeededCount = buf.size();
-			else {
-				std::copy(buf.begin(), buf.end(), pByteDataBuffer);
-			}
-		}
+void CContentEncryptionParams::GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
 
-		void CContentEncryptionParams::SetAuthenticationTag(Lib3MF_uint64 const nByteDataBufferSize, const Lib3MF_uint8 *pByteDataBuffer) {
-			std::vector<NMR::nfByte> tag(pByteDataBuffer, pByteDataBuffer + nByteDataBufferSize);
-			m_pParams->setAuthTag(tag);
-		}
+Lib3MF_uint64 CContentEncryptionParams::GetDescriptor()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
 
-		void CContentEncryptionParams::GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer) {
-			const std::vector<NMR::nfByte> & buf = m_pParams->getAddAuthData();
-			if (nByteDataBufferSize < buf.size() || nullptr == pByteDataBuffer)
-				*pByteDataNeededCount = buf.size();
-			else {
-				std::copy(buf.begin(), buf.end(), pByteDataBuffer);
-			}
-		}
-
-		void CContentEncryptionParams::SetAdditionalAuthenticationData(Lib3MF_uint64 const nByteDataBufferSize, const Lib3MF_uint8 *pByteDataBuffer) {
-			std::vector<NMR::nfByte> aad(pByteDataBuffer, pByteDataBuffer + nByteDataBufferSize);
-			m_pParams->setAddAuthData(aad);
-		}
-
-		std::string CContentEncryptionParams::GetKeyUUID() {
-			return std::string();
-		}
-	}
+std::string CContentEncryptionParams::GetKeyUUID()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

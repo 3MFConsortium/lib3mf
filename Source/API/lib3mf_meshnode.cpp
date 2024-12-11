@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -40,25 +40,18 @@ using namespace Lib3MF::Impl;
  Class definition of CMeshNode 
 **************************************************************************************************************************/
 
-CMeshNode::CMeshNode(NMR::PModelImplicitNode pImplicitNode)
-    : CImplicitNode{pImplicitNode}
-{
-	CImplicitNode::m_pImplicitNode = pImplicitNode;
-}
-
 IImplicitPort * CMeshNode::GetInputMesh()
 {
-	return FindInputOrThrow(NMR::InputNames::mesh);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * CMeshNode::GetInputPos()
 {
-	return FindInputOrThrow(NMR::InputNames::pos);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
-
 
 IImplicitPort * CMeshNode::GetOutputDistance()
 {
-	return FindOutputOrThrow(NMR::OutputNames::distance);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

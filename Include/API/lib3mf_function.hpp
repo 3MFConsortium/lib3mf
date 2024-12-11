@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CFunction
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelFunction.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -54,10 +54,10 @@ namespace Impl {
 
 class CFunction : public virtual IFunction, public virtual CResource {
 private:
+
 	/**
-	 * Put private members here.
-	 */
-	NMR::CModelFunction* function();
+	* Put private members here.
+	*/
 
 protected:
 
@@ -70,79 +70,30 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CFunction() = delete;
-	CFunction(NMR::PModelResource pResource);
+
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IFunction::GetDisplayName - Retrieves the display name of the function
-	* @return the display name
-	*/
 	std::string GetDisplayName() override;
 
-	/**
-	* IFunction::SetDisplayName - Sets the display name of the function
-	* @param[in] sDisplayName - the display name
-	*/
 	void SetDisplayName(const std::string & sDisplayName) override;
 
-	/**
-	* IFunction::AddInput - Add an input
-	* @param[in] sIdentifier - the identifier of the input
-	* @param[in] sDisplayName - the display name of the input
-	* @param[in] eType - the type of the input
-	* @return The added input port
-	*/
 	IImplicitPort * AddInput(const std::string & sIdentifier, const std::string & sDisplayName, const Lib3MF::eImplicitPortType eType) override;
 
-	/**
-	* IFunction::GetInputs - Retrieves the inputs
-	* @return iterator for the list of inputs
-	*/
 	IImplicitPortIterator * GetInputs() override;
 
-	/**
-	* IFunction::RemoveInput - Removes an input
-	* @param[in] pInput - The input to be removed
-	*/
 	void RemoveInput(IImplicitPort* pInput) override;
 
-	/**
-	* IFunction::AddOutput - Add an output
-	* @param[in] sIdentifier - the identifier of the output
-	* @param[in] sDisplayName - the display name of the output
-	* @param[in] eType - the type of the input
-	* @return The added input port
-	*/
 	IImplicitPort * AddOutput(const std::string & sIdentifier, const std::string & sDisplayName, const Lib3MF::eImplicitPortType eType) override;
 
-	/**
-	* IFunction::GetOutputs - Retrieves the outputs
-	* @return iterator for the outputs
-	*/
 	IImplicitPortIterator * GetOutputs() override;
 
-	/**
-	* IFunction::RemoveOutput - Removes an output
-	* @param[in] pOutput - The output to be removed
-	*/
 	void RemoveOutput(IImplicitPort* pOutput) override;
 
-	/**
-	* IFunction::FindInput - Retrieves an input
-	* @param[in] sIdentifier - the identifier of the input
-	* @return the input port
-	*/
 	IImplicitPort * FindInput(const std::string & sIdentifier) override;
 
-	/**
-	* IFunction::FindOutput - Retrieves an output
-	* @param[in] sIdentifier - the identifier of the output
-	* @return the output port
-	*/
 	IImplicitPort * FindOutput(const std::string & sIdentifier) override;
 
 };

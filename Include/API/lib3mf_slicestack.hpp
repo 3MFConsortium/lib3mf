@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CSliceStack
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelSliceStack.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -64,39 +64,38 @@ protected:
 	/**
 	* Put protected members here.
 	*/
-	NMR::PModelSliceStack sliceStack();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CSliceStack(NMR::PModelSliceStack pSliceStack);
 
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	double GetBottomZ();
+	Lib3MF_double GetBottomZ() override;
 
-	Lib3MF_uint64 GetSliceCount ();
+	Lib3MF_uint64 GetSliceCount() override;
 
-	ISlice * AddSlice(const double fZTop);
+	ISlice * GetSlice(const Lib3MF_uint64 nSliceIndex) override;
 
-	ISlice * GetSlice (const Lib3MF_uint64 nSliceIndex);
+	ISlice * AddSlice(const Lib3MF_double dZTop) override;
 
-	Lib3MF_uint64 GetSliceRefCount();
+	Lib3MF_uint64 GetSliceRefCount() override;
 
-	void AddSliceStackReference(ISliceStack* pTheSliceStack) ;
+	void AddSliceStackReference(ISliceStack* pTheSliceStack) override;
 
-	ISliceStack * GetSliceStackReference(const Lib3MF_uint64 nSliceRefIndex);
+	ISliceStack * GetSliceStackReference(const Lib3MF_uint64 nSliceRefIndex) override;
 
-	void CollapseSliceReferences();
+	void CollapseSliceReferences() override;
 
-	virtual void SetOwnPath(const std::string & sPath);
+	void SetOwnPath(const std::string & sPath) override;
 
-	virtual std::string GetOwnPath();
+	std::string GetOwnPath() override;
+
 };
 
 } // namespace Impl

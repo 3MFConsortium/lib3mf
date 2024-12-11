@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -28,8 +28,6 @@ Abstract: This is a stub class definition of CResourceIterator
 
 */
 
-#include "lib3mf_resource.hpp"
-#include "lib3mf_model.hpp"
 #include "lib3mf_resourceiterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
@@ -42,78 +40,28 @@ using namespace Lib3MF::Impl;
  Class definition of CResourceIterator 
 **************************************************************************************************************************/
 
-CResourceIterator::CResourceIterator()
+bool CResourceIterator::MoveNext()
 {
-	m_nCurrentIndex = -1;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CResourceIterator::addResource(NMR::PModelResource pResource)
+bool CResourceIterator::MovePrevious()
 {
-	if (pResource.get() == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-
-	m_pResources.push_back(pResource);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-bool CResourceIterator::MoveNext ()
+IResource * CResourceIterator::GetCurrent()
 {
-	// Get Resource Count
-	Lib3MF_int32 nBuildItemCount = (Lib3MF_int32)m_pResources.size();
-	m_nCurrentIndex++;
-
-	// Check new Index
-	if (m_nCurrentIndex >= nBuildItemCount) {
-		m_nCurrentIndex = nBuildItemCount;
-		return false;
-	}
-	else {
-		return true;
-	}
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-bool CResourceIterator::MovePrevious ()
+IResourceIterator * CResourceIterator::Clone()
 {
-	// Get Resource Count
-	m_nCurrentIndex--;
-
-	// Check new Index
-	if (m_nCurrentIndex <= -1) {
-		m_nCurrentIndex = -1;
-		return false;
-	}
-	else {
-		return true;
-	}
-}
-
-NMR::PModelResource CResourceIterator::GetCurrentResource()
-{
-	// Get Resource Count
-	Lib3MF_int32 nBuildItemCount = (Lib3MF_int32)m_pResources.size();
-	if ((m_nCurrentIndex < 0) || (m_nCurrentIndex >= nBuildItemCount))
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_ITERATORINVALIDINDEX);
-	
-	return m_pResources[m_nCurrentIndex];
-}
-
-IResource * CResourceIterator::GetCurrent ()
-{
-	// Create specific API class
-	return CModel::createIResourceFromModelResource(GetCurrentResource(), true);
-}
-
-IResourceIterator * CResourceIterator::Clone ()
-{
-	auto pResources = std::unique_ptr<CResourceIterator>(new CResourceIterator());
-
-	for (auto iIterator = m_pResources.begin(); iIterator != m_pResources.end(); iIterator++)
-		pResources->addResource(*iIterator);
-
-	return pResources.release();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF_uint64 CResourceIterator::Count()
 {
-	return m_pResources.size();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -40,64 +40,58 @@ using namespace Lib3MF::Impl;
  Class definition of CMetaData 
 **************************************************************************************************************************/
 
-CMetaData::CMetaData(NMR::PModelMetaData pMetaData)
-	:m_pMetaData(pMetaData)
+std::string CMetaData::GetNameSpace()
 {
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-
-std::string CMetaData::GetNameSpace ()
+void CMetaData::SetNameSpace(const std::string & sNameSpace)
 {
-	return m_pMetaData->getNameSpace();
-}
-
-void CMetaData::SetNameSpace (const std::string & sNameSpace)
-{
-	m_pMetaData->setNameSpace(sNameSpace);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 std::string CMetaData::GetName()
 {
-	return m_pMetaData->getName();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CMetaData::SetName(const std::string & sName)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 std::string CMetaData::GetKey()
 {
-	return m_pMetaData->getKey();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CMetaData::SetName (const std::string & sName)
+bool CMetaData::GetMustPreserve()
 {
-	m_pMetaData->setName(sName);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-bool CMetaData::GetMustPreserve ()
+void CMetaData::SetMustPreserve(const bool bMustPreserve)
 {
-	return m_pMetaData->getPreserve();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CMetaData::SetMustPreserve (const bool bMustPreserve)
+std::string CMetaData::GetType()
 {
-	m_pMetaData->setPreserve(bMustPreserve);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-std::string CMetaData::GetType ()
+void CMetaData::SetType(const std::string & sType)
 {
-	return m_pMetaData->getType();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CMetaData::SetType (const std::string & sType)
+std::string CMetaData::GetValue()
 {
-	m_pMetaData->setType(sType);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-std::string CMetaData::GetValue ()
+void CMetaData::SetValue(const std::string & sValue)
 {
-	return m_pMetaData->getValue();
-}
-
-void CMetaData::SetValue (const std::string & sValue)
-{
-	m_pMetaData->setValue(sValue);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

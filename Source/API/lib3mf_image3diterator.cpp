@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,6 +42,6 @@ using namespace Lib3MF::Impl;
 
 IImage3D * CImage3DIterator::GetCurrentImage3D()
 {
-	return dynamic_cast<IImage3D*>(GetCurrent());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

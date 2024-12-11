@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,6 +33,8 @@ Abstract: This is the class declaration of CAttachment
 #define __LIB3MF_ATTACHMENT
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -40,7 +42,7 @@ Abstract: This is the class declaration of CAttachment
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelAttachment.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -56,7 +58,6 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelAttachment m_pModelAttachment;
 
 protected:
 
@@ -69,43 +70,40 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CAttachment(NMR::PModelAttachment pModelAttachment);
+
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	std::string GetPath ();
+	std::string GetPath() override;
 
-	void SetPath (const std::string & sPath);
+	void SetPath(const std::string & sPath) override;
 
-	IPackagePart * PackagePart();
+	IPackagePart * PackagePart() override;
 
-	std::string GetRelationShipType ();
+	std::string GetRelationShipType() override;
 
-	void SetRelationShipType (const std::string & sPath);
+	void SetRelationShipType(const std::string & sPath) override;
 
-	void WriteToFile (const std::string & sFileName);
+	void WriteToFile(const std::string & sFileName) override;
 
-	void ReadFromFile (const std::string & sFileName);
-	
-	void ReadFromCallback(const Lib3MF::ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MF::SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
+	void ReadFromFile(const std::string & sFileName) override;
 
-	Lib3MF_uint64 GetStreamSize ();
+	void ReadFromCallback(const Lib3MF::ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MF::SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData) override;
 
-	void WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
+	Lib3MF_uint64 GetStreamSize() override;
 
-	void ReadFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);
+	void WriteToBuffer(Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer) override;
 
-	NMR::PModelAttachment getModelAttachment ();
+	void ReadFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer) override;
 
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-
 #endif // __LIB3MF_ATTACHMENT

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -40,8 +40,3 @@ using namespace Lib3MF::Impl;
  Class definition of CFloorNode 
 **************************************************************************************************************************/
 
-Lib3MF::Impl::CFloorNode::CFloorNode(NMR::PModelImplicitNode pImplicitNode)
-: COneInputNode{pImplicitNode}
-{
-    CImplicitNode::m_pImplicitNode = pImplicitNode;
-}

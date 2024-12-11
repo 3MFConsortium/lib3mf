@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -29,19 +29,14 @@ Abstract: This is a stub class definition of CSinhNode
 */
 
 #include "lib3mf_sinhnode.hpp"
-
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
+
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CSinhNode
+ Class definition of CSinhNode 
 **************************************************************************************************************************/
 
-Lib3MF::Impl::CSinhNode::CSinhNode(NMR::PModelImplicitNode pImplicitNode)
-    : COneInputNode{pImplicitNode}
-{
-    CImplicitNode::m_pImplicitNode = pImplicitNode;
-}

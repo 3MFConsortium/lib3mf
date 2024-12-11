@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,54 +33,25 @@ Abstract: This is a stub class definition of CIterator
 
 // Include custom headers here.
 
+
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CIterator
+ Class definition of CIterator 
 **************************************************************************************************************************/
 
 bool CIterator::MoveNext()
 {
-    auto const numItems = static_cast<Lib3MF_int64>(Count());
-    m_nCurrentIndex++;
-
-    if (m_nCurrentIndex >= numItems)
-    {
-        m_nCurrentIndex = numItems;
-        return false;
-    }
-    else
-    {
-        return true;
-    }
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 bool CIterator::MovePrevious()
 {
-    m_nCurrentIndex--;
-    if (m_nCurrentIndex <= -1)
-    {
-        m_nCurrentIndex = -1;
-        return false;
-    }
-    else
-    {
-        return true;
-    }
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF_uint64 CIterator::Count()
 {
-    throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF_int64 Lib3MF::Impl::CIterator::getCurrentIndex()
-{
-    return m_nCurrentIndex;
-}
-
-void Lib3MF::Impl::CIterator::throwIfInvalidIndex()
-{
-    if ((m_nCurrentIndex < 0) || (m_nCurrentIndex >= static_cast<Lib3MF_int64>(Count())))
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_ITERATORINVALIDINDEX);
-}

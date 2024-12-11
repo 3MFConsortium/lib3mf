@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -66,7 +66,7 @@ protected:
 	*/
 
 public:
-	CFunctionCallNode(NMR::PModelImplicitNode pImplicitNode);
+
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
@@ -76,11 +76,8 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IFunctionCallNode::GetInputFunctionId - Retrieves the input for the function id
-	* @return the input port for the function
-	*/
 	IImplicitPort * GetInputFunctionID() override;
+
 };
 
 } // namespace Impl

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -35,7 +35,6 @@ Abstract: This is the class declaration of CVolumeData
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_base.hpp"
 #include "lib3mf_resource.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -43,10 +42,7 @@ Abstract: This is the class declaration of CVolumeData
 #endif
 
 // Include custom headers here.
-#include "Common/Mesh/NMR_Mesh.h"
-#include "Model/Classes/NMR_ModelVolumeData.h"
-#include "Model/Classes/NMR_ModelMeshObject.h"
-#include "Model/Classes/NMR_ModelResource.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -62,7 +58,6 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelVolumeData m_pVolumeData;
 
 protected:
 
@@ -75,14 +70,12 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CVolumeData() = delete;
-	CVolumeData(NMR::PModelResource pResource);
 
-	// CVolumeData(NMR::PModelMeshObject pMeshObject, NMR::PModelVolumeData pVolumeData);
 
 	/**
 	* Public member functions to implement.
 	*/
+
 	IVolumeDataComposite * GetComposite() override;
 
 	IVolumeDataComposite * CreateNewComposite() override;
@@ -91,7 +84,7 @@ public:
 
 	IVolumeDataColor * GetColor() override;
 
-	IVolumeDataColor* CreateNewColor(IFunction* pTheFunction) override;
+	IVolumeDataColor * CreateNewColor(IFunction* pTheFunction) override;
 
 	void RemoveColor() override;
 
@@ -99,10 +92,8 @@ public:
 
 	IVolumeDataProperty * GetProperty(const Lib3MF_uint32 nIndex) override;
 
-	IVolumeDataProperty* AddPropertyFromFunction(
-            const std::string& sName, IFunction* pTheFunction) override;
+	IVolumeDataProperty * AddPropertyFromFunction(const std::string & sName, IFunction* pTheFunction) override;
 
-    
 	void RemoveProperty(const Lib3MF_uint32 nIndex) override;
 
 };

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CVolumeDataComposite
 #endif
 
 // Include custom headers here.
-#include "Common/Mesh/NMR_VolumeDataComposite.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -58,27 +58,24 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PVolumeDataComposite m_pVolumeDataComposite;
 
 protected:
 
 	/**
 	* Put protected members here.
 	*/
-	NMR::PVolumeDataComposite volumeDataComposite();
-
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CVolumeDataComposite() = delete;
-	CVolumeDataComposite(NMR::PVolumeDataComposite pComposite);
+
 
 	/**
 	* Public member functions to implement.
 	*/
+
 	IBaseMaterialGroup * GetBaseMaterialGroup() override;
 
 	void SetBaseMaterialGroup(IBaseMaterialGroup* pBaseMaterialGroupInstance) override;

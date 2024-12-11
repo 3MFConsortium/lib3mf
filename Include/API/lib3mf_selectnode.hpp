@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -66,7 +66,7 @@ protected:
 	*/
 
 public:
-	CSelectNode(NMR::PModelImplicitNode pImplicitNode);
+
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
@@ -76,22 +76,10 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* ISelectNode::GetInputB - Retrieves the second input
-	* @return the second input
-	*/
 	IImplicitPort * GetInputB() override;
 
-	/**
-	* ISelectNode::GetInputC - Retrieves the third input
-	* @return the third input
-	*/
 	IImplicitPort * GetInputC() override;
 
-	/**
-	* ISelectNode::GetInputD - Retrieves the fourth input
-	* @return the fourth input
-	*/
 	IImplicitPort * GetInputD() override;
 
 };

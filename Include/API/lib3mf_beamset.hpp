@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,22 +33,20 @@ Abstract: This is the class declaration of CBeamSet
 #define __LIB3MF_BEAMSET
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
-#include "Common/Mesh/NMR_MeshTypes.h" 
-#include "Common/Mesh/NMR_Mesh.h"
-#include "Model/Classes/NMR_ModelMeshObject.h"
 // Include custom headers here.
 
 
 namespace Lib3MF {
 namespace Impl {
 
-#define LIB3MF_MAXBEAMCOUNT (1UL << 31)
 
 /*************************************************************************************************************************
  Class declaration of CBeamSet 
@@ -60,8 +58,6 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PBEAMSET m_pBeamSet;
-	NMR::CMesh& m_mesh;
 
 protected:
 
@@ -74,36 +70,36 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CBeamSet(NMR::PBEAMSET pBeamSet, NMR::PModelMeshObject pMeshObject);
+
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	virtual void SetName(const std::string & sName);
+	void SetName(const std::string & sName) override;
 
-	virtual std::string GetName();
+	std::string GetName() override;
 
-	virtual void SetIdentifier(const std::string & sIdentifier);
+	void SetIdentifier(const std::string & sIdentifier) override;
 
-	virtual std::string GetIdentifier();
+	std::string GetIdentifier() override;
 
-	virtual Lib3MF_uint32 GetReferenceCount();
+	Lib3MF_uint32 GetReferenceCount() override;
 
-	virtual void SetReferences(const Lib3MF_uint64 nReferencesBufferSize, const Lib3MF_uint32 * pReferencesBuffer);
+	void SetReferences(const Lib3MF_uint64 nReferencesBufferSize, const Lib3MF_uint32 * pReferencesBuffer) override;
 
-	virtual void GetReferences(Lib3MF_uint64 nReferencesBufferSize, Lib3MF_uint64 * pReferencesNeededCount, Lib3MF_uint32 * pReferencesBuffer);
+	void GetReferences(Lib3MF_uint64 nReferencesBufferSize, Lib3MF_uint64* pReferencesNeededCount, Lib3MF_uint32 * pReferencesBuffer) override;
 
-	virtual Lib3MF_uint32 GetBallReferenceCount();
+	Lib3MF_uint32 GetBallReferenceCount() override;
 
-	virtual void SetBallReferences(const Lib3MF_uint64 nBallReferencesBufferSize, const Lib3MF_uint32 * pBallReferencesBuffer);
+	void SetBallReferences(const Lib3MF_uint64 nBallReferencesBufferSize, const Lib3MF_uint32 * pBallReferencesBuffer) override;
 
-	virtual void GetBallReferences(Lib3MF_uint64 nBallReferencesBufferSize, Lib3MF_uint64 * pBallReferencesNeededCount, Lib3MF_uint32 * pBallReferencesBuffer);
+	void GetBallReferences(Lib3MF_uint64 nBallReferencesBufferSize, Lib3MF_uint64* pBallReferencesNeededCount, Lib3MF_uint32 * pBallReferencesBuffer) override;
 
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)

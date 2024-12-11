@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -29,19 +29,14 @@ Abstract: This is a stub class definition of CLengthNode
 */
 
 #include "lib3mf_lengthnode.hpp"
-
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
+
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLengthNode
+ Class definition of CLengthNode 
 **************************************************************************************************************************/
 
-Lib3MF::Impl::CLengthNode::CLengthNode(NMR::PModelImplicitNode pImplicitNode)
-    : COneInputNode{pImplicitNode}
-{
-    CImplicitNode::m_pImplicitNode = pImplicitNode;
-}

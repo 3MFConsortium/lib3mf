@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -29,691 +29,304 @@ Abstract: This is a stub class definition of CImplicitFunction
 */
 
 #include "lib3mf_implicitfunction.hpp"
-
-#include "lib3mf_absnode.hpp"
-#include "lib3mf_additionnode.hpp"
-#include "lib3mf_arccosnode.hpp"
-#include "lib3mf_arcsinnode.hpp"
-#include "lib3mf_arctan2node.hpp"
-#include "lib3mf_ceilnode.hpp"
-#include "lib3mf_clampnode.hpp"
-#include "lib3mf_composematrixnode.hpp"
-#include "lib3mf_composevectornode.hpp"
-#include "lib3mf_constantnode.hpp"
-#include "lib3mf_constmatnode.hpp"
-#include "lib3mf_constvecnode.hpp"
-#include "lib3mf_coshnode.hpp"
-#include "lib3mf_cosnode.hpp"
-#include "lib3mf_crossnode.hpp"
-#include "lib3mf_decomposevectornode.hpp"
-#include "lib3mf_divisionnode.hpp"
-#include "lib3mf_dotnode.hpp"
-#include "lib3mf_expnode.hpp"
-#include "lib3mf_floornode.hpp"
-#include "lib3mf_fmodnode.hpp"
-#include "lib3mf_fractnode.hpp"
-#include "lib3mf_functioncallnode.hpp"
-#include "lib3mf_implicitnode.hpp"
-#include "lib3mf_implicitport.hpp"
 #include "lib3mf_interfaceexception.hpp"
-#include "lib3mf_inversenode.hpp"
-#include "lib3mf_lengthnode.hpp"
-#include "lib3mf_log10node.hpp"
-#include "lib3mf_log2node.hpp"
-#include "lib3mf_lognode.hpp"
-#include "lib3mf_matrixfromcolumnsnode.hpp"
-#include "lib3mf_matrixfromrowsnode.hpp"
-#include "lib3mf_matvecmultiplicationnode.hpp"
-#include "lib3mf_maxnode.hpp"
-#include "lib3mf_meshnode.hpp"
-#include "lib3mf_minnode.hpp"
-#include "lib3mf_multiplicationnode.hpp"
-#include "lib3mf_pownode.hpp"
-#include "lib3mf_resourceidnode.hpp"
-#include "lib3mf_roundnode.hpp"
-#include "lib3mf_selectnode.hpp"
-#include "lib3mf_signnode.hpp"
-#include "lib3mf_sinhnode.hpp"
-#include "lib3mf_sinnode.hpp"
-#include "lib3mf_sqrtnode.hpp"
-#include "lib3mf_subtractionnode.hpp"
-#include "lib3mf_tanhnode.hpp"
-#include "lib3mf_tannode.hpp"
-#include "lib3mf_transposenode.hpp"
-#include "lib3mf_unsignedmeshnode.hpp"
-#include "lib3mf_vectorfromscalarnode.hpp"
 
 // Include custom headers here.
-#include "lib3mf_implicitportiterator.hpp"
-#include "lib3mf_nodeiterator.hpp"
+
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CImplicitFunction
+ Class definition of CImplicitFunction 
 **************************************************************************************************************************/
-
-NMR::CModelImplicitFunction* CImplicitFunction::function()
-{
-    NMR::CModelImplicitFunction* pFunction =
-        dynamic_cast<NMR::CModelImplicitFunction*>(resource().get());
-    if(pFunction == nullptr)
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
-
-    return pFunction;
-}
-
-CImplicitFunction::CImplicitFunction(NMR::PModelResource pResource)
-    : CResource(pResource), CFunction(pResource)
-{
-}
 
 std::string CImplicitFunction::GetIdentifier()
 {
-    return function()->getIdentifier();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CImplicitFunction::SetIdentifier(const std::string& sIdentifier)
+void CImplicitFunction::SetIdentifier(const std::string & sIdentifier)
 {
-    function()->setIdentifier(sIdentifier);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IImplicitNode* CImplicitFunction::AddNode(
-    const Lib3MF::eImplicitNodeType eNodeType, const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IImplicitNode * CImplicitFunction::AddNode(const Lib3MF::eImplicitNodeType eNodeType, const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode = function()->addNode(eNodeType, eConfiguration, sIdentifier,
-                                       sDisplayName, sTag);
-    return new CImplicitNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ISinNode* CImplicitFunction::AddSinNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+ISinNode * CImplicitFunction::AddSinNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Sinus, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CSinNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ICosNode* CImplicitFunction::AddCosNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+ICosNode * CImplicitFunction::AddCosNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Cosinus, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CCosNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ITanNode* CImplicitFunction::AddTanNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+ITanNode * CImplicitFunction::AddTanNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Tan, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CTanNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IArcSinNode* CImplicitFunction::AddArcSinNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IArcSinNode * CImplicitFunction::AddArcSinNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::ArcSin, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CArcSinNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IArcCosNode* CImplicitFunction::AddArcCosNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IArcCosNode * CImplicitFunction::AddArcCosNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::ArcCos, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CArcCosNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IArcTan2Node* CImplicitFunction::AddArcTan2Node(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IArcTan2Node * CImplicitFunction::AddArcTan2Node(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::ArcTan2, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CArcTan2Node(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ISinhNode* CImplicitFunction::AddSinhNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+ISinhNode * CImplicitFunction::AddSinhNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Sinh, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CSinhNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ICoshNode* CImplicitFunction::AddCoshNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+ICoshNode * CImplicitFunction::AddCoshNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Cosh, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CCoshNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ITanhNode* CImplicitFunction::AddTanhNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+ITanhNode * CImplicitFunction::AddTanhNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Tanh, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CTanhNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IRoundNode* CImplicitFunction::AddRoundNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IRoundNode * CImplicitFunction::AddRoundNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Round, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CRoundNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ICeilNode* CImplicitFunction::AddCeilNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+ICeilNode * CImplicitFunction::AddCeilNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Ceil, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CCeilNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IFloorNode* CImplicitFunction::AddFloorNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IFloorNode * CImplicitFunction::AddFloorNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Floor, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CFloorNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ISignNode* CImplicitFunction::AddSignNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+ISignNode * CImplicitFunction::AddSignNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Sign, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CSignNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IFractNode* CImplicitFunction::AddFractNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IFractNode * CImplicitFunction::AddFractNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Fract, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CFractNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IAbsNode* CImplicitFunction::AddAbsNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IAbsNode * CImplicitFunction::AddAbsNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Abs, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CAbsNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IExpNode* CImplicitFunction::AddExpNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IExpNode * CImplicitFunction::AddExpNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Exp, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CExpNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILogNode* CImplicitFunction::AddLogNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+ILogNode * CImplicitFunction::AddLogNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Log, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CLogNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILog2Node* CImplicitFunction::AddLog2Node(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+ILog2Node * CImplicitFunction::AddLog2Node(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Log2, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CLog2Node(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILog10Node* CImplicitFunction::AddLog10Node(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+ILog10Node * CImplicitFunction::AddLog10Node(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Log10, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CLog10Node(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILengthNode* CImplicitFunction::AddLengthNode(const std::string& sIdentifier,
-                                              const std::string& sDisplayName,
-                                              const std::string& sTag)
+ILengthNode * CImplicitFunction::AddLengthNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Length,
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            sIdentifier, sDisplayName, sTag);
-    return new CLengthNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ITransposeNode* CImplicitFunction::AddTransposeNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+ITransposeNode * CImplicitFunction::AddTransposeNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Transpose,
-                            eConfiguration, sIdentifier, sDisplayName, sTag);
-    return new CTransposeNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IInverseNode* CImplicitFunction::AddInverseNode(const std::string& sIdentifier,
-                                             const std::string& sDisplayName,
-                                             const std::string& sTag)
+IInverseNode * CImplicitFunction::AddInverseNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Inverse,
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            sIdentifier, sDisplayName, sTag);
-    return new CInverseNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ISqrtNode* CImplicitFunction::AddSqrtNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+ISqrtNode * CImplicitFunction::AddSqrtNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Sqrt, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CSqrtNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IResourceIdNode* CImplicitFunction::AddResourceIdNode(
-    const std::string& sIdentifier, const std::string& sDisplayName,
-    const std::string& sTag)
+IResourceIdNode * CImplicitFunction::AddResourceIdNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::ConstResourceID,
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            sIdentifier, sDisplayName, sTag);
-    return new CResourceIdNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IAdditionNode* CImplicitFunction::AddAdditionNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IAdditionNode * CImplicitFunction::AddAdditionNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Addition, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-
-    return new CAdditionNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ISubtractionNode* CImplicitFunction::AddSubtractionNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+ISubtractionNode * CImplicitFunction::AddSubtractionNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Subtraction,
-                            eConfiguration, sIdentifier, sDisplayName, sTag);
-    return new CSubtractionNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IMultiplicationNode* CImplicitFunction::AddMultiplicationNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IMultiplicationNode * CImplicitFunction::AddMultiplicationNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Multiplication,
-                            eConfiguration, sIdentifier, sDisplayName, sTag);
-    return new CMultiplicationNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IDivisionNode* CImplicitFunction::AddDivisionNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IDivisionNode * CImplicitFunction::AddDivisionNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Division, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CDivisionNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IDotNode* CImplicitFunction::AddDotNode(const std::string& sIdentifier,
-                                        const std::string& sDisplayName,
-                                        const std::string& sTag)
+IDotNode * CImplicitFunction::AddDotNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Dot,
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            sIdentifier, sDisplayName, sTag);
-    return new CDotNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ICrossNode* CImplicitFunction::AddCrossNode(const std::string& sIdentifier,
-                                            const std::string& sDisplayName,
-                                            const std::string& sTag)
+ICrossNode * CImplicitFunction::AddCrossNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Cross,
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            sIdentifier, sDisplayName, sTag);
-    return new CCrossNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IMatVecMultiplicationNode* CImplicitFunction::AddMatVecMultiplicationNode(
-    const std::string& sIdentifier, const std::string& sDisplayName,
-    const std::string& sTag)
+IMatVecMultiplicationNode * CImplicitFunction::AddMatVecMultiplicationNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::MatVecMultiplication,
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            sIdentifier, sDisplayName, sTag);
-    return new CMatVecMultiplicationNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IMinNode* CImplicitFunction::AddMinNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IMinNode * CImplicitFunction::AddMinNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Min, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CMinNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IMaxNode* CImplicitFunction::AddMaxNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IMaxNode * CImplicitFunction::AddMaxNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Max, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CMaxNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IFmodNode* CImplicitFunction::AddFmodNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IFmodNode * CImplicitFunction::AddFmodNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Fmod, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CFmodNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IPowNode* CImplicitFunction::AddPowNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IPowNode * CImplicitFunction::AddPowNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Pow, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CPowNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ISelectNode* CImplicitFunction::AddSelectNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+ISelectNode * CImplicitFunction::AddSelectNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Select, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CSelectNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IClampNode* CImplicitFunction::AddClampNode(
-    const std::string& sIdentifier,
-    const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-    const std::string& sDisplayName, const std::string& sTag)
+IClampNode * CImplicitFunction::AddClampNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Clamp, eConfiguration,
-                            sIdentifier, sDisplayName, sTag);
-    return new CClampNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IComposeVectorNode* CImplicitFunction::AddComposeVectorNode(
-    const std::string& sIdentifier, const std::string& sDisplayName,
-    const std::string& sTag)
+IComposeVectorNode * CImplicitFunction::AddComposeVectorNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::ComposeVector,
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            sIdentifier, sDisplayName, sTag);
-    return new CComposeVectorNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IVectorFromScalarNode * CImplicitFunction::AddVectorFromScalarNode(const std::string & sIdentifier,
-                                                                   const std::string & sDisplayName,
-                                                                   const std::string & sTag)
+IVectorFromScalarNode * CImplicitFunction::AddVectorFromScalarNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode = function()->addNode(Lib3MF::eImplicitNodeType::VectorFromScalar,
-                                       Lib3MF::eImplicitNodeConfiguration::Default,
-                                       sIdentifier,
-                                       sDisplayName,
-                                       sTag);
-    return new CVectorFromScalarNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IDecomposeVectorNode* CImplicitFunction::AddDecomposeVectorNode(
-    const std::string& sIdentifier, const std::string& sDisplayName,
-    const std::string& sTag)
+IDecomposeVectorNode * CImplicitFunction::AddDecomposeVectorNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::DecomposeVector,
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            sIdentifier, sDisplayName, sTag);
-    return new CDecomposeVectorNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IComposeMatrixNode* CImplicitFunction::AddComposeMatrixNode(
-    const std::string& sIdentifier, const std::string& sDisplayName,
-    const std::string& sTag)
+IComposeMatrixNode * CImplicitFunction::AddComposeMatrixNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::ComposeMatrix,
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            sIdentifier, sDisplayName, sTag);
-    return new CComposeMatrixNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IMatrixFromRowsNode * CImplicitFunction::AddMatrixFromRowsNode(const std::string & sIdentifier,
-                                                        const std::string & sDisplayName,
-                                                        const std::string & sTag)
+IMatrixFromRowsNode * CImplicitFunction::AddMatrixFromRowsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode = function()->addNode(Lib3MF::eImplicitNodeType::MatrixFromRows,
-                                       Lib3MF::eImplicitNodeConfiguration::Default,
-                                       sIdentifier,
-                                       sDisplayName,
-                                       sTag);
-    return new CMatrixFromRowsNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IMatrixFromColumnsNode * CImplicitFunction::AddMatrixFromColumnsNode(const std::string & sIdentifier,
-                                                                      const std::string & sDisplayName,
-                                                                      const std::string & sTag)
+IMatrixFromColumnsNode * CImplicitFunction::AddMatrixFromColumnsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode = function()->addNode(Lib3MF::eImplicitNodeType::MatrixFromColumns,
-                                       Lib3MF::eImplicitNodeConfiguration::Default,
-                                       sIdentifier,
-                                       sDisplayName,
-                                       sTag);
-    return new CMatrixFromColumnsNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IConstantNode* CImplicitFunction::AddConstantNode(
-    const std::string& sIdentifier, const std::string& sDisplayName,
-    const std::string& sTag)
+IConstantNode * CImplicitFunction::AddConstantNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Constant,
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            sIdentifier, sDisplayName, sTag);
-    return new CConstantNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IConstVecNode* CImplicitFunction::AddConstVecNode(
-    const std::string& sIdentifier, const std::string& sDisplayName,
-    const std::string& sTag)
+IConstVecNode * CImplicitFunction::AddConstVecNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::ConstVec,
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            sIdentifier, sDisplayName, sTag);
-    return new CConstVecNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IConstMatNode* CImplicitFunction::AddConstMatNode(
-    const std::string& sIdentifier, const std::string& sDisplayName,
-    const std::string& sTag)
+IConstMatNode * CImplicitFunction::AddConstMatNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::ConstMat,
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            sIdentifier, sDisplayName, sTag);
-    return new CConstMatNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IMeshNode* CImplicitFunction::AddMeshNode(const std::string& sIdentifier,
-                                          const std::string& sDisplayName,
-                                          const std::string& sTag)
+IMeshNode * CImplicitFunction::AddMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::Mesh,
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            sIdentifier, sDisplayName, sTag);
-    return new CMeshNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IUnsignedMeshNode * CImplicitFunction::AddUnsignedMeshNode(const std::string & sIdentifier,
-                                                    const std::string & sDisplayName,
-                                                    const std::string & sTag)
+IUnsignedMeshNode * CImplicitFunction::AddUnsignedMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode = function()->addNode(Lib3MF::eImplicitNodeType::UnsignedMesh,
-                                       Lib3MF::eImplicitNodeConfiguration::Default,
-                                       sIdentifier,
-                                       sDisplayName,
-                                       sTag);
-    return new CUnsignedMeshNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IFunctionCallNode* CImplicitFunction::AddFunctionCallNode(
-    const std::string& sIdentifier, const std::string& sDisplayName,
-    const std::string& sTag)
+IFunctionCallNode * CImplicitFunction::AddFunctionCallNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 {
-    auto newNode =
-        function()->addNode(Lib3MF::eImplicitNodeType::FunctionCall,
-                            Lib3MF::eImplicitNodeConfiguration::Default,
-                            sIdentifier, sDisplayName, sTag);
-    return new CFunctionCallNode(newNode);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-INodeIterator* CImplicitFunction::GetNodes()
+INodeIterator * CImplicitFunction::GetNodes()
 {
-    return new CNodeIterator(function()->getNodes());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CImplicitFunction::RemoveNode(IImplicitNode* pNode)
 {
-    if(pNode == nullptr)
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-    function()->removeNode(pNode->GetIdentifier());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CImplicitFunction::AddLink(IImplicitPort* pSource, IImplicitPort* pTarget)
 {
-    if (pSource == nullptr || pTarget == nullptr)
-    {
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-    }
-    CImplicitPort* pSourcePort = dynamic_cast<CImplicitPort*>(pSource);
-    CImplicitPort* pTargetPort = dynamic_cast<CImplicitPort*>(pTarget);
-    
-    if (pSourcePort == nullptr || pTargetPort == nullptr)
-    {
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-    }
-
-    function()->addLink(pSourcePort->getPort(), pTargetPort->getPort());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CImplicitFunction::AddLinkByNames(const std::string& sSource,
-                                       const std::string& sTarget)
+void CImplicitFunction::AddLinkByNames(const std::string & sSource, const std::string & sTarget)
 {
-    function()->addLink(sSource, sTarget);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CImplicitFunction::Clear()
 {
-    function()->clear();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CImplicitFunction::SortNodesTopologically()
 {
-    function()->sortNodesTopologically();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

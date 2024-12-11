@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,13 +33,13 @@ Abstract: This is the class declaration of CMetaData
 #define __LIB3MF_METADATA
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
-
-#include "Model/Classes/NMR_ModelMetaData.h"
 
 // Include custom headers here.
 
@@ -58,7 +58,6 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelMetaData m_pMetaData;
 
 protected:
 
@@ -71,38 +70,38 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CMetaData(NMR::PModelMetaData pMetaData);
+
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	std::string GetNameSpace ();
+	std::string GetNameSpace() override;
 
-	void SetNameSpace (const std::string & sNameSpace);
+	void SetNameSpace(const std::string & sNameSpace) override;
 
-	std::string GetName ();
+	std::string GetName() override;
 
-	std::string GetKey();
+	void SetName(const std::string & sName) override;
 
-	void SetName (const std::string & sName);
+	std::string GetKey() override;
 
-	bool GetMustPreserve ();
+	bool GetMustPreserve() override;
 
-	void SetMustPreserve (const bool bMustPreserve);
+	void SetMustPreserve(const bool bMustPreserve) override;
 
-	std::string GetType ();
+	std::string GetType() override;
 
-	void SetType (const std::string & sType);
+	void SetType(const std::string & sType) override;
 
-	std::string GetValue ();
+	std::string GetValue() override;
 
-	void SetValue (const std::string & sValue);
+	void SetValue(const std::string & sValue) override;
 
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)

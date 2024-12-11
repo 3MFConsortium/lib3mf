@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -29,46 +29,75 @@ Abstract: This is the class declaration of CContentEncryptionParams
 */
 
 
-#ifndef __LIB3MF_CIPHERDATA
-#define __LIB3MF_CIPHERDATA
+#ifndef __LIB3MF_CONTENTENCRYPTIONPARAMS
+#define __LIB3MF_CONTENTENCRYPTIONPARAMS
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
-
-#include "Model/Classes/NMR_KeyStoreCEKParams.h"
 // Include custom headers here.
+
+
 namespace Lib3MF {
-	namespace Impl {
+namespace Impl {
 
-		/*************************************************************************************************************************
-		Class declaration of CContentEncryptionParams
-		**************************************************************************************************************************/
 
-		class CContentEncryptionParams : public virtual IContentEncryptionParams, public virtual CBase {
-		private:
-			NMR::PCKeyStoreContentEncryptionParams m_pParams;
-		public:
-			CContentEncryptionParams(NMR::PCKeyStoreContentEncryptionParams const & p);
-			// Inherited via IContentEncryptionParams
-			Lib3MF_uint64 GetDescriptor();
-			Lib3MF::eEncryptionAlgorithm GetEncryptionAlgorithm();
-			void GetKey(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
-			void GetInitializationVector(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
-			void GetAuthenticationTag(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
-			void SetAuthenticationTag(Lib3MF_uint64 const nByteDataBufferSize, const Lib3MF_uint8 *pByteDataBuffer);
-			void GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
-			void SetAdditionalAuthenticationData(Lib3MF_uint64 const nByteDataBufferSize, const Lib3MF_uint8 *pByteDataBuffer);
-			std::string GetKeyUUID();
+/*************************************************************************************************************************
+ Class declaration of CContentEncryptionParams 
+**************************************************************************************************************************/
 
-			inline NMR::PKeyStoreCEKParams params() const {
-				return m_pParams;
-			}
-		};
-	}
-}
+class CContentEncryptionParams : public virtual IContentEncryptionParams, public virtual CBase {
+private:
+
+	/**
+	* Put private members here.
+	*/
+
+protected:
+
+	/**
+	* Put protected members here.
+	*/
+
+public:
+
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
+
+
+	/**
+	* Public member functions to implement.
+	*/
+
+	Lib3MF::eEncryptionAlgorithm GetEncryptionAlgorithm() override;
+
+	void GetKey(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer) override;
+
+	void GetInitializationVector(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer) override;
+
+	void GetAuthenticationTag(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer) override;
+
+	void SetAuthenticationTag(const Lib3MF_uint64 nByteDataBufferSize, const Lib3MF_uint8 * pByteDataBuffer) override;
+
+	void GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer) override;
+
+	Lib3MF_uint64 GetDescriptor() override;
+
+	std::string GetKeyUUID() override;
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#ifdef _MSC_VER
+#pragma warning(pop)
 #endif
+#endif // __LIB3MF_CONTENTENCRYPTIONPARAMS

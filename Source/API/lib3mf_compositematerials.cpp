@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -32,7 +32,7 @@ Abstract: This is a stub class definition of CCompositeMaterials
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_basematerialgroup.hpp"
+
 
 using namespace Lib3MF::Impl;
 
@@ -40,94 +40,33 @@ using namespace Lib3MF::Impl;
  Class definition of CCompositeMaterials 
 **************************************************************************************************************************/
 
-
-CCompositeMaterials::CCompositeMaterials(NMR::PModelCompositeMaterialsResource pResource)
-	: CResource(std::static_pointer_cast<NMR::CModelResource>(pResource))
+Lib3MF_uint32 CCompositeMaterials::GetCount()
 {
-
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-
-NMR::CModelCompositeMaterialsResource& CCompositeMaterials::compositeMaterials()
+void CCompositeMaterials::GetAllPropertyIDs(Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
 {
-	NMR::CModelCompositeMaterialsResource* pCompositeMaterials = dynamic_cast<NMR::CModelCompositeMaterialsResource*>(resource().get());
-	if (pCompositeMaterials == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPOSITEMATERIALS);
-	return *pCompositeMaterials;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF_uint32 CCompositeMaterials::GetCount ()
+IBaseMaterialGroup * CCompositeMaterials::GetBaseMaterialGroup()
 {
-	return compositeMaterials().getCount();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CCompositeMaterials::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
+Lib3MF_uint32 CCompositeMaterials::AddComposite(const Lib3MF_uint64 nCompositeBufferSize, const Lib3MF::sCompositeConstituent * pCompositeBuffer)
 {
-	Lib3MF_uint32 nCompositesCount = compositeMaterials().getCount();
-
-	if (pPropertyIDsNeededCount)
-		*pPropertyIDsNeededCount = nCompositesCount;
-
-	if (nPropertyIDsBufferSize >= nCompositesCount && pPropertyIDsBuffer) {
-		if (!compositeMaterials().hasResourceIndexMap()) {
-			compositeMaterials().buildResourceIndexMap();
-		}
-		for (Lib3MF_uint32 i = 0; i < nCompositesCount; i++) {
-			DWORD nPropertyID;
-			if (compositeMaterials().mapResourceIndexToPropertyID(i, nPropertyID)) {
-				*pPropertyIDsBuffer = nPropertyID;
-			}
-			else {
-				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCEINDEX);
-			}
-			pPropertyIDsBuffer++;
-		}
-	}
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IBaseMaterialGroup * CCompositeMaterials::GetBaseMaterialGroup ()
+void CCompositeMaterials::RemoveComposite(const Lib3MF_uint32 nPropertyID)
 {
-	return new CBaseMaterialGroup(compositeMaterials().getBaseMaterialResource());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF_uint32 CCompositeMaterials::AddComposite(const Lib3MF_uint64 nCompositeBufferSize, const sLib3MFCompositeConstituent * pCompositeBuffer)
+void CCompositeMaterials::GetComposite(const Lib3MF_uint32 nPropertyID, Lib3MF_uint64 nCompositeBufferSize, Lib3MF_uint64* pCompositeNeededCount, Lib3MF::sCompositeConstituent * pCompositeBuffer)
 {
-	if (nCompositeBufferSize > LIB3MF_MAXCOMPOSITEMATERIALS)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT);
-
-	NMR::PModelComposite constituents = std::make_shared<NMR::CModelComposite>();
-	constituents->resize((size_t)nCompositeBufferSize);
-	for (size_t i = 0; i < (size_t)nCompositeBufferSize; i++) {
-		(*constituents)[i].m_dMixingRatio = pCompositeBuffer[i].m_MixingRatio;
-		(*constituents)[i].m_nPropertyID = pCompositeBuffer[i].m_PropertyID;
-	}
-	return compositeMaterials().addComposite(constituents);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
-
-void CCompositeMaterials::RemoveComposite (const Lib3MF_uint32 nPropertyID)
-{
-	compositeMaterials().removeComposite(nPropertyID);
-}
-
-void CCompositeMaterials::GetComposite(const Lib3MF_uint32 nPropertyID, Lib3MF_uint64 nCompositeBufferSize, Lib3MF_uint64* pCompositeNeededCount, sLib3MFCompositeConstituent * pCompositeBuffer)
-{
-
-	if (nCompositeBufferSize > LIB3MF_MAXCOMPOSITEMATERIALS)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT);
-
-	NMR::PModelComposite constituents = compositeMaterials().getComposite(nPropertyID);
-	
-	if (pCompositeNeededCount) {
-		*pCompositeNeededCount = constituents->size();
-	}
-
-	if (pCompositeBuffer && nCompositeBufferSize >= constituents->size()) {
-		for (size_t i = 0; i < (size_t) nCompositeBufferSize; i++) {
-			pCompositeBuffer[i].m_MixingRatio = (*constituents)[i].m_dMixingRatio;
-			pCompositeBuffer[i].m_PropertyID = (*constituents)[i].m_nPropertyID;
-		}
-	}
-
-}
-
 

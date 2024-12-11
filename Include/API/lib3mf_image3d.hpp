@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CImage3D
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelImage3D.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -64,14 +64,13 @@ protected:
 	/**
 	* Put protected members here.
 	*/
-	NMR::CModelImage3D* image3D();
+
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CImage3D() = delete;
-	CImage3D(NMR::PModelResource pResource);
+
 
 	/**
 	* Public member functions to implement.

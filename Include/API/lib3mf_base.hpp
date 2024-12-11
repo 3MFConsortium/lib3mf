@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -52,8 +52,8 @@ namespace Impl {
 class CBase : public virtual IBase {
 private:
 
-	std::unique_ptr<std::list<std::string>> m_pErrors;
-	Lib3MF_uint32 m_nReferenceCount = 1;
+	std::unique_ptr<std::string> m_pLastError;
+	uint32_t m_nReferenceCount = 1;
 
 	/**
 	* Put private members here.
@@ -81,9 +81,13 @@ public:
 
 	bool DecRefCount() override;
 
+
 	/**
 	* Public member functions to implement.
 	*/
+
+	Lib3MF_uint64 ClassTypeId() override;
+
 };
 
 } // namespace Impl

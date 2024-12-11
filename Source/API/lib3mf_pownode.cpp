@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -29,19 +29,14 @@ Abstract: This is a stub class definition of CPowNode
 */
 
 #include "lib3mf_pownode.hpp"
-
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
+
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CPowNode
+ Class definition of CPowNode 
 **************************************************************************************************************************/
 
-Lib3MF::Impl::CPowNode::CPowNode(NMR::PModelImplicitNode pImplicitNode)
-    : CTwoInputNode{pImplicitNode}
-{
-    CImplicitNode::m_pImplicitNode = pImplicitNode;
-}

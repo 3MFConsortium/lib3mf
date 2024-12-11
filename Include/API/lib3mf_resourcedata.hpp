@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,42 +33,63 @@ Abstract: This is the class declaration of CResourceData
 #define __LIB3MF_RESOURCEDATA
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
-#include "Model/Classes/NMR_KeyStoreResourceData.h"
 // Include custom headers here.
+
+
 namespace Lib3MF {
-	namespace Impl {
+namespace Impl {
 
 
-		/*************************************************************************************************************************
-		Class declaration of CResourceData
-		**************************************************************************************************************************/
+/*************************************************************************************************************************
+ Class declaration of CResourceData 
+**************************************************************************************************************************/
 
-		class CResourceData : public virtual IResourceData, public virtual CBase {
-		private:
-			NMR::PKeyStoreResourceData m_pResourceData;
-		public:
-			CResourceData(NMR::PKeyStoreResourceData resourceData);
+class CResourceData : public virtual IResourceData, public virtual CBase {
+private:
+
+	/**
+	* Put private members here.
+	*/
+
+protected:
+
+	/**
+	* Put protected members here.
+	*/
+
+public:
+
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
 
 
-			// Inherited via IResourceData
-			IPackagePart * GetPath() override;
+	/**
+	* Public member functions to implement.
+	*/
 
-			Lib3MF::eEncryptionAlgorithm GetEncryptionAlgorithm() override;
+	IPackagePart * GetPath() override;
 
-			Lib3MF::eCompression GetCompression() override;
+	Lib3MF::eEncryptionAlgorithm GetEncryptionAlgorithm() override;
 
-			void GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 * pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer) override;
+	Lib3MF::eCompression GetCompression() override;
 
-			inline NMR::PKeyStoreResourceData resourceData() const {
-				return m_pResourceData;
-			}
-		};
-	}
-}
+	void GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer) override;
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#ifdef _MSC_VER
+#pragma warning(pop)
 #endif
+#endif // __LIB3MF_RESOURCEDATA

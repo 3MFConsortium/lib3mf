@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,13 +33,13 @@ Abstract: This is the class declaration of CMetaDataGroup
 #define __LIB3MF_METADATAGROUP
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
-
-#include "Model/Classes/NMR_ModelMetaDataGroup.h"
 
 // Include custom headers here.
 
@@ -58,7 +58,6 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelMetaDataGroup m_pModelMetaDataGroup;
 
 protected:
 
@@ -71,29 +70,28 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CMetaDataGroup(NMR::PModelMetaDataGroup pMetaDataGroup);
+
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	virtual Lib3MF_uint32 GetMetaDataCount();
+	Lib3MF_uint32 GetMetaDataCount() override;
 
-	IMetaData * GetMetaData(const Lib3MF_uint32 nIndex);
+	IMetaData * GetMetaData(const Lib3MF_uint32 nIndex) override;
 
-	IMetaData * GetMetaDataByKey(const std::string & sNameSpace, const std::string & sName);
+	IMetaData * GetMetaDataByKey(const std::string & sNameSpace, const std::string & sName) override;
 
-	void RemoveMetaDataByIndex(const Lib3MF_uint32 nIndex);
+	void RemoveMetaDataByIndex(const Lib3MF_uint32 nIndex) override;
 
-	void RemoveMetaData(IMetaData* pTheMetaData);
+	void RemoveMetaData(IMetaData* pTheMetaData) override;
 
-	IMetaData * AddMetaData(const std::string & sNameSpace, const std::string & sName, const std::string & sValue, const std::string & sType, const bool bMustPreserve);
-
+	IMetaData * AddMetaData(const std::string & sNameSpace, const std::string & sName, const std::string & sValue, const std::string & sType, const bool bMustPreserve) override;
 
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)

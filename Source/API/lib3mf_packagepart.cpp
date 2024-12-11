@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,9 +33,6 @@ Abstract: This is a stub class definition of CPackagePart
 
 // Include custom headers here.
 
-#include "Model/Classes/NMR_PackageResourceID.h"
-
-
 
 using namespace Lib3MF::Impl;
 
@@ -43,19 +40,13 @@ using namespace Lib3MF::Impl;
  Class definition of CPackagePart 
 **************************************************************************************************************************/
 
-CPackagePart::CPackagePart(NMR::PPackageModelPath pPath)
-  : m_pPath(pPath)
-{
-	if (!pPath.get())
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-}
-
 std::string CPackagePart::GetPath()
 {
-	return m_pPath->getPath();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CPackagePart::SetPath(const std::string & sPath)
 {
-	m_pPath->setPath(sPath);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
+

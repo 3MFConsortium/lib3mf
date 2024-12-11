@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -40,30 +40,18 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumeDataProperty 
 **************************************************************************************************************************/
 
-CVolumeDataProperty::CVolumeDataProperty(NMR::PVolumeDataProperty pProperty)
-	: CFunctionReference(pProperty)
-{
-}
-
-NMR::PVolumeDataProperty CVolumeDataProperty::asVolumeDataProperty()
-{
-	NMR::PVolumeDataProperty pProperty = std::dynamic_pointer_cast<NMR::CVolumeDataProperty>(m_pFunctionReference);
-	if (pProperty)
-		return pProperty;
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-}
-
 std::string CVolumeDataProperty::GetName()
 {
-	return asVolumeDataProperty()->getName();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CVolumeDataProperty::SetIsRequired(const bool bIsRequired)
 {
-	asVolumeDataProperty()->setIsRequired(bIsRequired);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 bool CVolumeDataProperty::IsRequired()
 {
-	return asVolumeDataProperty()->isRequired();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
+

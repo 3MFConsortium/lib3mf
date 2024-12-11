@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -66,7 +66,7 @@ protected:
 	*/
 
 public:
-	CConstVecNode(NMR::PModelImplicitNode pImplicitNode);
+
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
@@ -76,22 +76,10 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IConstVecNode::SetVector - Sets the vector value of the node
-	* @param[in] Value - the value
-	*/
 	void SetVector(const Lib3MF::sVector Value) override;
 
-	/**
-	* IConstVecNode::GetVector - Retrieves the vector value of the node
-	* @return the value
-	*/
 	Lib3MF::sVector GetVector() override;
 
-	/**
-	* IConstVecNode::GetOutputVector - Retrieves the output
-	* @return the output
-	*/
 	IImplicitPort * GetOutputVector() override;
 
 };

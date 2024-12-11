@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -28,6 +28,7 @@ Abstract: This is the class declaration of CMaxNode
 
 */
 
+
 #ifndef __LIB3MF_MAXNODE
 #define __LIB3MF_MAXNODE
 
@@ -42,43 +43,45 @@ Abstract: This is the class declaration of CMaxNode
 
 // Include custom headers here.
 
-namespace Lib3MF
-{
-    namespace Impl
-    {
 
-        /*************************************************************************************************************************
-         Class declaration of CMaxNode
-        **************************************************************************************************************************/
+namespace Lib3MF {
+namespace Impl {
 
-        class CMaxNode : public virtual IMaxNode, public virtual CTwoInputNode
-        {
-           private:
-            /**
-             * Put private members here.
-             */
 
-           protected:
-            /**
-             * Put protected members here.
-             */
+/*************************************************************************************************************************
+ Class declaration of CMaxNode 
+**************************************************************************************************************************/
 
-           public:
-            CMaxNode(NMR::PModelImplicitNode pImplicitNode);
-            /**
-             * Put additional public members here. They will not be visible in
-             * the external API.
-             */
+class CMaxNode : public virtual IMaxNode, public virtual CTwoInputNode {
+private:
 
-            /**
-             * Public member functions to implement.
-             */
-        };
+	/**
+	* Put private members here.
+	*/
 
-    }  // namespace Impl
-}  // namespace Lib3MF
+protected:
+
+	/**
+	* Put protected members here.
+	*/
+
+public:
+
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
+
+
+	/**
+	* Public member functions to implement.
+	*/
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif  // __LIB3MF_MAXNODE
+#endif // __LIB3MF_MAXNODE

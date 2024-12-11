@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -31,7 +31,6 @@ Abstract: This is a stub class definition of CBuildItemIterator
 #include "lib3mf_builditemiterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
-#include "lib3mf_builditem.hpp"
 // Include custom headers here.
 
 
@@ -41,73 +40,28 @@ using namespace Lib3MF::Impl;
  Class definition of CBuildItemIterator 
 **************************************************************************************************************************/
 
-CBuildItemIterator::CBuildItemIterator()
+bool CBuildItemIterator::MoveNext()
 {
-	m_nCurrentIndex = -1;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-
-void CBuildItemIterator::addBuildItem(NMR::PModelBuildItem pBuildItem)
+bool CBuildItemIterator::MovePrevious()
 {
-	m_pBuildItems.push_back(pBuildItem);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-bool CBuildItemIterator::MoveNext ()
+IBuildItem * CBuildItemIterator::GetCurrent()
 {
-	// Get Resource Count
-	Lib3MF_int32 nBuildItemCount = (Lib3MF_int32)m_pBuildItems.size();
-	m_nCurrentIndex++;
-
-	// Check new Index
-	if (m_nCurrentIndex >= nBuildItemCount) {
-		m_nCurrentIndex = nBuildItemCount;
-		return false;
-	}
-	else {
-		return true;
-	}
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-bool CBuildItemIterator::MovePrevious ()
+IBuildItemIterator * CBuildItemIterator::Clone()
 {
-	// Get Resource Count
-	m_nCurrentIndex--;
-
-	// Check new Index
-	if (m_nCurrentIndex <= -1) {
-		m_nCurrentIndex = -1;
-		return false;
-	}
-	else {
-		return true;
-	}
-}
-
-IBuildItem * CBuildItemIterator::GetCurrent ()
-{
-	// Get Resource Count
-	Lib3MF_int32 nBuildItemCount = (Lib3MF_int32)m_pBuildItems.size();
-	if ((m_nCurrentIndex < 0) || (m_nCurrentIndex >= nBuildItemCount))
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_ITERATORINVALIDINDEX);
-
-	// Create specific API class
-	NMR::PModelBuildItem pBuildItem = m_pBuildItems[m_nCurrentIndex];
-	
-	return new CBuildItem(pBuildItem);
-}
-
-IBuildItemIterator * CBuildItemIterator::Clone ()
-{
-	auto pBuildItems = std::unique_ptr<CBuildItemIterator>(new CBuildItemIterator());
-	
-	for (auto iIterator = m_pBuildItems.begin(); iIterator != m_pBuildItems.end(); iIterator++)
-		pBuildItems->addBuildItem(*iIterator);
-
-	return pBuildItems.release();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF_uint64 CBuildItemIterator::Count()
 {
-	return m_pBuildItems.size();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

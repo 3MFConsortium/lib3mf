@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CVolumeDataColor
 #endif
 
 // Include custom headers here.
-#include "Common/Mesh/NMR_VolumeDataColor.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -64,15 +64,13 @@ protected:
 	/**
 	* Put protected members here.
 	*/
-	NMR::PVolumeDataColor asVolumeDataColor();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CVolumeDataColor() = delete;
-	CVolumeDataColor(NMR::PVolumeDataColor pColor);
+
 
 	/**
 	* Public member functions to implement.

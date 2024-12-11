@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -29,130 +29,84 @@ Abstract: This is a stub class definition of CImplicitNode
 */
 
 #include "lib3mf_implicitnode.hpp"
-#include "lib3mf_implicitport.hpp"
-#include "lib3mf_implicitportiterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
-#include "lib3mf_meshobject.hpp"
-#include <Model/Classes/NMR_ModelMeshObject.h>
 
 // Include custom headers here.
+
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CImplicitNode
+ Class definition of CImplicitNode 
 **************************************************************************************************************************/
 
 std::string CImplicitNode::GetIdentifier()
 {
-    if (!m_pImplicitNode)
-    {
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-    }
-    return m_pImplicitNode->getIdentifier();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CImplicitNode::SetIdentifier(const std::string & sIdentifier)
 {
-    m_pImplicitNode->setIdentifier(sIdentifier);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 std::string CImplicitNode::GetDisplayName()
 {
-    return m_pImplicitNode->getDisplayName();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CImplicitNode::SetDisplayName(const std::string& sDisplayName)
+void CImplicitNode::SetDisplayName(const std::string & sDisplayName)
 {
-    m_pImplicitNode->setDisplayName(sDisplayName);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 std::string CImplicitNode::GetTag()
 {
-    return m_pImplicitNode->getTag();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CImplicitNode::SetTag(const std::string& sTag)
+void CImplicitNode::SetTag(const std::string & sTag)
 {
-    m_pImplicitNode->setTag(sTag);
-}
-
-IImplicitPort* Lib3MF::Impl::CImplicitNode::FindInputOrThrow(
-    const std::string& sIdentifier)
-{
-    auto pPort = FindInput(sIdentifier);
-    if (!pPort)
-    {
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-    }
-    return pPort;
-}
-
-IImplicitPort* Lib3MF::Impl::CImplicitNode::FindOutputOrThrow(
-    const std::string& sIdentifier)
-{
-    auto pPort = FindOutput(sIdentifier);
-    if (!pPort)
-    {
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-    }
-    return pPort;
-}
-
-CImplicitNode::CImplicitNode(NMR::PModelImplicitNode pImplicitNode)
-    : m_pImplicitNode{pImplicitNode}
-{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF::eImplicitNodeType CImplicitNode::GetNodeType()
 {
-    return m_pImplicitNode->getNodeType();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IImplicitPort * CImplicitNode::AddInput(const std::string & sIdentifier,
-                                        const std::string & sDisplayName)
+IImplicitPort * CImplicitNode::AddInput(const std::string & sIdentifier, const std::string & sDisplayName)
 {
-    return new CImplicitPort(m_pImplicitNode->addInput(sIdentifier, sDisplayName));
-}
-
-IImplicitPort * CImplicitNode::AddOutput(const std::string & sIdentifier,
-                                         const std::string & sDisplayName)
-{
-    return new CImplicitPort(m_pImplicitNode->addOutput(sIdentifier, sDisplayName));
-}
-
-IImplicitPortIterator * CImplicitNode::GetOutputs()
-{
-    return new CImplicitPortIterator(m_pImplicitNode->getOutputs());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPortIterator * CImplicitNode::GetInputs()
 {
-    return new CImplicitPortIterator(m_pImplicitNode->getInputs());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IImplicitPort * CImplicitNode::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IImplicitPortIterator * CImplicitNode::GetOutputs()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * CImplicitNode::FindInput(const std::string & sIdentifier)
 {
-    auto pPort = m_pImplicitNode->findInput(sIdentifier);
-    if (!pPort)
-    {
-        return nullptr;
-    }
-    return new CImplicitPort(pPort);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * CImplicitNode::FindOutput(const std::string & sIdentifier)
 {
-    auto pPort = m_pImplicitNode->findOutput(sIdentifier);
-    if (!pPort)
-    {
-        return nullptr;
-    }
-    return new CImplicitPort(pPort);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-bool Lib3MF::Impl::CImplicitNode::AreTypesValid()
+bool CImplicitNode::AreTypesValid()
 {
-    return m_pImplicitNode->arePortsValid();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

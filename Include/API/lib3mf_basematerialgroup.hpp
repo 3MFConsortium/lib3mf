@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CBaseMaterial
+Abstract: This is the class declaration of CBaseMaterialGroup
 
 */
 
@@ -42,8 +42,7 @@ Abstract: This is the class declaration of CBaseMaterial
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelBaseMaterial.h"
-#include "Model/Classes/NMR_ModelBaseMaterials.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -59,43 +58,44 @@ private:
 	/**
 	* Put private members here.
 	*/
+
 protected:
 
 	/**
 	* Put protected members here.
 	*/
-	NMR::CModelBaseMaterialResource& baseMaterialGroup();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CBaseMaterialGroup(NMR::PModelBaseMaterialResource pResource);
+
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	Lib3MF_uint32 GetCount ();
+	Lib3MF_uint32 GetCount() override;
 
-	Lib3MF_uint32 AddMaterial(const std::string & sName, const sLib3MFColor DisplayColor);
+	void GetAllPropertyIDs(Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer) override;
 
-	void RemoveMaterial (const Lib3MF_uint32 nPropertyID);
+	Lib3MF_uint32 AddMaterial(const std::string & sName, const Lib3MF::sColor DisplayColor) override;
 
-	std::string GetName (const Lib3MF_uint32 nPropertyID);
+	void RemoveMaterial(const Lib3MF_uint32 nPropertyID) override;
 
-	void SetName (const Lib3MF_uint32 nPropertyID, const std::string & sName);
+	std::string GetName(const Lib3MF_uint32 nPropertyID) override;
 
-	void SetDisplayColor(const Lib3MF_uint32 nPropertyID, const sLib3MFColor TheColor);
+	void SetName(const Lib3MF_uint32 nPropertyID, const std::string & sName) override;
 
-	sLib3MFColor GetDisplayColor(const Lib3MF_uint32 nPropertyID);
+	void SetDisplayColor(const Lib3MF_uint32 nPropertyID, const Lib3MF::sColor TheColor) override;
 
-	void GetAllPropertyIDs(Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer);
+	Lib3MF::sColor GetDisplayColor(const Lib3MF_uint32 nPropertyID) override;
+
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)

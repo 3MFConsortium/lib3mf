@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -32,7 +32,7 @@ Abstract: This is a stub class definition of CCompositeMaterialsIterator
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_compositematerials.hpp"
+
 
 using namespace Lib3MF::Impl;
 
@@ -40,14 +40,8 @@ using namespace Lib3MF::Impl;
  Class definition of CCompositeMaterialsIterator 
 **************************************************************************************************************************/
 
-ICompositeMaterials * CCompositeMaterialsIterator::GetCurrentCompositeMaterials ()
+ICompositeMaterials * CCompositeMaterialsIterator::GetCurrentCompositeMaterials()
 {
-	// Create specific API class
-	return new CCompositeMaterials(std::dynamic_pointer_cast<NMR::CModelCompositeMaterialsResource>(GetCurrentResource()));
-}
-
-IResource * CCompositeMaterialsIterator::GetCurrent()
-{
-	return GetCurrentCompositeMaterials();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

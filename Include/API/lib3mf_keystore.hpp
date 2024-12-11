@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,6 +33,8 @@ Abstract: This is the class declaration of CKeyStore
 #define __LIB3MF_KEYSTORE
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -40,86 +42,80 @@ Abstract: This is the class declaration of CKeyStore
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_KeyStore.h"
-#include "Model/Classes/NMR_Model.h"
+
+
 namespace Lib3MF {
-	namespace Impl {
+namespace Impl {
 
 
-		/*************************************************************************************************************************
-		Class declaration of CKeyStore
-		**************************************************************************************************************************/
+/*************************************************************************************************************************
+ Class declaration of CKeyStore 
+**************************************************************************************************************************/
 
-		class CKeyStore : public virtual IKeyStore, public virtual CBase {
-		private:
+class CKeyStore : public virtual IKeyStore, public virtual CBase {
+private:
 
-			/**
-			* Put private members here.
-			*/
-			NMR::PKeyStore m_pKeyStore;
-			NMR::PModel m_pModel;
-		protected:
+	/**
+	* Put private members here.
+	*/
 
-			/**
-			* Put protected members here.
-			*/
+protected:
 
-		public:
+	/**
+	* Put protected members here.
+	*/
 
-			/**
-			* Put additional public members here. They will not be visible in the external API.
-			*/
-			CKeyStore(NMR::PModel const & pModel);
-		
-			/**
-			* Public member functions to implement.
-			*/
+public:
+
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
 
 
-			// Inherited via IKeyStore
-			IConsumer * AddConsumer(const std::string & sConsumerID, const std::string & sKeyID, const std::string & sKeyValue) override;
+	/**
+	* Public member functions to implement.
+	*/
 
-			Lib3MF_uint64 GetConsumerCount() override;
+	IConsumer * AddConsumer(const std::string & sConsumerID, const std::string & sKeyID, const std::string & sKeyValue) override;
 
-			IConsumer * GetConsumer(const Lib3MF_uint64 nConsumerIndex) override;
+	Lib3MF_uint64 GetConsumerCount() override;
 
-			IConsumer * FindConsumer(const std::string & sConsumerID) override;
+	IConsumer * GetConsumer(const Lib3MF_uint64 nConsumerIndex) override;
 
-			virtual void RemoveConsumer(IConsumer * pConsumerInstance) override;
+	void RemoveConsumer(IConsumer* pConsumer) override;
 
-			std::string GetUUID(bool & bHasUUID) override;
-			
-			void SetUUID(const std::string & sUUID) override;
+	IConsumer * FindConsumer(const std::string & sConsumerID) override;
 
-			virtual Lib3MF_uint64 GetResourceDataGroupCount() override;
+	Lib3MF_uint64 GetResourceDataGroupCount() override;
 
-			IResourceDataGroup * GetResourceDataGroup(const Lib3MF_uint64 nResourceDataIndex) override;
+	IResourceDataGroup * AddResourceDataGroup() override;
 
-			IResourceDataGroup * AddResourceDataGroup() override;
+	IResourceDataGroup * GetResourceDataGroup(const Lib3MF_uint64 nResourceDataIndex) override;
 
-			void RemoveResourceDataGroup(IResourceDataGroup * pTheResourceDataGroup) override;
+	void RemoveResourceDataGroup(IResourceDataGroup* pResourceDataGroup) override;
 
-			Lib3MF::Impl::IResourceDataGroup * FindResourceDataGroup(Lib3MF::Impl::IPackagePart *pPartPath) override;
+	IResourceDataGroup * FindResourceDataGroup(IPackagePart* pPartPath) override;
 
-			IResourceData * AddResourceData(
-				IResourceDataGroup * pResourceDataGroup,
-				IPackagePart * pPartPath,
-				const Lib3MF::eEncryptionAlgorithm eAlgorithm,
-				const Lib3MF::eCompression eCompression,
-				const Lib3MF_uint64 nAdditionalAuthenticationDataBufferSize,
-				const Lib3MF_uint8 * pAdditionalAuthenticationDataBuffer) override;
+	IResourceData * AddResourceData(IResourceDataGroup* pResourceDataGroup, IPackagePart* pPartPath, const Lib3MF::eEncryptionAlgorithm eAlgorithm, const Lib3MF::eCompression eCompression, const Lib3MF_uint64 nAdditionalAuthenticationDataBufferSize, const Lib3MF_uint8 * pAdditionalAuthenticationDataBuffer) override;
 
-			void RemoveResourceData(Lib3MF::Impl::IResourceData *pResourceData) override;
+	void RemoveResourceData(IResourceData* pResourceData) override;
 
-			Lib3MF_uint64 GetResourceDataCount() override;
+	IResourceData * FindResourceData(IPackagePart* pResourcePath) override;
 
-			Lib3MF::Impl::IResourceData * GetResourceData(const Lib3MF_uint64 nResourceDataIndex) override;
+	Lib3MF_uint64 GetResourceDataCount() override;
 
-			IResourceData * FindResourceData(IPackagePart * pResourcePath) override;
+	IResourceData * GetResourceData(const Lib3MF_uint64 nResourceDataIndex) override;
 
-		};
+	std::string GetUUID(bool & bHasUUID) override;
 
-	} // namespace Impl
+	void SetUUID(const std::string & sUUID) override;
+
+};
+
+} // namespace Impl
 } // namespace Lib3MF
 
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 #endif // __LIB3MF_KEYSTORE

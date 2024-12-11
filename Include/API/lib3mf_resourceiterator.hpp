@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,15 +33,16 @@ Abstract: This is the class declaration of CResourceIterator
 #define __LIB3MF_RESOURCEITERATOR
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
-
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelResource.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -52,42 +53,43 @@ namespace Impl {
 **************************************************************************************************************************/
 
 class CResourceIterator : public virtual IResourceIterator, public virtual CBase {
-
 private:
-	NMR::PModel m_pModel;
 
-	std::vector<NMR::PModelResource> m_pResources;
-	Lib3MF_int32 m_nCurrentIndex;
+	/**
+	* Put private members here.
+	*/
 
 protected:
-	virtual NMR::PModelResource GetCurrentResource();
+
+	/**
+	* Put protected members here.
+	*/
+
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CResourceIterator();
 
-	void addResource(NMR::PModelResource pResource);
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	bool MoveNext ();
+	bool MoveNext() override;
 
-	bool MovePrevious ();
+	bool MovePrevious() override;
 
-	IResource * GetCurrent ();
+	IResource * GetCurrent() override;
 
-	IResourceIterator * Clone ();
+	IResourceIterator * Clone() override;
 
-	Lib3MF_uint64 Count();
+	Lib3MF_uint64 Count() override;
 
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)

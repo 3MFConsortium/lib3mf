@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,22 +33,20 @@ Abstract: This is the class declaration of CReader
 #define __LIB3MF_READER
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
-
 // Include custom headers here.
-#include "Model/Reader/NMR_ModelReader.h"
-#include "Model/Reader/NMR_ModelReader_3MF_Native.h"
-#include "Model/Reader/NMR_ModelReader_STL.h"
+
 
 namespace Lib3MF {
 namespace Impl {
 
-#define LIB3MF_READER_MAXKEYSIZE (1UL << 31)
 
 /*************************************************************************************************************************
  Class declaration of CReader 
@@ -60,54 +58,52 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelReader m_pReader;
 
 protected:
 
 	/**
 	* Put protected members here.
 	*/
-	
+
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CReader(std::string sReaderClass, NMR::PModel model);
 
-	NMR::CModelReader& reader();
+
 	/**
 	* Public member functions to implement.
 	*/
 
-	void ReadFromFile (const std::string & sFilename);
+	void ReadFromFile(const std::string & sFilename) override;
 
-	void ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);
+	void ReadFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer) override;
 
-	void ReadFromCallback(const Lib3MFReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
+	void ReadFromCallback(const Lib3MF::ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MF::SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData) override;
 
-	void AddRelationToRead (const std::string & sRelationShipType);
+	void SetProgressCallback(const Lib3MF::ProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData) override;
 
-	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData);
+	void AddRelationToRead(const std::string & sRelationShipType) override;
 
-	void RemoveRelationToRead (const std::string & sRelationShipType);
+	void RemoveRelationToRead(const std::string & sRelationShipType) override;
 
-	void SetStrictModeActive (const bool bStrictModeActive);
+	void SetStrictModeActive(const bool bStrictModeActive) override;
 
-	bool GetStrictModeActive ();
+	bool GetStrictModeActive() override;
 
-	std::string GetWarning (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode);
+	std::string GetWarning(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode) override;
 
-	Lib3MF_uint32 GetWarningCount ();
+	Lib3MF_uint32 GetWarningCount() override;
 
-	void AddKeyWrappingCallback(const std::string &sConsumerID, const Lib3MF::KeyWrappingCallback pTheCallback,  const Lib3MF_pvoid pUserData);
+	void AddKeyWrappingCallback(const std::string & sConsumerID, const Lib3MF::KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData) override;
 
-	void SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData);
+	void SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData) override;
 
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)

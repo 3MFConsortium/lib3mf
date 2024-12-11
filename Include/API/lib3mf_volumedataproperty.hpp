@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CVolumeDataProperty
 #endif
 
 // Include custom headers here.
-#include "Common/Mesh/NMR_VolumeDataProperty.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -64,15 +64,13 @@ protected:
 	/**
 	* Put protected members here.
 	*/
-	NMR::PVolumeDataProperty asVolumeDataProperty();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CVolumeDataProperty() = delete;
-	CVolumeDataProperty(NMR::PVolumeDataProperty pProperty);
+
 
 	/**
 	* Public member functions to implement.
@@ -83,6 +81,7 @@ public:
 	void SetIsRequired(const bool bIsRequired) override;
 
 	bool IsRequired() override;
+
 };
 
 } // namespace Impl

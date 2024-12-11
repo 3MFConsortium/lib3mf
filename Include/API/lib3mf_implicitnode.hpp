@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -28,6 +28,7 @@ Abstract: This is the class declaration of CImplicitNode
 
 */
 
+
 #ifndef __LIB3MF_IMPLICITNODE
 #define __LIB3MF_IMPLICITNODE
 
@@ -41,130 +42,71 @@ Abstract: This is the class declaration of CImplicitNode
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelImplicitNode.h"
 
-namespace Lib3MF
-{
-    namespace Impl
-    {
 
-        /*************************************************************************************************************************
-         Class declaration of CImplicitNode
-        **************************************************************************************************************************/
+namespace Lib3MF {
+namespace Impl {
 
-        class CImplicitNode : public virtual IImplicitNode, public virtual CBase
-        {
-          private:
-            
 
-          protected:
-            /**
-             * Put protected members here.
-             */
-            NMR::PModelImplicitNode m_pImplicitNode;
+/*************************************************************************************************************************
+ Class declaration of CImplicitNode 
+**************************************************************************************************************************/
 
-            IImplicitPort * FindInputOrThrow(const std::string & sIdentifier);
-            IImplicitPort * FindOutputOrThrow(const std::string & sIdentifier);
-          public:
-            
-            CImplicitNode() = default;
-            explicit CImplicitNode(NMR::PModelImplicitNode pImplicitNode);
+class CImplicitNode : public virtual IImplicitNode, public virtual CBase {
+private:
 
-            /**
-             * Public member functions to implement.
-             */
+	/**
+	* Put private members here.
+	*/
 
-            /**
-             * IImplicitNode::GetIdentifier - Retrieves the identifier of the node
-             * @return the identifier
-             */
-            std::string GetIdentifier() override;
+protected:
 
-            /**
-             * IImplicitNode::SetIdentifier - Sets the identifier of the node
-             * @param[in] sIdentifier - the identifier
-             */
-            void SetIdentifier(const std::string & sIdentifier) override;
+	/**
+	* Put protected members here.
+	*/
 
-            /**
-             * IImplicitNode::GetDisplayName - Retrieves the display name of the node
-             * @return the display name
-             */
-            std::string GetDisplayName() override;
+public:
 
-            /**
-             * IImplicitNode::SetDisplayName - Sets the display name of the node
-             * @param[in] sDisplayName - the display name
-             */
-            void SetDisplayName(const std::string & sDisplayName) override;
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
 
-            /**
-             * IImplicitNode::GetTag - Retrieves the tag of the node
-             * @return the tag
-             */
-            std::string GetTag() override;
 
-            /**
-            * IImplicitNode::SetTag - Sets the tag of the node
-            * @param[in] sTag - the tag
-            */
-            void SetTag(const std::string& sTag) override;
+	/**
+	* Public member functions to implement.
+	*/
 
-            Lib3MF::eImplicitNodeType GetNodeType() override;
+	std::string GetIdentifier() override;
 
-            /**
-             * IImplicitNode::AddInput - Add an input
-             * @param[in] sIdentifier - the identifier of the input
-             * @param[in] sDisplayName - the display name of the input
-             * @return
-             */
-            IImplicitPort * AddInput(const std::string & sIdentifier,
-                                     const std::string & sDisplayName) override;
+	void SetIdentifier(const std::string & sIdentifier) override;
 
-            /**
-             * IImplicitNode::GetInputs - Retrieves the inputs
-             * @return the accessor to the inputs
-             */
-            IImplicitPortIterator * GetInputs() override;
+	std::string GetDisplayName() override;
 
-            /**
-             * IImplicitNode::AddOutput - Add an output
-             * @param[in] sIdentifier - the identifier of the output
-             * @param[in] sDisplayName - the display name of the output
-             * @return
-             */
-            IImplicitPort * AddOutput(const std::string & sIdentifier,
-                                      const std::string & sDisplayName) override;
+	void SetDisplayName(const std::string & sDisplayName) override;
 
-            /**
-             * IImplicitNode::GetOutputs - Retrieves the outputs
-             * @return the accessor to the outputs
-             */
-            IImplicitPortIterator * GetOutputs() override;
+	std::string GetTag() override;
 
-            /**
-             * IImplicitNode::FindInput - Retrieves an input
-             * @param[in] sIdentifier - the identifier of the input
-             * @return the input port
-             */
-            IImplicitPort * FindInput(const std::string & sIdentifier) override;
+	void SetTag(const std::string & sTag) override;
 
-            /**
-             * IImplicitNode::FindOutput - Retrieves an output
-             * @param[in] sIdentifier - the identifier of the output
-             * @return the output port
-             */
-            IImplicitPort * FindOutput(const std::string & sIdentifier) override;
+	Lib3MF::eImplicitNodeType GetNodeType() override;
 
-            /**
-             * IImplicitNode::AreTypesValid - Checks if the types of the input
-             * and output ports are valid for the node type
-             * @return true, if the types are valid
-             */
-            bool AreTypesValid() override;
-        };
+	IImplicitPort * AddInput(const std::string & sIdentifier, const std::string & sDisplayName) override;
 
-    } // namespace Impl
+	IImplicitPortIterator * GetInputs() override;
+
+	IImplicitPort * AddOutput(const std::string & sIdentifier, const std::string & sDisplayName) override;
+
+	IImplicitPortIterator * GetOutputs() override;
+
+	IImplicitPort * FindInput(const std::string & sIdentifier) override;
+
+	IImplicitPort * FindOutput(const std::string & sIdentifier) override;
+
+	bool AreTypesValid() override;
+
+};
+
+} // namespace Impl
 } // namespace Lib3MF
 
 #ifdef _MSC_VER

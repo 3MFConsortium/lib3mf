@@ -1,161 +1,127 @@
-#include "lib3mf_types.hpp"
+/*++
+
+Copyright (C) 2024 3MF Consortium (Original Author)
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract: This is a stub class definition of CKeyStore
+
+*/
+
 #include "lib3mf_keystore.hpp"
 #include "lib3mf_interfaceexception.hpp"
-#include "lib3mf_consumer.hpp"
-#include "lib3mf_resourcedatagroup.hpp"
-#include "lib3mf_resourcedata.hpp"
-#include "lib3mf_packagepart.hpp"
-#include "lib3mf_utils.hpp"
 
-#include "Model/Classes/NMR_KeyStoreFactory.h"
-#include "Model/Classes/NMR_PackageResourceID.h"
-#include "Model/Classes/NMR_Model.h"
-#include "Common/NMR_SecureContentTypes.h"
-#include "Common/NMR_Types.h"
+// Include custom headers here.
 
-#include <vector>
 
 using namespace Lib3MF::Impl;
 
-Lib3MF::Impl::CKeyStore::CKeyStore(NMR::PModel const & pModel) 
-	:m_pModel(pModel)
+/*************************************************************************************************************************
+ Class definition of CKeyStore 
+**************************************************************************************************************************/
+
+IConsumer * CKeyStore::AddConsumer(const std::string & sConsumerID, const std::string & sKeyID, const std::string & sKeyValue)
 {
-	if (nullptr == pModel)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDKEYSTORE);
-	m_pKeyStore = pModel->getKeyStore();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IConsumer * Lib3MF::Impl::CKeyStore::AddConsumer(const std::string & sConsumerID, const std::string & sKeyID, const std::string & sKeyValue)
+Lib3MF_uint64 CKeyStore::GetConsumerCount()
 {
-	NMR::PKeyStoreConsumer consumer = NMR::CKeyStoreFactory::makeConsumer(sConsumerID);
-	consumer->setKeyID(sKeyID);
-	consumer->setKeyValue(sKeyValue);
-	m_pKeyStore->addConsumer(consumer);
-	return new CConsumer(consumer);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF_uint64 Lib3MF::Impl::CKeyStore::GetConsumerCount()
+IConsumer * CKeyStore::GetConsumer(const Lib3MF_uint64 nConsumerIndex)
 {
-	return m_pKeyStore->getConsumerCount();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IConsumer * Lib3MF::Impl::CKeyStore::GetConsumer(const Lib3MF_uint64 nConsumerIndex)
+void CKeyStore::RemoveConsumer(IConsumer* pConsumer)
 {
-	NMR::PKeyStoreConsumer consumer = m_pKeyStore->getConsumer(nConsumerIndex);
-	return new CConsumer(consumer);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IConsumer * Lib3MF::Impl::CKeyStore::FindConsumer(const std::string & sConsumerID)
+IConsumer * CKeyStore::FindConsumer(const std::string & sConsumerID)
 {
-	NMR::PKeyStoreConsumer consumer = m_pKeyStore->findConsumerById(sConsumerID);
-	if (!consumer)
-		return nullptr;
-	return new CConsumer(consumer);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void Lib3MF::Impl::CKeyStore::RemoveConsumer(IConsumer * pConsumerInstance) 
+Lib3MF_uint64 CKeyStore::GetResourceDataGroupCount()
 {
-	CConsumer * pConsumer = dynamic_cast<CConsumer *>(pConsumerInstance);
-	if (!pConsumer) {
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDKEYSTORECONSUMER);
-	}
-	m_pKeyStore->removeConsumer(pConsumer->consumer());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-std::string Lib3MF::Impl::CKeyStore::GetUUID(bool & bHasUUID) {
-	bHasUUID = m_pKeyStore->getUUID() != nullptr;
-	if (bHasUUID)
-		return m_pKeyStore->getUUID()->toString();
-	return "";
-}
-
-void Lib3MF::Impl::CKeyStore::SetUUID(const std::string & sUUID)
+IResourceDataGroup * CKeyStore::AddResourceDataGroup()
 {
-	NMR::PUUID pUUID = std::make_shared<NMR::CUUID>(sUUID);
-	m_pKeyStore->setUUID(pUUID);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF_uint64 Lib3MF::Impl::CKeyStore::GetResourceDataGroupCount()
+IResourceDataGroup * CKeyStore::GetResourceDataGroup(const Lib3MF_uint64 nResourceDataIndex)
 {
-	return (Lib3MF_uint32)m_pKeyStore->getResourceDataGroupCount();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IResourceDataGroup * Lib3MF::Impl::CKeyStore::GetResourceDataGroup(const Lib3MF_uint64 nResourceDataIndex)
+void CKeyStore::RemoveResourceDataGroup(IResourceDataGroup* pResourceDataGroup)
 {
-	NMR::PKeyStoreResourceDataGroup dg = m_pKeyStore->getResourceDataGroup(nResourceDataIndex);
-	return new CResourceDataGroup(dg);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IResourceDataGroup * Lib3MF::Impl::CKeyStore::AddResourceDataGroup() {
-	//this is not ideal, as key size is determined by the encryptionalgorithm inside resourcedata.
-	//in any case, the spec does not state what happens if different resource datas have different algorithms,
-	//but resourcedatagroups are supposed to group the same key for a group of resources...
-	//so far, this should work as aes256 is the only thing we support.
-	std::vector<NMR::nfByte> key((size_t) NMR::fnGetAlgorithmKeySize(NMR::eKeyStoreEncryptAlgorithm::AES256_GCM), 0);
-	m_pModel->generateRandomBytes(key.data(), key.size());
-	NMR::PKeyStoreResourceDataGroup dg = NMR::CKeyStoreFactory::makeResourceDataGroup(std::make_shared<NMR::CUUID>(), key);
-	m_pKeyStore->addResourceDataGroup(dg);
-	return new CResourceDataGroup(dg);
+IResourceDataGroup * CKeyStore::FindResourceDataGroup(IPackagePart* pPartPath)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void Lib3MF::Impl::CKeyStore::RemoveResourceDataGroup(IResourceDataGroup * pTheResourceDataGroup) {
-	CResourceDataGroup * dg = dynamic_cast<CResourceDataGroup *>(pTheResourceDataGroup);
-	if (!dg)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	m_pKeyStore->removeResourceDataGroup(dg->resourceDataGroup());
+IResourceData * CKeyStore::AddResourceData(IResourceDataGroup* pResourceDataGroup, IPackagePart* pPartPath, const Lib3MF::eEncryptionAlgorithm eAlgorithm, const Lib3MF::eCompression eCompression, const Lib3MF_uint64 nAdditionalAuthenticationDataBufferSize, const Lib3MF_uint8 * pAdditionalAuthenticationDataBuffer)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF::Impl::IResourceDataGroup * Lib3MF::Impl::CKeyStore::FindResourceDataGroup(Lib3MF::Impl::IPackagePart *pPartPath) {
-	NMR::PPackageModelPath pPath = m_pModel->findOrCreateModelPath(pPartPath->GetPath());
-	if (!pPath)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-
-	NMR::PKeyStoreResourceDataGroup dg = m_pKeyStore->findResourceDataGroupByResourceDataPath(pPath);
-	if (!dg)
-		return nullptr;
-	return new CResourceDataGroup(dg);
+void CKeyStore::RemoveResourceData(IResourceData* pResourceData)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF::Impl::IResourceData * Lib3MF::Impl::CKeyStore::AddResourceData(Lib3MF::Impl::IResourceDataGroup *pResourceDataGroup, Lib3MF::Impl::IPackagePart *pPartPath, Lib3MF::eEncryptionAlgorithm eAlgorithm, Lib3MF::eCompression eCompression, Lib3MF_uint64 nAdditionalAuthenticationDataBufferSize, const Lib3MF_uint8 *pAdditionalAuthenticationDataBuffer) {
-	bool compression = translateCompression(eCompression);
-	NMR::eKeyStoreEncryptAlgorithm algorithm = translateEncryptionAlgorithm(eAlgorithm);
-	CResourceDataGroup * dg = dynamic_cast<CResourceDataGroup *>(pResourceDataGroup);
-	if (!dg)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	//pPartPath might have different implementations, so asking model get us right to what we need.
-	NMR::PPackageModelPath pPath = m_pModel->findOrCreateModelPath(pPartPath->GetPath());
-	if (!pPath)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-
-	std::vector<NMR::nfByte> aad(pAdditionalAuthenticationDataBuffer, pAdditionalAuthenticationDataBuffer + nAdditionalAuthenticationDataBufferSize);
-	NMR::PKeyStoreCEKParams params = NMR::CKeyStoreFactory::makeCEKParams(compression, algorithm, aad);
-	NMR::PKeyStoreResourceData rd = NMR::CKeyStoreFactory::makeResourceData(dg->resourceDataGroup(), pPath, params);
-	m_pKeyStore->addResourceData(rd);
-	return new CResourceData(rd);
+IResourceData * CKeyStore::FindResourceData(IPackagePart* pResourcePath)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void Lib3MF::Impl::CKeyStore::RemoveResourceData(Lib3MF::Impl::IResourceData *pResourceData) {
-	CResourceData * rd = dynamic_cast<CResourceData *>(pResourceData);
-	if (!rd)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	m_pKeyStore->removeResourceData(rd->resourceData());
+Lib3MF_uint64 CKeyStore::GetResourceDataCount()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF_uint64 Lib3MF::Impl::CKeyStore::GetResourceDataCount() {
-	return m_pKeyStore->getResourceDataCount();
+IResourceData * CKeyStore::GetResourceData(const Lib3MF_uint64 nResourceDataIndex)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF::Impl::IResourceData * Lib3MF::Impl::CKeyStore::GetResourceData(Lib3MF_uint64 nResourceDataIndex) {
-	NMR::PKeyStoreResourceData rd = m_pKeyStore->getResourceData(nResourceDataIndex);
-	return new CResourceData(rd);
+std::string CKeyStore::GetUUID(bool & bHasUUID)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IResourceData * Lib3MF::Impl::CKeyStore::FindResourceData(IPackagePart * pResourcePath) {
-	NMR::PPackageModelPath pPath = m_pModel->findOrCreateModelPath(pResourcePath->GetPath());
-	if (!pPath)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceData(pPath);
-	if (!rd)
-		return nullptr;
-	return new CResourceData(rd);
+void CKeyStore::SetUUID(const std::string & sUUID)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
+

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -28,768 +28,176 @@ Abstract: This is the class declaration of CImplicitFunction
 
 */
 
+
 #ifndef __LIB3MF_IMPLICITFUNCTION
 #define __LIB3MF_IMPLICITFUNCTION
 
-#include "lib3mf_function.hpp"
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_base.hpp"
-
+#include "lib3mf_function.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelImplicitFunction.h"
-
-namespace Lib3MF
-{
-    namespace Impl
-    {
-
-        /*************************************************************************************************************************
-         Class declaration of CImplicitFunction
-        **************************************************************************************************************************/
-
-        class CImplicitFunction : public IImplicitFunction, public CFunction
-        {
-           private:
-            /**
-             * Put private members here.
-             */
-            NMR::CModelImplicitFunction* function();
-
-           protected:
-            /**
-             * Put protected members here.
-             */
-
-           public:
-            /**
-             * Put additional public members here. They will not be visible in
-             * the external API.
-             */
-
-            CImplicitFunction() = delete;
-            CImplicitFunction(NMR::PModelResource pResource);
-            /**
-             * Public member functions to implement.
-             */
-
-            /**
-             * IImplicitFunction::GetIdentifier - Retrieves the identifier of
-             * the function
-             * @return the identifier
-             */
-            std::string GetIdentifier() override;
-
-            /**
-             * IImplicitFunction::SetIdentifier - Sets the identifier of the
-             * function
-             * @param[in] sIdentifier - the identifier
-             */
-            void SetIdentifier(const std::string& sIdentifier) override;
-
-            /**
-             * IImplicitFunction::AddNode - Add a node
-             * @param[in] eNodeType - the type of the node
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IImplicitNode* AddNode(
-                const Lib3MF::eImplicitNodeType eNodeType,
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddSinNode - Add a SinNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ISinNode* AddSinNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddCosNode - Add a CosNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ICosNode* AddCosNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddTanNode - Add a TanNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ITanNode* AddTanNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddArcSinNode - Add a ArcSinNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IArcSinNode* AddArcSinNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddArcCosNode - Add a ArcCosNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IArcCosNode* AddArcCosNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddArcTan2Node - Add a ArcTan2Node
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IArcTan2Node* AddArcTan2Node(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddSinhNode - Add a SinhNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ISinhNode* AddSinhNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddCoshNode - Add a CoshNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ICoshNode* AddCoshNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddTanhNode - Add a TanhNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ITanhNode* AddTanhNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddRoundNode - Add a RoundNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IRoundNode* AddRoundNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddCeilNode - Add a CeilNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ICeilNode* AddCeilNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddFloorNode - Add a FloorNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IFloorNode* AddFloorNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddSignNode - Add a SignNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ISignNode* AddSignNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddFractNode - Add a FractNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IFractNode* AddFractNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddAbsNode - Add a AbsNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IAbsNode* AddAbsNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddExpNode - Add a ExpNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IExpNode* AddExpNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddLogNode - Add a LogNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ILogNode* AddLogNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddLog2Node - Add a Log2Node
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ILog2Node* AddLog2Node(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddLog10Node - Add a Log10Node
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ILog10Node* AddLog10Node(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddLengthNode - Add a LengthNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ILengthNode* AddLengthNode(const std::string& sIdentifier,
-                                       const std::string& sDisplayName,
-                                       const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddTransposeNode - Add a TransposeNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ITransposeNode* AddTransposeNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::InverseNode - Add a InverseNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IInverseNode* AddInverseNode(const std::string& sIdentifier,
-                                      const std::string& sDisplayName,
-                                      const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddSqrtNode - Add a SqrtNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ISqrtNode* AddSqrtNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddResourceIdNode - Add a ResourceIdNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IResourceIdNode* AddResourceIdNode(
-                const std::string& sIdentifier, const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddAdditionNode - Add an AdditionNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IAdditionNode* AddAdditionNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddSubtractionNode - Add a SubtractionNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ISubtractionNode* AddSubtractionNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddMultiplicationNode - Add a
-             * MultiplicationNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IMultiplicationNode* AddMultiplicationNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddDivisionNode - Add a DivisionNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IDivisionNode* AddDivisionNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddDotNode - Add a DotNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IDotNode* AddDotNode(const std::string& sIdentifier,
-                                 const std::string& sDisplayName,
-                                 const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddCrossNode - Add a CrossNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ICrossNode* AddCrossNode(const std::string& sIdentifier,
-                                     const std::string& sDisplayName,
-                                     const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddMatVecMultiplicationNode - Add a
-             * MatVecMultiplicationNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IMatVecMultiplicationNode* AddMatVecMultiplicationNode(
-                const std::string& sIdentifier, const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddMinNode - Add a MinNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IMinNode* AddMinNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddMaxNode - Add a MaxNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IMaxNode* AddMaxNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddFmodNode - Add a FmodNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IFmodNode* AddFmodNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddPowNode - Add a PowNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IPowNode* AddPowNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddSelectNode - Add a SelectNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            ISelectNode* AddSelectNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddClampNode - Add a ClampNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] eConfiguration - the configuration of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IClampNode* AddClampNode(
-                const std::string& sIdentifier,
-                const Lib3MF::eImplicitNodeConfiguration eConfiguration,
-                const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddComposeVectorNode - Add a ComposeVectorNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IComposeVectorNode* AddComposeVectorNode(
-                const std::string& sIdentifier, const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddVectorFromScalarNode - Add a VectorFromScalar
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IVectorFromScalarNode * AddVectorFromScalarNode(const std::string & sIdentifier,
-                                                            const std::string & sDisplayName,
-                                                            const std::string & sTag) override;
-
-            /**
-             * IImplicitFunction::AddDecomposeVectorNode - Add a
-             * DecomposeVectorNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IDecomposeVectorNode* AddDecomposeVectorNode(
-                const std::string& sIdentifier, const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddComposeMatrixNode - Add a ComposeMatrixNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IComposeMatrixNode* AddComposeMatrixNode(
-                const std::string& sIdentifier, const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddMatrixFromRowsNode - Add a MatrixFromRowsNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IMatrixFromRowsNode * AddMatrixFromRowsNode(const std::string & sIdentifier,
-                                                        const std::string & sDisplayName,
-                                                        const std::string & sTag) override;
-
-            /**
-             * IImplicitFunction::AddMatrixFromColumnsNode - Add a MatrixFromColumnsNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IMatrixFromColumnsNode * AddMatrixFromColumnsNode(const std::string & sIdentifier,
-                                                              const std::string & sDisplayName,
-                                                              const std::string & sTag) override;
-
-            /**
-             * IImplicitFunction::AddConstantNode - Add a ConstantNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IConstantNode* AddConstantNode(const std::string& sIdentifier,
-                                           const std::string& sDisplayName,
-                                           const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddConstVecNode - Add a ConstVecNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IConstVecNode* AddConstVecNode(const std::string& sIdentifier,
-                                           const std::string& sDisplayName,
-                                           const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddConstMatNode - Add a ConstMatNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IConstMatNode* AddConstMatNode(const std::string& sIdentifier,
-                                           const std::string& sDisplayName,
-                                           const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddMeshNode - Add a MeshNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IMeshNode* AddMeshNode(const std::string& sIdentifier,
-                                   const std::string& sDisplayName,
-                                   const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::AddUnsignedMeshNode - Add a UnsignedMeshNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IUnsignedMeshNode * AddUnsignedMeshNode(const std::string & sIdentifier,
-                                                    const std::string & sDisplayName,
-                                                    const std::string & sTag) override;
-
-            /**
-             * IImplicitFunction::AddFunctionCallNode - Add a FunctionCallNode
-             * @param[in] sIdentifier - the identifier of the node
-             * @param[in] sDisplayName - the display name of the node
-             * @param[in] sTag - the tag of the node
-             * @return the added node
-             */
-            IFunctionCallNode* AddFunctionCallNode(
-                const std::string& sIdentifier, const std::string& sDisplayName,
-                const std::string& sTag) override;
-
-            /**
-             * IImplicitFunction::GetNodes - Retrieves the nodes
-             * @return the accessor to the nodes
-             */
-            INodeIterator* GetNodes() override;
-
-            /**
-             * IImplicitFunction::RemoveNode - Removes a node
-             * @param[in] pNode - The node to be removed
-             */
-            void RemoveNode(IImplicitNode* pNode) override;
-
-            /**
-             * IImplicitFunction::AddLink - Add a link
-             * @param[in] pSource - the source port
-             * @param[in] pTarget - the target port
-             */
-            void AddLink(IImplicitPort* pSource,
-                         IImplicitPort* pTarget) override;
-
-            /**
-             * IImplicitFunction::AddLinkByNames - Add a link
-             * @param[in] sSource - name of the source port in the format
-             * nodename.portname
-             * @param[in] sTarget - name of the target port in the format
-             * nodename.portname
-             */
-            void AddLinkByNames(const std::string& sSource,
-                                const std::string& sTarget) override;
-
-            /**
-             * IImplicitFunction::Clear - Clears the function
-             */
-            void Clear() override;
-
-            /**
-             * IImplicitFunction::SortNodesTopologically - Sorts the nodes
-             * topologically
-             */
-            void SortNodesTopologically() override;
-        };
-
-    }  // namespace Impl
-}  // namespace Lib3MF
+
+
+namespace Lib3MF {
+namespace Impl {
+
+
+/*************************************************************************************************************************
+ Class declaration of CImplicitFunction 
+**************************************************************************************************************************/
+
+class CImplicitFunction : public virtual IImplicitFunction, public virtual CFunction {
+private:
+
+	/**
+	* Put private members here.
+	*/
+
+protected:
+
+	/**
+	* Put protected members here.
+	*/
+
+public:
+
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
+
+
+	/**
+	* Public member functions to implement.
+	*/
+
+	std::string GetIdentifier() override;
+
+	void SetIdentifier(const std::string & sIdentifier) override;
+
+	IImplicitNode * AddNode(const Lib3MF::eImplicitNodeType eNodeType, const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ISinNode * AddSinNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ICosNode * AddCosNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ITanNode * AddTanNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IArcSinNode * AddArcSinNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IArcCosNode * AddArcCosNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IArcTan2Node * AddArcTan2Node(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ISinhNode * AddSinhNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ICoshNode * AddCoshNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ITanhNode * AddTanhNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IRoundNode * AddRoundNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ICeilNode * AddCeilNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IFloorNode * AddFloorNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ISignNode * AddSignNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IFractNode * AddFractNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IAbsNode * AddAbsNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IExpNode * AddExpNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ILogNode * AddLogNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ILog2Node * AddLog2Node(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ILog10Node * AddLog10Node(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ILengthNode * AddLengthNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ITransposeNode * AddTransposeNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IInverseNode * AddInverseNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ISqrtNode * AddSqrtNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IResourceIdNode * AddResourceIdNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IAdditionNode * AddAdditionNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ISubtractionNode * AddSubtractionNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IMultiplicationNode * AddMultiplicationNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IDivisionNode * AddDivisionNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IDotNode * AddDotNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ICrossNode * AddCrossNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IMatVecMultiplicationNode * AddMatVecMultiplicationNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IMinNode * AddMinNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IMaxNode * AddMaxNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IFmodNode * AddFmodNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IPowNode * AddPowNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	ISelectNode * AddSelectNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IClampNode * AddClampNode(const std::string & sIdentifier, const Lib3MF::eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IComposeVectorNode * AddComposeVectorNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IVectorFromScalarNode * AddVectorFromScalarNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IDecomposeVectorNode * AddDecomposeVectorNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IComposeMatrixNode * AddComposeMatrixNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IMatrixFromRowsNode * AddMatrixFromRowsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IMatrixFromColumnsNode * AddMatrixFromColumnsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IConstantNode * AddConstantNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IConstVecNode * AddConstVecNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IConstMatNode * AddConstMatNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IMeshNode * AddMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IUnsignedMeshNode * AddUnsignedMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	IFunctionCallNode * AddFunctionCallNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) override;
+
+	INodeIterator * GetNodes() override;
+
+	void RemoveNode(IImplicitNode* pNode) override;
+
+	void AddLink(IImplicitPort* pSource, IImplicitPort* pTarget) override;
+
+	void AddLinkByNames(const std::string & sSource, const std::string & sTarget) override;
+
+	void Clear() override;
+
+	void SortNodesTopologically() override;
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif  // __LIB3MF_IMPLICITFUNCTION
+#endif // __LIB3MF_IMPLICITFUNCTION

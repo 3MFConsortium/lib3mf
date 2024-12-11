@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,16 +42,11 @@ using namespace Lib3MF::Impl;
 
 IImplicitPort * COneInputNode::GetInputA()
 {
-	return FindInputOrThrow(NMR::InputNames::A);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * COneInputNode::GetOutputResult()
 {
-	return FindOutputOrThrow(NMR::OutputNames::result);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-COneInputNode::COneInputNode(
-    NMR::PModelImplicitNode pImplicitNode) : CImplicitNode{pImplicitNode}
-{
-	CImplicitNode::m_pImplicitNode = pImplicitNode;
-}

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -40,25 +40,18 @@ using namespace Lib3MF::Impl;
  Class definition of CConstVecNode 
 **************************************************************************************************************************/
 
-Lib3MF::Impl::CConstVecNode::CConstVecNode(
-    NMR::PModelImplicitNode pImplicitNode)
-	: CImplicitNode{pImplicitNode}
-{
-	CImplicitNode::m_pImplicitNode = pImplicitNode;
-}
-
 void CConstVecNode::SetVector(const Lib3MF::sVector Value)
 {
-	m_pImplicitNode->setVector(Value);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF::sVector CConstVecNode::GetVector()
 {
-	return m_pImplicitNode->getVector();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * CConstVecNode::GetOutputVector()
 {
-	return FindOutputOrThrow(NMR::OutputNames::vector);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

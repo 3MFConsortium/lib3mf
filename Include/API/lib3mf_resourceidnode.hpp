@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -67,7 +67,6 @@ protected:
 
 public:
 
-	CResourceIdNode(NMR::PModelImplicitNode pImplicitNode);
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
@@ -77,22 +76,10 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IResourceIdNode::SetResource - Sets the Resource that the resourceid attribute of the node will point to
-	* @param[in] pResource - the resource
-	*/
 	void SetResource(IResource* pResource) override;
 
-	/**
-	* IResourceIdNode::GetResource - Retrieves the resource of the node
-	* @return the resource
-	*/
 	IResource * GetResource() override;
 
-	/**
-	* IResourceIdNode::GetOutputValue - Retrieves the output
-	* @return the output
-	*/
 	IImplicitPort * GetOutputValue() override;
 
 };

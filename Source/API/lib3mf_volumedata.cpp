@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -31,14 +31,8 @@ Abstract: This is a stub class definition of CVolumeData
 #include "lib3mf_volumedata.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
-#include "lib3mf_volumedataproperty.hpp"
-#include "lib3mf_volumedatacolor.hpp"
-#include "lib3mf_volumedatacomposite.hpp"
-
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelMeshObject.h"
-#include "Model/Classes/NMR_ModelResource.h"
-#include "Model/Classes/NMR_ModelFunction.h"
+
 
 using namespace Lib3MF::Impl;
 
@@ -46,116 +40,53 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumeData 
 **************************************************************************************************************************/
 
-
-CVolumeData::CVolumeData(NMR::PModelResource pResource)
-	: CResource(pResource)
-{
-	if (!pResource.get())
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-
-	m_pVolumeData = std::dynamic_pointer_cast<NMR::CModelVolumeData>(pResource);
-	if (!m_pVolumeData)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-}
-
-
 IVolumeDataComposite * CVolumeData::GetComposite()
 {
-	auto pComposite = m_pVolumeData->getComposite();
-	if (!pComposite) {
-		return nullptr;
-	}
-	return new CVolumeDataComposite(pComposite);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IVolumeDataComposite * CVolumeData::CreateNewComposite()
 {
-	auto pComposite = m_pVolumeData->createComposite();
-	if (!pComposite) {
-		return nullptr;
-	}
-	return new CVolumeDataComposite(pComposite);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CVolumeData::RemoveComposite()
 {
-	m_pVolumeData->removeComposite();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IVolumeDataColor * CVolumeData::GetColor()
 {
-	auto pColor = m_pVolumeData->getColor();
-	if (!pColor) {
-		return nullptr;
-	}
-	return new CVolumeDataColor(pColor);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IVolumeDataColor * CVolumeData::CreateNewColor(IFunction* pTheFunction)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CVolumeData::RemoveColor()
 {
-	m_pVolumeData->removeColor();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF_uint32 CVolumeData::GetPropertyCount()
 {
-	return m_pVolumeData->getPropertyCount();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IVolumeDataProperty * CVolumeData::GetProperty(const Lib3MF_uint32 nIndex)
 {
-	NMR::PVolumeDataProperty pProperty = m_pVolumeData->getProperty(nIndex);
-	if (!pProperty) {
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	}
-	return new CVolumeDataProperty(pProperty);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IVolumeDataProperty * CVolumeData::AddPropertyFromFunction(const std::string & sName, IFunction* pTheFunction)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CVolumeData::RemoveProperty(const Lib3MF_uint32 nIndex)
 {
-	auto pProperty = m_pVolumeData->getProperty(nIndex);
-	if (!pProperty)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	m_pVolumeData->removeProperty(pProperty->getName());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-
-IVolumeDataColor* Lib3MF::Impl::CVolumeData::CreateNewColor(
-    IFunction* pTheFunction)
-{
-	NMR::CModel* pModel = m_pVolumeData->getModel();
-
-	NMR::PModelResource pResource = pModel->findResource(pTheFunction->GetUniqueResourceID());
-	NMR::PModelFunction pFunction = std::dynamic_pointer_cast<NMR::CModelFunction>(pResource);
-
-	if (!pFunction)
-	{
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	}
-
-	NMR::PVolumeDataColor pColor = m_pVolumeData->createColor(pFunction);
-	if(!pColor)
-	{
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	}
-	return new CVolumeDataColor(pColor);
-}
-
-IVolumeDataProperty * Lib3MF::Impl::CVolumeData::AddPropertyFromFunction(const std::string & sName, IFunction * pTheFunction)
-{
-	NMR::CModel* pModel = m_pVolumeData->getModel();
-
-	NMR::PModelResource pResource = pModel->findResource(pTheFunction->GetUniqueResourceID());
-	NMR::PModelFunction pFunction = std::dynamic_pointer_cast<NMR::CModelFunction>(pResource);
-
-	if (!pFunction)
-	{
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	}
-
-	NMR::PVolumeDataProperty pProperty = m_pVolumeData->addProperty(sName, pFunction);
-	if(!pProperty)
-	{
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	}
-	return new CVolumeDataProperty(pProperty);
-}

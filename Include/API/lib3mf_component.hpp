@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,15 +33,16 @@ Abstract: This is the class declaration of CComponent
 #define __LIB3MF_COMPONENT
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
-
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelComponent.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -57,7 +58,6 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelComponent m_pComponent;
 
 protected:
 
@@ -70,29 +70,30 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CComponent(NMR::PModelComponent pComponent);
+
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	IObject * GetObjectResource ();
+	IObject * GetObjectResource() override;
 
-	Lib3MF_uint32 GetObjectResourceID ();
+	Lib3MF_uint32 GetObjectResourceID() override;
 
-	std::string GetUUID (bool & bHasUUID);
+	std::string GetUUID(bool & bHasUUID) override;
 
-	void SetUUID (const std::string & sUUID);
+	void SetUUID(const std::string & sUUID) override;
 
-	bool HasTransform ();
+	bool HasTransform() override;
 
-	void SetTransform (const sLib3MFTransform Transform);
+	Lib3MF::sTransform GetTransform() override;
 
-	virtual sLib3MFTransform GetTransform();
+	void SetTransform(const Lib3MF::sTransform Transform) override;
+
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)

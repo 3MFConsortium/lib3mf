@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -66,7 +66,7 @@ protected:
 	*/
 
 public:
-	CClampNode(NMR::PModelImplicitNode pImplicitNode);
+
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
@@ -76,16 +76,8 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IClampNode::GetInputMin - Retrieves the input for the lower limit
-	* @return the input for the lower limit
-	*/
 	IImplicitPort * GetInputMin() override;
 
-	/**
-	* IClampNode::GetInputMax - Retrieves the input for the upper limit
-	* @return the input for the upper limit
-	*/
 	IImplicitPort * GetInputMax() override;
 
 };

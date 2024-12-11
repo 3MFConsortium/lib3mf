@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,17 +33,16 @@ Abstract: This is the class declaration of CModel
 #define __LIB3MF_MODEL
 
 #include "lib3mf_interfaces.hpp"
-#include "lib3mf_base.hpp"
 
+// Parent classes
+#include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
-
 // Include custom headers here.
-#include "Model/Classes/NMR_Model.h" 
-#include "Model/Classes/NMR_KeyStore.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -56,9 +55,9 @@ namespace Impl {
 class CModel : public virtual IModel, public virtual CBase {
 private:
 
-	NMR::PModel m_model;
-
-	void mergeModel(NMR::CModel & sourceModel, NMR::CModel & targetModel);
+	/**
+	* Put private members here.
+	*/
 
 protected:
 
@@ -71,11 +70,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CModel();
 
-	NMR::CModel& model();
-
-	static IResource* createIResourceFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
 
 	/**
 	* Public member functions to implement.
@@ -85,9 +80,9 @@ public:
 
 	IPackagePart * FindOrCreatePackagePart(const std::string & sAbsolutePath) override;
 
-	void SetUnit (const eLib3MFModelUnit eUnit) override;
+	void SetUnit(const Lib3MF::eModelUnit eUnit) override;
 
-	eLib3MFModelUnit GetUnit() override;
+	Lib3MF::eModelUnit GetUnit() override;
 
 	std::string GetLanguage() override;
 
@@ -97,19 +92,13 @@ public:
 
 	IReader * QueryReader(const std::string & sReaderClass) override;
 
-	IResource* GetResourceByID(const Lib3MF_uint32 nUniqueResourceID) override;
+	IResource * GetResourceByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
 	ITexture2D * GetTexture2DByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	eLib3MFPropertyType GetPropertyTypeByID(const Lib3MF_uint32 nUniqueResourceID) override;
+	Lib3MF::ePropertyType GetPropertyTypeByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
 	IBaseMaterialGroup * GetBaseMaterialGroupByID(const Lib3MF_uint32 nUniqueResourceID) override;
-
-	IMeshObject * GetMeshObjectByID(const Lib3MF_uint32 nUniqueResourceID) override;
-
-	IComponentsObject * GetComponentsObjectByID(const Lib3MF_uint32 nUniqueResourceID) override;
-
-	IColorGroup * GetColorGroupByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
 	ITexture2DGroup * GetTexture2DGroupByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
@@ -117,15 +106,23 @@ public:
 
 	IMultiPropertyGroup * GetMultiPropertyGroupByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
+	IMeshObject * GetMeshObjectByID(const Lib3MF_uint32 nUniqueResourceID) override;
+
+	IComponentsObject * GetComponentsObjectByID(const Lib3MF_uint32 nUniqueResourceID) override;
+
+	IColorGroup * GetColorGroupByID(const Lib3MF_uint32 nUniqueResourceID) override;
+
 	ISliceStack * GetSliceStackByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-    ILevelSet* GetLevelSetByID(const Lib3MF_uint32 nUniqueResourceID) override;
+	ILevelSet * GetLevelSetByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-    std::string GetBuildUUID (bool & bHasUUID) override;
+	std::string GetBuildUUID(bool & bHasUUID) override;
 
-	void SetBuildUUID (const std::string & sUUID) override;
+	void SetBuildUUID(const std::string & sUUID) override;
 
 	IBuildItemIterator * GetBuildItems() override;
+
+	Lib3MF::sBox GetOutbox() override;
 
 	IResourceIterator * GetResources() override;
 
@@ -149,6 +146,8 @@ public:
 
 	ISliceStackIterator * GetSliceStacks() override;
 
+	IImage3DIterator * GetImage3Ds() override;
+
 	IModel * MergeToModel() override;
 
 	void MergeFromModel(IModel* pModelInstance) override;
@@ -171,7 +170,11 @@ public:
 
 	IMultiPropertyGroup * AddMultiPropertyGroup() override;
 
-	IBuildItem * AddBuildItem(IObject* pObject, const sLib3MFTransform Transform) override;
+	IImageStack * AddImageStack(const Lib3MF_uint32 nColumnCount, const Lib3MF_uint32 nRowCount, const Lib3MF_uint32 nSheetCount) override;
+
+	IImageStack * GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID) override;
+
+	IBuildItem * AddBuildItem(IObject* pObject, const Lib3MF::sTransform Transform) override;
 
 	void RemoveBuildItem(IBuildItem* pBuildItemInstance) override;
 
@@ -199,38 +202,30 @@ public:
 
 	void RemoveCustomContentType(const std::string & sExtension) override;
 
-	Lib3MF::sBox GetOutbox() override;
-
-	IKeyStore * GetKeyStore() override;
-
 	void SetRandomNumberCallback(const Lib3MF::RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData) override;
 
-	IImageStack * AddImageStack(const Lib3MF_uint32 nSizeX, const Lib3MF_uint32 nSizeY, const Lib3MF_uint32 nSheetCount) override;
-
-	IImageStack* GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID) override;
-
-	IImage3DIterator * GetImage3Ds() override;
+	IKeyStore * GetKeyStore() override;
 
 	IFunctionIterator * GetFunctions() override;
 
 	IImplicitFunction * AddImplicitFunction() override;
 
-	IFunctionFromImage3D* AddFunctionFromImage3D(IImage3D* pImage3DInstance) override;
+	IFunctionFromImage3D * AddFunctionFromImage3D(IImage3D* pImage3DInstance) override;
 
 	IVolumeData * AddVolumeData() override;
 
-	ILevelSet* AddLevelSet() override;
+	ILevelSet * AddLevelSet() override;
 
 	ILevelSetIterator * GetLevelSets() override;
 
 	void RemoveResource(IResource* pResource) override;
+
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-
 #endif // __LIB3MF_MODEL

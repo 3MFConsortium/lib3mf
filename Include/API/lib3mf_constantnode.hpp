@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -66,7 +66,7 @@ protected:
 	*/
 
 public:
-	CConstantNode(NMR::PModelImplicitNode pImplicitNode);
+
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
@@ -76,22 +76,10 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IConstantNode::SetConstant - Sets the constant value of the node
-	* @param[in] dValue - the value
-	*/
 	void SetConstant(const Lib3MF_double dValue) override;
 
-	/**
-	* IConstantNode::GetConstant - Retrieves the constant value of the node
-	* @return the value
-	*/
 	Lib3MF_double GetConstant() override;
 
-	/**
-	* IConstantNode::GetOutputValue - Retrieves the output
-	* @return the output
-	*/
 	IImplicitPort * GetOutputValue() override;
 
 };

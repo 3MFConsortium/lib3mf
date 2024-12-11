@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -60,12 +60,12 @@ private:
 	*/
 
 protected:
+
 	/**
 	* Put protected members here.
 	*/
 
 public:
-	CArcSinNode(NMR::PModelImplicitNode pImplicitNode);
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -66,7 +66,7 @@ protected:
 	*/
 
 public:
-	CUnsignedMeshNode(NMR::PModelImplicitNode pImplicitNode);
+
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
@@ -76,22 +76,10 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IUnsignedMeshNode::GetInputMesh - Retrieves the input for the model resource id of the mesh
-	* @return the input port for the model resource id of the mesh
-	*/
 	IImplicitPort * GetInputMesh() override;
 
-	/**
-	* IUnsignedMeshNode::GetInputPos - Retrieves the input for the position
-	* @return the input port for the position
-	*/
 	IImplicitPort * GetInputPos() override;
 
-	/**
-	* IUnsignedMeshNode::GetOutputDistance - Retrieves the output
-	* @return the output port for the unsigned distance to the mesh
-	*/
 	IImplicitPort * GetOutputDistance() override;
 
 };

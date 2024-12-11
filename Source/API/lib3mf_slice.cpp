@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -40,85 +40,48 @@ using namespace Lib3MF::Impl;
  Class definition of CSlice 
 **************************************************************************************************************************/
 
-CSlice::CSlice(NMR::PSlice pSlice)
-	:m_pSlice(pSlice)
+void CSlice::SetVertices(const Lib3MF_uint64 nVerticesBufferSize, const Lib3MF::sPosition2D * pVerticesBuffer)
 {
-	
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CSlice::SetVertices (const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition2D * pVerticesBuffer)
+void CSlice::GetVertices(Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, Lib3MF::sPosition2D * pVerticesBuffer)
 {
-	m_pSlice->Clear();
-	for (Lib3MF_uint64 index = 0; index < nVerticesBufferSize; index++) {
-		m_pSlice->addVertex(pVerticesBuffer->m_Coordinates[0], pVerticesBuffer->m_Coordinates[1]);
-		pVerticesBuffer++;
-	}
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CSlice::GetVertices (Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, sLib3MFPosition2D * pVerticesBuffer)
+Lib3MF_uint64 CSlice::GetVertexCount()
 {
-	Lib3MF_uint64 vertexCount = m_pSlice->getVertexCount();
-	if (pVerticesNeededCount)
-		*pVerticesNeededCount = vertexCount;
-
-	if (nVerticesBufferSize >= vertexCount && pVerticesBuffer)
-	{
-		for (Lib3MF_uint32 i = 0; i < vertexCount; i++)
-		{
-			const NMR::SLICENODE* node = m_pSlice->getNode(i);
-			pVerticesBuffer[i].m_Coordinates[0] = node->m_position.m_fields[0];
-			pVerticesBuffer[i].m_Coordinates[1] = node->m_position.m_fields[1];
-		}
-	}
-}
-
-Lib3MF_uint64 CSlice::GetVertexCount ()
-{
-	return m_pSlice->getVertexCount();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF_uint64 CSlice::AddPolygon(const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer)
 {
-	Lib3MF_uint32 index = m_pSlice->beginPolygon();
-	SetPolygonIndices(index, nIndicesBufferSize, pIndicesBuffer);
-	return index;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF_uint64 CSlice::GetPolygonCount ()
+Lib3MF_uint64 CSlice::GetPolygonCount()
 {
-	return m_pSlice->getPolygonCount();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CSlice::SetPolygonIndices (const Lib3MF_uint64 nIndex, const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer)
+void CSlice::SetPolygonIndices(const Lib3MF_uint64 nIndex, const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer)
 {
-	m_pSlice->clearPolygon(NMR::nfUint32(nIndex));
-
-	for (Lib3MF_uint64 i=0; i< nIndicesBufferSize; i++)
-		m_pSlice->addPolygonIndex(NMR::nfUint32(nIndex), pIndicesBuffer[i]);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CSlice::GetPolygonIndices (const Lib3MF_uint64 nIndex, Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, Lib3MF_uint32 * pIndicesBuffer)
+void CSlice::GetPolygonIndices(const Lib3MF_uint64 nIndex, Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, Lib3MF_uint32 * pIndicesBuffer)
 {
-	Lib3MF_uint64 indexCount = m_pSlice->getPolygonIndexCount(NMR::nfUint32(nIndex));
-	if (pIndicesNeededCount)
-		*pIndicesNeededCount = indexCount;
-
-	if (nIndicesBufferSize >= indexCount && pIndicesBuffer)
-	{
-		for (Lib3MF_uint32 i = 0; i < indexCount; i++)
-		{
-			pIndicesBuffer[i] = m_pSlice->getPolygonIndex(NMR::nfUint32(nIndex), i);
-		}
-	}
-
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF_uint64 CSlice::GetPolygonIndexCount (const Lib3MF_uint64 nIndex)
+Lib3MF_uint64 CSlice::GetPolygonIndexCount(const Lib3MF_uint64 nIndex)
 {
-	return m_pSlice->getPolygonIndexCount(NMR::nfUint32(nIndex));
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-double CSlice::GetZTop()
+Lib3MF_double CSlice::GetZTop()
 {
-	return m_pSlice->getTopZ();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
+

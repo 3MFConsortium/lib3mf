@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -29,29 +29,24 @@ Abstract: This is a stub class definition of CClampNode
 */
 
 #include "lib3mf_clampnode.hpp"
-
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
+
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CClampNode
+ Class definition of CClampNode 
 **************************************************************************************************************************/
 
-IImplicitPort* CClampNode::GetInputMin()
+IImplicitPort * CClampNode::GetInputMin()
 {
-    return FindInputOrThrow(NMR::InputNames::min);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IImplicitPort* CClampNode::GetInputMax()
+IImplicitPort * CClampNode::GetInputMax()
 {
-    return FindInputOrThrow(NMR::InputNames::max);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF::Impl::CClampNode::CClampNode(NMR::PModelImplicitNode pImplicitNode)
-    : COneInputNode{pImplicitNode}
-{
-    CImplicitNode::m_pImplicitNode = pImplicitNode;
-}

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -66,7 +66,7 @@ protected:
 	*/
 
 public:
-	CMatrixFromColumnsNode(NMR::PModelImplicitNode pImplicitNode);
+
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
@@ -76,34 +76,14 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IMatrixFromColumnsNode::GetInputA - Retrieves the input for the first column
-	* @return the input for the first column
-	*/
 	IImplicitPort * GetInputA() override;
 
-	/**
-	* IMatrixFromColumnsNode::GetInputB - Retrieves the input for the second column
-	* @return the input for the second column
-	*/
 	IImplicitPort * GetInputB() override;
 
-	/**
-	* IMatrixFromColumnsNode::GetInputC - Retrieves the input for the third column
-	* @return the input for the third column
-	*/
 	IImplicitPort * GetInputC() override;
 
-	/**
-	* IMatrixFromColumnsNode::GetInputD - Retrieves the input for the fourth column
-	* @return the input for the fourth column
-	*/
 	IImplicitPort * GetInputD() override;
 
-	/**
-	* IMatrixFromColumnsNode::GetOutputResult - Retrieves the output
-	* @return the output
-	*/
 	IImplicitPort * GetOutputResult() override;
 
 };

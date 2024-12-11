@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,8 +42,8 @@ using namespace Lib3MF::Impl;
 
 bool CBase::GetLastErrorMessage(std::string & sErrorMessage)
 {
-	if (m_pErrors && !m_pErrors->empty()) {
-		sErrorMessage = m_pErrors->back();
+	if (m_pLastError.get() != nullptr) {
+		sErrorMessage = *m_pLastError;
 		return true;
 	} else {
 		sErrorMessage = "";
@@ -53,16 +53,15 @@ bool CBase::GetLastErrorMessage(std::string & sErrorMessage)
 
 void CBase::ClearErrorMessages()
 {
-	m_pErrors.reset();
+	m_pLastError.reset();
 }
 
 void CBase::RegisterErrorMessage(const std::string & sErrorMessage)
 {
-	if (!m_pErrors) {
-		m_pErrors.reset(new std::list<std::string>());
+	if (m_pLastError.get() == nullptr) {
+		m_pLastError.reset(new std::string());
 	}
-	m_pErrors->clear();
-	m_pErrors->push_back(sErrorMessage);
+	*m_pLastError = sErrorMessage;
 }
 
 void CBase::IncRefCount()
@@ -78,5 +77,10 @@ bool CBase::DecRefCount()
 		return true;
 	}
 	return false;
+}
+
+Lib3MF_uint64 CBase::ClassTypeId()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

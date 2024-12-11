@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,28 +24,24 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CTexture2DIterator
+Abstract: This is a stub class definition of CTexture2DGroupIterator
 
 */
 
 #include "lib3mf_texture2dgroupiterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
-#include "lib3mf_texture2dgroup.hpp"
+
 // Include custom headers here.
+
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CTexture2DIterator 
+ Class definition of CTexture2DGroupIterator 
 **************************************************************************************************************************/
 
 ITexture2DGroup * CTexture2DGroupIterator::GetCurrentTexture2DGroup()
 {
-	// Create specific API class
-	return new CTexture2DGroup(std::dynamic_pointer_cast<NMR::CModelTexture2DGroupResource>(GetCurrentResource()));
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IResource * CTexture2DGroupIterator::GetCurrent()
-{
-	return GetCurrentTexture2DGroup();
-}

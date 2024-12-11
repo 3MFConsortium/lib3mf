@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,15 +33,14 @@ Abstract: This is the class declaration of CBeamLattice
 #define __LIB3MF_BEAMLATTICE
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
-#include "Common/Mesh/NMR_Mesh.h"
-#include "Model/Classes/NMR_ModelMeshBeamLatticeAttributes.h"
-#include "Model/Classes/NMR_ModelMeshObject.h"
 // Include custom headers here.
 
 
@@ -59,9 +58,6 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::CMesh& m_mesh;
-	NMR::PModelMeshBeamLatticeAttributes m_pAttributes;
-	NMR::PModelMeshObject m_pMeshObject;
 
 protected:
 
@@ -74,57 +70,57 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CBeamLattice(NMR::PModelMeshObject pMeshObject, NMR::PModelMeshBeamLatticeAttributes pAttributes);
+
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	Lib3MF_double GetMinLength ();
+	Lib3MF_double GetMinLength() override;
 
-	void SetMinLength (const Lib3MF_double dMinLength);
+	void SetMinLength(const Lib3MF_double dMinLength) override;
 
-	void GetClipping (eBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nUniqueResourceID);
+	void GetClipping(Lib3MF::eBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nUniqueResourceID) override;
 
-	void SetClipping (const eBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nUniqueResourceID);
+	void SetClipping(const Lib3MF::eBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nUniqueResourceID) override;
 
-	bool GetRepresentation(Lib3MF_uint32 & nUniqueResourceID);
+	bool GetRepresentation(Lib3MF_uint32 & nUniqueResourceID) override;
 
-	void SetRepresentation(const Lib3MF_uint32 nUniqueResourceID);
+	void SetRepresentation(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	void GetBallOptions (eBeamLatticeBallMode & eBallMode, Lib3MF_double & dBallRadius);
+	void GetBallOptions(Lib3MF::eBeamLatticeBallMode & eBallMode, Lib3MF_double & dBallRadius) override;
 
-	void SetBallOptions (const eBeamLatticeBallMode eBallMode, const Lib3MF_double dBallRadius);
+	void SetBallOptions(const Lib3MF::eBeamLatticeBallMode eBallMode, const Lib3MF_double dBallRadius) override;
 
-	Lib3MF_uint32 GetBeamCount ();
+	Lib3MF_uint32 GetBeamCount() override;
 
-	sLib3MFBeam GetBeam (const Lib3MF_uint32 nIndex);
+	Lib3MF::sBeam GetBeam(const Lib3MF_uint32 nIndex) override;
 
-	Lib3MF_uint32 AddBeam (const sLib3MFBeam BeamInfo);
+	Lib3MF_uint32 AddBeam(const Lib3MF::sBeam BeamInfo) override;
 
-	void SetBeam (const Lib3MF_uint32 nIndex, const sLib3MFBeam BeamInfo);
+	void SetBeam(const Lib3MF_uint32 nIndex, const Lib3MF::sBeam BeamInfo) override;
 
-	void SetBeams (const Lib3MF_uint64 nBeamInfoBufferSize, const sLib3MFBeam * pBeamInfoBuffer);
+	void SetBeams(const Lib3MF_uint64 nBeamInfoBufferSize, const Lib3MF::sBeam * pBeamInfoBuffer) override;
 
-	void GetBeams (Lib3MF_uint64 nBeamInfoBufferSize, Lib3MF_uint64 * pBeamInfoNeededCount, sLib3MFBeam * pBeamInfoBuffer);
+	void GetBeams(Lib3MF_uint64 nBeamInfoBufferSize, Lib3MF_uint64* pBeamInfoNeededCount, Lib3MF::sBeam * pBeamInfoBuffer) override;
 
-	Lib3MF_uint32 GetBallCount ();
+	Lib3MF_uint32 GetBallCount() override;
 
-	sLib3MFBall GetBall (const Lib3MF_uint32 nIndex);
+	Lib3MF::sBall GetBall(const Lib3MF_uint32 nIndex) override;
 
-	Lib3MF_uint32 AddBall (const sLib3MFBall BallInfo);
+	Lib3MF_uint32 AddBall(const Lib3MF::sBall BallInfo) override;
 
-	void SetBall (const Lib3MF_uint32 nIndex, const sLib3MFBall BallInfo);
+	void SetBall(const Lib3MF_uint32 nIndex, const Lib3MF::sBall BallInfo) override;
 
-	void SetBalls (const Lib3MF_uint64 nBallInfoBufferSize, const sLib3MFBall * pBallInfoBuffer);
+	void SetBalls(const Lib3MF_uint64 nBallInfoBufferSize, const Lib3MF::sBall * pBallInfoBuffer) override;
 
-	void GetBalls (Lib3MF_uint64 nBeamInfoBufferSize, Lib3MF_uint64 * pBallInfoNeededCount, sLib3MFBall * pBallInfoBuffer);
+	void GetBalls(Lib3MF_uint64 nBallInfoBufferSize, Lib3MF_uint64* pBallInfoNeededCount, Lib3MF::sBall * pBallInfoBuffer) override;
 
-	Lib3MF_uint32 GetBeamSetCount ();
+	Lib3MF_uint32 GetBeamSetCount() override;
 
-	IBeamSet * AddBeamSet ();
+	IBeamSet * AddBeamSet() override;
 
-	IBeamSet * GetBeamSet (const Lib3MF_uint32 nIndex);
+	IBeamSet * GetBeamSet(const Lib3MF_uint32 nIndex) override;
 
 };
 

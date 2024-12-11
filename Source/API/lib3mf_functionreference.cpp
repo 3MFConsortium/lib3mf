@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -29,78 +29,64 @@ Abstract: This is a stub class definition of CFunctionReference
 */
 
 #include "lib3mf_functionreference.hpp"
-
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_utils.hpp"
+
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CFunctionReference
+ Class definition of CFunctionReference 
 **************************************************************************************************************************/
 
 Lib3MF_uint32 CFunctionReference::GetFunctionResourceID()
 {
-    return m_pFunctionReference->getFunctionResourceID();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CFunctionReference::SetFunctionResourceID(
-    const Lib3MF_uint32 nUniqueResourceID)
+void CFunctionReference::SetFunctionResourceID(const Lib3MF_uint32 nUniqueResourceID)
 {
-    m_pFunctionReference->setFunctionResourceID(nUniqueResourceID);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
-
-CFunctionReference::CFunctionReference(
-    NMR::PFunctionReference pFunctionReference)
-    : m_pFunctionReference(pFunctionReference)
-{
-}
-
-void CFunctionReference::SetTransform(
-    const Lib3MF::sTransform Transform)
-{
-     m_pFunctionReference->setTransform(TransformToMatrix(Transform));
-}
-
 
 Lib3MF::sTransform CFunctionReference::GetTransform()
 {
-    NMR::NMATRIX3 const matrix = m_pFunctionReference->getTransform();
-	return MatrixToTransform(matrix);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-//std::string GetChannelName()
+void CFunctionReference::SetTransform(const Lib3MF::sTransform Transform)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
 std::string CFunctionReference::GetChannelName()
 {
-    return m_pFunctionReference->getChannelName();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CFunctionReference::SetChannelName(
-    const std::string & sChannelName)
+void CFunctionReference::SetChannelName(const std::string & sChannelName)
 {
-    m_pFunctionReference->setChannelName(sChannelName);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CFunctionReference::SetMinFeatureSize(
-    const Lib3MF_double dMinFeatureSize)
+void CFunctionReference::SetMinFeatureSize(const Lib3MF_double dMinFeatureSize)
 {
-    m_pFunctionReference->setMinFeatureSize(dMinFeatureSize);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF_double CFunctionReference::GetMinFeatureSize()
 {
-    return m_pFunctionReference->getMinFeatureSize();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CFunctionReference::SetFallBackValue(
-    const Lib3MF_double dFallBackValue)
+void CFunctionReference::SetFallBackValue(const Lib3MF_double dFallBackValue)
 {
-    m_pFunctionReference->setFallBackValue(dFallBackValue);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF_double CFunctionReference::GetFallBackValue()
 {
-    return m_pFunctionReference->getFallBackValue();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
+

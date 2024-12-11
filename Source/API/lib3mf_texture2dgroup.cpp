@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -32,7 +32,7 @@ Abstract: This is a stub class definition of CTexture2DGroup
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_texture2d.hpp"
+
 
 using namespace Lib3MF::Impl;
 
@@ -40,67 +40,33 @@ using namespace Lib3MF::Impl;
  Class definition of CTexture2DGroup 
 **************************************************************************************************************************/
 
-NMR::CModelTexture2DGroupResource& CTexture2DGroup::texture2DGroup()
+Lib3MF_uint32 CTexture2DGroup::GetCount()
 {
-	NMR::CModelTexture2DGroupResource* pTexture2dGroup = dynamic_cast<NMR::CModelTexture2DGroupResource*>(resource().get());
-	if (pTexture2dGroup == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDTEXTURE2DGROUP);
-	return *pTexture2dGroup;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-CTexture2DGroup::CTexture2DGroup(NMR::PModelTexture2DGroupResource pResource)
-	: CResource(std::static_pointer_cast<NMR::CModelResource>(pResource))
+void CTexture2DGroup::GetAllPropertyIDs(Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
 {
-
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ITexture2D * CTexture2DGroup::GetTexture2D()
+Lib3MF_uint32 CTexture2DGroup::AddTex2Coord(const Lib3MF::sTex2Coord UVCoordinate)
 {
-	return new CTexture2D(texture2DGroup().getTexture2D());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF_uint32 CTexture2DGroup::GetCount ()
+Lib3MF::sTex2Coord CTexture2DGroup::GetTex2Coord(const Lib3MF_uint32 nPropertyID)
 {
-	return texture2DGroup().getCount();
-}
-
-void CTexture2DGroup::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
-{
-	Lib3MF_uint32 nCount = texture2DGroup().getCount();
-
-	if (pPropertyIDsNeededCount)
-		*pPropertyIDsNeededCount = nCount;
-
-	if (nPropertyIDsBufferSize >= nCount && pPropertyIDsBuffer) {
-		if (!texture2DGroup().hasResourceIndexMap()) {
-			texture2DGroup().buildResourceIndexMap();
-		}
-		for (Lib3MF_uint32 i = 0; i < nCount; i++) {
-			DWORD nPropertyID;
-			if (texture2DGroup().mapResourceIndexToPropertyID(i, nPropertyID)) {
-				*pPropertyIDsBuffer = nPropertyID;
-			}
-			else {
-				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCEINDEX);
-			}
-			pPropertyIDsBuffer++;
-		}
-	}
-}
-
-Lib3MF_uint32 CTexture2DGroup::AddTex2Coord (const sLib3MFTex2Coord UVCoordinate)
-{
-	return texture2DGroup().addUVCoordinate(NMR::MODELTEXTURE2DCOORDINATE({ UVCoordinate.m_U, UVCoordinate.m_V }));
-}
-
-sLib3MFTex2Coord CTexture2DGroup::GetTex2Coord (const Lib3MF_uint32 nPropertyID)
-{
-	NMR::MODELTEXTURE2DCOORDINATE coord = texture2DGroup().getUVCoordinate(nPropertyID);
-	return sLib3MFTex2Coord({ coord.m_dU, coord.m_dV});
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CTexture2DGroup::RemoveTex2Coord(const Lib3MF_uint32 nPropertyID)
 {
-	texture2DGroup().removePropertyID(nPropertyID);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+ITexture2D * CTexture2DGroup::GetTexture2D()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

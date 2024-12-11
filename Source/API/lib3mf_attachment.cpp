@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -32,11 +32,7 @@ Abstract: This is a stub class definition of CAttachment
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
-#include "Common/Platform/NMR_ImportStream_Callback.h"
-#include "Common/Platform/NMR_ImportStream.h"
-#include "Common/Platform/NMR_Platform.h"
-#include "Common/NMR_StringUtils.h"
+
 
 using namespace Lib3MF::Impl;
 
@@ -44,31 +40,14 @@ using namespace Lib3MF::Impl;
  Class definition of CAttachment 
 **************************************************************************************************************************/
 
-CAttachment::CAttachment(NMR::PModelAttachment pModelAttachment)
-	: m_pModelAttachment(pModelAttachment)
+std::string CAttachment::GetPath()
 {
-	
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-std::string CAttachment::GetPath ()
+void CAttachment::SetPath(const std::string & sPath)
 {
-	return m_pModelAttachment->getPathURI();
-}
-
-void CAttachment::SetPath (const std::string & sPath)
-{
-	NMR::CModel * pModel = m_pModelAttachment->getModel();
-	NMR::PImportStream pStream = m_pModelAttachment->getStream();
-	if (pModel->getPackageThumbnail() == m_pModelAttachment) {
-		// different handling for package-wide attachment
-		pModel->removePackageThumbnail();
-		m_pModelAttachment = pModel->addPackageThumbnail(sPath, pStream);
-	}
-	else {
-		std::string sRelationshipType = m_pModelAttachment->getRelationShipType();
-		pModel->removeAttachment(m_pModelAttachment->getPathURI());
-		m_pModelAttachment = pModel->addAttachment(sPath, sRelationshipType, pStream);
-	}
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IPackagePart * CAttachment::PackagePart()
@@ -76,93 +55,43 @@ IPackagePart * CAttachment::PackagePart()
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-std::string CAttachment::GetRelationShipType ()
+std::string CAttachment::GetRelationShipType()
 {
-	return m_pModelAttachment->getRelationShipType();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CAttachment::SetRelationShipType (const std::string & sPath)
+void CAttachment::SetRelationShipType(const std::string & sPath)
 {
-	m_pModelAttachment->setRelationShipType(sPath);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CAttachment::WriteToFile (const std::string & sFileName)
+void CAttachment::WriteToFile(const std::string & sFileName)
 {
-	NMR::PImportStream pStream = m_pModelAttachment->getStream();
-
-	if (pStream.get() != nullptr) {
-		pStream->writeToFile(NMR::fnUTF8toUTF16(sFileName).c_str());
-	} else {
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDATTACHMENTSTREAM);
-	}
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CAttachment::ReadFromFile (const std::string & sFileName)
+void CAttachment::ReadFromFile(const std::string & sFileName)
 {
-	NMR::PImportStream pImportStream = NMR::fnCreateImportStreamInstance(sFileName.c_str());
-
-	m_pModelAttachment->setStream(pImportStream);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CAttachment::ReadFromCallback(const Lib3MF::ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MF::SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
 {
-	NMR::ImportStream_ReadCallbackType lambdaReadCallback =
-		[pTheReadCallback](NMR::nfByte* pData, NMR::nfUint64 cbBytes, void* pUserData)
-	{
-		(*pTheReadCallback)(reinterpret_cast<Lib3MF_uint64>(pData), cbBytes, pUserData);
-		return 0;
-	};
-
-	NMR::ImportStream_SeekCallbackType lambdaSeekCallback =
-		[pTheSeekCallback](NMR::nfUint64 nPosition, void* pUserData)
-	{
-		(*pTheSeekCallback)(nPosition, pUserData);
-		return 0;
-	};
-
-	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Callback>(
-		lambdaReadCallback, lambdaSeekCallback,
-		pUserData, nStreamSize);
-	try {
-		m_pModelAttachment->setStream(pImportStream);
-	}
-	catch (NMR::CNMRException& e) {
-		if (e.getErrorCode() == NMR_USERABORTED) {
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
-		}
-		else throw e;
-	}
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-
-Lib3MF_uint64 CAttachment::GetStreamSize ()
+Lib3MF_uint64 CAttachment::GetStreamSize()
 {
-	NMR::PImportStream pStream = m_pModelAttachment->getStream();
-	return pStream->retrieveSize();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CAttachment::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
+void CAttachment::WriteToBuffer(Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
 {
-	NMR::PImportStream pStream = m_pModelAttachment->getStream();
-
-	Lib3MF_uint64 cbStreamSize = pStream->retrieveSize();
-	if (pBufferNeededCount)
-		*pBufferNeededCount = cbStreamSize;
-
-	if (nBufferBufferSize >= cbStreamSize) {
-		pStream->seekPosition(0, true);
-		pStream->readIntoBuffer(pBufferBuffer, cbStreamSize, true);
-	}
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CAttachment::ReadFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer)
 {
-	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Unique_Memory>(pBufferBuffer, nBufferBufferSize);
-	m_pModelAttachment->setStream(pImportStream);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-
-NMR::PModelAttachment CAttachment::getModelAttachment()
-{
-	return m_pModelAttachment;
-}

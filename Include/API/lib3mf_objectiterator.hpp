@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -77,9 +77,6 @@ public:
 	*/
 
 	IObject * GetCurrentObject() override;
-
-
-	IResource * GetCurrent() override;
 
 };
 

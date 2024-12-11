@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -39,25 +39,19 @@ using namespace Lib3MF::Impl;
 /*************************************************************************************************************************
  Class definition of CUnsignedMeshNode 
 **************************************************************************************************************************/
-CUnsignedMeshNode::
-	CUnsignedMeshNode(NMR::PModelImplicitNode pImplicitNode)
-	: CImplicitNode{pImplicitNode}
-{
-	CImplicitNode::m_pImplicitNode = pImplicitNode;
-}
 
 IImplicitPort * CUnsignedMeshNode::GetInputMesh()
 {
-	return FindInputOrThrow(NMR::InputNames::mesh);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * CUnsignedMeshNode::GetInputPos()
 {
-	return FindInputOrThrow(NMR::InputNames::pos);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * CUnsignedMeshNode::GetOutputDistance()
 {
-	return FindOutputOrThrow(NMR::OutputNames::distance);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -39,10 +39,4 @@ using namespace Lib3MF::Impl;
 /*************************************************************************************************************************
  Class definition of CVolumeDataColor 
 **************************************************************************************************************************/
-
-CVolumeDataColor::CVolumeDataColor(NMR::PVolumeDataColor pColor)
-	: CFunctionReference(pColor)
-{
-
-}
 

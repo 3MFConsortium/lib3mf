@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,34 +33,61 @@ Abstract: This is the class declaration of CConsumer
 #define __LIB3MF_CONSUMER
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
-#include "Model/Classes/NMR_KeyStoreConsumer.h"
 // Include custom headers here.
+
+
 namespace Lib3MF {
-	namespace Impl {
+namespace Impl {
 
-		/*************************************************************************************************************************
-		Class declaration of CConsumer
-		**************************************************************************************************************************/
 
-		class CConsumer : public virtual IConsumer, public virtual CBase {
-		private:
-			NMR::PKeyStoreConsumer m_Consumer;
-		public:
-			inline NMR::PKeyStoreConsumer consumer() const {
-				return m_Consumer;
-			}
-			CConsumer(NMR::PKeyStoreConsumer const & consumer);
-			// Inherited via IConsumer
-			std::string GetConsumerID() override;
-			std::string GetKeyID() override;
-			std::string GetKeyValue() override;
-		};
-	}
-}
+/*************************************************************************************************************************
+ Class declaration of CConsumer 
+**************************************************************************************************************************/
+
+class CConsumer : public virtual IConsumer, public virtual CBase {
+private:
+
+	/**
+	* Put private members here.
+	*/
+
+protected:
+
+	/**
+	* Put protected members here.
+	*/
+
+public:
+
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
+
+
+	/**
+	* Public member functions to implement.
+	*/
+
+	std::string GetConsumerID() override;
+
+	std::string GetKeyID() override;
+
+	std::string GetKeyValue() override;
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#ifdef _MSC_VER
+#pragma warning(pop)
 #endif
+#endif // __LIB3MF_CONSUMER

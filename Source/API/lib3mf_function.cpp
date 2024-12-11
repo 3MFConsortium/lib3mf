@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -30,8 +30,6 @@ Abstract: This is a stub class definition of CFunction
 
 #include "lib3mf_function.hpp"
 #include "lib3mf_interfaceexception.hpp"
-#include "lib3mf_implicitport.hpp"
-#include "lib3mf_implicitportiterator.hpp"
 
 // Include custom headers here.
 
@@ -42,85 +40,53 @@ using namespace Lib3MF::Impl;
  Class definition of CFunction 
 **************************************************************************************************************************/
 
-NMR::CModelFunction* Lib3MF::Impl::CFunction::function()
-{
-	NMR::CModelFunction* pFunction = dynamic_cast<NMR::CModelFunction*>(resource().get());
-	if (pFunction == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
-
-	return pFunction;
-}
-
-Lib3MF::Impl::CFunction::CFunction(NMR::PModelResource pResource)
-	: CResource(pResource)
-{
-}
-
 std::string CFunction::GetDisplayName()
 {
-	return function()->getDisplayName();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CFunction::SetDisplayName(const std::string& sDisplayName)
+void CFunction::SetDisplayName(const std::string & sDisplayName)
 {
-	function()->setDisplayName(sDisplayName);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IImplicitPort* CFunction::AddInput(const std::string& sIdentifier,
-	const std::string& sDisplayName,
-	const Lib3MF::eImplicitPortType eType)
+IImplicitPort * CFunction::AddInput(const std::string & sIdentifier, const std::string & sDisplayName, const Lib3MF::eImplicitPortType eType)
 {
-
-	return new CImplicitPort(function()->addInput(sIdentifier, sDisplayName, eType));
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IImplicitPortIterator* CFunction::GetInputs()
+IImplicitPortIterator * CFunction::GetInputs()
 {
-	return new CImplicitPortIterator(function()->getInputs());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CFunction::RemoveInput(IImplicitPort* pInput)
 {
-	auto inputs = function()->getInputs();
-	auto it = std::find_if(inputs->begin(), inputs->end(), [pInput](const NMR::PModelImplicitPort& port) {
-		return port->getIdentifier() == pInput->GetIdentifier();
-	});
-	if (it != inputs->end())
-		inputs->erase(it);
-	else
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IImplicitPort* CFunction::AddOutput(const std::string& sIdentifier,
-	const std::string& sDisplayName,
-	const Lib3MF::eImplicitPortType eType)
+IImplicitPort * CFunction::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName, const Lib3MF::eImplicitPortType eType)
 {
-	return new CImplicitPort(function()->addOutput(sIdentifier, sDisplayName, eType));
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IImplicitPortIterator* CFunction::GetOutputs()
+IImplicitPortIterator * CFunction::GetOutputs()
 {
-	return new CImplicitPortIterator(function()->getOutputs());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CFunction::RemoveOutput(IImplicitPort* pOutput)
 {
-	auto outputs = function()->getOutputs();
-	auto it = std::find_if(outputs->begin(), outputs->end(), [pOutput](const NMR::PModelImplicitPort& port) {
-		return port->getIdentifier() == pOutput->GetIdentifier();
-	});
-	if (it != outputs->end())
-		outputs->erase(it);
-	else
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IImplicitPort* CFunction::FindInput(const std::string& sIdentifier)
+IImplicitPort * CFunction::FindInput(const std::string & sIdentifier)
 {
-	return new CImplicitPort(function()->findInput(sIdentifier));
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IImplicitPort* CFunction::FindOutput(const std::string& sIdentifier)
+IImplicitPort * CFunction::FindOutput(const std::string & sIdentifier)
 {
-	return new CImplicitPort(function()->findOutput(sIdentifier));
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
+

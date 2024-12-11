@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -29,8 +29,8 @@ Abstract: This is the class declaration of CLevelSet
 */
 
 
-#ifndef __LIB3MF_BOUNDARYSHAPE
-#define __LIB3MF_BOUNDARYSHAPE
+#ifndef __LIB3MF_LEVELSET
+#define __LIB3MF_LEVELSET
 
 #include "lib3mf_interfaces.hpp"
 
@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CLevelSet
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelLevelSetObject.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -58,7 +58,7 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelLevelSetObject levelSetObject();
+
 protected:
 
 	/**
@@ -66,123 +66,48 @@ protected:
 	*/
 
 public:
+
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
-	CLevelSet() = delete;
-
-	CLevelSet(NMR::PModelResource pResource);
 
 
 	/**
 	* Public member functions to implement.
 	*/
-    static ILevelSet* fnCreateLevelSetFromModelResource(
-            NMR::PModelResource pResource, bool bFailIfUnkownClass);
 
-        /**
-	* ILevelSet::GetFunction - Returns the function that is used as boundary shape.
-	* @return the function to use as boundary shape
-	*/
 	IFunction * GetFunction() override;
 
-	/**
-	* ILevelSet::SetFunction - Sets the function to use as boundary shape.
-	* @param[in] pTheFunction - the function to use as boundary shape
-	*/
 	void SetFunction(IFunction* pTheFunction) override;
 
-	/**
-	* ILevelSet::GetTransform - Returns the transformation matrix into the coordinate system of the referenced Function.
-	* @return the transformation matrix
-	*/
 	Lib3MF::sTransform GetTransform() override;
 
-	/**
-	* ILevelSet::SetTransform - Sets the transformation matrix into the coordinate system of the referenced Function.
-	* @param[in] Transform - new transformation matrix
-	*/
 	void SetTransform(const Lib3MF::sTransform Transform) override;
 
-	/**
-	* ILevelSet::GetChannelName - Returns the name of the function output channel to use.
-	* @return the name of the function output channel
-	*/
 	std::string GetChannelName() override;
 
-	/**
-	* ILevelSet::SetChannelName - Sets the name of the function output channel to use.
-	* @param[in] sChannelName - new name of the function output channel
-	*/
 	void SetChannelName(const std::string & sChannelName) override;
 
-	/**
-	* ILevelSet::SetMinFeatureSize - Sets the minimal feature size as a hint for the function evaluator
-	* @param[in] dMinFeatureSize - minimal feature size
-	*/
 	void SetMinFeatureSize(const Lib3MF_double dMinFeatureSize) override;
 
-	/**
-	* ILevelSet::GetMinFeatureSize - Returns the minimal feature size as a hint for the function evaluator
-	* @return minimal feature size
-	*/
 	Lib3MF_double GetMinFeatureSize() override;
 
-	/**
-	* ILevelSet::SetFallBackValue - Sets the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
-	* @param[in] dFallBackValue - fallback value
-	*/
 	void SetFallBackValue(const Lib3MF_double dFallBackValue) override;
 
-	/**
-	* ILevelSet::GetFallBackValue - Returns the fallback value to use if the function evaluation fails (e.g. evaluates to NaN or Inf).
-	* @return fallback value
-	*/
 	Lib3MF_double GetFallBackValue() override;
 
-	/**
-	* ILevelSet::SetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
-	* @param[in] bMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
-	*/
 	void SetMeshBBoxOnly(const bool bMeshBBoxOnly) override;
 
-	/**
-	* ILevelSet::GetMeshBBoxOnly - If set only the bounding box of the mesh is intersected with the boundary
-	* @return If set only the bounding box of the mesh is intersected with the boundary
-	*/
 	bool GetMeshBBoxOnly() override;
 
-	/**
-	* ILevelSet::SetMesh - Sets the mesh to use as evaluation domain
-	* @param[in] pTheMesh - The mesh
-	*/
 	void SetMesh(IMeshObject* pTheMesh) override;
 
-	/**
-	* ILevelSet::GetMesh - Returns the mesh that is used as evaluation domain
-	* @return The mesh
-	*/
 	IMeshObject * GetMesh() override;
 
-
-	/**
-	* ILevelSet::GetVolumeData - Retrieves the VolumeData this MeshObject.
-	* @return the VolumeData of this MeshObject
-	*/
 	IVolumeData * GetVolumeData() override;
 
-	/**
-	* ILevelSet::SetVolumeData - Sets the VolumeData of this LevelSet.
-	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
-	*/
 	void SetVolumeData(IVolumeData* pTheVolumeData) override;
 
-    bool IsMeshObject() override;
-
-	bool IsComponentsObject() override;
-
-	bool IsLevelSetObject() override;
 };
 
 } // namespace Impl
@@ -191,4 +116,4 @@ public:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_BOUNDARYSHAPE
+#endif // __LIB3MF_LEVELSET

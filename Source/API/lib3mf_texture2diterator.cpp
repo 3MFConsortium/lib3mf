@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -30,7 +30,6 @@ Abstract: This is a stub class definition of CTexture2DIterator
 
 #include "lib3mf_texture2diterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
-#include "lib3mf_texture2d.hpp"
 
 // Include custom headers here.
 
@@ -41,14 +40,8 @@ using namespace Lib3MF::Impl;
  Class definition of CTexture2DIterator 
 **************************************************************************************************************************/
 
-ITexture2D * CTexture2DIterator::GetCurrentTexture2D ()
+ITexture2D * CTexture2DIterator::GetCurrentTexture2D()
 {
-	// Create specific API class
-	return new CTexture2D(std::dynamic_pointer_cast<NMR::CModelTexture2DResource>(GetCurrentResource()));
-}
-
-IResource * CTexture2DIterator::GetCurrent()
-{
-	return GetCurrentTexture2D();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

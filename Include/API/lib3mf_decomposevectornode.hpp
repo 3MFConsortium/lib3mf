@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -66,7 +66,7 @@ protected:
 	*/
 
 public:
-	CDecomposeVectorNode(NMR::PModelImplicitNode pImplicitNode);
+
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
@@ -76,28 +76,12 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IDecomposeVectorNode::GetInputVector - Retrieves the input
-	* @return the input
-	*/
 	IImplicitPort * GetInputA() override;
 
-	/**
-	* IDecomposeVectorNode::GetOutputX - Retrieves the output for the x component
-	* @return the output for the x component
-	*/
 	IImplicitPort * GetOutputX() override;
 
-	/**
-	* IDecomposeVectorNode::GetOutputY - Retrieves the output for the y component
-	* @return the output for the y component
-	*/
 	IImplicitPort * GetOutputY() override;
 
-	/**
-	* IDecomposeVectorNode::GetOutputZ - Retrieves the output for the z component
-	* @return the output for the z component
-	*/
 	IImplicitPort * GetOutputZ() override;
 
 };

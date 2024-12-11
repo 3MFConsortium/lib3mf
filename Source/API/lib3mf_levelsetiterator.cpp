@@ -32,7 +32,6 @@ Abstract: This is a stub class definition of CLevelSetIterator
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_levelset.hpp"
 
 
 using namespace Lib3MF::Impl;
@@ -43,6 +42,6 @@ using namespace Lib3MF::Impl;
 
 ILevelSet * CLevelSetIterator::GetCurrentLevelSet()
 {
-	return CLevelSet::fnCreateLevelSetFromModelResource(GetCurrentResource(), true);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

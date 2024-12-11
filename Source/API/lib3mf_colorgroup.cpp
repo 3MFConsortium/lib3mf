@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -40,76 +40,33 @@ using namespace Lib3MF::Impl;
  Class definition of CColorGroup 
 **************************************************************************************************************************/
 
-CColorGroup::CColorGroup(NMR::PModelColorGroupResource pResource)
-	: CResource(std::static_pointer_cast<NMR::CModelResource>(pResource))
+Lib3MF_uint32 CColorGroup::GetCount()
 {
-
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-
-NMR::CModelColorGroupResource& CColorGroup::colorGroup()
+void CColorGroup::GetAllPropertyIDs(Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
 {
-	NMR::CModelColorGroupResource* pColorGroup = dynamic_cast<NMR::CModelColorGroupResource*>(resource().get());
-	if (pColorGroup == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOLORGROUP);
-	return *pColorGroup;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-
-Lib3MF_uint32 CColorGroup::GetCount ()
+Lib3MF_uint32 CColorGroup::AddColor(const Lib3MF::sColor TheColor)
 {
-	return colorGroup().getCount();
-}
-
-void CColorGroup::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
-{
-	Lib3MF_uint32 nCount = colorGroup().getCount();
-
-	if (pPropertyIDsNeededCount)
-		*pPropertyIDsNeededCount = nCount;
-
-	if (nPropertyIDsBufferSize >= nCount && pPropertyIDsBuffer) {
-		if (!colorGroup().hasResourceIndexMap()) {
-			colorGroup().buildResourceIndexMap();
-		}
-		for (Lib3MF_uint32 i = 0; i < nCount; i++) {
-			DWORD nPropertyID;
-			if (colorGroup().mapResourceIndexToPropertyID(i, nPropertyID)) {
-				*pPropertyIDsBuffer = nPropertyID;
-			}
-			else {
-				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCEINDEX);
-			}
-			pPropertyIDsBuffer++;
-		}
-	}
-}
-
-Lib3MF_uint32 CColorGroup::AddColor (const sLib3MFColor TheColor)
-{
-	NMR::nfColor cColor = TheColor.m_Red | (TheColor.m_Green << 8) | (TheColor.m_Blue << 16) | (TheColor.m_Alpha << 24);
-
-	return colorGroup().addColor(cColor);
-}
-
-void CColorGroup::SetColor (const Lib3MF_uint32 nPropertyID, const sLib3MFColor TheColor)
-{
-	NMR::nfColor cColor = TheColor.m_Red | (TheColor.m_Green << 8) | (TheColor.m_Blue << 16) | (TheColor.m_Alpha << 24);
-	colorGroup().setColor(nPropertyID, cColor);
-}
-
-sLib3MFColor CColorGroup::GetColor (const Lib3MF_uint32 nPropertyID)
-{
-	NMR::nfColor cColor = colorGroup().getColor(nPropertyID);
-	sLib3MFColor c;
-	c.m_Red = (cColor) & 0xff;
-	c.m_Green = (cColor >> 8) & 0xff;
-	c.m_Blue = (cColor >> 16) & 0xff;
-	c.m_Alpha = (cColor >> 24) & 0xff;
-	return c;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CColorGroup::RemoveColor(const Lib3MF_uint32 nPropertyID)
 {
-	colorGroup().removeColor(nPropertyID);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
+
+void CColorGroup::SetColor(const Lib3MF_uint32 nPropertyID, const Lib3MF::sColor TheColor)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+Lib3MF::sColor CColorGroup::GetColor(const Lib3MF_uint32 nPropertyID)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+

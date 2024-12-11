@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -31,10 +31,8 @@ Abstract: This is a stub class definition of CBuildItem
 #include "lib3mf_builditem.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
-#include "lib3mf_utils.hpp"
-#include "lib3mf_object.hpp"
-#include "lib3mf_metadatagroup.hpp"
 // Include custom headers here.
+
 
 using namespace Lib3MF::Impl;
 
@@ -42,98 +40,58 @@ using namespace Lib3MF::Impl;
  Class definition of CBuildItem 
 **************************************************************************************************************************/
 
-NMR::CModelBuildItem& CBuildItem::buildItem()
+IObject * CBuildItem::GetObjectResource()
 {
-	return *m_pBuildItem.get();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-CBuildItem::CBuildItem(NMR::PModelBuildItem pBuildItem)
+std::string CBuildItem::GetUUID(bool & bHasUUID)
 {
-	m_pBuildItem = pBuildItem;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF_uint32 CBuildItem::GetHandle()
+void CBuildItem::SetUUID(const std::string & sUUID)
 {
-	return buildItem().getHandle();
-}
-
-IObject * CBuildItem::GetObjectResource ()
-{
-	NMR::PModelResource pResource = buildItem().getModel()->findResource(buildItem().getObject()->getPackageResourceID());
-	if (!pResource.get())
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
-	
-	std::unique_ptr<IObject> pResourceInterface(CObject::fnCreateObjectFromModelResource(pResource, true));
-	if (pResourceInterface == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
-
-	return pResourceInterface.release();
-}
-
-std::string CBuildItem::GetUUID (bool & bHasUUID)
-{
-	bHasUUID = buildItem().uuid() != nullptr;
-	if (bHasUUID)
-		return buildItem().uuid()->toString();
-	return "";
-}
-
-void CBuildItem::SetUUID (const std::string & sUUID)
-{
-	NMR::PUUID pUUID = std::make_shared<NMR::CUUID>(sUUID);
-	buildItem().setUUID(pUUID);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF_uint32 CBuildItem::GetObjectResourceID()
 {
-	return buildItem().getObject()->getPackageResourceID()->getUniqueID();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-bool CBuildItem::HasObjectTransform ()
+bool CBuildItem::HasObjectTransform()
 {
-	return buildItem().hasTransform();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-sLib3MFTransform CBuildItem::GetObjectTransform ()
+Lib3MF::sTransform CBuildItem::GetObjectTransform()
 {
-	const NMR::NMATRIX3 matrix = buildItem().getTransform();
-	return MatrixToTransform(matrix);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CBuildItem::SetObjectTransform (const sLib3MFTransform Transform)
+void CBuildItem::SetObjectTransform(const Lib3MF::sTransform Transform)
 {
-	buildItem().setTransform(TransformToMatrix(Transform));
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-std::string CBuildItem::GetPartNumber ()
+std::string CBuildItem::GetPartNumber()
 {
-	return buildItem().getPartNumber();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CBuildItem::SetPartNumber (const std::string & sSetPartnumber)
+void CBuildItem::SetPartNumber(const std::string & sSetPartnumber)
 {
-	buildItem().setPartNumber(sSetPartnumber);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IMetaDataGroup * CBuildItem::GetMetaDataGroup ()
+IMetaDataGroup * CBuildItem::GetMetaDataGroup()
 {
-	return new CMetaDataGroup(buildItem().metaDataGroup());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF::sBox CBuildItem::GetOutbox()
 {
-	NMR::NOUTBOX3 sOutbox;
-	NMR::fnOutboxInitialize(sOutbox);
-
-	buildItem().getObject()->extendOutbox(sOutbox, buildItem().getTransform());
-
-	sBox s;
-	s.m_MinCoordinate[0] = sOutbox.m_min.m_fields[0];
-	s.m_MinCoordinate[1] = sOutbox.m_min.m_fields[1];
-	s.m_MinCoordinate[2] = sOutbox.m_min.m_fields[2];
-
-	s.m_MaxCoordinate[0] = sOutbox.m_max.m_fields[0];
-	s.m_MaxCoordinate[1] = sOutbox.m_max.m_fields[1];
-	s.m_MaxCoordinate[2] = sOutbox.m_max.m_fields[2];
-	return s;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
+

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -66,8 +66,6 @@ protected:
 	*/
 
 public:
-	COneInputNode() = default;
-	COneInputNode(NMR::PModelImplicitNode pImplicitNode);
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
@@ -78,16 +76,8 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IOneInputNode::GetInputA - Retrieves the input
-	* @return the input
-	*/
 	IImplicitPort * GetInputA() override;
 
-	/**
-	* IOneInputNode::GetOutputResult - Retrieves the output
-	* @return the output
-	*/
 	IImplicitPort * GetOutputResult() override;
 
 };

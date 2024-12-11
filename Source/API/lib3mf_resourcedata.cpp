@@ -1,38 +1,62 @@
+/*++
+
+Copyright (C) 2024 3MF Consortium (Original Author)
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract: This is a stub class definition of CResourceData
+
+*/
+
 #include "lib3mf_resourcedata.hpp"
 #include "lib3mf_interfaceexception.hpp"
-#include "lib3mf_consumer.hpp"
-#include "lib3mf_packagepart.hpp"
-#include "lib3mf_utils.hpp"
 
-namespace Lib3MF {
-	namespace Impl {
-		Lib3MF::Impl::CResourceData::CResourceData(NMR::PKeyStoreResourceData resourceData) 
-			:m_pResourceData(resourceData)
-		{
-			if (!resourceData)
-				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-		}
+// Include custom headers here.
 
-		Lib3MF::eEncryptionAlgorithm Lib3MF::Impl::CResourceData::GetEncryptionAlgorithm() {
-			NMR::eKeyStoreEncryptAlgorithm ea = m_pResourceData->getEncryptionAlgorithm();
-			return static_cast<eEncryptionAlgorithm>(ea);
-		}
 
-		Lib3MF::eCompression Lib3MF::Impl::CResourceData::GetCompression() {
-			return translateCompression(m_pResourceData->isCompressed());
-		}
+using namespace Lib3MF::Impl;
 
-		IPackagePart * CResourceData::GetPath() {
-			return new CPackagePart(m_pResourceData->packagePath());
-		}
+/*************************************************************************************************************************
+ Class definition of CResourceData 
+**************************************************************************************************************************/
 
-		void CResourceData::GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 * pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer) {
-			std::vector<NMR::nfByte> const & aad = m_pResourceData->getAddAuthData();
-			if (nByteDataBufferSize < aad.size()) {
-				*pByteDataNeededCount = aad.size();
-			} else {
-				std::copy(aad.begin(), aad.end(), pByteDataBuffer);
-			}
-		}
-	}
+IPackagePart * CResourceData::GetPath()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
+
+Lib3MF::eEncryptionAlgorithm CResourceData::GetEncryptionAlgorithm()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+Lib3MF::eCompression CResourceData::GetCompression()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CResourceData::GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+

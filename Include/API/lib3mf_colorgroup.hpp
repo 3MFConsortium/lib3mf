@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CColorGroup
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelColorGroup.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -64,31 +64,29 @@ protected:
 	/**
 	* Put protected members here.
 	*/
-	NMR::CModelColorGroupResource& colorGroup();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CColorGroup(NMR::PModelColorGroupResource pResource);
 
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	Lib3MF_uint32 GetCount ();
+	Lib3MF_uint32 GetCount() override;
 
-	void GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer);
+	void GetAllPropertyIDs(Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer) override;
 
-	Lib3MF_uint32 AddColor (const sLib3MFColor TheColor);
+	Lib3MF_uint32 AddColor(const Lib3MF::sColor TheColor) override;
 
-	void SetColor (const Lib3MF_uint32 nPropertyID, const sLib3MFColor TheColor);
+	void RemoveColor(const Lib3MF_uint32 nPropertyID) override;
 
-	sLib3MFColor GetColor (const Lib3MF_uint32 nPropertyID);
+	void SetColor(const Lib3MF_uint32 nPropertyID, const Lib3MF::sColor TheColor) override;
 
-	void RemoveColor(const Lib3MF_uint32 nPropertyID);
+	Lib3MF::sColor GetColor(const Lib3MF_uint32 nPropertyID) override;
 
 };
 

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -32,8 +32,7 @@ Abstract: This is a stub class definition of CComponent
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_utils.hpp"
-#include "lib3mf_object.hpp"
+
 
 using namespace Lib3MF::Impl;
 
@@ -41,61 +40,38 @@ using namespace Lib3MF::Impl;
  Class definition of CComponent 
 **************************************************************************************************************************/
 
-CComponent::CComponent(NMR::PModelComponent pComponent)
-{
-	if (pComponent.get() == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPONENT);
-	m_pComponent = pComponent;
-}
-
-
 IObject * CComponent::GetObjectResource()
 {
-	NMR::PModelResource pModelObject = m_pComponent->getModel()->findResource(m_pComponent->getObject()->getPackageResourceID());
-	if (!pModelObject.get())
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
-
-	std::unique_ptr<IObject> pObject(CObject::fnCreateObjectFromModelResource(pModelObject, true));
-	if (pObject == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
-
-	return pObject.release();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF_uint32 CComponent::GetObjectResourceID()
 {
-	return m_pComponent->getObject()->getPackageResourceID()->getUniqueID();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 std::string CComponent::GetUUID(bool & bHasUUID)
 {
-	NMR::PUUID pUUID = m_pComponent->uuid();
-	bHasUUID = (pUUID.get() != nullptr);
-	if (bHasUUID)
-		return pUUID->toString(); 
-	else
-		return "";
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CComponent::SetUUID(const std::string & sUUID)
 {
-	NMR::PUUID pUUID = std::make_shared<NMR::CUUID>(sUUID);
-	m_pComponent->setUUID(pUUID);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 bool CComponent::HasTransform()
 {
-	return m_pComponent->hasTransform();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CComponent::SetTransform (const sLib3MFTransform Transform)
+Lib3MF::sTransform CComponent::GetTransform()
 {
-	m_pComponent->setTransform(TransformToMatrix(Transform));
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-sLib3MFTransform CComponent::GetTransform()
+void CComponent::SetTransform(const Lib3MF::sTransform Transform)
 {
-	const NMR::NMATRIX3 matrix = m_pComponent->getTransform();
-	return MatrixToTransform(matrix);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -32,7 +32,7 @@ Abstract: This is a stub class definition of CMultiPropertyGroupIterator
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_multipropertygroup.hpp"
+
 
 using namespace Lib3MF::Impl;
 
@@ -40,12 +40,8 @@ using namespace Lib3MF::Impl;
  Class definition of CMultiPropertyGroupIterator 
 **************************************************************************************************************************/
 
-IMultiPropertyGroup * CMultiPropertyGroupIterator::GetCurrentMultiPropertyGroup ()
+IMultiPropertyGroup * CMultiPropertyGroupIterator::GetCurrentMultiPropertyGroup()
 {
-	return new CMultiPropertyGroup(std::dynamic_pointer_cast<NMR::CModelMultiPropertyGroupResource>(GetCurrentResource()));
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IResource * CMultiPropertyGroupIterator::GetCurrent()
-{
-	return GetCurrentMultiPropertyGroup();
-}

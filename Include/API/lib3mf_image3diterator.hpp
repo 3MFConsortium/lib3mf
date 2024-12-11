@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -77,6 +77,7 @@ public:
 	*/
 
 	IImage3D * GetCurrentImage3D() override;
+
 };
 
 } // namespace Impl

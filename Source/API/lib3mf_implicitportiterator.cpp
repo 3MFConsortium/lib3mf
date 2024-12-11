@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -32,7 +32,7 @@ Abstract: This is a stub class definition of CImplicitPortIterator
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_implicitport.hpp"
+
 
 using namespace Lib3MF::Impl;
 
@@ -40,18 +40,8 @@ using namespace Lib3MF::Impl;
  Class definition of CImplicitPortIterator 
 **************************************************************************************************************************/
 
-Lib3MF::Impl::CImplicitPortIterator::CImplicitPortIterator(NMR::PPorts pPorts) : m_pPorts(pPorts)
-{
-}
-
-Lib3MF_uint64 Lib3MF::Impl::CImplicitPortIterator::Count()
-{
-    return static_cast<Lib3MF_uint64>(m_pPorts->size());
-}
-
 IImplicitPort * CImplicitPortIterator::GetCurrent()
 {
-	throwIfInvalidIndex();
-	return new CImplicitPort(m_pPorts->at(static_cast<size_t>(getCurrentIndex())));
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

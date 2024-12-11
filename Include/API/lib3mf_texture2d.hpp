@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CTexture2D
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelTexture2D.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -64,40 +64,38 @@ protected:
 	/**
 	* Put protected members here.
 	*/
-	NMR::PModelTexture2DResource texture();
-
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CTexture2D(NMR::PModelTexture2DResource pResource);
+
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	IAttachment * GetAttachment ();
+	IAttachment * GetAttachment() override;
 
-	void SetAttachment (IAttachment* pAttachment);
+	void SetAttachment(IAttachment* pAttachment) override;
 
-	eLib3MFTextureType GetContentType ();
+	Lib3MF::eTextureType GetContentType() override;
 
-	void SetContentType (const eLib3MFTextureType eContentType);
+	void SetContentType(const Lib3MF::eTextureType eContentType) override;
 
-	void GetTileStyleUV (eLib3MFTextureTileStyle & eTileStyleU, eLib3MFTextureTileStyle & eTileStyleV);
+	void GetTileStyleUV(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV) override;
 
-	void SetTileStyleUV (const eLib3MFTextureTileStyle eTileStyleU, const eLib3MFTextureTileStyle eTileStyleV);
+	void SetTileStyleUV(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV) override;
 
-	eLib3MFTextureFilter GetFilter ();
+	Lib3MF::eTextureFilter GetFilter() override;
 
-	void SetFilter (const eLib3MFTextureFilter eFilter);
+	void SetFilter(const Lib3MF::eTextureFilter eFilter) override;
 
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)

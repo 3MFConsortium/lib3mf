@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -66,7 +66,6 @@ protected:
 	*/
 
 public:
-	CComposeMatrixNode(NMR::PModelImplicitNode pImplicitNode);
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
@@ -77,106 +76,38 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IComposeMatrixNode::GetInputM00 - Retrieves the input for the element 0 0
-	* @return the input for the m00 element
-	*/
 	IImplicitPort * GetInputM00() override;
 
-	/**
-	* IComposeMatrixNode::GetInputM01 - Retrieves the input for the element 0 1
-	* @return the input for the m01 element
-	*/
 	IImplicitPort * GetInputM01() override;
 
-	/**
-	* IComposeMatrixNode::GetInputM02 - Retrieves the input for the element 0 2
-	* @return the input for the m02 element
-	*/
 	IImplicitPort * GetInputM02() override;
 
-	/**
-	* IComposeMatrixNode::GetInputM03 - Retrieves the input for the element 0 3
-	* @return the input for the m03 element
-	*/
 	IImplicitPort * GetInputM03() override;
 
-	/**
-	* IComposeMatrixNode::GetInputM10 - Retrieves the input for the element 1 0
-	* @return the input for the m10 element
-	*/
 	IImplicitPort * GetInputM10() override;
 
-	/**
-	* IComposeMatrixNode::GetInputM11 - Retrieves the input for the element 1 1
-	* @return the input for the m11 element
-	*/
 	IImplicitPort * GetInputM11() override;
 
-	/**
-	* IComposeMatrixNode::GetInputM12 - Retrieves the input for the element 1 2
-	* @return the input for the m12 element
-	*/
 	IImplicitPort * GetInputM12() override;
 
-	/**
-	* IComposeMatrixNode::GetInputM13 - Retrieves the input for the element 1 3
-	* @return the input for the m3 element
-	*/
 	IImplicitPort * GetInputM13() override;
 
-	/**
-	* IComposeMatrixNode::GetInputM20 - Retrieves the input for the element 2 0
-	* @return the input for the m2 element
-	*/
 	IImplicitPort * GetInputM20() override;
 
-	/**
-	* IComposeMatrixNode::GetInputM21 - Retrieves the input for the element 2 1
-	* @return 
-	*/
 	IImplicitPort * GetInputM21() override;
 
-	/**
-	* IComposeMatrixNode::GetInputM22 - Retrieves the input for the element 2 2
-	* @return the input for the m22 element
-	*/
 	IImplicitPort * GetInputM22() override;
 
-	/**
-	* IComposeMatrixNode::GetInputM23 - Retrieves the input for the element 2 3
-	* @return the input for the m23 element
-	*/
 	IImplicitPort * GetInputM23() override;
 
-	/**
-	* IComposeMatrixNode::GetInputM30 - Retrieves the input for the element 3 0
-	* @return the input for the m30 element
-	*/
 	IImplicitPort * GetInputM30() override;
 
-	/**
-	* IComposeMatrixNode::GetInputM31 - Retrieves the input for the element 3 1
-	* @return the input for the m31 element
-	*/
 	IImplicitPort * GetInputM31() override;
 
-	/**
-	* IComposeMatrixNode::GetInputM32 - Retrieves the input for the element 3 2
-	* @return the input for the m32 element
-	*/
 	IImplicitPort * GetInputM32() override;
 
-	/**
-	* IComposeMatrixNode::GetInputM33 - Retrieves the input for the element 3 3
-	* @return the input for the m33 element
-	*/
 	IImplicitPort * GetInputM33() override;
 
-	/**
-	* IComposeMatrixNode::GetOutputMatrix - Retrieves the output
-	* @return the output
-	*/
 	IImplicitPort * GetOutputResult() override;
 
 };

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CFunctionFromImage3D
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelFunctionFromImage3D.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -58,7 +58,6 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::CModelFunctionFromImage3D* functionfromimage3d();
 
 protected:
 
@@ -71,78 +70,30 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-	CFunctionFromImage3D() = delete;
-	CFunctionFromImage3D(NMR::PModelResource pResource);
+
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IFunctionFromImage3D::GetImage3D - Returns the selected 3D image.
-	* @return image instance
-	*/
 	IImage3D * GetImage3D() override;
 
-	/**
-	* IFunctionFromImage3D::SetImage3D - Sets the 3D image of the selector.
-	* @param[in] pImage3D - image instance
-	*/
 	void SetImage3D(IImage3D* pImage3D) override;
 
-	/**
-	* IFunctionFromImage3D::SetFilter - Sets the texture filter of the selector.
-	* @param[in] eFilter - texture filter
-	*/
 	void SetFilter(const Lib3MF::eTextureFilter eFilter) override;
 
-	/**
-	* IFunctionFromImage3D::GetFilter - Returns the texture filter of the selector.
-	* @return texture filter
-	*/
 	Lib3MF::eTextureFilter GetFilter() override;
 
-	/**
-	* IFunctionFromImage3D::SetTileStyles - Sets the tile styles of the selector.
-	* @param[in] eTileStyleU - tile style in U
-	* @param[in] eTileStyleV - tile style in V
-	* @param[in] eTileStyleW - tile style in W
-	*/
 	void SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV, const Lib3MF::eTextureTileStyle eTileStyleW) override;
 
-	/**
-	* IFunctionFromImage3D::GetTileStyles - Retrieves the tile styles of the selector.
-	* @param[out] eTileStyleU - tile style in U
-	* @param[out] eTileStyleV - tile style in V
-	* @param[out] eTileStyleW - tile style in W
-	*/
 	void GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW) override;
 
-	/**
-	* IFunctionFromImage3D::GetOffset - returns the offset value for the pixel values in the Image3D
-	* @return the offset value for the pixel values in the Image3D
-	*/
 	Lib3MF_double GetOffset() override;
 
-	/**
-	* IFunctionFromImage3D::SetOffset - Sets the offset value for the pixel values in the Image3D
-	* @param[in] dOffset - the offset value for the pixel values in the Image3D
-	*/
 	void SetOffset(const Lib3MF_double dOffset) override;
 
-	/**
-	* IFunctionFromImage3D::GetScale - returns the scale value for the pixel values in the Image3D
-	* @return the scale value for the pixel values in the Image3D
-	*/
 	Lib3MF_double GetScale() override;
 
-	/**
-	* IFunctionFromImage3D::SetScale - Sets the scale value for the pixel values in the Image3D
-	* @param[in] dScale - the scale value for the pixel values in the Image3D
-	*/
 	void SetScale(const Lib3MF_double dScale) override;
 
 };

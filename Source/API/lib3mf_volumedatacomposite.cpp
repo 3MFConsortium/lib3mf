@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,24 +33,12 @@ Abstract: This is a stub class definition of CVolumeDataComposite
 
 // Include custom headers here.
 
+
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
  Class definition of CVolumeDataComposite 
 **************************************************************************************************************************/
-
-CVolumeDataComposite::CVolumeDataComposite(NMR::PVolumeDataComposite pComposite):
-	m_pVolumeDataComposite(pComposite)
-{
-	
-}
-
-NMR::PVolumeDataComposite CVolumeDataComposite::volumeDataComposite()
-{
-	if (!m_pVolumeDataComposite)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	return m_pVolumeDataComposite;
-}
 
 IBaseMaterialGroup * CVolumeDataComposite::GetBaseMaterialGroup()
 {

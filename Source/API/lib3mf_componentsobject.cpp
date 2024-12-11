@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -31,10 +31,8 @@ Abstract: This is a stub class definition of CComponentsObject
 #include "lib3mf_componentsobject.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
-#include "lib3mf_component.hpp"
-#include "lib3mf_utils.hpp"
-
 // Include custom headers here.
+
 
 using namespace Lib3MF::Impl;
 
@@ -42,92 +40,18 @@ using namespace Lib3MF::Impl;
  Class definition of CComponentsObject 
 **************************************************************************************************************************/
 
-
-IComponentsObject* CComponentsObject::fnCreateComponentsObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass)
+IComponent * CComponentsObject::AddComponent(IObject* pObjectResource, const Lib3MF::sTransform Transform)
 {
-
-	if (!pResource.get())
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-
-	NMR::CModelComponentsObject * pMeshObject = dynamic_cast<NMR::CModelComponentsObject *> (pResource.get());
-	if (pMeshObject) {
-		return new CComponentsObject(pResource);
-	}
-
-	if (bFailIfUnkownClass)
-		throw ELib3MFInterfaceException(NMR_ERROR_UNKNOWNMODELRESOURCE);
-
-	return nullptr;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-CComponentsObject::CComponentsObject(NMR::PModelResource pResource)
-	: CResource(pResource), CObject(pResource)
+IComponent * CComponentsObject::GetComponent(const Lib3MF_uint32 nIndex)
 {
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-NMR::CModelComponentsObject * CComponentsObject::getComponentsObject()
+Lib3MF_uint32 CComponentsObject::GetComponentCount()
 {
-	NMR::CModelComponentsObject * pComponentsObject = dynamic_cast<NMR::CModelComponentsObject *> (resource().get());
-	if (pComponentsObject == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPONENTSOBJECT);
-
-	return pComponentsObject;
-}
-
-IComponent * CComponentsObject::AddComponent(IObject* pObjectResource, const sLib3MFTransform Transform)
-{
-	NMR::CModelComponentsObject * pComponentsObject = getComponentsObject();
-	NMR::CModel * pModel = pComponentsObject->getModel();
-	if (pModel == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODEL);
-	
-	// Get Resource ID
-	NMR::UniqueResourceID nObjectID = pObjectResource->GetResourceID();
-
-	if (GetResourceID() == nObjectID)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_FORBIDDENCYCLICREFERENCE);
-
-	// TODO: check all ancestors to avoid circular references
-
-	// Find class instance
-	NMR::CModelObject * pObject = pModel->findObject(nObjectID);
-	if (pObject == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
-
-	// Convert Transform, if given
-	NMR::NMATRIX3 mMatrix = TransformToMatrix(Transform);
-
-	// Create Model component
-	NMR::PModelComponent pNewComponent = std::make_shared<NMR::CModelComponent>(pObject, mMatrix);
-	pComponentsObject->addComponent(pNewComponent);
-
-	return new CComponent(pNewComponent);
-}
-
-IComponent * CComponentsObject::GetComponent (const Lib3MF_uint32 nIndex)
-{
-	NMR::CModelComponentsObject * pComponentsObject = getComponentsObject();
-	NMR::PModelComponent pNewComponent = pComponentsObject->getComponent(nIndex);
-	return new CComponent(pNewComponent);
-}
-
-Lib3MF_uint32 CComponentsObject::GetComponentCount ()
-{
-	return getComponentsObject()->getComponentCount();
-}
-
-bool CComponentsObject::IsMeshObject()
-{
-	return false;
-}
-
-bool CComponentsObject::IsComponentsObject()
-{
-	return true;
-}
-
-bool CComponentsObject::IsLevelSetObject()
-{
-	return false;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

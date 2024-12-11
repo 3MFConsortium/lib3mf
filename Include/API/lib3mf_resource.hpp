@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,15 +33,16 @@ Abstract: This is the class declaration of CResource
 #define __LIB3MF_RESOURCE
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
-
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelResource.h" 
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -57,19 +58,19 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelResource m_pResource;
 
 protected:
 
+	/**
+	* Put protected members here.
+	*/
+
 public:
-	NMR::CModel* model();
-	NMR::PModelResource resource();
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CResource() = delete;
-	CResource(NMR::PModelResource pResource);
+
 
 	/**
 	* Public member functions to implement.
@@ -79,17 +80,16 @@ public:
 
 	Lib3MF_uint32 GetUniqueResourceID() override;
 
-	virtual IObject * AsObject();
-
 	IPackagePart * PackagePart() override;
 
-	void SetPackagePart(IPackagePart* pPackagePath) override;
+	void SetPackagePart(IPackagePart* pPackagePart) override;
 
 	Lib3MF_uint32 GetModelResourceID() override;
+
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)

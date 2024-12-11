@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -29,17 +29,9 @@ Abstract: This is a stub class definition of CReader
 */
 
 #include "lib3mf_reader.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_interfaceexception.hpp"
-#include "lib3mf_accessright.hpp"
-#include "lib3mf_contentencryptionparams.hpp"
-#include "Common/Platform/NMR_Platform.h"
-#include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
-#include "Common/Platform/NMR_ImportStream_Callback.h"
-#include "Common/NMR_SecureContentTypes.h"
-#include "Common/NMR_SecureContext.h"
-#include "Model/Classes/NMR_KeyStore.h"
 
 
 using namespace Lib3MF::Impl;
@@ -48,186 +40,63 @@ using namespace Lib3MF::Impl;
  Class definition of CReader 
 **************************************************************************************************************************/
 
-CReader::CReader(std::string sReaderClass, NMR::PModel model)
+void CReader::ReadFromFile(const std::string & sFilename)
 {
-	m_pReader = nullptr;
-
-	// Create specified writer instance
-	if (sReaderClass.compare("3mf") == 0) {
-		m_pReader = std::make_shared<NMR::CModelReader_3MF_Native>(model);
-
-	}
-	else if (sReaderClass.compare("stl") == 0) {
-		m_pReader = std::make_shared<NMR::CModelReader_STL>(model);
-	}
-
-	if (!m_pReader)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_READERCLASSUNKNOWN);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-NMR::CModelReader& CReader::reader()
+void CReader::ReadFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer)
 {
-	return *m_pReader;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CReader::ReadFromFile (const std::string & sFilename)
+void CReader::ReadFromCallback(const Lib3MF::ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MF::SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
 {
-	NMR::PImportStream pImportStream = NMR::fnCreateImportStreamInstance(sFilename.c_str());
-
-	try {
-		reader().readStream(pImportStream);
-	}
-	catch (NMR::CNMRException&e) {
-		if (e.getErrorCode() == NMR_USERABORTED) {
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
-		}
-		else throw e;
-	}
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CReader::ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer)
+void CReader::SetProgressCallback(const Lib3MF::ProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData)
 {
-	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Shared_Memory>(pBufferBuffer, nBufferBufferSize);
-
-	try {
-		reader().readStream(pImportStream);
-	}
-	catch (NMR::CNMRException&e) {
-		if (e.getErrorCode() == NMR_USERABORTED) {
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
-		}
-		else throw e;
-	}
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CReader::ReadFromCallback(const Lib3MFReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
+void CReader::AddRelationToRead(const std::string & sRelationShipType)
 {
-	
-	NMR::ImportStream_ReadCallbackType lambdaReadCallback =
-		[pTheReadCallback](NMR::nfByte* pData, NMR::nfUint64 cbBytes, void* pUserData)
-	{
-		(*pTheReadCallback)(reinterpret_cast<Lib3MF_uint64>(pData), cbBytes, pUserData);
-		return 0;
-	};
-
-	NMR::ImportStream_SeekCallbackType lambdaSeekCallback =
-		[pTheSeekCallback](NMR::nfUint64 nPosition, void* pUserData)
-	{
-		(*pTheSeekCallback)(nPosition, pUserData);
-		return 0;
-	};
-
-	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Callback>(
-		lambdaReadCallback, lambdaSeekCallback,
-		pUserData, nStreamSize);
-	try {
-		reader().readStream(pImportStream);
-	}
-	catch (NMR::CNMRException&e) {
-		if (e.getErrorCode() == NMR_USERABORTED) {
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
-		}
-		else throw e;
-	}
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CReader::SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData)
+void CReader::RemoveRelationToRead(const std::string & sRelationShipType)
 {
-	NMR::Lib3MFProgressCallback lambdaCallback =
-		[pProgressCallback](int progressStep, NMR::ProgressIdentifier identifier, void* pUserData)
-	{
-		bool ret;
-		(*pProgressCallback)(&ret, progressStep / 100.0f, eLib3MFProgressIdentifier(identifier), pUserData);
-		return ret;
-	};
-	m_pReader->SetProgressCallback(lambdaCallback, pUserData);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CReader::AddRelationToRead (const std::string & sRelationShipType)
+void CReader::SetStrictModeActive(const bool bStrictModeActive)
 {
-	reader().addRelationToRead(sRelationShipType);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CReader::RemoveRelationToRead (const std::string & sRelationShipType)
+bool CReader::GetStrictModeActive()
 {
-	reader().removeRelationToRead(sRelationShipType);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CReader::SetStrictModeActive (const bool bStrictModeActive)
+std::string CReader::GetWarning(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode)
 {
-	if (bStrictModeActive)
-		reader().warnings()->setCriticalWarningLevel(NMR::mrwInvalidOptionalValue);
-	else
-		reader().warnings()->setCriticalWarningLevel(NMR::mrwFatal);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-bool CReader::GetStrictModeActive ()
+Lib3MF_uint32 CReader::GetWarningCount()
 {
-	return reader().warnings()->getCriticalWarningLevel() == NMR::mrwInvalidOptionalValue;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-std::string CReader::GetWarning (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode)
+void CReader::AddKeyWrappingCallback(const std::string & sConsumerID, const Lib3MF::KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData)
 {
-	auto warning = reader().warnings()->getWarning(nIndex);
-	nErrorCode = warning->getErrorCode();
-	return warning->getMessage();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF_uint32 CReader::GetWarningCount ()
+void CReader::SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData)
 {
-	return reader().warnings()->getWarningCount();
-}
-
-void Lib3MF::Impl::CReader::AddKeyWrappingCallback(const std::string &sConsumerID, const Lib3MF::KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData) {
-	NMR::KeyWrappingDescriptor descriptor;
-	descriptor.m_sKekDecryptData.m_pUserData = pUserData;
-	descriptor.m_fnWrap =
-		[this, pTheCallback](
-			std::vector<NMR::nfByte> const & cipher,
-			std::vector<NMR::nfByte> & plain,
-			NMR::KeyWrappingContext & ctx) {
-
-		std::shared_ptr<IAccessRight> pAccessRight = std::make_shared<CAccessRight>(ctx.m_pAccessRight);
-		IBase * pBaseEntity(nullptr);
-		pBaseEntity = pAccessRight.get();
-		Lib3MF_AccessRight entityHandle = pBaseEntity;
-
-		//figure out the size of the key.
-		Lib3MF_uint64 needed = 0;
-		Lib3MF_uint64 result = 0;
-		(*pTheCallback)(entityHandle, cipher.size(), cipher.data(),
-			0, &needed, nullptr, ctx.m_pUserData, &result);
-		if (result == 0)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
-
-		if (needed > LIB3MF_READER_MAXKEYSIZE)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDKEYSIZE);
-
-		plain.resize((size_t)needed, 0);
-
-		result = 0;
-		(*pTheCallback)(entityHandle, cipher.size(), cipher.data(),
-			plain.size(), nullptr, plain.data(), ctx.m_pUserData, &result);
-		if (result == 0)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
-		return (NMR::nfUint64)result;
-	};
-	reader().secureContext()->addKekCtx(sConsumerID, descriptor);
-}
-void Lib3MF::Impl::CReader::SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData) {
-	NMR::ContentEncryptionDescriptor descriptor;
-	descriptor.m_sDekDecryptData.m_pUserData = pUserData;
-	descriptor.m_fnCrypt = [this, pTheCallback](NMR::nfUint64 size, NMR::nfByte const * cipher, NMR::nfByte * plain, NMR::ContentEncryptionContext & ctx) {
-		std::shared_ptr<CContentEncryptionParams> pCekParams = std::make_shared<CContentEncryptionParams>(ctx.m_sParams);
-		IBase * pBaseEntity(nullptr);
-		pBaseEntity = pCekParams.get();
-		Lib3MF_ContentEncryptionParams entityHandle = pBaseEntity;
-		Lib3MF_uint64 result = 0;
-		(*pTheCallback)(entityHandle, (Lib3MF_uint64)size, cipher, (Lib3MF_uint64)size, nullptr, plain, ctx.m_pUserData, &result);
-		if (result == 0)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
-		return (NMR::nfUint64)result;
-	};
-	reader().secureContext()->setDekCtx(descriptor);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

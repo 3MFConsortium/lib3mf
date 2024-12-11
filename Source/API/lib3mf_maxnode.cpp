@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -29,19 +29,14 @@ Abstract: This is a stub class definition of CMaxNode
 */
 
 #include "lib3mf_maxnode.hpp"
-
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
+
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CMaxNode
+ Class definition of CMaxNode 
 **************************************************************************************************************************/
 
-Lib3MF::Impl::CMaxNode::CMaxNode(NMR::PModelImplicitNode pImplicitNode)
-    : CTwoInputNode{pImplicitNode}
-{
-    CImplicitNode::m_pImplicitNode = pImplicitNode;
-}

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CTexture2DGroup
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelTexture2DGroup.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -64,31 +64,29 @@ protected:
 	/**
 	* Put protected members here.
 	*/
-	NMR::CModelTexture2DGroupResource& texture2DGroup();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CTexture2DGroup(NMR::PModelTexture2DGroupResource pResource);
 
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	ITexture2D * GetTexture2D();
+	Lib3MF_uint32 GetCount() override;
 
-	Lib3MF_uint32 GetCount ();
+	void GetAllPropertyIDs(Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer) override;
 
-	void GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer);
+	Lib3MF_uint32 AddTex2Coord(const Lib3MF::sTex2Coord UVCoordinate) override;
 
-	Lib3MF_uint32 AddTex2Coord (const sLib3MFTex2Coord UVCoordinate);
+	Lib3MF::sTex2Coord GetTex2Coord(const Lib3MF_uint32 nPropertyID) override;
 
-	sLib3MFTex2Coord GetTex2Coord (const Lib3MF_uint32 nPropertyID);
+	void RemoveTex2Coord(const Lib3MF_uint32 nPropertyID) override;
 
-	void RemoveTex2Coord(const Lib3MF_uint32 nPropertyID);
+	ITexture2D * GetTexture2D() override;
 
 };
 

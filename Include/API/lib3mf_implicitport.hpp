@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -28,6 +28,7 @@ Abstract: This is the class declaration of CImplicitPort
 
 */
 
+
 #ifndef __LIB3MF_IMPLICITPORT
 #define __LIB3MF_IMPLICITPORT
 
@@ -41,94 +42,59 @@ Abstract: This is the class declaration of CImplicitPort
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelImplicitPort.h"
 
-namespace Lib3MF
-{
-    namespace Impl
-    {
 
-        /*************************************************************************************************************************
-         Class declaration of CImplicitPort
-        **************************************************************************************************************************/
+namespace Lib3MF {
+namespace Impl {
 
-        class CImplicitPort : public virtual IImplicitPort, public virtual CBase
-        {
-          private:
-            /**
-             * Put private members here.
-             */
-            NMR::PModelImplicitPort m_pImplicitPort;
 
-          protected:
-            /**
-             * Put protected members here.
-             */
+/*************************************************************************************************************************
+ Class declaration of CImplicitPort 
+**************************************************************************************************************************/
 
-          public:
-            CImplicitPort(NMR::PModelImplicitPort pImplicitPort);
-            /**
-             * Put additional public members here. They will not be visible in the external API.
-             */
+class CImplicitPort : public virtual IImplicitPort, public virtual CBase {
+private:
 
-            /**
-             * Public member functions to implement.
-             */
+	/**
+	* Put private members here.
+	*/
 
-            /**
-             * IImplicitPort::GetIdentifier - Retrieves the identifier of the port
-             * @return the identifier
-             */
-            std::string GetIdentifier() override;
+protected:
 
-            /**
-             * IImplicitPort::SetIdentifier - Sets the identifier of the port
-             * @param[in] sIdentifier - the identifier
-             */
-            void SetIdentifier(const std::string & sIdentifier) override;
+	/**
+	* Put protected members here.
+	*/
 
-            /**
-             * IImplicitPort::GetDisplayName - Retrieves the display name of the port
-             * @return the display name
-             */
-            std::string GetDisplayName() override;
+public:
 
-            /**
-             * IImplicitPort::SetDisplayName - Sets the display name of the port
-             * @param[in] sDisplayName - the display name
-             */
-            void SetDisplayName(const std::string & sDisplayName) override;
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
 
-            /**
-             * IImplicitPort::SetType - Sets the type of the port
-             * @param[in] eImplicitPortType - the type
-             */
-            void SetType(const Lib3MF::eImplicitPortType eImplicitPortType) override;
 
-            /**
-             * IImplicitPort::GetType - Retrieves the type of the port
-             * @return the type
-             */
-            Lib3MF::eImplicitPortType GetType() override;
+	/**
+	* Public member functions to implement.
+	*/
 
-            /**
-             * IImplicitPort::GetReference - Retrieves the reference of the port, only used for
-             * input ports
-             * @return the reference
-             */
-            std::string GetReference() override;
+	std::string GetIdentifier() override;
 
-            /**
-             * IImplicitPort::SetReference - Sets the reference of the port, only used for input
-             * ports
-             * @param[in] sReference - the reference
-             */
-            void SetReference(const std::string & sReference) override;
+	void SetIdentifier(const std::string & sIdentifier) override;
 
-            NMR::PModelImplicitPort getPort();
-        };
+	std::string GetDisplayName() override;
 
-    } // namespace Impl
+	void SetDisplayName(const std::string & sDisplayName) override;
+
+	void SetType(const Lib3MF::eImplicitPortType eImplicitPortType) override;
+
+	Lib3MF::eImplicitPortType GetType() override;
+
+	std::string GetReference() override;
+
+	void SetReference(const std::string & sReference) override;
+
+};
+
+} // namespace Impl
 } // namespace Lib3MF
 
 #ifdef _MSC_VER

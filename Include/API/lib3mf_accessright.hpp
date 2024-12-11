@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -29,10 +29,12 @@ Abstract: This is the class declaration of CAccessRight
 */
 
 
-#ifndef __LIB3MF_DECRYPTRIGHT
-#define __LIB3MF_DECRYPTRIGHT
+#ifndef __LIB3MF_ACCESSRIGHT
+#define __LIB3MF_ACCESSRIGHT
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -40,35 +42,54 @@ Abstract: This is the class declaration of CAccessRight
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_KeyStoreAccessRight.h"
+
+
 namespace Lib3MF {
-	namespace Impl {
+namespace Impl {
 
 
-		/*************************************************************************************************************************
-		Class declaration of CAccessRight
-		**************************************************************************************************************************/
+/*************************************************************************************************************************
+ Class declaration of CAccessRight 
+**************************************************************************************************************************/
 
-		class CAccessRight : public virtual IAccessRight, public virtual CBase {
-		private:
-			NMR::PKeyStoreAccessRight m_pAccessRight;
-		public:
-			CAccessRight(NMR::PKeyStoreAccessRight ar);
+class CAccessRight : public virtual IAccessRight, public virtual CBase {
+private:
 
-			// Inherited via IAccessRight
-			IConsumer * GetConsumer() override;
+	/**
+	* Put private members here.
+	*/
 
-			Lib3MF::eWrappingAlgorithm GetWrappingAlgorithm() override;
+protected:
 
-			Lib3MF::eMgfAlgorithm GetMgfAlgorithm() override;
+	/**
+	* Put protected members here.
+	*/
 
-			Lib3MF::eDigestMethod GetDigestMethod() override;
+public:
 
-			// Other access methods
-			NMR::PKeyStoreAccessRight accessRight() const;
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
 
 
-		};
-	}
-}
+	/**
+	* Public member functions to implement.
+	*/
+
+	IConsumer * GetConsumer() override;
+
+	Lib3MF::eWrappingAlgorithm GetWrappingAlgorithm() override;
+
+	Lib3MF::eMgfAlgorithm GetMgfAlgorithm() override;
+
+	Lib3MF::eDigestMethod GetDigestMethod() override;
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#ifdef _MSC_VER
+#pragma warning(pop)
 #endif
+#endif // __LIB3MF_ACCESSRIGHT

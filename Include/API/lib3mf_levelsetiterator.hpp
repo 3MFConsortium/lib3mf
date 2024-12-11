@@ -29,8 +29,8 @@ Abstract: This is the class declaration of CLevelSetIterator
 */
 
 
-#ifndef __LIB3MF_BOUNDARYSHAPEITERATOR
-#define __LIB3MF_BOUNDARYSHAPEITERATOR
+#ifndef __LIB3MF_LEVELSETITERATOR
+#define __LIB3MF_LEVELSETITERATOR
 
 #include "lib3mf_interfaces.hpp"
 
@@ -76,10 +76,6 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* ILevelSetIterator::GetCurrentLevelSet - Returns the LevelSet the iterator points at.
-	* @return returns the MeshObject instance.
-	*/
 	ILevelSet * GetCurrentLevelSet() override;
 
 };
@@ -90,4 +86,4 @@ public:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_BOUNDARYSHAPEITERATOR
+#endif // __LIB3MF_LEVELSETITERATOR

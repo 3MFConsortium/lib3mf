@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -66,7 +66,7 @@ protected:
 	*/
 
 public:
-	CConstMatNode(NMR::PModelImplicitNode pImplicitNode);
+
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
@@ -76,22 +76,10 @@ public:
 	* Public member functions to implement.
 	*/
 
-	/**
-	* IConstMatNode::SetMatrix - Sets the matrix value of the node
-	* @param[in] Value - the value
-	*/
 	void SetMatrix(const Lib3MF::sMatrix4x4 Value) override;
 
-	/**
-	* IConstMatNode::GetMatrix - Retrieves the matrix value of the node
-	* @return the matrix
-	*/
 	Lib3MF::sMatrix4x4 GetMatrix() override;
 
-	/**
-	* IConstMatNode::GetOutputMatrix - Retrieves the output
-	* @return the output
-	*/
 	IImplicitPort * GetOutputMatrix() override;
 
 };

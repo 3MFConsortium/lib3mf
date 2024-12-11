@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,15 +33,16 @@ Abstract: This is the class declaration of CBuildItemIterator
 #define __LIB3MF_BUILDITEMITERATOR
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
-
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelBuildItem.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -57,8 +58,6 @@ private:
 	/**
 	* Put private members here.
 	*/
-	std::vector<NMR::PModelBuildItem> m_pBuildItems;
-	Lib3MF_int32 m_nCurrentIndex;
 
 protected:
 
@@ -71,28 +70,26 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CBuildItemIterator();
 
-	void addBuildItem(NMR::PModelBuildItem pBuildItem);
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	bool MoveNext ();
+	bool MoveNext() override;
 
-	bool MovePrevious ();
+	bool MovePrevious() override;
 
-	IBuildItem * GetCurrent ();
+	IBuildItem * GetCurrent() override;
 
-	IBuildItemIterator * Clone ();
+	IBuildItemIterator * Clone() override;
 
-	Lib3MF_uint64 Count();
+	Lib3MF_uint64 Count() override;
 
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,7 +42,6 @@ Abstract: This is the class declaration of CComponentsObject
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelComponentsObject.h"
 
 
 namespace Lib3MF {
@@ -62,34 +61,33 @@ private:
 
 protected:
 
-	NMR::CModelComponentsObject * getComponentsObject();
+	/**
+	* Put protected members here.
+	*/
 
 public:
+
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CComponentsObject(NMR::PModelResource pResource);
 
-	static IComponentsObject* fnCreateComponentsObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	IComponent * AddComponent (IObject* pObjectResource, const sLib3MFTransform Transform);
+	IComponent * AddComponent(IObject* pObjectResource, const Lib3MF::sTransform Transform) override;
 
-	IComponent * GetComponent (const Lib3MF_uint32 nIndex);
+	IComponent * GetComponent(const Lib3MF_uint32 nIndex) override;
 
-	Lib3MF_uint32 GetComponentCount ();
+	Lib3MF_uint32 GetComponentCount() override;
 
-	bool IsMeshObject();
-
-	bool IsComponentsObject();
-
-    bool IsLevelSetObject() override;
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 #endif // __LIB3MF_COMPONENTSOBJECT

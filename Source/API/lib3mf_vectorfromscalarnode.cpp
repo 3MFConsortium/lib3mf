@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -40,9 +40,3 @@ using namespace Lib3MF::Impl;
  Class definition of CVectorFromScalarNode 
 **************************************************************************************************************************/
 
-CVectorFromScalarNode::
-	CVectorFromScalarNode(NMR::PModelImplicitNode pImplicitNode)
-	: CImplicitNode{pImplicitNode}
-{
-	CImplicitNode::m_pImplicitNode = pImplicitNode;
-}

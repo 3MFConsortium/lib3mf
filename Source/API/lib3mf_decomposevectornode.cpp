@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -42,27 +42,21 @@ using namespace Lib3MF::Impl;
 
 IImplicitPort * CDecomposeVectorNode::GetInputA()
 {
-	return FindInput("A");
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * CDecomposeVectorNode::GetOutputX()
 {
-	return FindOutput("x");
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * CDecomposeVectorNode::GetOutputY()
 {
-	return FindOutput("y");
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * CDecomposeVectorNode::GetOutputZ()
 {
-	return FindOutput("z");
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF::Impl::CDecomposeVectorNode::CDecomposeVectorNode(
-    NMR::PModelImplicitNode pImplicitNode)
-	: CImplicitNode{pImplicitNode}
-{
-	CImplicitNode::m_pImplicitNode = pImplicitNode;
-}

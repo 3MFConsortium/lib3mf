@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -32,16 +32,16 @@ Abstract: This is a stub class definition of CMeshObjectIterator
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_meshobject.hpp"
+
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CObjectIterator 
+ Class definition of CMeshObjectIterator 
 **************************************************************************************************************************/
 
-IMeshObject * CMeshObjectIterator::GetCurrentMeshObject ()
+IMeshObject * CMeshObjectIterator::GetCurrentMeshObject()
 {
-	return CMeshObject::fnCreateMeshObjectFromModelResource(GetCurrentResource(), true);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

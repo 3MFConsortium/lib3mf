@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2023 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -40,25 +40,18 @@ using namespace Lib3MF::Impl;
  Class definition of CConstantNode 
 **************************************************************************************************************************/
 
-Lib3MF::Impl::CConstantNode::CConstantNode(
-    NMR::PModelImplicitNode pImplicitNode)
-	: CImplicitNode{pImplicitNode}
-{
-	CImplicitNode::m_pImplicitNode = pImplicitNode;
-}
-
 void CConstantNode::SetConstant(const Lib3MF_double dValue)
 {
-	m_pImplicitNode->setConstant(dValue);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF_double CConstantNode::GetConstant()
 {
-	return m_pImplicitNode->getConstant();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImplicitPort * CConstantNode::GetOutputValue()
 {
-	return FindOutputOrThrow(NMR::OutputNames::value);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -33,15 +33,16 @@ Abstract: This is the class declaration of CBuildItem
 #define __LIB3MF_BUILDITEM
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
-
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelBuildItem.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -57,53 +58,50 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelBuildItem m_pBuildItem;
 
 protected:
 
 	/**
 	* Put protected members here.
 	*/
-	NMR::CModelBuildItem& buildItem();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CBuildItem(NMR::PModelBuildItem pBuildItem);
 
-	Lib3MF_uint32 GetHandle();
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	IObject * GetObjectResource ();
+	IObject * GetObjectResource() override;
 
-	std::string GetUUID (bool & bHasUUID);
+	std::string GetUUID(bool & bHasUUID) override;
 
-	void SetUUID (const std::string & sUUID);
+	void SetUUID(const std::string & sUUID) override;
 
-	Lib3MF_uint32 GetObjectResourceID ();
+	Lib3MF_uint32 GetObjectResourceID() override;
 
-	bool HasObjectTransform ();
+	bool HasObjectTransform() override;
 
-	sLib3MFTransform GetObjectTransform ();
+	Lib3MF::sTransform GetObjectTransform() override;
 
-	void SetObjectTransform (const sLib3MFTransform Transform);
+	void SetObjectTransform(const Lib3MF::sTransform Transform) override;
 
-	std::string GetPartNumber ();
+	std::string GetPartNumber() override;
 
-	void SetPartNumber (const std::string & sSetPartnumber);
+	void SetPartNumber(const std::string & sSetPartnumber) override;
 
-	IMetaDataGroup * GetMetaDataGroup ();
+	IMetaDataGroup * GetMetaDataGroup() override;
 
-	Lib3MF::sBox GetOutbox();
+	Lib3MF::sBox GetOutbox() override;
+
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)

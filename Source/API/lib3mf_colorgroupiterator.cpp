@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2024 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -32,7 +32,7 @@ Abstract: This is a stub class definition of CColorGroupIterator
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_colorgroup.hpp"
+
 
 using namespace Lib3MF::Impl;
 
@@ -40,13 +40,8 @@ using namespace Lib3MF::Impl;
  Class definition of CColorGroupIterator 
 **************************************************************************************************************************/
 
-IColorGroup * CColorGroupIterator::GetCurrentColorGroup ()
+IColorGroup * CColorGroupIterator::GetCurrentColorGroup()
 {
-	// Create specific API class
-	return new CColorGroup(std::dynamic_pointer_cast<NMR::CModelColorGroupResource>(GetCurrentResource()));
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IResource * CColorGroupIterator::GetCurrent()
-{
-	return GetCurrentColorGroup();
-}
