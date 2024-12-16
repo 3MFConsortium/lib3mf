@@ -126,3 +126,8 @@ bool CComponentsObject::IsComponentsObject()
 	return true;
 }
 
+bool CComponentsObject::IsLevelSetObject()
+{
+	return false;
+}
+

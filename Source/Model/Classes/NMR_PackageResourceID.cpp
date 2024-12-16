@@ -119,6 +119,13 @@ namespace NMR {
 
 	PPackageModelPath CResourceHandler::findPackageModelPath(std::string sPath)
 	{
+		if (!sPath.empty())
+		{
+			if (sPath[0] != '/')
+			{
+				return nullptr;
+			}
+		}
 		auto it = m_PathToModelPath.find(sPath);
 		if (it != m_PathToModelPath.end())
 		{

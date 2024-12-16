@@ -36,6 +36,7 @@ Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Mesh.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_MetaDataGroup.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Components.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_LevelSet.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -236,7 +237,8 @@ namespace NMR {
 				// Create Empty Mesh
 				PMesh pMesh = std::make_shared<CMesh>();
 				// Create Mesh Object
-				m_pObject = std::make_shared<CModelMeshObject>(m_nID, m_pModel, pMesh);
+				PModelMeshObject meshObject = std::make_shared<CModelMeshObject>(m_nID, m_pModel, pMesh);
+				m_pObject = meshObject;
 				// Set Object Type (might fail, if string is invalid)
 				if (m_bHasType) {
 					if (!m_pObject->setObjectTypeString(m_sType, false))
@@ -244,7 +246,7 @@ namespace NMR {
 				}
 				
 				// Read Mesh
-				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(),
+				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, meshObject,
 					m_pWarnings, m_pProgressMonitor, m_pObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
 
@@ -316,7 +318,28 @@ namespace NMR {
 
 		}
 
-	}
+ 		if(strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0)	//Seems really wiered that object types defined by extensions have to be handled here
+		{
+			if(strcmp(pChildName, XML_3MF_ELEMENT_BOUNDARY_SHAPE) == 0)
+			{
+				auto levelSet = std::make_shared<CModelLevelSetObject>(m_nID, m_pModel);
+
+				PModelReaderNode pXMLNode =
+					std::make_shared<CModelReaderNode_LevelSet>(
+						m_pModel, levelSet, m_pWarnings, m_pProgressMonitor);
+				pXMLNode->parseXML(pXMLReader);
+				m_pObject = levelSet;
+				m_pModel->addResource(m_pObject);
+
+			}
+			else
+			{
+				m_pWarnings->addException(
+					CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT),
+					mrwInvalidOptionalValue);
+			}
+		}
+    }
 
 	// Create the object-level property from m_nObjectLevelPropertyID, if defined
 	void CModelReaderNode100_Object::createDefaultProperties()
@@ -422,5 +445,4 @@ namespace NMR {
 			}
 		}
 	}
-
 }

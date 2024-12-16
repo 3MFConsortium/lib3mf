@@ -92,6 +92,8 @@ public:
 
 	virtual bool IsComponentsObject ();
 
+	virtual bool IsLevelSetObject ();
+
 	virtual IMeshObject * AsMeshObject();
 
 	virtual IComponentsObject * AsComponentsObject();

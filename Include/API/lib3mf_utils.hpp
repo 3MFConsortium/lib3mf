@@ -36,6 +36,7 @@ Abstract: This file contains utilties used in the API of lib3mf
 
 // Include custom headers here.
 #include "Common/Math/NMR_Matrix.h" 
+#include "Model/Classes/NMR_ModelTypes.h" 
 #include "Common/NMR_SecureContentTypes.h"
 
 namespace Lib3MF {

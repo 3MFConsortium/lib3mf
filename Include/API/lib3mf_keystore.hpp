@@ -93,23 +93,29 @@ namespace Lib3MF {
 
 			virtual Lib3MF_uint64 GetResourceDataGroupCount() override;
 
-			virtual IResourceDataGroup * GetResourceDataGroup(const Lib3MF_uint64 nResourceDataIndex) override;
+			IResourceDataGroup * GetResourceDataGroup(const Lib3MF_uint64 nResourceDataIndex) override;
 
-			virtual IResourceDataGroup * AddResourceDataGroup() override;
+			IResourceDataGroup * AddResourceDataGroup() override;
 
-			virtual void RemoveResourceDataGroup(IResourceDataGroup * pTheResourceDataGroup) override;
+			void RemoveResourceDataGroup(IResourceDataGroup * pTheResourceDataGroup) override;
 
-			virtual Lib3MF::Impl::IResourceDataGroup * FindResourceDataGroup(Lib3MF::Impl::IPackagePart *pPartPath);
+			Lib3MF::Impl::IResourceDataGroup * FindResourceDataGroup(Lib3MF::Impl::IPackagePart *pPartPath) override;
 
-			virtual IResourceData * AddResourceData(IResourceDataGroup* pResourceDataGroup, IPackagePart* pPartPath, const Lib3MF::eEncryptionAlgorithm eAlgorithm, const Lib3MF::eCompression eCompression, const Lib3MF_uint64 nAdditionalAuthenticationDataBufferSize, const Lib3MF_uint8 * pAdditionalAuthenticationDataBuffer);
+			IResourceData * AddResourceData(
+				IResourceDataGroup * pResourceDataGroup,
+				IPackagePart * pPartPath,
+				const Lib3MF::eEncryptionAlgorithm eAlgorithm,
+				const Lib3MF::eCompression eCompression,
+				const Lib3MF_uint64 nAdditionalAuthenticationDataBufferSize,
+				const Lib3MF_uint8 * pAdditionalAuthenticationDataBuffer) override;
 
-			virtual void RemoveResourceData(Lib3MF::Impl::IResourceData *pResourceData);
+			void RemoveResourceData(Lib3MF::Impl::IResourceData *pResourceData) override;
 
-			virtual Lib3MF_uint64 GetResourceDataCount();
+			Lib3MF_uint64 GetResourceDataCount() override;
 
-			virtual Lib3MF::Impl::IResourceData * GetResourceData(const Lib3MF_uint64 nResourceDataIndex);
+			Lib3MF::Impl::IResourceData * GetResourceData(const Lib3MF_uint64 nResourceDataIndex) override;
 
-			virtual IResourceData * FindResourceData(IPackagePart * pResourcePath) override;
+			IResourceData * FindResourceData(IPackagePart * pResourcePath) override;
 
 		};
 

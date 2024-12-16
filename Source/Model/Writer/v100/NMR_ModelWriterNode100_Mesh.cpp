@@ -51,7 +51,7 @@ This is the class for exporting the 3mf mesh node.
 namespace NMR {
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
+		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension, _In_ nfBool bWriteVolumetricExtension)
 		:CModelWriterNode_ModelBase(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor), m_nPosAfterDecPoint(nPosAfterDecPoint), m_nPutDoubleFactor((nfInt64)(pow(10, CModelWriterNode100_Mesh::m_nPosAfterDecPoint)))
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
@@ -60,6 +60,7 @@ namespace NMR {
 
 		m_bWriteMaterialExtension = bWriteMaterialExtension;
 		m_bWriteBeamLatticeExtension = bWriteBeamLatticeExtension;
+		m_bWriteVolumetricExtension = bWriteVolumetricExtension;
 
 		m_pModelMeshObject = pModelMeshObject;
 		m_pPropertyIndexMapping = pPropertyIndexMapping;
@@ -130,6 +131,19 @@ namespace NMR {
 		writeStartElement(XML_3MF_ELEMENT_MESH);
 
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENODES);
+
+		//	Write id of referenced volume data, if any
+		if (m_bWriteVolumetricExtension) {
+			auto pVolumeData = m_pModelMeshObject->getVolumeData();
+			if (pVolumeData) {
+				PPackageResourceID pID = pVolumeData->getPackageResourceID();
+				if (pID->getPath() != m_pModel->currentPath())
+					throw CNMRException(NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL);
+				writePrefixedIntAttribute(XML_3MF_NAMESPACEPREFIX_VOLUMETRIC, XML_3MF_ATTRIBUTE_MESH_VOLUMEDATA, pID->getModelResourceID());
+			}
+		}
+		
+
 		// Write Vertices
 		writeStartElement(XML_3MF_ELEMENT_VERTICES);
 		for (nNodeIndex = 0; nNodeIndex < nNodeCount; nNodeIndex++) {
