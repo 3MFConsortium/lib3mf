@@ -540,27 +540,28 @@ typedef PModel PLib3MFModel;
 
 template<class T> class classParam {
 private:
-    std::shared_ptr<T> m_sharedPtr;
-    const T* m_ptr;
+	std::shared_ptr<T> m_sharedPtr;
+	const T* m_ptr;
 
 public:
-    classParam(const T* ptr)
-        : m_ptr(ptr)
-    {
-    }
+	classParam(const T* ptr)
+		: m_ptr(ptr)
+	{
+	}
 
-    classParam(std::shared_ptr<T> sharedPtr)
-        : m_sharedPtr(sharedPtr), m_ptr(sharedPtr.get())
-    {
-    }
+	classParam(std::shared_ptr <T> sharedPtr)
+		: m_sharedPtr(sharedPtr), m_ptr(sharedPtr.get())
+	{
+	}
 
-    Lib3MFHandle GetHandle()
-    {
-        if (m_ptr != nullptr)
-            return m_ptr->handle();
-        return nullptr;
-    }
+	Lib3MFHandle GetHandle()
+	{
+		if (m_ptr != nullptr)
+			return m_ptr->handle();
+		return (Lib3MFHandle)nullptr;
+	}
 };
+
 
 /*************************************************************************************************************************
  Class ELib3MFException 
@@ -3607,7 +3608,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	inline PModel CWrapper::CreateModel()
 	{
-		Lib3MFHandle hModel = nullptr;
+		Lib3MFHandle hModel = (Lib3MFHandle)nullptr;
 		CheckError(nullptr,lib3mf_createmodel(&hModel));
 		
 		if (!hModel) {
@@ -3804,7 +3805,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		return resultTransform;
 	}
-	
+
 	inline void CWrapper::CheckError(CBase * pBaseClass, Lib3MFResult nResult)
 	{
 		if (nResult != 0) {
@@ -4004,7 +4005,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	void CReader::ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer)
 	{
-		CheckError(lib3mf_reader_readfrombuffer(m_pHandle, (Lib3MF_uint64)BufferBuffer.size(), BufferBuffer.data()));
+		Lib3MF_uint64 nBufferSize = BufferBuffer.size();
+		CheckError(lib3mf_reader_readfrombuffer(m_pHandle, nBufferSize, BufferBuffer.data()));
 	}
 	
 	/**
@@ -4180,7 +4182,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PPackagePart CResource::PackagePart()
 	{
-		Lib3MFHandle hPackagePart = nullptr;
+		Lib3MFHandle hPackagePart = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_resource_packagepart(m_pHandle, &hPackagePart));
 		
 		if (!hPackagePart) {
@@ -4245,7 +4247,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PResource CResourceIterator::GetCurrent()
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_resourceiterator_getcurrent(m_pHandle, &hResource));
 		
 		if (!hResource) {
@@ -4260,7 +4262,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PResourceIterator CResourceIterator::Clone()
 	{
-		Lib3MFHandle hOutResourceIterator = nullptr;
+		Lib3MFHandle hOutResourceIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_resourceiterator_clone(m_pHandle, &hOutResourceIterator));
 		
 		if (!hOutResourceIterator) {
@@ -4291,7 +4293,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PSliceStack CSliceStackIterator::GetCurrentSliceStack()
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_slicestackiterator_getcurrentslicestack(m_pHandle, &hResource));
 		
 		if (!hResource) {
@@ -4310,7 +4312,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PObject CObjectIterator::GetCurrentObject()
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_objectiterator_getcurrentobject(m_pHandle, &hResource));
 		
 		if (!hResource) {
@@ -4329,7 +4331,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMeshObject CMeshObjectIterator::GetCurrentMeshObject()
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_meshobjectiterator_getcurrentmeshobject(m_pHandle, &hResource));
 		
 		if (!hResource) {
@@ -4348,7 +4350,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PComponentsObject CComponentsObjectIterator::GetCurrentComponentsObject()
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_componentsobjectiterator_getcurrentcomponentsobject(m_pHandle, &hResource));
 		
 		if (!hResource) {
@@ -4367,7 +4369,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PTexture2D CTexture2DIterator::GetCurrentTexture2D()
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_texture2diterator_getcurrenttexture2d(m_pHandle, &hResource));
 		
 		if (!hResource) {
@@ -4386,7 +4388,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PBaseMaterialGroup CBaseMaterialGroupIterator::GetCurrentBaseMaterialGroup()
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_basematerialgroupiterator_getcurrentbasematerialgroup(m_pHandle, &hResource));
 		
 		if (!hResource) {
@@ -4405,7 +4407,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PColorGroup CColorGroupIterator::GetCurrentColorGroup()
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_colorgroupiterator_getcurrentcolorgroup(m_pHandle, &hResource));
 		
 		if (!hResource) {
@@ -4424,7 +4426,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PTexture2DGroup CTexture2DGroupIterator::GetCurrentTexture2DGroup()
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_texture2dgroupiterator_getcurrenttexture2dgroup(m_pHandle, &hResource));
 		
 		if (!hResource) {
@@ -4443,7 +4445,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PCompositeMaterials CCompositeMaterialsIterator::GetCurrentCompositeMaterials()
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_compositematerialsiterator_getcurrentcompositematerials(m_pHandle, &hResource));
 		
 		if (!hResource) {
@@ -4462,7 +4464,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMultiPropertyGroup CMultiPropertyGroupIterator::GetCurrentMultiPropertyGroup()
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_multipropertygroupiterator_getcurrentmultipropertygroup(m_pHandle, &hResource));
 		
 		if (!hResource) {
@@ -4481,7 +4483,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImage3D CImage3DIterator::GetCurrentImage3D()
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_image3diterator_getcurrentimage3d(m_pHandle, &hResource));
 		
 		if (!hResource) {
@@ -4500,7 +4502,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PFunction CFunctionIterator::GetCurrentFunction()
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_functioniterator_getcurrentfunction(m_pHandle, &hResource));
 		
 		if (!hResource) {
@@ -4519,7 +4521,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PLevelSet CLevelSetIterator::GetCurrentLevelSet()
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_levelsetiterator_getcurrentlevelset(m_pHandle, &hResource));
 		
 		if (!hResource) {
@@ -4687,7 +4689,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMetaData CMetaDataGroup::GetMetaData(const Lib3MF_uint32 nIndex)
 	{
-		Lib3MFHandle hMetaData = nullptr;
+		Lib3MFHandle hMetaData = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_metadatagroup_getmetadata(m_pHandle, nIndex, &hMetaData));
 		
 		if (!hMetaData) {
@@ -4704,7 +4706,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMetaData CMetaDataGroup::GetMetaDataByKey(const std::string & sNameSpace, const std::string & sName)
 	{
-		Lib3MFHandle hMetaData = nullptr;
+		Lib3MFHandle hMetaData = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_metadatagroup_getmetadatabykey(m_pHandle, sNameSpace.c_str(), sName.c_str(), &hMetaData));
 		
 		if (!hMetaData) {
@@ -4743,7 +4745,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMetaData CMetaDataGroup::AddMetaData(const std::string & sNameSpace, const std::string & sName, const std::string & sValue, const std::string & sType, const bool bMustPreserve)
 	{
-		Lib3MFHandle hMetaData = nullptr;
+		Lib3MFHandle hMetaData = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_metadatagroup_addmetadata(m_pHandle, sNameSpace.c_str(), sName.c_str(), sValue.c_str(), sType.c_str(), bMustPreserve, &hMetaData));
 		
 		if (!hMetaData) {
@@ -4889,7 +4891,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PAttachment CObject::GetThumbnailAttachment()
 	{
-		Lib3MFHandle hAttachment = nullptr;
+		Lib3MFHandle hAttachment = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_object_getthumbnailattachment(m_pHandle, &hAttachment));
 		
 		if (hAttachment) {
@@ -4950,7 +4952,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMetaDataGroup CObject::GetMetaDataGroup()
 	{
-		Lib3MFHandle hMetaDataGroup = nullptr;
+		Lib3MFHandle hMetaDataGroup = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_object_getmetadatagroup(m_pHandle, &hMetaDataGroup));
 		
 		if (!hMetaDataGroup) {
@@ -5007,7 +5009,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PSliceStack CObject::GetSliceStack()
 	{
-		Lib3MFHandle hSliceStackInstance = nullptr;
+		Lib3MFHandle hSliceStackInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_object_getslicestack(m_pHandle, &hSliceStackInstance));
 		
 		if (!hSliceStackInstance) {
@@ -5202,7 +5204,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	void CMeshObject::SetAllTriangleProperties(const CInputVector<sTriangleProperties> & PropertiesArrayBuffer)
 	{
-		CheckError(lib3mf_meshobject_setalltriangleproperties(m_pHandle, (Lib3MF_uint64)PropertiesArrayBuffer.size(), PropertiesArrayBuffer.data()));
+		Lib3MF_uint64 nPropertiesArraySize = PropertiesArrayBuffer.size();
+		CheckError(lib3mf_meshobject_setalltriangleproperties(m_pHandle, nPropertiesArraySize, PropertiesArrayBuffer.data()));
 	}
 	
 	/**
@@ -5233,7 +5236,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	void CMeshObject::SetGeometry(const CInputVector<sPosition> & VerticesBuffer, const CInputVector<sTriangle> & IndicesBuffer)
 	{
-		CheckError(lib3mf_meshobject_setgeometry(m_pHandle, (Lib3MF_uint64)VerticesBuffer.size(), VerticesBuffer.data(), (Lib3MF_uint64)IndicesBuffer.size(), IndicesBuffer.data()));
+		Lib3MF_uint64 nVerticesSize = VerticesBuffer.size();
+		Lib3MF_uint64 nIndicesSize = IndicesBuffer.size();
+		CheckError(lib3mf_meshobject_setgeometry(m_pHandle, nVerticesSize, VerticesBuffer.data(), nIndicesSize, IndicesBuffer.data()));
 	}
 	
 	/**
@@ -5254,7 +5259,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PBeamLattice CMeshObject::BeamLattice()
 	{
-		Lib3MFHandle hTheBeamLattice = nullptr;
+		Lib3MFHandle hTheBeamLattice = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_meshobject_beamlattice(m_pHandle, &hTheBeamLattice));
 		
 		if (!hTheBeamLattice) {
@@ -5269,7 +5274,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PVolumeData CMeshObject::GetVolumeData()
 	{
-		Lib3MFHandle hTheVolumeData = nullptr;
+		Lib3MFHandle hTheVolumeData = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_meshobject_getvolumedata(m_pHandle, &hTheVolumeData));
 		
 		if (hTheVolumeData) {
@@ -5299,7 +5304,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PFunction CLevelSet::GetFunction()
 	{
-		Lib3MFHandle hTheFunction = nullptr;
+		Lib3MFHandle hTheFunction = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_levelset_getfunction(m_pHandle, &hTheFunction));
 		
 		if (hTheFunction) {
@@ -5443,7 +5448,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMeshObject CLevelSet::GetMesh()
 	{
-		Lib3MFHandle hTheMesh = nullptr;
+		Lib3MFHandle hTheMesh = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_levelset_getmesh(m_pHandle, &hTheMesh));
 		
 		if (hTheMesh) {
@@ -5459,7 +5464,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PVolumeData CLevelSet::GetVolumeData()
 	{
-		Lib3MFHandle hTheVolumeData = nullptr;
+		Lib3MFHandle hTheVolumeData = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_levelset_getvolumedata(m_pHandle, &hTheVolumeData));
 		
 		if (hTheVolumeData) {
@@ -5620,7 +5625,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	void CBeamLattice::SetBeams(const CInputVector<sBeam> & BeamInfoBuffer)
 	{
-		CheckError(lib3mf_beamlattice_setbeams(m_pHandle, (Lib3MF_uint64)BeamInfoBuffer.size(), BeamInfoBuffer.data()));
+		Lib3MF_uint64 nBeamInfoSize = BeamInfoBuffer.size();
+		CheckError(lib3mf_beamlattice_setbeams(m_pHandle, nBeamInfoSize, BeamInfoBuffer.data()));
 	}
 	
 	/**
@@ -5690,7 +5696,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	void CBeamLattice::SetBalls(const CInputVector<sBall> & BallInfoBuffer)
 	{
-		CheckError(lib3mf_beamlattice_setballs(m_pHandle, (Lib3MF_uint64)BallInfoBuffer.size(), BallInfoBuffer.data()));
+		Lib3MF_uint64 nBallInfoSize = BallInfoBuffer.size();
+		CheckError(lib3mf_beamlattice_setballs(m_pHandle, nBallInfoSize, BallInfoBuffer.data()));
 	}
 	
 	/**
@@ -5724,7 +5731,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PBeamSet CBeamLattice::AddBeamSet()
 	{
-		Lib3MFHandle hBeamSet = nullptr;
+		Lib3MFHandle hBeamSet = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_beamlattice_addbeamset(m_pHandle, &hBeamSet));
 		
 		if (!hBeamSet) {
@@ -5740,7 +5747,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PBeamSet CBeamLattice::GetBeamSet(const Lib3MF_uint32 nIndex)
 	{
-		Lib3MFHandle hBeamSet = nullptr;
+		Lib3MFHandle hBeamSet = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_beamlattice_getbeamset(m_pHandle, nIndex, &hBeamSet));
 		
 		if (!hBeamSet) {
@@ -5879,7 +5886,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PBaseMaterialGroup CVolumeDataComposite::GetBaseMaterialGroup()
 	{
-		Lib3MFHandle hBaseMaterialGroupInstance = nullptr;
+		Lib3MFHandle hBaseMaterialGroupInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_volumedatacomposite_getbasematerialgroup(m_pHandle, &hBaseMaterialGroupInstance));
 		
 		if (!hBaseMaterialGroupInstance) {
@@ -5917,7 +5924,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMaterialMapping CVolumeDataComposite::GetMaterialMapping(const Lib3MF_uint32 nIndex)
 	{
-		Lib3MFHandle hTheMaterialMapping = nullptr;
+		Lib3MFHandle hTheMaterialMapping = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_volumedatacomposite_getmaterialmapping(m_pHandle, nIndex, &hTheMaterialMapping));
 		
 		if (!hTheMaterialMapping) {
@@ -5933,7 +5940,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMaterialMapping CVolumeDataComposite::AddMaterialMapping(const sTransform & Transform)
 	{
-		Lib3MFHandle hTheMaterialMapping = nullptr;
+		Lib3MFHandle hTheMaterialMapping = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_volumedatacomposite_addmaterialmapping(m_pHandle, &Transform, &hTheMaterialMapping));
 		
 		if (!hTheMaterialMapping) {
@@ -6001,7 +6008,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PVolumeDataComposite CVolumeData::GetComposite()
 	{
-		Lib3MFHandle hTheCompositeData = nullptr;
+		Lib3MFHandle hTheCompositeData = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_volumedata_getcomposite(m_pHandle, &hTheCompositeData));
 		
 		if (hTheCompositeData) {
@@ -6017,7 +6024,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PVolumeDataComposite CVolumeData::CreateNewComposite()
 	{
-		Lib3MFHandle hTheCompositeData = nullptr;
+		Lib3MFHandle hTheCompositeData = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_volumedata_createnewcomposite(m_pHandle, &hTheCompositeData));
 		
 		if (!hTheCompositeData) {
@@ -6040,7 +6047,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PVolumeDataColor CVolumeData::GetColor()
 	{
-		Lib3MFHandle hTheColorData = nullptr;
+		Lib3MFHandle hTheColorData = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_volumedata_getcolor(m_pHandle, &hTheColorData));
 		
 		if (hTheColorData) {
@@ -6058,7 +6065,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	PVolumeDataColor CVolumeData::CreateNewColor(classParam<CFunction> pTheFunction)
 	{
 		Lib3MFHandle hTheFunction = pTheFunction.GetHandle();
-		Lib3MFHandle hTheColorData = nullptr;
+		Lib3MFHandle hTheColorData = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_volumedata_createnewcolor(m_pHandle, hTheFunction, &hTheColorData));
 		
 		if (!hTheColorData) {
@@ -6094,7 +6101,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PVolumeDataProperty CVolumeData::GetProperty(const Lib3MF_uint32 nIndex)
 	{
-		Lib3MFHandle hTheVolumeDataProperty = nullptr;
+		Lib3MFHandle hTheVolumeDataProperty = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_volumedata_getproperty(m_pHandle, nIndex, &hTheVolumeDataProperty));
 		
 		if (!hTheVolumeDataProperty) {
@@ -6112,7 +6119,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	PVolumeDataProperty CVolumeData::AddPropertyFromFunction(const std::string & sName, classParam<CFunction> pTheFunction)
 	{
 		Lib3MFHandle hTheFunction = pTheFunction.GetHandle();
-		Lib3MFHandle hTheVolumeDataProperty = nullptr;
+		Lib3MFHandle hTheVolumeDataProperty = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_volumedata_addpropertyfromfunction(m_pHandle, sName.c_str(), hTheFunction, &hTheVolumeDataProperty));
 		
 		if (!hTheVolumeDataProperty) {
@@ -6140,7 +6147,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PObject CComponent::GetObjectResource()
 	{
-		Lib3MFHandle hObjectResource = nullptr;
+		Lib3MFHandle hObjectResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_component_getobjectresource(m_pHandle, &hObjectResource));
 		
 		if (!hObjectResource) {
@@ -6232,7 +6239,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	PComponent CComponentsObject::AddComponent(classParam<CObject> pObjectResource, const sTransform & Transform)
 	{
 		Lib3MFHandle hObjectResource = pObjectResource.GetHandle();
-		Lib3MFHandle hComponentInstance = nullptr;
+		Lib3MFHandle hComponentInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_componentsobject_addcomponent(m_pHandle, hObjectResource, &Transform, &hComponentInstance));
 		
 		if (!hComponentInstance) {
@@ -6248,7 +6255,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PComponent CComponentsObject::GetComponent(const Lib3MF_uint32 nIndex)
 	{
-		Lib3MFHandle hComponentInstance = nullptr;
+		Lib3MFHandle hComponentInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_componentsobject_getcomponent(m_pHandle, nIndex, &hComponentInstance));
 		
 		if (!hComponentInstance) {
@@ -6339,7 +6346,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	void CBeamSet::SetReferences(const CInputVector<Lib3MF_uint32> & ReferencesBuffer)
 	{
-		CheckError(lib3mf_beamset_setreferences(m_pHandle, (Lib3MF_uint64)ReferencesBuffer.size(), ReferencesBuffer.data()));
+		Lib3MF_uint64 nReferencesSize = ReferencesBuffer.size();
+		CheckError(lib3mf_beamset_setreferences(m_pHandle, nReferencesSize, ReferencesBuffer.data()));
 	}
 	
 	/**
@@ -6373,7 +6381,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	void CBeamSet::SetBallReferences(const CInputVector<Lib3MF_uint32> & BallReferencesBuffer)
 	{
-		CheckError(lib3mf_beamset_setballreferences(m_pHandle, (Lib3MF_uint64)BallReferencesBuffer.size(), BallReferencesBuffer.data()));
+		Lib3MF_uint64 nBallReferencesSize = BallReferencesBuffer.size();
+		CheckError(lib3mf_beamset_setballreferences(m_pHandle, nBallReferencesSize, BallReferencesBuffer.data()));
 	}
 	
 	/**
@@ -6634,7 +6643,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PTexture2D CTexture2DGroup::GetTexture2D()
 	{
-		Lib3MFHandle hTexture2DInstance = nullptr;
+		Lib3MFHandle hTexture2DInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_texture2dgroup_gettexture2d(m_pHandle, &hTexture2DInstance));
 		
 		if (!hTexture2DInstance) {
@@ -6678,7 +6687,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PBaseMaterialGroup CCompositeMaterials::GetBaseMaterialGroup()
 	{
-		Lib3MFHandle hBaseMaterialGroupInstance = nullptr;
+		Lib3MFHandle hBaseMaterialGroupInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_compositematerials_getbasematerialgroup(m_pHandle, &hBaseMaterialGroupInstance));
 		
 		if (!hBaseMaterialGroupInstance) {
@@ -6694,8 +6703,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	Lib3MF_uint32 CCompositeMaterials::AddComposite(const CInputVector<sCompositeConstituent> & CompositeBuffer)
 	{
+		Lib3MF_uint64 nCompositeSize = CompositeBuffer.size();
 		Lib3MF_uint32 resultPropertyID = 0;
-		CheckError(lib3mf_compositematerials_addcomposite(m_pHandle, (Lib3MF_uint64)CompositeBuffer.size(), CompositeBuffer.data(), &resultPropertyID));
+		CheckError(lib3mf_compositematerials_addcomposite(m_pHandle, nCompositeSize, CompositeBuffer.data(), &resultPropertyID));
 		
 		return resultPropertyID;
 	}
@@ -6759,8 +6769,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	Lib3MF_uint32 CMultiPropertyGroup::AddMultiProperty(const CInputVector<Lib3MF_uint32> & PropertyIDsBuffer)
 	{
+		Lib3MF_uint64 nPropertyIDsSize = PropertyIDsBuffer.size();
 		Lib3MF_uint32 resultPropertyID = 0;
-		CheckError(lib3mf_multipropertygroup_addmultiproperty(m_pHandle, (Lib3MF_uint64)PropertyIDsBuffer.size(), PropertyIDsBuffer.data(), &resultPropertyID));
+		CheckError(lib3mf_multipropertygroup_addmultiproperty(m_pHandle, nPropertyIDsSize, PropertyIDsBuffer.data(), &resultPropertyID));
 		
 		return resultPropertyID;
 	}
@@ -6772,7 +6783,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	void CMultiPropertyGroup::SetMultiProperty(const Lib3MF_uint32 nPropertyID, const CInputVector<Lib3MF_uint32> & PropertyIDsBuffer)
 	{
-		CheckError(lib3mf_multipropertygroup_setmultiproperty(m_pHandle, nPropertyID, (Lib3MF_uint64)PropertyIDsBuffer.size(), PropertyIDsBuffer.data()));
+		Lib3MF_uint64 nPropertyIDsSize = PropertyIDsBuffer.size();
+		CheckError(lib3mf_multipropertygroup_setmultiproperty(m_pHandle, nPropertyID, nPropertyIDsSize, PropertyIDsBuffer.data()));
 	}
 	
 	/**
@@ -6950,7 +6962,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PAttachment CImageStack::GetSheet(const Lib3MF_uint32 nIndex)
 	{
-		Lib3MFHandle hSheet = nullptr;
+		Lib3MFHandle hSheet = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_imagestack_getsheet(m_pHandle, nIndex, &hSheet));
 		
 		if (!hSheet) {
@@ -6978,7 +6990,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PAttachment CImageStack::CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath)
 	{
-		Lib3MFHandle hSheet = nullptr;
+		Lib3MFHandle hSheet = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_imagestack_createemptysheet(m_pHandle, nIndex, sPath.c_str(), &hSheet));
 		
 		if (!hSheet) {
@@ -6996,8 +7008,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PAttachment CImageStack::CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const CInputVector<Lib3MF_uint8> & DataBuffer)
 	{
-		Lib3MFHandle hSheet = nullptr;
-		CheckError(lib3mf_imagestack_createsheetfrombuffer(m_pHandle, nIndex, sPath.c_str(), (Lib3MF_uint64)DataBuffer.size(), DataBuffer.data(), &hSheet));
+		Lib3MF_uint64 nDataSize = DataBuffer.size();
+		Lib3MFHandle hSheet = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_imagestack_createsheetfrombuffer(m_pHandle, nIndex, sPath.c_str(), nDataSize, DataBuffer.data(), &hSheet));
 		
 		if (!hSheet) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -7014,7 +7027,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PAttachment CImageStack::CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName)
 	{
-		Lib3MFHandle hSheet = nullptr;
+		Lib3MFHandle hSheet = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_imagestack_createsheetfromfile(m_pHandle, nIndex, sPath.c_str(), sFileName.c_str(), &hSheet));
 		
 		if (!hSheet) {
@@ -7057,7 +7070,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PPackagePart CAttachment::PackagePart()
 	{
-		Lib3MFHandle hPackagePart = nullptr;
+		Lib3MFHandle hPackagePart = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_attachment_packagepart(m_pHandle, &hPackagePart));
 		
 		if (!hPackagePart) {
@@ -7151,7 +7164,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	void CAttachment::ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer)
 	{
-		CheckError(lib3mf_attachment_readfrombuffer(m_pHandle, (Lib3MF_uint64)BufferBuffer.size(), BufferBuffer.data()));
+		Lib3MF_uint64 nBufferSize = BufferBuffer.size();
+		CheckError(lib3mf_attachment_readfrombuffer(m_pHandle, nBufferSize, BufferBuffer.data()));
 	}
 	
 	/**
@@ -7164,7 +7178,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PAttachment CTexture2D::GetAttachment()
 	{
-		Lib3MFHandle hAttachment = nullptr;
+		Lib3MFHandle hAttachment = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_texture2d_getattachment(m_pHandle, &hAttachment));
 		
 		if (!hAttachment) {
@@ -7392,7 +7406,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CImplicitPortIterator::GetCurrent()
 	{
-		Lib3MFHandle hPort = nullptr;
+		Lib3MFHandle hPort = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitportiterator_getcurrent(m_pHandle, &hPort));
 		
 		if (!hPort) {
@@ -7497,7 +7511,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CImplicitNode::AddInput(const std::string & sIdentifier, const std::string & sDisplayName)
 	{
-		Lib3MFHandle hPort = nullptr;
+		Lib3MFHandle hPort = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitnode_addinput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), &hPort));
 		
 		if (!hPort) {
@@ -7512,7 +7526,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPortIterator CImplicitNode::GetInputs()
 	{
-		Lib3MFHandle hIterator = nullptr;
+		Lib3MFHandle hIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitnode_getinputs(m_pHandle, &hIterator));
 		
 		if (!hIterator) {
@@ -7529,7 +7543,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CImplicitNode::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName)
 	{
-		Lib3MFHandle hPort = nullptr;
+		Lib3MFHandle hPort = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitnode_addoutput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), &hPort));
 		
 		if (!hPort) {
@@ -7544,7 +7558,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPortIterator CImplicitNode::GetOutputs()
 	{
-		Lib3MFHandle hIterator = nullptr;
+		Lib3MFHandle hIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitnode_getoutputs(m_pHandle, &hIterator));
 		
 		if (!hIterator) {
@@ -7560,7 +7574,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CImplicitNode::FindInput(const std::string & sIdentifier)
 	{
-		Lib3MFHandle hInput = nullptr;
+		Lib3MFHandle hInput = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitnode_findinput(m_pHandle, sIdentifier.c_str(), &hInput));
 		
 		if (hInput) {
@@ -7577,7 +7591,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CImplicitNode::FindOutput(const std::string & sIdentifier)
 	{
-		Lib3MFHandle hOutput = nullptr;
+		Lib3MFHandle hOutput = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitnode_findoutput(m_pHandle, sIdentifier.c_str(), &hOutput));
 		
 		if (hOutput) {
@@ -7609,7 +7623,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort COneInputNode::GetInputA()
 	{
-		Lib3MFHandle hInput = nullptr;
+		Lib3MFHandle hInput = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_oneinputnode_getinputa(m_pHandle, &hInput));
 		
 		if (!hInput) {
@@ -7624,7 +7638,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort COneInputNode::GetOutputResult()
 	{
-		Lib3MFHandle hResult = nullptr;
+		Lib3MFHandle hResult = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_oneinputnode_getoutputresult(m_pHandle, &hResult));
 		
 		if (!hResult) {
@@ -7745,7 +7759,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PResource CResourceIdNode::GetResource()
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_resourceidnode_getresource(m_pHandle, &hResource));
 		
 		if (!hResource) {
@@ -7760,7 +7774,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CResourceIdNode::GetOutputValue()
 	{
-		Lib3MFHandle hValue = nullptr;
+		Lib3MFHandle hValue = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_resourceidnode_getoutputvalue(m_pHandle, &hValue));
 		
 		if (!hValue) {
@@ -7779,7 +7793,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CTwoInputNode::GetInputB()
 	{
-		Lib3MFHandle hB = nullptr;
+		Lib3MFHandle hB = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_twoinputnode_getinputb(m_pHandle, &hB));
 		
 		if (!hB) {
@@ -7850,7 +7864,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CSelectNode::GetInputB()
 	{
-		Lib3MFHandle hB = nullptr;
+		Lib3MFHandle hB = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_selectnode_getinputb(m_pHandle, &hB));
 		
 		if (!hB) {
@@ -7865,7 +7879,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CSelectNode::GetInputC()
 	{
-		Lib3MFHandle hC = nullptr;
+		Lib3MFHandle hC = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_selectnode_getinputc(m_pHandle, &hC));
 		
 		if (!hC) {
@@ -7880,7 +7894,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CSelectNode::GetInputD()
 	{
-		Lib3MFHandle hD = nullptr;
+		Lib3MFHandle hD = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_selectnode_getinputd(m_pHandle, &hD));
 		
 		if (!hD) {
@@ -7899,7 +7913,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CClampNode::GetInputMin()
 	{
-		Lib3MFHandle hMin = nullptr;
+		Lib3MFHandle hMin = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_clampnode_getinputmin(m_pHandle, &hMin));
 		
 		if (!hMin) {
@@ -7914,7 +7928,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CClampNode::GetInputMax()
 	{
-		Lib3MFHandle hMax = nullptr;
+		Lib3MFHandle hMax = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_clampnode_getinputmax(m_pHandle, &hMax));
 		
 		if (!hMax) {
@@ -7933,7 +7947,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeVectorNode::GetInputX()
 	{
-		Lib3MFHandle hX = nullptr;
+		Lib3MFHandle hX = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composevectornode_getinputx(m_pHandle, &hX));
 		
 		if (!hX) {
@@ -7948,7 +7962,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeVectorNode::GetInputY()
 	{
-		Lib3MFHandle hY = nullptr;
+		Lib3MFHandle hY = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composevectornode_getinputy(m_pHandle, &hY));
 		
 		if (!hY) {
@@ -7963,7 +7977,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeVectorNode::GetInputZ()
 	{
-		Lib3MFHandle hZ = nullptr;
+		Lib3MFHandle hZ = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composevectornode_getinputz(m_pHandle, &hZ));
 		
 		if (!hZ) {
@@ -7978,7 +7992,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeVectorNode::GetOutputResult()
 	{
-		Lib3MFHandle hResult = nullptr;
+		Lib3MFHandle hResult = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composevectornode_getoutputresult(m_pHandle, &hResult));
 		
 		if (!hResult) {
@@ -8001,7 +8015,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CDecomposeVectorNode::GetInputA()
 	{
-		Lib3MFHandle hA = nullptr;
+		Lib3MFHandle hA = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_decomposevectornode_getinputa(m_pHandle, &hA));
 		
 		if (!hA) {
@@ -8016,7 +8030,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CDecomposeVectorNode::GetOutputX()
 	{
-		Lib3MFHandle hX = nullptr;
+		Lib3MFHandle hX = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_decomposevectornode_getoutputx(m_pHandle, &hX));
 		
 		if (!hX) {
@@ -8031,7 +8045,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CDecomposeVectorNode::GetOutputY()
 	{
-		Lib3MFHandle hY = nullptr;
+		Lib3MFHandle hY = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_decomposevectornode_getoutputy(m_pHandle, &hY));
 		
 		if (!hY) {
@@ -8046,7 +8060,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CDecomposeVectorNode::GetOutputZ()
 	{
-		Lib3MFHandle hZ = nullptr;
+		Lib3MFHandle hZ = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_decomposevectornode_getoutputz(m_pHandle, &hZ));
 		
 		if (!hZ) {
@@ -8065,7 +8079,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM00()
 	{
-		Lib3MFHandle hM00 = nullptr;
+		Lib3MFHandle hM00 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm00(m_pHandle, &hM00));
 		
 		if (!hM00) {
@@ -8080,7 +8094,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM01()
 	{
-		Lib3MFHandle hM01 = nullptr;
+		Lib3MFHandle hM01 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm01(m_pHandle, &hM01));
 		
 		if (!hM01) {
@@ -8095,7 +8109,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM02()
 	{
-		Lib3MFHandle hM02 = nullptr;
+		Lib3MFHandle hM02 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm02(m_pHandle, &hM02));
 		
 		if (!hM02) {
@@ -8110,7 +8124,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM03()
 	{
-		Lib3MFHandle hM03 = nullptr;
+		Lib3MFHandle hM03 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm03(m_pHandle, &hM03));
 		
 		if (!hM03) {
@@ -8125,7 +8139,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM10()
 	{
-		Lib3MFHandle hM10 = nullptr;
+		Lib3MFHandle hM10 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm10(m_pHandle, &hM10));
 		
 		if (!hM10) {
@@ -8140,7 +8154,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM11()
 	{
-		Lib3MFHandle hM11 = nullptr;
+		Lib3MFHandle hM11 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm11(m_pHandle, &hM11));
 		
 		if (!hM11) {
@@ -8155,7 +8169,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM12()
 	{
-		Lib3MFHandle hM12 = nullptr;
+		Lib3MFHandle hM12 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm12(m_pHandle, &hM12));
 		
 		if (!hM12) {
@@ -8170,7 +8184,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM13()
 	{
-		Lib3MFHandle hM13 = nullptr;
+		Lib3MFHandle hM13 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm13(m_pHandle, &hM13));
 		
 		if (!hM13) {
@@ -8185,7 +8199,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM20()
 	{
-		Lib3MFHandle hM20 = nullptr;
+		Lib3MFHandle hM20 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm20(m_pHandle, &hM20));
 		
 		if (!hM20) {
@@ -8200,7 +8214,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM21()
 	{
-		Lib3MFHandle hM21 = nullptr;
+		Lib3MFHandle hM21 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm21(m_pHandle, &hM21));
 		
 		if (!hM21) {
@@ -8215,7 +8229,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM22()
 	{
-		Lib3MFHandle hM22 = nullptr;
+		Lib3MFHandle hM22 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm22(m_pHandle, &hM22));
 		
 		if (!hM22) {
@@ -8230,7 +8244,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM23()
 	{
-		Lib3MFHandle hM23 = nullptr;
+		Lib3MFHandle hM23 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm23(m_pHandle, &hM23));
 		
 		if (!hM23) {
@@ -8245,7 +8259,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM30()
 	{
-		Lib3MFHandle hM30 = nullptr;
+		Lib3MFHandle hM30 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm30(m_pHandle, &hM30));
 		
 		if (!hM30) {
@@ -8260,7 +8274,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM31()
 	{
-		Lib3MFHandle hM31 = nullptr;
+		Lib3MFHandle hM31 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm31(m_pHandle, &hM31));
 		
 		if (!hM31) {
@@ -8275,7 +8289,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM32()
 	{
-		Lib3MFHandle hM32 = nullptr;
+		Lib3MFHandle hM32 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm32(m_pHandle, &hM32));
 		
 		if (!hM32) {
@@ -8290,7 +8304,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetInputM33()
 	{
-		Lib3MFHandle hM33 = nullptr;
+		Lib3MFHandle hM33 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getinputm33(m_pHandle, &hM33));
 		
 		if (!hM33) {
@@ -8305,7 +8319,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CComposeMatrixNode::GetOutputResult()
 	{
-		Lib3MFHandle hResult = nullptr;
+		Lib3MFHandle hResult = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_composematrixnode_getoutputresult(m_pHandle, &hResult));
 		
 		if (!hResult) {
@@ -8324,7 +8338,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CMatrixFromRowsNode::GetInputA()
 	{
-		Lib3MFHandle hRow0 = nullptr;
+		Lib3MFHandle hRow0 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_matrixfromrowsnode_getinputa(m_pHandle, &hRow0));
 		
 		if (!hRow0) {
@@ -8339,7 +8353,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CMatrixFromRowsNode::GetInputB()
 	{
-		Lib3MFHandle hRow1 = nullptr;
+		Lib3MFHandle hRow1 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_matrixfromrowsnode_getinputb(m_pHandle, &hRow1));
 		
 		if (!hRow1) {
@@ -8354,7 +8368,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CMatrixFromRowsNode::GetInputC()
 	{
-		Lib3MFHandle hRow2 = nullptr;
+		Lib3MFHandle hRow2 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_matrixfromrowsnode_getinputc(m_pHandle, &hRow2));
 		
 		if (!hRow2) {
@@ -8369,7 +8383,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CMatrixFromRowsNode::GetInputD()
 	{
-		Lib3MFHandle hRow3 = nullptr;
+		Lib3MFHandle hRow3 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_matrixfromrowsnode_getinputd(m_pHandle, &hRow3));
 		
 		if (!hRow3) {
@@ -8384,7 +8398,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CMatrixFromRowsNode::GetOutputResult()
 	{
-		Lib3MFHandle hResult = nullptr;
+		Lib3MFHandle hResult = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_matrixfromrowsnode_getoutputresult(m_pHandle, &hResult));
 		
 		if (!hResult) {
@@ -8403,7 +8417,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CMatrixFromColumnsNode::GetInputA()
 	{
-		Lib3MFHandle hColumn0 = nullptr;
+		Lib3MFHandle hColumn0 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_matrixfromcolumnsnode_getinputa(m_pHandle, &hColumn0));
 		
 		if (!hColumn0) {
@@ -8418,7 +8432,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CMatrixFromColumnsNode::GetInputB()
 	{
-		Lib3MFHandle hColumn1 = nullptr;
+		Lib3MFHandle hColumn1 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_matrixfromcolumnsnode_getinputb(m_pHandle, &hColumn1));
 		
 		if (!hColumn1) {
@@ -8433,7 +8447,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CMatrixFromColumnsNode::GetInputC()
 	{
-		Lib3MFHandle hColumn2 = nullptr;
+		Lib3MFHandle hColumn2 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_matrixfromcolumnsnode_getinputc(m_pHandle, &hColumn2));
 		
 		if (!hColumn2) {
@@ -8448,7 +8462,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CMatrixFromColumnsNode::GetInputD()
 	{
-		Lib3MFHandle hColumn3 = nullptr;
+		Lib3MFHandle hColumn3 = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_matrixfromcolumnsnode_getinputd(m_pHandle, &hColumn3));
 		
 		if (!hColumn3) {
@@ -8463,7 +8477,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CMatrixFromColumnsNode::GetOutputResult()
 	{
-		Lib3MFHandle hResult = nullptr;
+		Lib3MFHandle hResult = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_matrixfromcolumnsnode_getoutputresult(m_pHandle, &hResult));
 		
 		if (!hResult) {
@@ -8503,7 +8517,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CConstantNode::GetOutputValue()
 	{
-		Lib3MFHandle hValue = nullptr;
+		Lib3MFHandle hValue = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_constantnode_getoutputvalue(m_pHandle, &hValue));
 		
 		if (!hValue) {
@@ -8543,7 +8557,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CConstVecNode::GetOutputVector()
 	{
-		Lib3MFHandle hVector = nullptr;
+		Lib3MFHandle hVector = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_constvecnode_getoutputvector(m_pHandle, &hVector));
 		
 		if (!hVector) {
@@ -8583,7 +8597,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CConstMatNode::GetOutputMatrix()
 	{
-		Lib3MFHandle hMatrix = nullptr;
+		Lib3MFHandle hMatrix = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_constmatnode_getoutputmatrix(m_pHandle, &hMatrix));
 		
 		if (!hMatrix) {
@@ -8602,7 +8616,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CMeshNode::GetInputMesh()
 	{
-		Lib3MFHandle hMesh = nullptr;
+		Lib3MFHandle hMesh = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_meshnode_getinputmesh(m_pHandle, &hMesh));
 		
 		if (!hMesh) {
@@ -8617,7 +8631,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CMeshNode::GetInputPos()
 	{
-		Lib3MFHandle hPos = nullptr;
+		Lib3MFHandle hPos = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_meshnode_getinputpos(m_pHandle, &hPos));
 		
 		if (!hPos) {
@@ -8632,7 +8646,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CMeshNode::GetOutputDistance()
 	{
-		Lib3MFHandle hDistance = nullptr;
+		Lib3MFHandle hDistance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_meshnode_getoutputdistance(m_pHandle, &hDistance));
 		
 		if (!hDistance) {
@@ -8651,7 +8665,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CUnsignedMeshNode::GetInputMesh()
 	{
-		Lib3MFHandle hMesh = nullptr;
+		Lib3MFHandle hMesh = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_unsignedmeshnode_getinputmesh(m_pHandle, &hMesh));
 		
 		if (!hMesh) {
@@ -8666,7 +8680,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CUnsignedMeshNode::GetInputPos()
 	{
-		Lib3MFHandle hPos = nullptr;
+		Lib3MFHandle hPos = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_unsignedmeshnode_getinputpos(m_pHandle, &hPos));
 		
 		if (!hPos) {
@@ -8681,7 +8695,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CUnsignedMeshNode::GetOutputDistance()
 	{
-		Lib3MFHandle hDistance = nullptr;
+		Lib3MFHandle hDistance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_unsignedmeshnode_getoutputdistance(m_pHandle, &hDistance));
 		
 		if (!hDistance) {
@@ -8700,7 +8714,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CFunctionCallNode::GetInputFunctionID()
 	{
-		Lib3MFHandle hFunction = nullptr;
+		Lib3MFHandle hFunction = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_functioncallnode_getinputfunctionid(m_pHandle, &hFunction));
 		
 		if (!hFunction) {
@@ -8719,7 +8733,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitNode CNodeIterator::GetCurrent()
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_nodeiterator_getcurrent(m_pHandle, &hNode));
 		
 		if (!hNode) {
@@ -8765,7 +8779,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CFunction::AddInput(const std::string & sIdentifier, const std::string & sDisplayName, const eImplicitPortType eType)
 	{
-		Lib3MFHandle hPort = nullptr;
+		Lib3MFHandle hPort = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_function_addinput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), eType, &hPort));
 		
 		if (!hPort) {
@@ -8780,7 +8794,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPortIterator CFunction::GetInputs()
 	{
-		Lib3MFHandle hIterator = nullptr;
+		Lib3MFHandle hIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_function_getinputs(m_pHandle, &hIterator));
 		
 		if (!hIterator) {
@@ -8808,7 +8822,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CFunction::AddOutput(const std::string & sIdentifier, const std::string & sDisplayName, const eImplicitPortType eType)
 	{
-		Lib3MFHandle hPort = nullptr;
+		Lib3MFHandle hPort = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_function_addoutput(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), eType, &hPort));
 		
 		if (!hPort) {
@@ -8823,7 +8837,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPortIterator CFunction::GetOutputs()
 	{
-		Lib3MFHandle hIterator = nullptr;
+		Lib3MFHandle hIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_function_getoutputs(m_pHandle, &hIterator));
 		
 		if (!hIterator) {
@@ -8849,7 +8863,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CFunction::FindInput(const std::string & sIdentifier)
 	{
-		Lib3MFHandle hInput = nullptr;
+		Lib3MFHandle hInput = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_function_findinput(m_pHandle, sIdentifier.c_str(), &hInput));
 		
 		if (!hInput) {
@@ -8865,7 +8879,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitPort CFunction::FindOutput(const std::string & sIdentifier)
 	{
-		Lib3MFHandle hOutput = nullptr;
+		Lib3MFHandle hOutput = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_function_findoutput(m_pHandle, sIdentifier.c_str(), &hOutput));
 		
 		if (!hOutput) {
@@ -8913,7 +8927,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitNode CImplicitFunction::AddNode(const eImplicitNodeType eNodeType, const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addnode(m_pHandle, eNodeType, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -8932,7 +8946,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PSinNode CImplicitFunction::AddSinNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addsinnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -8951,7 +8965,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PCosNode CImplicitFunction::AddCosNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addcosnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -8970,7 +8984,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PTanNode CImplicitFunction::AddTanNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addtannode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -8989,7 +9003,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PArcSinNode CImplicitFunction::AddArcSinNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addarcsinnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9008,7 +9022,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PArcCosNode CImplicitFunction::AddArcCosNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addarccosnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9027,7 +9041,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PArcTan2Node CImplicitFunction::AddArcTan2Node(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addarctan2node(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9046,7 +9060,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PSinhNode CImplicitFunction::AddSinhNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addsinhnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9065,7 +9079,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PCoshNode CImplicitFunction::AddCoshNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addcoshnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9084,7 +9098,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PTanhNode CImplicitFunction::AddTanhNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addtanhnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9103,7 +9117,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PRoundNode CImplicitFunction::AddRoundNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addroundnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9122,7 +9136,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PCeilNode CImplicitFunction::AddCeilNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addceilnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9141,7 +9155,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PFloorNode CImplicitFunction::AddFloorNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addfloornode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9160,7 +9174,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PSignNode CImplicitFunction::AddSignNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addsignnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9179,7 +9193,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PFractNode CImplicitFunction::AddFractNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addfractnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9198,7 +9212,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PAbsNode CImplicitFunction::AddAbsNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addabsnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9217,7 +9231,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PExpNode CImplicitFunction::AddExpNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addexpnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9236,7 +9250,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PLogNode CImplicitFunction::AddLogNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addlognode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9255,7 +9269,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PLog2Node CImplicitFunction::AddLog2Node(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addlog2node(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9274,7 +9288,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PLog10Node CImplicitFunction::AddLog10Node(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addlog10node(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9292,7 +9306,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PLengthNode CImplicitFunction::AddLengthNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addlengthnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9311,7 +9325,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PTransposeNode CImplicitFunction::AddTransposeNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addtransposenode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9329,7 +9343,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PInverseNode CImplicitFunction::AddInverseNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addinversenode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9348,7 +9362,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PSqrtNode CImplicitFunction::AddSqrtNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addsqrtnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9366,7 +9380,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PResourceIdNode CImplicitFunction::AddResourceIdNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addresourceidnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9385,7 +9399,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PAdditionNode CImplicitFunction::AddAdditionNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addadditionnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9404,7 +9418,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PSubtractionNode CImplicitFunction::AddSubtractionNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addsubtractionnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9423,7 +9437,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMultiplicationNode CImplicitFunction::AddMultiplicationNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addmultiplicationnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9442,7 +9456,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PDivisionNode CImplicitFunction::AddDivisionNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_adddivisionnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9460,7 +9474,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PDotNode CImplicitFunction::AddDotNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_adddotnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9478,7 +9492,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PCrossNode CImplicitFunction::AddCrossNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addcrossnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9496,7 +9510,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMatVecMultiplicationNode CImplicitFunction::AddMatVecMultiplicationNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addmatvecmultiplicationnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9515,7 +9529,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMinNode CImplicitFunction::AddMinNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addminnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9534,7 +9548,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMaxNode CImplicitFunction::AddMaxNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addmaxnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9553,7 +9567,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PFmodNode CImplicitFunction::AddFmodNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addfmodnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9572,7 +9586,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PPowNode CImplicitFunction::AddPowNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addpownode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9591,7 +9605,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PSelectNode CImplicitFunction::AddSelectNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addselectnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9610,7 +9624,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PClampNode CImplicitFunction::AddClampNode(const std::string & sIdentifier, const eImplicitNodeConfiguration eConfiguration, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addclampnode(m_pHandle, sIdentifier.c_str(), eConfiguration, sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9628,7 +9642,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PComposeVectorNode CImplicitFunction::AddComposeVectorNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addcomposevectornode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9646,7 +9660,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PVectorFromScalarNode CImplicitFunction::AddVectorFromScalarNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addvectorfromscalarnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9664,7 +9678,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PDecomposeVectorNode CImplicitFunction::AddDecomposeVectorNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_adddecomposevectornode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9682,7 +9696,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PComposeMatrixNode CImplicitFunction::AddComposeMatrixNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addcomposematrixnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9700,7 +9714,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMatrixFromRowsNode CImplicitFunction::AddMatrixFromRowsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addmatrixfromrowsnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9718,7 +9732,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMatrixFromColumnsNode CImplicitFunction::AddMatrixFromColumnsNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addmatrixfromcolumnsnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9736,7 +9750,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PConstantNode CImplicitFunction::AddConstantNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addconstantnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9754,7 +9768,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PConstVecNode CImplicitFunction::AddConstVecNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addconstvecnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9772,7 +9786,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PConstMatNode CImplicitFunction::AddConstMatNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addconstmatnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9790,7 +9804,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMeshNode CImplicitFunction::AddMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addmeshnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9808,7 +9822,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PUnsignedMeshNode CImplicitFunction::AddUnsignedMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addunsignedmeshnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9826,7 +9840,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PFunctionCallNode CImplicitFunction::AddFunctionCallNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
 	{
-		Lib3MFHandle hNode = nullptr;
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_addfunctioncallnode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
 		
 		if (!hNode) {
@@ -9841,7 +9855,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PNodeIterator CImplicitFunction::GetNodes()
 	{
-		Lib3MFHandle hIterator = nullptr;
+		Lib3MFHandle hIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_implicitfunction_getnodes(m_pHandle, &hIterator));
 		
 		if (!hIterator) {
@@ -9908,7 +9922,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImage3D CFunctionFromImage3D::GetImage3D()
 	{
-		Lib3MFHandle hImage3D = nullptr;
+		Lib3MFHandle hImage3D = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_functionfromimage3d_getimage3d(m_pHandle, &hImage3D));
 		
 		if (!hImage3D) {
@@ -10022,7 +10036,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PObject CBuildItem::GetObjectResource()
 	{
-		Lib3MFHandle hObjectResource = nullptr;
+		Lib3MFHandle hObjectResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_builditem_getobjectresource(m_pHandle, &hObjectResource));
 		
 		if (!hObjectResource) {
@@ -10131,7 +10145,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMetaDataGroup CBuildItem::GetMetaDataGroup()
 	{
-		Lib3MFHandle hMetaDataGroup = nullptr;
+		Lib3MFHandle hMetaDataGroup = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_builditem_getmetadatagroup(m_pHandle, &hMetaDataGroup));
 		
 		if (!hMetaDataGroup) {
@@ -10186,7 +10200,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PBuildItem CBuildItemIterator::GetCurrent()
 	{
-		Lib3MFHandle hBuildItem = nullptr;
+		Lib3MFHandle hBuildItem = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_builditemiterator_getcurrent(m_pHandle, &hBuildItem));
 		
 		if (!hBuildItem) {
@@ -10201,7 +10215,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PBuildItemIterator CBuildItemIterator::Clone()
 	{
-		Lib3MFHandle hOutBuildItemIterator = nullptr;
+		Lib3MFHandle hOutBuildItemIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_builditemiterator_clone(m_pHandle, &hOutBuildItemIterator));
 		
 		if (!hOutBuildItemIterator) {
@@ -10232,7 +10246,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	void CSlice::SetVertices(const CInputVector<sPosition2D> & VerticesBuffer)
 	{
-		CheckError(lib3mf_slice_setvertices(m_pHandle, (Lib3MF_uint64)VerticesBuffer.size(), VerticesBuffer.data()));
+		Lib3MF_uint64 nVerticesSize = VerticesBuffer.size();
+		CheckError(lib3mf_slice_setvertices(m_pHandle, nVerticesSize, VerticesBuffer.data()));
 	}
 	
 	/**
@@ -10267,8 +10282,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	Lib3MF_uint64 CSlice::AddPolygon(const CInputVector<Lib3MF_uint32> & IndicesBuffer)
 	{
+		Lib3MF_uint64 nIndicesSize = IndicesBuffer.size();
 		Lib3MF_uint64 resultIndex = 0;
-		CheckError(lib3mf_slice_addpolygon(m_pHandle, (Lib3MF_uint64)IndicesBuffer.size(), IndicesBuffer.data(), &resultIndex));
+		CheckError(lib3mf_slice_addpolygon(m_pHandle, nIndicesSize, IndicesBuffer.data(), &resultIndex));
 		
 		return resultIndex;
 	}
@@ -10292,7 +10308,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	void CSlice::SetPolygonIndices(const Lib3MF_uint64 nIndex, const CInputVector<Lib3MF_uint32> & IndicesBuffer)
 	{
-		CheckError(lib3mf_slice_setpolygonindices(m_pHandle, nIndex, (Lib3MF_uint64)IndicesBuffer.size(), IndicesBuffer.data()));
+		Lib3MF_uint64 nIndicesSize = IndicesBuffer.size();
+		CheckError(lib3mf_slice_setpolygonindices(m_pHandle, nIndex, nIndicesSize, IndicesBuffer.data()));
 	}
 	
 	/**
@@ -10369,7 +10386,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PSlice CSliceStack::GetSlice(const Lib3MF_uint64 nSliceIndex)
 	{
-		Lib3MFHandle hTheSlice = nullptr;
+		Lib3MFHandle hTheSlice = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_slicestack_getslice(m_pHandle, nSliceIndex, &hTheSlice));
 		
 		if (!hTheSlice) {
@@ -10385,7 +10402,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PSlice CSliceStack::AddSlice(const Lib3MF_double dZTop)
 	{
-		Lib3MFHandle hTheSlice = nullptr;
+		Lib3MFHandle hTheSlice = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_slicestack_addslice(m_pHandle, dZTop, &hTheSlice));
 		
 		if (!hTheSlice) {
@@ -10423,7 +10440,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PSliceStack CSliceStack::GetSliceStackReference(const Lib3MF_uint64 nSliceRefIndex)
 	{
-		Lib3MFHandle hTheSliceStack = nullptr;
+		Lib3MFHandle hTheSliceStack = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_slicestack_getslicestackreference(m_pHandle, nSliceRefIndex, &hTheSliceStack));
 		
 		if (!hTheSliceStack) {
@@ -10523,7 +10540,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PConsumer CAccessRight::GetConsumer()
 	{
-		Lib3MFHandle hConsumer = nullptr;
+		Lib3MFHandle hConsumer = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_accessright_getconsumer(m_pHandle, &hConsumer));
 		
 		if (!hConsumer) {
@@ -10629,7 +10646,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	void CContentEncryptionParams::SetAuthenticationTag(const CInputVector<Lib3MF_uint8> & ByteDataBuffer)
 	{
-		CheckError(lib3mf_contentencryptionparams_setauthenticationtag(m_pHandle, (Lib3MF_uint64)ByteDataBuffer.size(), ByteDataBuffer.data()));
+		Lib3MF_uint64 nByteDataSize = ByteDataBuffer.size();
+		CheckError(lib3mf_contentencryptionparams_setauthenticationtag(m_pHandle, nByteDataSize, ByteDataBuffer.data()));
 	}
 	
 	/**
@@ -10682,7 +10700,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PPackagePart CResourceData::GetPath()
 	{
-		Lib3MFHandle hPath = nullptr;
+		Lib3MFHandle hPath = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_resourcedata_getpath(m_pHandle, &hPath));
 		
 		if (!hPath) {
@@ -10758,7 +10776,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	PAccessRight CResourceDataGroup::AddAccessRight(classParam<CConsumer> pConsumer, const eWrappingAlgorithm eWrappingAlgorithm, const eMgfAlgorithm eMgfAlgorithm, const eDigestMethod eDigestMethod)
 	{
 		Lib3MFHandle hConsumer = pConsumer.GetHandle();
-		Lib3MFHandle hTheAccessRight = nullptr;
+		Lib3MFHandle hTheAccessRight = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_resourcedatagroup_addaccessright(m_pHandle, hConsumer, eWrappingAlgorithm, eMgfAlgorithm, eDigestMethod, &hTheAccessRight));
 		
 		if (!hTheAccessRight) {
@@ -10775,7 +10793,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	PAccessRight CResourceDataGroup::FindAccessRightByConsumer(classParam<CConsumer> pConsumer)
 	{
 		Lib3MFHandle hConsumer = pConsumer.GetHandle();
-		Lib3MFHandle hTheAccessRight = nullptr;
+		Lib3MFHandle hTheAccessRight = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_resourcedatagroup_findaccessrightbyconsumer(m_pHandle, hConsumer, &hTheAccessRight));
 		
 		if (hTheAccessRight) {
@@ -10808,7 +10826,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PConsumer CKeyStore::AddConsumer(const std::string & sConsumerID, const std::string & sKeyID, const std::string & sKeyValue)
 	{
-		Lib3MFHandle hConsumer = nullptr;
+		Lib3MFHandle hConsumer = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_keystore_addconsumer(m_pHandle, sConsumerID.c_str(), sKeyID.c_str(), sKeyValue.c_str(), &hConsumer));
 		
 		if (!hConsumer) {
@@ -10836,7 +10854,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PConsumer CKeyStore::GetConsumer(const Lib3MF_uint64 nConsumerIndex)
 	{
-		Lib3MFHandle hConsumer = nullptr;
+		Lib3MFHandle hConsumer = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_keystore_getconsumer(m_pHandle, nConsumerIndex, &hConsumer));
 		
 		if (!hConsumer) {
@@ -10862,7 +10880,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PConsumer CKeyStore::FindConsumer(const std::string & sConsumerID)
 	{
-		Lib3MFHandle hConsumer = nullptr;
+		Lib3MFHandle hConsumer = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_keystore_findconsumer(m_pHandle, sConsumerID.c_str(), &hConsumer));
 		
 		if (hConsumer) {
@@ -10890,7 +10908,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PResourceDataGroup CKeyStore::AddResourceDataGroup()
 	{
-		Lib3MFHandle hResourceDataGroup = nullptr;
+		Lib3MFHandle hResourceDataGroup = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_keystore_addresourcedatagroup(m_pHandle, &hResourceDataGroup));
 		
 		if (!hResourceDataGroup) {
@@ -10906,7 +10924,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PResourceDataGroup CKeyStore::GetResourceDataGroup(const Lib3MF_uint64 nResourceDataIndex)
 	{
-		Lib3MFHandle hResourceDataGroup = nullptr;
+		Lib3MFHandle hResourceDataGroup = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_keystore_getresourcedatagroup(m_pHandle, nResourceDataIndex, &hResourceDataGroup));
 		
 		if (!hResourceDataGroup) {
@@ -10933,7 +10951,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	PResourceDataGroup CKeyStore::FindResourceDataGroup(classParam<CPackagePart> pPartPath)
 	{
 		Lib3MFHandle hPartPath = pPartPath.GetHandle();
-		Lib3MFHandle hResourceDataGroup = nullptr;
+		Lib3MFHandle hResourceDataGroup = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_keystore_findresourcedatagroup(m_pHandle, hPartPath, &hResourceDataGroup));
 		
 		if (hResourceDataGroup) {
@@ -10956,8 +10974,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	{
 		Lib3MFHandle hResourceDataGroup = pResourceDataGroup.GetHandle();
 		Lib3MFHandle hPartPath = pPartPath.GetHandle();
-		Lib3MFHandle hResourceData = nullptr;
-		CheckError(lib3mf_keystore_addresourcedata(m_pHandle, hResourceDataGroup, hPartPath, eAlgorithm, eCompression, (Lib3MF_uint64)AdditionalAuthenticationDataBuffer.size(), AdditionalAuthenticationDataBuffer.data(), &hResourceData));
+		Lib3MF_uint64 nAdditionalAuthenticationDataSize = AdditionalAuthenticationDataBuffer.size();
+		Lib3MFHandle hResourceData = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_keystore_addresourcedata(m_pHandle, hResourceDataGroup, hPartPath, eAlgorithm, eCompression, nAdditionalAuthenticationDataSize, AdditionalAuthenticationDataBuffer.data(), &hResourceData));
 		
 		if (!hResourceData) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -10983,7 +11002,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	PResourceData CKeyStore::FindResourceData(classParam<CPackagePart> pResourcePath)
 	{
 		Lib3MFHandle hResourcePath = pResourcePath.GetHandle();
-		Lib3MFHandle hResourceData = nullptr;
+		Lib3MFHandle hResourceData = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_keystore_findresourcedata(m_pHandle, hResourcePath, &hResourceData));
 		
 		if (hResourceData) {
@@ -11012,7 +11031,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PResourceData CKeyStore::GetResourceData(const Lib3MF_uint64 nResourceDataIndex)
 	{
-		Lib3MFHandle hResourceData = nullptr;
+		Lib3MFHandle hResourceData = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_keystore_getresourcedata(m_pHandle, nResourceDataIndex, &hResourceData));
 		
 		if (!hResourceData) {
@@ -11056,7 +11075,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PPackagePart CModel::RootModelPart()
 	{
-		Lib3MFHandle hRootModelPart = nullptr;
+		Lib3MFHandle hRootModelPart = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_rootmodelpart(m_pHandle, &hRootModelPart));
 		
 		if (!hRootModelPart) {
@@ -11072,7 +11091,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PPackagePart CModel::FindOrCreatePackagePart(const std::string & sAbsolutePath)
 	{
-		Lib3MFHandle hModelPart = nullptr;
+		Lib3MFHandle hModelPart = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_findorcreatepackagepart(m_pHandle, sAbsolutePath.c_str(), &hModelPart));
 		
 		if (!hModelPart) {
@@ -11133,7 +11152,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PWriter CModel::QueryWriter(const std::string & sWriterClass)
 	{
-		Lib3MFHandle hWriterInstance = nullptr;
+		Lib3MFHandle hWriterInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_querywriter(m_pHandle, sWriterClass.c_str(), &hWriterInstance));
 		
 		if (!hWriterInstance) {
@@ -11149,7 +11168,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PReader CModel::QueryReader(const std::string & sReaderClass)
 	{
-		Lib3MFHandle hReaderInstance = nullptr;
+		Lib3MFHandle hReaderInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_queryreader(m_pHandle, sReaderClass.c_str(), &hReaderInstance));
 		
 		if (!hReaderInstance) {
@@ -11165,7 +11184,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PResource CModel::GetResourceByID(const Lib3MF_uint32 nUniqueResourceID)
 	{
-		Lib3MFHandle hResource = nullptr;
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getresourcebyid(m_pHandle, nUniqueResourceID, &hResource));
 		
 		if (!hResource) {
@@ -11181,7 +11200,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PTexture2D CModel::GetTexture2DByID(const Lib3MF_uint32 nUniqueResourceID)
 	{
-		Lib3MFHandle hTextureInstance = nullptr;
+		Lib3MFHandle hTextureInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_gettexture2dbyid(m_pHandle, nUniqueResourceID, &hTextureInstance));
 		
 		if (!hTextureInstance) {
@@ -11210,7 +11229,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PBaseMaterialGroup CModel::GetBaseMaterialGroupByID(const Lib3MF_uint32 nUniqueResourceID)
 	{
-		Lib3MFHandle hBaseMaterialGroupInstance = nullptr;
+		Lib3MFHandle hBaseMaterialGroupInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getbasematerialgroupbyid(m_pHandle, nUniqueResourceID, &hBaseMaterialGroupInstance));
 		
 		if (!hBaseMaterialGroupInstance) {
@@ -11226,7 +11245,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PTexture2DGroup CModel::GetTexture2DGroupByID(const Lib3MF_uint32 nUniqueResourceID)
 	{
-		Lib3MFHandle hTexture2DGroupInstance = nullptr;
+		Lib3MFHandle hTexture2DGroupInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_gettexture2dgroupbyid(m_pHandle, nUniqueResourceID, &hTexture2DGroupInstance));
 		
 		if (!hTexture2DGroupInstance) {
@@ -11242,7 +11261,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PCompositeMaterials CModel::GetCompositeMaterialsByID(const Lib3MF_uint32 nUniqueResourceID)
 	{
-		Lib3MFHandle hCompositeMaterialsInstance = nullptr;
+		Lib3MFHandle hCompositeMaterialsInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getcompositematerialsbyid(m_pHandle, nUniqueResourceID, &hCompositeMaterialsInstance));
 		
 		if (!hCompositeMaterialsInstance) {
@@ -11258,7 +11277,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMultiPropertyGroup CModel::GetMultiPropertyGroupByID(const Lib3MF_uint32 nUniqueResourceID)
 	{
-		Lib3MFHandle hMultiPropertyGroupInstance = nullptr;
+		Lib3MFHandle hMultiPropertyGroupInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getmultipropertygroupbyid(m_pHandle, nUniqueResourceID, &hMultiPropertyGroupInstance));
 		
 		if (!hMultiPropertyGroupInstance) {
@@ -11274,7 +11293,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMeshObject CModel::GetMeshObjectByID(const Lib3MF_uint32 nUniqueResourceID)
 	{
-		Lib3MFHandle hMeshObjectInstance = nullptr;
+		Lib3MFHandle hMeshObjectInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getmeshobjectbyid(m_pHandle, nUniqueResourceID, &hMeshObjectInstance));
 		
 		if (!hMeshObjectInstance) {
@@ -11290,7 +11309,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PComponentsObject CModel::GetComponentsObjectByID(const Lib3MF_uint32 nUniqueResourceID)
 	{
-		Lib3MFHandle hComponentsObjectInstance = nullptr;
+		Lib3MFHandle hComponentsObjectInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getcomponentsobjectbyid(m_pHandle, nUniqueResourceID, &hComponentsObjectInstance));
 		
 		if (!hComponentsObjectInstance) {
@@ -11306,7 +11325,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PColorGroup CModel::GetColorGroupByID(const Lib3MF_uint32 nUniqueResourceID)
 	{
-		Lib3MFHandle hColorGroupInstance = nullptr;
+		Lib3MFHandle hColorGroupInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getcolorgroupbyid(m_pHandle, nUniqueResourceID, &hColorGroupInstance));
 		
 		if (!hColorGroupInstance) {
@@ -11322,7 +11341,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PSliceStack CModel::GetSliceStackByID(const Lib3MF_uint32 nUniqueResourceID)
 	{
-		Lib3MFHandle hSliceStacInstance = nullptr;
+		Lib3MFHandle hSliceStacInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getslicestackbyid(m_pHandle, nUniqueResourceID, &hSliceStacInstance));
 		
 		if (!hSliceStacInstance) {
@@ -11338,7 +11357,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PLevelSet CModel::GetLevelSetByID(const Lib3MF_uint32 nUniqueResourceID)
 	{
-		Lib3MFHandle hLevelSetObjectInstance = nullptr;
+		Lib3MFHandle hLevelSetObjectInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getlevelsetbyid(m_pHandle, nUniqueResourceID, &hLevelSetObjectInstance));
 		
 		if (!hLevelSetObjectInstance) {
@@ -11378,7 +11397,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PBuildItemIterator CModel::GetBuildItems()
 	{
-		Lib3MFHandle hBuildItemIterator = nullptr;
+		Lib3MFHandle hBuildItemIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getbuilditems(m_pHandle, &hBuildItemIterator));
 		
 		if (!hBuildItemIterator) {
@@ -11405,7 +11424,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PResourceIterator CModel::GetResources()
 	{
-		Lib3MFHandle hResourceIterator = nullptr;
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getresources(m_pHandle, &hResourceIterator));
 		
 		if (!hResourceIterator) {
@@ -11420,7 +11439,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PObjectIterator CModel::GetObjects()
 	{
-		Lib3MFHandle hResourceIterator = nullptr;
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getobjects(m_pHandle, &hResourceIterator));
 		
 		if (!hResourceIterator) {
@@ -11435,7 +11454,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMeshObjectIterator CModel::GetMeshObjects()
 	{
-		Lib3MFHandle hResourceIterator = nullptr;
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getmeshobjects(m_pHandle, &hResourceIterator));
 		
 		if (!hResourceIterator) {
@@ -11450,7 +11469,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PComponentsObjectIterator CModel::GetComponentsObjects()
 	{
-		Lib3MFHandle hResourceIterator = nullptr;
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getcomponentsobjects(m_pHandle, &hResourceIterator));
 		
 		if (!hResourceIterator) {
@@ -11465,7 +11484,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PTexture2DIterator CModel::GetTexture2Ds()
 	{
-		Lib3MFHandle hResourceIterator = nullptr;
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_gettexture2ds(m_pHandle, &hResourceIterator));
 		
 		if (!hResourceIterator) {
@@ -11480,7 +11499,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PBaseMaterialGroupIterator CModel::GetBaseMaterialGroups()
 	{
-		Lib3MFHandle hResourceIterator = nullptr;
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getbasematerialgroups(m_pHandle, &hResourceIterator));
 		
 		if (!hResourceIterator) {
@@ -11495,7 +11514,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PColorGroupIterator CModel::GetColorGroups()
 	{
-		Lib3MFHandle hResourceIterator = nullptr;
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getcolorgroups(m_pHandle, &hResourceIterator));
 		
 		if (!hResourceIterator) {
@@ -11510,7 +11529,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PTexture2DGroupIterator CModel::GetTexture2DGroups()
 	{
-		Lib3MFHandle hResourceIterator = nullptr;
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_gettexture2dgroups(m_pHandle, &hResourceIterator));
 		
 		if (!hResourceIterator) {
@@ -11525,7 +11544,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PCompositeMaterialsIterator CModel::GetCompositeMaterials()
 	{
-		Lib3MFHandle hResourceIterator = nullptr;
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getcompositematerials(m_pHandle, &hResourceIterator));
 		
 		if (!hResourceIterator) {
@@ -11540,7 +11559,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMultiPropertyGroupIterator CModel::GetMultiPropertyGroups()
 	{
-		Lib3MFHandle hResourceIterator = nullptr;
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getmultipropertygroups(m_pHandle, &hResourceIterator));
 		
 		if (!hResourceIterator) {
@@ -11555,7 +11574,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PSliceStackIterator CModel::GetSliceStacks()
 	{
-		Lib3MFHandle hResourceIterator = nullptr;
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getslicestacks(m_pHandle, &hResourceIterator));
 		
 		if (!hResourceIterator) {
@@ -11570,7 +11589,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImage3DIterator CModel::GetImage3Ds()
 	{
-		Lib3MFHandle hResourceIterator = nullptr;
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getimage3ds(m_pHandle, &hResourceIterator));
 		
 		if (!hResourceIterator) {
@@ -11585,7 +11604,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PModel CModel::MergeToModel()
 	{
-		Lib3MFHandle hMergedModelInstance = nullptr;
+		Lib3MFHandle hMergedModelInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_mergetomodel(m_pHandle, &hMergedModelInstance));
 		
 		if (!hMergedModelInstance) {
@@ -11610,7 +11629,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMeshObject CModel::AddMeshObject()
 	{
-		Lib3MFHandle hMeshObjectInstance = nullptr;
+		Lib3MFHandle hMeshObjectInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addmeshobject(m_pHandle, &hMeshObjectInstance));
 		
 		if (!hMeshObjectInstance) {
@@ -11625,7 +11644,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PComponentsObject CModel::AddComponentsObject()
 	{
-		Lib3MFHandle hComponentsObjectInstance = nullptr;
+		Lib3MFHandle hComponentsObjectInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addcomponentsobject(m_pHandle, &hComponentsObjectInstance));
 		
 		if (!hComponentsObjectInstance) {
@@ -11641,7 +11660,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PSliceStack CModel::AddSliceStack(const Lib3MF_double dZBottom)
 	{
-		Lib3MFHandle hSliceStackInstance = nullptr;
+		Lib3MFHandle hSliceStackInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addslicestack(m_pHandle, dZBottom, &hSliceStackInstance));
 		
 		if (!hSliceStackInstance) {
@@ -11658,7 +11677,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	PTexture2D CModel::AddTexture2DFromAttachment(classParam<CAttachment> pTextureAttachment)
 	{
 		Lib3MFHandle hTextureAttachment = pTextureAttachment.GetHandle();
-		Lib3MFHandle hTexture2DInstance = nullptr;
+		Lib3MFHandle hTexture2DInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addtexture2dfromattachment(m_pHandle, hTextureAttachment, &hTexture2DInstance));
 		
 		if (!hTexture2DInstance) {
@@ -11673,7 +11692,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PBaseMaterialGroup CModel::AddBaseMaterialGroup()
 	{
-		Lib3MFHandle hBaseMaterialGroupInstance = nullptr;
+		Lib3MFHandle hBaseMaterialGroupInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addbasematerialgroup(m_pHandle, &hBaseMaterialGroupInstance));
 		
 		if (!hBaseMaterialGroupInstance) {
@@ -11688,7 +11707,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PColorGroup CModel::AddColorGroup()
 	{
-		Lib3MFHandle hColorGroupInstance = nullptr;
+		Lib3MFHandle hColorGroupInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addcolorgroup(m_pHandle, &hColorGroupInstance));
 		
 		if (!hColorGroupInstance) {
@@ -11705,7 +11724,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	PTexture2DGroup CModel::AddTexture2DGroup(classParam<CTexture2D> pTexture2DInstance)
 	{
 		Lib3MFHandle hTexture2DInstance = pTexture2DInstance.GetHandle();
-		Lib3MFHandle hTexture2DGroupInstance = nullptr;
+		Lib3MFHandle hTexture2DGroupInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addtexture2dgroup(m_pHandle, hTexture2DInstance, &hTexture2DGroupInstance));
 		
 		if (!hTexture2DGroupInstance) {
@@ -11722,7 +11741,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	PCompositeMaterials CModel::AddCompositeMaterials(classParam<CBaseMaterialGroup> pBaseMaterialGroupInstance)
 	{
 		Lib3MFHandle hBaseMaterialGroupInstance = pBaseMaterialGroupInstance.GetHandle();
-		Lib3MFHandle hCompositeMaterialsInstance = nullptr;
+		Lib3MFHandle hCompositeMaterialsInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addcompositematerials(m_pHandle, hBaseMaterialGroupInstance, &hCompositeMaterialsInstance));
 		
 		if (!hCompositeMaterialsInstance) {
@@ -11737,7 +11756,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMultiPropertyGroup CModel::AddMultiPropertyGroup()
 	{
-		Lib3MFHandle hMultiPropertyGroupInstance = nullptr;
+		Lib3MFHandle hMultiPropertyGroupInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addmultipropertygroup(m_pHandle, &hMultiPropertyGroupInstance));
 		
 		if (!hMultiPropertyGroupInstance) {
@@ -11755,7 +11774,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImageStack CModel::AddImageStack(const Lib3MF_uint32 nColumnCount, const Lib3MF_uint32 nRowCount, const Lib3MF_uint32 nSheetCount)
 	{
-		Lib3MFHandle hInstance = nullptr;
+		Lib3MFHandle hInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addimagestack(m_pHandle, nColumnCount, nRowCount, nSheetCount, &hInstance));
 		
 		if (!hInstance) {
@@ -11771,7 +11790,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImageStack CModel::GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID)
 	{
-		Lib3MFHandle hImageStackInstance = nullptr;
+		Lib3MFHandle hImageStackInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getimagestackbyid(m_pHandle, nUniqueResourceID, &hImageStackInstance));
 		
 		if (!hImageStackInstance) {
@@ -11789,7 +11808,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	PBuildItem CModel::AddBuildItem(classParam<CObject> pObject, const sTransform & Transform)
 	{
 		Lib3MFHandle hObject = pObject.GetHandle();
-		Lib3MFHandle hBuildItemInstance = nullptr;
+		Lib3MFHandle hBuildItemInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addbuilditem(m_pHandle, hObject, &Transform, &hBuildItemInstance));
 		
 		if (!hBuildItemInstance) {
@@ -11814,7 +11833,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PMetaDataGroup CModel::GetMetaDataGroup()
 	{
-		Lib3MFHandle hTheMetaDataGroup = nullptr;
+		Lib3MFHandle hTheMetaDataGroup = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getmetadatagroup(m_pHandle, &hTheMetaDataGroup));
 		
 		if (!hTheMetaDataGroup) {
@@ -11831,7 +11850,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PAttachment CModel::AddAttachment(const std::string & sURI, const std::string & sRelationShipType)
 	{
-		Lib3MFHandle hAttachmentInstance = nullptr;
+		Lib3MFHandle hAttachmentInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addattachment(m_pHandle, sURI.c_str(), sRelationShipType.c_str(), &hAttachmentInstance));
 		
 		if (!hAttachmentInstance) {
@@ -11857,7 +11876,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PAttachment CModel::GetAttachment(const Lib3MF_uint32 nIndex)
 	{
-		Lib3MFHandle hAttachmentInstance = nullptr;
+		Lib3MFHandle hAttachmentInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getattachment(m_pHandle, nIndex, &hAttachmentInstance));
 		
 		if (!hAttachmentInstance) {
@@ -11873,7 +11892,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PAttachment CModel::FindAttachment(const std::string & sURI)
 	{
-		Lib3MFHandle hAttachmentInstance = nullptr;
+		Lib3MFHandle hAttachmentInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_findattachment(m_pHandle, sURI.c_str(), &hAttachmentInstance));
 		
 		if (!hAttachmentInstance) {
@@ -11912,7 +11931,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PAttachment CModel::CreatePackageThumbnailAttachment()
 	{
-		Lib3MFHandle hAttachment = nullptr;
+		Lib3MFHandle hAttachment = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_createpackagethumbnailattachment(m_pHandle, &hAttachment));
 		
 		if (!hAttachment) {
@@ -11927,7 +11946,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PAttachment CModel::GetPackageThumbnailAttachment()
 	{
-		Lib3MFHandle hAttachment = nullptr;
+		Lib3MFHandle hAttachment = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getpackagethumbnailattachment(m_pHandle, &hAttachment));
 		
 		if (hAttachment) {
@@ -11980,7 +11999,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PKeyStore CModel::GetKeyStore()
 	{
-		Lib3MFHandle hKeyStore = nullptr;
+		Lib3MFHandle hKeyStore = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getkeystore(m_pHandle, &hKeyStore));
 		
 		if (!hKeyStore) {
@@ -11995,7 +12014,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PFunctionIterator CModel::GetFunctions()
 	{
-		Lib3MFHandle hTheResourceIterator = nullptr;
+		Lib3MFHandle hTheResourceIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getfunctions(m_pHandle, &hTheResourceIterator));
 		
 		if (!hTheResourceIterator) {
@@ -12010,7 +12029,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PImplicitFunction CModel::AddImplicitFunction()
 	{
-		Lib3MFHandle hFunctionInstance = nullptr;
+		Lib3MFHandle hFunctionInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addimplicitfunction(m_pHandle, &hFunctionInstance));
 		
 		if (!hFunctionInstance) {
@@ -12027,7 +12046,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	PFunctionFromImage3D CModel::AddFunctionFromImage3D(classParam<CImage3D> pImage3DInstance)
 	{
 		Lib3MFHandle hImage3DInstance = pImage3DInstance.GetHandle();
-		Lib3MFHandle hFunctionInstance = nullptr;
+		Lib3MFHandle hFunctionInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addfunctionfromimage3d(m_pHandle, hImage3DInstance, &hFunctionInstance));
 		
 		if (!hFunctionInstance) {
@@ -12042,7 +12061,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PVolumeData CModel::AddVolumeData()
 	{
-		Lib3MFHandle hVolumeDataInstance = nullptr;
+		Lib3MFHandle hVolumeDataInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addvolumedata(m_pHandle, &hVolumeDataInstance));
 		
 		if (!hVolumeDataInstance) {
@@ -12057,7 +12076,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PLevelSet CModel::AddLevelSet()
 	{
-		Lib3MFHandle hLevelSetInstance = nullptr;
+		Lib3MFHandle hLevelSetInstance = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_addlevelset(m_pHandle, &hLevelSetInstance));
 		
 		if (!hLevelSetInstance) {
@@ -12072,7 +12091,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	*/
 	PLevelSetIterator CModel::GetLevelSets()
 	{
-		Lib3MFHandle hResourceIterator = nullptr;
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_model_getlevelsets(m_pHandle, &hResourceIterator));
 		
 		if (!hResourceIterator) {
