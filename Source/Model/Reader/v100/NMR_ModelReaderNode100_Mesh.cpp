@@ -198,7 +198,7 @@ namespace NMR {
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_TRIANGLESETS) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_TRIANGLESETS) == 0)
 			{
-				PModelReaderNode100_TriangleSets pXMLNode = std::make_shared<CModelReaderNode100_TriangleSets>(m_pModel, m_pMesh, m_pWarnings);
+				PModelReaderNode100_TriangleSets pXMLNode = std::make_shared<CModelReaderNode100_TriangleSets>(m_pModel, m_pMesh->getMesh(), m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
 				m_pTriangleSets = pXMLNode->getTriangleSets ();

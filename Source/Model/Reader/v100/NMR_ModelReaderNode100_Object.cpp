@@ -253,7 +253,7 @@ namespace NMR {
 				// store triangle sets in memory model
 				auto triangleSets = pXMLNode->getTriangleSets();
 				for (auto triangleSet : triangleSets)
-					pModelMeshObject->addTriangleSet(triangleSet);
+					meshObject->addTriangleSet(triangleSet);
 
 				// Add Object to Parent
 				m_pModel->addResource(m_pObject);

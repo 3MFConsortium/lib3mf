@@ -131,6 +131,8 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT 141 /** An element buffer exceeds its spec limit */
 #define LIB3MF_ERROR_INVALIDRESOURCE 142 /** A resource is invalid */
 #define LIB3MF_ERROR_INVALIDLEVELSET 143 /** A level set is invalid */
+#define LIB3MF_ERROR_COULDNOTFINDTRIANGLESET 144 /** Could not find triangle set */
+#define LIB3MF_ERROR_INVALIDTRIANGLESETINDEX 145 /** Invalid triangle set index */
 #define LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE 2000 /** This object type is not valid for beamlattices */
 #define LIB3MF_ERROR_INVALIDKEYSTORE 3000 /** The keystore object is invalid */
 #define LIB3MF_ERROR_INVALIDKEYSTORECONSUMER 3001 /** The consumer keystore object is invalid */
@@ -187,6 +189,8 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "An element buffer exceeds its spec limit";
     case LIB3MF_ERROR_INVALIDRESOURCE: return "A resource is invalid";
     case LIB3MF_ERROR_INVALIDLEVELSET: return "A level set is invalid";
+    case LIB3MF_ERROR_COULDNOTFINDTRIANGLESET: return "Could not find triangle set";
+    case LIB3MF_ERROR_INVALIDTRIANGLESETINDEX: return "Invalid triangle set index";
     case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "This object type is not valid for beamlattices";
     case LIB3MF_ERROR_INVALIDKEYSTORE: return "The keystore object is invalid";
     case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "The consumer keystore object is invalid";
@@ -227,6 +231,7 @@ typedef Lib3MFHandle Lib3MF_FunctionIterator;
 typedef Lib3MFHandle Lib3MF_LevelSetIterator;
 typedef Lib3MFHandle Lib3MF_MetaData;
 typedef Lib3MFHandle Lib3MF_MetaDataGroup;
+typedef Lib3MFHandle Lib3MF_TriangleSet;
 typedef Lib3MFHandle Lib3MF_Object;
 typedef Lib3MFHandle Lib3MF_MeshObject;
 typedef Lib3MFHandle Lib3MF_LevelSet;

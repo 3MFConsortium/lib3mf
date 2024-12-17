@@ -78,6 +78,7 @@ class CFunctionIterator;
 class CLevelSetIterator;
 class CMetaData;
 class CMetaDataGroup;
+class CTriangleSet;
 class CObject;
 class CMeshObject;
 class CLevelSet;
@@ -198,6 +199,7 @@ typedef CFunctionIterator CLib3MFFunctionIterator;
 typedef CLevelSetIterator CLib3MFLevelSetIterator;
 typedef CMetaData CLib3MFMetaData;
 typedef CMetaDataGroup CLib3MFMetaDataGroup;
+typedef CTriangleSet CLib3MFTriangleSet;
 typedef CObject CLib3MFObject;
 typedef CMeshObject CLib3MFMeshObject;
 typedef CLevelSet CLib3MFLevelSet;
@@ -318,6 +320,7 @@ typedef std::shared_ptr<CFunctionIterator> PFunctionIterator;
 typedef std::shared_ptr<CLevelSetIterator> PLevelSetIterator;
 typedef std::shared_ptr<CMetaData> PMetaData;
 typedef std::shared_ptr<CMetaDataGroup> PMetaDataGroup;
+typedef std::shared_ptr<CTriangleSet> PTriangleSet;
 typedef std::shared_ptr<CObject> PObject;
 typedef std::shared_ptr<CMeshObject> PMeshObject;
 typedef std::shared_ptr<CLevelSet> PLevelSet;
@@ -438,6 +441,7 @@ typedef PFunctionIterator PLib3MFFunctionIterator;
 typedef PLevelSetIterator PLib3MFLevelSetIterator;
 typedef PMetaData PLib3MFMetaData;
 typedef PMetaDataGroup PLib3MFMetaDataGroup;
+typedef PTriangleSet PLib3MFTriangleSet;
 typedef PObject PLib3MFObject;
 typedef PMeshObject PLib3MFMeshObject;
 typedef PLevelSet PLib3MFLevelSet;
@@ -650,6 +654,8 @@ public:
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "ELEMENTCOUNTEXCEEDSLIMIT";
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "INVALIDRESOURCE";
 			case LIB3MF_ERROR_INVALIDLEVELSET: return "INVALIDLEVELSET";
+			case LIB3MF_ERROR_COULDNOTFINDTRIANGLESET: return "COULDNOTFINDTRIANGLESET";
+			case LIB3MF_ERROR_INVALIDTRIANGLESETINDEX: return "INVALIDTRIANGLESETINDEX";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "BEAMLATTICE_INVALID_OBJECTTYPE";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "INVALIDKEYSTORE";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "INVALIDKEYSTORECONSUMER";
@@ -706,6 +712,8 @@ public:
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "An element buffer exceeds its spec limit";
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "A resource is invalid";
 			case LIB3MF_ERROR_INVALIDLEVELSET: return "A level set is invalid";
+			case LIB3MF_ERROR_COULDNOTFINDTRIANGLESET: return "Could not find triangle set";
+			case LIB3MF_ERROR_INVALIDTRIANGLESETINDEX: return "Invalid triangle set index";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "This object type is not valid for beamlattices";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "The keystore object is invalid";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "The consumer keystore object is invalid";
@@ -870,6 +878,7 @@ private:
 	friend class CLevelSetIterator;
 	friend class CMetaData;
 	friend class CMetaDataGroup;
+	friend class CTriangleSet;
 	friend class CObject;
 	friend class CMeshObject;
 	friend class CLevelSet;
@@ -1413,6 +1422,35 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CTriangleSet 
+**************************************************************************************************************************/
+class CTriangleSet : public CBase {
+public:
+	
+	/**
+	* CTriangleSet::CTriangleSet - Constructor for TriangleSet class.
+	*/
+	CTriangleSet(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline void SetName(const std::string & sName);
+	inline std::string GetName();
+	inline void SetIdentifier(const std::string & sIdentifier);
+	inline std::string GetIdentifier();
+	inline void AddTriangle(const Lib3MF_uint32 nTriangleIndex);
+	inline void RemoveTriangle(const Lib3MF_uint32 nTriangleIndex);
+	inline void Clear();
+	inline void SetTriangleList(const CInputVector<Lib3MF_uint32> & TriangleIndicesBuffer);
+	inline void GetTriangleList(std::vector<Lib3MF_uint32> & TriangleIndicesBuffer);
+	inline void AddTriangleList(const CInputVector<Lib3MF_uint32> & TriangleIndicesBuffer);
+	inline void Merge(classParam<CTriangleSet> pOtherTriangleSet, const bool bDeleteOther);
+	inline void DeleteSet();
+	inline PTriangleSet Duplicate(const std::string & sIdentifier);
+};
+	
+/*************************************************************************************************************************
  Class CObject 
 **************************************************************************************************************************/
 class CObject : public CResource {
@@ -1487,6 +1525,11 @@ public:
 	inline PBeamLattice BeamLattice();
 	inline PVolumeData GetVolumeData();
 	inline void SetVolumeData(classParam<CVolumeData> pTheVolumeData);
+	inline PTriangleSet AddTriangleSet(const std::string & sIdentifier, const std::string & sName);
+	inline bool HasTriangleSet(const std::string & sIdentifier);
+	inline PTriangleSet FindTriangleSet(const std::string & sIdentifier);
+	inline Lib3MF_uint32 GetTriangleSetCount();
+	inline PTriangleSet GetTriangleSet(const Lib3MF_uint32 nIndex);
 };
 	
 /*************************************************************************************************************************
@@ -3468,6 +3511,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0xA0C005C035D5371DUL: return new CLevelSetIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
 		case 0xD17716D063DE2C22UL: return new CMetaData(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 		case 0x0C3B85369E9B25D3UL: return new CMetaDataGroup(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
+		case 0x5950BB3EE8A82090UL: return new CTriangleSet(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::TriangleSet"
 		case 0x2DA2136F577A779CUL: return new CObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
 		case 0x3B3A6DC6EC610497UL: return new CMeshObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
 		case 0xE8A7D9C192EFD0E2UL: return new CLevelSet(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
@@ -3916,6 +3960,19 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_MetaDataGroup_RemoveMetaDataByIndex = nullptr;
 		pWrapperTable->m_MetaDataGroup_RemoveMetaData = nullptr;
 		pWrapperTable->m_MetaDataGroup_AddMetaData = nullptr;
+		pWrapperTable->m_TriangleSet_SetName = nullptr;
+		pWrapperTable->m_TriangleSet_GetName = nullptr;
+		pWrapperTable->m_TriangleSet_SetIdentifier = nullptr;
+		pWrapperTable->m_TriangleSet_GetIdentifier = nullptr;
+		pWrapperTable->m_TriangleSet_AddTriangle = nullptr;
+		pWrapperTable->m_TriangleSet_RemoveTriangle = nullptr;
+		pWrapperTable->m_TriangleSet_Clear = nullptr;
+		pWrapperTable->m_TriangleSet_SetTriangleList = nullptr;
+		pWrapperTable->m_TriangleSet_GetTriangleList = nullptr;
+		pWrapperTable->m_TriangleSet_AddTriangleList = nullptr;
+		pWrapperTable->m_TriangleSet_Merge = nullptr;
+		pWrapperTable->m_TriangleSet_DeleteSet = nullptr;
+		pWrapperTable->m_TriangleSet_Duplicate = nullptr;
 		pWrapperTable->m_Object_GetType = nullptr;
 		pWrapperTable->m_Object_SetType = nullptr;
 		pWrapperTable->m_Object_GetName = nullptr;
@@ -3961,6 +4018,11 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_MeshObject_BeamLattice = nullptr;
 		pWrapperTable->m_MeshObject_GetVolumeData = nullptr;
 		pWrapperTable->m_MeshObject_SetVolumeData = nullptr;
+		pWrapperTable->m_MeshObject_AddTriangleSet = nullptr;
+		pWrapperTable->m_MeshObject_HasTriangleSet = nullptr;
+		pWrapperTable->m_MeshObject_FindTriangleSet = nullptr;
+		pWrapperTable->m_MeshObject_GetTriangleSetCount = nullptr;
+		pWrapperTable->m_MeshObject_GetTriangleSet = nullptr;
 		pWrapperTable->m_LevelSet_GetFunction = nullptr;
 		pWrapperTable->m_LevelSet_SetFunction = nullptr;
 		pWrapperTable->m_LevelSet_GetTransform = nullptr;
@@ -5113,6 +5175,123 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_TriangleSet_SetName = (PLib3MFTriangleSet_SetNamePtr) GetProcAddress(hLibrary, "lib3mf_triangleset_setname");
+		#else // _WIN32
+		pWrapperTable->m_TriangleSet_SetName = (PLib3MFTriangleSet_SetNamePtr) dlsym(hLibrary, "lib3mf_triangleset_setname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_TriangleSet_SetName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_TriangleSet_GetName = (PLib3MFTriangleSet_GetNamePtr) GetProcAddress(hLibrary, "lib3mf_triangleset_getname");
+		#else // _WIN32
+		pWrapperTable->m_TriangleSet_GetName = (PLib3MFTriangleSet_GetNamePtr) dlsym(hLibrary, "lib3mf_triangleset_getname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_TriangleSet_GetName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_TriangleSet_SetIdentifier = (PLib3MFTriangleSet_SetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_triangleset_setidentifier");
+		#else // _WIN32
+		pWrapperTable->m_TriangleSet_SetIdentifier = (PLib3MFTriangleSet_SetIdentifierPtr) dlsym(hLibrary, "lib3mf_triangleset_setidentifier");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_TriangleSet_SetIdentifier == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_TriangleSet_GetIdentifier = (PLib3MFTriangleSet_GetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_triangleset_getidentifier");
+		#else // _WIN32
+		pWrapperTable->m_TriangleSet_GetIdentifier = (PLib3MFTriangleSet_GetIdentifierPtr) dlsym(hLibrary, "lib3mf_triangleset_getidentifier");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_TriangleSet_GetIdentifier == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_TriangleSet_AddTriangle = (PLib3MFTriangleSet_AddTrianglePtr) GetProcAddress(hLibrary, "lib3mf_triangleset_addtriangle");
+		#else // _WIN32
+		pWrapperTable->m_TriangleSet_AddTriangle = (PLib3MFTriangleSet_AddTrianglePtr) dlsym(hLibrary, "lib3mf_triangleset_addtriangle");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_TriangleSet_AddTriangle == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_TriangleSet_RemoveTriangle = (PLib3MFTriangleSet_RemoveTrianglePtr) GetProcAddress(hLibrary, "lib3mf_triangleset_removetriangle");
+		#else // _WIN32
+		pWrapperTable->m_TriangleSet_RemoveTriangle = (PLib3MFTriangleSet_RemoveTrianglePtr) dlsym(hLibrary, "lib3mf_triangleset_removetriangle");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_TriangleSet_RemoveTriangle == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_TriangleSet_Clear = (PLib3MFTriangleSet_ClearPtr) GetProcAddress(hLibrary, "lib3mf_triangleset_clear");
+		#else // _WIN32
+		pWrapperTable->m_TriangleSet_Clear = (PLib3MFTriangleSet_ClearPtr) dlsym(hLibrary, "lib3mf_triangleset_clear");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_TriangleSet_Clear == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_TriangleSet_SetTriangleList = (PLib3MFTriangleSet_SetTriangleListPtr) GetProcAddress(hLibrary, "lib3mf_triangleset_settrianglelist");
+		#else // _WIN32
+		pWrapperTable->m_TriangleSet_SetTriangleList = (PLib3MFTriangleSet_SetTriangleListPtr) dlsym(hLibrary, "lib3mf_triangleset_settrianglelist");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_TriangleSet_SetTriangleList == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_TriangleSet_GetTriangleList = (PLib3MFTriangleSet_GetTriangleListPtr) GetProcAddress(hLibrary, "lib3mf_triangleset_gettrianglelist");
+		#else // _WIN32
+		pWrapperTable->m_TriangleSet_GetTriangleList = (PLib3MFTriangleSet_GetTriangleListPtr) dlsym(hLibrary, "lib3mf_triangleset_gettrianglelist");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_TriangleSet_GetTriangleList == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_TriangleSet_AddTriangleList = (PLib3MFTriangleSet_AddTriangleListPtr) GetProcAddress(hLibrary, "lib3mf_triangleset_addtrianglelist");
+		#else // _WIN32
+		pWrapperTable->m_TriangleSet_AddTriangleList = (PLib3MFTriangleSet_AddTriangleListPtr) dlsym(hLibrary, "lib3mf_triangleset_addtrianglelist");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_TriangleSet_AddTriangleList == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_TriangleSet_Merge = (PLib3MFTriangleSet_MergePtr) GetProcAddress(hLibrary, "lib3mf_triangleset_merge");
+		#else // _WIN32
+		pWrapperTable->m_TriangleSet_Merge = (PLib3MFTriangleSet_MergePtr) dlsym(hLibrary, "lib3mf_triangleset_merge");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_TriangleSet_Merge == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_TriangleSet_DeleteSet = (PLib3MFTriangleSet_DeleteSetPtr) GetProcAddress(hLibrary, "lib3mf_triangleset_deleteset");
+		#else // _WIN32
+		pWrapperTable->m_TriangleSet_DeleteSet = (PLib3MFTriangleSet_DeleteSetPtr) dlsym(hLibrary, "lib3mf_triangleset_deleteset");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_TriangleSet_DeleteSet == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_TriangleSet_Duplicate = (PLib3MFTriangleSet_DuplicatePtr) GetProcAddress(hLibrary, "lib3mf_triangleset_duplicate");
+		#else // _WIN32
+		pWrapperTable->m_TriangleSet_Duplicate = (PLib3MFTriangleSet_DuplicatePtr) dlsym(hLibrary, "lib3mf_triangleset_duplicate");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_TriangleSet_Duplicate == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_Object_GetType = (PLib3MFObject_GetTypePtr) GetProcAddress(hLibrary, "lib3mf_object_gettype");
 		#else // _WIN32
 		pWrapperTable->m_Object_GetType = (PLib3MFObject_GetTypePtr) dlsym(hLibrary, "lib3mf_object_gettype");
@@ -5515,6 +5694,51 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_MeshObject_SetVolumeData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_MeshObject_AddTriangleSet = (PLib3MFMeshObject_AddTriangleSetPtr) GetProcAddress(hLibrary, "lib3mf_meshobject_addtriangleset");
+		#else // _WIN32
+		pWrapperTable->m_MeshObject_AddTriangleSet = (PLib3MFMeshObject_AddTriangleSetPtr) dlsym(hLibrary, "lib3mf_meshobject_addtriangleset");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_MeshObject_AddTriangleSet == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_MeshObject_HasTriangleSet = (PLib3MFMeshObject_HasTriangleSetPtr) GetProcAddress(hLibrary, "lib3mf_meshobject_hastriangleset");
+		#else // _WIN32
+		pWrapperTable->m_MeshObject_HasTriangleSet = (PLib3MFMeshObject_HasTriangleSetPtr) dlsym(hLibrary, "lib3mf_meshobject_hastriangleset");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_MeshObject_HasTriangleSet == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_MeshObject_FindTriangleSet = (PLib3MFMeshObject_FindTriangleSetPtr) GetProcAddress(hLibrary, "lib3mf_meshobject_findtriangleset");
+		#else // _WIN32
+		pWrapperTable->m_MeshObject_FindTriangleSet = (PLib3MFMeshObject_FindTriangleSetPtr) dlsym(hLibrary, "lib3mf_meshobject_findtriangleset");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_MeshObject_FindTriangleSet == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_MeshObject_GetTriangleSetCount = (PLib3MFMeshObject_GetTriangleSetCountPtr) GetProcAddress(hLibrary, "lib3mf_meshobject_gettrianglesetcount");
+		#else // _WIN32
+		pWrapperTable->m_MeshObject_GetTriangleSetCount = (PLib3MFMeshObject_GetTriangleSetCountPtr) dlsym(hLibrary, "lib3mf_meshobject_gettrianglesetcount");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_MeshObject_GetTriangleSetCount == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_MeshObject_GetTriangleSet = (PLib3MFMeshObject_GetTriangleSetPtr) GetProcAddress(hLibrary, "lib3mf_meshobject_gettriangleset");
+		#else // _WIN32
+		pWrapperTable->m_MeshObject_GetTriangleSet = (PLib3MFMeshObject_GetTriangleSetPtr) dlsym(hLibrary, "lib3mf_meshobject_gettriangleset");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_MeshObject_GetTriangleSet == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -10206,6 +10430,58 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_MetaDataGroup_AddMetaData == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_triangleset_setname", (void**)&(pWrapperTable->m_TriangleSet_SetName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_TriangleSet_SetName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_triangleset_getname", (void**)&(pWrapperTable->m_TriangleSet_GetName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_TriangleSet_GetName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_triangleset_setidentifier", (void**)&(pWrapperTable->m_TriangleSet_SetIdentifier));
+		if ( (eLookupError != 0) || (pWrapperTable->m_TriangleSet_SetIdentifier == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_triangleset_getidentifier", (void**)&(pWrapperTable->m_TriangleSet_GetIdentifier));
+		if ( (eLookupError != 0) || (pWrapperTable->m_TriangleSet_GetIdentifier == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_triangleset_addtriangle", (void**)&(pWrapperTable->m_TriangleSet_AddTriangle));
+		if ( (eLookupError != 0) || (pWrapperTable->m_TriangleSet_AddTriangle == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_triangleset_removetriangle", (void**)&(pWrapperTable->m_TriangleSet_RemoveTriangle));
+		if ( (eLookupError != 0) || (pWrapperTable->m_TriangleSet_RemoveTriangle == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_triangleset_clear", (void**)&(pWrapperTable->m_TriangleSet_Clear));
+		if ( (eLookupError != 0) || (pWrapperTable->m_TriangleSet_Clear == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_triangleset_settrianglelist", (void**)&(pWrapperTable->m_TriangleSet_SetTriangleList));
+		if ( (eLookupError != 0) || (pWrapperTable->m_TriangleSet_SetTriangleList == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_triangleset_gettrianglelist", (void**)&(pWrapperTable->m_TriangleSet_GetTriangleList));
+		if ( (eLookupError != 0) || (pWrapperTable->m_TriangleSet_GetTriangleList == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_triangleset_addtrianglelist", (void**)&(pWrapperTable->m_TriangleSet_AddTriangleList));
+		if ( (eLookupError != 0) || (pWrapperTable->m_TriangleSet_AddTriangleList == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_triangleset_merge", (void**)&(pWrapperTable->m_TriangleSet_Merge));
+		if ( (eLookupError != 0) || (pWrapperTable->m_TriangleSet_Merge == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_triangleset_deleteset", (void**)&(pWrapperTable->m_TriangleSet_DeleteSet));
+		if ( (eLookupError != 0) || (pWrapperTable->m_TriangleSet_DeleteSet == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_triangleset_duplicate", (void**)&(pWrapperTable->m_TriangleSet_Duplicate));
+		if ( (eLookupError != 0) || (pWrapperTable->m_TriangleSet_Duplicate == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_object_gettype", (void**)&(pWrapperTable->m_Object_GetType));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Object_GetType == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -10384,6 +10660,26 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_meshobject_setvolumedata", (void**)&(pWrapperTable->m_MeshObject_SetVolumeData));
 		if ( (eLookupError != 0) || (pWrapperTable->m_MeshObject_SetVolumeData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_meshobject_addtriangleset", (void**)&(pWrapperTable->m_MeshObject_AddTriangleSet));
+		if ( (eLookupError != 0) || (pWrapperTable->m_MeshObject_AddTriangleSet == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_meshobject_hastriangleset", (void**)&(pWrapperTable->m_MeshObject_HasTriangleSet));
+		if ( (eLookupError != 0) || (pWrapperTable->m_MeshObject_HasTriangleSet == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_meshobject_findtriangleset", (void**)&(pWrapperTable->m_MeshObject_FindTriangleSet));
+		if ( (eLookupError != 0) || (pWrapperTable->m_MeshObject_FindTriangleSet == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_meshobject_gettrianglesetcount", (void**)&(pWrapperTable->m_MeshObject_GetTriangleSetCount));
+		if ( (eLookupError != 0) || (pWrapperTable->m_MeshObject_GetTriangleSetCount == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_meshobject_gettriangleset", (void**)&(pWrapperTable->m_MeshObject_GetTriangleSet));
+		if ( (eLookupError != 0) || (pWrapperTable->m_MeshObject_GetTriangleSet == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_levelset_getfunction", (void**)&(pWrapperTable->m_LevelSet_GetFunction));
@@ -13282,6 +13578,152 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CTriangleSet
+	 */
+	
+	/**
+	* CTriangleSet::SetName - sets the name of the triangle set
+	* @param[in] sName - the new name
+	*/
+	void CTriangleSet::SetName(const std::string & sName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_SetName(m_pHandle, sName.c_str()));
+	}
+	
+	/**
+	* CTriangleSet::GetName - returns the name of the triangle set
+	* @return returns the name
+	*/
+	std::string CTriangleSet::GetName()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_GetName(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_GetName(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CTriangleSet::SetIdentifier - sets the identifier of the triangle set.
+	* @param[in] sIdentifier - the new identifier. MUST be unique within the mesh. MUST NOT be an empty string
+	*/
+	void CTriangleSet::SetIdentifier(const std::string & sIdentifier)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_SetIdentifier(m_pHandle, sIdentifier.c_str()));
+	}
+	
+	/**
+	* CTriangleSet::GetIdentifier - returns the identifier of the triangle set
+	* @return returns the identifier
+	*/
+	std::string CTriangleSet::GetIdentifier()
+	{
+		Lib3MF_uint32 bytesNeededIdentifier = 0;
+		Lib3MF_uint32 bytesWrittenIdentifier = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_GetIdentifier(m_pHandle, 0, &bytesNeededIdentifier, nullptr));
+		std::vector<char> bufferIdentifier(bytesNeededIdentifier);
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_GetIdentifier(m_pHandle, bytesNeededIdentifier, &bytesWrittenIdentifier, &bufferIdentifier[0]));
+		
+		return std::string(&bufferIdentifier[0]);
+	}
+	
+	/**
+	* CTriangleSet::AddTriangle - adds a triangle to the set. Does nothing if triangle is already in the set.
+	* @param[in] nTriangleIndex - Triangle index to add. MUST be between 0 and TriangleCount - 1.
+	*/
+	void CTriangleSet::AddTriangle(const Lib3MF_uint32 nTriangleIndex)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_AddTriangle(m_pHandle, nTriangleIndex));
+	}
+	
+	/**
+	* CTriangleSet::RemoveTriangle - removes a triangle from the set
+	* @param[in] nTriangleIndex - Triangle index to remove. MUST be between 0 and TriangleCount - 1.
+	*/
+	void CTriangleSet::RemoveTriangle(const Lib3MF_uint32 nTriangleIndex)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_RemoveTriangle(m_pHandle, nTriangleIndex));
+	}
+	
+	/**
+	* CTriangleSet::Clear - clears all triangles from the list
+	*/
+	void CTriangleSet::Clear()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_Clear(m_pHandle));
+	}
+	
+	/**
+	* CTriangleSet::SetTriangleList - Sets all triangles in the list, while clearing old values. Duplicates will be merged.
+	* @param[in] TriangleIndicesBuffer - Triangle indices to add. Every element MUST be between 0 and TriangleCount - 1.
+	*/
+	void CTriangleSet::SetTriangleList(const CInputVector<Lib3MF_uint32> & TriangleIndicesBuffer)
+	{
+		Lib3MF_uint64 nTriangleIndicesSize = TriangleIndicesBuffer.size();
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_SetTriangleList(m_pHandle, nTriangleIndicesSize, TriangleIndicesBuffer.data()));
+	}
+	
+	/**
+	* CTriangleSet::GetTriangleList - Retrieves all the triangles in the TriangleSet
+	* @param[out] TriangleIndicesBuffer - retrieves the indices of the triangles in this TriangleSet
+	*/
+	void CTriangleSet::GetTriangleList(std::vector<Lib3MF_uint32> & TriangleIndicesBuffer)
+	{
+		Lib3MF_uint64 elementsNeededTriangleIndices = 0;
+		Lib3MF_uint64 elementsWrittenTriangleIndices = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_GetTriangleList(m_pHandle, 0, &elementsNeededTriangleIndices, nullptr));
+		TriangleIndicesBuffer.resize((size_t) elementsNeededTriangleIndices);
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_GetTriangleList(m_pHandle, elementsNeededTriangleIndices, &elementsWrittenTriangleIndices, TriangleIndicesBuffer.data()));
+	}
+	
+	/**
+	* CTriangleSet::AddTriangleList - Adds multiple triangles in the list. Duplicates will be merged.
+	* @param[in] TriangleIndicesBuffer - Triangle indices to add. Every element MUST be between 0 and TriangleCount - 1.
+	*/
+	void CTriangleSet::AddTriangleList(const CInputVector<Lib3MF_uint32> & TriangleIndicesBuffer)
+	{
+		Lib3MF_uint64 nTriangleIndicesSize = TriangleIndicesBuffer.size();
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_AddTriangleList(m_pHandle, nTriangleIndicesSize, TriangleIndicesBuffer.data()));
+	}
+	
+	/**
+	* CTriangleSet::Merge - Merges another Triangle set.
+	* @param[in] pOtherTriangleSet - Other triangle set to merge.
+	* @param[in] bDeleteOther - Flag if other triangle set is getting removed.
+	*/
+	void CTriangleSet::Merge(classParam<CTriangleSet> pOtherTriangleSet, const bool bDeleteOther)
+	{
+		Lib3MFHandle hOtherTriangleSet = pOtherTriangleSet.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_Merge(m_pHandle, hOtherTriangleSet, bDeleteOther));
+	}
+	
+	/**
+	* CTriangleSet::DeleteSet - Deletes the whole set from the mesh.
+	*/
+	void CTriangleSet::DeleteSet()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_DeleteSet(m_pHandle));
+	}
+	
+	/**
+	* CTriangleSet::Duplicate - Duplicates the set in the mesh.
+	* @param[in] sIdentifier - the new identifier. MUST be unique within the mesh. MUST NOT be an empty string
+	* @return Copy of the triangle set.
+	*/
+	PTriangleSet CTriangleSet::Duplicate(const std::string & sIdentifier)
+	{
+		Lib3MFHandle hNewSet = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_TriangleSet_Duplicate(m_pHandle, sIdentifier.c_str(), &hNewSet));
+		
+		if (!hNewSet) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CTriangleSet>(dynamic_cast<CTriangleSet*>(m_pWrapper->polymorphicFactory(hNewSet)));
+	}
+	
+	/**
 	 * Method definitions for class CObject
 	 */
 	
@@ -13819,6 +14261,80 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	{
 		Lib3MFHandle hTheVolumeData = pTheVolumeData.GetHandle();
 		CheckError(m_pWrapper->m_WrapperTable.m_MeshObject_SetVolumeData(m_pHandle, hTheVolumeData));
+	}
+	
+	/**
+	* CMeshObject::AddTriangleSet - Adds a new triangle set.
+	* @param[in] sIdentifier - the new identifier. MUST be unique within the mesh. MUST NOT be an empty string
+	* @param[in] sName - the human readable name. MUST NOT be an empty string
+	* @return the new Triangle Set Instance.
+	*/
+	PTriangleSet CMeshObject::AddTriangleSet(const std::string & sIdentifier, const std::string & sName)
+	{
+		Lib3MFHandle hTheTriangleSet = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_MeshObject_AddTriangleSet(m_pHandle, sIdentifier.c_str(), sName.c_str(), &hTheTriangleSet));
+		
+		if (!hTheTriangleSet) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CTriangleSet>(dynamic_cast<CTriangleSet*>(m_pWrapper->polymorphicFactory(hTheTriangleSet)));
+	}
+	
+	/**
+	* CMeshObject::HasTriangleSet - Checks if a triangle set exists.
+	* @param[in] sIdentifier - the identifier to be found.
+	* @return flag if the triangles set exists.
+	*/
+	bool CMeshObject::HasTriangleSet(const std::string & sIdentifier)
+	{
+		bool resultTriangleSetExists = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_MeshObject_HasTriangleSet(m_pHandle, sIdentifier.c_str(), &resultTriangleSetExists));
+		
+		return resultTriangleSetExists;
+	}
+	
+	/**
+	* CMeshObject::FindTriangleSet - Finds a new triangle set by identifier. Fails if not existing.
+	* @param[in] sIdentifier - the identifier to be found.
+	* @return the triangle Set Instance.
+	*/
+	PTriangleSet CMeshObject::FindTriangleSet(const std::string & sIdentifier)
+	{
+		Lib3MFHandle hTheTriangleSet = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_MeshObject_FindTriangleSet(m_pHandle, sIdentifier.c_str(), &hTheTriangleSet));
+		
+		if (!hTheTriangleSet) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CTriangleSet>(dynamic_cast<CTriangleSet*>(m_pWrapper->polymorphicFactory(hTheTriangleSet)));
+	}
+	
+	/**
+	* CMeshObject::GetTriangleSetCount - Returns number of triangle sets.
+	* @return the number of triangle sets of this mesh.
+	*/
+	Lib3MF_uint32 CMeshObject::GetTriangleSetCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_MeshObject_GetTriangleSetCount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CMeshObject::GetTriangleSet - Returns a specific triangle set by index.
+	* @param[in] nIndex - the index of the triangle set.
+	* @return the triangle Set Instance.
+	*/
+	PTriangleSet CMeshObject::GetTriangleSet(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hTheTriangleSet = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_MeshObject_GetTriangleSet(m_pHandle, nIndex, &hTheTriangleSet));
+		
+		if (!hTheTriangleSet) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CTriangleSet>(dynamic_cast<CTriangleSet*>(m_pWrapper->polymorphicFactory(hTheTriangleSet)));
 	}
 	
 	/**

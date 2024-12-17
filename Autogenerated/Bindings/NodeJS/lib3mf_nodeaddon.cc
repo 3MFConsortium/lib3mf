@@ -69,6 +69,7 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFLevelSetIterator::Init();
 	CLib3MFMetaData::Init();
 	CLib3MFMetaDataGroup::Init();
+	CLib3MFTriangleSet::Init();
 	CLib3MFObject::Init();
 	CLib3MFMeshObject::Init();
 	CLib3MFLevelSet::Init();
