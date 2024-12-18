@@ -87,8 +87,10 @@ namespace NMR {
 	{
 		auto pTriangleSet = std::make_shared<CModelTriangleSet>(m_sName, sIdentifier);
 
-		for (auto nTriangleIndex : m_sTriangles)
+		for (auto nTriangleIndex : m_sTriangles) 
+		{
 			pTriangleSet->m_sTriangles.insert(nTriangleIndex);
+		}
 
 		return pTriangleSet;
 	}
@@ -99,7 +101,9 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		for (auto nTriangleIndex : pTriangleSet->m_sTriangles)
+		{
 			m_sTriangles.insert(nTriangleIndex);
+		}
 
 	}
 
