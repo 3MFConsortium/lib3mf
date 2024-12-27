@@ -781,6 +781,135 @@ typedef Lib3MFResult (*PLib3MFMetaDataGroup_RemoveMetaDataPtr) (Lib3MF_MetaDataG
 typedef Lib3MFResult (*PLib3MFMetaDataGroup_AddMetaDataPtr) (Lib3MF_MetaDataGroup pMetaDataGroup, const char * pNameSpace, const char * pName, const char * pValue, const char * pType, bool bMustPreserve, Lib3MF_MetaData * pMetaData);
 
 /*************************************************************************************************************************
+ Class definition for TriangleSet
+**************************************************************************************************************************/
+
+/**
+* sets the name of the triangle set
+*
+* @param[in] pTriangleSet - TriangleSet instance.
+* @param[in] pName - the new name
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFTriangleSet_SetNamePtr) (Lib3MF_TriangleSet pTriangleSet, const char * pName);
+
+/**
+* returns the name of the triangle set
+*
+* @param[in] pTriangleSet - TriangleSet instance.
+* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameBuffer -  buffer of returns the name, may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFTriangleSet_GetNamePtr) (Lib3MF_TriangleSet pTriangleSet, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
+
+/**
+* sets the identifier of the triangle set.
+*
+* @param[in] pTriangleSet - TriangleSet instance.
+* @param[in] pIdentifier - the new identifier. MUST be unique within the mesh. MUST NOT be an empty string
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFTriangleSet_SetIdentifierPtr) (Lib3MF_TriangleSet pTriangleSet, const char * pIdentifier);
+
+/**
+* returns the identifier of the triangle set
+*
+* @param[in] pTriangleSet - TriangleSet instance.
+* @param[in] nIdentifierBufferSize - size of the buffer (including trailing 0)
+* @param[out] pIdentifierNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pIdentifierBuffer -  buffer of returns the identifier, may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFTriangleSet_GetIdentifierPtr) (Lib3MF_TriangleSet pTriangleSet, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer);
+
+/**
+* adds a triangle to the set. Does nothing if triangle is already in the set.
+*
+* @param[in] pTriangleSet - TriangleSet instance.
+* @param[in] nTriangleIndex - Triangle index to add. MUST be between 0 and TriangleCount - 1.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFTriangleSet_AddTrianglePtr) (Lib3MF_TriangleSet pTriangleSet, Lib3MF_uint32 nTriangleIndex);
+
+/**
+* removes a triangle from the set
+*
+* @param[in] pTriangleSet - TriangleSet instance.
+* @param[in] nTriangleIndex - Triangle index to remove. MUST be between 0 and TriangleCount - 1.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFTriangleSet_RemoveTrianglePtr) (Lib3MF_TriangleSet pTriangleSet, Lib3MF_uint32 nTriangleIndex);
+
+/**
+* clears all triangles from the list
+*
+* @param[in] pTriangleSet - TriangleSet instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFTriangleSet_ClearPtr) (Lib3MF_TriangleSet pTriangleSet);
+
+/**
+* Sets all triangles in the list, while clearing old values. Duplicates will be merged.
+*
+* @param[in] pTriangleSet - TriangleSet instance.
+* @param[in] nTriangleIndicesBufferSize - Number of elements in buffer
+* @param[in] pTriangleIndicesBuffer - uint32 buffer of Triangle indices to add. Every element MUST be between 0 and TriangleCount - 1.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFTriangleSet_SetTriangleListPtr) (Lib3MF_TriangleSet pTriangleSet, Lib3MF_uint64 nTriangleIndicesBufferSize, const Lib3MF_uint32 * pTriangleIndicesBuffer);
+
+/**
+* Retrieves all the triangles in the TriangleSet
+*
+* @param[in] pTriangleSet - TriangleSet instance.
+* @param[in] nTriangleIndicesBufferSize - Number of elements in buffer
+* @param[out] pTriangleIndicesNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pTriangleIndicesBuffer - uint32  buffer of retrieves the indices of the triangles in this TriangleSet
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFTriangleSet_GetTriangleListPtr) (Lib3MF_TriangleSet pTriangleSet, const Lib3MF_uint64 nTriangleIndicesBufferSize, Lib3MF_uint64* pTriangleIndicesNeededCount, Lib3MF_uint32 * pTriangleIndicesBuffer);
+
+/**
+* Adds multiple triangles in the list. Duplicates will be merged.
+*
+* @param[in] pTriangleSet - TriangleSet instance.
+* @param[in] nTriangleIndicesBufferSize - Number of elements in buffer
+* @param[in] pTriangleIndicesBuffer - uint32 buffer of Triangle indices to add. Every element MUST be between 0 and TriangleCount - 1.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFTriangleSet_AddTriangleListPtr) (Lib3MF_TriangleSet pTriangleSet, Lib3MF_uint64 nTriangleIndicesBufferSize, const Lib3MF_uint32 * pTriangleIndicesBuffer);
+
+/**
+* Merges another Triangle set.
+*
+* @param[in] pTriangleSet - TriangleSet instance.
+* @param[in] pOtherTriangleSet - Other triangle set to merge.
+* @param[in] bDeleteOther - Flag if other triangle set is getting removed.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFTriangleSet_MergePtr) (Lib3MF_TriangleSet pTriangleSet, Lib3MF_TriangleSet pOtherTriangleSet, bool bDeleteOther);
+
+/**
+* Deletes the whole set from the mesh.
+*
+* @param[in] pTriangleSet - TriangleSet instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFTriangleSet_DeleteSetPtr) (Lib3MF_TriangleSet pTriangleSet);
+
+/**
+* Duplicates the set in the mesh.
+*
+* @param[in] pTriangleSet - TriangleSet instance.
+* @param[in] pIdentifier - the new identifier. MUST be unique within the mesh. MUST NOT be an empty string
+* @param[out] pNewSet - Copy of the triangle set.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFTriangleSet_DuplicatePtr) (Lib3MF_TriangleSet pTriangleSet, const char * pIdentifier, Lib3MF_TriangleSet * pNewSet);
+
+/*************************************************************************************************************************
  Class definition for Object
 **************************************************************************************************************************/
 
@@ -1218,6 +1347,56 @@ typedef Lib3MFResult (*PLib3MFMeshObject_GetVolumeDataPtr) (Lib3MF_MeshObject pM
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFMeshObject_SetVolumeDataPtr) (Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData pTheVolumeData);
+
+/**
+* Adds a new triangle set.
+*
+* @param[in] pMeshObject - MeshObject instance.
+* @param[in] pIdentifier - the new identifier. MUST be unique within the mesh. MUST NOT be an empty string
+* @param[in] pName - the human readable name. MUST NOT be an empty string
+* @param[out] pTheTriangleSet - the new Triangle Set Instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFMeshObject_AddTriangleSetPtr) (Lib3MF_MeshObject pMeshObject, const char * pIdentifier, const char * pName, Lib3MF_TriangleSet * pTheTriangleSet);
+
+/**
+* Checks if a triangle set exists.
+*
+* @param[in] pMeshObject - MeshObject instance.
+* @param[in] pIdentifier - the identifier to be found.
+* @param[out] pTriangleSetExists - flag if the triangles set exists.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFMeshObject_HasTriangleSetPtr) (Lib3MF_MeshObject pMeshObject, const char * pIdentifier, bool * pTriangleSetExists);
+
+/**
+* Finds a new triangle set by identifier. Fails if not existing.
+*
+* @param[in] pMeshObject - MeshObject instance.
+* @param[in] pIdentifier - the identifier to be found.
+* @param[out] pTheTriangleSet - the triangle Set Instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFMeshObject_FindTriangleSetPtr) (Lib3MF_MeshObject pMeshObject, const char * pIdentifier, Lib3MF_TriangleSet * pTheTriangleSet);
+
+/**
+* Returns number of triangle sets.
+*
+* @param[in] pMeshObject - MeshObject instance.
+* @param[out] pCount - the number of triangle sets of this mesh.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFMeshObject_GetTriangleSetCountPtr) (Lib3MF_MeshObject pMeshObject, Lib3MF_uint32 * pCount);
+
+/**
+* Returns a specific triangle set by index.
+*
+* @param[in] pMeshObject - MeshObject instance.
+* @param[in] nIndex - the index of the triangle set.
+* @param[out] pTheTriangleSet - the triangle Set Instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFMeshObject_GetTriangleSetPtr) (Lib3MF_MeshObject pMeshObject, Lib3MF_uint32 nIndex, Lib3MF_TriangleSet * pTheTriangleSet);
 
 /*************************************************************************************************************************
  Class definition for LevelSet
@@ -6512,6 +6691,19 @@ typedef struct {
 	PLib3MFMetaDataGroup_RemoveMetaDataByIndexPtr m_MetaDataGroup_RemoveMetaDataByIndex;
 	PLib3MFMetaDataGroup_RemoveMetaDataPtr m_MetaDataGroup_RemoveMetaData;
 	PLib3MFMetaDataGroup_AddMetaDataPtr m_MetaDataGroup_AddMetaData;
+	PLib3MFTriangleSet_SetNamePtr m_TriangleSet_SetName;
+	PLib3MFTriangleSet_GetNamePtr m_TriangleSet_GetName;
+	PLib3MFTriangleSet_SetIdentifierPtr m_TriangleSet_SetIdentifier;
+	PLib3MFTriangleSet_GetIdentifierPtr m_TriangleSet_GetIdentifier;
+	PLib3MFTriangleSet_AddTrianglePtr m_TriangleSet_AddTriangle;
+	PLib3MFTriangleSet_RemoveTrianglePtr m_TriangleSet_RemoveTriangle;
+	PLib3MFTriangleSet_ClearPtr m_TriangleSet_Clear;
+	PLib3MFTriangleSet_SetTriangleListPtr m_TriangleSet_SetTriangleList;
+	PLib3MFTriangleSet_GetTriangleListPtr m_TriangleSet_GetTriangleList;
+	PLib3MFTriangleSet_AddTriangleListPtr m_TriangleSet_AddTriangleList;
+	PLib3MFTriangleSet_MergePtr m_TriangleSet_Merge;
+	PLib3MFTriangleSet_DeleteSetPtr m_TriangleSet_DeleteSet;
+	PLib3MFTriangleSet_DuplicatePtr m_TriangleSet_Duplicate;
 	PLib3MFObject_GetTypePtr m_Object_GetType;
 	PLib3MFObject_SetTypePtr m_Object_SetType;
 	PLib3MFObject_GetNamePtr m_Object_GetName;
@@ -6557,6 +6749,11 @@ typedef struct {
 	PLib3MFMeshObject_BeamLatticePtr m_MeshObject_BeamLattice;
 	PLib3MFMeshObject_GetVolumeDataPtr m_MeshObject_GetVolumeData;
 	PLib3MFMeshObject_SetVolumeDataPtr m_MeshObject_SetVolumeData;
+	PLib3MFMeshObject_AddTriangleSetPtr m_MeshObject_AddTriangleSet;
+	PLib3MFMeshObject_HasTriangleSetPtr m_MeshObject_HasTriangleSet;
+	PLib3MFMeshObject_FindTriangleSetPtr m_MeshObject_FindTriangleSet;
+	PLib3MFMeshObject_GetTriangleSetCountPtr m_MeshObject_GetTriangleSetCount;
+	PLib3MFMeshObject_GetTriangleSetPtr m_MeshObject_GetTriangleSet;
 	PLib3MFLevelSet_GetFunctionPtr m_LevelSet_GetFunction;
 	PLib3MFLevelSet_SetFunctionPtr m_LevelSet_SetFunction;
 	PLib3MFLevelSet_GetTransformPtr m_LevelSet_GetTransform;
@@ -7265,6 +7462,45 @@ Lib3MFResult CCall_lib3mf_metadatagroup_removemetadata(Lib3MFHandle libraryHandl
 Lib3MFResult CCall_lib3mf_metadatagroup_addmetadata(Lib3MFHandle libraryHandle, Lib3MF_MetaDataGroup pMetaDataGroup, const char * pNameSpace, const char * pName, const char * pValue, const char * pType, bool bMustPreserve, Lib3MF_MetaData * pMetaData);
 
 
+Lib3MFResult CCall_lib3mf_triangleset_setname(Lib3MFHandle libraryHandle, Lib3MF_TriangleSet pTriangleSet, const char * pName);
+
+
+Lib3MFResult CCall_lib3mf_triangleset_getname(Lib3MFHandle libraryHandle, Lib3MF_TriangleSet pTriangleSet, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
+
+
+Lib3MFResult CCall_lib3mf_triangleset_setidentifier(Lib3MFHandle libraryHandle, Lib3MF_TriangleSet pTriangleSet, const char * pIdentifier);
+
+
+Lib3MFResult CCall_lib3mf_triangleset_getidentifier(Lib3MFHandle libraryHandle, Lib3MF_TriangleSet pTriangleSet, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer);
+
+
+Lib3MFResult CCall_lib3mf_triangleset_addtriangle(Lib3MFHandle libraryHandle, Lib3MF_TriangleSet pTriangleSet, Lib3MF_uint32 nTriangleIndex);
+
+
+Lib3MFResult CCall_lib3mf_triangleset_removetriangle(Lib3MFHandle libraryHandle, Lib3MF_TriangleSet pTriangleSet, Lib3MF_uint32 nTriangleIndex);
+
+
+Lib3MFResult CCall_lib3mf_triangleset_clear(Lib3MFHandle libraryHandle, Lib3MF_TriangleSet pTriangleSet);
+
+
+Lib3MFResult CCall_lib3mf_triangleset_settrianglelist(Lib3MFHandle libraryHandle, Lib3MF_TriangleSet pTriangleSet, Lib3MF_uint64 nTriangleIndicesBufferSize, const Lib3MF_uint32 * pTriangleIndicesBuffer);
+
+
+Lib3MFResult CCall_lib3mf_triangleset_gettrianglelist(Lib3MFHandle libraryHandle, Lib3MF_TriangleSet pTriangleSet, const Lib3MF_uint64 nTriangleIndicesBufferSize, Lib3MF_uint64* pTriangleIndicesNeededCount, Lib3MF_uint32 * pTriangleIndicesBuffer);
+
+
+Lib3MFResult CCall_lib3mf_triangleset_addtrianglelist(Lib3MFHandle libraryHandle, Lib3MF_TriangleSet pTriangleSet, Lib3MF_uint64 nTriangleIndicesBufferSize, const Lib3MF_uint32 * pTriangleIndicesBuffer);
+
+
+Lib3MFResult CCall_lib3mf_triangleset_merge(Lib3MFHandle libraryHandle, Lib3MF_TriangleSet pTriangleSet, Lib3MF_TriangleSet pOtherTriangleSet, bool bDeleteOther);
+
+
+Lib3MFResult CCall_lib3mf_triangleset_deleteset(Lib3MFHandle libraryHandle, Lib3MF_TriangleSet pTriangleSet);
+
+
+Lib3MFResult CCall_lib3mf_triangleset_duplicate(Lib3MFHandle libraryHandle, Lib3MF_TriangleSet pTriangleSet, const char * pIdentifier, Lib3MF_TriangleSet * pNewSet);
+
+
 Lib3MFResult CCall_lib3mf_object_gettype(Lib3MFHandle libraryHandle, Lib3MF_Object pObject, eLib3MFObjectType * pObjectType);
 
 
@@ -7398,6 +7634,21 @@ Lib3MFResult CCall_lib3mf_meshobject_getvolumedata(Lib3MFHandle libraryHandle, L
 
 
 Lib3MFResult CCall_lib3mf_meshobject_setvolumedata(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData pTheVolumeData);
+
+
+Lib3MFResult CCall_lib3mf_meshobject_addtriangleset(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, const char * pIdentifier, const char * pName, Lib3MF_TriangleSet * pTheTriangleSet);
+
+
+Lib3MFResult CCall_lib3mf_meshobject_hastriangleset(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, const char * pIdentifier, bool * pTriangleSetExists);
+
+
+Lib3MFResult CCall_lib3mf_meshobject_findtriangleset(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, const char * pIdentifier, Lib3MF_TriangleSet * pTheTriangleSet);
+
+
+Lib3MFResult CCall_lib3mf_meshobject_gettrianglesetcount(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, Lib3MF_uint32 * pCount);
+
+
+Lib3MFResult CCall_lib3mf_meshobject_gettriangleset(Lib3MFHandle libraryHandle, Lib3MF_MeshObject pMeshObject, Lib3MF_uint32 nIndex, Lib3MF_TriangleSet * pTheTriangleSet);
 
 
 Lib3MFResult CCall_lib3mf_levelset_getfunction(Lib3MFHandle libraryHandle, Lib3MF_LevelSet pLevelSet, Lib3MF_Function * pTheFunction);

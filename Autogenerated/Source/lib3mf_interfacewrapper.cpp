@@ -2726,6 +2726,495 @@ Lib3MFResult lib3mf_metadatagroup_addmetadata(Lib3MF_MetaDataGroup pMetaDataGrou
 
 
 /*************************************************************************************************************************
+ Class implementation for TriangleSet
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_triangleset_setname(Lib3MF_TriangleSet pTriangleSet, const char * pName)
+{
+	IBase* pIBaseClass = (IBase *)pTriangleSet;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pTriangleSet, "TriangleSet", "SetName");
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		ITriangleSet* pITriangleSet = dynamic_cast<ITriangleSet*>(pIBaseClass);
+		if (!pITriangleSet)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pITriangleSet->SetName(sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_triangleset_getname(Lib3MF_TriangleSet pTriangleSet, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pTriangleSet;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pTriangleSet, "TriangleSet", "GetName");
+		}
+		if ( (!pNameBuffer) && !(pNameNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName("");
+		ITriangleSet* pITriangleSet = dynamic_cast<ITriangleSet*>(pIBaseClass);
+		if (!pITriangleSet)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pNameBuffer == nullptr);
+		if (isCacheCall) {
+			sName = pITriangleSet->GetName();
+
+			pITriangleSet->_setCache (new ParameterCache_1<std::string> (sName));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pITriangleSet->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sName);
+			pITriangleSet->_setCache (nullptr);
+		}
+		
+		if (pNameNeededChars)
+			*pNameNeededChars = (Lib3MF_uint32) (sName.size()+1);
+		if (pNameBuffer) {
+			if (sName.size() >= nNameBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iName = 0; iName < sName.size(); iName++)
+				pNameBuffer[iName] = sName[iName];
+			pNameBuffer[sName.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Name", sName.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_triangleset_setidentifier(Lib3MF_TriangleSet pTriangleSet, const char * pIdentifier)
+{
+	IBase* pIBaseClass = (IBase *)pTriangleSet;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pTriangleSet, "TriangleSet", "SetIdentifier");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		ITriangleSet* pITriangleSet = dynamic_cast<ITriangleSet*>(pIBaseClass);
+		if (!pITriangleSet)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pITriangleSet->SetIdentifier(sIdentifier);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_triangleset_getidentifier(Lib3MF_TriangleSet pTriangleSet, const Lib3MF_uint32 nIdentifierBufferSize, Lib3MF_uint32* pIdentifierNeededChars, char * pIdentifierBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pTriangleSet;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pTriangleSet, "TriangleSet", "GetIdentifier");
+		}
+		if ( (!pIdentifierBuffer) && !(pIdentifierNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier("");
+		ITriangleSet* pITriangleSet = dynamic_cast<ITriangleSet*>(pIBaseClass);
+		if (!pITriangleSet)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pIdentifierBuffer == nullptr);
+		if (isCacheCall) {
+			sIdentifier = pITriangleSet->GetIdentifier();
+
+			pITriangleSet->_setCache (new ParameterCache_1<std::string> (sIdentifier));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pITriangleSet->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sIdentifier);
+			pITriangleSet->_setCache (nullptr);
+		}
+		
+		if (pIdentifierNeededChars)
+			*pIdentifierNeededChars = (Lib3MF_uint32) (sIdentifier.size()+1);
+		if (pIdentifierBuffer) {
+			if (sIdentifier.size() >= nIdentifierBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iIdentifier = 0; iIdentifier < sIdentifier.size(); iIdentifier++)
+				pIdentifierBuffer[iIdentifier] = sIdentifier[iIdentifier];
+			pIdentifierBuffer[sIdentifier.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Identifier", sIdentifier.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_triangleset_addtriangle(Lib3MF_TriangleSet pTriangleSet, Lib3MF_uint32 nTriangleIndex)
+{
+	IBase* pIBaseClass = (IBase *)pTriangleSet;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pTriangleSet, "TriangleSet", "AddTriangle");
+			pJournalEntry->addUInt32Parameter("TriangleIndex", nTriangleIndex);
+		}
+		ITriangleSet* pITriangleSet = dynamic_cast<ITriangleSet*>(pIBaseClass);
+		if (!pITriangleSet)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pITriangleSet->AddTriangle(nTriangleIndex);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_triangleset_removetriangle(Lib3MF_TriangleSet pTriangleSet, Lib3MF_uint32 nTriangleIndex)
+{
+	IBase* pIBaseClass = (IBase *)pTriangleSet;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pTriangleSet, "TriangleSet", "RemoveTriangle");
+			pJournalEntry->addUInt32Parameter("TriangleIndex", nTriangleIndex);
+		}
+		ITriangleSet* pITriangleSet = dynamic_cast<ITriangleSet*>(pIBaseClass);
+		if (!pITriangleSet)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pITriangleSet->RemoveTriangle(nTriangleIndex);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_triangleset_clear(Lib3MF_TriangleSet pTriangleSet)
+{
+	IBase* pIBaseClass = (IBase *)pTriangleSet;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pTriangleSet, "TriangleSet", "Clear");
+		}
+		ITriangleSet* pITriangleSet = dynamic_cast<ITriangleSet*>(pIBaseClass);
+		if (!pITriangleSet)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pITriangleSet->Clear();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_triangleset_settrianglelist(Lib3MF_TriangleSet pTriangleSet, Lib3MF_uint64 nTriangleIndicesBufferSize, const Lib3MF_uint32 * pTriangleIndicesBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pTriangleSet;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pTriangleSet, "TriangleSet", "SetTriangleList");
+		}
+		if ( (!pTriangleIndicesBuffer) && (nTriangleIndicesBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		ITriangleSet* pITriangleSet = dynamic_cast<ITriangleSet*>(pIBaseClass);
+		if (!pITriangleSet)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pITriangleSet->SetTriangleList(nTriangleIndicesBufferSize, pTriangleIndicesBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_triangleset_gettrianglelist(Lib3MF_TriangleSet pTriangleSet, const Lib3MF_uint64 nTriangleIndicesBufferSize, Lib3MF_uint64* pTriangleIndicesNeededCount, Lib3MF_uint32 * pTriangleIndicesBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pTriangleSet;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pTriangleSet, "TriangleSet", "GetTriangleList");
+		}
+		if ((!pTriangleIndicesBuffer) && !(pTriangleIndicesNeededCount))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		ITriangleSet* pITriangleSet = dynamic_cast<ITriangleSet*>(pIBaseClass);
+		if (!pITriangleSet)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pITriangleSet->GetTriangleList(nTriangleIndicesBufferSize, pTriangleIndicesNeededCount, pTriangleIndicesBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_triangleset_addtrianglelist(Lib3MF_TriangleSet pTriangleSet, Lib3MF_uint64 nTriangleIndicesBufferSize, const Lib3MF_uint32 * pTriangleIndicesBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pTriangleSet;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pTriangleSet, "TriangleSet", "AddTriangleList");
+		}
+		if ( (!pTriangleIndicesBuffer) && (nTriangleIndicesBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		ITriangleSet* pITriangleSet = dynamic_cast<ITriangleSet*>(pIBaseClass);
+		if (!pITriangleSet)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pITriangleSet->AddTriangleList(nTriangleIndicesBufferSize, pTriangleIndicesBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_triangleset_merge(Lib3MF_TriangleSet pTriangleSet, Lib3MF_TriangleSet pOtherTriangleSet, bool bDeleteOther)
+{
+	IBase* pIBaseClass = (IBase *)pTriangleSet;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pTriangleSet, "TriangleSet", "Merge");
+			pJournalEntry->addHandleParameter("OtherTriangleSet", pOtherTriangleSet);
+			pJournalEntry->addBooleanParameter("DeleteOther", bDeleteOther);
+		}
+		IBase* pIBaseClassOtherTriangleSet = (IBase *)pOtherTriangleSet;
+		ITriangleSet* pIOtherTriangleSet = dynamic_cast<ITriangleSet*>(pIBaseClassOtherTriangleSet);
+		if (!pIOtherTriangleSet)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		ITriangleSet* pITriangleSet = dynamic_cast<ITriangleSet*>(pIBaseClass);
+		if (!pITriangleSet)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pITriangleSet->Merge(pIOtherTriangleSet, bDeleteOther);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_triangleset_deleteset(Lib3MF_TriangleSet pTriangleSet)
+{
+	IBase* pIBaseClass = (IBase *)pTriangleSet;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pTriangleSet, "TriangleSet", "DeleteSet");
+		}
+		ITriangleSet* pITriangleSet = dynamic_cast<ITriangleSet*>(pIBaseClass);
+		if (!pITriangleSet)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pITriangleSet->DeleteSet();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_triangleset_duplicate(Lib3MF_TriangleSet pTriangleSet, const char * pIdentifier, Lib3MF_TriangleSet * pNewSet)
+{
+	IBase* pIBaseClass = (IBase *)pTriangleSet;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pTriangleSet, "TriangleSet", "Duplicate");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNewSet == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		IBase* pBaseNewSet(nullptr);
+		ITriangleSet* pITriangleSet = dynamic_cast<ITriangleSet*>(pIBaseClass);
+		if (!pITriangleSet)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNewSet = pITriangleSet->Duplicate(sIdentifier);
+
+		*pNewSet = (IBase*)(pBaseNewSet);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("NewSet", *pNewSet);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
  Class implementation for Object
 **************************************************************************************************************************/
 Lib3MFResult lib3mf_object_gettype(Lib3MF_Object pObject, eLib3MFObjectType * pObjectType)
@@ -4321,6 +4810,199 @@ Lib3MFResult lib3mf_meshobject_setvolumedata(Lib3MF_MeshObject pMeshObject, Lib3
 		pIMeshObject->SetVolumeData(pITheVolumeData);
 
 		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_meshobject_addtriangleset(Lib3MF_MeshObject pMeshObject, const char * pIdentifier, const char * pName, Lib3MF_TriangleSet * pTheTriangleSet)
+{
+	IBase* pIBaseClass = (IBase *)pMeshObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMeshObject, "MeshObject", "AddTriangleSet");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTheTriangleSet == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sName(pName);
+		IBase* pBaseTheTriangleSet(nullptr);
+		IMeshObject* pIMeshObject = dynamic_cast<IMeshObject*>(pIBaseClass);
+		if (!pIMeshObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheTriangleSet = pIMeshObject->AddTriangleSet(sIdentifier, sName);
+
+		*pTheTriangleSet = (IBase*)(pBaseTheTriangleSet);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheTriangleSet", *pTheTriangleSet);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_meshobject_hastriangleset(Lib3MF_MeshObject pMeshObject, const char * pIdentifier, bool * pTriangleSetExists)
+{
+	IBase* pIBaseClass = (IBase *)pMeshObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMeshObject, "MeshObject", "HasTriangleSet");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTriangleSetExists == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		IMeshObject* pIMeshObject = dynamic_cast<IMeshObject*>(pIBaseClass);
+		if (!pIMeshObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pTriangleSetExists = pIMeshObject->HasTriangleSet(sIdentifier);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("TriangleSetExists", *pTriangleSetExists);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_meshobject_findtriangleset(Lib3MF_MeshObject pMeshObject, const char * pIdentifier, Lib3MF_TriangleSet * pTheTriangleSet)
+{
+	IBase* pIBaseClass = (IBase *)pMeshObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMeshObject, "MeshObject", "FindTriangleSet");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTheTriangleSet == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		IBase* pBaseTheTriangleSet(nullptr);
+		IMeshObject* pIMeshObject = dynamic_cast<IMeshObject*>(pIBaseClass);
+		if (!pIMeshObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheTriangleSet = pIMeshObject->FindTriangleSet(sIdentifier);
+
+		*pTheTriangleSet = (IBase*)(pBaseTheTriangleSet);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheTriangleSet", *pTheTriangleSet);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_meshobject_gettrianglesetcount(Lib3MF_MeshObject pMeshObject, Lib3MF_uint32 * pCount)
+{
+	IBase* pIBaseClass = (IBase *)pMeshObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMeshObject, "MeshObject", "GetTriangleSetCount");
+		}
+		if (pCount == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IMeshObject* pIMeshObject = dynamic_cast<IMeshObject*>(pIBaseClass);
+		if (!pIMeshObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCount = pIMeshObject->GetTriangleSetCount();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("Count", *pCount);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_meshobject_gettriangleset(Lib3MF_MeshObject pMeshObject, Lib3MF_uint32 nIndex, Lib3MF_TriangleSet * pTheTriangleSet)
+{
+	IBase* pIBaseClass = (IBase *)pMeshObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pMeshObject, "MeshObject", "GetTriangleSet");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if (pTheTriangleSet == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseTheTriangleSet(nullptr);
+		IMeshObject* pIMeshObject = dynamic_cast<IMeshObject*>(pIBaseClass);
+		if (!pIMeshObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheTriangleSet = pIMeshObject->GetTriangleSet(nIndex);
+
+		*pTheTriangleSet = (IBase*)(pBaseTheTriangleSet);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheTriangleSet", *pTheTriangleSet);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -22795,6 +23477,32 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_metadatagroup_removemetadata;
 	if (sProcName == "lib3mf_metadatagroup_addmetadata") 
 		*ppProcAddress = (void*) &lib3mf_metadatagroup_addmetadata;
+	if (sProcName == "lib3mf_triangleset_setname") 
+		*ppProcAddress = (void*) &lib3mf_triangleset_setname;
+	if (sProcName == "lib3mf_triangleset_getname") 
+		*ppProcAddress = (void*) &lib3mf_triangleset_getname;
+	if (sProcName == "lib3mf_triangleset_setidentifier") 
+		*ppProcAddress = (void*) &lib3mf_triangleset_setidentifier;
+	if (sProcName == "lib3mf_triangleset_getidentifier") 
+		*ppProcAddress = (void*) &lib3mf_triangleset_getidentifier;
+	if (sProcName == "lib3mf_triangleset_addtriangle") 
+		*ppProcAddress = (void*) &lib3mf_triangleset_addtriangle;
+	if (sProcName == "lib3mf_triangleset_removetriangle") 
+		*ppProcAddress = (void*) &lib3mf_triangleset_removetriangle;
+	if (sProcName == "lib3mf_triangleset_clear") 
+		*ppProcAddress = (void*) &lib3mf_triangleset_clear;
+	if (sProcName == "lib3mf_triangleset_settrianglelist") 
+		*ppProcAddress = (void*) &lib3mf_triangleset_settrianglelist;
+	if (sProcName == "lib3mf_triangleset_gettrianglelist") 
+		*ppProcAddress = (void*) &lib3mf_triangleset_gettrianglelist;
+	if (sProcName == "lib3mf_triangleset_addtrianglelist") 
+		*ppProcAddress = (void*) &lib3mf_triangleset_addtrianglelist;
+	if (sProcName == "lib3mf_triangleset_merge") 
+		*ppProcAddress = (void*) &lib3mf_triangleset_merge;
+	if (sProcName == "lib3mf_triangleset_deleteset") 
+		*ppProcAddress = (void*) &lib3mf_triangleset_deleteset;
+	if (sProcName == "lib3mf_triangleset_duplicate") 
+		*ppProcAddress = (void*) &lib3mf_triangleset_duplicate;
 	if (sProcName == "lib3mf_object_gettype") 
 		*ppProcAddress = (void*) &lib3mf_object_gettype;
 	if (sProcName == "lib3mf_object_settype") 
@@ -22885,6 +23593,16 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_meshobject_getvolumedata;
 	if (sProcName == "lib3mf_meshobject_setvolumedata") 
 		*ppProcAddress = (void*) &lib3mf_meshobject_setvolumedata;
+	if (sProcName == "lib3mf_meshobject_addtriangleset") 
+		*ppProcAddress = (void*) &lib3mf_meshobject_addtriangleset;
+	if (sProcName == "lib3mf_meshobject_hastriangleset") 
+		*ppProcAddress = (void*) &lib3mf_meshobject_hastriangleset;
+	if (sProcName == "lib3mf_meshobject_findtriangleset") 
+		*ppProcAddress = (void*) &lib3mf_meshobject_findtriangleset;
+	if (sProcName == "lib3mf_meshobject_gettrianglesetcount") 
+		*ppProcAddress = (void*) &lib3mf_meshobject_gettrianglesetcount;
+	if (sProcName == "lib3mf_meshobject_gettriangleset") 
+		*ppProcAddress = (void*) &lib3mf_meshobject_gettriangleset;
 	if (sProcName == "lib3mf_levelset_getfunction") 
 		*ppProcAddress = (void*) &lib3mf_levelset_getfunction;
 	if (sProcName == "lib3mf_levelset_setfunction") 

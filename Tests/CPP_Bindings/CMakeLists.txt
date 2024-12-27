@@ -40,6 +40,7 @@ set(SRCS_UNITTEST
 	./Source/Volumetric.cpp
 	./Source/Wrapper.cpp
 	./Source/Writer.cpp
+	./Source/TriangleSets.cpp
 )
 
 set(CMAKE_CURRENT_BINARY_DIR ${CMAKE_BINARY_DIR})

@@ -192,6 +192,15 @@ namespace NMR {
 		case NMR_ERROR_INVALIDMESHINFORMATIONDATA: return "Mesh Information Block was not assigned";
 		case NMR_ERROR_INVALIDMESHINFORMATION: return "Mesh Information Object was not assigned";
 		case NMR_ERROR_TOOMANYBEAMS: return "The mesh exceeds more than NMR_MESH_MAXBEAMCOUNT (2^31-1, around two billion) beams";
+		case NMR_ERROR_TOOMANYBALLS: return "The mesh exceeds more than NMR_MESH_MAXBALLCOUNT (2^31-1, around two billion) balls";
+		case NMR_ERROR_INVALIDSLICEPOLYGON: return "Invalid slice polygon index";
+		case NMR_ERROR_INVALIDSLICEVERTEX: return "Invalid slice vertex index";
+		case NMR_ERROR_DUPLICATETRIANGLESET: return "Duplicate triangle set";
+		case NMR_ERROR_TOOMANYTRIANGLESETS: return "Too many triangle sets";
+		case NMR_ERROR_TRIANGLESETINVALIDATTRIBUTE: return "Invalid triangle set attribute";
+		case NMR_ERROR_TRIANGLESETMISSINGREFERENCEINDEX: return "Missing triangle set reference index";
+		case NMR_ERROR_TRIANGLESETNAMEMISSING: return "Triangle set name missing";
+		case NMR_ERROR_TRIANGLESETIDENTIFIERMISSING : return "Triangle set identifier missing";
 
 		// Model error codes (0x8XXX)
 		case NMR_ERROR_OPCREADFAILED: return "3MF Loading - OPC could not be loaded";

@@ -116,6 +116,19 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_MetaDataGroup_RemoveMetaDataByIndex = NULL;
 	pWrapperTable->m_MetaDataGroup_RemoveMetaData = NULL;
 	pWrapperTable->m_MetaDataGroup_AddMetaData = NULL;
+	pWrapperTable->m_TriangleSet_SetName = NULL;
+	pWrapperTable->m_TriangleSet_GetName = NULL;
+	pWrapperTable->m_TriangleSet_SetIdentifier = NULL;
+	pWrapperTable->m_TriangleSet_GetIdentifier = NULL;
+	pWrapperTable->m_TriangleSet_AddTriangle = NULL;
+	pWrapperTable->m_TriangleSet_RemoveTriangle = NULL;
+	pWrapperTable->m_TriangleSet_Clear = NULL;
+	pWrapperTable->m_TriangleSet_SetTriangleList = NULL;
+	pWrapperTable->m_TriangleSet_GetTriangleList = NULL;
+	pWrapperTable->m_TriangleSet_AddTriangleList = NULL;
+	pWrapperTable->m_TriangleSet_Merge = NULL;
+	pWrapperTable->m_TriangleSet_DeleteSet = NULL;
+	pWrapperTable->m_TriangleSet_Duplicate = NULL;
 	pWrapperTable->m_Object_GetType = NULL;
 	pWrapperTable->m_Object_SetType = NULL;
 	pWrapperTable->m_Object_GetName = NULL;
@@ -161,6 +174,11 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_MeshObject_BeamLattice = NULL;
 	pWrapperTable->m_MeshObject_GetVolumeData = NULL;
 	pWrapperTable->m_MeshObject_SetVolumeData = NULL;
+	pWrapperTable->m_MeshObject_AddTriangleSet = NULL;
+	pWrapperTable->m_MeshObject_HasTriangleSet = NULL;
+	pWrapperTable->m_MeshObject_FindTriangleSet = NULL;
+	pWrapperTable->m_MeshObject_GetTriangleSetCount = NULL;
+	pWrapperTable->m_MeshObject_GetTriangleSet = NULL;
 	pWrapperTable->m_LevelSet_GetFunction = NULL;
 	pWrapperTable->m_LevelSet_SetFunction = NULL;
 	pWrapperTable->m_LevelSet_GetTransform = NULL;
@@ -1317,6 +1335,123 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_TriangleSet_SetName = (PLib3MFTriangleSet_SetNamePtr) GetProcAddress(hLibrary, "lib3mf_triangleset_setname");
+	#else // _WIN32
+	pWrapperTable->m_TriangleSet_SetName = (PLib3MFTriangleSet_SetNamePtr) dlsym(hLibrary, "lib3mf_triangleset_setname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_TriangleSet_SetName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_TriangleSet_GetName = (PLib3MFTriangleSet_GetNamePtr) GetProcAddress(hLibrary, "lib3mf_triangleset_getname");
+	#else // _WIN32
+	pWrapperTable->m_TriangleSet_GetName = (PLib3MFTriangleSet_GetNamePtr) dlsym(hLibrary, "lib3mf_triangleset_getname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_TriangleSet_GetName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_TriangleSet_SetIdentifier = (PLib3MFTriangleSet_SetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_triangleset_setidentifier");
+	#else // _WIN32
+	pWrapperTable->m_TriangleSet_SetIdentifier = (PLib3MFTriangleSet_SetIdentifierPtr) dlsym(hLibrary, "lib3mf_triangleset_setidentifier");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_TriangleSet_SetIdentifier == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_TriangleSet_GetIdentifier = (PLib3MFTriangleSet_GetIdentifierPtr) GetProcAddress(hLibrary, "lib3mf_triangleset_getidentifier");
+	#else // _WIN32
+	pWrapperTable->m_TriangleSet_GetIdentifier = (PLib3MFTriangleSet_GetIdentifierPtr) dlsym(hLibrary, "lib3mf_triangleset_getidentifier");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_TriangleSet_GetIdentifier == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_TriangleSet_AddTriangle = (PLib3MFTriangleSet_AddTrianglePtr) GetProcAddress(hLibrary, "lib3mf_triangleset_addtriangle");
+	#else // _WIN32
+	pWrapperTable->m_TriangleSet_AddTriangle = (PLib3MFTriangleSet_AddTrianglePtr) dlsym(hLibrary, "lib3mf_triangleset_addtriangle");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_TriangleSet_AddTriangle == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_TriangleSet_RemoveTriangle = (PLib3MFTriangleSet_RemoveTrianglePtr) GetProcAddress(hLibrary, "lib3mf_triangleset_removetriangle");
+	#else // _WIN32
+	pWrapperTable->m_TriangleSet_RemoveTriangle = (PLib3MFTriangleSet_RemoveTrianglePtr) dlsym(hLibrary, "lib3mf_triangleset_removetriangle");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_TriangleSet_RemoveTriangle == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_TriangleSet_Clear = (PLib3MFTriangleSet_ClearPtr) GetProcAddress(hLibrary, "lib3mf_triangleset_clear");
+	#else // _WIN32
+	pWrapperTable->m_TriangleSet_Clear = (PLib3MFTriangleSet_ClearPtr) dlsym(hLibrary, "lib3mf_triangleset_clear");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_TriangleSet_Clear == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_TriangleSet_SetTriangleList = (PLib3MFTriangleSet_SetTriangleListPtr) GetProcAddress(hLibrary, "lib3mf_triangleset_settrianglelist");
+	#else // _WIN32
+	pWrapperTable->m_TriangleSet_SetTriangleList = (PLib3MFTriangleSet_SetTriangleListPtr) dlsym(hLibrary, "lib3mf_triangleset_settrianglelist");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_TriangleSet_SetTriangleList == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_TriangleSet_GetTriangleList = (PLib3MFTriangleSet_GetTriangleListPtr) GetProcAddress(hLibrary, "lib3mf_triangleset_gettrianglelist");
+	#else // _WIN32
+	pWrapperTable->m_TriangleSet_GetTriangleList = (PLib3MFTriangleSet_GetTriangleListPtr) dlsym(hLibrary, "lib3mf_triangleset_gettrianglelist");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_TriangleSet_GetTriangleList == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_TriangleSet_AddTriangleList = (PLib3MFTriangleSet_AddTriangleListPtr) GetProcAddress(hLibrary, "lib3mf_triangleset_addtrianglelist");
+	#else // _WIN32
+	pWrapperTable->m_TriangleSet_AddTriangleList = (PLib3MFTriangleSet_AddTriangleListPtr) dlsym(hLibrary, "lib3mf_triangleset_addtrianglelist");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_TriangleSet_AddTriangleList == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_TriangleSet_Merge = (PLib3MFTriangleSet_MergePtr) GetProcAddress(hLibrary, "lib3mf_triangleset_merge");
+	#else // _WIN32
+	pWrapperTable->m_TriangleSet_Merge = (PLib3MFTriangleSet_MergePtr) dlsym(hLibrary, "lib3mf_triangleset_merge");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_TriangleSet_Merge == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_TriangleSet_DeleteSet = (PLib3MFTriangleSet_DeleteSetPtr) GetProcAddress(hLibrary, "lib3mf_triangleset_deleteset");
+	#else // _WIN32
+	pWrapperTable->m_TriangleSet_DeleteSet = (PLib3MFTriangleSet_DeleteSetPtr) dlsym(hLibrary, "lib3mf_triangleset_deleteset");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_TriangleSet_DeleteSet == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_TriangleSet_Duplicate = (PLib3MFTriangleSet_DuplicatePtr) GetProcAddress(hLibrary, "lib3mf_triangleset_duplicate");
+	#else // _WIN32
+	pWrapperTable->m_TriangleSet_Duplicate = (PLib3MFTriangleSet_DuplicatePtr) dlsym(hLibrary, "lib3mf_triangleset_duplicate");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_TriangleSet_Duplicate == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_Object_GetType = (PLib3MFObject_GetTypePtr) GetProcAddress(hLibrary, "lib3mf_object_gettype");
 	#else // _WIN32
 	pWrapperTable->m_Object_GetType = (PLib3MFObject_GetTypePtr) dlsym(hLibrary, "lib3mf_object_gettype");
@@ -1719,6 +1854,51 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_MeshObject_SetVolumeData == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_MeshObject_AddTriangleSet = (PLib3MFMeshObject_AddTriangleSetPtr) GetProcAddress(hLibrary, "lib3mf_meshobject_addtriangleset");
+	#else // _WIN32
+	pWrapperTable->m_MeshObject_AddTriangleSet = (PLib3MFMeshObject_AddTriangleSetPtr) dlsym(hLibrary, "lib3mf_meshobject_addtriangleset");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_MeshObject_AddTriangleSet == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_MeshObject_HasTriangleSet = (PLib3MFMeshObject_HasTriangleSetPtr) GetProcAddress(hLibrary, "lib3mf_meshobject_hastriangleset");
+	#else // _WIN32
+	pWrapperTable->m_MeshObject_HasTriangleSet = (PLib3MFMeshObject_HasTriangleSetPtr) dlsym(hLibrary, "lib3mf_meshobject_hastriangleset");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_MeshObject_HasTriangleSet == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_MeshObject_FindTriangleSet = (PLib3MFMeshObject_FindTriangleSetPtr) GetProcAddress(hLibrary, "lib3mf_meshobject_findtriangleset");
+	#else // _WIN32
+	pWrapperTable->m_MeshObject_FindTriangleSet = (PLib3MFMeshObject_FindTriangleSetPtr) dlsym(hLibrary, "lib3mf_meshobject_findtriangleset");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_MeshObject_FindTriangleSet == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_MeshObject_GetTriangleSetCount = (PLib3MFMeshObject_GetTriangleSetCountPtr) GetProcAddress(hLibrary, "lib3mf_meshobject_gettrianglesetcount");
+	#else // _WIN32
+	pWrapperTable->m_MeshObject_GetTriangleSetCount = (PLib3MFMeshObject_GetTriangleSetCountPtr) dlsym(hLibrary, "lib3mf_meshobject_gettrianglesetcount");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_MeshObject_GetTriangleSetCount == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_MeshObject_GetTriangleSet = (PLib3MFMeshObject_GetTriangleSetPtr) GetProcAddress(hLibrary, "lib3mf_meshobject_gettriangleset");
+	#else // _WIN32
+	pWrapperTable->m_MeshObject_GetTriangleSet = (PLib3MFMeshObject_GetTriangleSetPtr) dlsym(hLibrary, "lib3mf_meshobject_gettriangleset");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_MeshObject_GetTriangleSet == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

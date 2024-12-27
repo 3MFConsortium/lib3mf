@@ -114,6 +114,8 @@ const
 	LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT = 141;
 	LIB3MF_ERROR_INVALIDRESOURCE = 142;
 	LIB3MF_ERROR_INVALIDLEVELSET = 143;
+	LIB3MF_ERROR_COULDNOTFINDTRIANGLESET = 144;
+	LIB3MF_ERROR_INVALIDTRIANGLESETINDEX = 145;
 	LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE = 2000;
 	LIB3MF_ERROR_INVALIDKEYSTORE = 3000;
 	LIB3MF_ERROR_INVALIDKEYSTORECONSUMER = 3001;
@@ -494,6 +496,7 @@ type
 	TLib3MFLevelSetIterator = class;
 	TLib3MFMetaData = class;
 	TLib3MFMetaDataGroup = class;
+	TLib3MFTriangleSet = class;
 	TLib3MFObject = class;
 	TLib3MFMeshObject = class;
 	TLib3MFLevelSet = class;
@@ -1352,6 +1355,136 @@ type
 	
 
 (*************************************************************************************************************************
+ Function type definitions for TriangleSet
+**************************************************************************************************************************)
+
+	(**
+	* sets the name of the triangle set
+	*
+	* @param[in] pTriangleSet - TriangleSet instance.
+	* @param[in] pName - the new name
+	* @return error code or 0 (success)
+	*)
+	TLib3MFTriangleSet_SetNameFunc = function(pTriangleSet: TLib3MFHandle; const pName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* returns the name of the triangle set
+	*
+	* @param[in] pTriangleSet - TriangleSet instance.
+	* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameBuffer -  buffer of returns the name, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFTriangleSet_GetNameFunc = function(pTriangleSet: TLib3MFHandle; const nNameBufferSize: Cardinal; out pNameNeededChars: Cardinal; pNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* sets the identifier of the triangle set.
+	*
+	* @param[in] pTriangleSet - TriangleSet instance.
+	* @param[in] pIdentifier - the new identifier. MUST be unique within the mesh. MUST NOT be an empty string
+	* @return error code or 0 (success)
+	*)
+	TLib3MFTriangleSet_SetIdentifierFunc = function(pTriangleSet: TLib3MFHandle; const pIdentifier: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* returns the identifier of the triangle set
+	*
+	* @param[in] pTriangleSet - TriangleSet instance.
+	* @param[in] nIdentifierBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pIdentifierNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pIdentifierBuffer -  buffer of returns the identifier, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFTriangleSet_GetIdentifierFunc = function(pTriangleSet: TLib3MFHandle; const nIdentifierBufferSize: Cardinal; out pIdentifierNeededChars: Cardinal; pIdentifierBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* adds a triangle to the set. Does nothing if triangle is already in the set.
+	*
+	* @param[in] pTriangleSet - TriangleSet instance.
+	* @param[in] nTriangleIndex - Triangle index to add. MUST be between 0 and TriangleCount - 1.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFTriangleSet_AddTriangleFunc = function(pTriangleSet: TLib3MFHandle; const nTriangleIndex: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* removes a triangle from the set
+	*
+	* @param[in] pTriangleSet - TriangleSet instance.
+	* @param[in] nTriangleIndex - Triangle index to remove. MUST be between 0 and TriangleCount - 1.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFTriangleSet_RemoveTriangleFunc = function(pTriangleSet: TLib3MFHandle; const nTriangleIndex: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* clears all triangles from the list
+	*
+	* @param[in] pTriangleSet - TriangleSet instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFTriangleSet_ClearFunc = function(pTriangleSet: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets all triangles in the list, while clearing old values. Duplicates will be merged.
+	*
+	* @param[in] pTriangleSet - TriangleSet instance.
+	* @param[in] nTriangleIndicesCount - Number of elements in buffer
+	* @param[in] pTriangleIndicesBuffer - uint32 buffer of Triangle indices to add. Every element MUST be between 0 and TriangleCount - 1.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFTriangleSet_SetTriangleListFunc = function(pTriangleSet: TLib3MFHandle; const nTriangleIndicesCount: QWord; const pTriangleIndicesBuffer: PCardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves all the triangles in the TriangleSet
+	*
+	* @param[in] pTriangleSet - TriangleSet instance.
+	* @param[in] nTriangleIndicesCount - Number of elements in buffer
+	* @param[out] pTriangleIndicesNeededCount - will be filled with the count of the written elements, or needed buffer size.
+	* @param[out] pTriangleIndicesBuffer - uint32 buffer of retrieves the indices of the triangles in this TriangleSet
+	* @return error code or 0 (success)
+	*)
+	TLib3MFTriangleSet_GetTriangleListFunc = function(pTriangleSet: TLib3MFHandle; const nTriangleIndicesCount: QWord; out pTriangleIndicesNeededCount: QWord; pTriangleIndicesBuffer: PCardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds multiple triangles in the list. Duplicates will be merged.
+	*
+	* @param[in] pTriangleSet - TriangleSet instance.
+	* @param[in] nTriangleIndicesCount - Number of elements in buffer
+	* @param[in] pTriangleIndicesBuffer - uint32 buffer of Triangle indices to add. Every element MUST be between 0 and TriangleCount - 1.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFTriangleSet_AddTriangleListFunc = function(pTriangleSet: TLib3MFHandle; const nTriangleIndicesCount: QWord; const pTriangleIndicesBuffer: PCardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Merges another Triangle set.
+	*
+	* @param[in] pTriangleSet - TriangleSet instance.
+	* @param[in] pOtherTriangleSet - Other triangle set to merge.
+	* @param[in] bDeleteOther - Flag if other triangle set is getting removed.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFTriangleSet_MergeFunc = function(pTriangleSet: TLib3MFHandle; const pOtherTriangleSet: TLib3MFHandle; const bDeleteOther: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Deletes the whole set from the mesh.
+	*
+	* @param[in] pTriangleSet - TriangleSet instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFTriangleSet_DeleteSetFunc = function(pTriangleSet: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Duplicates the set in the mesh.
+	*
+	* @param[in] pTriangleSet - TriangleSet instance.
+	* @param[in] pIdentifier - the new identifier. MUST be unique within the mesh. MUST NOT be an empty string
+	* @param[out] pNewSet - Copy of the triangle set.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFTriangleSet_DuplicateFunc = function(pTriangleSet: TLib3MFHandle; const pIdentifier: PAnsiChar; out pNewSet: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
  Function type definitions for Object
 **************************************************************************************************************************)
 
@@ -1790,6 +1923,56 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFMeshObject_SetVolumeDataFunc = function(pMeshObject: TLib3MFHandle; const pTheVolumeData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds a new triangle set.
+	*
+	* @param[in] pMeshObject - MeshObject instance.
+	* @param[in] pIdentifier - the new identifier. MUST be unique within the mesh. MUST NOT be an empty string
+	* @param[in] pName - the human readable name. MUST NOT be an empty string
+	* @param[out] pTheTriangleSet - the new Triangle Set Instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFMeshObject_AddTriangleSetFunc = function(pMeshObject: TLib3MFHandle; const pIdentifier: PAnsiChar; const pName: PAnsiChar; out pTheTriangleSet: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Checks if a triangle set exists.
+	*
+	* @param[in] pMeshObject - MeshObject instance.
+	* @param[in] pIdentifier - the identifier to be found.
+	* @param[out] pTriangleSetExists - flag if the triangles set exists.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFMeshObject_HasTriangleSetFunc = function(pMeshObject: TLib3MFHandle; const pIdentifier: PAnsiChar; out pTriangleSetExists: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Finds a new triangle set by identifier. Fails if not existing.
+	*
+	* @param[in] pMeshObject - MeshObject instance.
+	* @param[in] pIdentifier - the identifier to be found.
+	* @param[out] pTheTriangleSet - the triangle Set Instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFMeshObject_FindTriangleSetFunc = function(pMeshObject: TLib3MFHandle; const pIdentifier: PAnsiChar; out pTheTriangleSet: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns number of triangle sets.
+	*
+	* @param[in] pMeshObject - MeshObject instance.
+	* @param[out] pCount - the number of triangle sets of this mesh.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFMeshObject_GetTriangleSetCountFunc = function(pMeshObject: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns a specific triangle set by index.
+	*
+	* @param[in] pMeshObject - MeshObject instance.
+	* @param[in] nIndex - the index of the triangle set.
+	* @param[out] pTheTriangleSet - the triangle Set Instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFMeshObject_GetTriangleSetFunc = function(pMeshObject: TLib3MFHandle; const nIndex: Cardinal; out pTheTriangleSet: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -7428,6 +7611,30 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
+ Class definition for TriangleSet
+**************************************************************************************************************************)
+
+	TLib3MFTriangleSet = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		procedure SetName(const AName: String);
+		function GetName(): String;
+		procedure SetIdentifier(const AIdentifier: String);
+		function GetIdentifier(): String;
+		procedure AddTriangle(const ATriangleIndex: Cardinal);
+		procedure RemoveTriangle(const ATriangleIndex: Cardinal);
+		procedure Clear();
+		procedure SetTriangleList(const ATriangleIndices: TCardinalDynArray);
+		procedure GetTriangleList(out ATriangleIndices: TCardinalDynArray);
+		procedure AddTriangleList(const ATriangleIndices: TCardinalDynArray);
+		procedure Merge(const AOtherTriangleSet: TLib3MFTriangleSet; const ADeleteOther: Boolean);
+		procedure DeleteSet();
+		function Duplicate(const AIdentifier: String): TLib3MFTriangleSet;
+	end;
+
+
+(*************************************************************************************************************************
  Class definition for Object
 **************************************************************************************************************************)
 
@@ -7491,6 +7698,11 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function BeamLattice(): TLib3MFBeamLattice;
 		function GetVolumeData(): TLib3MFVolumeData;
 		procedure SetVolumeData(const ATheVolumeData: TLib3MFVolumeData);
+		function AddTriangleSet(const AIdentifier: String; const AName: String): TLib3MFTriangleSet;
+		function HasTriangleSet(const AIdentifier: String): Boolean;
+		function FindTriangleSet(const AIdentifier: String): TLib3MFTriangleSet;
+		function GetTriangleSetCount(): Cardinal;
+		function GetTriangleSet(const AIndex: Cardinal): TLib3MFTriangleSet;
 	end;
 
 
@@ -9050,6 +9262,19 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFMetaDataGroup_RemoveMetaDataByIndexFunc: TLib3MFMetaDataGroup_RemoveMetaDataByIndexFunc;
 		FLib3MFMetaDataGroup_RemoveMetaDataFunc: TLib3MFMetaDataGroup_RemoveMetaDataFunc;
 		FLib3MFMetaDataGroup_AddMetaDataFunc: TLib3MFMetaDataGroup_AddMetaDataFunc;
+		FLib3MFTriangleSet_SetNameFunc: TLib3MFTriangleSet_SetNameFunc;
+		FLib3MFTriangleSet_GetNameFunc: TLib3MFTriangleSet_GetNameFunc;
+		FLib3MFTriangleSet_SetIdentifierFunc: TLib3MFTriangleSet_SetIdentifierFunc;
+		FLib3MFTriangleSet_GetIdentifierFunc: TLib3MFTriangleSet_GetIdentifierFunc;
+		FLib3MFTriangleSet_AddTriangleFunc: TLib3MFTriangleSet_AddTriangleFunc;
+		FLib3MFTriangleSet_RemoveTriangleFunc: TLib3MFTriangleSet_RemoveTriangleFunc;
+		FLib3MFTriangleSet_ClearFunc: TLib3MFTriangleSet_ClearFunc;
+		FLib3MFTriangleSet_SetTriangleListFunc: TLib3MFTriangleSet_SetTriangleListFunc;
+		FLib3MFTriangleSet_GetTriangleListFunc: TLib3MFTriangleSet_GetTriangleListFunc;
+		FLib3MFTriangleSet_AddTriangleListFunc: TLib3MFTriangleSet_AddTriangleListFunc;
+		FLib3MFTriangleSet_MergeFunc: TLib3MFTriangleSet_MergeFunc;
+		FLib3MFTriangleSet_DeleteSetFunc: TLib3MFTriangleSet_DeleteSetFunc;
+		FLib3MFTriangleSet_DuplicateFunc: TLib3MFTriangleSet_DuplicateFunc;
 		FLib3MFObject_GetTypeFunc: TLib3MFObject_GetTypeFunc;
 		FLib3MFObject_SetTypeFunc: TLib3MFObject_SetTypeFunc;
 		FLib3MFObject_GetNameFunc: TLib3MFObject_GetNameFunc;
@@ -9095,6 +9320,11 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFMeshObject_BeamLatticeFunc: TLib3MFMeshObject_BeamLatticeFunc;
 		FLib3MFMeshObject_GetVolumeDataFunc: TLib3MFMeshObject_GetVolumeDataFunc;
 		FLib3MFMeshObject_SetVolumeDataFunc: TLib3MFMeshObject_SetVolumeDataFunc;
+		FLib3MFMeshObject_AddTriangleSetFunc: TLib3MFMeshObject_AddTriangleSetFunc;
+		FLib3MFMeshObject_HasTriangleSetFunc: TLib3MFMeshObject_HasTriangleSetFunc;
+		FLib3MFMeshObject_FindTriangleSetFunc: TLib3MFMeshObject_FindTriangleSetFunc;
+		FLib3MFMeshObject_GetTriangleSetCountFunc: TLib3MFMeshObject_GetTriangleSetCountFunc;
+		FLib3MFMeshObject_GetTriangleSetFunc: TLib3MFMeshObject_GetTriangleSetFunc;
 		FLib3MFLevelSet_GetFunctionFunc: TLib3MFLevelSet_GetFunctionFunc;
 		FLib3MFLevelSet_SetFunctionFunc: TLib3MFLevelSet_SetFunctionFunc;
 		FLib3MFLevelSet_GetTransformFunc: TLib3MFLevelSet_GetTransformFunc;
@@ -9662,6 +9892,19 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFMetaDataGroup_RemoveMetaDataByIndexFunc: TLib3MFMetaDataGroup_RemoveMetaDataByIndexFunc read FLib3MFMetaDataGroup_RemoveMetaDataByIndexFunc;
 		property Lib3MFMetaDataGroup_RemoveMetaDataFunc: TLib3MFMetaDataGroup_RemoveMetaDataFunc read FLib3MFMetaDataGroup_RemoveMetaDataFunc;
 		property Lib3MFMetaDataGroup_AddMetaDataFunc: TLib3MFMetaDataGroup_AddMetaDataFunc read FLib3MFMetaDataGroup_AddMetaDataFunc;
+		property Lib3MFTriangleSet_SetNameFunc: TLib3MFTriangleSet_SetNameFunc read FLib3MFTriangleSet_SetNameFunc;
+		property Lib3MFTriangleSet_GetNameFunc: TLib3MFTriangleSet_GetNameFunc read FLib3MFTriangleSet_GetNameFunc;
+		property Lib3MFTriangleSet_SetIdentifierFunc: TLib3MFTriangleSet_SetIdentifierFunc read FLib3MFTriangleSet_SetIdentifierFunc;
+		property Lib3MFTriangleSet_GetIdentifierFunc: TLib3MFTriangleSet_GetIdentifierFunc read FLib3MFTriangleSet_GetIdentifierFunc;
+		property Lib3MFTriangleSet_AddTriangleFunc: TLib3MFTriangleSet_AddTriangleFunc read FLib3MFTriangleSet_AddTriangleFunc;
+		property Lib3MFTriangleSet_RemoveTriangleFunc: TLib3MFTriangleSet_RemoveTriangleFunc read FLib3MFTriangleSet_RemoveTriangleFunc;
+		property Lib3MFTriangleSet_ClearFunc: TLib3MFTriangleSet_ClearFunc read FLib3MFTriangleSet_ClearFunc;
+		property Lib3MFTriangleSet_SetTriangleListFunc: TLib3MFTriangleSet_SetTriangleListFunc read FLib3MFTriangleSet_SetTriangleListFunc;
+		property Lib3MFTriangleSet_GetTriangleListFunc: TLib3MFTriangleSet_GetTriangleListFunc read FLib3MFTriangleSet_GetTriangleListFunc;
+		property Lib3MFTriangleSet_AddTriangleListFunc: TLib3MFTriangleSet_AddTriangleListFunc read FLib3MFTriangleSet_AddTriangleListFunc;
+		property Lib3MFTriangleSet_MergeFunc: TLib3MFTriangleSet_MergeFunc read FLib3MFTriangleSet_MergeFunc;
+		property Lib3MFTriangleSet_DeleteSetFunc: TLib3MFTriangleSet_DeleteSetFunc read FLib3MFTriangleSet_DeleteSetFunc;
+		property Lib3MFTriangleSet_DuplicateFunc: TLib3MFTriangleSet_DuplicateFunc read FLib3MFTriangleSet_DuplicateFunc;
 		property Lib3MFObject_GetTypeFunc: TLib3MFObject_GetTypeFunc read FLib3MFObject_GetTypeFunc;
 		property Lib3MFObject_SetTypeFunc: TLib3MFObject_SetTypeFunc read FLib3MFObject_SetTypeFunc;
 		property Lib3MFObject_GetNameFunc: TLib3MFObject_GetNameFunc read FLib3MFObject_GetNameFunc;
@@ -9707,6 +9950,11 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFMeshObject_BeamLatticeFunc: TLib3MFMeshObject_BeamLatticeFunc read FLib3MFMeshObject_BeamLatticeFunc;
 		property Lib3MFMeshObject_GetVolumeDataFunc: TLib3MFMeshObject_GetVolumeDataFunc read FLib3MFMeshObject_GetVolumeDataFunc;
 		property Lib3MFMeshObject_SetVolumeDataFunc: TLib3MFMeshObject_SetVolumeDataFunc read FLib3MFMeshObject_SetVolumeDataFunc;
+		property Lib3MFMeshObject_AddTriangleSetFunc: TLib3MFMeshObject_AddTriangleSetFunc read FLib3MFMeshObject_AddTriangleSetFunc;
+		property Lib3MFMeshObject_HasTriangleSetFunc: TLib3MFMeshObject_HasTriangleSetFunc read FLib3MFMeshObject_HasTriangleSetFunc;
+		property Lib3MFMeshObject_FindTriangleSetFunc: TLib3MFMeshObject_FindTriangleSetFunc read FLib3MFMeshObject_FindTriangleSetFunc;
+		property Lib3MFMeshObject_GetTriangleSetCountFunc: TLib3MFMeshObject_GetTriangleSetCountFunc read FLib3MFMeshObject_GetTriangleSetCountFunc;
+		property Lib3MFMeshObject_GetTriangleSetFunc: TLib3MFMeshObject_GetTriangleSetFunc read FLib3MFMeshObject_GetTriangleSetFunc;
 		property Lib3MFLevelSet_GetFunctionFunc: TLib3MFLevelSet_GetFunctionFunc read FLib3MFLevelSet_GetFunctionFunc;
 		property Lib3MFLevelSet_SetFunctionFunc: TLib3MFLevelSet_SetFunctionFunc read FLib3MFLevelSet_SetFunctionFunc;
 		property Lib3MFLevelSet_GetTransformFunc: TLib3MFLevelSet_GetTransformFunc read FLib3MFLevelSet_GetTransformFunc;
@@ -10297,6 +10545,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeLevelSetIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFLevelSetIterator;
 	function TLib3MFPolymorphicFactoryMakeMetaData(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMetaData;
 	function TLib3MFPolymorphicFactoryMakeMetaDataGroup(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMetaDataGroup;
+	function TLib3MFPolymorphicFactoryMakeTriangleSet(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTriangleSet;
 	function TLib3MFPolymorphicFactoryMakeObject(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFObject;
 	function TLib3MFPolymorphicFactoryMakeMeshObject(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMeshObject;
 	function TLib3MFPolymorphicFactoryMakeLevelSet(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFLevelSet;
@@ -11121,6 +11370,7 @@ implementation
 			QWord($A0C005C035D5371D): begin Obj := TLIB3MFLevelSetIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
 			QWord($D17716D063DE2C22): begin Obj := TLIB3MFMetaData.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 			QWord($0C3B85369E9B25D3): begin Obj := TLIB3MFMetaDataGroup.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
+			QWord($5950BB3EE8A82090): begin Obj := TLIB3MFTriangleSet.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::TriangleSet"
 			QWord($2DA2136F577A779C): begin Obj := TLIB3MFObject.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
 			QWord($3B3A6DC6EC610497): begin Obj := TLIB3MFMeshObject.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
 			QWord($E8A7D9C192EFD0E2): begin Obj := TLIB3MFLevelSet.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
@@ -11301,6 +11551,10 @@ implementation
 	function TLib3MFPolymorphicFactoryMakeMetaDataGroup(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMetaDataGroup;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFMetaDataGroup, TLIB3MFMetaDataGroup>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeTriangleSet(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTriangleSet;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFTriangleSet, TLIB3MFTriangleSet>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeObject(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFObject;
 	begin
@@ -11726,6 +11980,8 @@ implementation
 			LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: ADescription := 'An element buffer exceeds its spec limit';
 			LIB3MF_ERROR_INVALIDRESOURCE: ADescription := 'A resource is invalid';
 			LIB3MF_ERROR_INVALIDLEVELSET: ADescription := 'A level set is invalid';
+			LIB3MF_ERROR_COULDNOTFINDTRIANGLESET: ADescription := 'Could not find triangle set';
+			LIB3MF_ERROR_INVALIDTRIANGLESETINDEX: ADescription := 'Invalid triangle set index';
 			LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: ADescription := 'This object type is not valid for beamlattices';
 			LIB3MF_ERROR_INVALIDKEYSTORE: ADescription := 'The keystore object is invalid';
 			LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: ADescription := 'The consumer keystore object is invalid';
@@ -12650,6 +12906,144 @@ implementation
 	end;
 
 (*************************************************************************************************************************
+ Class implementation for TriangleSet
+**************************************************************************************************************************)
+
+	constructor TLib3MFTriangleSet.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFTriangleSet.Destroy;
+	begin
+		inherited;
+	end;
+
+	procedure TLib3MFTriangleSet.SetName(const AName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_SetNameFunc(FHandle, PAnsiChar(AName)));
+	end;
+
+	function TLib3MFTriangleSet.GetName(): String;
+	var
+		bytesNeededName: Cardinal;
+		bytesWrittenName: Cardinal;
+		bufferName: array of Char;
+	begin
+		bytesNeededName:= 0;
+		bytesWrittenName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_GetNameFunc(FHandle, 0, bytesNeededName, nil));
+		SetLength(bufferName, bytesNeededName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_GetNameFunc(FHandle, bytesNeededName, bytesWrittenName, @bufferName[0]));
+		Result := StrPas(@bufferName[0]);
+	end;
+
+	procedure TLib3MFTriangleSet.SetIdentifier(const AIdentifier: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_SetIdentifierFunc(FHandle, PAnsiChar(AIdentifier)));
+	end;
+
+	function TLib3MFTriangleSet.GetIdentifier(): String;
+	var
+		bytesNeededIdentifier: Cardinal;
+		bytesWrittenIdentifier: Cardinal;
+		bufferIdentifier: array of Char;
+	begin
+		bytesNeededIdentifier:= 0;
+		bytesWrittenIdentifier:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_GetIdentifierFunc(FHandle, 0, bytesNeededIdentifier, nil));
+		SetLength(bufferIdentifier, bytesNeededIdentifier);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_GetIdentifierFunc(FHandle, bytesNeededIdentifier, bytesWrittenIdentifier, @bufferIdentifier[0]));
+		Result := StrPas(@bufferIdentifier[0]);
+	end;
+
+	procedure TLib3MFTriangleSet.AddTriangle(const ATriangleIndex: Cardinal);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_AddTriangleFunc(FHandle, ATriangleIndex));
+	end;
+
+	procedure TLib3MFTriangleSet.RemoveTriangle(const ATriangleIndex: Cardinal);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_RemoveTriangleFunc(FHandle, ATriangleIndex));
+	end;
+
+	procedure TLib3MFTriangleSet.Clear();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_ClearFunc(FHandle));
+	end;
+
+	procedure TLib3MFTriangleSet.SetTriangleList(const ATriangleIndices: TCardinalDynArray);
+	var
+		PtrTriangleIndices: PCardinal;
+		LenTriangleIndices: QWord;
+	begin
+		LenTriangleIndices := Length(ATriangleIndices);
+		if LenTriangleIndices > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenTriangleIndices > 0 then
+			PtrTriangleIndices := @ATriangleIndices[0]
+		else
+			PtrTriangleIndices := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_SetTriangleListFunc(FHandle, QWord(LenTriangleIndices), PtrTriangleIndices));
+	end;
+
+	procedure TLib3MFTriangleSet.GetTriangleList(out ATriangleIndices: TCardinalDynArray);
+	var
+		countNeededTriangleIndices: QWord;
+		countWrittenTriangleIndices: QWord;
+	begin
+		countNeededTriangleIndices:= 0;
+		countWrittenTriangleIndices:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_GetTriangleListFunc(FHandle, 0, countNeededTriangleIndices, nil));
+		SetLength(ATriangleIndices, countNeededTriangleIndices);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_GetTriangleListFunc(FHandle, countNeededTriangleIndices, countWrittenTriangleIndices, @ATriangleIndices[0]));
+	end;
+
+	procedure TLib3MFTriangleSet.AddTriangleList(const ATriangleIndices: TCardinalDynArray);
+	var
+		PtrTriangleIndices: PCardinal;
+		LenTriangleIndices: QWord;
+	begin
+		LenTriangleIndices := Length(ATriangleIndices);
+		if LenTriangleIndices > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenTriangleIndices > 0 then
+			PtrTriangleIndices := @ATriangleIndices[0]
+		else
+			PtrTriangleIndices := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_AddTriangleListFunc(FHandle, QWord(LenTriangleIndices), PtrTriangleIndices));
+	end;
+
+	procedure TLib3MFTriangleSet.Merge(const AOtherTriangleSet: TLib3MFTriangleSet; const ADeleteOther: Boolean);
+	var
+		AOtherTriangleSetHandle: TLib3MFHandle;
+	begin
+		if Assigned(AOtherTriangleSet) then
+		AOtherTriangleSetHandle := AOtherTriangleSet.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AOtherTriangleSet is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_MergeFunc(FHandle, AOtherTriangleSetHandle, Ord(ADeleteOther)));
+	end;
+
+	procedure TLib3MFTriangleSet.DeleteSet();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_DeleteSetFunc(FHandle));
+	end;
+
+	function TLib3MFTriangleSet.Duplicate(const AIdentifier: String): TLib3MFTriangleSet;
+	var
+		HNewSet: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNewSet := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFTriangleSet_DuplicateFunc(FHandle, PAnsiChar(AIdentifier), HNewSet));
+		if Assigned(HNewSet) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFTriangleSet, TLib3MFTriangleSet>.Make(FWrapper, HNewSet);
+	end;
+
+(*************************************************************************************************************************
  Class implementation for Object
 **************************************************************************************************************************)
 
@@ -13067,6 +13461,53 @@ implementation
 		else
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheVolumeData is a nil value.');
 		FWrapper.CheckError(Self, FWrapper.Lib3MFMeshObject_SetVolumeDataFunc(FHandle, ATheVolumeDataHandle));
+	end;
+
+	function TLib3MFMeshObject.AddTriangleSet(const AIdentifier: String; const AName: String): TLib3MFTriangleSet;
+	var
+		HTheTriangleSet: TLib3MFHandle;
+	begin
+		Result := nil;
+		HTheTriangleSet := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFMeshObject_AddTriangleSetFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(AName), HTheTriangleSet));
+		if Assigned(HTheTriangleSet) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFTriangleSet, TLib3MFTriangleSet>.Make(FWrapper, HTheTriangleSet);
+	end;
+
+	function TLib3MFMeshObject.HasTriangleSet(const AIdentifier: String): Boolean;
+	var
+		ResultTriangleSetExists: Byte;
+	begin
+		ResultTriangleSetExists := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFMeshObject_HasTriangleSetFunc(FHandle, PAnsiChar(AIdentifier), ResultTriangleSetExists));
+		Result := (ResultTriangleSetExists <> 0);
+	end;
+
+	function TLib3MFMeshObject.FindTriangleSet(const AIdentifier: String): TLib3MFTriangleSet;
+	var
+		HTheTriangleSet: TLib3MFHandle;
+	begin
+		Result := nil;
+		HTheTriangleSet := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFMeshObject_FindTriangleSetFunc(FHandle, PAnsiChar(AIdentifier), HTheTriangleSet));
+		if Assigned(HTheTriangleSet) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFTriangleSet, TLib3MFTriangleSet>.Make(FWrapper, HTheTriangleSet);
+	end;
+
+	function TLib3MFMeshObject.GetTriangleSetCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFMeshObject_GetTriangleSetCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFMeshObject.GetTriangleSet(const AIndex: Cardinal): TLib3MFTriangleSet;
+	var
+		HTheTriangleSet: TLib3MFHandle;
+	begin
+		Result := nil;
+		HTheTriangleSet := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFMeshObject_GetTriangleSetFunc(FHandle, AIndex, HTheTriangleSet));
+		if Assigned(HTheTriangleSet) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFTriangleSet, TLib3MFTriangleSet>.Make(FWrapper, HTheTriangleSet);
 	end;
 
 (*************************************************************************************************************************
@@ -19007,6 +19448,19 @@ implementation
 		FLib3MFMetaDataGroup_RemoveMetaDataByIndexFunc := LoadFunction('lib3mf_metadatagroup_removemetadatabyindex');
 		FLib3MFMetaDataGroup_RemoveMetaDataFunc := LoadFunction('lib3mf_metadatagroup_removemetadata');
 		FLib3MFMetaDataGroup_AddMetaDataFunc := LoadFunction('lib3mf_metadatagroup_addmetadata');
+		FLib3MFTriangleSet_SetNameFunc := LoadFunction('lib3mf_triangleset_setname');
+		FLib3MFTriangleSet_GetNameFunc := LoadFunction('lib3mf_triangleset_getname');
+		FLib3MFTriangleSet_SetIdentifierFunc := LoadFunction('lib3mf_triangleset_setidentifier');
+		FLib3MFTriangleSet_GetIdentifierFunc := LoadFunction('lib3mf_triangleset_getidentifier');
+		FLib3MFTriangleSet_AddTriangleFunc := LoadFunction('lib3mf_triangleset_addtriangle');
+		FLib3MFTriangleSet_RemoveTriangleFunc := LoadFunction('lib3mf_triangleset_removetriangle');
+		FLib3MFTriangleSet_ClearFunc := LoadFunction('lib3mf_triangleset_clear');
+		FLib3MFTriangleSet_SetTriangleListFunc := LoadFunction('lib3mf_triangleset_settrianglelist');
+		FLib3MFTriangleSet_GetTriangleListFunc := LoadFunction('lib3mf_triangleset_gettrianglelist');
+		FLib3MFTriangleSet_AddTriangleListFunc := LoadFunction('lib3mf_triangleset_addtrianglelist');
+		FLib3MFTriangleSet_MergeFunc := LoadFunction('lib3mf_triangleset_merge');
+		FLib3MFTriangleSet_DeleteSetFunc := LoadFunction('lib3mf_triangleset_deleteset');
+		FLib3MFTriangleSet_DuplicateFunc := LoadFunction('lib3mf_triangleset_duplicate');
 		FLib3MFObject_GetTypeFunc := LoadFunction('lib3mf_object_gettype');
 		FLib3MFObject_SetTypeFunc := LoadFunction('lib3mf_object_settype');
 		FLib3MFObject_GetNameFunc := LoadFunction('lib3mf_object_getname');
@@ -19052,6 +19506,11 @@ implementation
 		FLib3MFMeshObject_BeamLatticeFunc := LoadFunction('lib3mf_meshobject_beamlattice');
 		FLib3MFMeshObject_GetVolumeDataFunc := LoadFunction('lib3mf_meshobject_getvolumedata');
 		FLib3MFMeshObject_SetVolumeDataFunc := LoadFunction('lib3mf_meshobject_setvolumedata');
+		FLib3MFMeshObject_AddTriangleSetFunc := LoadFunction('lib3mf_meshobject_addtriangleset');
+		FLib3MFMeshObject_HasTriangleSetFunc := LoadFunction('lib3mf_meshobject_hastriangleset');
+		FLib3MFMeshObject_FindTriangleSetFunc := LoadFunction('lib3mf_meshobject_findtriangleset');
+		FLib3MFMeshObject_GetTriangleSetCountFunc := LoadFunction('lib3mf_meshobject_gettrianglesetcount');
+		FLib3MFMeshObject_GetTriangleSetFunc := LoadFunction('lib3mf_meshobject_gettriangleset');
 		FLib3MFLevelSet_GetFunctionFunc := LoadFunction('lib3mf_levelset_getfunction');
 		FLib3MFLevelSet_SetFunctionFunc := LoadFunction('lib3mf_levelset_setfunction');
 		FLib3MFLevelSet_GetTransformFunc := LoadFunction('lib3mf_levelset_gettransform');
@@ -19756,6 +20215,45 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_metadatagroup_addmetadata'), @FLib3MFMetaDataGroup_AddMetaDataFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_triangleset_setname'), @FLib3MFTriangleSet_SetNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_triangleset_getname'), @FLib3MFTriangleSet_GetNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_triangleset_setidentifier'), @FLib3MFTriangleSet_SetIdentifierFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_triangleset_getidentifier'), @FLib3MFTriangleSet_GetIdentifierFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_triangleset_addtriangle'), @FLib3MFTriangleSet_AddTriangleFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_triangleset_removetriangle'), @FLib3MFTriangleSet_RemoveTriangleFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_triangleset_clear'), @FLib3MFTriangleSet_ClearFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_triangleset_settrianglelist'), @FLib3MFTriangleSet_SetTriangleListFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_triangleset_gettrianglelist'), @FLib3MFTriangleSet_GetTriangleListFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_triangleset_addtrianglelist'), @FLib3MFTriangleSet_AddTriangleListFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_triangleset_merge'), @FLib3MFTriangleSet_MergeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_triangleset_deleteset'), @FLib3MFTriangleSet_DeleteSetFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_triangleset_duplicate'), @FLib3MFTriangleSet_DuplicateFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_object_gettype'), @FLib3MFObject_GetTypeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -19889,6 +20387,21 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_meshobject_setvolumedata'), @FLib3MFMeshObject_SetVolumeDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_meshobject_addtriangleset'), @FLib3MFMeshObject_AddTriangleSetFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_meshobject_hastriangleset'), @FLib3MFMeshObject_HasTriangleSetFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_meshobject_findtriangleset'), @FLib3MFMeshObject_FindTriangleSetFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_meshobject_gettrianglesetcount'), @FLib3MFMeshObject_GetTriangleSetCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_meshobject_gettriangleset'), @FLib3MFMeshObject_GetTriangleSetFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_levelset_getfunction'), @FLib3MFLevelSet_GetFunctionFunc);

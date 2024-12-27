@@ -62,6 +62,7 @@ Persistent<Function> CLib3MFFunctionIterator::constructor;
 Persistent<Function> CLib3MFLevelSetIterator::constructor;
 Persistent<Function> CLib3MFMetaData::constructor;
 Persistent<Function> CLib3MFMetaDataGroup::constructor;
+Persistent<Function> CLib3MFTriangleSet::constructor;
 Persistent<Function> CLib3MFObject::constructor;
 Persistent<Function> CLib3MFMeshObject::constructor;
 Persistent<Function> CLib3MFLevelSet::constructor;
@@ -4308,6 +4309,386 @@ void CLib3MFMetaDataGroup::AddMetaData(const FunctionCallbackInfo<Value>& args)
 }
 
 /*************************************************************************************************************************
+ Class CLib3MFTriangleSet Implementation
+**************************************************************************************************************************/
+
+CLib3MFTriangleSet::CLib3MFTriangleSet()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFTriangleSet::~CLib3MFTriangleSet()
+{
+}
+
+void CLib3MFTriangleSet::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFTriangleSet"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetName", SetName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetName", GetName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetIdentifier", SetIdentifier);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetIdentifier", GetIdentifier);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddTriangle", AddTriangle);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveTriangle", RemoveTriangle);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "Clear", Clear);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetTriangleList", SetTriangleList);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetTriangleList", GetTriangleList);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddTriangleList", AddTriangleList);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "Merge", Merge);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "DeleteSet", DeleteSet);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "Duplicate", Duplicate);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFTriangleSet::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFTriangleSet * trianglesetInstance = new CLib3MFTriangleSet();
+				trianglesetInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFTriangleSet: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFTriangleSet::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFTriangleSet::SetName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetName.");
+        if (wrapperTable->m_TriangleSet_SetName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method TriangleSet::SetName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_TriangleSet_SetName(instanceHandle, sName.c_str());
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFTriangleSet::GetName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededName = 0;
+        unsigned int bytesWrittenName = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetName.");
+        if (wrapperTable->m_TriangleSet_GetName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method TriangleSet::GetName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_TriangleSet_GetName(instanceHandle, 0, &bytesNeededName, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferName;
+        bufferName.resize(bytesNeededName);
+        Lib3MFResult errorCode = wrapperTable->m_TriangleSet_GetName(instanceHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferName[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFTriangleSet::SetIdentifier(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Identifier)");
+        }
+        v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
+        std::string sIdentifier = *sutf8Identifier;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetIdentifier.");
+        if (wrapperTable->m_TriangleSet_SetIdentifier == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method TriangleSet::SetIdentifier.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_TriangleSet_SetIdentifier(instanceHandle, sIdentifier.c_str());
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFTriangleSet::GetIdentifier(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededIdentifier = 0;
+        unsigned int bytesWrittenIdentifier = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetIdentifier.");
+        if (wrapperTable->m_TriangleSet_GetIdentifier == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method TriangleSet::GetIdentifier.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_TriangleSet_GetIdentifier(instanceHandle, 0, &bytesNeededIdentifier, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferIdentifier;
+        bufferIdentifier.resize(bytesNeededIdentifier);
+        Lib3MFResult errorCode = wrapperTable->m_TriangleSet_GetIdentifier(instanceHandle, bytesNeededIdentifier, &bytesWrittenIdentifier, &bufferIdentifier[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferIdentifier[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFTriangleSet::AddTriangle(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (TriangleIndex)");
+        }
+        unsigned int nTriangleIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddTriangle.");
+        if (wrapperTable->m_TriangleSet_AddTriangle == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method TriangleSet::AddTriangle.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_TriangleSet_AddTriangle(instanceHandle, nTriangleIndex);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFTriangleSet::RemoveTriangle(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (TriangleIndex)");
+        }
+        unsigned int nTriangleIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method RemoveTriangle.");
+        if (wrapperTable->m_TriangleSet_RemoveTriangle == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method TriangleSet::RemoveTriangle.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_TriangleSet_RemoveTriangle(instanceHandle, nTriangleIndex);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFTriangleSet::Clear(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method Clear.");
+        if (wrapperTable->m_TriangleSet_Clear == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method TriangleSet::Clear.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_TriangleSet_Clear(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFTriangleSet::SetTriangleList(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetTriangleList.");
+        if (wrapperTable->m_TriangleSet_SetTriangleList == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method TriangleSet::SetTriangleList.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_TriangleSet_SetTriangleList(instanceHandle, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFTriangleSet::GetTriangleList(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetTriangleList.");
+        if (wrapperTable->m_TriangleSet_GetTriangleList == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method TriangleSet::GetTriangleList.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_TriangleSet_GetTriangleList(instanceHandle, 0, nullptr, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFTriangleSet::AddTriangleList(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddTriangleList.");
+        if (wrapperTable->m_TriangleSet_AddTriangleList == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method TriangleSet::AddTriangleList.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_TriangleSet_AddTriangleList(instanceHandle, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFTriangleSet::Merge(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 0 (OtherTriangleSet)");
+        }
+        if (!args[1]->IsBoolean()) {
+            throw std::runtime_error("Expected bool parameter 1 (DeleteOther)");
+        }
+        Local<Object> objOtherTriangleSet = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFTriangleSet * instanceOtherTriangleSet = ObjectWrap::Unwrap<CLib3MFTriangleSet>(objOtherTriangleSet);
+        if (instanceOtherTriangleSet == nullptr)
+            throw std::runtime_error("Invalid Object parameter 0 (OtherTriangleSet)");
+        Lib3MFHandle hOtherTriangleSet = instanceOtherTriangleSet->getHandle( objOtherTriangleSet );
+        bool bDeleteOther = args[1]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method Merge.");
+        if (wrapperTable->m_TriangleSet_Merge == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method TriangleSet::Merge.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_TriangleSet_Merge(instanceHandle, hOtherTriangleSet, bDeleteOther);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFTriangleSet::DeleteSet(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method DeleteSet.");
+        if (wrapperTable->m_TriangleSet_DeleteSet == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method TriangleSet::DeleteSet.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_TriangleSet_DeleteSet(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFTriangleSet::Duplicate(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Identifier)");
+        }
+        v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
+        std::string sIdentifier = *sutf8Identifier;
+        Lib3MFHandle hReturnNewSet = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method Duplicate.");
+        if (wrapperTable->m_TriangleSet_Duplicate == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method TriangleSet::Duplicate.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_TriangleSet_Duplicate(instanceHandle, sIdentifier.c_str(), &hReturnNewSet);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjNewSet = CLib3MFTriangleSet::NewInstance(args.Holder(), hReturnNewSet);
+        args.GetReturnValue().Set(instanceObjNewSet);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
  Class CLib3MFObject Implementation
 **************************************************************************************************************************/
 
@@ -4983,6 +5364,11 @@ void CLib3MFMeshObject::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "BeamLattice", BeamLattice);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetVolumeData", GetVolumeData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetVolumeData", SetVolumeData);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddTriangleSet", AddTriangleSet);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasTriangleSet", HasTriangleSet);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "FindTriangleSet", FindTriangleSet);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetTriangleSetCount", GetTriangleSetCount);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetTriangleSet", GetTriangleSet);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -5539,6 +5925,143 @@ void CLib3MFMeshObject::SetVolumeData(const FunctionCallbackInfo<Value>& args)
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_MeshObject_SetVolumeData(instanceHandle, hTheVolumeData);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFMeshObject::AddTriangleSet(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Identifier)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (Name)");
+        }
+        v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
+        std::string sIdentifier = *sutf8Identifier;
+        v8::String::Utf8Value sutf8Name(isolate, args[1]);
+        std::string sName = *sutf8Name;
+        Lib3MFHandle hReturnTheTriangleSet = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddTriangleSet.");
+        if (wrapperTable->m_MeshObject_AddTriangleSet == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method MeshObject::AddTriangleSet.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_MeshObject_AddTriangleSet(instanceHandle, sIdentifier.c_str(), sName.c_str(), &hReturnTheTriangleSet);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjTheTriangleSet = CLib3MFTriangleSet::NewInstance(args.Holder(), hReturnTheTriangleSet);
+        args.GetReturnValue().Set(instanceObjTheTriangleSet);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFMeshObject::HasTriangleSet(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Identifier)");
+        }
+        v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
+        std::string sIdentifier = *sutf8Identifier;
+        bool bReturnTriangleSetExists = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasTriangleSet.");
+        if (wrapperTable->m_MeshObject_HasTriangleSet == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method MeshObject::HasTriangleSet.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_MeshObject_HasTriangleSet(instanceHandle, sIdentifier.c_str(), &bReturnTriangleSetExists);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnTriangleSetExists));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFMeshObject::FindTriangleSet(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Identifier)");
+        }
+        v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
+        std::string sIdentifier = *sutf8Identifier;
+        Lib3MFHandle hReturnTheTriangleSet = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindTriangleSet.");
+        if (wrapperTable->m_MeshObject_FindTriangleSet == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method MeshObject::FindTriangleSet.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_MeshObject_FindTriangleSet(instanceHandle, sIdentifier.c_str(), &hReturnTheTriangleSet);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjTheTriangleSet = CLib3MFTriangleSet::NewInstance(args.Holder(), hReturnTheTriangleSet);
+        args.GetReturnValue().Set(instanceObjTheTriangleSet);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFMeshObject::GetTriangleSetCount(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnCount = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetTriangleSetCount.");
+        if (wrapperTable->m_MeshObject_GetTriangleSetCount == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method MeshObject::GetTriangleSetCount.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_MeshObject_GetTriangleSetCount(instanceHandle, &nReturnCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnCount));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFMeshObject::GetTriangleSet(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnTheTriangleSet = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetTriangleSet.");
+        if (wrapperTable->m_MeshObject_GetTriangleSet == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method MeshObject::GetTriangleSet.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_MeshObject_GetTriangleSet(instanceHandle, nIndex, &hReturnTheTriangleSet);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjTheTriangleSet = CLib3MFTriangleSet::NewInstance(args.Holder(), hReturnTheTriangleSet);
+        args.GetReturnValue().Set(instanceObjTheTriangleSet);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

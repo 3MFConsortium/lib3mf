@@ -101,6 +101,8 @@ class ErrorCodes(enum.IntEnum):
 	ELEMENTCOUNTEXCEEDSLIMIT = 141
 	INVALIDRESOURCE = 142
 	INVALIDLEVELSET = 143
+	COULDNOTFINDTRIANGLESET = 144
+	INVALIDTRIANGLESETINDEX = 145
 	BEAMLATTICE_INVALID_OBJECTTYPE = 2000
 	INVALIDKEYSTORE = 3000
 	INVALIDKEYSTORECONSUMER = 3001
@@ -203,6 +205,19 @@ class FunctionTable:
 	lib3mf_metadatagroup_removemetadatabyindex = None
 	lib3mf_metadatagroup_removemetadata = None
 	lib3mf_metadatagroup_addmetadata = None
+	lib3mf_triangleset_setname = None
+	lib3mf_triangleset_getname = None
+	lib3mf_triangleset_setidentifier = None
+	lib3mf_triangleset_getidentifier = None
+	lib3mf_triangleset_addtriangle = None
+	lib3mf_triangleset_removetriangle = None
+	lib3mf_triangleset_clear = None
+	lib3mf_triangleset_settrianglelist = None
+	lib3mf_triangleset_gettrianglelist = None
+	lib3mf_triangleset_addtrianglelist = None
+	lib3mf_triangleset_merge = None
+	lib3mf_triangleset_deleteset = None
+	lib3mf_triangleset_duplicate = None
 	lib3mf_object_gettype = None
 	lib3mf_object_settype = None
 	lib3mf_object_getname = None
@@ -248,6 +263,11 @@ class FunctionTable:
 	lib3mf_meshobject_beamlattice = None
 	lib3mf_meshobject_getvolumedata = None
 	lib3mf_meshobject_setvolumedata = None
+	lib3mf_meshobject_addtriangleset = None
+	lib3mf_meshobject_hastriangleset = None
+	lib3mf_meshobject_findtriangleset = None
+	lib3mf_meshobject_gettrianglesetcount = None
+	lib3mf_meshobject_gettriangleset = None
 	lib3mf_levelset_getfunction = None
 	lib3mf_levelset_setfunction = None
 	lib3mf_levelset_gettransform = None
@@ -1650,6 +1670,84 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_bool, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_metadatagroup_addmetadata = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_triangleset_setname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_triangleset_setname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_triangleset_getname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_triangleset_getname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_triangleset_setidentifier")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_triangleset_setidentifier = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_triangleset_getidentifier")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_triangleset_getidentifier = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_triangleset_addtriangle")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_triangleset_addtriangle = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_triangleset_removetriangle")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_triangleset_removetriangle = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_triangleset_clear")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_triangleset_clear = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_triangleset_settrianglelist")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_triangleset_settrianglelist = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_triangleset_gettrianglelist")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_triangleset_gettrianglelist = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_triangleset_addtrianglelist")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_triangleset_addtrianglelist = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_triangleset_merge")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_bool)
+			self.lib.lib3mf_triangleset_merge = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_triangleset_deleteset")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_triangleset_deleteset = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_triangleset_duplicate")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_triangleset_duplicate = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_object_gettype")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -1919,6 +2017,36 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
 			self.lib.lib3mf_meshobject_setvolumedata = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_meshobject_addtriangleset")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_meshobject_addtriangleset = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_meshobject_hastriangleset")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_meshobject_hastriangleset = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_meshobject_findtriangleset")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_meshobject_findtriangleset = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_meshobject_gettrianglesetcount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_meshobject_gettrianglesetcount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_meshobject_gettriangleset")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_meshobject_gettriangleset = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_levelset_getfunction")), methodAddress)
 			if err != 0:
@@ -5006,6 +5134,45 @@ class Wrapper:
 			self.lib.lib3mf_metadatagroup_addmetadata.restype = ctypes.c_int32
 			self.lib.lib3mf_metadatagroup_addmetadata.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_bool, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_triangleset_setname.restype = ctypes.c_int32
+			self.lib.lib3mf_triangleset_setname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_triangleset_getname.restype = ctypes.c_int32
+			self.lib.lib3mf_triangleset_getname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_triangleset_setidentifier.restype = ctypes.c_int32
+			self.lib.lib3mf_triangleset_setidentifier.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_triangleset_getidentifier.restype = ctypes.c_int32
+			self.lib.lib3mf_triangleset_getidentifier.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_triangleset_addtriangle.restype = ctypes.c_int32
+			self.lib.lib3mf_triangleset_addtriangle.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_triangleset_removetriangle.restype = ctypes.c_int32
+			self.lib.lib3mf_triangleset_removetriangle.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_triangleset_clear.restype = ctypes.c_int32
+			self.lib.lib3mf_triangleset_clear.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_triangleset_settrianglelist.restype = ctypes.c_int32
+			self.lib.lib3mf_triangleset_settrianglelist.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_triangleset_gettrianglelist.restype = ctypes.c_int32
+			self.lib.lib3mf_triangleset_gettrianglelist.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_triangleset_addtrianglelist.restype = ctypes.c_int32
+			self.lib.lib3mf_triangleset_addtrianglelist.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_triangleset_merge.restype = ctypes.c_int32
+			self.lib.lib3mf_triangleset_merge.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_bool]
+			
+			self.lib.lib3mf_triangleset_deleteset.restype = ctypes.c_int32
+			self.lib.lib3mf_triangleset_deleteset.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_triangleset_duplicate.restype = ctypes.c_int32
+			self.lib.lib3mf_triangleset_duplicate.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 			self.lib.lib3mf_object_gettype.restype = ctypes.c_int32
 			self.lib.lib3mf_object_gettype.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
 			
@@ -5140,6 +5307,21 @@ class Wrapper:
 			
 			self.lib.lib3mf_meshobject_setvolumedata.restype = ctypes.c_int32
 			self.lib.lib3mf_meshobject_setvolumedata.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_meshobject_addtriangleset.restype = ctypes.c_int32
+			self.lib.lib3mf_meshobject_addtriangleset.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_meshobject_hastriangleset.restype = ctypes.c_int32
+			self.lib.lib3mf_meshobject_hastriangleset.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_meshobject_findtriangleset.restype = ctypes.c_int32
+			self.lib.lib3mf_meshobject_findtriangleset.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_meshobject_gettrianglesetcount.restype = ctypes.c_int32
+			self.lib.lib3mf_meshobject_gettrianglesetcount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_meshobject_gettriangleset.restype = ctypes.c_int32
+			self.lib.lib3mf_meshobject_gettriangleset.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_levelset_getfunction.restype = ctypes.c_int32
 			self.lib.lib3mf_levelset_getfunction.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -6799,6 +6981,8 @@ class Wrapper:
 				return MetaData(handle, wrapper)
 			def getObjectById_0C3B85369E9B25D3(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
 				return MetaDataGroup(handle, wrapper)
+			def getObjectById_5950BB3EE8A82090(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::TriangleSet"
+				return TriangleSet(handle, wrapper)
 			def getObjectById_2DA2136F577A779C(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Object"
 				return Object(handle, wrapper)
 			def getObjectById_3B3A6DC6EC610497(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
@@ -7678,6 +7862,107 @@ class MetaDataGroup(Base):
 	
 
 
+''' Class Implementation for TriangleSet
+'''
+class TriangleSet(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def SetName(self, Name):
+		pName = ctypes.c_char_p(str.encode(Name))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_setname(self._handle, pName))
+		
+	
+	def GetName(self):
+		nNameBufferSize = ctypes.c_uint64(0)
+		nNameNeededChars = ctypes.c_uint64(0)
+		pNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_getname(self._handle, nNameBufferSize, nNameNeededChars, pNameBuffer))
+		nNameBufferSize = ctypes.c_uint64(nNameNeededChars.value)
+		pNameBuffer = (ctypes.c_char * (nNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_getname(self._handle, nNameBufferSize, nNameNeededChars, pNameBuffer))
+		
+		return pNameBuffer.value.decode()
+	
+	def SetIdentifier(self, Identifier):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_setidentifier(self._handle, pIdentifier))
+		
+	
+	def GetIdentifier(self):
+		nIdentifierBufferSize = ctypes.c_uint64(0)
+		nIdentifierNeededChars = ctypes.c_uint64(0)
+		pIdentifierBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_getidentifier(self._handle, nIdentifierBufferSize, nIdentifierNeededChars, pIdentifierBuffer))
+		nIdentifierBufferSize = ctypes.c_uint64(nIdentifierNeededChars.value)
+		pIdentifierBuffer = (ctypes.c_char * (nIdentifierNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_getidentifier(self._handle, nIdentifierBufferSize, nIdentifierNeededChars, pIdentifierBuffer))
+		
+		return pIdentifierBuffer.value.decode()
+	
+	def AddTriangle(self, TriangleIndex):
+		nTriangleIndex = ctypes.c_uint32(TriangleIndex)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_addtriangle(self._handle, nTriangleIndex))
+		
+	
+	def RemoveTriangle(self, TriangleIndex):
+		nTriangleIndex = ctypes.c_uint32(TriangleIndex)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_removetriangle(self._handle, nTriangleIndex))
+		
+	
+	def Clear(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_clear(self._handle))
+		
+	
+	def SetTriangleList(self, TriangleIndices):
+		nTriangleIndicesCount = ctypes.c_uint64(len(TriangleIndices))
+		pTriangleIndicesBuffer = (ctypes.c_uint32*len(TriangleIndices))(*TriangleIndices)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_settrianglelist(self._handle, nTriangleIndicesCount, pTriangleIndicesBuffer))
+		
+	
+	def GetTriangleList(self):
+		nTriangleIndicesCount = ctypes.c_uint64(0)
+		nTriangleIndicesNeededCount = ctypes.c_uint64(0)
+		pTriangleIndicesBuffer = (ctypes.c_uint32*0)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_gettrianglelist(self._handle, nTriangleIndicesCount, nTriangleIndicesNeededCount, pTriangleIndicesBuffer))
+		nTriangleIndicesCount = ctypes.c_uint64(nTriangleIndicesNeededCount.value)
+		pTriangleIndicesBuffer = (ctypes.c_uint32 * nTriangleIndicesNeededCount.value)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_gettrianglelist(self._handle, nTriangleIndicesCount, nTriangleIndicesNeededCount, pTriangleIndicesBuffer))
+		
+		return [pTriangleIndicesBuffer[i] for i in range(nTriangleIndicesNeededCount.value)]
+	
+	def AddTriangleList(self, TriangleIndices):
+		nTriangleIndicesCount = ctypes.c_uint64(len(TriangleIndices))
+		pTriangleIndicesBuffer = (ctypes.c_uint32*len(TriangleIndices))(*TriangleIndices)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_addtrianglelist(self._handle, nTriangleIndicesCount, pTriangleIndicesBuffer))
+		
+	
+	def Merge(self, OtherTriangleSetObject, DeleteOther):
+		OtherTriangleSetHandle = None
+		if OtherTriangleSetObject:
+			OtherTriangleSetHandle = OtherTriangleSetObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		bDeleteOther = ctypes.c_bool(DeleteOther)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_merge(self._handle, OtherTriangleSetHandle, bDeleteOther))
+		
+	
+	def DeleteSet(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_deleteset(self._handle))
+		
+	
+	def Duplicate(self, Identifier):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		NewSetHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_triangleset_duplicate(self._handle, pIdentifier, NewSetHandle))
+		if NewSetHandle:
+			NewSetObject = self._wrapper._polymorphicFactory(NewSetHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return NewSetObject
+	
+
+
 ''' Class Implementation for Object
 '''
 class Object(Resource):
@@ -8011,6 +8296,53 @@ class MeshObject(Object):
 			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_meshobject_setvolumedata(self._handle, TheVolumeDataHandle))
 		
+	
+	def AddTriangleSet(self, Identifier, Name):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		pName = ctypes.c_char_p(str.encode(Name))
+		TheTriangleSetHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_meshobject_addtriangleset(self._handle, pIdentifier, pName, TheTriangleSetHandle))
+		if TheTriangleSetHandle:
+			TheTriangleSetObject = self._wrapper._polymorphicFactory(TheTriangleSetHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return TheTriangleSetObject
+	
+	def HasTriangleSet(self, Identifier):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		pTriangleSetExists = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_meshobject_hastriangleset(self._handle, pIdentifier, pTriangleSetExists))
+		
+		return pTriangleSetExists.value
+	
+	def FindTriangleSet(self, Identifier):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		TheTriangleSetHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_meshobject_findtriangleset(self._handle, pIdentifier, TheTriangleSetHandle))
+		if TheTriangleSetHandle:
+			TheTriangleSetObject = self._wrapper._polymorphicFactory(TheTriangleSetHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return TheTriangleSetObject
+	
+	def GetTriangleSetCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_meshobject_gettrianglesetcount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def GetTriangleSet(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		TheTriangleSetHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_meshobject_gettriangleset(self._handle, nIndex, TheTriangleSetHandle))
+		if TheTriangleSetHandle:
+			TheTriangleSetObject = self._wrapper._polymorphicFactory(TheTriangleSetHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return TheTriangleSetObject
 	
 
 

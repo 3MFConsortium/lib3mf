@@ -78,6 +78,7 @@ class CFunctionIterator;
 class CLevelSetIterator;
 class CMetaData;
 class CMetaDataGroup;
+class CTriangleSet;
 class CObject;
 class CMeshObject;
 class CLevelSet;
@@ -198,6 +199,7 @@ typedef CFunctionIterator CLib3MFFunctionIterator;
 typedef CLevelSetIterator CLib3MFLevelSetIterator;
 typedef CMetaData CLib3MFMetaData;
 typedef CMetaDataGroup CLib3MFMetaDataGroup;
+typedef CTriangleSet CLib3MFTriangleSet;
 typedef CObject CLib3MFObject;
 typedef CMeshObject CLib3MFMeshObject;
 typedef CLevelSet CLib3MFLevelSet;
@@ -318,6 +320,7 @@ typedef std::shared_ptr<CFunctionIterator> PFunctionIterator;
 typedef std::shared_ptr<CLevelSetIterator> PLevelSetIterator;
 typedef std::shared_ptr<CMetaData> PMetaData;
 typedef std::shared_ptr<CMetaDataGroup> PMetaDataGroup;
+typedef std::shared_ptr<CTriangleSet> PTriangleSet;
 typedef std::shared_ptr<CObject> PObject;
 typedef std::shared_ptr<CMeshObject> PMeshObject;
 typedef std::shared_ptr<CLevelSet> PLevelSet;
@@ -438,6 +441,7 @@ typedef PFunctionIterator PLib3MFFunctionIterator;
 typedef PLevelSetIterator PLib3MFLevelSetIterator;
 typedef PMetaData PLib3MFMetaData;
 typedef PMetaDataGroup PLib3MFMetaDataGroup;
+typedef PTriangleSet PLib3MFTriangleSet;
 typedef PObject PLib3MFObject;
 typedef PMeshObject PLib3MFMeshObject;
 typedef PLevelSet PLib3MFLevelSet;
@@ -650,6 +654,8 @@ public:
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "ELEMENTCOUNTEXCEEDSLIMIT";
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "INVALIDRESOURCE";
 			case LIB3MF_ERROR_INVALIDLEVELSET: return "INVALIDLEVELSET";
+			case LIB3MF_ERROR_COULDNOTFINDTRIANGLESET: return "COULDNOTFINDTRIANGLESET";
+			case LIB3MF_ERROR_INVALIDTRIANGLESETINDEX: return "INVALIDTRIANGLESETINDEX";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "BEAMLATTICE_INVALID_OBJECTTYPE";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "INVALIDKEYSTORE";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "INVALIDKEYSTORECONSUMER";
@@ -706,6 +712,8 @@ public:
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "An element buffer exceeds its spec limit";
 			case LIB3MF_ERROR_INVALIDRESOURCE: return "A resource is invalid";
 			case LIB3MF_ERROR_INVALIDLEVELSET: return "A level set is invalid";
+			case LIB3MF_ERROR_COULDNOTFINDTRIANGLESET: return "Could not find triangle set";
+			case LIB3MF_ERROR_INVALIDTRIANGLESETINDEX: return "Invalid triangle set index";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "This object type is not valid for beamlattices";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "The keystore object is invalid";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "The consumer keystore object is invalid";
@@ -846,6 +854,7 @@ private:
 	friend class CLevelSetIterator;
 	friend class CMetaData;
 	friend class CMetaDataGroup;
+	friend class CTriangleSet;
 	friend class CObject;
 	friend class CMeshObject;
 	friend class CLevelSet;
@@ -1389,6 +1398,35 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CTriangleSet 
+**************************************************************************************************************************/
+class CTriangleSet : public CBase {
+public:
+	
+	/**
+	* CTriangleSet::CTriangleSet - Constructor for TriangleSet class.
+	*/
+	CTriangleSet(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline void SetName(const std::string & sName);
+	inline std::string GetName();
+	inline void SetIdentifier(const std::string & sIdentifier);
+	inline std::string GetIdentifier();
+	inline void AddTriangle(const Lib3MF_uint32 nTriangleIndex);
+	inline void RemoveTriangle(const Lib3MF_uint32 nTriangleIndex);
+	inline void Clear();
+	inline void SetTriangleList(const CInputVector<Lib3MF_uint32> & TriangleIndicesBuffer);
+	inline void GetTriangleList(std::vector<Lib3MF_uint32> & TriangleIndicesBuffer);
+	inline void AddTriangleList(const CInputVector<Lib3MF_uint32> & TriangleIndicesBuffer);
+	inline void Merge(classParam<CTriangleSet> pOtherTriangleSet, const bool bDeleteOther);
+	inline void DeleteSet();
+	inline PTriangleSet Duplicate(const std::string & sIdentifier);
+};
+	
+/*************************************************************************************************************************
  Class CObject 
 **************************************************************************************************************************/
 class CObject : public CResource {
@@ -1463,6 +1501,11 @@ public:
 	inline PBeamLattice BeamLattice();
 	inline PVolumeData GetVolumeData();
 	inline void SetVolumeData(classParam<CVolumeData> pTheVolumeData);
+	inline PTriangleSet AddTriangleSet(const std::string & sIdentifier, const std::string & sName);
+	inline bool HasTriangleSet(const std::string & sIdentifier);
+	inline PTriangleSet FindTriangleSet(const std::string & sIdentifier);
+	inline Lib3MF_uint32 GetTriangleSetCount();
+	inline PTriangleSet GetTriangleSet(const Lib3MF_uint32 nIndex);
 };
 	
 /*************************************************************************************************************************
@@ -3444,6 +3487,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0xA0C005C035D5371DUL: return new CLevelSetIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
 		case 0xD17716D063DE2C22UL: return new CMetaData(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 		case 0x0C3B85369E9B25D3UL: return new CMetaDataGroup(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
+		case 0x5950BB3EE8A82090UL: return new CTriangleSet(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::TriangleSet"
 		case 0x2DA2136F577A779CUL: return new CObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
 		case 0x3B3A6DC6EC610497UL: return new CMeshObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
 		case 0xE8A7D9C192EFD0E2UL: return new CLevelSet(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
@@ -4755,6 +4799,152 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CTriangleSet
+	 */
+	
+	/**
+	* CTriangleSet::SetName - sets the name of the triangle set
+	* @param[in] sName - the new name
+	*/
+	void CTriangleSet::SetName(const std::string & sName)
+	{
+		CheckError(lib3mf_triangleset_setname(m_pHandle, sName.c_str()));
+	}
+	
+	/**
+	* CTriangleSet::GetName - returns the name of the triangle set
+	* @return returns the name
+	*/
+	std::string CTriangleSet::GetName()
+	{
+		Lib3MF_uint32 bytesNeededName = 0;
+		Lib3MF_uint32 bytesWrittenName = 0;
+		CheckError(lib3mf_triangleset_getname(m_pHandle, 0, &bytesNeededName, nullptr));
+		std::vector<char> bufferName(bytesNeededName);
+		CheckError(lib3mf_triangleset_getname(m_pHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]));
+		
+		return std::string(&bufferName[0]);
+	}
+	
+	/**
+	* CTriangleSet::SetIdentifier - sets the identifier of the triangle set.
+	* @param[in] sIdentifier - the new identifier. MUST be unique within the mesh. MUST NOT be an empty string
+	*/
+	void CTriangleSet::SetIdentifier(const std::string & sIdentifier)
+	{
+		CheckError(lib3mf_triangleset_setidentifier(m_pHandle, sIdentifier.c_str()));
+	}
+	
+	/**
+	* CTriangleSet::GetIdentifier - returns the identifier of the triangle set
+	* @return returns the identifier
+	*/
+	std::string CTriangleSet::GetIdentifier()
+	{
+		Lib3MF_uint32 bytesNeededIdentifier = 0;
+		Lib3MF_uint32 bytesWrittenIdentifier = 0;
+		CheckError(lib3mf_triangleset_getidentifier(m_pHandle, 0, &bytesNeededIdentifier, nullptr));
+		std::vector<char> bufferIdentifier(bytesNeededIdentifier);
+		CheckError(lib3mf_triangleset_getidentifier(m_pHandle, bytesNeededIdentifier, &bytesWrittenIdentifier, &bufferIdentifier[0]));
+		
+		return std::string(&bufferIdentifier[0]);
+	}
+	
+	/**
+	* CTriangleSet::AddTriangle - adds a triangle to the set. Does nothing if triangle is already in the set.
+	* @param[in] nTriangleIndex - Triangle index to add. MUST be between 0 and TriangleCount - 1.
+	*/
+	void CTriangleSet::AddTriangle(const Lib3MF_uint32 nTriangleIndex)
+	{
+		CheckError(lib3mf_triangleset_addtriangle(m_pHandle, nTriangleIndex));
+	}
+	
+	/**
+	* CTriangleSet::RemoveTriangle - removes a triangle from the set
+	* @param[in] nTriangleIndex - Triangle index to remove. MUST be between 0 and TriangleCount - 1.
+	*/
+	void CTriangleSet::RemoveTriangle(const Lib3MF_uint32 nTriangleIndex)
+	{
+		CheckError(lib3mf_triangleset_removetriangle(m_pHandle, nTriangleIndex));
+	}
+	
+	/**
+	* CTriangleSet::Clear - clears all triangles from the list
+	*/
+	void CTriangleSet::Clear()
+	{
+		CheckError(lib3mf_triangleset_clear(m_pHandle));
+	}
+	
+	/**
+	* CTriangleSet::SetTriangleList - Sets all triangles in the list, while clearing old values. Duplicates will be merged.
+	* @param[in] TriangleIndicesBuffer - Triangle indices to add. Every element MUST be between 0 and TriangleCount - 1.
+	*/
+	void CTriangleSet::SetTriangleList(const CInputVector<Lib3MF_uint32> & TriangleIndicesBuffer)
+	{
+		Lib3MF_uint64 nTriangleIndicesSize = TriangleIndicesBuffer.size();
+		CheckError(lib3mf_triangleset_settrianglelist(m_pHandle, nTriangleIndicesSize, TriangleIndicesBuffer.data()));
+	}
+	
+	/**
+	* CTriangleSet::GetTriangleList - Retrieves all the triangles in the TriangleSet
+	* @param[out] TriangleIndicesBuffer - retrieves the indices of the triangles in this TriangleSet
+	*/
+	void CTriangleSet::GetTriangleList(std::vector<Lib3MF_uint32> & TriangleIndicesBuffer)
+	{
+		Lib3MF_uint64 elementsNeededTriangleIndices = 0;
+		Lib3MF_uint64 elementsWrittenTriangleIndices = 0;
+		CheckError(lib3mf_triangleset_gettrianglelist(m_pHandle, 0, &elementsNeededTriangleIndices, nullptr));
+		TriangleIndicesBuffer.resize((size_t) elementsNeededTriangleIndices);
+		CheckError(lib3mf_triangleset_gettrianglelist(m_pHandle, elementsNeededTriangleIndices, &elementsWrittenTriangleIndices, TriangleIndicesBuffer.data()));
+	}
+	
+	/**
+	* CTriangleSet::AddTriangleList - Adds multiple triangles in the list. Duplicates will be merged.
+	* @param[in] TriangleIndicesBuffer - Triangle indices to add. Every element MUST be between 0 and TriangleCount - 1.
+	*/
+	void CTriangleSet::AddTriangleList(const CInputVector<Lib3MF_uint32> & TriangleIndicesBuffer)
+	{
+		Lib3MF_uint64 nTriangleIndicesSize = TriangleIndicesBuffer.size();
+		CheckError(lib3mf_triangleset_addtrianglelist(m_pHandle, nTriangleIndicesSize, TriangleIndicesBuffer.data()));
+	}
+	
+	/**
+	* CTriangleSet::Merge - Merges another Triangle set.
+	* @param[in] pOtherTriangleSet - Other triangle set to merge.
+	* @param[in] bDeleteOther - Flag if other triangle set is getting removed.
+	*/
+	void CTriangleSet::Merge(classParam<CTriangleSet> pOtherTriangleSet, const bool bDeleteOther)
+	{
+		Lib3MFHandle hOtherTriangleSet = pOtherTriangleSet.GetHandle();
+		CheckError(lib3mf_triangleset_merge(m_pHandle, hOtherTriangleSet, bDeleteOther));
+	}
+	
+	/**
+	* CTriangleSet::DeleteSet - Deletes the whole set from the mesh.
+	*/
+	void CTriangleSet::DeleteSet()
+	{
+		CheckError(lib3mf_triangleset_deleteset(m_pHandle));
+	}
+	
+	/**
+	* CTriangleSet::Duplicate - Duplicates the set in the mesh.
+	* @param[in] sIdentifier - the new identifier. MUST be unique within the mesh. MUST NOT be an empty string
+	* @return Copy of the triangle set.
+	*/
+	PTriangleSet CTriangleSet::Duplicate(const std::string & sIdentifier)
+	{
+		Lib3MFHandle hNewSet = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_triangleset_duplicate(m_pHandle, sIdentifier.c_str(), &hNewSet));
+		
+		if (!hNewSet) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CTriangleSet>(dynamic_cast<CTriangleSet*>(m_pWrapper->polymorphicFactory(hNewSet)));
+	}
+	
+	/**
 	 * Method definitions for class CObject
 	 */
 	
@@ -5292,6 +5482,80 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	{
 		Lib3MFHandle hTheVolumeData = pTheVolumeData.GetHandle();
 		CheckError(lib3mf_meshobject_setvolumedata(m_pHandle, hTheVolumeData));
+	}
+	
+	/**
+	* CMeshObject::AddTriangleSet - Adds a new triangle set.
+	* @param[in] sIdentifier - the new identifier. MUST be unique within the mesh. MUST NOT be an empty string
+	* @param[in] sName - the human readable name. MUST NOT be an empty string
+	* @return the new Triangle Set Instance.
+	*/
+	PTriangleSet CMeshObject::AddTriangleSet(const std::string & sIdentifier, const std::string & sName)
+	{
+		Lib3MFHandle hTheTriangleSet = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_meshobject_addtriangleset(m_pHandle, sIdentifier.c_str(), sName.c_str(), &hTheTriangleSet));
+		
+		if (!hTheTriangleSet) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CTriangleSet>(dynamic_cast<CTriangleSet*>(m_pWrapper->polymorphicFactory(hTheTriangleSet)));
+	}
+	
+	/**
+	* CMeshObject::HasTriangleSet - Checks if a triangle set exists.
+	* @param[in] sIdentifier - the identifier to be found.
+	* @return flag if the triangles set exists.
+	*/
+	bool CMeshObject::HasTriangleSet(const std::string & sIdentifier)
+	{
+		bool resultTriangleSetExists = 0;
+		CheckError(lib3mf_meshobject_hastriangleset(m_pHandle, sIdentifier.c_str(), &resultTriangleSetExists));
+		
+		return resultTriangleSetExists;
+	}
+	
+	/**
+	* CMeshObject::FindTriangleSet - Finds a new triangle set by identifier. Fails if not existing.
+	* @param[in] sIdentifier - the identifier to be found.
+	* @return the triangle Set Instance.
+	*/
+	PTriangleSet CMeshObject::FindTriangleSet(const std::string & sIdentifier)
+	{
+		Lib3MFHandle hTheTriangleSet = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_meshobject_findtriangleset(m_pHandle, sIdentifier.c_str(), &hTheTriangleSet));
+		
+		if (!hTheTriangleSet) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CTriangleSet>(dynamic_cast<CTriangleSet*>(m_pWrapper->polymorphicFactory(hTheTriangleSet)));
+	}
+	
+	/**
+	* CMeshObject::GetTriangleSetCount - Returns number of triangle sets.
+	* @return the number of triangle sets of this mesh.
+	*/
+	Lib3MF_uint32 CMeshObject::GetTriangleSetCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(lib3mf_meshobject_gettrianglesetcount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CMeshObject::GetTriangleSet - Returns a specific triangle set by index.
+	* @param[in] nIndex - the index of the triangle set.
+	* @return the triangle Set Instance.
+	*/
+	PTriangleSet CMeshObject::GetTriangleSet(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hTheTriangleSet = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_meshobject_gettriangleset(m_pHandle, nIndex, &hTheTriangleSet));
+		
+		if (!hTheTriangleSet) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CTriangleSet>(dynamic_cast<CTriangleSet*>(m_pWrapper->polymorphicFactory(hTheTriangleSet)));
 	}
 	
 	/**

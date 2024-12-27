@@ -57,6 +57,8 @@ namespace NMR {
 		MESHFACES m_Faces;
 		CBeamLattice m_BeamLattice;
 
+
+
 		PMeshInformationHandler m_pMeshInformationHandler;
 	public:
 		CMesh();

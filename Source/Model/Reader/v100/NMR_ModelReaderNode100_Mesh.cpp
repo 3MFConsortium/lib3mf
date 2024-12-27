@@ -34,6 +34,7 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Mesh.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Vertices.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Triangles.h"
+#include "Model/Reader/v100/NMR_ModelReaderNode100_TriangleSets.h"
 #include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamLattice.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_VolumeData.h"
 
@@ -194,6 +195,23 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_TRIANGLESETS) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_TRIANGLESETS) == 0)
+			{
+				PModelReaderNode100_TriangleSets pXMLNode = std::make_shared<CModelReaderNode100_TriangleSets>(m_pModel, m_pMesh->getMesh(), m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				m_pTriangleSets = pXMLNode->getTriangleSets ();
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		}
+
+	}
+
+	std::vector<PModelTriangleSet> CModelReaderNode100_Mesh::getTriangleSets()
+	{
+		return m_pTriangleSets;
 	}
 
 }
