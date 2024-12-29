@@ -97,6 +97,11 @@ namespace Lib3MF
 
     TEST_F(TriangleSet, meshTriangleSet)
     {
+        auto getTriangleListCount = [](PTriangleSet triSet) {
+            std::vector<Lib3MF_uint32> triangleIndices;
+            triSet->GetTriangleList(triangleIndices);
+            return triangleIndices.size();
+        };
         mesh->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
         ASSERT_EQ(mesh->GetVertexCount(), 8);
         ASSERT_EQ(mesh->GetTriangleCount(), 12);
@@ -108,25 +113,20 @@ namespace Lib3MF
         {
             triSet->AddTriangle(i);
         }
-        std::vector<Lib3MF_uint32> triangleIndices;
-        triSet->GetTriangleList(triangleIndices);
+
         ASSERT_EQ(triSet->GetName(), "test_name");
         ASSERT_EQ(triSet->GetIdentifier(), "test_id");
-        ASSERT_EQ(triangleIndices.size(), 6);
+        ASSERT_EQ(getTriangleListCount(triSet), 6);
 
         // check adding duplicate
         triSet->AddTriangle(0);
-        std::vector<Lib3MF_uint32> triangleIndices2;
-        triSet->GetTriangleList(triangleIndices2);
-        ASSERT_EQ(triangleIndices2.size(), 6);
+        ASSERT_EQ(getTriangleListCount(triSet), 6);
 
         mesh->AddTriangleSet("test_id_1", "test_name");
         auto triSet1 = mesh->FindTriangleSet("test_id_1");
         triSet1->AddTriangle(1);
         triSet1->AddTriangle(3);
-        std::vector<Lib3MF_uint32> triangleIndices3;
-        triSet1->GetTriangleList(triangleIndices3);
-        ASSERT_EQ(triangleIndices3.size(), 2);
+        ASSERT_EQ(getTriangleListCount(triSet1), 2);
 
         ASSERT_EQ(mesh->GetTriangleSetCount(), 2);
 
@@ -145,9 +145,47 @@ namespace Lib3MF
 
         triSet2->Merge(triSet, false);
 
-        std::vector<Lib3MF_uint32> triangleIndices4;
-        triSet2->GetTriangleList(triangleIndices4);
-        ASSERT_EQ(triangleIndices4.size(), 8);
+        ASSERT_EQ(getTriangleListCount(triSet2), 8);
+
+        triSet2->SetName("test_name_3");
+
+        auto triSet3 = mesh->FindTriangleSet("test_id_2");
+        ASSERT_EQ(triSet3->GetName(), "test_name_3");
+
+        triSet3->SetIdentifier("test_id_3");
+        
+        ASSERT_TRUE(mesh->HasTriangleSet("test_id_2"));
+        ASSERT_FALSE(mesh->HasTriangleSet("test_id_3"));
+
+        ASSERT_EQ(mesh->FindTriangleSet("test_id_2")->GetIdentifier(), "test_id_3");
+
+        auto triSetDup = triSet3->Duplicate("test_id_3");
+        ASSERT_EQ(triSetDup->GetName(), "test_name_3");
+
+        ASSERT_EQ(getTriangleListCount(triSetDup), 8);
+
+        triSetDup->RemoveTriangle(1);
+        std::vector<Lib3MF_uint32> triangleIndicesDup2;
+        triSetDup->GetTriangleList(triangleIndicesDup2);
+        ASSERT_EQ(getTriangleListCount(triSetDup), 7);
+
+        triSetDup->Clear();
+        ASSERT_EQ(getTriangleListCount(triSetDup), 0);
+
+
+        ASSERT_TRUE(triSetDup->handle());
+
+        std::vector<Lib3MF_uint32> setTriangleList{1, 2, 3, 4};
+        triSetDup->SetTriangleList(setTriangleList);
+        ASSERT_EQ(getTriangleListCount(triSetDup), 4);
+
+        std::vector<Lib3MF_uint32> addTriangleList{3, 4, 5, 6};
+        triSetDup->AddTriangleList(addTriangleList);        
+        ASSERT_EQ(getTriangleListCount(triSetDup), 6);
+
+        std::vector<Lib3MF_uint32> setTriangleList2{1, 2};
+        triSetDup->SetTriangleList(setTriangleList2);
+        ASSERT_EQ(getTriangleListCount(triSetDup), 2);
 
     }
 
