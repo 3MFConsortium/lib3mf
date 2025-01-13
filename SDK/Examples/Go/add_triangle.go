@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract: Simplest 3mf example that just includes a single triangle
 
-Interface version: 2.3.2
+Interface version: 2.4.0
 +++
 */
 
@@ -35,8 +35,9 @@ package main
 
 import (
 	"fmt"
-	lib3mf "github.com/3MFConsortium/lib3mf.go/v2"
 	"log"
+
+	lib3mf "github.com/3MFConsortium/lib3mf.go/v2"
 )
 
 // createVertexAndReturnIndex creates a vertex on the mesh object and returns its index.

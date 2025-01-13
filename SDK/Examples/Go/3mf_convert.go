@@ -27,19 +27,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract: An example to convert between 3MF and STL
 
-Interface version: 2.3.2
+Interface version: 2.4.0
 +++
 */
-
 
 package main
 
 import (
 	"fmt"
-	lib3mf "github.com/3MFConsortium/lib3mf.go/v2"
 	"log"
 	"os"
 	"strings"
+
+	lib3mf "github.com/3MFConsortium/lib3mf.go/v2"
 )
 
 // findExtension returns the file extension from a given filename.
