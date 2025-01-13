@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 2.6)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 if (WIN32)
 	set(LSUFFIX "dll")
@@ -60,6 +60,9 @@ CopySharedLibrary(Example_Slice)
 
 add_executable(Example_BeamLattice Source/BeamLattice.cpp)
 CopySharedLibrary(Example_BeamLattice)
+
+add_executable(Example_FillMeshWithGyroid Source/FillMeshWithGyroid.cpp)
+CopySharedLibrary(Example_FillMeshWithGyroid)
 
 if (${MSVC})
 	IF(${CMAKE_VERSION} VERSION_LESS 3.6.3)

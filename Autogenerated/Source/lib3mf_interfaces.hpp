@@ -72,6 +72,7 @@ class IFunctionIterator;
 class ILevelSetIterator;
 class IMetaData;
 class IMetaDataGroup;
+class ITriangleSet;
 class IObject;
 class IMeshObject;
 class ILevelSet;
@@ -1203,6 +1204,108 @@ typedef IBaseSharedPtr<IMetaDataGroup> PIMetaDataGroup;
 
 
 /*************************************************************************************************************************
+ Class interface for TriangleSet 
+**************************************************************************************************************************/
+
+class ITriangleSet : public virtual IBase {
+public:
+	/**
+	* ITriangleSet::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x5950BB3EE8A82090UL; // First 64 bits of SHA1 of a string: "Lib3MF::TriangleSet"
+	}
+
+	/**
+	* ITriangleSet::SetName - sets the name of the triangle set
+	* @param[in] sName - the new name
+	*/
+	virtual void SetName(const std::string & sName) = 0;
+
+	/**
+	* ITriangleSet::GetName - returns the name of the triangle set
+	* @return returns the name
+	*/
+	virtual std::string GetName() = 0;
+
+	/**
+	* ITriangleSet::SetIdentifier - sets the identifier of the triangle set.
+	* @param[in] sIdentifier - the new identifier. MUST be unique within the mesh. MUST NOT be an empty string
+	*/
+	virtual void SetIdentifier(const std::string & sIdentifier) = 0;
+
+	/**
+	* ITriangleSet::GetIdentifier - returns the identifier of the triangle set
+	* @return returns the identifier
+	*/
+	virtual std::string GetIdentifier() = 0;
+
+	/**
+	* ITriangleSet::AddTriangle - adds a triangle to the set. Does nothing if triangle is already in the set.
+	* @param[in] nTriangleIndex - Triangle index to add. MUST be between 0 and TriangleCount - 1.
+	*/
+	virtual void AddTriangle(const Lib3MF_uint32 nTriangleIndex) = 0;
+
+	/**
+	* ITriangleSet::RemoveTriangle - removes a triangle from the set
+	* @param[in] nTriangleIndex - Triangle index to remove. MUST be between 0 and TriangleCount - 1.
+	*/
+	virtual void RemoveTriangle(const Lib3MF_uint32 nTriangleIndex) = 0;
+
+	/**
+	* ITriangleSet::Clear - clears all triangles from the list
+	*/
+	virtual void Clear() = 0;
+
+	/**
+	* ITriangleSet::SetTriangleList - Sets all triangles in the list, while clearing old values. Duplicates will be merged.
+	* @param[in] nTriangleIndicesBufferSize - Number of elements in buffer
+	* @param[in] pTriangleIndicesBuffer - Triangle indices to add. Every element MUST be between 0 and TriangleCount - 1.
+	*/
+	virtual void SetTriangleList(const Lib3MF_uint64 nTriangleIndicesBufferSize, const Lib3MF_uint32 * pTriangleIndicesBuffer) = 0;
+
+	/**
+	* ITriangleSet::GetTriangleList - Retrieves all the triangles in the TriangleSet
+	* @param[in] nTriangleIndicesBufferSize - Number of elements in buffer
+	* @param[out] pTriangleIndicesNeededCount - will be filled with the count of the written structs, or needed buffer size.
+	* @param[out] pTriangleIndicesBuffer - uint32 buffer of retrieves the indices of the triangles in this TriangleSet
+	*/
+	virtual void GetTriangleList(Lib3MF_uint64 nTriangleIndicesBufferSize, Lib3MF_uint64* pTriangleIndicesNeededCount, Lib3MF_uint32 * pTriangleIndicesBuffer) = 0;
+
+	/**
+	* ITriangleSet::AddTriangleList - Adds multiple triangles in the list. Duplicates will be merged.
+	* @param[in] nTriangleIndicesBufferSize - Number of elements in buffer
+	* @param[in] pTriangleIndicesBuffer - Triangle indices to add. Every element MUST be between 0 and TriangleCount - 1.
+	*/
+	virtual void AddTriangleList(const Lib3MF_uint64 nTriangleIndicesBufferSize, const Lib3MF_uint32 * pTriangleIndicesBuffer) = 0;
+
+	/**
+	* ITriangleSet::Merge - Merges another Triangle set.
+	* @param[in] pOtherTriangleSet - Other triangle set to merge.
+	* @param[in] bDeleteOther - Flag if other triangle set is getting removed.
+	*/
+	virtual void Merge(ITriangleSet* pOtherTriangleSet, const bool bDeleteOther) = 0;
+
+	/**
+	* ITriangleSet::DeleteSet - Deletes the whole set from the mesh.
+	*/
+	virtual void DeleteSet() = 0;
+
+	/**
+	* ITriangleSet::Duplicate - Duplicates the set in the mesh.
+	* @param[in] sIdentifier - the new identifier. MUST be unique within the mesh. MUST NOT be an empty string
+	* @return Copy of the triangle set.
+	*/
+	virtual ITriangleSet * Duplicate(const std::string & sIdentifier) = 0;
+
+};
+
+typedef IBaseSharedPtr<ITriangleSet> PITriangleSet;
+
+
+/*************************************************************************************************************************
  Class interface for Object 
 **************************************************************************************************************************/
 
@@ -1526,6 +1629,41 @@ public:
 	* @param[in] pTheVolumeData - the VolumeData of this MeshObject
 	*/
 	virtual void SetVolumeData(IVolumeData* pTheVolumeData) = 0;
+
+	/**
+	* IMeshObject::AddTriangleSet - Adds a new triangle set.
+	* @param[in] sIdentifier - the new identifier. MUST be unique within the mesh. MUST NOT be an empty string
+	* @param[in] sName - the human readable name. MUST NOT be an empty string
+	* @return the new Triangle Set Instance.
+	*/
+	virtual ITriangleSet * AddTriangleSet(const std::string & sIdentifier, const std::string & sName) = 0;
+
+	/**
+	* IMeshObject::HasTriangleSet - Checks if a triangle set exists.
+	* @param[in] sIdentifier - the identifier to be found.
+	* @return flag if the triangles set exists.
+	*/
+	virtual bool HasTriangleSet(const std::string & sIdentifier) = 0;
+
+	/**
+	* IMeshObject::FindTriangleSet - Finds a new triangle set by identifier. Fails if not existing.
+	* @param[in] sIdentifier - the identifier to be found.
+	* @return the triangle Set Instance.
+	*/
+	virtual ITriangleSet * FindTriangleSet(const std::string & sIdentifier) = 0;
+
+	/**
+	* IMeshObject::GetTriangleSetCount - Returns number of triangle sets.
+	* @return the number of triangle sets of this mesh.
+	*/
+	virtual Lib3MF_uint32 GetTriangleSetCount() = 0;
+
+	/**
+	* IMeshObject::GetTriangleSet - Returns a specific triangle set by index.
+	* @param[in] nIndex - the index of the triangle set.
+	* @return the triangle Set Instance.
+	*/
+	virtual ITriangleSet * GetTriangleSet(const Lib3MF_uint32 nIndex) = 0;
 
 };
 

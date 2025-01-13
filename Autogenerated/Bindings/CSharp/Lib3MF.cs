@@ -639,6 +639,45 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_metadatagroup_addmetadata", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 MetaDataGroup_AddMetaData (IntPtr Handle, byte[] ANameSpace, byte[] AName, byte[] AValue, byte[] AType, Byte AMustPreserve, out IntPtr AMetaData);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_triangleset_setname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 TriangleSet_SetName (IntPtr Handle, byte[] AName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_triangleset_getname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 TriangleSet_GetName (IntPtr Handle, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_triangleset_setidentifier", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 TriangleSet_SetIdentifier (IntPtr Handle, byte[] AIdentifier);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_triangleset_getidentifier", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 TriangleSet_GetIdentifier (IntPtr Handle, UInt32 sizeIdentifier, out UInt32 neededIdentifier, IntPtr dataIdentifier);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_triangleset_addtriangle", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 TriangleSet_AddTriangle (IntPtr Handle, UInt32 ATriangleIndex);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_triangleset_removetriangle", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 TriangleSet_RemoveTriangle (IntPtr Handle, UInt32 ATriangleIndex);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_triangleset_clear", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 TriangleSet_Clear (IntPtr Handle);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_triangleset_settrianglelist", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 TriangleSet_SetTriangleList (IntPtr Handle, UInt64 sizeTriangleIndices, IntPtr dataTriangleIndices);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_triangleset_gettrianglelist", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 TriangleSet_GetTriangleList (IntPtr Handle, UInt64 sizeTriangleIndices, out UInt64 neededTriangleIndices, IntPtr dataTriangleIndices);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_triangleset_addtrianglelist", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 TriangleSet_AddTriangleList (IntPtr Handle, UInt64 sizeTriangleIndices, IntPtr dataTriangleIndices);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_triangleset_merge", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 TriangleSet_Merge (IntPtr Handle, IntPtr AOtherTriangleSet, Byte ADeleteOther);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_triangleset_deleteset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 TriangleSet_DeleteSet (IntPtr Handle);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_triangleset_duplicate", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 TriangleSet_Duplicate (IntPtr Handle, byte[] AIdentifier, out IntPtr ANewSet);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_object_gettype", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Object_GetType (IntPtr Handle, out Int32 AObjectType);
 
@@ -773,6 +812,21 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_setvolumedata", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 MeshObject_SetVolumeData (IntPtr Handle, IntPtr ATheVolumeData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_addtriangleset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 MeshObject_AddTriangleSet (IntPtr Handle, byte[] AIdentifier, byte[] AName, out IntPtr ATheTriangleSet);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_hastriangleset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 MeshObject_HasTriangleSet (IntPtr Handle, byte[] AIdentifier, out Byte ATriangleSetExists);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_findtriangleset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 MeshObject_FindTriangleSet (IntPtr Handle, byte[] AIdentifier, out IntPtr ATheTriangleSet);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_gettrianglesetcount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 MeshObject_GetTriangleSetCount (IntPtr Handle, out UInt32 ACount);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_gettriangleset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 MeshObject_GetTriangleSet (IntPtr Handle, UInt32 AIndex, out IntPtr ATheTriangleSet);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_getfunction", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 LevelSet_GetFunction (IntPtr Handle, out IntPtr ATheFunction);
@@ -2617,6 +2671,7 @@ namespace Lib3MF {
 					case 0xA0C005C035D5371D: Object = new CLevelSetIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
 					case 0xD17716D063DE2C22: Object = new CMetaData(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
 					case 0x0C3B85369E9B25D3: Object = new CMetaDataGroup(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaDataGroup"
+					case 0x5950BB3EE8A82090: Object = new CTriangleSet(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::TriangleSet"
 					case 0x2DA2136F577A779C: Object = new CObject(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
 					case 0x3B3A6DC6EC610497: Object = new CMeshObject(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
 					case 0xE8A7D9C192EFD0E2: Object = new CLevelSet(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
@@ -3497,6 +3552,127 @@ namespace Lib3MF {
 
 	}
 
+	public class CTriangleSet : CBase
+	{
+		public CTriangleSet (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public void SetName (String AName)
+		{
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_SetName (Handle, byteName));
+		}
+
+		public String GetName ()
+		{
+			UInt32 sizeName = 0;
+			UInt32 neededName = 0;
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_GetName (Handle, sizeName, out neededName, IntPtr.Zero));
+			sizeName = neededName;
+			byte[] bytesName = new byte[sizeName];
+			GCHandle dataName = GCHandle.Alloc(bytesName, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_GetName (Handle, sizeName, out neededName, dataName.AddrOfPinnedObject()));
+			dataName.Free();
+			return Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
+		}
+
+		public void SetIdentifier (String AIdentifier)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_SetIdentifier (Handle, byteIdentifier));
+		}
+
+		public String GetIdentifier ()
+		{
+			UInt32 sizeIdentifier = 0;
+			UInt32 neededIdentifier = 0;
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_GetIdentifier (Handle, sizeIdentifier, out neededIdentifier, IntPtr.Zero));
+			sizeIdentifier = neededIdentifier;
+			byte[] bytesIdentifier = new byte[sizeIdentifier];
+			GCHandle dataIdentifier = GCHandle.Alloc(bytesIdentifier, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_GetIdentifier (Handle, sizeIdentifier, out neededIdentifier, dataIdentifier.AddrOfPinnedObject()));
+			dataIdentifier.Free();
+			return Encoding.UTF8.GetString(bytesIdentifier).TrimEnd(char.MinValue);
+		}
+
+		public void AddTriangle (UInt32 ATriangleIndex)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_AddTriangle (Handle, ATriangleIndex));
+		}
+
+		public void RemoveTriangle (UInt32 ATriangleIndex)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_RemoveTriangle (Handle, ATriangleIndex));
+		}
+
+		public void Clear ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_Clear (Handle));
+		}
+
+		public void SetTriangleList (UInt32[] ATriangleIndices)
+		{
+			GCHandle dataTriangleIndices = GCHandle.Alloc(ATriangleIndices, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_SetTriangleList (Handle, (UInt64) ATriangleIndices.Length, dataTriangleIndices.AddrOfPinnedObject()));
+			dataTriangleIndices.Free ();
+		}
+
+		public void GetTriangleList (out UInt32[] ATriangleIndices)
+		{
+			UInt64 sizeTriangleIndices = 0;
+			UInt64 neededTriangleIndices = 0;
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_GetTriangleList (Handle, sizeTriangleIndices, out neededTriangleIndices, IntPtr.Zero));
+			sizeTriangleIndices = neededTriangleIndices;
+			ATriangleIndices = new UInt32[sizeTriangleIndices];
+			GCHandle dataTriangleIndices = GCHandle.Alloc(ATriangleIndices, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_GetTriangleList (Handle, sizeTriangleIndices, out neededTriangleIndices, dataTriangleIndices.AddrOfPinnedObject()));
+			dataTriangleIndices.Free();
+		}
+
+		public void AddTriangleList (UInt32[] ATriangleIndices)
+		{
+			GCHandle dataTriangleIndices = GCHandle.Alloc(ATriangleIndices, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_AddTriangleList (Handle, (UInt64) ATriangleIndices.Length, dataTriangleIndices.AddrOfPinnedObject()));
+			dataTriangleIndices.Free ();
+		}
+
+		public void Merge (CTriangleSet AOtherTriangleSet, bool ADeleteOther)
+		{
+			IntPtr AOtherTriangleSetHandle = IntPtr.Zero;
+			if (AOtherTriangleSet != null)
+				AOtherTriangleSetHandle = AOtherTriangleSet.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_Merge (Handle, AOtherTriangleSetHandle, (Byte)( ADeleteOther ? 1 : 0 )));
+		}
+
+		public void DeleteSet ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_DeleteSet (Handle));
+		}
+
+		public CTriangleSet Duplicate (String AIdentifier)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			IntPtr newNewSet = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.TriangleSet_Duplicate (Handle, byteIdentifier, out newNewSet));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CTriangleSet>(newNewSet);
+		}
+
+	}
+
 	public class CObject : CResource
 	{
 		public CObject (IntPtr NewHandle) : base (NewHandle)
@@ -3913,6 +4089,50 @@ namespace Lib3MF {
 				ATheVolumeDataHandle = ATheVolumeData.GetHandle();
 
 			CheckError(Internal.Lib3MFWrapper.MeshObject_SetVolumeData (Handle, ATheVolumeDataHandle));
+		}
+
+		public CTriangleSet AddTriangleSet (String AIdentifier, String AName)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+			IntPtr newTheTriangleSet = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.MeshObject_AddTriangleSet (Handle, byteIdentifier, byteName, out newTheTriangleSet));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CTriangleSet>(newTheTriangleSet);
+		}
+
+		public bool HasTriangleSet (String AIdentifier)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			Byte resultTriangleSetExists = 0;
+
+			CheckError(Internal.Lib3MFWrapper.MeshObject_HasTriangleSet (Handle, byteIdentifier, out resultTriangleSetExists));
+			return (resultTriangleSetExists != 0);
+		}
+
+		public CTriangleSet FindTriangleSet (String AIdentifier)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			IntPtr newTheTriangleSet = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.MeshObject_FindTriangleSet (Handle, byteIdentifier, out newTheTriangleSet));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CTriangleSet>(newTheTriangleSet);
+		}
+
+		public UInt32 GetTriangleSetCount ()
+		{
+			UInt32 resultCount = 0;
+
+			CheckError(Internal.Lib3MFWrapper.MeshObject_GetTriangleSetCount (Handle, out resultCount));
+			return resultCount;
+		}
+
+		public CTriangleSet GetTriangleSet (UInt32 AIndex)
+		{
+			IntPtr newTheTriangleSet = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.MeshObject_GetTriangleSet (Handle, AIndex, out newTheTriangleSet));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CTriangleSet>(newTheTriangleSet);
 		}
 
 	}

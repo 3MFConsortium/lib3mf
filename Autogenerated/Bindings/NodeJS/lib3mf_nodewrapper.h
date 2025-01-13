@@ -495,6 +495,36 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFTriangleSet 
+**************************************************************************************************************************/
+class CLib3MFTriangleSet : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void SetName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddTriangle(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RemoveTriangle(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void Clear(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetTriangleList(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetTriangleList(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddTriangleList(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void Merge(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void DeleteSet(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void Duplicate(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFTriangleSet();
+	~CLib3MFTriangleSet();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
  Class CLib3MFObject 
 **************************************************************************************************************************/
 class CLib3MFObject : public CLib3MFBaseClass {
@@ -563,6 +593,11 @@ private:
 	static void BeamLattice(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetVolumeData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetVolumeData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddTriangleSet(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasTriangleSet(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindTriangleSet(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetTriangleSetCount(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetTriangleSet(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFMeshObject();

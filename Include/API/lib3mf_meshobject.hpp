@@ -63,6 +63,7 @@ private:
 
 	NMR::CMeshInformation_Properties* getMeshInformationProperties();
 
+
 protected:
 
 	/**
@@ -81,57 +82,67 @@ public:
 	* Public member functions to implement.
 	*/
 
-	Lib3MF_uint32 GetVertexCount ();
+	Lib3MF_uint32 GetVertexCount () override;
 
-	Lib3MF_uint32 GetTriangleCount ();
+	Lib3MF_uint32 GetTriangleCount () override;
 
-	void SetVertex (const Lib3MF_uint32 nIndex, const sLib3MFPosition Coordinates);
+	void SetVertex (const Lib3MF_uint32 nIndex, const sLib3MFPosition Coordinates) override;
 
-	sLib3MFPosition GetVertex(const Lib3MF_uint32 nIndex);
+	sLib3MFPosition GetVertex(const Lib3MF_uint32 nIndex) override;
 
-	Lib3MF_uint32 AddVertex (const sLib3MFPosition Coordinates);
+	Lib3MF_uint32 AddVertex (const sLib3MFPosition Coordinates) override;
 
-	virtual void GetVertices(Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, sLib3MFPosition * pVerticesBuffer);
+	virtual void GetVertices(Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, sLib3MFPosition * pVerticesBuffer) override;
 
-	sLib3MFTriangle GetTriangle (const Lib3MF_uint32 nIndex);
+	sLib3MFTriangle GetTriangle (const Lib3MF_uint32 nIndex) override;
 
-	void SetTriangle (const Lib3MF_uint32 nIndex, const sLib3MFTriangle Indices);
+	void SetTriangle (const Lib3MF_uint32 nIndex, const sLib3MFTriangle Indices) override;
 
-	Lib3MF_uint32 AddTriangle (const sLib3MFTriangle Indices);
+	Lib3MF_uint32 AddTriangle (const sLib3MFTriangle Indices) override;
 
-	void GetTriangleIndices (Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, sLib3MFTriangle * pIndicesBuffer);
+	void GetTriangleIndices (Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, sLib3MFTriangle * pIndicesBuffer) override;
 
-	void SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition * pVerticesBuffer, const Lib3MF_uint64 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer);
+	void SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition * pVerticesBuffer, const Lib3MF_uint64 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer) override;
 
-	bool IsManifoldAndOriented();
+	bool IsManifoldAndOriented() override;
 
-	bool IsMeshObject();
+	bool IsMeshObject() override;
 
-	bool IsComponentsObject();
+	bool IsComponentsObject() override;
 
     bool IsLevelSetObject() override;
 
     bool IsValid();
 
-	virtual IBeamLattice * BeamLattice();
+	virtual IBeamLattice * BeamLattice() override;
 
-	void SetObjectLevelProperty(const Lib3MF_uint32 nUniqueResourceID, const Lib3MF_uint32 nPropertyID);
+	void SetObjectLevelProperty(const Lib3MF_uint32 nUniqueResourceID, const Lib3MF_uint32 nPropertyID) override;
 
-	bool GetObjectLevelProperty(Lib3MF_uint32 & nUniqueResourceID, Lib3MF_uint32 & nPropertyID);
+	bool GetObjectLevelProperty(Lib3MF_uint32 & nUniqueResourceID, Lib3MF_uint32 & nPropertyID) override;
 
-	void SetTriangleProperties(const Lib3MF_uint32 nIndex, const sLib3MFTriangleProperties Properties);
+	void SetTriangleProperties(const Lib3MF_uint32 nIndex, const sLib3MFTriangleProperties Properties) override;
 
-	void GetTriangleProperties(const Lib3MF_uint32 nIndex, sLib3MFTriangleProperties & sProperty);
+	void GetTriangleProperties(const Lib3MF_uint32 nIndex, sLib3MFTriangleProperties & sProperty) override;
 
-	void SetAllTriangleProperties(const Lib3MF_uint64 nPropertiesArrayBufferSize, const sLib3MFTriangleProperties * pPropertiesArrayBuffer);
+	void SetAllTriangleProperties(const Lib3MF_uint64 nPropertiesArrayBufferSize, const sLib3MFTriangleProperties * pPropertiesArrayBuffer) override;
 
-	void GetAllTriangleProperties(Lib3MF_uint64 nPropertiesArrayBufferSize, Lib3MF_uint64* pPropertiesArrayNeededCount, sLib3MFTriangleProperties * pPropertiesArrayBuffer);
+	void GetAllTriangleProperties(Lib3MF_uint64 nPropertiesArrayBufferSize, Lib3MF_uint64* pPropertiesArrayNeededCount, sLib3MFTriangleProperties * pPropertiesArrayBuffer) override;
 
-	void ClearAllProperties();
+	void ClearAllProperties() override;
 
 	IVolumeData * GetVolumeData() override;
 
 	void SetVolumeData(IVolumeData* pTheVolumeData) override;
+
+	ITriangleSet* AddTriangleSet(const std::string& sIdentifier, const std::string& sName) override;
+
+	bool HasTriangleSet(const std::string& sIdentifier) override;
+
+	ITriangleSet* FindTriangleSet(const std::string& sIdentifier) override;
+
+	Lib3MF_uint32 GetTriangleSetCount() override;
+
+	ITriangleSet* GetTriangleSet(const Lib3MF_uint32 nIndex) override;
 };
 
 }

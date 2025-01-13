@@ -29,6 +29,7 @@ Abstract: This is a stub class definition of CMeshObject
 */
 #include "lib3mf_meshobject.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_triangleset.hpp"
 
 #include "lib3mf_beamlattice.hpp"
 #include "lib3mf_volumedata.hpp"
@@ -425,3 +426,43 @@ void CMeshObject::SetVolumeData(IVolumeData* pTheVolumeData)
 
 	meshObject()->setVolumeData(pVolumeData);
 }
+
+ITriangleSet* CMeshObject::AddTriangleSet(const std::string& sIdentifier, const std::string& sName)
+{	
+	return new CTriangleSet(meshObject()->addTriangleSet(sIdentifier, sName), meshObject());
+}
+
+bool CMeshObject::HasTriangleSet(const std::string& sIdentifier)
+{
+	auto pTriangleSet = meshObject()->findTriangleSet(sIdentifier);
+	return (pTriangleSet.get() != nullptr);
+}
+
+ITriangleSet* CMeshObject::FindTriangleSet(const std::string& sIdentifier)
+{
+	auto pMeshObject = meshObject();
+	auto pTriangleSet = pMeshObject->findTriangleSet(sIdentifier);
+	if (pTriangleSet.get() == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_COULDNOTFINDTRIANGLESET);
+
+	return new CTriangleSet(pTriangleSet, pMeshObject);
+
+}
+
+Lib3MF_uint32 CMeshObject::GetTriangleSetCount() 
+{
+	return meshObject()->getTriangleSetCount();
+}
+
+ITriangleSet* CMeshObject::GetTriangleSet(const Lib3MF_uint32 nIndex)
+{
+	auto pMeshObject = meshObject();
+	auto nTriangleSetCount = pMeshObject->getTriangleSetCount();
+	if (nIndex >= nTriangleSetCount)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDTRIANGLESETINDEX);
+	
+	auto pTriangleSet = meshObject()->getTriangleSet (nIndex);
+
+	return new CTriangleSet(pTriangleSet, pMeshObject);
+}
+

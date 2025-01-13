@@ -455,6 +455,8 @@ const LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER = 140;
 const LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT = 141;
 const LIB3MF_ERROR_INVALIDRESOURCE = 142;
 const LIB3MF_ERROR_INVALIDLEVELSET = 143;
+const LIB3MF_ERROR_COULDNOTFINDTRIANGLESET = 144;
+const LIB3MF_ERROR_INVALIDTRIANGLESETINDEX = 145;
 const LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE = 2000;
 const LIB3MF_ERROR_INVALIDKEYSTORE = 3000;
 const LIB3MF_ERROR_INVALIDKEYSTORECONSUMER = 3001;
@@ -553,6 +555,10 @@ func errorMessage(errorcode uint32) string {
 		return "A resource is invalid";
 	case LIB3MF_ERROR_INVALIDLEVELSET:
 		return "A level set is invalid";
+	case LIB3MF_ERROR_COULDNOTFINDTRIANGLESET:
+		return "Could not find triangle set";
+	case LIB3MF_ERROR_INVALIDTRIANGLESETINDEX:
+		return "Invalid triangle set index";
 	case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE:
 		return "This object type is not valid for beamlattices";
 	case LIB3MF_ERROR_INVALIDKEYSTORE:
@@ -1641,6 +1647,158 @@ func (inst MetaDataGroup) AddMetaData(nameSpace string, name string, value strin
 }
 
 
+// TriangleSet represents a Lib3MF class.
+type TriangleSet struct {
+	Base
+}
+
+func (wrapper Wrapper) NewTriangleSet(r ref) TriangleSet {
+	return TriangleSet{wrapper.NewBase(r)}
+}
+
+// SetName sets the name of the triangle set.
+func (inst TriangleSet) SetName(name string) error {
+	ret := C.CCall_lib3mf_triangleset_setname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetName returns the name of the triangle set.
+func (inst TriangleSet) GetName() (string, error) {
+	var neededforname C.uint32_t
+	var filledinname C.uint32_t
+	ret := C.CCall_lib3mf_triangleset_getname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforname, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizename := neededforname
+	buffername := make([]byte, bufferSizename)
+	ret = C.CCall_lib3mf_triangleset_getname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizename, &filledinname, (*C.char)(unsafe.Pointer(&buffername[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffername[:(filledinname-1)]), nil
+}
+
+// SetIdentifier sets the identifier of the triangle set.
+func (inst TriangleSet) SetIdentifier(identifier string) error {
+	ret := C.CCall_lib3mf_triangleset_setidentifier(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetIdentifier returns the identifier of the triangle set.
+func (inst TriangleSet) GetIdentifier() (string, error) {
+	var neededforidentifier C.uint32_t
+	var filledinidentifier C.uint32_t
+	ret := C.CCall_lib3mf_triangleset_getidentifier(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforidentifier, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizeidentifier := neededforidentifier
+	bufferidentifier := make([]byte, bufferSizeidentifier)
+	ret = C.CCall_lib3mf_triangleset_getidentifier(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeidentifier, &filledinidentifier, (*C.char)(unsafe.Pointer(&bufferidentifier[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferidentifier[:(filledinidentifier-1)]), nil
+}
+
+// AddTriangle adds a triangle to the set. Does nothing if triangle is already in the set.
+func (inst TriangleSet) AddTriangle(triangleIndex uint32) error {
+	ret := C.CCall_lib3mf_triangleset_addtriangle(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(triangleIndex))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// RemoveTriangle removes a triangle from the set.
+func (inst TriangleSet) RemoveTriangle(triangleIndex uint32) error {
+	ret := C.CCall_lib3mf_triangleset_removetriangle(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(triangleIndex))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// Clear clears all triangles from the list.
+func (inst TriangleSet) Clear() error {
+	ret := C.CCall_lib3mf_triangleset_clear(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetTriangleList sets all triangles in the list, while clearing old values. Duplicates will be merged.
+func (inst TriangleSet) SetTriangleList(triangleIndices []uint32) error {
+	ret := C.CCall_lib3mf_triangleset_settrianglelist(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(len(triangleIndices)), (*C.uint32_t)(unsafe.Pointer(&triangleIndices[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetTriangleList retrieves all the triangles in the TriangleSet.
+func (inst TriangleSet) GetTriangleList(triangleIndices []uint32) ([]uint32, error) {
+	var neededfortriangleIndices C.uint64_t
+	ret := C.CCall_lib3mf_triangleset_gettrianglelist(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededfortriangleIndices, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(triangleIndices) < int(neededfortriangleIndices) {
+	 triangleIndices = append(triangleIndices, make([]uint32, int(neededfortriangleIndices)-len(triangleIndices))...)
+	}
+	ret = C.CCall_lib3mf_triangleset_gettrianglelist(inst.wrapperRef.LibraryHandle, inst.Ref, neededfortriangleIndices, nil, (*C.uint32_t)(unsafe.Pointer(&triangleIndices[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return triangleIndices[:int(neededfortriangleIndices)], nil
+}
+
+// AddTriangleList adds multiple triangles in the list. Duplicates will be merged.
+func (inst TriangleSet) AddTriangleList(triangleIndices []uint32) error {
+	ret := C.CCall_lib3mf_triangleset_addtrianglelist(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(len(triangleIndices)), (*C.uint32_t)(unsafe.Pointer(&triangleIndices[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// Merge merges another Triangle set.
+func (inst TriangleSet) Merge(otherTriangleSet TriangleSet, deleteOther bool) error {
+	ret := C.CCall_lib3mf_triangleset_merge(inst.wrapperRef.LibraryHandle, inst.Ref, otherTriangleSet.Ref, C.bool(deleteOther))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// DeleteSet deletes the whole set from the mesh.
+func (inst TriangleSet) DeleteSet() error {
+	ret := C.CCall_lib3mf_triangleset_deleteset(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// Duplicate duplicates the set in the mesh.
+func (inst TriangleSet) Duplicate(identifier string) (TriangleSet, error) {
+	var newSet ref
+	ret := C.CCall_lib3mf_triangleset_duplicate(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), &newSet)
+	if ret != 0 {
+		return TriangleSet{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewTriangleSet(newSet), nil
+}
+
+
 // Object represents a Lib3MF class.
 type Object struct {
 	Resource
@@ -2146,6 +2304,56 @@ func (inst MeshObject) SetVolumeData(theVolumeData VolumeData) error {
 		return makeError(uint32(ret))
 	}
 	return nil
+}
+
+// AddTriangleSet adds a new triangle set.
+func (inst MeshObject) AddTriangleSet(identifier string, name string) (TriangleSet, error) {
+	var theTriangleSet ref
+	ret := C.CCall_lib3mf_meshobject_addtriangleset(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &theTriangleSet)
+	if ret != 0 {
+		return TriangleSet{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewTriangleSet(theTriangleSet), nil
+}
+
+// HasTriangleSet checks if a triangle set exists.
+func (inst MeshObject) HasTriangleSet(identifier string) (bool, error) {
+	var triangleSetExists C.bool
+	ret := C.CCall_lib3mf_meshobject_hastriangleset(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), &triangleSetExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(triangleSetExists), nil
+}
+
+// FindTriangleSet finds a new triangle set by identifier. Fails if not existing.
+func (inst MeshObject) FindTriangleSet(identifier string) (TriangleSet, error) {
+	var theTriangleSet ref
+	ret := C.CCall_lib3mf_meshobject_findtriangleset(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), &theTriangleSet)
+	if ret != 0 {
+		return TriangleSet{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewTriangleSet(theTriangleSet), nil
+}
+
+// GetTriangleSetCount returns number of triangle sets.
+func (inst MeshObject) GetTriangleSetCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_meshobject_gettrianglesetcount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// GetTriangleSet returns a specific triangle set by index.
+func (inst MeshObject) GetTriangleSet(index uint32) (TriangleSet, error) {
+	var theTriangleSet ref
+	ret := C.CCall_lib3mf_meshobject_gettriangleset(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &theTriangleSet)
+	if ret != 0 {
+		return TriangleSet{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewTriangleSet(theTriangleSet), nil
 }
 
 

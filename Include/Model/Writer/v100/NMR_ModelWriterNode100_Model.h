@@ -54,6 +54,7 @@ namespace NMR {
 		nfBool m_bWriteMaterialExtension;
 		nfBool m_bWriteProductionExtension;
 		nfBool m_bWriteBeamLatticeExtension;
+		nfBool m_bWriteTriangleSetExtension;
 		nfBool m_bWriteNurbsExtension;
 		nfBool m_bWriteSliceExtension;
 		nfBool m_bWriteSecureContentExtension;

@@ -250,6 +250,11 @@ namespace NMR {
 					m_pWarnings, m_pProgressMonitor, m_pObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
 
+				// store triangle sets in memory model
+				auto triangleSets = pXMLNode->getTriangleSets();
+				for (auto triangleSet : triangleSets)
+					meshObject->addTriangleSet(triangleSet);
+
 				// Add Object to Parent
 				m_pModel->addResource(m_pObject);
 
