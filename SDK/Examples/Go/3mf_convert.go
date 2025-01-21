@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract: An example to convert between 3MF and STL
 
-Interface version: 2.4.0
+Interface version: 2.4.1-alpha
 +++
 */
 

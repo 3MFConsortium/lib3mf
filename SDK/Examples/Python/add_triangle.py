@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract: Simplest 3mf example that just includes a single triangle
 
-Interface version: 2.3.2
+Interface version: 2.4.1-alpha
 
 '''
 

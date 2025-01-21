@@ -22,7 +22,7 @@ copyright = '2019, 3MF Consortium'
 author = '3MF Consortium'
 
 # The full version, including alpha/beta/rc tags
-release = 'v2.3.2'
+release = 'v2.4.1-alpha'
 
 master_doc = 'index'
 
