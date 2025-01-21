@@ -397,6 +397,17 @@ jobs:
           cd SDK/CPackExamples/Cpp/build
           cmake --build .
           ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'
+      - name: Go Bindings
+        run: |
+          cd SDK/Examples/Go
+          go mod init lib3mfExamples
+          go get github.com/3MFConsortium/lib3mf.go/v2@v2.4.1
+          go build -o create_cube create_cube.go
+          ./create_cube
 
   deploy-windows:
     runs-on: windows-2019
@@ -451,6 +462,18 @@ jobs:
           cd SDK/CPackExamples/Cpp/build
           cmake --build . --config Release
           ./Release/Example_ExtractInfo.exe ../../../Examples/Files/Helix.3mf
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'
+      - name: Go Bindings
+        run: |
+          cd SDK/Examples/Go
+          go mod init lib3mfExamples
+          go get github.com/3MFConsortium/lib3mf.go/v2@v2.4.1
+          go build -o create_cube.exe create_cube.go
+          ./create_cube.exe
+
 
   deploy-macos:
     runs-on: macos-latest
@@ -507,6 +530,17 @@ jobs:
           cd SDK/CPackExamples/Cpp/build
           cmake --build .
           ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'
+      - name: Go Bindings
+        run: |
+          cd SDK/Examples/Go
+          go mod init lib3mfExamples
+          go get github.com/3MFConsortium/lib3mf.go/v2@v2.4.1
+          go build -o create_cube create_cube.go
+          ./create_cube
 
   deploy-source-code-with-submodules:
     runs-on: ubuntu-20.04
