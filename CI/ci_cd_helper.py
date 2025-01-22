@@ -23,7 +23,7 @@ def extract_version_from_cmake():
 
     version = f"{major.group(1)}.{minor.group(1)}.{micro.group(1)}"
     if prerelease and prerelease.group(1):
-        version += f"-{prerelease.group(1)}"
+        version += f".0"
 
     return version
 
