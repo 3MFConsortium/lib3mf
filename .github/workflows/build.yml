@@ -8,31 +8,17 @@ jobs:
     runs-on: ubuntu-20.04
     outputs:
       lib3mf-version: ${{ steps.set-version.outputs.LIB3MF_VERSION }}
-      lib3mf-version-with-pre-release: ${{ steps.set-version.outputs.LIB3MF_VERSION_WITH_PRE_RELEASE }}
-      lib3mf-version-with-modified-pre-release: ${{ steps.set-version.outputs.LIB3MF_VERSION_WITH_MODIFIED_PRE_RELEASE }}
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
-
-      - name: Run version extraction script and set environment variables
+      - name: Run version extraction script and set environment variable
         id: set-version
         run: |
-          VERSION_OUTPUT=$(python CI/ci_cd_helper.py extract-version)
-          CORE_VERSION=$(echo "$VERSION_OUTPUT" | jq -r '.core_version')
-          CORE_VERSION_WITH_PRE_RELEASE=$(echo "$VERSION_OUTPUT" | jq -r '.core_version_with_pre_release')
-          CORE_VERSION_WITH_MODIFIED_PRE_RELEASE=$(echo "$VERSION_OUTPUT" | jq -r '.core_version_with_modified_pre_release')
-
-          echo "LIB3MF_VERSION=$CORE_VERSION" >> $GITHUB_OUTPUT
-          echo "LIB3MF_VERSION_WITH_PRE_RELEASE=$CORE_VERSION_WITH_PRE_RELEASE" >> $GITHUB_OUTPUT
-          echo "LIB3MF_VERSION_WITH_MODIFIED_PRE_RELEASE=$CORE_VERSION_WITH_MODIFIED_PRE_RELEASE" >> $GITHUB_OUTPUT
-
-      - name: Echo versions for debug
-        run: |
-          echo "LIB3MF_VERSION=${{ steps.set-version.outputs.LIB3MF_VERSION }}"
-          echo "LIB3MF_VERSION_WITH_PRE_RELEASE=${{ steps.set-version.outputs.LIB3MF_VERSION_WITH_PRE_RELEASE }}"
-          echo "LIB3MF_VERSION_WITH_MODIFIED_PRE_RELEASE=${{ steps.set-version.outputs.LIB3MF_VERSION_WITH_MODIFIED_PRE_RELEASE }}"
-
+          LIB3MF_VERSION=$(python CI/ci_cd_helper.py extract-version)
+          echo "LIB3MF_VERSION=$LIB3MF_VERSION" >> $GITHUB_OUTPUT
+      - name: Echo version for debug
+        run: echo "LIB3MF_VERSION=${{ steps.set-version.outputs.LIB3MF_VERSION }}"
 
   build-linux-memtest:
     runs-on: ubuntu-20.04
@@ -149,7 +135,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lib3mf.dylib
-          path: build/lib3mf.${{ env.LIB3MF_VERSION }}.dylib
+          path: build/lib3mf.${{ env.LIB3MF_VERSION }}.0.dylib
       - name: Upload Artifact (CPacked Archive)
         uses: actions/upload-artifact@v4
         with:

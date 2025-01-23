@@ -22,20 +22,10 @@ def extract_version_from_cmake():
         raise ValueError("Could not find version components in CMakeLists.txt")
 
     version = f"{major.group(1)}.{minor.group(1)}.{micro.group(1)}"
-
-    core_version = version
-    core_version_with_pre_release = version
-    core_version_with_modified_pre_release = version
     if prerelease and prerelease.group(1):
-        core_version_with_pre_release += ".{0}".format(prerelease.group(1))
-        core_version_with_modified_pre_release += ".0"
+        version += f"-{prerelease.group(1)}"
 
-    # Return all three values as a JSON object
-    return json.dumps({
-        "core_version": core_version,
-        "core_version_with_pre_release": core_version_with_pre_release,
-        "core_version_with_modified_pre_release": core_version_with_modified_pre_release
-    })
+    return version
 
 def get_integration_sdk_url(index):
     url = "https://api.github.com/repos/3MFConsortium/test_suites/releases"
