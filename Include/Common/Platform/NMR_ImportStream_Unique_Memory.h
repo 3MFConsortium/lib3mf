@@ -38,6 +38,7 @@ This is a platform independent class for keeping data in a memory stream that ow
 #include "Common/NMR_Types.h"
 #include "Common/NMR_Local.h"
 
+#include <cstdint>
 #include <vector>
 
 namespace NMR {
