@@ -698,6 +698,8 @@ jobs:
       - name: Unpack the second latest SDK
         run: |
           unzip second_latest_lib3mf_sdk.zip -d second_latest_lib3mf_sdk
+          mv second_latest_lib3mf_sdk/lib3mf_sdk/* second_latest_lib3mf_sdk
+          rmdir second_latest_lib3mf_sdk/lib3mf_sdk
 
       - name: Download and unzip test suite
         run: |
