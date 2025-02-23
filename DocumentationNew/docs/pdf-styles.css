@@ -1,0 +1,13 @@
+/* ============================= */
+/* 📄 Fix List Indentation in PDFs */
+/* ============================= */
+
+ol, ul {
+    margin-left: 20px;  /* Adjust list margin */
+    padding-left: 20px; /* Add padding to align properly */
+}
+
+ol ol, ol ul, ul ol, ul ul {
+    margin-left: 30px;  /* Ensure nested lists are indented properly */
+    padding-left: 30px;
+}

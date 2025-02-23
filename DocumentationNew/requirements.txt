@@ -1,0 +1,10 @@
+# MkDocs and Material Theme
+mkdocs-material
+
+# Plugins for Extra Features
+mkdocs-material[plugins]  # Enables all recommended plugins
+mkdocs-macros-plugin  # Allows using macros in Markdown files
+mkdocs-minify-plugin
+mkdocs-video
+mkdocs-with-pdf
+mkdocs-table-reader-plugin

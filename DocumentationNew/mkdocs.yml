@@ -1,0 +1,94 @@
+site_name: lib3mf documentation
+site_url: https://lib3mf.readthedocs.io/
+site_author: 3MF Consortium
+site_description: "Official documentation for lib3mf"
+
+repo_url: https://github.com/3MFConsortium/lib3mf
+edit_uri: ""
+
+theme:
+  name: material
+  logo: images/dot-3mf.png
+  favicon: images/3mf.png
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.instant
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - content.code.copy  # Copy button for code blocks
+    - content.code.annotate
+  palette:
+  - scheme: default  # Light mode
+    primary: grey
+    accent: deep-orange
+    toggle:
+      icon: material/weather-night  # Moon icon for dark mode
+      name: Switch to dark mode
+  - scheme: slate  # Dark mode
+    primary: grey
+    accent: light-blue
+    toggle:
+      icon: material/weather-sunny  # Sun icon for light mode
+      name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: installation.md
+      - Usage: usage.md
+  - Reference:
+      - API Overview: api.md
+      - Advanced Topics: advanced.md
+  - About:
+      - License: license.md
+      - Contributing: contributions.md
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/3MFConsortium/lib3mf
+  toggle:
+    icon: material/weather-night  # Night mode (moon)
+    name: Switch to dark mode
+    position: right  # Moves toggle to the rightmost position
+
+extra_css:
+  - pdf-styles.css
+
+plugins:
+  - search
+  - with-pdf:
+      output_path: "../lib3mf_documentation.pdf"
+      cover: true
+      cover_logo: images/dot-3mf.png
+      cover_title: "lib3mf documentation"
+      toc_title: "Table of Contents"
+      author: "3MF Consortium"
+      cover_subtitle: ""
+      copyright: "v2.4.1-alpha"
+      stylesheets:
+        - pdf-styles.css
+  - minify:
+      minify_html: true
+  - table-reader  # Enables CSV and table support
+  - mkdocs-video  # Adds video embedding
+
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.highlight
+  - pymdownx.emoji
+  - pymdownx.extra
+  - pymdownx.tasklist
+  - pymdownx.details
+  - pymdownx.keys
+  - toc:
+      permalink: "#"
