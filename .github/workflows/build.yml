@@ -135,7 +135,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lib3mf.dylib
-          path: build/lib3mf.2.4.1.0.dylib
+          path: build/lib3mf.${{ env.LIB3MF_VERSION }}.0.dylib
       - name: Upload Artifact (CPacked Archive)
         uses: actions/upload-artifact@v4
         with:
@@ -317,7 +317,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [set-lib3mf-version, assemble-sdk]
     env:
-      LIB3MF_VERSION: 2.4.1
+      LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
     steps:
       - run: sudo apt install -y zip unzip file
       - run: pwd
@@ -413,7 +413,7 @@ jobs:
     runs-on: windows-2019
     needs: [set-lib3mf-version, assemble-sdk]
     env:
-      LIB3MF_VERSION: 2.4.1
+      LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
     steps:
       - name: Download lib3mf_sdk artifact
         uses: actions/download-artifact@v4
@@ -479,7 +479,7 @@ jobs:
     runs-on: macos-latest
     needs: [set-lib3mf-version, assemble-sdk]
     env:
-      LIB3MF_VERSION: 2.4.1
+      LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
     steps:
       - name: Download lib3mf_sdk artifact
         uses: actions/download-artifact@v4
@@ -698,6 +698,8 @@ jobs:
       - name: Unpack the second latest SDK
         run: |
           unzip second_latest_lib3mf_sdk.zip -d second_latest_lib3mf_sdk
+          mv second_latest_lib3mf_sdk/lib3mf_sdk/* second_latest_lib3mf_sdk
+          rmdir second_latest_lib3mf_sdk/lib3mf_sdk
 
       - name: Download and unzip test suite
         run: |
