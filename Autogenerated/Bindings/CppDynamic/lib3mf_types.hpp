@@ -85,7 +85,7 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_VERSION_MAJOR 2
 #define LIB3MF_VERSION_MINOR 4
 #define LIB3MF_VERSION_MICRO 1
-#define LIB3MF_VERSION_PRERELEASEINFO "alpha"
+#define LIB3MF_VERSION_PRERELEASEINFO ""
 #define LIB3MF_VERSION_BUILDINFO ""
 
 /*************************************************************************************************************************

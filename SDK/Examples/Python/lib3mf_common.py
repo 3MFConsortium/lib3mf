@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract: Common set of functions that are used across all examples
 
-Interface version: 2.4.1-alpha
+Interface version: 2.4.1
 
 '''
 

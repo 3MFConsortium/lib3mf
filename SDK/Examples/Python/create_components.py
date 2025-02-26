@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract: An example that creates multiple components using transformations
 
-Interface version: 2.4.1-alpha
+Interface version: 2.4.1
 
 '''
 
