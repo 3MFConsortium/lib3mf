@@ -728,6 +728,8 @@ jobs:
 
       - name: Build and run CppDynamic with second latest SDK
         run: |
+          ls -al
+          ls -al second_latest_lib3mf_sdk
           sh second_latest_lib3mf_sdk/Examples/CppDynamic/GenerateMake.sh
           cd second_latest_lib3mf_sdk/Examples/CppDynamic/build
           cmake --build .
