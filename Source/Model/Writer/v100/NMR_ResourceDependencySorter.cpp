@@ -32,6 +32,8 @@ sorting them topologically.
 
 #include "Model/Writer/v100/NMR_ResourceDependencySorter.h"
 
+#include <algorithm>
+
 #include "Common/Graph/DirectedGraph.h"
 #include "Common/Graph/GraphAlgorithms.h"
 #include "Model/Classes/NMR_Model.h"
