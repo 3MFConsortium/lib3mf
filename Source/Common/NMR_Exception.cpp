@@ -36,15 +36,9 @@ Each exception is identified via a global ErrorCode
 #include <cmath>
 
 namespace NMR {
-
-	CNMRException::CNMRException(_In_ nfError errorcode) : std::exception()
+	std::string errorCodeToMessage(nfError errorcode)
 	{
-		m_errorcode = errorcode;
-	}
-
-	const char * CNMRException::what() const throw ()
-	{
-		switch (m_errorcode) {
+		switch (errorcode) {
 		// Success / user interaction (0x0XXX)
 		case NMR_USERABORTED: return "The called function was aborted by the user";
 		// General error codes (0x1XXX)
@@ -198,6 +192,15 @@ namespace NMR {
 		case NMR_ERROR_INVALIDMESHINFORMATIONDATA: return "Mesh Information Block was not assigned";
 		case NMR_ERROR_INVALIDMESHINFORMATION: return "Mesh Information Object was not assigned";
 		case NMR_ERROR_TOOMANYBEAMS: return "The mesh exceeds more than NMR_MESH_MAXBEAMCOUNT (2^31-1, around two billion) beams";
+		case NMR_ERROR_TOOMANYBALLS: return "The mesh exceeds more than NMR_MESH_MAXBALLCOUNT (2^31-1, around two billion) balls";
+		case NMR_ERROR_INVALIDSLICEPOLYGON: return "Invalid slice polygon index";
+		case NMR_ERROR_INVALIDSLICEVERTEX: return "Invalid slice vertex index";
+		case NMR_ERROR_DUPLICATETRIANGLESET: return "Duplicate triangle set";
+		case NMR_ERROR_TOOMANYTRIANGLESETS: return "Too many triangle sets";
+		case NMR_ERROR_TRIANGLESETINVALIDATTRIBUTE: return "Invalid triangle set attribute";
+		case NMR_ERROR_TRIANGLESETMISSINGREFERENCEINDEX: return "Missing triangle set reference index";
+		case NMR_ERROR_TRIANGLESETNAMEMISSING: return "Triangle set name missing";
+		case NMR_ERROR_TRIANGLESETIDENTIFIERMISSING : return "Triangle set identifier missing";
 
 		// Model error codes (0x8XXX)
 		case NMR_ERROR_OPCREADFAILED: return "3MF Loading - OPC could not be loaded";
@@ -438,6 +441,82 @@ namespace NMR {
 		case NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM: return "The algorithm attribute is unsupported";
 		case NMR_ERROR_KEYSTORETOOMANYELEMENTS: return "Too many elements added to a keystore tree";
 
+		case NMR_ERROR_INVALIDIMAGE3DSIZE: return "Invalid Image3D Size";
+		case NMR_ERROR_TOOMANYCHANNELSELECTORS: return "Too many channel selectors";
+		case NMR_ERROR_TOOMANYVOLUMETRICCHANNELS: return "Too many volumetric channels";
+		case NMR_ERROR_COULDNOTMAPPACKAGEID: return "Could not map package ID";
+		case NMR_ERROR_DUPLICATEVOLUMETRICCHANNEL: return "Duplicate volumetric channel";
+		case NMR_ERROR_COULDNOTREMOVEVOLUMETRICLAYER: return "Could not remove volumetric layer";
+		case NMR_ERROR_COULDNOTREINDEXVOLUMETRICLAYER: return "Could not reindex volumetric layer";
+		case NMR_ERROR_COULDNOTREINDEXCHANNELSELECTOR: return "Could not reindex channel selector";
+		case NMR_ERROR_DUPLICATEIMAGE3DNAME: return "Duplicate Image3D Name";
+		case NMR_ERROR_DUPLICATEIMAGESTACKSIZE: return "Duplicate Image3D Size";			
+		case NMR_ERROR_DUPLICATEIMAGESTACKSHEETCOUNT: return "Duplicate Image3D Sheet count";
+		case NMR_ERROR_MISSINGIMAGESTACKSIZE: return "Missing 3D Image Size";
+		case NMR_ERROR_MISSINGIMAGESTACKSHEETCOUNT: return "Missing 3D Image Sheetcount";
+		case NMR_ERROR_MISSINGIMAGE3DNAME: return "Missing 3D Image Name";
+		case NMR_ERROR_INVALIDIMAGSHEETCOUNT: return "Invalid Image3D Sheet Count";
+		case NMR_ERROR_IMAGESHEETNOTFOUND: return "Image 3D Sheet not found";
+		case NMR_ERROR_TOOMANYIMAGESHEETS: return "Too many Image3D sheets";
+		case NMR_ERROR_MISSINGIMAGE3DSHEETPATH: return "Missing Image3D sheet path";
+		case NMR_ERROR_DUPLICATEVOLUMETRICBACKGROUND: return "Duplicate Volumetric Background";
+		case NMR_ERROR_INVALIDVOLUMETRICBACKGROUND: return "Invalid Volumetric Background";
+		case NMR_ERROR_MISSINGVOLUMETRICDSTCHANNELNAME: return "Missing Volumetric DstChannel Name";
+		case NMR_ERROR_MISSINGVOLUMETRICLAYERBLENDMETHOD: return "Missing Volumetric Layer Blend Method";
+		case NMR_ERROR_DUPLICATEVOLUMETRICBLENDMETHOD: return "Duplicate Volumetric Blend Method";
+		case NMR_ERROR_MISSINGVOLUMETRICLAYERTRANSFORM: return "Missing Volumetric Layer Transform";
+		case NMR_ERROR_DUPLICATEVOLUMETRICTRANSFORM: return "Duplicate Volumetric Transform";
+		case NMR_ERROR_DUPLICATEVOLUMETRICSRCALPHA: return "Duplicate Volumetric Src Alpha";
+		case NMR_ERROR_INVALIDVOLUMETRICSRCALPHA: return "Invalid Volumetric Src Alpha";
+		case NMR_ERROR_DUPLICATEVOLUMETRICDSTALPHA: return "Duplicate Volumetric Dst Alpha";
+		case NMR_ERROR_INVALIDVOLUMETRICDSTALPHA: return "Invalid Volumetric Dst Alpha";
+		case NMR_ERROR_DUPLICATEMASKCHANNELSELECTOR: return "Duplicate Mask Channel Selector";
+		case NMR_ERROR_DUPLICATEVOLUMETRICMINVALUE: return "Duplicate Volumetric Min Value";
+		case NMR_ERROR_INVALIDVOLUMETRICMINVALUE: return "Invalid Volumetric Min Value";
+		case NMR_ERROR_DUPLICATEVOLUMETRICMAXVALUE: return "Duplicate Volumetric Max Value"; 
+		case NMR_ERROR_INVALIDVOLUMETRICMAXVALUE: return "Invalid Volumetric Max Value";
+		case NMR_ERROR_MISSINGCHANNELSELECTORID: return "Missing Channel Selector ID";
+		case NMR_ERROR_MISSINGCHANNELSELECTORTILESTYLE: return "Missing Channel Selector TileStyle";
+		case NMR_ERROR_DUPLICATEVOLUMETRICTILESTYLE: return "Duplicate Volumetric TileStyle";
+		case NMR_ERROR_DUPLICATEVOLUMETRICFILTER: return "Duplicate Volumetric Filter";
+		case NMR_ERROR_DUPLICATEVOLUMETRICSOURCECHANNEL: return "Duplicate Volumetric Source Channel";
+		case NMR_ERROR_DUPLICATEVOLUMETRICDESTINATIONCHANNEL: return "Duplicate Volumetric Destination Channel";
+		case NMR_ERROR_DUPLICATEVOLUMEDATABOUNDARY: return "Duplicate VolumeData Levelset";
+		case NMR_ERROR_DUPLICATEVOLUMEDATATRANSFORM: return "Duplicate VolumeData Transform";
+		case NMR_ERROR_DUPLICATEVOLUMEDATACHANNEL: return "Duplicate VolumeData Channel";
+		case NMR_ERROR_DUPLICATEVOLUMEDATAFIELDID: return "Duplicate VolumeData VolumetricStackID";
+		case NMR_ERROR_DUPLICATEVOLUMEDATASOLIDTHRESHOLD: return "Duplicate VolumeData Solid Threshold";
+		case NMR_ERROR_MISSINGVOLUMEDATACHANNEL: return "Missing VolumeData Channel";
+		case NMR_ERROR_MISSINGVOLUMEDATAFIELDID: return "Missing VolumeData VolumetricStackID";
+		case NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD: return "Invalid VolumeData Solid Threshold";
+		case NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY: return "Duplicate VolumeData Property";
+		case NMR_ERROR_MISSINGVOLUMEDATAPROPERTYNAME: return "Missing VolumeData Property";
+		case NMR_ERROR_MISSINGVOLUMETRICSRCALPHA: return "Missing Volumetric Source Alpha";
+		case NMR_ERROR_MISSINGVOLUMETRICDSTALPHA: return "Missing Volumetric Destination Alpha";
+		case NMR_ERROR_MISSING_ATTRIBUTE_SCALARFIELDCOMPOSED: return "Missing attribute in a ScalarFieldComposed element";
+		case NMR_ERROR_DUPLICATE_ATTRIBUTE_SCALARFIELDCOMPOSED: return "Duplicate attribute in a ScalarFieldComposed element";
+		case NMR_ERROR_MISSING_ATTRIBUTE_VECTOR3DFIELDCOMPOSED: return "Missing attribute in a Vector3DFieldComposed element";
+		case NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED: return "Duplicate attribute in a Vector3DFieldComposed element";
+		case NMR_ERROR_UNKNOWN_NODETYPE_IMPLICITMODEL: return "Unknown node type in implicit model";
+		case NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_NODE : return "Invalid source node in implicit function";
+		case NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_NODE : return "Invalid target node in implicit function";
+		case NMR_ERROR_IMPLICIT_FUNCTION_INVALID_SOURCE_PORT : return "Invalid source port in implicit function";
+		case NMR_ERROR_IMPLICIT_FUNCTION_INVALID_TARGET_PORT : return "Invalid target port in implicit function";
+		case NMR_ERROR_IMPLICIT_FUNCTION_INVALID_PORT_TYPE : return "Invalid port type in implicit function";
+		case NMR_ERROR_IMPLICIT_PORT_DOES_NOT_EXIST : return "The port does not exist";
+		case NMR_ERROR_DUPLICATE_VOLUMEDATA_MESHBBOXONLY : return "Duplicate VolumeData MeshBBoxOnly";
+		case NMR_ERROR_DUPLICATE_VOLUMEDATA_MINFEATURESIZE : return "Duplicate VolumeData MinFeatureSize";
+		case NMR_ERROR_IMPLICIT_FUNCTION_CYCLIC_GRAPH : return "Cyclic graph in implicit function";
+		case NMR_ERROR_DUPLICATE_VOLUMEDATA_FALLBACKVALUE : return "Duplicate VolumeData FallbackValue";
+
+		case NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_FUNCTION_ID: return "Duplicate attribute functionid in levelset element";
+		case NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_CHANNEL: return "Duplicate attribute channel in levelset element";
+		case NMR_ERROR_DUPLICATE_BOUNDARY_SHAOE_FALLBACKVALUE: return "Duplicate attribute fallbackvalue in levelset element";
+		case NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_TRANSFORM: return "Duplicate attribute transform in levelset element";
+		case NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_MIN_FEATURE_SIZE: return "Duplicate attribute minfeaturesize in levelset element";
+		case NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_FALLBACK_VALUE: return "Duplicate attribute fallbackvalue in levelset element";
+		case NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_VOLUME_ID: return "Duplicate attribute volumeid in levelset element";
+
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";
 		case NMR_ERROR_XMLPARSER_INVALIDPARSERESULT: return "Invalid XML parse result";
@@ -479,6 +558,23 @@ namespace NMR {
 		default:
 			return "unknown error";
 		}
+	}
+
+	CNMRException::CNMRException(_In_ nfError errorcode) : m_errorcode(errorcode), std::exception()
+	{
+		m_message = errorCodeToMessage(errorcode);
+	}
+
+	CNMRException::CNMRException(nfError errorcode,
+									const std::string& message): m_errorcode(errorcode), m_message(message)
+	{
+		m_message = errorCodeToMessage(errorcode) + ": " + message;
+	}
+
+	const char* CNMRException::what() const throw()
+	{ 
+		return m_message.c_str();
+		
 	}
 
 	nfError CNMRException::getErrorCode() const

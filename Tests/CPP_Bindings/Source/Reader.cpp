@@ -33,6 +33,8 @@ UnitTest_Reader.cpp: Defines Unittests for the Reader classes
 #include "UnitTest_Utilities.h"
 #include "lib3mf_implicit.hpp"
 
+#include <algorithm>
+
 namespace Lib3MF
 {
 	class Reader : public Lib3MFTest {
@@ -58,6 +60,30 @@ namespace Lib3MF
 		Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "Pyramid.3mf");
 		CheckReaderWarnings(Reader::reader3MF, 0);
 	}
+
+    TEST_F(Reader, 3MFReadFromFileAndAddMeshObjects)
+    {
+        auto reader = model->QueryReader("3mf");
+        reader->ReadFromFile(sTestFilesPath + "/Reader/" + "Box.3mf");
+        ASSERT_NO_THROW(model->AddMeshObject());
+        ASSERT_NO_THROW(model->AddMeshObject());
+        ASSERT_NO_THROW(model->AddMeshObject());
+
+        auto objectIterator = model->GetObjects();
+		EXPECT_EQ(objectIterator->Count(), 5);
+    }
+
+    TEST_F(Reader, 3MFReadFromFileAndAddComponents)
+    {
+        auto reader = model->QueryReader("3mf");
+        reader->ReadFromFile(sTestFilesPath + "/Reader/" + "Globo.3mf");
+        ASSERT_NO_THROW(model->AddComponentsObject());
+        ASSERT_NO_THROW(model->AddComponentsObject());
+        ASSERT_NO_THROW(model->AddComponentsObject());
+
+        auto objectIterator = model->GetObjects();
+		EXPECT_EQ(objectIterator->Count(), 8);
+    }
 
 	TEST_F(Reader, STLReadFromFile)
 	{

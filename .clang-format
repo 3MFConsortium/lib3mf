@@ -1,0 +1,14 @@
+BasedOnStyle: Google
+IndentWidth: 4
+AllowShortFunctionsOnASingleLine: Inline
+PointerAlignment: Left
+SpaceBeforeParens: Never
+SpacesInParentheses: false
+MaxEmptyLinesToKeep: 1
+BreakBeforeBraces: Allman
+DerivePointerAlignment: true
+AlignAfterOpenBracket: Align
+BreakConstructorInitializers: BeforeColon
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+NamespaceIndentation: All
+SortIncludes: true

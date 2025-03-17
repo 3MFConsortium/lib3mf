@@ -33,6 +33,7 @@ This is the class for exporting the 3mf model stream root node.
 
 #include "Model/Writer/v100/NMR_ModelWriterNode100_Mesh.h"
 #include "Model/Writer/v100/NMR_ModelWriterNode100_Model.h"
+#include "Model/Writer/v100/NMR_ResourceDependencySorter.h"
 
 #include "Model/Classes/NMR_ModelAttachment.h"
 #include "Model/Classes/NMR_ModelBuildItem.h"
@@ -41,6 +42,9 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelColorGroup.h"
 #include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelTexture2DGroup.h"
+#include "Model/Classes/NMR_ModelImage3D.h"
+#include "Model/Classes/NMR_ModelImageStack.h"
+#include "Model/Classes/NMR_ModelFunctionFromImage3D.h"
 #include "Model/Classes/NMR_ModelCompositeMaterials.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -50,10 +54,18 @@ This is the class for exporting the 3mf model stream root node.
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+#include "Common/Graph/DirectedGraph.h"
+#include "Common/Graph/GraphAlgorithms.h"
 #include "Model/Classes/NMR_ModelConstants_Slices.h"
+#include "Model/Classes/NMR_ModelImplicitFunction.h"
+#include "Model/Classes/NMR_ModelLevelSetObject.h"
+#include "Model/Classes/NMR_ModelVolumeData.h"
+#include "Model/Writer/NMR_ModelWriterNode_Implicit.h"
+#include "Model/Writer/NMR_ModelWriterNode_LevelSet.h"
+#include "Model/Writer/NMR_ModelWriterNode_VolumeData.h"
+
 
 #include "Common/3MF_ProgressMonitor.h"
-
 
 namespace NMR {
 
@@ -68,8 +80,11 @@ namespace NMR {
 		m_bWriteBeamLatticeExtension = true;
 		m_bWriteSliceExtension = true;
 		m_bWriteSecureContentExtension = true;
+		m_bWriteTriangleSetExtension = true;
 		m_bWriteBaseMaterials = true;
 		m_bWriteObjects = true;
+		m_bWriteVolumetricExtension = true;
+		m_bWriteImplicitExtension = true;
 
 		m_bWriteCustomNamespaces = true;
 
@@ -152,12 +167,39 @@ namespace NMR {
 			}
 		}
 
+		if (m_bWriteTriangleSetExtension) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_TRIANGLESETS, XML_3MF_NAMESPACE_TRIANGLESETS);
+			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_TRIANGLESETS)) {
+				if (sRequiredExtensions.size() > 0)
+					sRequiredExtensions = sRequiredExtensions + " ";
+				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_TRIANGLESETS;
+			}
+		}
+
 		if (m_bWriteSecureContentExtension) {
 			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_SECURECONTENT, XML_3MF_NAMESPACE_SECURECONTENTSPEC);
 			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_SECURECONTENTSPEC)) {
 				if (sRequiredExtensions.size() > 0)
 					sRequiredExtensions = sRequiredExtensions + " ";
 				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_SECURECONTENT;
+			}
+		}
+
+		if (m_bWriteVolumetricExtension) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC, XML_3MF_NAMESPACE_VOLUMETRICSPEC);
+			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_VOLUMETRICSPEC)) {
+				if (sRequiredExtensions.size() > 0)
+					sRequiredExtensions = sRequiredExtensions + " ";
+				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_VOLUMETRIC;
+			}
+		}
+
+		if (m_bWriteImplicitExtension) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_IMPLICIT, XML_3MF_NAMESPACE_IMPLICITSPEC);
+			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_IMPLICITSPEC)) {
+				if (sRequiredExtensions.size() > 0)
+					sRequiredExtensions = sRequiredExtensions + " ";
+				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_IMPLICIT;
 			}
 		}
 
@@ -190,35 +232,54 @@ namespace NMR {
 
 			CModelTexture2DResource * pTexture2D = m_pModel->getTexture2D(nTextureIndex);
 
-			writeStartElementWithPrefix(XML_3MF_ELEMENT_TEXTURE2D, XML_3MF_NAMESPACEPREFIX_MATERIAL);
-
-			assertResourceIsInCurrentPath(pTexture2D->getPackageResourceID());
-			writeIntAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_ID, pTexture2D->getPackageResourceID()->getModelResourceID());
-			writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_PATH, pTexture2D->getAttachment()->getPathURI());
-			writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_CONTENTTYPE, pTexture2D->getContentTypeString());
-
-			if (pTexture2D->getTileStyleU() != MODELTEXTURETILESTYLE_WRAP)
-				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU, CModelTexture2DResource::tileStyleToString(pTexture2D->getTileStyleU()));
-			if (pTexture2D->getTileStyleV() != MODELTEXTURETILESTYLE_WRAP)
-				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV, CModelTexture2DResource::tileStyleToString(pTexture2D->getTileStyleV()));
-			if (pTexture2D->getFilter() != MODELTEXTUREFILTER_AUTO)
-				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER, CModelTexture2DResource::filterToString(pTexture2D->getFilter()));
-			
-			if (pTexture2D->hasBox2D()) {
-				nfFloat fU, fV, fWidth, fHeight;
-				pTexture2D->getBox2D(fU, fV, fWidth, fHeight);
-				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_BOX,
-					std::to_string(fU) + " " + std::to_string(fV) + " " + std::to_string(fWidth) + " " + std::to_string(fHeight));
-			}
-			
-			writeEndElement();
-
-		}
+            writeTexture2D(pTexture2D);
+        }
 
 	}
 
-	void CModelWriterNode100_Model::writeModelMetaData()
+	void CModelWriterNode100_Model::writeTexture2D(
+		CModelTexture2DResource *pTexture2D)
 	{
+		writeStartElementWithPrefix(XML_3MF_ELEMENT_TEXTURE2D,
+									XML_3MF_NAMESPACEPREFIX_MATERIAL);
+
+		assertResourceIsInCurrentPath(pTexture2D->getPackageResourceID());
+		writeIntAttribute(
+			XML_3MF_ATTRIBUTE_TEXTURE2D_ID,
+			pTexture2D->getPackageResourceID()->getModelResourceID());
+		writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_PATH,
+								pTexture2D->getAttachment()->getPathURI());
+		writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_CONTENTTYPE,
+								pTexture2D->getContentTypeString());
+
+		if(pTexture2D->getTileStyleU() != MODELTEXTURETILESTYLE_WRAP)
+			writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU,
+									CModelTexture2DResource::tileStyleToString(
+										pTexture2D->getTileStyleU()));
+		if(pTexture2D->getTileStyleV() != MODELTEXTURETILESTYLE_WRAP)
+			writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV,
+									CModelTexture2DResource::tileStyleToString(
+										pTexture2D->getTileStyleV()));
+		if(pTexture2D->getFilter() != MODELTEXTUREFILTER_AUTO)
+			writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER,
+									CModelTexture2DResource::filterToString(
+										pTexture2D->getFilter()));
+
+		if(pTexture2D->hasBox2D())
+		{
+			nfFloat fU, fV, fWidth, fHeight;
+			pTexture2D->getBox2D(fU, fV, fWidth, fHeight);
+			writeStringAttribute(
+				XML_3MF_ATTRIBUTE_TEXTURE2D_BOX,
+				std::to_string(fU) + " " + std::to_string(fV) + " " +
+					std::to_string(fWidth) + " " + std::to_string(fHeight));
+		}
+
+		writeEndElement();
+	}
+
+        void CModelWriterNode100_Model::writeModelMetaData()
+        {
 		if (m_bIsRootModel)
 		{
 			nfUint32 nMetaDataCount = m_pModel->getMetaDataCount();
@@ -240,42 +301,56 @@ namespace NMR {
 			m_pProgressMonitor->IncrementProgress(1);
 
 			CModelBaseMaterialResource * pBaseMaterial = m_pModel->getBaseMaterial(nMaterialIndex);
-
-			pBaseMaterial->buildResourceIndexMap();
-
-			assertResourceIsInCurrentPath(pBaseMaterial->getPackageResourceID());
-			ModelResourceID nResourceID = pBaseMaterial->getPackageResourceID()->getModelResourceID();
-
-			writeStartElement(XML_3MF_ELEMENT_BASEMATERIALS);
-			// Write Object ID (mandatory)
-			writeIntAttribute(XML_3MF_ATTRIBUTE_BASEMATERIALS_ID, nResourceID);
-
-			nfUint32 nElementCount = pBaseMaterial->getCount();
-
-			UniqueResourceID nUniqueResourceID = pBaseMaterial->getPackageResourceID()->getUniqueID();
-
-			for (nfUint32 j = 0; j < nElementCount; j++) {
-				ModelPropertyID nPropertyID;
-				if (!pBaseMaterial->mapResourceIndexToPropertyID(j, nPropertyID)) {
-					throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
-				}
-				PModelBaseMaterial pElement = pBaseMaterial->getBaseMaterial(nPropertyID);
-				
-				m_pPropertyIndexMapping->registerPropertyID(nUniqueResourceID, pElement->getPropertyID(), j);
-
-				writeStartElement(XML_3MF_ELEMENT_BASE);
-				writeStringAttribute(XML_3MF_ATTRIBUTE_BASEMATERIAL_NAME, pElement->getName());
-				writeStringAttribute(XML_3MF_ATTRIBUTE_BASEMATERIAL_DISPLAYCOLOR, pElement->getDisplayColorString());
-				writeEndElement();
-			}
-
-			writeFullEndElement();
+			writeBaseMaterial(pBaseMaterial);
 		}
 
 	}
 
+	void CModelWriterNode100_Model::writeBaseMaterial(
+		CModelBaseMaterialResource *pBaseMaterial)
+	{
+		pBaseMaterial->buildResourceIndexMap();
 
-	void CModelWriterNode100_Model::writeSliceStacks() {
+		assertResourceIsInCurrentPath(
+			pBaseMaterial->getPackageResourceID());
+		ModelResourceID nResourceID =
+			pBaseMaterial->getPackageResourceID()->getModelResourceID();
+
+		writeStartElement(XML_3MF_ELEMENT_BASEMATERIALS);
+		// Write Object ID (mandatory)
+		writeIntAttribute(XML_3MF_ATTRIBUTE_BASEMATERIALS_ID, nResourceID);
+
+		nfUint32 nElementCount = pBaseMaterial->getCount();
+
+		UniqueResourceID nUniqueResourceID =
+			pBaseMaterial->getPackageResourceID()->getUniqueID();
+
+		for(nfUint32 j = 0; j < nElementCount; j++)
+		{
+			ModelPropertyID nPropertyID;
+			if(!pBaseMaterial->mapResourceIndexToPropertyID(j, nPropertyID))
+			{
+				throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
+			}
+			PModelBaseMaterial pElement =
+				pBaseMaterial->getBaseMaterial(nPropertyID);
+
+			m_pPropertyIndexMapping->registerPropertyID(
+				nUniqueResourceID, pElement->getPropertyID(), j);
+
+			writeStartElement(XML_3MF_ELEMENT_BASE);
+			writeStringAttribute(XML_3MF_ATTRIBUTE_BASEMATERIAL_NAME,
+									pElement->getName());
+			writeStringAttribute(
+				XML_3MF_ATTRIBUTE_BASEMATERIAL_DISPLAYCOLOR,
+				pElement->getDisplayColorString());
+			writeEndElement();
+		}
+
+		writeFullEndElement();
+	}
+
+        void CModelWriterNode100_Model::writeSliceStacks() {
 		nfUint32 nSliceStackCount = m_pModel->getSliceStackCount();
 
 		for (nfUint32 nSliceStackIndex = 0; nSliceStackIndex < nSliceStackCount; nSliceStackIndex++) {
@@ -376,116 +451,191 @@ namespace NMR {
 	{
 		std::list <CModelObject *> objectList = m_pModel->getSortedObjectList();
 
-		for (auto iIterator = objectList.begin(); iIterator != objectList.end(); iIterator++) {
-			CModelObject * pObject = *iIterator;
-
-			PPackageModelPath pPath = pObject->getPackageResourceID()->getPackageModelPath();
-			if (m_pModel->currentModelPath()->getPath() != pPath->getPath())
+		for(auto iIterator = objectList.begin();
+			iIterator != objectList.end(); iIterator++)
+		{
+			CModelObject *pObject = *iIterator;
+			if (!pObject)
 			{
-				continue;
+				throw CNMRException(NMR_ERROR_INVALIDMODEL);
 			}
+			writeObject(*pObject);
+		}
+    }
 
-			m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEOBJECTS);
-			m_pProgressMonitor->IncrementProgress(1);
-			m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+	void CModelWriterNode100_Model::writeObject(CModelObject &object)
+	{
+		PPackageModelPath pPath =
+			object.getPackageResourceID()->getPackageModelPath();
+		if(m_pModel->currentModelPath()->getPath() != pPath->getPath())
+		{
+			return;
+		}
 
-			writeStartElement(XML_3MF_ELEMENT_OBJECT);
-			// Write Object ID (mandatory)
-			writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_ID, pObject->getPackageResourceID()->getModelResourceID());
+		m_pProgressMonitor->SetProgressIdentifier(
+			ProgressIdentifier::PROGRESS_WRITEOBJECTS);
+		m_pProgressMonitor->IncrementProgress(1);
+		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
-			// Write Object Name (optional)
-			std::string sObjectName = pObject->getName();
-			if (sObjectName.length() > 0)
-				writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_NAME, sObjectName);
+		writeStartElement(XML_3MF_ELEMENT_OBJECT);
+		// Write Object ID (mandatory)
+		writeIntAttribute(
+			XML_3MF_ATTRIBUTE_OBJECT_ID,
+			object.getPackageResourceID()->getModelResourceID());
 
-			// Write Object Partnumber (optional)
-			std::string sObjectPartNumber = pObject->getPartNumber();
-			if (sObjectPartNumber.length() > 0)
-				writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_PARTNUMBER, sObjectPartNumber);
+		// Write Object Name (optional)
+		std::string sObjectName = object.getName();
+		if(sObjectName.length() > 0)
+			writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_NAME,
+								sObjectName);
 
-			// Write Object Type (optional)
-			writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_TYPE, pObject->getObjectTypeString());
+		// Write Object Partnumber (optional)
+		std::string sObjectPartNumber = object.getPartNumber();
+		if(sObjectPartNumber.length() > 0)
+			writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_PARTNUMBER,
+								sObjectPartNumber);
 
-			// Write Object Thumbnail (optional)
-			PModelAttachment pThumbnail = pObject->getThumbnailAttachment();
-			if (pThumbnail) {
-				PModelAttachment pModelAttachment = m_pModel->findModelAttachment(pThumbnail->getPathURI());
-				if (!pModelAttachment)
-					throw CNMRException(NMR_ERROR_NOTEXTURESTREAM);
-				if (!((pModelAttachment->getRelationShipType() == PACKAGE_TEXTURE_RELATIONSHIP_TYPE) || (pModelAttachment->getRelationShipType() == PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE)))
-					throw CNMRException(NMR_ERROR_NOTEXTURESTREAM);
+		// Write Object Type (optional)
+		writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_TYPE,
+							object.getObjectTypeString());
 
-				writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_THUMBNAIL, pThumbnail->getPathURI());
+		// Write Object Thumbnail (optional)
+		PModelAttachment pThumbnail = object.getThumbnailAttachment();
+		if(pThumbnail)
+		{
+			PModelAttachment pModelAttachment =
+				m_pModel->findModelAttachment(pThumbnail->getPathURI());
+			if(!pModelAttachment)
+				throw CNMRException(NMR_ERROR_NOTEXTURESTREAM);
+			if(!((pModelAttachment->getRelationShipType() ==
+				PACKAGE_TEXTURE_RELATIONSHIP_TYPE) ||
+				(pModelAttachment->getRelationShipType() ==
+				PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE)))
+				throw CNMRException(NMR_ERROR_NOTEXTURESTREAM);
+
+			writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_THUMBNAIL,
+								pThumbnail->getPathURI());
+		}
+
+		if(m_bWriteProductionExtension)
+		{
+			if(!object.uuid().get())
+				throw CNMRException(NMR_ERROR_MISSINGUUID);
+			writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION,
+										XML_3MF_PRODUCTION_UUID,
+										object.uuid()->toString());
+		}
+
+		// Slice extension content
+		if(m_bWriteSliceExtension)
+		{
+			if(object.getSliceStack().get())
+			{
+				assertResourceIsInCurrentPath(
+					object.getSliceStack()->getPackageResourceID());
+				writePrefixedStringAttribute(
+					XML_3MF_NAMESPACEPREFIX_SLICE,
+					XML_3MF_ATTRIBUTE_OBJECT_SLICESTACKID,
+					fnUint32ToString(object.getSliceStack()
+										->getPackageResourceID()
+										->getModelResourceID()));
 			}
-
-			if (m_bWriteProductionExtension) {
-				if (!pObject->uuid().get())
-					throw CNMRException(NMR_ERROR_MISSINGUUID);
-				writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, pObject->uuid()->toString());
+			if(object.slicesMeshResolution() !=
+			MODELSLICESMESHRESOLUTION_FULL)
+			{
+				writePrefixedStringAttribute(
+					XML_3MF_NAMESPACEPREFIX_SLICE,
+					XML_3MF_ATTRIBUTE_OBJECT_MESHRESOLUTION,
+					XML_3MF_VALUE_OBJECT_MESHRESOLUTION_LOW);
 			}
+		}
 
-			// Slice extension content
-			if (m_bWriteSliceExtension) {
-				if (pObject->getSliceStack().get()) {
-					assertResourceIsInCurrentPath(pObject->getSliceStack()->getPackageResourceID());
-					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_SLICESTACKID,
-						fnUint32ToString(pObject->getSliceStack()->getPackageResourceID()->getModelResourceID()));
-				}
-				if (pObject->slicesMeshResolution() != MODELSLICESMESHRESOLUTION_FULL) {
-					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_MESHRESOLUTION,
-						XML_3MF_VALUE_OBJECT_MESHRESOLUTION_LOW);
-				}
-			}
+		// Check if object is a mesh Object
+		CModelMeshObject *pMeshObject =
+			dynamic_cast<CModelMeshObject *>(&object);
+		if(pMeshObject)
+		{
+			// Prepare Object Level Property ID and Index
+			UniqueResourceID nObjectLevelPropertyID = 0;
+			ModelResourceIndex nObjectLevelPropertyIndex = 0;
+			CMesh *pMesh = pMeshObject->getMesh();
 
-			// Check if object is a mesh Object
-			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (pObject);
-			if (pMeshObject) {
-				// Prepare Object Level Property ID and Index
-				UniqueResourceID nObjectLevelPropertyID = 0;
-				ModelResourceIndex nObjectLevelPropertyIndex = 0;
-				CMesh* pMesh = pMeshObject->getMesh();
-
-				if (pMesh) {
-					CMeshInformationHandler * pMeshInformationHandler = pMesh->getMeshInformationHandler();
-					if (pMeshInformationHandler) {
-						// Get generic property handler
-						CMeshInformation *pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
-						if (pInformation) {
-							auto pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
-							NMR::MESHINFORMATION_PROPERTIES * pDefaultData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getDefaultData();
-							if (pDefaultData && pDefaultData->m_nUniqueResourceID != 0) {
-								nObjectLevelPropertyID = pDefaultData->m_nUniqueResourceID;
-								nObjectLevelPropertyIndex = m_pPropertyIndexMapping->mapPropertyIDToIndex(nObjectLevelPropertyID, pDefaultData->m_nPropertyIDs[0]);
-							}
+			if(pMesh)
+			{
+				CMeshInformationHandler *pMeshInformationHandler =
+					pMesh->getMeshInformationHandler();
+				if(pMeshInformationHandler)
+				{
+					// Get generic property handler
+					CMeshInformation *pInformation =
+						pMeshInformationHandler->getInformationByType(
+							0, emiProperties);
+					if(pInformation)
+					{
+						auto pProperties =
+							dynamic_cast<CMeshInformation_Properties *>(
+								pInformation);
+						NMR::MESHINFORMATION_PROPERTIES *pDefaultData =
+							(NMR::MESHINFORMATION_PROPERTIES *)
+								pProperties->getDefaultData();
+						if(pDefaultData &&
+						pDefaultData->m_nUniqueResourceID != 0)
+						{
+							nObjectLevelPropertyID =
+								pDefaultData->m_nUniqueResourceID;
+							nObjectLevelPropertyIndex =
+								m_pPropertyIndexMapping
+									->mapPropertyIDToIndex(
+										nObjectLevelPropertyID,
+										pDefaultData->m_nPropertyIDs[0]);
 						}
 					}
 				}
-				// Write Object Level Attributes (only for meshes)
-				if (nObjectLevelPropertyID != 0) {
-					ModelResourceID nPropertyModelResourceID = m_pModel->findPackageResourceID(nObjectLevelPropertyID)->getModelResourceID();
-					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PID, nPropertyModelResourceID);
-					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX, nObjectLevelPropertyIndex);
-				}
 			}
-
-			writeMetaDataGroup(pObject->metaDataGroup());
-
-			if (pMeshObject) {
-				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
-					m_pPropertyIndexMapping, m_nDecimalPrecision, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
-
-				ModelWriter_Mesh.writeToXML();
+			// Write Object Level Attributes (only for meshes)
+			if(nObjectLevelPropertyID != 0)
+			{
+				ModelResourceID nPropertyModelResourceID =
+					m_pModel->findPackageResourceID(nObjectLevelPropertyID)
+						->getModelResourceID();
+				writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PID,
+								nPropertyModelResourceID);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX,
+								nObjectLevelPropertyIndex);
 			}
-
-			// Check if object is a component Object
-			CModelComponentsObject * pComponentObject = dynamic_cast<CModelComponentsObject *> (pObject);
-			if (pComponentObject) {
-				writeComponentsObject(pComponentObject);
-			}
-
-			writeFullEndElement();
 		}
 
+		writeMetaDataGroup(object.metaDataGroup());
+
+		if(pMeshObject)
+		{
+			CModelWriterNode100_Mesh ModelWriter_Mesh(
+				pMeshObject, m_pXMLWriter, m_pProgressMonitor,
+				m_pPropertyIndexMapping, m_nDecimalPrecision,
+				m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension,
+				m_bWriteVolumetricExtension, m_bWriteTriangleSetExtension);
+
+			ModelWriter_Mesh.writeToXML();
+		}
+
+		// Check if object is a component Object
+		CModelComponentsObject *pComponentObject =
+			dynamic_cast<CModelComponentsObject *>(&object);
+		if(pComponentObject)
+		{
+			writeComponentsObject(pComponentObject);
+		}
+
+		CModelLevelSetObject *pLevelSet =
+			dynamic_cast<CModelLevelSetObject *>(&object);
+		if(pLevelSet)
+		{
+			CModelWriterNode_LevelSet ModelWriter_LevelSet(
+				m_pModel, pLevelSet, m_pXMLWriter, m_pProgressMonitor);
+			ModelWriter_LevelSet.writeToXML();
+		}
+
+		writeFullEndElement();
 	}
 
 	void CModelWriterNode100_Model::writeMetaData(_In_ PModelMetaData pMetaData)
@@ -542,35 +692,42 @@ namespace NMR {
 
 			CModelColorGroupResource * pColorGroup = m_pModel->getColorGroup(nIndex);
 
-			pColorGroup->buildResourceIndexMap();
-
-			assertResourceIsInCurrentPath(pColorGroup->getPackageResourceID());
-			ModelResourceID nResourceID = pColorGroup->getPackageResourceID()->getModelResourceID();
-
-			writeStartElementWithPrefix(XML_3MF_ELEMENT_COLORGROUP, XML_3MF_NAMESPACEPREFIX_MATERIAL);
-			// Write Object ID (mandatory)
-			writeIntAttribute(XML_3MF_ATTRIBUTE_COLORS_ID, nResourceID);
-
-			nfUint32 nElementCount = pColorGroup->getCount();
-
-			UniqueResourceID nUniqueResourceID = pColorGroup->getPackageResourceID()->getUniqueID();
-			for (nfUint32 j = 0; j < nElementCount; j++) {
-				ModelPropertyID nPropertyID;
-				if (!pColorGroup->mapResourceIndexToPropertyID(j, nPropertyID)) {
-					throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
-				}
-				nfColor pElement = pColorGroup->getColor(nPropertyID);
-
-				m_pPropertyIndexMapping->registerPropertyID(nUniqueResourceID, nPropertyID, j);
-
-				writeStartElementWithPrefix(XML_3MF_ELEMENT_COLOR, XML_3MF_NAMESPACEPREFIX_MATERIAL);
-				writeStringAttribute(XML_3MF_ATTRIBUTE_COLORS_COLOR, fnColorToString(pElement));
-				writeEndElement();
-			}
-
-			writeFullEndElement();
+			writeColor(pColorGroup);
 		}
 	}
+
+	void CModelWriterNode100_Model::writeColor(
+		CModelColorGroupResource *pColorGroup)
+	{
+		pColorGroup->buildResourceIndexMap();
+
+		assertResourceIsInCurrentPath(pColorGroup->getPackageResourceID());
+		ModelResourceID nResourceID = pColorGroup->getPackageResourceID()->getModelResourceID();
+
+		writeStartElementWithPrefix(XML_3MF_ELEMENT_COLORGROUP, XML_3MF_NAMESPACEPREFIX_MATERIAL);
+		// Write Object ID (mandatory)
+		writeIntAttribute(XML_3MF_ATTRIBUTE_COLORS_ID, nResourceID);
+
+		nfUint32 nElementCount = pColorGroup->getCount();
+
+		UniqueResourceID nUniqueResourceID = pColorGroup->getPackageResourceID()->getUniqueID();
+		for (nfUint32 j = 0; j < nElementCount; j++) {
+			ModelPropertyID nPropertyID;
+			if (!pColorGroup->mapResourceIndexToPropertyID(j, nPropertyID)) {
+				throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
+			}
+			nfColor pElement = pColorGroup->getColor(nPropertyID);
+
+			m_pPropertyIndexMapping->registerPropertyID(nUniqueResourceID, nPropertyID, j);
+
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_COLOR, XML_3MF_NAMESPACEPREFIX_MATERIAL);
+			writeStringAttribute(XML_3MF_ATTRIBUTE_COLORS_COLOR, fnColorToString(pElement));
+			writeEndElement();
+		}
+
+		writeFullEndElement();
+	}
+
 
 	void CModelWriterNode100_Model::writeTex2Coords()
 	{
@@ -735,34 +892,157 @@ namespace NMR {
 		}
 	}
 
-	void CModelWriterNode100_Model::writeMultiProperties()
+	void CModelWriterNode100_Model::writeImage3Ds()
 	{
-		nfUint32 nCount = m_pModel->getMultiPropertyGroupCount();
+		nfUint32 nCount = m_pModel->getImage3DCount();
 
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			CModelImage3D * pImage3DResource = m_pModel->getImage3D(nIndex);
+
+			if (!pImage3DResource)
+			{
+				throw CNMRException(NMR_ERROR_INVALID_RESOURCE_INDEX, "Invalid Image3D resource index.");
+			}
+			writeImage3D(*pImage3DResource);
+		}
+
+	}
+
+    void CModelWriterNode100_Model::writeImage3D(CModelImage3D &pImage3D)
+	{
+		writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3D, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+		writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_ID, pImage3D.getPackageResourceID()->getModelResourceID());
+		if (!pImage3D.getName().empty())
+			writeStringAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_NAME, pImage3D.getName());
+
+		if (CModelImageStack* pImageStack = dynamic_cast<CModelImageStack*>(&pImage3D))
+		{
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGESTACK, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+
+			nfUint32 nSheetCount = pImageStack->getSheetCount();
+			writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGESTACK_ROWCOUNT, pImageStack->getRowCount());
+			writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGESTACK_COLUMNCOUNT, pImageStack->getColumnCount());
+			writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGESTACK_SHEETCOUNT, nSheetCount);
+
+			for (nfUint32 nSheetIndex = 0; nSheetIndex < nSheetCount; nSheetIndex++) {
+				auto pSheet = pImageStack->getSheet(nSheetIndex);
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGESHEET, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+				if (pSheet.get() != nullptr) {
+					writeStringAttribute(XML_3MF_ATTRIBUTE_IMAGESHEET_PATH, pSheet->getPathURI());
+				}
+				writeEndElement();
+			}
+
+			writeFullEndElement();
+		}
+		else
+		{
+			throw CNMRException(-1); // TODO NMR_ERROR_UNKNOWN_IMAGE3D_TYPE
+		}
+
+		writeFullEndElement();
+	}
+
+	
+    void CModelWriterNode100_Model::writeFunctionsFromImage3D()
+	{
+		nfUint32 nCount = m_pModel->getFunctionCount();
+
+		for (nfUint32 nIndex = 0u; nIndex < nCount; nIndex++)
+		{
+			auto funcFromImg3D = m_pModel->getFunctionFromImage3D(nIndex);
+			if (!funcFromImg3D)
+			{
+				continue;
+			}
+			
+			writeFunctionFromImage3D(*funcFromImg3D);
+		}
+	}
+
+	void CModelWriterNode100_Model::writeFunctionFromImage3D(
+		CModelFunctionFromImage3D & functionFromImage3D)
+	{
+		writeStartElementWithPrefix(XML_3MF_ELEMENT_FUNCTION_FROM_IMAGE3D,
+									XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+		writeIntAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_ID,
+							functionFromImage3D.getPackageResourceID()
+								->getModelResourceID());
+		writeStringAttribute(
+			XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_DISPLAY_NAME,
+			functionFromImage3D.getDisplayName());
+		writeIntAttribute(
+			XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID,
+			functionFromImage3D.getImage3DModelResourceID());
+		writeDoubleAttribute(
+			XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_OFFSET,
+			functionFromImage3D.getOffset());
+		writeDoubleAttribute(XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_SCALE,
+								functionFromImage3D.getScale());
+		writeStringAttribute(
+			XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEU,
+			CModelTexture2DResource::tileStyleToString(
+				functionFromImage3D.getTileStyleU()));
+		writeStringAttribute(
+			XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEV,
+			CModelTexture2DResource::tileStyleToString(
+				functionFromImage3D.getTileStyleV()));
+		writeStringAttribute(
+			XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEW,
+			CModelTexture2DResource::tileStyleToString(
+				functionFromImage3D.getTileStyleW()));
+		writeStringAttribute(
+			XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_FILTER,
+			CModelTexture2DResource::filterToString(
+				functionFromImage3D.getFilter()));
+		writeFullEndElement();
+	}
+
+    void CModelWriterNode100_Model::writeImplicitFunctions()
+	{
+		CModelWriterNode_Implicit implicitWriter(m_pModel, m_pXMLWriter, m_pProgressMonitor);
+		implicitWriter.writeImplicitFunctions();
+	}
+
+	void CModelWriterNode100_Model::writeVolumeData()
+	{
+		CModelWriterNode_VolumeData volumeWriter(m_pModel, m_pXMLWriter,
+													m_pProgressMonitor);
+		volumeWriter.writeToXML();
+	}
+
+    void CModelWriterNode100_Model::writeMultiProperties()
+        {
+		nfUint32 nCount = m_pModel->getMultiPropertyGroupCount();
+
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++)
+		{
 			m_pProgressMonitor->IncrementProgress(1);
 
-			CModelMultiPropertyGroupResource * pMultiPropertyGroup = m_pModel->getMultiPropertyGroup(nIndex);
+			CModelMultiPropertyGroupResource * pMultiPropertyGroup =
+				m_pModel->getMultiPropertyGroup(nIndex);
 
 			pMultiPropertyGroup->buildResourceIndexMap();
 
-			writeStartElementWithPrefix(XML_3MF_ELEMENT_MULTIPROPERTIES, XML_3MF_NAMESPACEPREFIX_MATERIAL);
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_MULTIPROPERTIES,
+										XML_3MF_NAMESPACEPREFIX_MATERIAL);
 
 			writeMultiPropertyAttributes(pMultiPropertyGroup);
-			
+
 			writeMultiPropertyMultiElements(pMultiPropertyGroup);
 
 			writeFullEndElement();
 		}
 	}
 
-	void CModelWriterNode100_Model::writeResources()
+    void CModelWriterNode100_Model::writeResources()
 	{
 		writeStartElement(XML_3MF_ELEMENT_RESOURCES);
 
 		if (m_bIsRootModel)
 		{
-			if (m_bWriteBaseMaterials)
+			// First we write all Resources, that have no dependencies to other resources
+            if (m_bWriteBaseMaterials)
 				writeBaseMaterials();
 
 			if (m_bWriteMaterialExtension) {
@@ -775,9 +1055,29 @@ namespace NMR {
 			if (m_bWriteSliceExtension) {
 				writeSliceStacks();
 			}
-			if (m_bWriteObjects)
-				writeObjects();
-		}
+
+			// Create topological order of resources
+			CResourceDependencySorter sorter(m_pModel);
+			auto sortedResources = sorter.sort();
+
+			for(auto &resId : sortedResources)
+			{
+				if(resId->getPath() != m_pModel->currentPath())
+				{
+					continue;
+				}
+				auto pResource =
+					m_pModel->findResource(resId->getUniqueID());
+
+				if(!pResource)
+				{
+					throw CNMRException(
+						NMR_ERROR_INVALID_RESOURCE_INDEX,
+						"Invalid Resource");
+				}
+				writeResource(pResource.get());
+			}
+        }
 		else {
 			if (m_bWriteSliceExtension) {
 				writeSliceStacks();
@@ -788,6 +1088,51 @@ namespace NMR {
 		}
 		
 		writeFullEndElement();
+	}
+
+	void CModelWriterNode100_Model::writeResource(CModelResource *pResource)
+	{
+		if (!pResource)
+		{
+			throw CNMRException(NMR_ERROR_INVALIDPARAM, "Invalid Resource");
+		}
+		CModelWriterNode_Implicit implicitWriter(m_pModel, m_pXMLWriter, m_pProgressMonitor);
+		CModelWriterNode_VolumeData volumeWriter(m_pModel, m_pXMLWriter, m_pProgressMonitor);
+
+		CModelImage3D * pImage3DResource = dynamic_cast<CModelImage3D *>(pResource);
+		if (pImage3DResource)
+		{
+			writeImage3D(*pImage3DResource);
+			return;
+		}
+
+		CModelFunctionFromImage3D * pFunctionFromImage3DResource = dynamic_cast<CModelFunctionFromImage3D *>(pResource);
+		if (pFunctionFromImage3DResource)
+		{
+			writeFunctionFromImage3D(*pFunctionFromImage3DResource);
+			return;
+		}
+
+		CModelImplicitFunction * pImplicitFunctionResource = dynamic_cast<CModelImplicitFunction *>(pResource);
+		if (pImplicitFunctionResource)
+		{
+			implicitWriter.writeImplicitFunction(*pImplicitFunctionResource);
+			return;
+		}
+
+		CModelVolumeData * pVolumeDataResource = dynamic_cast<CModelVolumeData *>(pResource);
+		if (pVolumeDataResource)
+		{
+			volumeWriter.writeVolumeDataResource(*pVolumeDataResource);
+			return;
+		}
+
+		CModelObject * pObject = dynamic_cast<CModelObject *>(pResource);
+		if (pObject)
+		{
+			writeObject(*pObject);
+			return;
+		}
 	}
 
 	void CModelWriterNode100_Model::writeBuild()

@@ -39,14 +39,19 @@ Each exception is identified via a global ErrorCode
 #include "Common/NMR_Types.h"
 #include "Common/NMR_Local.h"
 #include <exception>
+#include <string>
 
 namespace NMR {
 
 	class CNMRException : public std::exception {
 	private:
 		nfError m_errorcode;
-	public:
+        std::string m_message;
+
+    public:
 		CNMRException(_In_ nfError errorcode);
+		CNMRException(_In_ nfError errorcode, _In_ const std::string & message);
+
 		virtual const char * what() const throw ();
 		nfError getErrorCode() const;
 	};

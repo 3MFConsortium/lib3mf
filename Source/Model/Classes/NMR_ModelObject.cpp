@@ -208,6 +208,4 @@ namespace NMR {
 		if (nLevel >= m_nComponentDepthLevel)
 			m_nComponentDepthLevel = nLevel;
 	}
-
-
 }

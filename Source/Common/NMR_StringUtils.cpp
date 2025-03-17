@@ -38,6 +38,7 @@ correctly and Exception-safe
 #include <cmath>
 #include <string.h>
 #include <vector>
+#include <charconv>
 
 namespace NMR {
 
