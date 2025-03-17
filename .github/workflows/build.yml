@@ -130,11 +130,12 @@ jobs:
           ZIP_FILE=$(ls build/lib3mf-*.zip)
           echo "ARTIFACT_NAME=$(basename ${ZIP_FILE})" >> $GITHUB_ENV
         shell: bash
+      - run: ls -al build/
       - name: Archive Mac binary
         uses: actions/upload-artifact@v4
         with:
           name: lib3mf.dylib
-          path: build/lib3mf.dylib
+          path: build/lib3mf.${{ env.LIB3MF_VERSION }}.0.dylib
       - name: Upload Artifact (CPacked Archive)
         uses: actions/upload-artifact@v4
         with:
@@ -184,7 +185,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./build/Test_CPP_Bindings_filtered.info
-          fail_ci_if_error: true # optional (default = false)
+          fail_ci_if_error: false # optional (default = false)
           verbose: true # optional (default = false)
           
   build-windows-release:
@@ -301,7 +302,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./build
-      - run: ls -Rl ./build
+      - run: ls -Rlh ./build
       - run: unzip bindings.zip/bindings.zip
         working-directory: ./build
       - run: bash SDK/GenerateSDK_github.sh
@@ -396,6 +397,17 @@ jobs:
           cd SDK/CPackExamples/Cpp/build
           cmake --build .
           ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'
+      - name: Go Bindings
+        run: |
+          cd SDK/Examples/Go
+          go mod init lib3mfExamples
+          go get github.com/3MFConsortium/lib3mf.go/v2@v2.4.1
+          go build -o create_cube create_cube.go
+          ./create_cube
 
   deploy-windows:
     runs-on: windows-2019
@@ -450,6 +462,18 @@ jobs:
           cd SDK/CPackExamples/Cpp/build
           cmake --build . --config Release
           ./Release/Example_ExtractInfo.exe ../../../Examples/Files/Helix.3mf
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'
+      - name: Go Bindings
+        run: |
+          cd SDK/Examples/Go
+          go mod init lib3mfExamples
+          go get github.com/3MFConsortium/lib3mf.go/v2@v2.4.1
+          go build -o create_cube.exe create_cube.go
+          ./create_cube.exe
+
 
   deploy-macos:
     runs-on: macos-latest
@@ -470,6 +494,7 @@ jobs:
           sh Examples/CppDynamic/GenerateMake.sh
           cd Examples/CppDynamic/build
           cmake --build .
+          ls -al
           ./Example_ExtractInfo ../../Files/Helix.3mf
       - name: Build Cpp
         run: |
@@ -505,6 +530,17 @@ jobs:
           cd SDK/CPackExamples/Cpp/build
           cmake --build .
           ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'
+      - name: Go Bindings
+        run: |
+          cd SDK/Examples/Go
+          go mod init lib3mfExamples
+          go get github.com/3MFConsortium/lib3mf.go/v2@v2.4.1
+          go build -o create_cube create_cube.go
+          ./create_cube
 
   deploy-source-code-with-submodules:
     runs-on: ubuntu-20.04
@@ -662,6 +698,8 @@ jobs:
       - name: Unpack the second latest SDK
         run: |
           unzip second_latest_lib3mf_sdk.zip -d second_latest_lib3mf_sdk
+          mv second_latest_lib3mf_sdk/lib3mf_sdk/* second_latest_lib3mf_sdk
+          rmdir second_latest_lib3mf_sdk/lib3mf_sdk
 
       - name: Download and unzip test suite
         run: |
@@ -690,6 +728,8 @@ jobs:
 
       - name: Build and run CppDynamic with second latest SDK
         run: |
+          ls -al
+          ls -al second_latest_lib3mf_sdk
           sh second_latest_lib3mf_sdk/Examples/CppDynamic/GenerateMake.sh
           cd second_latest_lib3mf_sdk/Examples/CppDynamic/build
           cmake --build .

@@ -34,18 +34,23 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Mesh.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Vertices.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Triangles.h"
+#include "Model/Reader/v100/NMR_ModelReaderNode100_TriangleSets.h"
 #include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamLattice.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_VolumeData.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "Model/Classes/NMR_ModelVolumeData.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 
 namespace NMR {
 
-	CModelReaderNode100_Mesh::CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelWarnings pWarnings,
+	CModelReaderNode100_Mesh::CModelReaderNode100_Mesh(_In_ CModel * pModel, PModelMeshObject pMesh, _In_ PModelWarnings pWarnings,
 		_In_ PProgressMonitor pProgressMonitor, _In_ PPackageResourceID pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
-		: CModelReaderNode(pWarnings, pProgressMonitor)
+		: CModelReaderNode(pWarnings, pProgressMonitor),
+		 m_pModel(pModel),
+		 m_pMesh(pMesh)
 	{
 		__NMRASSERT(pMesh);
 		__NMRASSERT(pModel);
@@ -53,14 +58,14 @@ namespace NMR {
 		m_pObjectLevelPropertyID = pObjectLevelPropertyID;
 		m_nObjectLevelPropertyIndex = nDefaultPropertyIndex;
 
-		m_pMesh = pMesh;
-		m_pModel = pModel;
-
 		m_bHasClippingMeshID = false;
 		m_nClippingMeshID = 0;
 		m_eClipMode = eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE;
 		m_bHasRepresentationMeshID = false;
 		m_nRepresentationMeshID = 0;
+
+		m_bHasVolumeDataID = false;
+		m_nVolumeDataID = 0;
 	}
 
 	void CModelReaderNode100_Mesh::parseXML(_In_ CXmlReader * pXMLReader)
@@ -73,6 +78,23 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
+
+		if(m_bHasVolumeDataID)
+		{
+			PPackageResourceID volumePackageId =
+				m_pModel->findPackageResourceID(m_pModel->currentPath(),
+												m_nVolumeDataID);
+
+			if(!volumePackageId.get())
+			{
+				throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+			}
+
+			auto pVolumeData = m_pModel->findVolumeData(
+				volumePackageId->getUniqueID());
+
+			m_pMesh->setVolumeData(pVolumeData);
+		}
 	}
 
 	void CModelReaderNode100_Mesh::retrieveClippingInfo(_Out_ eModelBeamLatticeClipMode &eClipMode, _Out_ nfBool & bHasClippingMode, _Out_ ModelResourceID & nClippingMeshID)
@@ -88,36 +110,59 @@ namespace NMR {
 		nRepresentationMeshID = m_nRepresentationMeshID;
 	}
 
-	void CModelReaderNode100_Mesh::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+	void CModelReaderNode100_Mesh::OnNSAttribute(
+		_In_z_ const nfChar *pAttributeName,
+		_In_z_ const nfChar *pAttributeValue,
+		_In_z_ const nfChar *pNameSpace)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pNameSpace);
+
+		if(strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0)
+		{
+			if(strcmp(pAttributeName, XML_3MF_ATTRIBUTE_MESH_VOLUMEDATA) ==
+				0)
+			{
+				if(m_bHasVolumeDataID)
+				{
+					throw CNMRException(
+						NMR_ERROR_DUPLICATE_BOUNDARY_SHAPE_VOLUME_ID);
+				}
+				m_bHasVolumeDataID = true;
+				m_nVolumeDataID = fnStringToUint32(pAttributeValue);
+			}
+		}
 	}
 
-	void CModelReaderNode100_Mesh::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+    void CModelReaderNode100_Mesh::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
+
+		NMR::CMesh *mesh = m_pMesh->getMesh();	
+
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
+
 
 			if (strcmp(pChildName, XML_3MF_ELEMENT_VERTICES) == 0)
 			{
-				if (m_pMesh->getNodeCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE - 1) {
+				if (mesh->getNodeCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE - 1) {
 					m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READMESH);
 					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 				}
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Vertices>(m_pMesh, m_pWarnings);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Vertices>(mesh, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_TRIANGLES) == 0)
 			{
-				if (m_pMesh->getFaceCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE - 1) {
+				if (mesh->getFaceCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE - 1) {
 					m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READMESH);
 					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 				}
-				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_pWarnings,
+				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, mesh, m_pWarnings,
 					m_pObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
 				if (m_pObjectLevelPropertyID && m_pObjectLevelPropertyID->getPackageModelPath() == 0) {
@@ -139,7 +184,7 @@ namespace NMR {
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMLATTICE) == 0)
 			{
-				PModelReaderNode_BeamLattice1702_BeamLattice pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BeamLattice>(m_pModel, m_pMesh, m_pWarnings);
+				PModelReaderNode_BeamLattice1702_BeamLattice pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BeamLattice>(m_pModel, mesh, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
 				pXMLNode->retrieveClippingInfo(m_eClipMode, m_bHasClippingMeshID, m_nClippingMeshID);
@@ -150,6 +195,23 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_TRIANGLESETS) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_TRIANGLESETS) == 0)
+			{
+				PModelReaderNode100_TriangleSets pXMLNode = std::make_shared<CModelReaderNode100_TriangleSets>(m_pModel, m_pMesh->getMesh(), m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				m_pTriangleSets = pXMLNode->getTriangleSets ();
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		}
+
+	}
+
+	std::vector<PModelTriangleSet> CModelReaderNode100_Mesh::getTriangleSets()
+	{
+		return m_pTriangleSets;
 	}
 
 }

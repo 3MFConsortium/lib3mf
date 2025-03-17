@@ -118,7 +118,6 @@ namespace NMR {
 		virtual void calculateComponentDepthLevel (nfUint32 nLevel);
 
 		virtual void extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix) = 0;
-
 	};
 
 	typedef std::shared_ptr <CModelObject> PModelObject;

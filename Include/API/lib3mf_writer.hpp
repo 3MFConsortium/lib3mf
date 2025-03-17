@@ -100,17 +100,17 @@ public:
 
 	void SetDecimalPrecision(const Lib3MF_uint32 nDecimalPrecision) override;
 
-	void AddKeyWrappingCallback(const std::string & sConsumerID, const Lib3MF::KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData);
+	void AddKeyWrappingCallback(const std::string & sConsumerID, const Lib3MF::KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData) override;
 
-	void SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData);
+	void SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData) override;
 
-	void SetStrictModeActive(const bool bStrictModeActive);
+	void SetStrictModeActive(const bool bStrictModeActive) override;
 
-	bool GetStrictModeActive();
+	bool GetStrictModeActive() override;
 
-	std::string GetWarning(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode);
+	std::string GetWarning(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode) override;
 
-	Lib3MF_uint32 GetWarningCount();
+	Lib3MF_uint32 GetWarningCount() override;
 
 };
 

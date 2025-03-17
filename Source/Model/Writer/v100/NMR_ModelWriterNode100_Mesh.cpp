@@ -51,7 +51,7 @@ This is the class for exporting the 3mf mesh node.
 namespace NMR {
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
+		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension, _In_ nfBool bWriteVolumetricExtension, _In_ nfBool bWriteTriangleSetExtension)
 		:CModelWriterNode_ModelBase(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor), m_nPosAfterDecPoint(nPosAfterDecPoint), m_nPutDoubleFactor((nfInt64)(pow(10, CModelWriterNode100_Mesh::m_nPosAfterDecPoint)))
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
@@ -60,6 +60,8 @@ namespace NMR {
 
 		m_bWriteMaterialExtension = bWriteMaterialExtension;
 		m_bWriteBeamLatticeExtension = bWriteBeamLatticeExtension;
+		m_bWriteVolumetricExtension = bWriteVolumetricExtension;
+		m_bWriteTriangleSetExtension = bWriteTriangleSetExtension;
 
 		m_pModelMeshObject = pModelMeshObject;
 		m_pPropertyIndexMapping = pPropertyIndexMapping;
@@ -71,12 +73,14 @@ namespace NMR {
 		m_nBallBufferPos = 0;
 		m_nBeamRefBufferPos = 0;
 		m_nBallRefBufferPos = 0;
+		m_nTriangleSetRefBufferPos = 0;
 		putVertexString(MODELWRITERMESH100_VERTEXLINESTART);
 		putTriangleString(MODELWRITERMESH100_TRIANGLELINESTART);
 		putBeamString(MODELWRITERMESH100_BEAMLATTICE_BEAMLINESTART);
 		putBallString(MODELWRITERMESH100_BEAMLATTICE_BALLLINESTART);
 		putBeamRefString(MODELWRITERMESH100_BEAMLATTICE_REFLINESTART);
 		putBallRefString(MODELWRITERMESH100_BEAMLATTICE_BALLREFLINESTART);
+		putTriangleSetRefString(MODELWRITERMESH100_TRIANGLESETS_REFLINESTART);
 	}
 
 	bool stringRepresentationsDiffer(double a, double b, nfInt64 putFactor) {
@@ -130,6 +134,19 @@ namespace NMR {
 		writeStartElement(XML_3MF_ELEMENT_MESH);
 
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENODES);
+
+		//	Write id of referenced volume data, if any
+		if (m_bWriteVolumetricExtension) {
+			auto pVolumeData = m_pModelMeshObject->getVolumeData();
+			if (pVolumeData) {
+				PPackageResourceID pID = pVolumeData->getPackageResourceID();
+				if (pID->getPath() != m_pModel->currentPath())
+					throw CNMRException(NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL);
+				writePrefixedIntAttribute(XML_3MF_NAMESPACEPREFIX_VOLUMETRIC, XML_3MF_ATTRIBUTE_MESH_VOLUMEDATA, pID->getModelResourceID());
+			}
+		}
+		
+
 		// Write Vertices
 		writeStartElement(XML_3MF_ELEMENT_VERTICES);
 		for (nNodeIndex = 0; nNodeIndex < nNodeCount; nNodeIndex++) {
@@ -247,6 +264,32 @@ namespace NMR {
 			writeEndElement();  */
 		}
 		writeFullEndElement();
+
+
+		if (m_bWriteTriangleSetExtension) {
+			uint32_t nTriangleSetCount = m_pModelMeshObject->getTriangleSetCount();
+
+			if (nTriangleSetCount > 0) {
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_TRIANGLESETS, XML_3MF_NAMESPACEPREFIX_TRIANGLESETS);
+
+				for (uint32_t nTriangleSetIndex = 0; nTriangleSetIndex < nTriangleSetCount; nTriangleSetIndex++) {
+					auto pTriangleSet = m_pModelMeshObject->getTriangleSet(nTriangleSetIndex);
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_TRIANGLESET, XML_3MF_NAMESPACEPREFIX_TRIANGLESETS);
+					writeStringAttribute(XML_3MF_ATTRIBUTE_TRIANGLESET_IDENTIFIER, pTriangleSet->getIdentifier ());
+					writeStringAttribute(XML_3MF_ATTRIBUTE_TRIANGLESET_NAME, pTriangleSet->getName());
+					
+					auto triangleRefs = pTriangleSet->getTriangles();
+					for (auto triangleRef : triangleRefs) {
+						writeTriangleSetRefData (triangleRef);
+					}		
+
+					writeFullEndElement();
+				}
+				
+				writeFullEndElement();
+			}
+		}
+
 
 		if (bMeshHasAProperty && !(nObjectLevelPropertyID != 0)) {
 			throw CNMRException(NMR_ERROR_MISSINGOBJECTLEVELPID);
@@ -596,6 +639,34 @@ namespace NMR {
 		m_nBeamRefBufferPos += nCount;
 	}
 
+	void CModelWriterNode100_Mesh::putTriangleSetRefString(_In_ const nfChar* pszString)
+	{
+		__NMRASSERT(pszString);
+		const nfChar* pChar = pszString;
+		nfChar* pTarget = &m_TriangleSetRefLine[m_nTriangleSetRefBufferPos];
+
+		while (*pChar != 0) {
+			*pTarget = *pChar;
+			pTarget++;
+			pChar++;
+			m_nTriangleSetRefBufferPos++;
+		}
+	}
+
+	void CModelWriterNode100_Mesh::putTriangleSetRefUInt32(_In_ const nfUint32 nValue)
+	{
+#ifdef __GNUC__
+		int nCount = sprintf(&m_TriangleSetRefLine[m_nTriangleSetRefBufferPos], "%d", nValue);
+#else
+		int nCount = sprintf_s(&m_TriangleSetRefLine[m_nTriangleSetRefBufferPos], MODELWRITERMESH100_LINEBUFFERSIZE - m_nTriangleSetRefBufferPos, "%d", nValue);
+#endif // __GNUC__
+
+		if (nCount < 1)
+			throw CNMRException(NMR_ERROR_COULDNOTCONVERTNUMBER);
+		m_nTriangleSetRefBufferPos += nCount;
+	}
+
+
 	void CModelWriterNode100_Mesh::putBallRefString(_In_ const nfChar* pszString)
 	{
 		__NMRASSERT(pszString);
@@ -776,6 +847,14 @@ namespace NMR {
 		putBallRefUInt32(nBallRefID);
 		putBallRefString("\"/>");
 		m_pXMLWriter->WriteRawLine(&m_BallRefLine[0], m_nBallRefBufferPos);
+	}
+
+	__NMR_INLINE void CModelWriterNode100_Mesh::writeTriangleSetRefData(_In_ INT nRefID)
+	{
+		m_nTriangleSetRefBufferPos = MODELWRITERMESH100_TRIANGLESETS_REFSTARTLENGTH;
+		putTriangleSetRefUInt32(nRefID);
+		putTriangleSetRefString("\"/>");
+		m_pXMLWriter->WriteRawLine(&m_TriangleSetRefLine[0], m_nTriangleSetRefBufferPos);
 	}
 
 }

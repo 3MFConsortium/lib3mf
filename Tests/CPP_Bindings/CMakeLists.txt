@@ -35,8 +35,12 @@ set(SRCS_UNITTEST
 	./Source/Writer.cpp
 	./Source/TextureProperty.cpp
 	./Source/TextureResources.cpp
+	./Source/UnitTest_Utilities.cpp
 	./Source/v093.cpp
+	./Source/Volumetric.cpp
 	./Source/Wrapper.cpp
+	./Source/Writer.cpp
+	./Source/TriangleSets.cpp
 )
 
 set(CMAKE_CURRENT_BINARY_DIR ${CMAKE_BINARY_DIR})

@@ -80,16 +80,22 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_MATERIALSPEC "http://schemas.microsoft.com/3dmanufacturing/material/2015/02"
 #define XML_3MF_NAMESPACE_PRODUCTIONSPEC "http://schemas.microsoft.com/3dmanufacturing/production/2015/06"
 #define XML_3MF_NAMESPACE_BEAMLATTICESPEC "http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02"
+#define XML_3MF_NAMESPACE_TRIANGLESETS "http://schemas.microsoft.com/3dmanufacturing/trianglesets/2021/07"
 #define XML_3MF_NAMESPACE_SLICESPEC "http://schemas.microsoft.com/3dmanufacturing/slice/2015/07"
 #define XML_3MF_NAMESPACE_SECURECONTENTSPEC "http://schemas.microsoft.com/3dmanufacturing/securecontent/2019/04"
 #define XML_3MF_NAMESPACE_DIGITALSIGNATURESPEC "http://www.w3.org/2000/09/xmldsig#"
 #define XML_3MF_NAMESPACE_CIPHERVALUESPEC "http://www.w3.org/2001/04/xmlenc#"
+#define XML_3MF_NAMESPACE_VOLUMETRICSPEC "http://schemas.3mf.io/3dmanufacturing/volumetric/2022/01"
+#define XML_3MF_NAMESPACE_IMPLICITSPEC "http://schemas.3mf.io/3dmanufacturing/implicit/2023/12"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
 #define XML_3MF_NAMESPACEPREFIX_BEAMLATTICE "b"
 #define XML_3MF_NAMESPACEPREFIX_SLICE "s"
 #define XML_3MF_NAMESPACEPREFIX_SECURECONTENT "sc"
+#define XML_3MF_NAMESPACEPREFIX_VOLUMETRIC "v"
+#define XML_3MF_NAMESPACEPREFIX_IMPLICIT "i"
+#define XML_3MF_NAMESPACEPREFIX_TRIANGLESETS "t"
 
 #define XML_3MF_ATTRIBUTE_XMLNS                     "xmlns"
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                "xml"
@@ -117,6 +123,7 @@ These are given by the 3MF Standard
 
 // Mesh element.
 #define XML_3MF_ELEMENT_MESH                        "mesh"
+#define XML_3MF_ATTRIBUTE_MESH_VOLUMEDATA           "volumeid"
 
 // Slices element.
 #define XML_3MF_ELEMENT_SLICES                      "slices"
@@ -144,6 +151,8 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_BEAMSET                           "beamset"
 #define XML_3MF_ELEMENT_REF                               "ref"
 #define XML_3MF_ELEMENT_BALLREF                           "ballref"
+#define XML_3MF_ELEMENT_TRIANGLESETS                      "trianglesets"
+#define XML_3MF_ELEMENT_TRIANGLESET                       "triangleset"
 
 // Triangle element.
 #define XML_3MF_ELEMENT_TRIANGLE                    "triangle"
@@ -183,6 +192,9 @@ These are given by the 3MF Standard
 // deprecated (has been used in draft version of the specification):
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_ACCURACY      "accuracy"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_PRECISION     "precision"
+#define XML_3MF_ATTRIBUTE_TRIANGLESET_IDENTIFIER    "identifier"
+#define XML_3MF_ATTRIBUTE_TRIANGLESET_NAME          "name"
+#define XML_3MF_ATTRIBUTE_TRIANGLESETREF_INDEX		"index"
 
 // Vertex element.
 #define XML_3MF_ELEMENT_VERTEX                      "vertex"
@@ -221,6 +233,94 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_COMPOSITE                   "composite"
 #define XML_3MF_ATTRIBUTE_COMPOSITE_VALUES          "values"
 
+
+// Volumetric Extension
+#define XML_3MF_ELEMENT_IMAGE3D                "image3d"
+#define XML_3MF_ATTRIBUTE_IMAGE3D_ID           "id"
+#define XML_3MF_ATTRIBUTE_IMAGE3D_NAME         "name"
+
+#define XML_3MF_ELEMENT_IMAGESTACK              "imagestack"
+#define XML_3MF_ATTRIBUTE_IMAGESTACK_ROWCOUNT   "rowcount"
+#define XML_3MF_ATTRIBUTE_IMAGESTACK_COLUMNCOUNT "columncount"
+#define XML_3MF_ATTRIBUTE_IMAGESTACK_SHEETCOUNT "sheetcount"
+
+#define XML_3MF_ELEMENT_IMAGESHEET             "imagesheet"
+#define XML_3MF_ATTRIBUTE_IMAGESHEET_PATH      "path"
+
+#define XML_3MF_ELEMENT_VOLUMEDATA                      "volumedata"
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_ID                 "id"
+#define XML_3MF_ELEMENT_VOLUMETRIC_COMPOSITE            "composite"
+#define XML_3MF_ELEMENT_VOLUMETRIC_COLOR                "color"
+#define XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY             "property"
+
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_FUNCTIONID          "functionid"
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM          "transform"
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL            "channel"
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD     "solidthreshold"
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_MINFEATURESIZE     "minfeaturesize"
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_FALLBACKVALUE      "fallbackvalue"
+
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY           "name"
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED  "required"
+
+
+// Voumeteric/Implicit
+#define XML_3MF_ELEMENT_IMPLICIT_FUNCTION_DEPRECATED "function"
+#define XML_3MF_ELEMENT_IMPLICIT_FUNCTION "implicitfunction"
+
+#define XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_ID "id"
+#define XML_3MF_ATTRIBUTE_IMPLICIT_FUNCTION_DISPLAY_NAME "displayname"
+#define XML_3MF_ELEMENT_IMPLICIT_FUNCTION_INPUT "in"
+#define XML_3MF_ELEMENT_IMPLICIT_FUNCTION_OUTPUT "out"
+#define XML_3MF_ELEMENT_IMPLICIT_NODE_INPUT "in"
+#define XML_3MF_ELEMENT_IMPLICIT_NODE_OUTPUT "out"
+#define XML_3MF_ATTRIBUTE_IMPLICIT_NODE_VALUE "value"
+#define XML_3MF_ATTRIBUTE_IMPLICIT_NODE_MATRIX "matrix"
+#define XML_3MF_ATTRIBUTE_IMPLICIT_NODE_X "x"
+#define XML_3MF_ATTRIBUTE_IMPLICIT_NODE_Y "y"
+#define XML_3MF_ATTRIBUTE_IMPLICIT_NODE_Z "z"
+#define XML_3MF_ATTRIBUTE_IMPLICIT_NODE_ID "identifier"
+#define XML_3MF_ATTRIBUTE_IMPLICIT_NODE_DISPLAY_NAME "displayname"
+#define XML_3MF_ATTRIBUTE_IMPLICIT_NODE_TAG "tag"
+#define XML_3MF_ATTRIBUTE_IMPLICIT_NODE_RESOURCE_ID "resourceid"
+#define XML_3MF_ATTRIBUTE_IMPLICIT_NODE_RESOURCE_ID_VALUE_DEPRECATED "resourceid"
+#define XML_3MF_ATTRIBUTE_IMPLICIT_PORT_ID "identifier"
+#define XML_3MF_ATTRIBUTE_IMPLICIT_PORT_DISPLAY_NAME "displayname"
+#define XML_3MF_ATTRIBUTE_IMPLICIT_PORT_REFERENCE "ref"
+#define XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_SCALAR "scalar"
+#define XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_VECTOR "vector"
+#define XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_MATRIX "matrix"
+#define XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_RESOURCE_ID "resourceid"
+#define XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_SCALAR_REF "scalarref"
+#define XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_VECTOR_REF "vectorref"
+#define XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_MATRIX_REF "matrixref"
+#define XML_3MF_ELEMENT_IMPLICIT_PORT_TYPE_RESOURCE_REF "resourceref"
+
+#define XML_3MF_ELEMENT_FUNCTION_FROM_IMAGE3D "functionfromimage3d"
+#define XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID "image3did"
+#define XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_OFFSET "valueoffset"
+#define XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_SCALE "valuescale"
+#define XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_IMAGE3DID_DEPRECATED "image3dID"
+#define XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_OFFSET_DEPRECATED "offset"
+#define XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_SCALE_DEPRECATED "scale"
+#define XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEU "tilestyleu"
+#define XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEV "tilestylev"
+#define XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_TILESTYLEW "tilestylew"
+#define XML_3MF_ATTRIBUTE_FUNTCTION_FROM_IMAGE3D_FILTER "filter"
+
+
+#define XML_3MF_ELEMENT_BOUNDARY_SHAPE "levelset"
+#define XML_3MF_ATTRIBUTE_LEVELSET_VOLUMEDATA "volumeid"
+#define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_ID "id"
+#define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_FUNCTION_ID "functionid"
+#define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_CHANNEL "channel"
+#define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_CHANNEL_DEFAULT "shape"
+#define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_TRANSFORM "transform"
+#define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_MIN_FEATURE_SIZE "minfeaturesize"
+#define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_MESH_BBOX_ONLY "meshbboxonly"
+#define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_FALLBACK_VALUE "fallbackvalue"
+#define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_MESH_ID "meshid"
+
 // Multiproperties
 #define XML_3MF_ELEMENT_MULTIPROPERTIES             "multiproperties"
 #define XML_3MF_ATTRIBUTE_MULTIPROPERTIES_ID        "id"
@@ -228,6 +328,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_MULTIPROPERTIES_BLENDMETHODS "blendmethods"
 #define XML_3MF_ATTRIBUTE_MULTIPROPERTIES_BLENDMETHOD_MIX "mix"
 #define XML_3MF_ATTRIBUTE_MULTIPROPERTIES_BLENDMETHOD_MULTIPLY "multiply"
+#define XML_3MF_ATTRIBUTE_MULTIPROPERTIES_BLENDMETHOD_MASK "mask"
 #define XML_3MF_ELEMENT_MULTI                       "multi"
 #define XML_3MF_ATTRIBUTE_MULTI_PINDICES            "pindices"
 
@@ -423,5 +524,9 @@ These are given by the 3MF Standard
 #define XML_3MF_MAXIMUMSKINTHICKNESSVALUE           1000000000.0f
 #define XML_3MF_MAXBEAMCOUNT                        2147483647
 #define XML_3MF_MAXBALLCOUNT                        2147483647
+
+#ifdef __MINGW32__
+#define isNotANumber(x) ((x)!=(x))
+#endif
 
 #endif // __NMR_MODELCONSTANTS
