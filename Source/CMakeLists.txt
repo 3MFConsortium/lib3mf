@@ -1,18 +1,23 @@
 
-if (USE_INCLUDED_LIBZIP)
+# libzip related sources
+if (USE_PACKAGED_SUBMODULES)
   file(GLOB LIBZIP_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Libraries/libzip/Source/*.c")
   if (UNIX)
 	file(GLOB LIBZIP_FILES_PLATFORM RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Libraries/libzip/Source/unix/*.c")
   else()
 	file(GLOB LIBZIP_FILES_PLATFORM RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Libraries/libzip/Source/win/*.c")
   endif()
-endif()
+endif ()
 
-if (USE_INCLUDED_ZLIB)
+# Zlib related sources
+if (USE_PACKAGED_SUBMODULES)
   file(GLOB ZLIB_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Libraries/zlib/Source/*.c")
 endif()
 
-file (GLOB CPPBASE64_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Libraries/cpp-base64/Source/*.cpp")
+# Base 64 related sources
+if(USE_PACKAGED_SUBMODULES)
+  file (GLOB CPPBASE64_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Libraries/cpp-base64/Source/*.cpp")
+endif ()
 
 # sources
 set(SRCS_PLATFORM
