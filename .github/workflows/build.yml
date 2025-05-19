@@ -5,7 +5,7 @@ env:
 name: Build
 jobs:
   set-lib3mf-version:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     outputs:
       lib3mf-version: ${{ steps.set-version.outputs.LIB3MF_VERSION }}
     steps:
@@ -21,7 +21,7 @@ jobs:
         run: echo "LIB3MF_VERSION=${{ steps.set-version.outputs.LIB3MF_VERSION }}"
 
   build-linux-memtest:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-lib3mf-version]
     steps:
       - run: sudo apt update
@@ -34,7 +34,7 @@ jobs:
         working-directory: ./build
 
   build-linux-ubi8-gcc12:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-lib3mf-version]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
@@ -288,7 +288,7 @@ jobs:
 
 
   assemble-sdk:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-lib3mf-version, build-windows-release, build-macos, build-linux-ubi8-gcc12]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
@@ -314,7 +314,7 @@ jobs:
 
 
   deploy-linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-lib3mf-version, assemble-sdk]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
@@ -543,7 +543,7 @@ jobs:
           ./create_cube
 
   deploy-source-code-with-submodules:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [ set-lib3mf-version, assemble-sdk ]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
@@ -563,7 +563,7 @@ jobs:
 
 
   set-integration-tests-status:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [ deploy-linux, deploy-windows, deploy-macos, deploy-source-code-with-submodules ]
     outputs:
       run_integration_tests: ${{ steps.set-status.outputs.run_integration_tests }}
@@ -579,7 +579,7 @@ jobs:
       
 
   integration-tests-latest-release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-integration-tests-status]
     if: needs.set-integration-tests-status.outputs.run_integration_tests == 'true' # Single check before the job starts
     steps:
@@ -653,7 +653,7 @@ jobs:
           
 
   integration-tests-last-two-releases:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-integration-tests-status]
     if: needs.set-integration-tests-status.outputs.run_integration_tests == 'true' # Single check before the job starts
     steps:
@@ -783,7 +783,7 @@ jobs:
 
 
   integration-tests-latest-commit:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-integration-tests-status]
     if: needs.set-integration-tests-status.outputs.run_integration_tests == 'true' # Single check before the job starts
     steps:
@@ -852,7 +852,7 @@ jobs:
           echo "LATEST_TOTAL_MUSTFAIL=${LATEST_TOTAL_MUSTFAIL}" >> $GITHUB_ENV
 
   integration-test-last-commit-and-last-release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-integration-tests-status]
     if: needs.set-integration-tests-status.outputs.run_integration_tests == 'true' # Single check before the job starts
     steps:
