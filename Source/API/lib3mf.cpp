@@ -111,7 +111,7 @@ void CWrapper::GetSpecificationVersion (const std::string & sSpecificationURL, b
 	else if (!sSpecificationURL.compare(std::string(XML_3MF_NAMESPACE_VOLUMETRICSPEC))) {
 		nMajor = NMR_SPECVERSION_VOLUMETRIC_MAJOR;
 		nMinor = NMR_SPECVERSION_VOLUMETRIC_MINOR;
-		nMicro = NMR_SPECVERSION_MICRO;
+		nMicro = NMR_SPECVERSION_VOLUMETRIC_MICRO;
 		bIsSupported = true;
 	}
 	else if (!sSpecificationURL.compare(std::string(XML_3MF_NAMESPACE_IMPLICITSPEC))) {

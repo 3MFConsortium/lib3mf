@@ -107,24 +107,23 @@ namespace Lib3MF
 		ASSERT_EQ(nMinor, 0);
 		ASSERT_EQ(nMicro, 2);
 
-		// TODO: The following tests are made to fail on purpose. Once the correct spec info is set in NMR_Spec_Version.h, We fix the tests also
 		Lib3MFTest::wrapper->GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/trianglesets/2021/07", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
-		ASSERT_EQ(nMinor, 2);
-		ASSERT_EQ(nMicro, 4);
+		ASSERT_EQ(nMinor, 3);
+		ASSERT_EQ(nMicro, 0);
 
 		Lib3MFTest::wrapper->GetSpecificationVersion("http://schemas.3mf.io/3dmanufacturing/volumetric/2022/01", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
-		ASSERT_EQ(nMajor, 1);
-		ASSERT_EQ(nMinor, 2);
-		ASSERT_EQ(nMicro, 4);
+		ASSERT_EQ(nMajor, 0);
+		ASSERT_EQ(nMinor, 8);
+		ASSERT_EQ(nMicro, 0);
 
 		Lib3MFTest::wrapper->GetSpecificationVersion("http://schemas.3mf.io/3dmanufacturing/implicit/2023/12", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
-		ASSERT_EQ(nMajor, 1);
-		ASSERT_EQ(nMinor, 2);
-		ASSERT_EQ(nMicro, 4);
+		ASSERT_EQ(nMajor, 0);
+		ASSERT_EQ(nMinor, 8);
+		ASSERT_EQ(nMicro, 0);
 	}
 
 	TEST(Wrapper, CreateModel)
