@@ -32,6 +32,7 @@ Vulometric.cpp: Defines Unittests for the Volumetric extension
 
 #include "UnitTest_Utilities.h"
 #include "lib3mf_implicit.hpp"
+#include <algorithm>
 
 namespace Lib3MF
 {

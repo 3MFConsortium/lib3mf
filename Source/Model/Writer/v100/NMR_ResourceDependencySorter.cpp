@@ -36,6 +36,7 @@ sorting them topologically.
 #include "Common/Graph/GraphAlgorithms.h"
 #include "Model/Classes/NMR_Model.h"
 #include "Model/Classes/NMR_ModelResource.h"
+#include <algorithm>
 
 namespace NMR
 {
