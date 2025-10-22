@@ -178,6 +178,9 @@ if(USE_INCLUDED_LIBZIP)
     target_include_directories(lib3mf PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/libzip/Include
         ${CMAKE_CURRENT_BINARY_DIR}/libzip)
+    if(MINGW)
+        target_compile_definitions(lib3mf PRIVATE HAVE_FSEEKO=1 HAVE_FTELLO=1)
+    endif()
     if(MSVC)
         target_compile_definitions(lib3mf PRIVATE _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE)
     endif()
