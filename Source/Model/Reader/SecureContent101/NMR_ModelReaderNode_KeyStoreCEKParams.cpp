@@ -43,7 +43,7 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
-#include "base64.h"
+#include "lib3mfBase64.hpp"
 
 namespace NMR {
 	namespace ParserUtils {

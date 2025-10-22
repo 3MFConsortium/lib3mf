@@ -39,7 +39,7 @@ This is the class for exporting the 3mf keystore stream root node.
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_UUID.h"
-#include "base64.h"
+#include "lib3mfBase64.hpp"
 #include <vector>
 #include <array>
 

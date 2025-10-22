@@ -1,306 +1,381 @@
-cmake_minimum_required (VERSION 3.10)
+cmake_minimum_required(VERSION 3.11)
 
-cmake_policy(SET CMP0054 NEW)
-cmake_policy(SET CMP0048 NEW)
+# Detect whether we are the root project (vs. included as a subdirectory)
+set(_lib3mf_is_top_level OFF)
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    set(_lib3mf_is_top_level ON)
+endif()
 
+# -----------------------------------------------------------------------------
+# Project metadata
+# -----------------------------------------------------------------------------
+set(LIB3MF_VERSION_MAJOR "2" CACHE STRING "lib3mf major version")
+set(LIB3MF_VERSION_MINOR "4" CACHE STRING "lib3mf minor version")
+set(LIB3MF_VERSION_MICRO "2" CACHE STRING "lib3mf micro version")
+set(LIB3MF_VERSION_PRERELEASE "" CACHE STRING "lib3mf prerelease tag")
+
+set(_lib3mf_version_core "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}")
+if(LIB3MF_VERSION_PRERELEASE)
+    set(LIB3MF_VERSION_STRING "${_lib3mf_version_core}-${LIB3MF_VERSION_PRERELEASE}")
+else()
+    set(LIB3MF_VERSION_STRING "${_lib3mf_version_core}")
+endif()
+set(LIB3MF_VERSION_STRING "${LIB3MF_VERSION_STRING}" CACHE INTERNAL "lib3mf semantic version (with optional prerelease)")
+
+project(lib3mf
+    VERSION ${_lib3mf_version_core}
+    DESCRIPTION "An implementation of the 3D Manufacturing Format file standard"
+    LANGUAGES C CXX)
+
+# -----------------------------------------------------------------------------
+# Global configuration
+# -----------------------------------------------------------------------------
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum macOS deployment version")
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
 include(GNUInstallDirs)
 
-# Define Version
-set(LIB3MF_VERSION_MAJOR 2)        # increase on every backward-compatibility breaking change of the API
-set(LIB3MF_VERSION_MINOR 4)        # increase on every backward compatible change of the API
-set(LIB3MF_VERSION_MICRO 0)        # increase on on every change that does not alter the API
-set(LIB3MF_VERSION_PRERELEASE "")  # denotes pre-release information of a version of lib3mf
-set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment version")
-project(lib3mf
-  VERSION ${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}
-  DESCRIPTION "An implementation of the 3D Manufacturing Format file standard"
-)
+set(CMAKE_INSTALL_BINDIR "bin" CACHE PATH "Directory for installing binary files")
+set(CMAKE_INSTALL_LIBDIR "lib" CACHE PATH "Directory for installing library files")
+set(CMAKE_INSTALL_INCLUDEDIR "include/lib3mf" CACHE PATH "Directory for installing headers")
 
-find_program(buildcache_program buildcache)
-if(buildcache_program)
-  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${buildcache_program}")
+find_program(_lib3mf_buildcache buildcache)
+if(_lib3mf_buildcache)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${_lib3mf_buildcache}")
 endif()
 
-set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
-set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
-set(CMAKE_INSTALL_INCLUDEDIR include/lib3mf CACHE PATH "directory for installing header files")
-
-option(USE_INCLUDED_ZLIB "Use included zlib" ON)
-option(USE_INCLUDED_LIBZIP "Use included libzip" ON)
-option(USE_INCLUDED_SSL "Use included libressl" ON)
-option(BUILD_FOR_CODECOVERAGE "Build for code coverage analysis" OFF)
-option(STRIP_BINARIES "Strip binaries (on non-apple)" ON)
-option(USE_PLATFORM_UUID "Use UUID geneator that is provided by the OS (always ON for Windows)" OFF)
-
-add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
-set (CMAKE_CXX_STANDARD 17)
-
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  # using GCC
-  add_definitions(-DBUILD_DLL)
-  add_compile_options(-Wall)
-  if (CMAKE_BUILD_TYPE MATCHES DEBUG)
-    add_compile_options(-g)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Og")
-  else()
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O2")
-  endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
-  
-elseif ("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
-  # using GCC
-  add_definitions(-DBUILD_DLL)
-  add_compile_options(-Wall) 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O2")
-  set(CMAKE_MACOSX_RPATH ON)
+if(NOT DEFINED BUILD_SHARED_LIBS)
+    set(BUILD_SHARED_LIBS ON)
 endif()
 
-if (${MSVC})
-  # using Visual Studio C++
-
-  # this ensures that the min/max macros of minwindef.h are not used
-  add_definitions(-DNOMINMAX)
-
-  #add_definitions(/W3)
-
-  # add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
-  # set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-  # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+# -----------------------------------------------------------------------------
+# Build options & feature switches
+# -----------------------------------------------------------------------------
+set(_lib3mf_using_vcpkg OFF)
+if(DEFINED CMAKE_TOOLCHAIN_FILE AND CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg.cmake")
+    set(_lib3mf_using_vcpkg ON)
 endif()
 
-if (BUILD_FOR_CODECOVERAGE)
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -Wall -fprofile-arcs -ftest-coverage -DCREATEJOURNAL")
-  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0 -Wall -W -fprofile-arcs -ftest-coverage")
-  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
+set(_lib3mf_default_bundled ON)
+if(_lib3mf_using_vcpkg)
+    set(_lib3mf_default_bundled OFF)
 endif()
 
+option(USE_INCLUDED_ZLIB "Build lib3mf with the bundled zlib sources" ${_lib3mf_default_bundled})
+option(USE_INCLUDED_LIBZIP "Build lib3mf with the bundled libzip sources" ${_lib3mf_default_bundled})
+option(USE_INCLUDED_SSL "Build tests with the bundled LibreSSL sources" ${_lib3mf_default_bundled})
+option(STRIP_BINARIES "Strip binaries on non-Apple platforms" ON)
+option(USE_PLATFORM_UUID "Use the platform supplied UUID implementation" OFF)
 
-set(CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED ${CMAKE_CURRENT_SOURCE_DIR}/Autogenerated)
-set(CMAKE_CURRENT_BINARY_DIR_AUTOGENERATED ${CMAKE_CURRENT_BINARY_DIR})
-set(CMAKE_TEMP_HEADER_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/AutomaticComponentToolkit/Lib3MF_component")
-set(ACT_GENERATED_SOURCE
-  ${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Source/lib3mf_interfaceexception.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Source/lib3mf_interfacewrapper.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Source/lib3mf_interfacejournal.cpp
+if(USE_INCLUDED_LIBZIP AND NOT USE_INCLUDED_ZLIB)
+    message(FATAL_ERROR "USE_INCLUDED_LIBZIP=ON requires USE_INCLUDED_ZLIB=ON")
+endif()
+
+set(_lib3mf_tests_default ${_lib3mf_is_top_level})
+option(LIB3MF_TESTS "Build the lib3mf test suite" ${_lib3mf_tests_default})
+option(BUILD_FOR_CODECOVERAGE "Enable coverage instrumentation" OFF)
+
+# -----------------------------------------------------------------------------
+# Compiler configuration
+# -----------------------------------------------------------------------------
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+if(MSVC)
+    add_compile_definitions(NOMINMAX)
+else()
+    add_compile_options(-Wall)
+endif()
+
+if(APPLE)
+    set(CMAKE_MACOSX_RPATH ON)
+endif()
+
+if(BUILD_FOR_CODECOVERAGE)
+    add_compile_options(-g -O0 -fprofile-arcs -ftest-coverage)
+    add_link_options(-fprofile-arcs -ftest-coverage)
+endif()
+
+# -----------------------------------------------------------------------------
+# Helper utilities & source aggregation
+# -----------------------------------------------------------------------------
+include(cmake/lib3mfProjectAPI.cmake)
+
+set(CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED "${CMAKE_CURRENT_SOURCE_DIR}/Autogenerated")
+set(CMAKE_CURRENT_BINARY_DIR_AUTOGENERATED "${CMAKE_CURRENT_BINARY_DIR}")
+
+# Autogenerated interface stubs
+set(LIB3MF_GENERATED_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Source/lib3mf_interfaceexception.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Source/lib3mf_interfacewrapper.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Source/lib3mf_interfacejournal.cpp"
 )
 
 include(Source/CMakeLists.txt)
-#########################################################
-# Set version info
+
+# Version metadata for resource generation
 if(DEFINED ENV{BUILD_NUMBER})
-  set(BUILD_NUMBER $ENV{BUILD_NUMBER})
+    set(BUILD_NUMBER $ENV{BUILD_NUMBER})
 else()
-  set(BUILD_NUMBER 0)
+    set(BUILD_NUMBER 0)
 endif()
 
-if (WIN32)
-  message("BUILD_NUMBER ... " ${BUILD_NUMBER})
-  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/Include/VersionInfo)
-
-  include(generate_product_version)
+set(VERSION_FILES_OUTPUTLOCATION "")
+if(WIN32)
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Include/VersionInfo")
+    include(generate_product_version)
     generate_product_version(
-    VERSION_FILES_OUTPUTLOCATION
-    NAME "lib3mf"
-    FILE_DESCRIPTION "lib3mf is an implementation of the 3D Manufacturing Format file standard"
-    BUNDLE "3MF Consortium"
-    VERSION_MAJOR ${LIB3MF_VERSION_MAJOR}
-    VERSION_MINOR ${LIB3MF_VERSION_MINOR}
-    VERSION_PATCH ${LIB3MF_VERSION_MICRO}
-    VERSION_REVISION ${BUILD_NUMBER}
-    PRODUCT_VERSION_MAJOR ${LIB3MF_VERSION_MAJOR}
-    PRODUCT_VERSION_MINOR ${LIB3MF_VERSION_MINOR}
-    PRODUCT_VERSION_PATCH ${LIB3MF_VERSION_MICRO}
-    PRODUCT_VERSION_REVISION ${LIB3MF_VERSION_PRERELEASE}
-    COMPANY_NAME "3MF Consortium"
-  )
-  message("VERSION_FILES_OUTPUTLOCATION ... " ${VERSION_FILES_OUTPUTLOCATION})
-else()
-  set(VERSION_FILES_OUTPUTLOCATION "")
+        VERSION_FILES_OUTPUTLOCATION
+        NAME "lib3mf"
+        FILE_DESCRIPTION "lib3mf is an implementation of the 3D Manufacturing Format file standard"
+        BUNDLE "3MF Consortium"
+        VERSION_MAJOR ${PROJECT_VERSION_MAJOR}
+        VERSION_MINOR ${PROJECT_VERSION_MINOR}
+        VERSION_PATCH ${PROJECT_VERSION_PATCH}
+        VERSION_REVISION ${BUILD_NUMBER}
+        PRODUCT_VERSION_MAJOR ${PROJECT_VERSION_MAJOR}
+        PRODUCT_VERSION_MINOR ${PROJECT_VERSION_MINOR}
+        PRODUCT_VERSION_PATCH ${PROJECT_VERSION_PATCH}
+        PRODUCT_VERSION_REVISION ${LIB3MF_VERSION_PRERELEASE}
+        COMPANY_NAME "3MF Consortium"
+    )
 endif()
 
-
-#########################################################
-# Shared library
-add_library(${PROJECT_NAME} SHARED ${SRCS_COMMON} ${HDRS_COMMON}
-  ${ACT_GENERATED_SOURCE}
-  ${VERSION_FILES_OUTPUTLOCATION}
-)
-
-if (${MSVC})
-  # using Visual Studio C++
-
-  # Allow unnamed structs and ensures that the min/max macros of minwindef.h are not used
-
-  # Note the generator expression to limit the scope to c++ compiler, otherwise the RC compiler would get the arguments as well.
-  # Works with ninja, but not with the VS build generators
-  if (CMAKE_GENERATOR MATCHES "Ninja")
-    target_compile_options(${PROJECT_NAME} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-DNOMINMAX /Wv:18>)
-  else()
-    target_compile_options(${PROJECT_NAME} PUBLIC -DNOMINMAX /Wv:18)
-  endif()
+# -----------------------------------------------------------------------------
+# Library target
+# -----------------------------------------------------------------------------
+add_library(lib3mf ${SRCS_COMMON} ${LIB3MF_GENERATED_SOURCES} ${VERSION_FILES_OUTPUTLOCATION})
+add_library(lib3mf::lib3mf ALIAS lib3mf)
+if(HDRS_COMMON)
+    target_sources(lib3mf PRIVATE ${HDRS_COMMON})
 endif()
 
-SOURCE_GROUP("Source Files\\Autogenerated" FILES ${ACT_GENERATED_SOURCE})
-
-
-file(GLOB
-    LIBS_INCLUDE
-    LIST_DIRECTORIES true
-    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/*/Include
+target_include_directories(lib3mf
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Include/API>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Bindings/Cpp>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Bindings/Cpp>
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Source
 )
-list(FILTER LIBS_INCLUDE EXCLUDE REGEX "zlib|libzip|libressl")
-target_include_directories(${PROJECT_NAME} PRIVATE ${LIBS_INCLUDE})
 
-# allow FASTFLOAT_ALLOWS_LEADING_PLUS
-add_definitions(-DFASTFLOAT_ALLOWS_LEADING_PLUS=1)
+target_compile_definitions(lib3mf PRIVATE FASTFLOAT_ALLOWS_LEADING_PLUS=1)
+if(BUILD_SHARED_LIBS)
+    target_compile_definitions(lib3mf PRIVATE __LIB3MF_EXPORTS)
+endif()
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Source)
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include/API)
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+lib3mf_add_thirdparty_includes(lib3mf)
 
-if (USE_INCLUDED_LIBZIP)
-    # Something goes here to check if submodules exist and initialize the submodules if it does not
-    target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/libzip/Include)
+# -----------------------------------------------------------------------------
+# Dependency configuration
+# -----------------------------------------------------------------------------
+
+# Bundled libzip configuration
+if(USE_INCLUDED_LIBZIP)
+    target_include_directories(lib3mf PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/libzip/Include
+        ${CMAKE_CURRENT_BINARY_DIR}/libzip)
     if(MSVC)
-      target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
-      target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_NONSTDC_NO_DEPRECATE)
+        target_compile_definitions(lib3mf PRIVATE _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE)
     endif()
     if(WIN32)
-      target_link_libraries(${PROJECT_NAME} PRIVATE advapi32)
-      # disable win32 build failing 'initializing': conversion from 'zip_uint64_t' to 'size_t', possible loss of data 
-      if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
-        target_compile_options(${PROJECT_NAME} PRIVATE /wd4244)
-      endif()
+        target_link_libraries(lib3mf PRIVATE advapi32)
+        if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+            target_compile_options(lib3mf PRIVATE /wd4244)
+        endif()
     endif()
-
-    # create libzip autogenerated platform specific headers
-    if(NOT EXISTS ${CMAKE_BINARY_DIR}/libzip)
-    execute_process(
-      COMMAND ${CMAKE_COMMAND} "-DZLIB_INCLUDE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/submodules/zlib" 
-            "-DZLIB_LIBRARY=zlibstatic" "-DENABLE_COMMONCRYPTO=OFF" "-DENABLE_GNUTLS=OFF" "-DENABLE_MBEDTLS=OFF" 
-            "-DENABLE_OPENSSL=OFF" "-DENABLE_WINDOWS_CRYPTO=OFF" 
-            "-DENABLE_BZIP2=OFF" "-DENABLE_LZMA=OFF" "-DENABLE_ZSTD=OFF"
-            "-DBUILD_TOOLS=OFF" "-DBUILD_REGRESS=OFF"
-            "-DBUILD_EXAMPLES=OFF" "-DBUILD_DOC=OFF" "-DBUILD_SHARED_LIBS=OFF" "-DLIBZIP_DO_INSTALL=OFF"
-            "-S" "${CMAKE_CURRENT_SOURCE_DIR}/submodules/libzip" "-B" "${CMAKE_CURRENT_BINARY_DIR}/libzip"   
-      RESULT_VARIABLE CMD_ERROR
-      OUTPUT_QUIET)
-    MESSAGE( STATUS "CMD_ERROR:" ${CMD_ERROR})
+    if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/libzip/config.h")
+        execute_process(
+            COMMAND ${CMAKE_COMMAND}
+                -DZLIB_INCLUDE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/submodules/zlib
+                -DZLIB_LIBRARY=zlibstatic
+                -DENABLE_COMMONCRYPTO=OFF
+                -DENABLE_GNUTLS=OFF
+                -DENABLE_MBEDTLS=OFF
+                -DENABLE_OPENSSL=OFF
+                -DENABLE_WINDOWS_CRYPTO=OFF
+                -DENABLE_BZIP2=OFF
+                -DENABLE_LZMA=OFF
+                -DENABLE_ZSTD=OFF
+                -DBUILD_TOOLS=OFF
+                -DBUILD_REGRESS=OFF
+                -DBUILD_EXAMPLES=OFF
+                -DBUILD_DOC=OFF
+                -DBUILD_SHARED_LIBS=OFF
+                -DLIBZIP_DO_INSTALL=OFF
+                -S ${CMAKE_CURRENT_SOURCE_DIR}/submodules/libzip
+                -B ${CMAKE_CURRENT_BINARY_DIR}/libzip
+            RESULT_VARIABLE _libzip_configure_result
+            OUTPUT_QUIET
+        )
+        if(_libzip_configure_result)
+            message(WARNING "Failed to configure bundled libzip (code ${_libzip_configure_result}).")
+        endif()
     endif()
-    target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/libzip)
-
-    if (UNIX OR MINGW)
-      target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_FSEEKO")
-      target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_FTELLO")
-      target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_STRCASECMP")
-      target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_UNISTD_H")
-    endif()
-
 else()
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(LIBZIP REQUIRED libzip)
-    target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
-endif()
-
-
-if (USE_INCLUDED_ZLIB)
-    target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zlib/Include)
-else()
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(ZLIB REQUIRED zlib)
-    target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
-endif()
-
-
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/submodules/fast_float/include)
-
-
-set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "" )
-# This makes sure symbols are exported
-target_compile_options(${PROJECT_NAME} PRIVATE "-D__LIB3MF_EXPORTS")
-# The following two properties are crucial to reduce the number of undesirably exported symbols
-set_target_properties(${PROJECT_NAME} PROPERTIES C_VISIBILITY_PRESET hidden)
-set_target_properties(${PROJECT_NAME} PROPERTIES CXX_VISIBILITY_PRESET hidden)
-set_target_properties(${PROJECT_NAME} PROPERTIES VISIBILITY_INLINES_HIDDEN ON)
-
-set(STARTUPPROJECT ${PROJECT_NAME})
-
-#########################################################
-if (UNIX OR MINGW)
-  # Uncomment the following to put the version info into the .so-file.
-  set_target_properties(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
-  set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
-  if (STRIP_BINARIES AND NOT APPLE)
-    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS -s)
-  endif()
-else()
-  # wd4996 masks the deprecated-warning
-  target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/sdl;/W3;/WX;/FC;/wd4996>")
-  target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
-endif()
-
-## UUID
-if(WIN32)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE GUID_WINDOWS)
-	target_link_libraries(${PROJECT_NAME} PRIVATE ole32 uuid)
-else()
-  if (USE_PLATFORM_UUID)
-    if (APPLE)
-      target_compile_definitions(${PROJECT_NAME} PRIVATE GUID_CFUUID)
-      target_link_libraries(${PROJECT_NAME} "-framework Foundation")
+    find_package(libzip CONFIG QUIET)
+    if(libzip_FOUND)
+        target_link_libraries(lib3mf PUBLIC libzip::zip)
     else()
-      target_compile_definitions(${PROJECT_NAME} PRIVATE GUID_LIBUUID)
-      target_link_libraries(${PROJECT_NAME} PRIVATE uuid)
+        find_package(PkgConfig REQUIRED)
+        pkg_check_modules(LIBZIP REQUIRED libzip)
+        target_include_directories(lib3mf PUBLIC ${LIBZIP_INCLUDE_DIRS})
+        target_link_libraries(lib3mf PUBLIC ${LIBZIP_LIBRARIES})
     endif()
-  else()
-    target_compile_definitions(${PROJECT_NAME} PRIVATE GUID_CUSTOM)
-  endif()
-endif(WIN32)
+endif()
 
-configure_file(lib3mf.pc.in lib3mf.pc @ONLY)
-install(FILES ${CMAKE_BINARY_DIR}/lib3mf.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-install(FILES cmake/lib3mfConfig.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/lib3mf)
-install(TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Bindings DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+# Bundled zlib configuration
+if(USE_INCLUDED_ZLIB)
+    target_include_directories(lib3mf PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zlib/Include)
+else()
+    find_package(ZLIB REQUIRED)
+    target_link_libraries(lib3mf PUBLIC ZLIB::ZLIB)
+endif()
 
-#########################################################
-option(LIB3MF_TESTS "Switch whether the tests of lib3mf should be build" ON)
-message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
+# fast_float: use system package when available
+find_package(fast_float CONFIG QUIET)
+if(fast_float_FOUND)
+    target_link_libraries(lib3mf PUBLIC fast_float::fast_float)
+else()
+    target_include_directories(lib3mf PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/submodules/fast_float/include)
+endif()
 
+lib3mf_configure_uuid(lib3mf)
+
+set_target_properties(lib3mf PROPERTIES
+    PREFIX ""
+    IMPORT_PREFIX ""
+    C_VISIBILITY_PRESET hidden
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN ON
+    POSITION_INDEPENDENT_CODE ON
+)
+
+# Platform specific adjustments
+if(UNIX AND NOT APPLE)
+    if(STRIP_BINARIES)
+        target_link_options(lib3mf PRIVATE -s)
+    endif()
+endif()
+
+if(UNIX)
+    set_target_properties(lib3mf PROPERTIES
+        VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${BUILD_NUMBER}"
+        SOVERSION "${PROJECT_VERSION_MAJOR}"
+    )
+elseif(MSVC)
+    target_compile_options(lib3mf PRIVATE
+        $<$<CONFIG:DEBUG>:/Od;/Ob0;/sdl;/W3;/WX;/FC;/wd4996>
+        $<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>
+    )
+endif()
+
+set(STARTUPPROJECT lib3mf)
+if(MSVC)
+    if(CMAKE_VERSION VERSION_LESS 3.6.3)
+        message(STATUS "Select lib3mf manually as the startup project in Visual Studio.")
+    else()
+        set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${STARTUPPROJECT})
+    endif()
+endif()
+
+# -----------------------------------------------------------------------------
+# Installation & CMake package export
+# -----------------------------------------------------------------------------
+# Compute pkg-config metadata based on dependency choices
+set(_lib3mf_pkgconfig_requires)
+set(LIB3MF_PKGCONFIG_LIBS "-l3mf")
+
+if(NOT USE_INCLUDED_LIBZIP)
+    list(APPEND _lib3mf_pkgconfig_requires libzip)
+    string(APPEND LIB3MF_PKGCONFIG_LIBS " -lzip")
+endif()
+
+if(NOT USE_INCLUDED_ZLIB)
+    list(APPEND _lib3mf_pkgconfig_requires zlib)
+    string(APPEND LIB3MF_PKGCONFIG_LIBS " -lz")
+endif()
+
+if(_lib3mf_pkgconfig_requires)
+    string(REPLACE ";" " " LIB3MF_PKGCONFIG_REQUIRES "${_lib3mf_pkgconfig_requires}")
+else()
+    set(LIB3MF_PKGCONFIG_REQUIRES "")
+endif()
+
+set(LIB3MF_PKGCONFIG_VERSION ${LIB3MF_VERSION_STRING})
+configure_file(lib3mf.pc.in ${CMAKE_CURRENT_BINARY_DIR}/lib3mf.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/lib3mf.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+
+install(TARGETS lib3mf
+    EXPORT lib3mfTargets
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Bindings
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    cmake/lib3mfConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/lib3mfConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/lib3mf
+)
+
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/lib3mfConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+install(EXPORT lib3mfTargets
+    FILE lib3mfTargets.cmake
+    NAMESPACE lib3mf::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/lib3mf
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/lib3mfConfig.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/lib3mfConfigVersion.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/lib3mf
+)
+
+export(EXPORT lib3mfTargets
+    FILE ${CMAKE_CURRENT_BINARY_DIR}/lib3mfTargets.cmake
+    NAMESPACE lib3mf::)
+
+# -----------------------------------------------------------------------------
+# Tests
+# -----------------------------------------------------------------------------
 if(LIB3MF_TESTS)
-  enable_testing()
-  add_subdirectory(Tests)
+    enable_testing()
+    add_subdirectory(Tests)
 endif()
 
-#########################################################
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-  IF(${CMAKE_VERSION} VERSION_LESS 3.6.3)
-    MESSAGE ("Note: You need to manually select a StartUp-project in Visual Studio.")
-  ELSE()
-    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${STARTUPPROJECT})
-  ENDIF()
+# -----------------------------------------------------------------------------
+# Binary/source packaging (top-level builds only)
+# -----------------------------------------------------------------------------
+if(_lib3mf_is_top_level)
+    set(CPACK_PACKAGE_NAME "lib3mf")
+    set(CPACK_PACKAGE_VENDOR "3MF Consortium")
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "lib3mf - An implementation of the 3D Manufacturing Format file standard")
+    set(CPACK_PACKAGE_VERSION "${LIB3MF_VERSION_STRING}")
+    set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+    set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+    set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
+    set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
+    set(CPACK_PACKAGE_CONTACT "lib3mf@3mf.io")
+    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "3MF Consortium")
+    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_NAME}")
+    set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Source")
+    include(CPack)
 endif()
-
-
-#########################################################
-set(CPACK_PACKAGE_NAME "lib3mf")
-set(CPACK_PACKAGE_VENDOR "3MF Consortium")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "lib3mf - An implementation of the 3D Manufacturing Format file standard")
-set(CPACK_PACKAGE_VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}")
-set(CPACK_PACKAGE_VERSION_MAJOR "${LIB3MF_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${LIB3MF_VERSION_MINOR}")
-set(CPACK_PACKAGE_VERSION_PATCH "${LIB3MF_VERSION_MICRO}")
-set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
-set(CPACK_PACKAGE_CONTACT "lib3mf@3mf.io")
-set(CPACK_DEBIAN_PACKAGE_MAINTAINER "3MF Consortium")
-set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_NAME}")
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Source")
-
-#########################################################
-include(CPack)
