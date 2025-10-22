@@ -71,12 +71,14 @@ endif()
 
 target_link_libraries(${TESTNAME} PRIVATE lib3mf::lib3mf)
 
-if (USE_INCLUDED_SSL)
-    target_include_directories(${TESTNAME} PRIVATE ${PROJECT_SOURCE_DIR}/Libraries/libressl/include)
-    target_link_libraries(${TESTNAME} PRIVATE ssl crypto)
-else()
-    find_package(OpenSSL REQUIRED)
-    target_link_libraries(${TESTNAME} PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+if(UNIX)
+    if (USE_INCLUDED_SSL)
+        target_include_directories(${TESTNAME} PRIVATE ${PROJECT_SOURCE_DIR}/Libraries/libressl/include)
+        target_link_libraries(${TESTNAME} PRIVATE ssl crypto)
+    else()
+        find_package(OpenSSL REQUIRED)
+        target_link_libraries(${TESTNAME} PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+    endif()
 endif()
 
 if (WIN32)
@@ -94,12 +96,21 @@ set_target_properties(${TESTNAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_C
 
 # Enable fine-grained GoogleTest discovery instead of one monolithic test entry
 include(GoogleTest)
+if(WIN32)
+    set(_lib3mf_test_env "PATH=$<TARGET_FILE_DIR:lib3mf>\\;$ENV{PATH}")
+elseif(APPLE)
+    set(_lib3mf_test_env "DYLD_LIBRARY_PATH=$<TARGET_FILE_DIR:lib3mf>:$ENV{DYLD_LIBRARY_PATH}")
+else()
+    set(_lib3mf_test_env "LD_LIBRARY_PATH=$<TARGET_FILE_DIR:lib3mf>:$ENV{LD_LIBRARY_PATH}")
+endif()
 gtest_discover_tests(
 	${TESTNAME}
 	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 	DISCOVERY_TIMEOUT 60
 	# Avoid re-running discovery on every build unless sources change
-	PROPERTIES VS_TEST_CATEGORY "CPP_Bindings"
+	PROPERTIES
+        VS_TEST_CATEGORY "CPP_Bindings"
+        ENVIRONMENT "${_lib3mf_test_env}"
 )
 
 find_program(VALGRIND "valgrind")
