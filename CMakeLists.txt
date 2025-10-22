@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.11)
 
 # Detect whether we are the root project (vs. included as a subdirectory)
 set(_lib3mf_is_top_level OFF)
-if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     set(_lib3mf_is_top_level ON)
 endif()
 
@@ -230,6 +230,9 @@ endif()
 # Bundled zlib configuration
 if(USE_INCLUDED_ZLIB)
     target_include_directories(lib3mf PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zlib/Include)
+    if(APPLE)
+        target_compile_definitions(lib3mf PRIVATE Z_HAVE_UNISTD_H=1 HAVE_UNISTD_H=1)
+    endif()
 else()
     find_package(ZLIB REQUIRED)
     target_link_libraries(lib3mf PUBLIC ZLIB::ZLIB)
