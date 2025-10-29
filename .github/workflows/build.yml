@@ -110,7 +110,7 @@ jobs:
           path: dist/${{ env.ARTIFACT_NAME_RPM }}
 
   build-macos:
-    runs-on: macos-latest
+    runs-on: macos-15
     needs: [set-lib3mf-version]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
@@ -143,7 +143,7 @@ jobs:
           path: build/${{ env.ARTIFACT_NAME }}
 
   build-macos-debug:
-    runs-on: macos-latest
+    runs-on: macos-15
     needs: [set-lib3mf-version]
     steps:
       - uses: actions/checkout@v4
@@ -161,7 +161,7 @@ jobs:
           path: build/lib3mf.dylib
 
   codecoverage-macos:
-    runs-on: macos-latest
+    runs-on: macos-15
     needs: [set-lib3mf-version]
     steps:
       - uses: actions/checkout@v4

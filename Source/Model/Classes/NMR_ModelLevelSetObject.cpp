@@ -189,6 +189,7 @@ namespace NMR
 
         if (m_pVolumeData)
         {
+            dependencies.push_back(m_pVolumeData->getPackageResourceID());
             // concatenate dependencies
             auto volumeDataDependencies = m_pVolumeData->getDependencies();
             dependencies.insert(dependencies.end(), volumeDataDependencies.begin(), volumeDataDependencies.end());

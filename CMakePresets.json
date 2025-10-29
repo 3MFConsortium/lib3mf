@@ -99,6 +99,21 @@
     ],
     "buildPresets": [
         {
+            "name": "x64-debug",
+            "displayName": "Build (Windows x64 Debug)",
+            "configurePreset": "x64-debug"
+        },
+        {
+            "name": "x64-release",
+            "displayName": "Build (Windows x64 Release)",
+            "configurePreset": "x64-release"
+        },
+        {
+            "name": "x64-release-debug",
+            "displayName": "Build (Windows x64 Release with Debug)",
+            "configurePreset": "x64-release-debug"
+        },
+        {
             "name": "linux-debug",
             "displayName": "Build (Linux Debug)",
             "configurePreset": "linux-debug"
@@ -115,6 +130,30 @@
         }
     ],
     "testPresets": [
+        {
+            "name": "x64-debug",
+            "displayName": "Test (Windows x64 Debug)",
+            "configurePreset": "x64-debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "x64-release",
+            "displayName": "Test (Windows x64 Release)",
+            "configurePreset": "x64-release",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "x64-release-debug",
+            "displayName": "Test (Windows x64 Release with Debug)",
+            "configurePreset": "x64-release-debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
         {
             "name": "linux-debug",
             "displayName": "Test (Linux Debug)",
