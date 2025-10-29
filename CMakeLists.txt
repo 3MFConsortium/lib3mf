@@ -19,6 +19,11 @@ project(lib3mf
   DESCRIPTION "An implementation of the 3D Manufacturing Format file standard"
 )
 
+# macOS: ensure zlib includes <unistd.h> (affects ALL targets incl. Tests)
+if(APPLE)
+  add_compile_definitions(Z_HAVE_UNISTD_H=1)
+endif()
+
 find_program(buildcache_program buildcache)
 if(buildcache_program)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${buildcache_program}")
