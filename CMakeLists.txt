@@ -232,6 +232,7 @@ if (UNIX OR MINGW)
   # Uncomment the following to put the version info into the .so-file.
   set_target_properties(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
   set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wno-incompatible-pointer-types)
   if (STRIP_BINARIES AND NOT APPLE)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS -s)
   endif()
