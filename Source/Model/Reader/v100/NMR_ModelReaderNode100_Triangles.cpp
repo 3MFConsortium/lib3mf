@@ -40,6 +40,7 @@ XML Model Stream.
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Model/Reader/NMR_ModelReader_ColorMapping.h"
+#include "Common/Math/NMR_Vector.h"
 
 namespace NMR {
 
@@ -54,6 +55,7 @@ namespace NMR {
 		m_nDefaultResourceIndex = nDefaultPropertyIndex;
 
 		m_nUsedResourceID = 0;
+		m_nTriangleElementIndex = 0;
 
 		m_pModel = pModel;
 		m_pMesh = pMesh;
@@ -98,6 +100,12 @@ namespace NMR {
 		return pProperties;
 	}
 
+	bool CModelReaderNode100_Triangles::isStrictModeActive() const
+	{
+		if (m_pWarnings)
+			return m_pWarnings->getCriticalWarningLevel() == mrwInvalidOptionalValue;
+		return false;
+	}
 
 	void CModelReaderNode100_Triangles::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
@@ -115,11 +123,40 @@ namespace NMR {
 				nfInt32 nIndex1, nIndex2, nIndex3;
 				pXMLNode->retrieveIndices(nIndex1, nIndex2, nIndex3, m_pMesh->getNodeCount());
 
-				// Create face if valid
-				if ((nIndex1 != nIndex2) && (nIndex1 != nIndex3) && (nIndex2 != nIndex3)) {
-					MESHNODE * pNode1 = m_pMesh->getNode(nIndex1);
-					MESHNODE * pNode2 = m_pMesh->getNode(nIndex2);
-					MESHNODE * pNode3 = m_pMesh->getNode(nIndex3);
+				static const nfFloat fDegenerateEpsilon = 1e-12f;
+				bool bDegenerate = false;
+
+				if ((nIndex1 == nIndex2) || (nIndex1 == nIndex3) || (nIndex2 == nIndex3)) {
+					bDegenerate = true;
+				}
+
+				MESHNODE * pNode1 = m_pMesh->getNode(nIndex1);
+				MESHNODE * pNode2 = m_pMesh->getNode(nIndex2);
+				MESHNODE * pNode3 = m_pMesh->getNode(nIndex3);
+
+				if (!bDegenerate) {
+					NVEC3 vEdge1 = fnVEC3_sub(pNode2->m_position, pNode1->m_position);
+					NVEC3 vEdge2 = fnVEC3_sub(pNode3->m_position, pNode1->m_position);
+					NVEC3 vNormal = fnVEC3_crossproduct(vEdge1, vEdge2);
+
+					nfFloat fNormalSquared =
+						(vNormal.m_fields[0] * vNormal.m_fields[0]) +
+						(vNormal.m_fields[1] * vNormal.m_fields[1]) +
+						(vNormal.m_fields[2] * vNormal.m_fields[2]);
+
+					if (fNormalSquared <= fDegenerateEpsilon)
+						bDegenerate = true;
+				}
+
+				if (bDegenerate) {
+					if (isStrictModeActive())
+						throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATEINDICES);
+
+					m_pMesh->addDegenerateTriangle(m_nTriangleElementIndex, nIndex1, nIndex2, nIndex3);
+					if (m_pWarnings)
+						m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDMODELCOORDINATEINDICES), mrwInvalidOptionalValue);
+				}
+				else {
 					MESHFACE * pFace = m_pMesh->addFace(pNode1, pNode2, pNode3);
 
 					ModelResourceID nModelResourceID = 0;
@@ -167,8 +204,8 @@ namespace NMR {
 
 					}
 				}
-				else
-					throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATEINDICES);
+
+				m_nTriangleElementIndex++;
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

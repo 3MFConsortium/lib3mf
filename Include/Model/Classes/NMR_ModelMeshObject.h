@@ -98,6 +98,13 @@ namespace NMR {
 		PModelTriangleSet findTriangleSet (const std::string & sIdentifier);
 		uint32_t getTriangleSetCount();
 		PModelTriangleSet getTriangleSet(const uint32_t nIndex);
+
+		void clearDegenerateTriangles();
+		nfBool hasDegenerateTriangles() const;
+		nfUint32 getDegenerateTriangleCount() const;
+		const MESHDEGENERATETRIANGLE & getDegenerateTriangle(_In_ nfUint32 nIndex) const;
+		const MESHDEGENERATETRIANGLEVECTOR & getDegenerateTriangles() const;
+		void addDegenerateTriangle(_In_ nfUint32 nTriangleElementIndex, _In_ nfInt32 nNodeIndex1, _In_ nfInt32 nNodeIndex2, _In_ nfInt32 nNodeIndex3);
 		
 
 	};

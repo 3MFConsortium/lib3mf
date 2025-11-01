@@ -505,11 +505,51 @@ namespace NMR {
 		return true;
 	}
 
+	void CMesh::addDegenerateTriangle(_In_ nfUint32 nTriangleElementIndex, _In_ nfInt32 nNodeIndex1, _In_ nfInt32 nNodeIndex2, _In_ nfInt32 nNodeIndex3)
+	{
+		MESHDEGENERATETRIANGLE sRecord;
+		sRecord.m_nTriangleElementIndex = nTriangleElementIndex;
+		sRecord.m_nNodeIndices[0] = nNodeIndex1;
+		sRecord.m_nNodeIndices[1] = nNodeIndex2;
+		sRecord.m_nNodeIndices[2] = nNodeIndex3;
+
+		m_DegenerateTriangles.push_back(sRecord);
+	}
+
+	void CMesh::clearDegenerateTriangles()
+	{
+		m_DegenerateTriangles.clear();
+	}
+
+	nfBool CMesh::hasDegenerateTriangles() const
+	{
+		return !m_DegenerateTriangles.empty();
+	}
+
+	nfUint32 CMesh::getDegenerateTriangleCount() const
+	{
+		return (nfUint32)m_DegenerateTriangles.size();
+	}
+
+	const MESHDEGENERATETRIANGLE & CMesh::getDegenerateTriangle(_In_ nfUint32 nIdx) const
+	{
+		if (nIdx >= m_DegenerateTriangles.size())
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		return m_DegenerateTriangles[nIdx];
+	}
+
+	const MESHDEGENERATETRIANGLEVECTOR & CMesh::getDegenerateTriangleRecords() const
+	{
+		return m_DegenerateTriangles;
+	}
+
 	void CMesh::clear()
 	{
 		m_pMeshInformationHandler.reset();
 		m_Faces.clearAllData();
 		m_Nodes.clearAllData();
+		clearDegenerateTriangles();
 		clearBeamLattice();
 	}
 	

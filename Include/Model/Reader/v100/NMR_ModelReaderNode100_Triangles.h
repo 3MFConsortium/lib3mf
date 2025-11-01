@@ -50,11 +50,13 @@ namespace NMR {
 		PPackageResourceID m_pObjectLevelPropertyID;
 		ModelResourceIndex m_nDefaultResourceIndex;
 		ModelResourceID m_nUsedResourceID;
+		nfUint32 m_nTriangleElementIndex;
 
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
 		_Ret_notnull_ CMeshInformation_Properties * createPropertiesInformation();
+		bool isStrictModeActive() const;
 	public:
 		CModelReaderNode100_Triangles() = delete;
 		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelWarnings pWarnings,

@@ -48,6 +48,7 @@ You can only add nodes and faces to mesh. You cannot remove the existing structu
 #include "Common/Mesh/NMR_BeamLattice.h"
 
 #include <map>
+#include <vector>
 
 namespace NMR {
 
@@ -57,6 +58,7 @@ namespace NMR {
 		MESHFACES m_Faces;
 		CBeamLattice m_BeamLattice;
 
+		MESHDEGENERATETRIANGLEVECTOR m_DegenerateTriangles;
 
 
 		PMeshInformationHandler m_pMeshInformationHandler;
@@ -109,6 +111,13 @@ namespace NMR {
 		eModelBeamLatticeCapMode getBeamLatticeCapMode();
 
 		nfBool checkSanity();
+
+		void addDegenerateTriangle(_In_ nfUint32 nTriangleElementIndex, _In_ nfInt32 nNodeIndex1, _In_ nfInt32 nNodeIndex2, _In_ nfInt32 nNodeIndex3);
+		void clearDegenerateTriangles();
+		nfBool hasDegenerateTriangles() const;
+		nfUint32 getDegenerateTriangleCount() const;
+		const MESHDEGENERATETRIANGLE & getDegenerateTriangle(_In_ nfUint32 nIdx) const;
+		const MESHDEGENERATETRIANGLEVECTOR & getDegenerateTriangleRecords() const;
 
 		void clear();
 		void clearBeamLattice();

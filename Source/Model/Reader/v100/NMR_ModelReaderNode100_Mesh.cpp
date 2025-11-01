@@ -76,6 +76,8 @@ namespace NMR {
 		// Parse attribute
 		parseAttributes(pXMLReader);
 
+		m_pMesh->clearDegenerateTriangles();
+
 		// Parse Content
 		parseContent(pXMLReader);
 

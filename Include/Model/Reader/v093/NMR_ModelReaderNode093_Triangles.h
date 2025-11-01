@@ -53,11 +53,13 @@ namespace NMR {
 		PModelReader_ColorMapping m_pColorMapping;
 		PModelReader_TexCoordMapping m_pTexCoordMapping;
 		PModelBaseMaterialResource m_pDefaultMaterialResource;
+		nfUint32 m_nTriangleElementIndex;
 
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
 		_Ret_notnull_ CMeshInformation_Properties * createPropertiesInformation();
+		bool isStrictModeActive() const;
 	public:
 		CModelReaderNode093_Triangles() = delete;
 		CModelReaderNode093_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, PModelBaseMaterialResource pMaterialResource, _In_ PModelWarnings pWarnings);

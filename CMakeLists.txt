@@ -10,7 +10,7 @@ include(GNUInstallDirs)
 
 # Define Version
 set(LIB3MF_VERSION_MAJOR 2)        # increase on every backward-compatibility breaking change of the API
-set(LIB3MF_VERSION_MINOR 4)        # increase on every backward compatible change of the API
+set(LIB3MF_VERSION_MINOR 5)        # increase on every backward compatible change of the API
 set(LIB3MF_VERSION_MICRO 0)        # increase on on every change that does not alter the API
 set(LIB3MF_VERSION_PRERELEASE "")  # denotes pre-release information of a version of lib3mf
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment version")
@@ -243,7 +243,7 @@ if (UNIX OR MINGW)
   # Uncomment the following to put the version info into the .so-file.
   set_target_properties(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
   set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
-  target_compile_options(${PROJECT_NAME} PRIVATE -Wno-incompatible-pointer-types)
+  target_compile_options(${PROJECT_NAME} PRIVATE "$<$<COMPILE_LANGUAGE:C>:-Wno-incompatible-pointer-types>")
   if (STRIP_BINARIES AND NOT APPLE)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS -s)
   endif()

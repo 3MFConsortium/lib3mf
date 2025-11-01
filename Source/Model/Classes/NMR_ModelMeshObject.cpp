@@ -327,6 +327,35 @@ namespace NMR {
 
 	}
 
-}
+	void CModelMeshObject::clearDegenerateTriangles()
+	{
+		m_pMesh->clearDegenerateTriangles();
+	}
 
+	nfBool CModelMeshObject::hasDegenerateTriangles() const
+	{
+		return m_pMesh->hasDegenerateTriangles();
+	}
+
+	nfUint32 CModelMeshObject::getDegenerateTriangleCount() const
+	{
+		return m_pMesh->getDegenerateTriangleCount();
+	}
+
+	const MESHDEGENERATETRIANGLE & CModelMeshObject::getDegenerateTriangle(_In_ nfUint32 nIndex) const
+	{
+		return m_pMesh->getDegenerateTriangle(nIndex);
+	}
+
+	const MESHDEGENERATETRIANGLEVECTOR & CModelMeshObject::getDegenerateTriangles() const
+	{
+		return m_pMesh->getDegenerateTriangleRecords();
+	}
+
+	void CModelMeshObject::addDegenerateTriangle(_In_ nfUint32 nTriangleElementIndex, _In_ nfInt32 nNodeIndex1, _In_ nfInt32 nNodeIndex2, _In_ nfInt32 nNodeIndex3)
+	{
+		m_pMesh->addDegenerateTriangle(nTriangleElementIndex, nNodeIndex1, nNodeIndex2, nNodeIndex3);
+	}
+
+}
 

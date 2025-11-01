@@ -39,6 +39,7 @@ In addition, some constants are defined here.
 #include "Common/NMR_Local.h" 
 #include "Common/Math/NMR_Geometry.h" 
 #include "Common/NMR_PagedVector.h"
+#include <vector>
 #include <string>
 
 // The maximum allowed number of certain entities (2^31-1)
@@ -98,10 +99,17 @@ namespace NMR {
 	} MESHBALL;
 	typedef CPagedVector<MESHBALL, NMR_MESH_BALLBLOCKCOUNT> MESHBALLS;
 
-  typedef struct {
-    nfInt32 m_index;
-    NVEC2 m_position;
-  } SLICENODE;
+	typedef struct {
+		nfInt32 m_index;
+		NVEC2 m_position;
+	} SLICENODE;
+
+	typedef struct {
+		nfUint32 m_nTriangleElementIndex;
+		nfInt32 m_nNodeIndices[3];
+	} MESHDEGENERATETRIANGLE;
+
+	typedef std::vector<MESHDEGENERATETRIANGLE> MESHDEGENERATETRIANGLEVECTOR;
 }
 
 #endif // __NMR_MESHTYPES

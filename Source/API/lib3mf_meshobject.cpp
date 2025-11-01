@@ -466,3 +466,52 @@ ITriangleSet* CMeshObject::GetTriangleSet(const Lib3MF_uint32 nIndex)
 	return new CTriangleSet(pTriangleSet, pMeshObject);
 }
 
+bool CMeshObject::HasDegenerateTriangles()
+{
+	return mesh()->hasDegenerateTriangles();
+}
+
+Lib3MF_uint32 CMeshObject::GetDegenerateTriangleCount()
+{
+	return mesh()->getDegenerateTriangleCount();
+}
+
+sLib3MFTriangle CMeshObject::GetDegenerateTriangle(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nTriangleElementIndex)
+{
+	const NMR::MESHDEGENERATETRIANGLE & sRecord = mesh()->getDegenerateTriangle(nIndex);
+
+	sLib3MFTriangle sTriangle;
+	sTriangle.m_Indices[0] = sRecord.m_nNodeIndices[0];
+	sTriangle.m_Indices[1] = sRecord.m_nNodeIndices[1];
+	sTriangle.m_Indices[2] = sRecord.m_nNodeIndices[2];
+
+	nTriangleElementIndex = sRecord.m_nTriangleElementIndex;
+
+	return sTriangle;
+}
+
+void CMeshObject::GetDegenerateTriangles(Lib3MF_uint64 nTriangleElementIndicesBufferSize, Lib3MF_uint64* pTriangleElementIndicesNeededCount, Lib3MF_uint32 * pTriangleElementIndicesBuffer, Lib3MF_uint64 nTriangleInfosBufferSize, Lib3MF_uint64* pTriangleInfosNeededCount, sLib3MFTriangle * pTriangleInfosBuffer)
+{
+	Lib3MF_uint32 nCount = mesh()->getDegenerateTriangleCount();
+
+	if (pTriangleElementIndicesNeededCount)
+		*pTriangleElementIndicesNeededCount = nCount;
+	if (pTriangleInfosNeededCount)
+		*pTriangleInfosNeededCount = nCount;
+
+	if ((nTriangleElementIndicesBufferSize >= nCount) && pTriangleElementIndicesBuffer) {
+		for (Lib3MF_uint32 i = 0; i < nCount; ++i) {
+			const NMR::MESHDEGENERATETRIANGLE & sRecord = mesh()->getDegenerateTriangle(i);
+			pTriangleElementIndicesBuffer[i] = sRecord.m_nTriangleElementIndex;
+		}
+	}
+
+	if ((nTriangleInfosBufferSize >= nCount) && pTriangleInfosBuffer) {
+		for (Lib3MF_uint32 i = 0; i < nCount; ++i) {
+			const NMR::MESHDEGENERATETRIANGLE & sRecord = mesh()->getDegenerateTriangle(i);
+			pTriangleInfosBuffer[i].m_Indices[0] = sRecord.m_nNodeIndices[0];
+			pTriangleInfosBuffer[i].m_Indices[1] = sRecord.m_nNodeIndices[1];
+			pTriangleInfosBuffer[i].m_Indices[2] = sRecord.m_nNodeIndices[2];
+		}
+	}
+}

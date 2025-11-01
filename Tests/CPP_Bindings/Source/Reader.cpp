@@ -138,6 +138,36 @@ namespace Lib3MF
 		CheckReaderWarnings(Reader::reader3MF, 0);
 	}
 
+	TEST_F(Reader, DegenerateTriangleNonStrictMode)
+	{
+		reader3MF->SetStrictModeActive(false);
+		reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "DegenerateTriangle.3mf");
+
+		CheckReaderWarnings(reader3MF, 1);
+
+		auto meshObjects = model->GetMeshObjects();
+		ASSERT_EQ(1, meshObjects->Count());
+		ASSERT_TRUE(meshObjects->MoveNext());
+
+		auto meshObject = meshObjects->GetCurrentMeshObject();
+		EXPECT_EQ(1, meshObject->GetTriangleCount());
+		EXPECT_TRUE(meshObject->HasDegenerateTriangles());
+		EXPECT_EQ(1, meshObject->GetDegenerateTriangleCount());
+
+		Lib3MF_uint32 triangleElementIndex = 0;
+		auto degenerateTriangle = meshObject->GetDegenerateTriangle(0, triangleElementIndex);
+		EXPECT_EQ(1, triangleElementIndex);
+		EXPECT_EQ(0, degenerateTriangle.m_Indices[0]);
+		EXPECT_EQ(0, degenerateTriangle.m_Indices[1]);
+		EXPECT_EQ(2, degenerateTriangle.m_Indices[2]);
+	}
+
+	TEST_F(Reader, DegenerateTriangleStrictModeThrows)
+	{
+		reader3MF->SetStrictModeActive(true);
+		ASSERT_SPECIFIC_THROW(reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "DegenerateTriangle.3mf"), ELib3MFException);
+	}
+
 	TEST_F(Reader, Production)
 	{
 		auto buffer = ReadFileIntoBuffer(sTestFilesPath + "/Production/" + "2ProductionBoxes.3mf");

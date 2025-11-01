@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2024" basename="lib3mf" version="2.4.0">
+<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2024" basename="lib3mf" version="2.5.0">
 
 
 	<license>
@@ -1055,6 +1055,21 @@
 		<method name="GetTriangleSet" description="Returns a specific triangle set by index.">
 			<param name="Index" type="uint32" pass="in" description="the index of the triangle set."/>
 			<param name="TheTriangleSet" type="class" class="TriangleSet" pass="return" description="the triangle Set Instance."/>
+		</method>
+		<method name="HasDegenerateTriangles" description="Checks if this mesh contains degenerate triangles collected during import.">
+			<param name="HasDegenerateTriangles" type="bool" pass="return" description="flag whether degenerate triangles are available."/>
+		</method>
+		<method name="GetDegenerateTriangleCount" description="Returns the number of degenerate triangles collected during import.">
+			<param name="Count" type="uint32" pass="return" description="number of collected degenerate triangles."/>
+		</method>
+		<method name="GetDegenerateTriangle" description="Returns information about a single degenerate triangle collected during import.">
+			<param name="Index" type="uint32" pass="in" description="index into the degenerate triangle list (0 to count-1)."/>
+			<param name="TriangleElementIndex" type="uint32" pass="out" description="triangle index within the mesh element list."/>
+			<param name="TriangleInfo" type="struct" class="Triangle" pass="return" description="indices of the degenerate triangle."/>
+		</method>
+		<method name="GetDegenerateTriangles" description="Returns all degenerate triangles collected during import.">
+			<param name="TriangleElementIndices" type="basicarray" class="uint32" pass="out" description="triangle indices within the mesh element list."/>
+			<param name="TriangleInfos" type="structarray" class="Triangle" pass="out" description="indices of all degenerate triangles."/>
 		</method>
 	</class>
 

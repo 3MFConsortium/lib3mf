@@ -143,6 +143,14 @@ public:
 	Lib3MF_uint32 GetTriangleSetCount() override;
 
 	ITriangleSet* GetTriangleSet(const Lib3MF_uint32 nIndex) override;
+
+	bool HasDegenerateTriangles() override;
+
+	Lib3MF_uint32 GetDegenerateTriangleCount() override;
+
+	sLib3MFTriangle GetDegenerateTriangle(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nTriangleElementIndex) override;
+
+	void GetDegenerateTriangles(Lib3MF_uint64 nTriangleElementIndicesBufferSize, Lib3MF_uint64* pTriangleElementIndicesNeededCount, Lib3MF_uint32 * pTriangleElementIndicesBuffer, Lib3MF_uint64 nTriangleInfosBufferSize, Lib3MF_uint64* pTriangleInfosNeededCount, sLib3MFTriangle * pTriangleInfosBuffer) override;
 };
 
 }

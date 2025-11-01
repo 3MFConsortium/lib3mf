@@ -41,6 +41,7 @@ XML Model Stream.
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
+#include "Common/Math/NMR_Vector.h"
 
 namespace NMR {
 
@@ -58,6 +59,7 @@ namespace NMR {
 		m_pColorMapping = pColorMapping;
 		m_pTexCoordMapping = pTexCoordMapping;
 		m_pDefaultMaterialResource = pMaterialResource;
+		m_nTriangleElementIndex = 0;
 	}
 
 	void CModelReaderNode093_Triangles::parseXML(_In_ CXmlReader * pXMLReader)
@@ -96,12 +98,39 @@ namespace NMR {
 				pXMLNode->retrieveIndices(nIndex1, nIndex2, nIndex3, m_pMesh->getNodeCount());
 
 				nfInt32 nTextureIndex1, nTextureIndex2, nTextureIndex3;
+				static const nfFloat fDegenerateEpsilon = 1e-12f;
+				bool bDegenerate = false;
 
-				// Create face if valid
-				if ((nIndex1 != nIndex2) && (nIndex1 != nIndex3) && (nIndex2 != nIndex3)) {
-					MESHNODE * pNode1 = m_pMesh->getNode(nIndex1);
-					MESHNODE * pNode2 = m_pMesh->getNode(nIndex2);
-					MESHNODE * pNode3 = m_pMesh->getNode(nIndex3);
+				if ((nIndex1 == nIndex2) || (nIndex1 == nIndex3) || (nIndex2 == nIndex3))
+					bDegenerate = true;
+
+				MESHNODE * pNode1 = m_pMesh->getNode(nIndex1);
+				MESHNODE * pNode2 = m_pMesh->getNode(nIndex2);
+				MESHNODE * pNode3 = m_pMesh->getNode(nIndex3);
+
+				if (!bDegenerate) {
+					NVEC3 vEdge1 = fnVEC3_sub(pNode2->m_position, pNode1->m_position);
+					NVEC3 vEdge2 = fnVEC3_sub(pNode3->m_position, pNode1->m_position);
+					NVEC3 vNormal = fnVEC3_crossproduct(vEdge1, vEdge2);
+
+					nfFloat fNormalSquared =
+						(vNormal.m_fields[0] * vNormal.m_fields[0]) +
+						(vNormal.m_fields[1] * vNormal.m_fields[1]) +
+						(vNormal.m_fields[2] * vNormal.m_fields[2]);
+
+					if (fNormalSquared <= fDegenerateEpsilon)
+						bDegenerate = true;
+				}
+
+				if (bDegenerate) {
+					if (isStrictModeActive())
+						throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATEINDICES);
+
+					m_pMesh->addDegenerateTriangle(m_nTriangleElementIndex, nIndex1, nIndex2, nIndex3);
+					if (m_pWarnings)
+						m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDMODELCOORDINATEINDICES), mrwInvalidOptionalValue);
+				}
+				else {
 					MESHFACE * pFace = m_pMesh->addFace(pNode1, pNode2, pNode3);
 
 					nfInt32 nColorID1, nColorID2, nColorID3;
@@ -214,6 +243,8 @@ namespace NMR {
 						}
 					}
 				}
+
+				m_nTriangleElementIndex++;
 			}
 		}
 	}
@@ -237,7 +268,11 @@ namespace NMR {
 
 		return pProperties;
 	}
+
+	bool CModelReaderNode093_Triangles::isStrictModeActive() const
+	{
+		if (m_pWarnings)
+			return m_pWarnings->getCriticalWarningLevel() == mrwInvalidOptionalValue;
+		return false;
+	}
 }
-
-
-
