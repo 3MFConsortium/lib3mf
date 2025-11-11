@@ -53,7 +53,7 @@ namespace Lib3MF
 	TEST_F(ReaderV093, 3MFReadFromFile_Geometry)
 	{
 		reader->ReadFromFile(sTestFilesPath + "/v093/" + "Track_093.3mf");
-		CheckReaderWarnings(reader, 2);
+		CheckReaderWarnings(reader, 9);
 
 		auto buildItems = model->GetBuildItems();
 		ASSERT_EQ(buildItems->Count(),1);
@@ -67,8 +67,11 @@ namespace Lib3MF
 		ASSERT_TRUE(meshObjects->MoveNext());
 		auto mesh = meshObjects->GetCurrentMeshObject();
 
-		EXPECT_EQ(mesh->GetTriangleCount(), 5282);
+		EXPECT_EQ(mesh->GetTriangleCount(), 5275);
 		EXPECT_EQ(mesh->GetVertexCount(), 2643);
+
+		EXPECT_TRUE(mesh->HasDegenerateTriangles());
+		EXPECT_EQ(mesh->GetDegenerateTriangleCount(), 7);
 
 		auto mdg = model->GetMetaDataGroup();
 		EXPECT_EQ(mdg->GetMetaDataCount(), 8);
@@ -77,7 +80,7 @@ namespace Lib3MF
 	TEST_F(ReaderV093, 3MFReadFromFile_Texture)
 	{
 		reader->ReadFromFile(sTestFilesPath + "/v093/" + "Texture_093.3mf");
-		CheckReaderWarnings(reader, 1);
+		CheckReaderWarnings(reader, 4);
 
 		auto writer = model->QueryWriter("3mf");
 		writer->WriteToFile("v093reout.3mf");
