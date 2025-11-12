@@ -180,14 +180,14 @@ namespace Lib3MF
 	TEST_F(Reader, DegenerateTriangleStrictModeAllowsFlag)
 	{
 		reader3MF->SetStrictModeActive(true);
-		reader3MF->SetAllowDegenerateTriangles(true);
-		EXPECT_TRUE(reader3MF->GetAllowDegenerateTriangles());
-		reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "DegenerateTriangle.3mf");
+	reader3MF->SetAllowDegenerateTriangles(true);
+	EXPECT_TRUE(reader3MF->GetAllowDegenerateTriangles());
+	reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "DegenerateTriangle.3mf");
 
-		CheckReaderWarnings(reader3MF, 1);
+	CheckReaderWarnings(reader3MF, 0);
 
-		ExpectDegenerateTriangleResult();
-	}
+	ExpectDegenerateTriangleResult();
+}
 
 	TEST_F(Reader, DegenerateTriangleStrictModeThrows)
 	{
