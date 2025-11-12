@@ -955,6 +955,15 @@ func (inst Reader) SetStrictModeActive(strictModeActive bool) error {
 	return nil
 }
 
+// SetAllowDegenerateTriangles allows degenerate triangles to be collected instead of causing strict-mode failures.
+func (inst Reader) SetAllowDegenerateTriangles(allowDegenerateTriangles bool) error {
+	ret := C.CCall_lib3mf_reader_setallowdegeneratetriangles(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(allowDegenerateTriangles))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
 // GetStrictModeActive queries whether the strict mode of the reader is active or not.
 func (inst Reader) GetStrictModeActive() (bool, error) {
 	var strictModeActive C.bool
@@ -963,6 +972,16 @@ func (inst Reader) GetStrictModeActive() (bool, error) {
 		return false, makeError(uint32(ret))
 	}
 	return bool(strictModeActive), nil
+}
+
+// GetAllowDegenerateTriangles queries whether degenerate triangles are collected without raising strict-mode errors.
+func (inst Reader) GetAllowDegenerateTriangles() (bool, error) {
+	var allowDegenerateTriangles C.bool
+	ret := C.CCall_lib3mf_reader_getallowdegeneratetriangles(inst.wrapperRef.LibraryHandle, inst.Ref, &allowDegenerateTriangles)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(allowDegenerateTriangles), nil
 }
 
 // GetWarning returns Warning and Error Information of the read process.

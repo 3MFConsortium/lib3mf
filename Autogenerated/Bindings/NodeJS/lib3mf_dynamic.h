@@ -259,6 +259,15 @@ typedef Lib3MFResult (*PLib3MFReader_RemoveRelationToReadPtr) (Lib3MF_Reader pRe
 typedef Lib3MFResult (*PLib3MFReader_SetStrictModeActivePtr) (Lib3MF_Reader pReader, bool bStrictModeActive);
 
 /**
+* Allows degenerate triangles to be collected instead of causing strict-mode failures.
+*
+* @param[in] pReader - Reader instance.
+* @param[in] bAllowDegenerateTriangles - flag whether degenerate triangles should be collected even in strict mode.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFReader_SetAllowDegenerateTrianglesPtr) (Lib3MF_Reader pReader, bool bAllowDegenerateTriangles);
+
+/**
 * Queries whether the strict mode of the reader is active or not
 *
 * @param[in] pReader - Reader instance.
@@ -266,6 +275,15 @@ typedef Lib3MFResult (*PLib3MFReader_SetStrictModeActivePtr) (Lib3MF_Reader pRea
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFReader_GetStrictModeActivePtr) (Lib3MF_Reader pReader, bool * pStrictModeActive);
+
+/**
+* Queries whether degenerate triangles are collected without raising strict-mode errors.
+*
+* @param[in] pReader - Reader instance.
+* @param[out] pAllowDegenerateTriangles - returns flag whether degenerate triangles are collected even in strict mode.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFReader_GetAllowDegenerateTrianglesPtr) (Lib3MF_Reader pReader, bool * pAllowDegenerateTriangles);
 
 /**
 * Returns Warning and Error Information of the read process
@@ -6687,7 +6705,9 @@ typedef struct {
 	PLib3MFReader_AddRelationToReadPtr m_Reader_AddRelationToRead;
 	PLib3MFReader_RemoveRelationToReadPtr m_Reader_RemoveRelationToRead;
 	PLib3MFReader_SetStrictModeActivePtr m_Reader_SetStrictModeActive;
+	PLib3MFReader_SetAllowDegenerateTrianglesPtr m_Reader_SetAllowDegenerateTriangles;
 	PLib3MFReader_GetStrictModeActivePtr m_Reader_GetStrictModeActive;
+	PLib3MFReader_GetAllowDegenerateTrianglesPtr m_Reader_GetAllowDegenerateTriangles;
 	PLib3MFReader_GetWarningPtr m_Reader_GetWarning;
 	PLib3MFReader_GetWarningCountPtr m_Reader_GetWarningCount;
 	PLib3MFReader_AddKeyWrappingCallbackPtr m_Reader_AddKeyWrappingCallback;

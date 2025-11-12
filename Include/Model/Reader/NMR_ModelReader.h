@@ -48,6 +48,7 @@ namespace NMR {
 		PImportStream m_pPrintTicketStream;
 		std::string m_sPrintTicketContentType;
 		std::set<std::string> m_RelationsToRead;
+		bool m_bAllowDegenerateTriangles;
 
 
 		void readFromMeshImporter(_In_ CMeshImporter * pImporter);
@@ -61,6 +62,9 @@ namespace NMR {
 
 		void addRelationToRead(_In_ std::string sRelationShipType);
 		void removeRelationToRead(_In_ std::string sRelationShipType);
+
+		void setAllowDegenerateTriangles(_In_ bool bAllow);
+		bool getAllowDegenerateTriangles() const;
 	};
 
 	typedef std::shared_ptr <CModelReader> PModelReader;

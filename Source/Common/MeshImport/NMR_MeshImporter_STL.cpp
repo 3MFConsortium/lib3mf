@@ -31,15 +31,49 @@ This is a derived class for Importing the binary STL and color STL Mesh Format.
 
 --*/
 
-#include "Common/MeshImport/NMR_MeshImporter_STL.h" 
-#include "Common/MeshInformation/NMR_MeshInformation.h" 
-#include "Common/MeshInformation/NMR_MeshInformation_Properties.h" 
-#include "Common/Math/NMR_VectorTree.h" 
-#include "Common/Math/NMR_Matrix.h" 
-#include "Common/NMR_Exception.h" 
+#include "Common/MeshImport/NMR_MeshImporter_STL.h"
+#include "Common/MeshInformation/NMR_MeshInformation.h"
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+#include "Common/Math/NMR_VectorTree.h"
+#include "Common/Math/NMR_Matrix.h"
+#include "Common/Math/NMR_Vector.h"
+#include "Common/NMR_Exception.h"
 #include <cmath>
 #include <array>
 #include <list>
+#include <sstream>
+#include <algorithm>
+#include <string>
+#include <cctype>
+#include <limits>
+
+namespace {
+
+	std::string toLowerCopy(const std::string & text)
+	{
+		std::string lowered = text;
+		std::transform(lowered.begin(), lowered.end(), lowered.begin(),
+			[](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+		return lowered;
+	}
+
+	bool headerStartsWithSolid(const std::string & header)
+	{
+		auto firstNonWhitespace = header.find_first_not_of(" \t\r\n");
+		if (firstNonWhitespace == std::string::npos)
+			return false;
+
+		const char keyword[] = "solid";
+		for (size_t i = 0; i < 5; ++i) {
+			if (firstNonWhitespace + i >= header.size())
+				return false;
+			if (std::tolower(static_cast<unsigned char>(header[firstNonWhitespace + i])) != keyword[i])
+				return false;
+		}
+		return true;
+	}
+
+}
 
 namespace NMR {
 
@@ -113,98 +147,188 @@ namespace NMR {
 		if (!pStream)
 			throw CNMRException(NMR_ERROR_NOIMPORTSTREAM);
 
-		// TODO: handle colors
-		//CMeshInformationHandler * pMeshInformationHandler = pMesh->createMeshInformationHandler();
-		//CMeshInformation * pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
-		//CMeshInformation_Properties * pProperties = nullptr;
-
-		//if (!pProperties) {
-		//	PMeshInformation_Properties pNewMeshInformation = std::make_shared<CMeshInformation_Properties>(pMesh->getFaceCount());
-		//	pMeshInformationHandler->addInformation(pNewMeshInformation);
-
-		//	pProperties = pNewMeshInformation.get();
-		//}
-
 		std::array<nfByte, 80> aSTLHeader;
 		nfUint32 nFaceCount = 0;
-		// nfUint32 nGlobalColor = 0xffffffff;
 
-		pStream->readIntoBuffer(&aSTLHeader[0], 80, true);
-		pStream->readIntoBuffer((nfByte*)&nFaceCount, sizeof(nFaceCount), true);
-		if (isBigEndian()) {
+		pStream->readIntoBuffer(aSTLHeader.data(), aSTLHeader.size(), true);
+		pStream->readIntoBuffer(reinterpret_cast<nfByte*>(&nFaceCount), sizeof(nFaceCount), true);
+		if (isBigEndian())
 			nFaceCount = swapBytes(nFaceCount);
-		}
 
-		if (nFaceCount > NMR_MESH_MAXFACECOUNT)
+		const bool bCountValid = (nFaceCount <= NMR_MESH_MAXFACECOUNT);
+		nfUint64 nStreamSize = pStream->retrieveSize();
+		nfUint64 nExpectedBinarySize = 0;
+		if (bCountValid)
+			nExpectedBinarySize = 84 + (nfUint64)nFaceCount * 50;
+		std::string headerString(reinterpret_cast<const char*>(aSTLHeader.data()), aSTLHeader.size());
+
+		bool bTreatAsASCII = false;
+		if ((nStreamSize > 0) && bCountValid && (nExpectedBinarySize != nStreamSize))
+			bTreatAsASCII = true;
+		else if (headerStartsWithSolid(headerString))
+			bTreatAsASCII = true;
+
+		if ((nStreamSize > 0) && bCountValid && (nExpectedBinarySize == nStreamSize))
+			bTreatAsASCII = false;
+
+		if (!bTreatAsASCII && !bCountValid)
 			throw CNMRException(NMR_ERROR_INVALIDFACECOUNT);
 
-		// std::string sHeaderString(std::begin(aSTLHeader), std::end(aSTLHeader));
-		// std::size_t nFound = sHeaderString.find("COLOR=");
-		// if (nFound != std::string::npos) {
-		// 	if (nFound <= 76) {
-		// 		nGlobalColor = ((nfUint32)aSTLHeader[nFound + 6]) + (((nfUint32)aSTLHeader[nFound + 7]) << 8) + (((nfUint32)aSTLHeader[nFound + 8]) << 16) +
-		// 			(((nfUint32)aSTLHeader[nFound + 9]) << 24);
-		// 	}
-		// }
-
-		nfUint32 nNodeIdx;
-		MESHNODE * pNodes[3];
-		MESHFORMAT_STL_FACET Facet;
 		CVectorTree VectorTree;
-		nfBool bIsValid;
-
 		VectorTree.setUnits(m_fUnits);
+		const nfFloat fDegenerateEpsilon = 1e-12f;
 
-		for (nfUint32 nIdx = 0; nIdx < nFaceCount; nIdx++) {
-			pStream->readIntoBuffer((nfByte*)&Facet, sizeof(Facet), true);
-			if (isBigEndian()) {
-				Facet.swapByteOrder();
-			}
+		auto processTriangle = [&](const std::array<NVEC3, 3> & vertices, nfUint32 nElementIndex)
+		{
+			MESHNODE* pNodes[3];
+			nfUint32 nNodeIdx = 0;
+			bool bIsValid = true;
 
-			// Check, if Coordinates are in Valid Space
-			bIsValid = true;
-			for (nfUint32 j = 0; j < 3; j++)
-				for (nfUint32 k = 0; k < 3; k++)
-					bIsValid &= (fabs(Facet.m_vertices[j].m_fields[k]) < NMR_MESH_MAXCOORDINATE);
+			for (nfUint32 j = 0; j < 3 && bIsValid; ++j) {
+				NVEC3 vPosition = vertices[j];
+				if (pmMatrix)
+					vPosition = fnMATRIX3_apply(*pmMatrix, vPosition);
 
-			// Identify Nodes via Tree
-			if (bIsValid) {
-
-				for (nfUint32 j = 0; j < 3; j++) {
-					NVEC3 vPosition = Facet.m_vertices[j];
-					if (pmMatrix)
-						vPosition = fnMATRIX3_apply(*pmMatrix, vPosition);
-
-					if (VectorTree.findVector3(vPosition, nNodeIdx)) {
-						pNodes[j] = pMesh->getNode(nNodeIdx);
-					}
-					else {
-						pNodes[j] = pMesh->addNode(vPosition);
-						VectorTree.addVector3(pNodes[j]->m_position, (nfUint32)pNodes[j]->m_index);
+				for (nfUint32 k = 0; k < 3; k++) {
+					if (fabs(vPosition.m_fields[k]) > NMR_MESH_MAXCOORDINATE) {
+						bIsValid = false;
+						break;
 					}
 				}
+				if (!bIsValid)
+					break;
 
-				// check, if Nodes are separate
-				bIsValid = (pNodes[0] != pNodes[1]) && (pNodes[0] != pNodes[2]) && (pNodes[1] != pNodes[2]);
+				if (VectorTree.findVector3(vPosition, nNodeIdx)) {
+					pNodes[j] = pMesh->getNode(nNodeIdx);
+				}
+				else {
+					pNodes[j] = pMesh->addNode(vPosition);
+					VectorTree.addVector3(pNodes[j]->m_position, (nfUint32)pNodes[j]->m_index);
+				}
 			}
 
-			// Throw "Invalid Exception"
-			if ((!bIsValid) && !m_bIgnoreInvalidFaces)
-				throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
-
-			if (bIsValid) {
-				pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
-				// MESHFACE * pFace = pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
-				//if (pProperties) {
-				//	nfUint32 nRed = (nfUint32) ((nfFloat) (Facet.m_attribute & 0x1f) / (255.0f / 31.0f));
-				//	nfUint32 nGreen = (nfUint32)((nfFloat)((Facet.m_attribute >> 5) & 0x1f) / (255.0f / 31.0f));
-				//	nfUint32 nBlue = (nfUint32)((nfFloat)((Facet.m_attribute >> 10) & 0x1f) / (255.0f / 31.0f));
-
-				//	// MESHINFORMATION_PROPERTIES * pFaceData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getFaceData(pFace->m_index);
-				//}
+			if (!bIsValid) {
+				if (!m_bIgnoreInvalidFaces)
+					throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+				return;
 			}
+
+			bool bHasDuplicateNodes = (pNodes[0] == pNodes[1]) || (pNodes[0] == pNodes[2]) || (pNodes[1] == pNodes[2]);
+			if (bHasDuplicateNodes) {
+				if (!m_bIgnoreInvalidFaces)
+					throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+
+				pMesh->addDegenerateTriangle(nElementIndex, pNodes[0]->m_index, pNodes[1]->m_index, pNodes[2]->m_index);
+				return;
+			}
+
+			NVEC3 vEdge1 = fnVEC3_sub(pNodes[1]->m_position, pNodes[0]->m_position);
+			NVEC3 vEdge2 = fnVEC3_sub(pNodes[2]->m_position, pNodes[0]->m_position);
+			NVEC3 vNormal = fnVEC3_crossproduct(vEdge1, vEdge2);
+
+			nfFloat fNormalSquared =
+				(vNormal.m_fields[0] * vNormal.m_fields[0]) +
+				(vNormal.m_fields[1] * vNormal.m_fields[1]) +
+				(vNormal.m_fields[2] * vNormal.m_fields[2]);
+
+			if (fNormalSquared <= fDegenerateEpsilon) {
+				if (!m_bIgnoreInvalidFaces)
+					throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+
+				pMesh->addDegenerateTriangle(nElementIndex, pNodes[0]->m_index, pNodes[1]->m_index, pNodes[2]->m_index);
+				return;
+			}
+
+			pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
+		};
+
+		if (bTreatAsASCII) {
+			pStream->seekPosition(0, true);
+			nfUint64 nAsciiSize = pStream->retrieveSize();
+			if (nAsciiSize == 0)
+				throw CNMRException(NMR_ERROR_INVALIDMESH);
+
+			if (nAsciiSize > static_cast<nfUint64>(std::numeric_limits<size_t>::max()))
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			std::string asciiData;
+			asciiData.resize(static_cast<size_t>(nAsciiSize));
+			pStream->readIntoBuffer(reinterpret_cast<nfByte*>(&asciiData[0]), nAsciiSize, true);
+
+			std::istringstream asciiStream(asciiData);
+			std::string token;
+			if (!(asciiStream >> token))
+				throw CNMRException(NMR_ERROR_INVALIDMESH);
+
+			if (toLowerCopy(token) != "solid")
+				throw CNMRException(NMR_ERROR_INVALIDMESH);
+			std::string restOfLine;
+			std::getline(asciiStream, restOfLine);
+
+			nfUint32 nElementIndex = 0;
+			while (asciiStream >> token) {
+				std::string tokenLower = toLowerCopy(token);
+				if (tokenLower == "facet") {
+					std::string normalToken;
+					if (!(asciiStream >> normalToken) || toLowerCopy(normalToken) != "normal")
+						throw CNMRException(NMR_ERROR_INVALIDMESH);
+
+					nfDouble nx, ny, nz;
+					if (!(asciiStream >> nx >> ny >> nz))
+						throw CNMRException(NMR_ERROR_INVALIDMESH);
+
+					std::string outerToken, loopToken;
+					if (!(asciiStream >> outerToken >> loopToken) ||
+						toLowerCopy(outerToken) != "outer" || toLowerCopy(loopToken) != "loop")
+						throw CNMRException(NMR_ERROR_INVALIDMESH);
+
+					std::array<NVEC3, 3> vertices;
+					for (nfUint32 j = 0; j < 3; ++j) {
+						std::string vertexToken;
+						if (!(asciiStream >> vertexToken) || toLowerCopy(vertexToken) != "vertex")
+							throw CNMRException(NMR_ERROR_INVALIDMESH);
+
+						nfDouble x, y, z;
+						if (!(asciiStream >> x >> y >> z))
+							throw CNMRException(NMR_ERROR_INVALIDMESH);
+
+						vertices[j] = fnVEC3_make(static_cast<nfFloat>(x), static_cast<nfFloat>(y), static_cast<nfFloat>(z));
+					}
+
+					std::string endLoopToken;
+					if (!(asciiStream >> endLoopToken) || toLowerCopy(endLoopToken) != "endloop")
+						throw CNMRException(NMR_ERROR_INVALIDMESH);
+
+					std::string endFacetToken;
+					if (!(asciiStream >> endFacetToken) || toLowerCopy(endFacetToken) != "endfacet")
+						throw CNMRException(NMR_ERROR_INVALIDMESH);
+
+					processTriangle(vertices, nElementIndex);
+					++nElementIndex;
+				}
+				else if (tokenLower == "endsolid") {
+					break;
+				}
+				else if (tokenLower == "solid") {
+					std::getline(asciiStream, restOfLine);
+				}
+				else {
+					std::getline(asciiStream, restOfLine);
+				}
+			}
+
+			return;
 		}
 
+		MESHFORMAT_STL_FACET Facet;
+		for (nfUint32 nIdx = 0; nIdx < nFaceCount; nIdx++) {
+			pStream->readIntoBuffer((nfByte*)&Facet, sizeof(Facet), true);
+			if (isBigEndian())
+				Facet.swapByteOrder();
+
+			std::array<NVEC3, 3> vertices = { Facet.m_vertices[0], Facet.m_vertices[1], Facet.m_vertices[2] };
+			processTriangle(vertices, nIdx);
+		}
 	}
 
 }

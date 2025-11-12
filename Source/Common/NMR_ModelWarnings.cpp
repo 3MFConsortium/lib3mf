@@ -33,6 +33,7 @@ a relaxed import policy on the file format.
 --*/
 
 #include "Common/NMR_ModelWarnings.h" 
+#include "Common/NMR_ErrorConst.h"
 
 namespace NMR {
 
@@ -61,6 +62,7 @@ namespace NMR {
 	CModelWarnings::CModelWarnings()
 	{
 		setCriticalWarningLevel(mrwFatal);
+		m_bAllowDegenerateTrianglesInStrictMode = false;
 	}
 
 	eModelWarningLevel CModelWarnings::getCriticalWarningLevel()
@@ -71,6 +73,16 @@ namespace NMR {
 	void CModelWarnings::setCriticalWarningLevel(_In_ eModelWarningLevel WarningLevel)
 	{
 		m_CriticalWarningLevel = WarningLevel;
+	}
+
+	void CModelWarnings::setAllowDegenerateTrianglesInStrictMode(_In_ bool bAllow)
+	{
+		m_bAllowDegenerateTrianglesInStrictMode = bAllow;
+	}
+
+	bool CModelWarnings::getAllowDegenerateTrianglesInStrictMode() const
+	{
+		return m_bAllowDegenerateTrianglesInStrictMode;
 	}
 
 	void CModelWarnings::addWarning(_In_ nfError nErrorCode, eModelWarningLevel WarningLevel)
@@ -88,7 +100,11 @@ namespace NMR {
 			m_Warnings.push_back(pWarning);
 		}
 
-		if ((nfInt32)WarningLevel <= (nfInt32)m_CriticalWarningLevel)
+		bool bShouldThrow = ((nfInt32)WarningLevel <= (nfInt32)m_CriticalWarningLevel);
+		if (bShouldThrow && m_bAllowDegenerateTrianglesInStrictMode && Exception.getErrorCode() == NMR_ERROR_INVALIDMODELCOORDINATEINDICES)
+			bShouldThrow = false;
+
+		if (bShouldThrow)
 			throw Exception;
 	}
 

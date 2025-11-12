@@ -825,6 +825,38 @@ Lib3MFResult lib3mf_reader_setstrictmodeactive(Lib3MF_Reader pReader, bool bStri
 	}
 }
 
+Lib3MFResult lib3mf_reader_setallowdegeneratetriangles(Lib3MF_Reader pReader, bool bAllowDegenerateTriangles)
+{
+	IBase* pIBaseClass = (IBase *)pReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pReader, "Reader", "SetAllowDegenerateTriangles");
+			pJournalEntry->addBooleanParameter("AllowDegenerateTriangles", bAllowDegenerateTriangles);
+		}
+		IReader* pIReader = dynamic_cast<IReader*>(pIBaseClass);
+		if (!pIReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIReader->SetAllowDegenerateTriangles(bAllowDegenerateTriangles);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_reader_getstrictmodeactive(Lib3MF_Reader pReader, bool * pStrictModeActive)
 {
 	IBase* pIBaseClass = (IBase *)pReader;
@@ -844,6 +876,40 @@ Lib3MFResult lib3mf_reader_getstrictmodeactive(Lib3MF_Reader pReader, bool * pSt
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addBooleanResult("StrictModeActive", *pStrictModeActive);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_reader_getallowdegeneratetriangles(Lib3MF_Reader pReader, bool * pAllowDegenerateTriangles)
+{
+	IBase* pIBaseClass = (IBase *)pReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pReader, "Reader", "GetAllowDegenerateTriangles");
+		}
+		if (pAllowDegenerateTriangles == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IReader* pIReader = dynamic_cast<IReader*>(pIBaseClass);
+		if (!pIReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pAllowDegenerateTriangles = pIReader->GetAllowDegenerateTriangles();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("AllowDegenerateTriangles", *pAllowDegenerateTriangles);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -23523,8 +23589,12 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_reader_removerelationtoread;
 	if (sProcName == "lib3mf_reader_setstrictmodeactive") 
 		*ppProcAddress = (void*) &lib3mf_reader_setstrictmodeactive;
+	if (sProcName == "lib3mf_reader_setallowdegeneratetriangles") 
+		*ppProcAddress = (void*) &lib3mf_reader_setallowdegeneratetriangles;
 	if (sProcName == "lib3mf_reader_getstrictmodeactive") 
 		*ppProcAddress = (void*) &lib3mf_reader_getstrictmodeactive;
+	if (sProcName == "lib3mf_reader_getallowdegeneratetriangles") 
+		*ppProcAddress = (void*) &lib3mf_reader_getallowdegeneratetriangles;
 	if (sProcName == "lib3mf_reader_getwarning") 
 		*ppProcAddress = (void*) &lib3mf_reader_getwarning;
 	if (sProcName == "lib3mf_reader_getwarningcount") 

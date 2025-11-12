@@ -210,6 +210,7 @@ namespace NMR {
 		void setLanguage(_In_ std::string sLanguage);
 		std::string getLanguage();
 
+
 		// General Resource Handling
 		PModelResource findResource(_In_ std::string path, ModelResourceID nID);
 		PModelResource findResource(_In_ UniqueResourceID nID);

@@ -158,7 +158,9 @@ class FunctionTable:
 	lib3mf_reader_addrelationtoread = None
 	lib3mf_reader_removerelationtoread = None
 	lib3mf_reader_setstrictmodeactive = None
+	lib3mf_reader_setallowdegeneratetriangles = None
 	lib3mf_reader_getstrictmodeactive = None
+	lib3mf_reader_getallowdegeneratetriangles = None
 	lib3mf_reader_getwarning = None
 	lib3mf_reader_getwarningcount = None
 	lib3mf_reader_addkeywrappingcallback = None
@@ -1392,11 +1394,23 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_bool)
 			self.lib.lib3mf_reader_setstrictmodeactive = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_reader_setallowdegeneratetriangles")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_bool)
+			self.lib.lib3mf_reader_setallowdegeneratetriangles = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_reader_getstrictmodeactive")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
 			self.lib.lib3mf_reader_getstrictmodeactive = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_reader_getallowdegeneratetriangles")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_reader_getallowdegeneratetriangles = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_reader_getwarning")), methodAddress)
 			if err != 0:
@@ -5021,8 +5035,14 @@ class Wrapper:
 			self.lib.lib3mf_reader_setstrictmodeactive.restype = ctypes.c_int32
 			self.lib.lib3mf_reader_setstrictmodeactive.argtypes = [ctypes.c_void_p, ctypes.c_bool]
 			
+			self.lib.lib3mf_reader_setallowdegeneratetriangles.restype = ctypes.c_int32
+			self.lib.lib3mf_reader_setallowdegeneratetriangles.argtypes = [ctypes.c_void_p, ctypes.c_bool]
+			
 			self.lib.lib3mf_reader_getstrictmodeactive.restype = ctypes.c_int32
 			self.lib.lib3mf_reader_getstrictmodeactive.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_reader_getallowdegeneratetriangles.restype = ctypes.c_int32
+			self.lib.lib3mf_reader_getallowdegeneratetriangles.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
 			
 			self.lib.lib3mf_reader_getwarning.restype = ctypes.c_int32
 			self.lib.lib3mf_reader_getwarning.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
@@ -7373,11 +7393,22 @@ class Reader(Base):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_reader_setstrictmodeactive(self._handle, bStrictModeActive))
 		
 	
+	def SetAllowDegenerateTriangles(self, AllowDegenerateTriangles):
+		bAllowDegenerateTriangles = ctypes.c_bool(AllowDegenerateTriangles)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_reader_setallowdegeneratetriangles(self._handle, bAllowDegenerateTriangles))
+		
+	
 	def GetStrictModeActive(self):
 		pStrictModeActive = ctypes.c_bool()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_reader_getstrictmodeactive(self._handle, pStrictModeActive))
 		
 		return pStrictModeActive.value
+	
+	def GetAllowDegenerateTriangles(self):
+		pAllowDegenerateTriangles = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_reader_getallowdegeneratetriangles(self._handle, pAllowDegenerateTriangles))
+		
+		return pAllowDegenerateTriangles.value
 	
 	def GetWarning(self, Index):
 		nIndex = ctypes.c_uint32(Index)

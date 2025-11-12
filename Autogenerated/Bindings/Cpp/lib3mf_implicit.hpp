@@ -1060,7 +1060,9 @@ public:
 	inline void AddRelationToRead(const std::string & sRelationShipType);
 	inline void RemoveRelationToRead(const std::string & sRelationShipType);
 	inline void SetStrictModeActive(const bool bStrictModeActive);
+	inline void SetAllowDegenerateTriangles(const bool bAllowDegenerateTriangles);
 	inline bool GetStrictModeActive();
+	inline bool GetAllowDegenerateTriangles();
 	inline std::string GetWarning(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode);
 	inline Lib3MF_uint32 GetWarningCount();
 	inline void AddKeyWrappingCallback(const std::string & sConsumerID, const KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData);
@@ -4107,6 +4109,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CReader::SetAllowDegenerateTriangles - Allows degenerate triangles to be collected instead of causing strict-mode failures.
+	* @param[in] bAllowDegenerateTriangles - flag whether degenerate triangles should be collected even in strict mode.
+	*/
+	void CReader::SetAllowDegenerateTriangles(const bool bAllowDegenerateTriangles)
+	{
+		CheckError(lib3mf_reader_setallowdegeneratetriangles(m_pHandle, bAllowDegenerateTriangles));
+	}
+	
+	/**
 	* CReader::GetStrictModeActive - Queries whether the strict mode of the reader is active or not
 	* @return returns flag whether strict mode is active or not.
 	*/
@@ -4116,6 +4127,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(lib3mf_reader_getstrictmodeactive(m_pHandle, &resultStrictModeActive));
 		
 		return resultStrictModeActive;
+	}
+	
+	/**
+	* CReader::GetAllowDegenerateTriangles - Queries whether degenerate triangles are collected without raising strict-mode errors.
+	* @return returns flag whether degenerate triangles are collected even in strict mode.
+	*/
+	bool CReader::GetAllowDegenerateTriangles()
+	{
+		bool resultAllowDegenerateTriangles = 0;
+		CheckError(lib3mf_reader_getallowdegeneratetriangles(m_pHandle, &resultAllowDegenerateTriangles));
+		
+		return resultAllowDegenerateTriangles;
 	}
 	
 	/**

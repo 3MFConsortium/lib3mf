@@ -166,6 +166,16 @@ bool CReader::GetStrictModeActive ()
 	return reader().warnings()->getCriticalWarningLevel() == NMR::mrwInvalidOptionalValue;
 }
 
+void CReader::SetAllowDegenerateTriangles (const bool bAllowDegenerateTriangles)
+{
+	reader().setAllowDegenerateTriangles(bAllowDegenerateTriangles);
+}
+
+bool CReader::GetAllowDegenerateTriangles ()
+{
+	return reader().getAllowDegenerateTriangles();
+}
+
 std::string CReader::GetWarning (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode)
 {
 	auto warning = reader().warnings()->getWarning(nIndex);
@@ -230,4 +240,3 @@ void Lib3MF::Impl::CReader::SetContentEncryptionCallback(const Lib3MF::ContentEn
 	};
 	reader().secureContext()->setDekCtx(descriptor);
 }
-

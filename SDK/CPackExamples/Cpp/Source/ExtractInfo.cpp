@@ -182,7 +182,7 @@ void ShowComponentsObjectInformation(PComponentsObject componentsObject)
 }
 
 
-void ExtractInfoExample(const std::string& sFileName, bool strictMode) {
+void ExtractInfoExample(const std::string& sFileName, bool strictMode, bool allowDegenerateTriangles) {
 	PWrapper wrapper = CWrapper::loadLibrary();
 	
 	std::cout << "------------------------------------------------------------------" << std::endl;
@@ -196,8 +196,11 @@ void ExtractInfoExample(const std::string& sFileName, bool strictMode) {
 	{
 		PReader reader = model->QueryReader("3mf");
 		reader->SetStrictModeActive(strictMode);
+		reader->SetAllowDegenerateTriangles(allowDegenerateTriangles);
 		if (strictMode)
 			std::cout << "Strict reader mode enabled" << std::endl;
+		if (allowDegenerateTriangles)
+			std::cout << "Degenerate triangle skipping enabled" << std::endl;
 		reader->ReadFromFile(sFileName);
 
 		for (Lib3MF_uint32 iWarning = 0; iWarning < reader->GetWarningCount(); iWarning++) {
@@ -254,19 +257,28 @@ void ExtractInfoExample(const std::string& sFileName, bool strictMode) {
 
 
 int main(int argc, char** argv) {
+    auto parseBooleanFlag = [](const char* rawValue) {
+        if(rawValue == nullptr)
+            return false;
+        std::string value(rawValue);
+        value.erase(std::remove_if(value.begin(), value.end(),
+                                   [](unsigned char c) { return std::isspace(c); }),
+                    value.end());
+        std::transform(value.begin(), value.end(), value.begin(),
+                       [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+        return !value.empty() && value != "0" && value != "false" && value != "off";
+    };
+
     bool strictMode = false;
     if(const char* envStrict = std::getenv("LIB3MF_STRICT_READER"))
     {
-        std::string value(envStrict);
-        value.erase(
-            std::remove_if(value.begin(), value.end(),
-                           [](unsigned char c) { return std::isspace(c); }),
-            value.end());
-        std::transform(value.begin(), value.end(), value.begin(),
-                       [](unsigned char c)
-                       { return static_cast<char>(std::tolower(c)); });
-        if(!value.empty() && value != "0" && value != "false" && value != "off")
-            strictMode = true;
+        strictMode = parseBooleanFlag(envStrict);
+    }
+
+    bool allowDegenerateTriangles = false;
+    if(const char* envAllow = std::getenv("LIB3MF_ALLOW_DEGENERATE_TRIANGLES"))
+    {
+        allowDegenerateTriangles = parseBooleanFlag(envAllow);
     }
 
     int fileArgIndex = -1;
@@ -276,6 +288,16 @@ int main(int argc, char** argv) {
         if(arg == "--strict")
         {
             strictMode = true;
+            continue;
+        }
+        if(arg == "--allow-degenerate-triangles")
+        {
+            allowDegenerateTriangles = true;
+            continue;
+        }
+        if(arg == "--disallow-degenerate-triangles")
+        {
+            allowDegenerateTriangles = false;
             continue;
         }
         if(!arg.empty() && arg[0] == '-')
@@ -290,16 +312,17 @@ int main(int argc, char** argv) {
     if(fileArgIndex < 0 || fileArgIndex != argc - 1)
     {
         std::cout << "Usage: " << std::endl;
-        std::cout << "ExtractInfo.exe [--strict] model.3mf" << std::endl;
+        std::cout << "ExtractInfo.exe [--strict] [--allow-degenerate-triangles|--disallow-degenerate-triangles] model.3mf" << std::endl;
         return 0;
     }
 
-        try {
-		ExtractInfoExample(argv[fileArgIndex], strictMode);
-	}
-	catch (ELib3MFException &e) {
-		std::cout << e.what() << std::endl;
-		return e.getErrorCode();
-	}
-	return 0;
+    try {
+        ExtractInfoExample(argv[fileArgIndex], strictMode, allowDegenerateTriangles);
+    }
+    catch(ELib3MFException &e)
+    {
+        std::cout << e.what() << std::endl;
+        return e.getErrorCode();
+    }
+    return 0;
 }

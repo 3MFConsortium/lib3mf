@@ -69,7 +69,9 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Reader_AddRelationToRead = NULL;
 	pWrapperTable->m_Reader_RemoveRelationToRead = NULL;
 	pWrapperTable->m_Reader_SetStrictModeActive = NULL;
+	pWrapperTable->m_Reader_SetAllowDegenerateTriangles = NULL;
 	pWrapperTable->m_Reader_GetStrictModeActive = NULL;
+	pWrapperTable->m_Reader_GetAllowDegenerateTriangles = NULL;
 	pWrapperTable->m_Reader_GetWarning = NULL;
 	pWrapperTable->m_Reader_GetWarningCount = NULL;
 	pWrapperTable->m_Reader_AddKeyWrappingCallback = NULL;
@@ -916,12 +918,30 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_Reader_SetAllowDegenerateTriangles = (PLib3MFReader_SetAllowDegenerateTrianglesPtr) GetProcAddress(hLibrary, "lib3mf_reader_setallowdegeneratetriangles");
+	#else // _WIN32
+	pWrapperTable->m_Reader_SetAllowDegenerateTriangles = (PLib3MFReader_SetAllowDegenerateTrianglesPtr) dlsym(hLibrary, "lib3mf_reader_setallowdegeneratetriangles");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Reader_SetAllowDegenerateTriangles == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_Reader_GetStrictModeActive = (PLib3MFReader_GetStrictModeActivePtr) GetProcAddress(hLibrary, "lib3mf_reader_getstrictmodeactive");
 	#else // _WIN32
 	pWrapperTable->m_Reader_GetStrictModeActive = (PLib3MFReader_GetStrictModeActivePtr) dlsym(hLibrary, "lib3mf_reader_getstrictmodeactive");
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Reader_GetStrictModeActive == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Reader_GetAllowDegenerateTriangles = (PLib3MFReader_GetAllowDegenerateTrianglesPtr) GetProcAddress(hLibrary, "lib3mf_reader_getallowdegeneratetriangles");
+	#else // _WIN32
+	pWrapperTable->m_Reader_GetAllowDegenerateTriangles = (PLib3MFReader_GetAllowDegenerateTrianglesPtr) dlsym(hLibrary, "lib3mf_reader_getallowdegeneratetriangles");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Reader_GetAllowDegenerateTriangles == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -6566,12 +6586,30 @@ Lib3MFResult CCall_lib3mf_reader_setstrictmodeactive(Lib3MFHandle libraryHandle,
 }
 
 
+Lib3MFResult CCall_lib3mf_reader_setallowdegeneratetriangles(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, bool bAllowDegenerateTriangles)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Reader_SetAllowDegenerateTriangles (pReader, bAllowDegenerateTriangles);
+}
+
+
 Lib3MFResult CCall_lib3mf_reader_getstrictmodeactive(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, bool * pStrictModeActive)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Reader_GetStrictModeActive (pReader, pStrictModeActive);
+}
+
+
+Lib3MFResult CCall_lib3mf_reader_getallowdegeneratetriangles(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, bool * pAllowDegenerateTriangles)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Reader_GetAllowDegenerateTriangles (pReader, pAllowDegenerateTriangles);
 }
 
 

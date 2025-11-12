@@ -1816,4 +1816,3 @@ namespace NMR {
 		throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 	}
 }  // namespace NMR
-

@@ -1884,7 +1884,9 @@ void CLib3MFReader::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddRelationToRead", AddRelationToRead);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveRelationToRead", RemoveRelationToRead);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetStrictModeActive", SetStrictModeActive);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetAllowDegenerateTriangles", SetAllowDegenerateTriangles);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetStrictModeActive", GetStrictModeActive);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetAllowDegenerateTriangles", GetAllowDegenerateTriangles);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetWarning", GetWarning);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetWarningCount", GetWarningCount);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddKeyWrappingCallback", AddKeyWrappingCallback);
@@ -2099,6 +2101,30 @@ void CLib3MFReader::SetStrictModeActive(const FunctionCallbackInfo<Value>& args)
 }
 
 
+void CLib3MFReader::SetAllowDegenerateTriangles(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsBoolean()) {
+            throw std::runtime_error("Expected bool parameter 0 (AllowDegenerateTriangles)");
+        }
+        bool bAllowDegenerateTriangles = args[0]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetAllowDegenerateTriangles.");
+        if (wrapperTable->m_Reader_SetAllowDegenerateTriangles == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Reader::SetAllowDegenerateTriangles.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Reader_SetAllowDegenerateTriangles(instanceHandle, bAllowDegenerateTriangles);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
 void CLib3MFReader::GetStrictModeActive(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
@@ -2114,6 +2140,28 @@ void CLib3MFReader::GetStrictModeActive(const FunctionCallbackInfo<Value>& args)
         Lib3MFResult errorCode = wrapperTable->m_Reader_GetStrictModeActive(instanceHandle, &bReturnStrictModeActive);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(Boolean::New(isolate, bReturnStrictModeActive));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFReader::GetAllowDegenerateTriangles(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        bool bReturnAllowDegenerateTriangles = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetAllowDegenerateTriangles.");
+        if (wrapperTable->m_Reader_GetAllowDegenerateTriangles == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Reader::GetAllowDegenerateTriangles.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Reader_GetAllowDegenerateTriangles(instanceHandle, &bReturnAllowDegenerateTriangles);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnAllowDegenerateTriangles));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

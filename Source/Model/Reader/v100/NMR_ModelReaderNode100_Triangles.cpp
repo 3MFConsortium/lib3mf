@@ -107,6 +107,13 @@ namespace NMR {
 		return false;
 	}
 
+	bool CModelReaderNode100_Triangles::allowsDegenerateTrianglesInStrictMode() const
+	{
+		if (m_pWarnings)
+			return m_pWarnings->getAllowDegenerateTrianglesInStrictMode();
+		return false;
+	}
+
 	void CModelReaderNode100_Triangles::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
@@ -149,11 +156,12 @@ namespace NMR {
 				}
 
 				if (bDegenerate) {
-					if (isStrictModeActive())
+					const bool bAllowInStrictMode = allowsDegenerateTrianglesInStrictMode();
+					if (isStrictModeActive() && !bAllowInStrictMode)
 						throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATEINDICES);
 
 					m_pMesh->addDegenerateTriangle(m_nTriangleElementIndex, nIndex1, nIndex2, nIndex3);
-					if (m_pWarnings)
+					if (m_pWarnings && !bAllowInStrictMode)
 						m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDMODELCOORDINATEINDICES), mrwInvalidOptionalValue);
 				}
 				else {

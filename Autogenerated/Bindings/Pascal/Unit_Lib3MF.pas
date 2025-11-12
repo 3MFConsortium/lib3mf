@@ -814,6 +814,15 @@ type
 	TLib3MFReader_SetStrictModeActiveFunc = function(pReader: TLib3MFHandle; const bStrictModeActive: Byte): TLib3MFResult; cdecl;
 	
 	(**
+	* Allows degenerate triangles to be collected instead of causing strict-mode failures.
+	*
+	* @param[in] pReader - Reader instance.
+	* @param[in] bAllowDegenerateTriangles - flag whether degenerate triangles should be collected even in strict mode.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFReader_SetAllowDegenerateTrianglesFunc = function(pReader: TLib3MFHandle; const bAllowDegenerateTriangles: Byte): TLib3MFResult; cdecl;
+	
+	(**
 	* Queries whether the strict mode of the reader is active or not
 	*
 	* @param[in] pReader - Reader instance.
@@ -821,6 +830,15 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFReader_GetStrictModeActiveFunc = function(pReader: TLib3MFHandle; out pStrictModeActive: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Queries whether degenerate triangles are collected without raising strict-mode errors.
+	*
+	* @param[in] pReader - Reader instance.
+	* @param[out] pAllowDegenerateTriangles - returns flag whether degenerate triangles are collected even in strict mode.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFReader_GetAllowDegenerateTrianglesFunc = function(pReader: TLib3MFHandle; out pAllowDegenerateTriangles: Byte): TLib3MFResult; cdecl;
 	
 	(**
 	* Returns Warning and Error Information of the read process
@@ -7405,7 +7423,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure AddRelationToRead(const ARelationShipType: String);
 		procedure RemoveRelationToRead(const ARelationShipType: String);
 		procedure SetStrictModeActive(const AStrictModeActive: Boolean);
+		procedure SetAllowDegenerateTriangles(const AAllowDegenerateTriangles: Boolean);
 		function GetStrictModeActive(): Boolean;
+		function GetAllowDegenerateTriangles(): Boolean;
 		function GetWarning(const AIndex: Cardinal; out AErrorCode: Cardinal): String;
 		function GetWarningCount(): Cardinal;
 		procedure AddKeyWrappingCallback(const AConsumerID: String; const ATheCallback: PLib3MF_KeyWrappingCallback; const AUserData: Pointer);
@@ -9262,7 +9282,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFReader_AddRelationToReadFunc: TLib3MFReader_AddRelationToReadFunc;
 		FLib3MFReader_RemoveRelationToReadFunc: TLib3MFReader_RemoveRelationToReadFunc;
 		FLib3MFReader_SetStrictModeActiveFunc: TLib3MFReader_SetStrictModeActiveFunc;
+		FLib3MFReader_SetAllowDegenerateTrianglesFunc: TLib3MFReader_SetAllowDegenerateTrianglesFunc;
 		FLib3MFReader_GetStrictModeActiveFunc: TLib3MFReader_GetStrictModeActiveFunc;
+		FLib3MFReader_GetAllowDegenerateTrianglesFunc: TLib3MFReader_GetAllowDegenerateTrianglesFunc;
 		FLib3MFReader_GetWarningFunc: TLib3MFReader_GetWarningFunc;
 		FLib3MFReader_GetWarningCountFunc: TLib3MFReader_GetWarningCountFunc;
 		FLib3MFReader_AddKeyWrappingCallbackFunc: TLib3MFReader_AddKeyWrappingCallbackFunc;
@@ -9896,7 +9918,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFReader_AddRelationToReadFunc: TLib3MFReader_AddRelationToReadFunc read FLib3MFReader_AddRelationToReadFunc;
 		property Lib3MFReader_RemoveRelationToReadFunc: TLib3MFReader_RemoveRelationToReadFunc read FLib3MFReader_RemoveRelationToReadFunc;
 		property Lib3MFReader_SetStrictModeActiveFunc: TLib3MFReader_SetStrictModeActiveFunc read FLib3MFReader_SetStrictModeActiveFunc;
+		property Lib3MFReader_SetAllowDegenerateTrianglesFunc: TLib3MFReader_SetAllowDegenerateTrianglesFunc read FLib3MFReader_SetAllowDegenerateTrianglesFunc;
 		property Lib3MFReader_GetStrictModeActiveFunc: TLib3MFReader_GetStrictModeActiveFunc read FLib3MFReader_GetStrictModeActiveFunc;
+		property Lib3MFReader_GetAllowDegenerateTrianglesFunc: TLib3MFReader_GetAllowDegenerateTrianglesFunc read FLib3MFReader_GetAllowDegenerateTrianglesFunc;
 		property Lib3MFReader_GetWarningFunc: TLib3MFReader_GetWarningFunc read FLib3MFReader_GetWarningFunc;
 		property Lib3MFReader_GetWarningCountFunc: TLib3MFReader_GetWarningCountFunc read FLib3MFReader_GetWarningCountFunc;
 		property Lib3MFReader_AddKeyWrappingCallbackFunc: TLib3MFReader_AddKeyWrappingCallbackFunc read FLib3MFReader_AddKeyWrappingCallbackFunc;
@@ -12264,6 +12288,11 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFReader_SetStrictModeActiveFunc(FHandle, Ord(AStrictModeActive)));
 	end;
 
+	procedure TLib3MFReader.SetAllowDegenerateTriangles(const AAllowDegenerateTriangles: Boolean);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFReader_SetAllowDegenerateTrianglesFunc(FHandle, Ord(AAllowDegenerateTriangles)));
+	end;
+
 	function TLib3MFReader.GetStrictModeActive(): Boolean;
 	var
 		ResultStrictModeActive: Byte;
@@ -12271,6 +12300,15 @@ implementation
 		ResultStrictModeActive := 0;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFReader_GetStrictModeActiveFunc(FHandle, ResultStrictModeActive));
 		Result := (ResultStrictModeActive <> 0);
+	end;
+
+	function TLib3MFReader.GetAllowDegenerateTriangles(): Boolean;
+	var
+		ResultAllowDegenerateTriangles: Byte;
+	begin
+		ResultAllowDegenerateTriangles := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFReader_GetAllowDegenerateTrianglesFunc(FHandle, ResultAllowDegenerateTriangles));
+		Result := (ResultAllowDegenerateTriangles <> 0);
 	end;
 
 	function TLib3MFReader.GetWarning(const AIndex: Cardinal; out AErrorCode: Cardinal): String;
@@ -19492,7 +19530,9 @@ implementation
 		FLib3MFReader_AddRelationToReadFunc := LoadFunction('lib3mf_reader_addrelationtoread');
 		FLib3MFReader_RemoveRelationToReadFunc := LoadFunction('lib3mf_reader_removerelationtoread');
 		FLib3MFReader_SetStrictModeActiveFunc := LoadFunction('lib3mf_reader_setstrictmodeactive');
+		FLib3MFReader_SetAllowDegenerateTrianglesFunc := LoadFunction('lib3mf_reader_setallowdegeneratetriangles');
 		FLib3MFReader_GetStrictModeActiveFunc := LoadFunction('lib3mf_reader_getstrictmodeactive');
+		FLib3MFReader_GetAllowDegenerateTrianglesFunc := LoadFunction('lib3mf_reader_getallowdegeneratetriangles');
 		FLib3MFReader_GetWarningFunc := LoadFunction('lib3mf_reader_getwarning');
 		FLib3MFReader_GetWarningCountFunc := LoadFunction('lib3mf_reader_getwarningcount');
 		FLib3MFReader_AddKeyWrappingCallbackFunc := LoadFunction('lib3mf_reader_addkeywrappingcallback');
@@ -20169,7 +20209,13 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_reader_setstrictmodeactive'), @FLib3MFReader_SetStrictModeActiveFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_reader_setallowdegeneratetriangles'), @FLib3MFReader_SetAllowDegenerateTrianglesFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_reader_getstrictmodeactive'), @FLib3MFReader_GetStrictModeActiveFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_reader_getallowdegeneratetriangles'), @FLib3MFReader_GetAllowDegenerateTrianglesFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_reader_getwarning'), @FLib3MFReader_GetWarningFunc);

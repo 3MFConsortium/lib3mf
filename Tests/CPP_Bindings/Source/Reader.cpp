@@ -49,11 +49,38 @@ namespace Lib3MF
 			reader3MF.reset();
 			readerSTL.reset();
 		}
+
+		void ExpectDegenerateTriangleResult();
 	
 		PModel model;
 		PReader reader3MF;
 		PReader readerSTL;
 	};
+
+	void Reader::ExpectDegenerateTriangleResult()
+	{
+		auto meshObjects = model->GetMeshObjects();
+		const Lib3MF_uint32 expectedObjectCount = 1;
+		ASSERT_EQ(expectedObjectCount, meshObjects->Count());
+		ASSERT_TRUE(meshObjects->MoveNext());
+
+		auto meshObject = meshObjects->GetCurrentMeshObject();
+		const Lib3MF_uint32 expectedTriangleCount = 1;
+		EXPECT_EQ(expectedTriangleCount, meshObject->GetTriangleCount());
+		EXPECT_TRUE(meshObject->HasDegenerateTriangles());
+		EXPECT_EQ(expectedTriangleCount, meshObject->GetDegenerateTriangleCount());
+
+		Lib3MF_uint32 triangleElementIndex = 0;
+		auto degenerateTriangle = meshObject->GetDegenerateTriangle(0, triangleElementIndex);
+		const Lib3MF_uint32 expectedElementIndex = 1;
+		EXPECT_EQ(expectedElementIndex, triangleElementIndex);
+		const Lib3MF_uint32 expectedFirstIndex = 0;
+		const Lib3MF_uint32 expectedSecondIndex = 0;
+		const Lib3MF_uint32 expectedThirdIndex = 2;
+		EXPECT_EQ(expectedFirstIndex, degenerateTriangle.m_Indices[0]);
+		EXPECT_EQ(expectedSecondIndex, degenerateTriangle.m_Indices[1]);
+		EXPECT_EQ(expectedThirdIndex, degenerateTriangle.m_Indices[2]);
+	}
 
 	TEST_F(Reader, 3MFReadFromFile)
 	{
@@ -70,7 +97,8 @@ namespace Lib3MF
         ASSERT_NO_THROW(model->AddMeshObject());
 
         auto objectIterator = model->GetObjects();
-		EXPECT_EQ(objectIterator->Count(), 5);
+		const Lib3MF_uint32 expectedObjectCountWithAdditions = 5;
+		EXPECT_EQ(expectedObjectCountWithAdditions, objectIterator->Count());
     }
 
     TEST_F(Reader, 3MFReadFromFileAndAddComponents)
@@ -82,7 +110,8 @@ namespace Lib3MF
         ASSERT_NO_THROW(model->AddComponentsObject());
 
         auto objectIterator = model->GetObjects();
-		EXPECT_EQ(objectIterator->Count(), 8);
+		const Lib3MF_uint32 expectedComponentCountWithAdditions = 8;
+		EXPECT_EQ(expectedComponentCountWithAdditions, objectIterator->Count());
     }
 
 	TEST_F(Reader, STLReadFromFile)
@@ -145,27 +174,41 @@ namespace Lib3MF
 
 		CheckReaderWarnings(reader3MF, 1);
 
-		auto meshObjects = model->GetMeshObjects();
-		ASSERT_EQ(1, meshObjects->Count());
-		ASSERT_TRUE(meshObjects->MoveNext());
+		ExpectDegenerateTriangleResult();
+	}
 
-		auto meshObject = meshObjects->GetCurrentMeshObject();
-		EXPECT_EQ(1, meshObject->GetTriangleCount());
-		EXPECT_TRUE(meshObject->HasDegenerateTriangles());
-		EXPECT_EQ(1, meshObject->GetDegenerateTriangleCount());
+	TEST_F(Reader, DegenerateTriangleStrictModeAllowsFlag)
+	{
+		reader3MF->SetStrictModeActive(true);
+		reader3MF->SetAllowDegenerateTriangles(true);
+		EXPECT_TRUE(reader3MF->GetAllowDegenerateTriangles());
+		reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "DegenerateTriangle.3mf");
 
-		Lib3MF_uint32 triangleElementIndex = 0;
-		auto degenerateTriangle = meshObject->GetDegenerateTriangle(0, triangleElementIndex);
-		EXPECT_EQ(1, triangleElementIndex);
-		EXPECT_EQ(0, degenerateTriangle.m_Indices[0]);
-		EXPECT_EQ(0, degenerateTriangle.m_Indices[1]);
-		EXPECT_EQ(2, degenerateTriangle.m_Indices[2]);
+		CheckReaderWarnings(reader3MF, 1);
+
+		ExpectDegenerateTriangleResult();
 	}
 
 	TEST_F(Reader, DegenerateTriangleStrictModeThrows)
 	{
 		reader3MF->SetStrictModeActive(true);
 		ASSERT_SPECIFIC_THROW(reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "DegenerateTriangle.3mf"), ELib3MFException);
+	}
+
+	TEST_F(Reader, STLDegenerateTriangle)
+	{
+		readerSTL->ReadFromFile(sTestFilesPath + "/Reader/" + "DegenerateTriangle.stl");
+		CheckReaderWarnings(readerSTL, 0);
+
+		ExpectDegenerateTriangleResult();
+	}
+
+	TEST_F(Reader, STLDegenerateTriangleASCII)
+	{
+		readerSTL->ReadFromFile(sTestFilesPath + "/Reader/" + "DegenerateTriangle_ASCII.stl");
+		CheckReaderWarnings(readerSTL, 0);
+
+		ExpectDegenerateTriangleResult();
 	}
 
 	TEST_F(Reader, Production)
@@ -178,8 +221,10 @@ namespace Lib3MF
 	TEST_F(Reader, ProductionExternalModel) {
 		auto reader = model->QueryReader("3mf");
 		reader->ReadFromFile(sTestFilesPath + "/Production/" + "detachedmodel.3mf");
-		ASSERT_EQ(27, model->GetBuildItems()->Count());
-		ASSERT_EQ(28, model->GetObjects()->Count());
+		const Lib3MF_uint32 expectedBuildItems = 27;
+		const Lib3MF_uint32 expectedObjects = 28;
+		ASSERT_EQ(expectedBuildItems, model->GetBuildItems()->Count());
+		ASSERT_EQ(expectedObjects, model->GetObjects()->Count());
 	}
 
 	TEST_F(Reader, DuplicateStartPart)

@@ -65,8 +65,10 @@ if __name__ == "__main__":
 
     if "LIB3MF_STRICT_READER" not in os.environ:
         os.environ["LIB3MF_STRICT_READER"] = "1"
-
+    manage_allow_env = "LIB3MF_ALLOW_DEGENERATE_TRIANGLES" not in os.environ
     execCommand = os.path.join(root, "Example_ExtractInfo")
+
+    suite_root = os.environ.get("LIB3MF_TEST_SUITE_ROOT", root)
 
     print("Execute once for testing")
     os.system(execCommand)
@@ -75,8 +77,8 @@ if __name__ == "__main__":
     positives = []
     negatives = []
 
-    for suite in os.listdir(root):
-        suite_path = os.path.join(root, suite)
+    for suite in os.listdir(suite_root):
+        suite_path = os.path.join(suite_root, suite)
         if os.path.isdir(suite_path) and suite.startswith("suite"):
             positives += listFilesIn(suite_path, "positive_test_cases", ".3mf")
             negatives += listFilesIn(suite_path, "negative_test_cases", ".3mf")
@@ -89,6 +91,9 @@ if __name__ == "__main__":
 
     brokenPositives = []
     iFile = 0
+    if manage_allow_env:
+        os.environ["LIB3MF_ALLOW_DEGENERATE_TRIANGLES"] = "1"
+
     for fileName in positives:
         iFile += 1
         print("{:3.0f}%: {:s}".format(100 * (iFile / nFiles), fileName), flush=True)
@@ -108,6 +113,9 @@ if __name__ == "__main__":
             brokenPositives.append(info)
 
     runningNegatives = []
+    if manage_allow_env:
+        os.environ["LIB3MF_ALLOW_DEGENERATE_TRIANGLES"] = "0"
+
     for fileName in negatives:
         iFile += 1
         print("{:3.0f}%: {:s}".format(100 * (iFile / nFiles), fileName), flush=True)

@@ -131,7 +131,9 @@ private:
 	static void AddRelationToRead(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveRelationToRead(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetStrictModeActive(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetAllowDegenerateTriangles(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetStrictModeActive(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetAllowDegenerateTriangles(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetWarning(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetWarningCount(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddKeyWrappingCallback(const v8::FunctionCallbackInfo<v8::Value>& args);

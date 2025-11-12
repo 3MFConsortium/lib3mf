@@ -474,10 +474,20 @@
 			<param name="StrictModeActive" type="bool" pass="in"
 				description="flag whether strict mode is active or not." />
 		</method>
+		<method name="SetAllowDegenerateTriangles"
+			description="Allows degenerate triangles to be collected instead of causing strict-mode failures.">
+			<param name="AllowDegenerateTriangles" type="bool" pass="in"
+				description="flag whether degenerate triangles should be collected even in strict mode." />
+		</method>
 		<method name="GetStrictModeActive"
 			description="Queries whether the strict mode of the reader is active or not">
 			<param name="StrictModeActive" type="bool" pass="return"
 				description="returns flag whether strict mode is active or not." />
+		</method>
+		<method name="GetAllowDegenerateTriangles"
+			description="Queries whether degenerate triangles are collected without raising strict-mode errors.">
+			<param name="AllowDegenerateTriangles" type="bool" pass="return"
+				description="returns flag whether degenerate triangles are collected even in strict mode." />
 		</method>
 		<method name="GetWarning"
 			description="Returns Warning and Error Information of the read process">

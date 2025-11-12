@@ -272,6 +272,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_removerelationtoread(Lib3MF_Reader pR
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_setstrictmodeactive(Lib3MF_Reader pReader, bool bStrictModeActive);
 
 /**
+* Allows degenerate triangles to be collected instead of causing strict-mode failures.
+*
+* @param[in] pReader - Reader instance.
+* @param[in] bAllowDegenerateTriangles - flag whether degenerate triangles should be collected even in strict mode.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_setallowdegeneratetriangles(Lib3MF_Reader pReader, bool bAllowDegenerateTriangles);
+
+/**
 * Queries whether the strict mode of the reader is active or not
 *
 * @param[in] pReader - Reader instance.
@@ -279,6 +288,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_setstrictmodeactive(Lib3MF_Reader pRe
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_getstrictmodeactive(Lib3MF_Reader pReader, bool * pStrictModeActive);
+
+/**
+* Queries whether degenerate triangles are collected without raising strict-mode errors.
+*
+* @param[in] pReader - Reader instance.
+* @param[out] pAllowDegenerateTriangles - returns flag whether degenerate triangles are collected even in strict mode.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_getallowdegeneratetriangles(Lib3MF_Reader pReader, bool * pAllowDegenerateTriangles);
 
 /**
 * Returns Warning and Error Information of the read process
