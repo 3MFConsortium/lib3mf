@@ -60,7 +60,7 @@ namespace NMR {
 
 		_Ret_notnull_ CMeshInformation_Properties * createPropertiesInformation();
 		bool isStrictModeActive() const;
-		bool allowsDegenerateTrianglesInStrictMode() const;
+		bool shouldSkipDegenerateTriangles() const;
 	public:
 		CModelReaderNode093_Triangles() = delete;
 		CModelReaderNode093_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, PModelBaseMaterialResource pMaterialResource, _In_ PModelWarnings pWarnings);

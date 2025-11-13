@@ -62,7 +62,7 @@ namespace NMR {
 	CModelWarnings::CModelWarnings()
 	{
 		setCriticalWarningLevel(mrwFatal);
-		m_bAllowDegenerateTrianglesInStrictMode = false;
+		m_bSkipDegenerateTriangles = false;
 	}
 
 	eModelWarningLevel CModelWarnings::getCriticalWarningLevel()
@@ -75,14 +75,14 @@ namespace NMR {
 		m_CriticalWarningLevel = WarningLevel;
 	}
 
-	void CModelWarnings::setAllowDegenerateTrianglesInStrictMode(_In_ bool bAllow)
+	void CModelWarnings::setSkipDegenerateTriangles(_In_ bool bSkip)
 	{
-		m_bAllowDegenerateTrianglesInStrictMode = bAllow;
+		m_bSkipDegenerateTriangles = bSkip;
 	}
 
-	bool CModelWarnings::getAllowDegenerateTrianglesInStrictMode() const
+	bool CModelWarnings::getSkipDegenerateTriangles() const
 	{
-		return m_bAllowDegenerateTrianglesInStrictMode;
+		return m_bSkipDegenerateTriangles;
 	}
 
 	void CModelWarnings::addWarning(_In_ nfError nErrorCode, eModelWarningLevel WarningLevel)
@@ -101,7 +101,7 @@ namespace NMR {
 		}
 
 		bool bShouldThrow = ((nfInt32)WarningLevel <= (nfInt32)m_CriticalWarningLevel);
-		if (bShouldThrow && m_bAllowDegenerateTrianglesInStrictMode && Exception.getErrorCode() == NMR_ERROR_INVALIDMODELCOORDINATEINDICES)
+		if (bShouldThrow && m_bSkipDegenerateTriangles && Exception.getErrorCode() == NMR_ERROR_INVALIDMODELCOORDINATEINDICES)
 			bShouldThrow = false;
 
 		if (bShouldThrow)

@@ -1060,9 +1060,9 @@ public:
 	inline void AddRelationToRead(const std::string & sRelationShipType);
 	inline void RemoveRelationToRead(const std::string & sRelationShipType);
 	inline void SetStrictModeActive(const bool bStrictModeActive);
-	inline void SetAllowDegenerateTriangles(const bool bAllowDegenerateTriangles);
+	inline void SkipDegenerateTriangles(const bool bShouldSkipDegenerateTriangles);
 	inline bool GetStrictModeActive();
-	inline bool GetAllowDegenerateTriangles();
+	inline bool AreDegenerateTrianglesSkipped();
 	inline std::string GetWarning(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode);
 	inline Lib3MF_uint32 GetWarningCount();
 	inline void AddKeyWrappingCallback(const std::string & sConsumerID, const KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData);
@@ -4109,12 +4109,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CReader::SetAllowDegenerateTriangles - Allows degenerate triangles to be collected instead of causing strict-mode failures.
-	* @param[in] bAllowDegenerateTriangles - flag whether degenerate triangles should be collected even in strict mode.
+	* CReader::SkipDegenerateTriangles - Allows degenerate triangles to be collected instead of causing strict-mode failures.
+	* @param[in] bShouldSkipDegenerateTriangles - flag whether degenerate triangles should be collected even in strict mode.
 	*/
-	void CReader::SetAllowDegenerateTriangles(const bool bAllowDegenerateTriangles)
+	void CReader::SkipDegenerateTriangles(const bool bShouldSkipDegenerateTriangles)
 	{
-		CheckError(lib3mf_reader_setallowdegeneratetriangles(m_pHandle, bAllowDegenerateTriangles));
+		CheckError(lib3mf_reader_skipdegeneratetriangles(m_pHandle, bShouldSkipDegenerateTriangles));
 	}
 	
 	/**
@@ -4130,15 +4130,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CReader::GetAllowDegenerateTriangles - Queries whether degenerate triangles are collected without raising strict-mode errors.
+	* CReader::AreDegenerateTrianglesSkipped - Queries whether degenerate triangles are collected without raising strict-mode errors.
 	* @return returns flag whether degenerate triangles are collected even in strict mode.
 	*/
-	bool CReader::GetAllowDegenerateTriangles()
+	bool CReader::AreDegenerateTrianglesSkipped()
 	{
-		bool resultAllowDegenerateTriangles = 0;
-		CheckError(lib3mf_reader_getallowdegeneratetriangles(m_pHandle, &resultAllowDegenerateTriangles));
+		bool resultAreDegenerateTrianglesSkipped = 0;
+		CheckError(lib3mf_reader_aredegeneratetrianglesskipped(m_pHandle, &resultAreDegenerateTrianglesSkipped));
 		
-		return resultAllowDegenerateTriangles;
+		return resultAreDegenerateTrianglesSkipped;
 	}
 	
 	/**

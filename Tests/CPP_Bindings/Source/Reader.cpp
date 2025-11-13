@@ -34,6 +34,7 @@ UnitTest_Reader.cpp: Defines Unittests for the Reader classes
 #include "lib3mf_implicit.hpp"
 
 #include <algorithm>
+#include <vector>
 
 namespace Lib3MF
 {
@@ -80,6 +81,16 @@ namespace Lib3MF
 		EXPECT_EQ(expectedFirstIndex, degenerateTriangle.m_Indices[0]);
 		EXPECT_EQ(expectedSecondIndex, degenerateTriangle.m_Indices[1]);
 		EXPECT_EQ(expectedThirdIndex, degenerateTriangle.m_Indices[2]);
+
+		std::vector<Lib3MF_uint32> triangleElementIndices;
+		std::vector<Lib3MF::sTriangle> triangleInfos;
+		meshObject->GetDegenerateTriangles(triangleElementIndices, triangleInfos);
+		EXPECT_EQ(expectedTriangleCount, triangleElementIndices.size());
+		EXPECT_EQ(expectedTriangleCount, triangleInfos.size());
+		EXPECT_EQ(expectedElementIndex, triangleElementIndices[0]);
+		EXPECT_EQ(expectedFirstIndex, triangleInfos[0].m_Indices[0]);
+		EXPECT_EQ(expectedSecondIndex, triangleInfos[0].m_Indices[1]);
+		EXPECT_EQ(expectedThirdIndex, triangleInfos[0].m_Indices[2]);
 	}
 
 	TEST_F(Reader, 3MFReadFromFile)
@@ -180,8 +191,8 @@ namespace Lib3MF
 	TEST_F(Reader, DegenerateTriangleStrictModeAllowsFlag)
 	{
 		reader3MF->SetStrictModeActive(true);
-	reader3MF->SetAllowDegenerateTriangles(true);
-	EXPECT_TRUE(reader3MF->GetAllowDegenerateTriangles());
+		reader3MF->SkipDegenerateTriangles(true);
+		EXPECT_TRUE(reader3MF->AreDegenerateTrianglesSkipped());
 	reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "DegenerateTriangle.3mf");
 
 	CheckReaderWarnings(reader3MF, 0);

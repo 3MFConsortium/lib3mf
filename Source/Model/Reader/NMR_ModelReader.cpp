@@ -45,9 +45,9 @@ namespace NMR {
 	CModelReader::CModelReader(_In_ PModel pModel)
 		:CModelContext(pModel)
 	{
-		m_bAllowDegenerateTriangles = false;
+		m_bSkipDegenerateTriangles = false;
 		if (warnings())
-			warnings()->setAllowDegenerateTrianglesInStrictMode(false);
+			warnings()->setSkipDegenerateTriangles(false);
 	}
 
 	void CModelReader::readFromMeshImporter(_In_ CMeshImporter * pImporter)
@@ -85,16 +85,16 @@ namespace NMR {
 		m_RelationsToRead.erase(sRelationShipType);
 	}
 
-	void CModelReader::setAllowDegenerateTriangles(_In_ bool bAllow)
-	{
-		m_bAllowDegenerateTriangles = bAllow;
+void CModelReader::setSkipDegenerateTriangles(_In_ bool bSkip)
+{
+		m_bSkipDegenerateTriangles = bSkip;
 		if (warnings())
-			warnings()->setAllowDegenerateTrianglesInStrictMode(bAllow);
-	}
+			warnings()->setSkipDegenerateTriangles(bSkip);
+}
 
-	bool CModelReader::getAllowDegenerateTriangles() const
-	{
-		return m_bAllowDegenerateTriangles;
-	}
+bool CModelReader::getSkipDegenerateTriangles() const
+{
+		return m_bSkipDegenerateTriangles;
+}
 
 }

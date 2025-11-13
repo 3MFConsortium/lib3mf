@@ -1084,9 +1084,9 @@ public:
 	inline void AddRelationToRead(const std::string & sRelationShipType);
 	inline void RemoveRelationToRead(const std::string & sRelationShipType);
 	inline void SetStrictModeActive(const bool bStrictModeActive);
-	inline void SetAllowDegenerateTriangles(const bool bAllowDegenerateTriangles);
+	inline void SkipDegenerateTriangles(const bool bShouldSkipDegenerateTriangles);
 	inline bool GetStrictModeActive();
-	inline bool GetAllowDegenerateTriangles();
+	inline bool AreDegenerateTrianglesSkipped();
 	inline std::string GetWarning(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode);
 	inline Lib3MF_uint32 GetWarningCount();
 	inline void AddKeyWrappingCallback(const std::string & sConsumerID, const KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData);
@@ -3919,9 +3919,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Reader_AddRelationToRead = nullptr;
 		pWrapperTable->m_Reader_RemoveRelationToRead = nullptr;
 		pWrapperTable->m_Reader_SetStrictModeActive = nullptr;
-		pWrapperTable->m_Reader_SetAllowDegenerateTriangles = nullptr;
+		pWrapperTable->m_Reader_SkipDegenerateTriangles = nullptr;
 		pWrapperTable->m_Reader_GetStrictModeActive = nullptr;
-		pWrapperTable->m_Reader_GetAllowDegenerateTriangles = nullptr;
+		pWrapperTable->m_Reader_AreDegenerateTrianglesSkipped = nullptr;
 		pWrapperTable->m_Reader_GetWarning = nullptr;
 		pWrapperTable->m_Reader_GetWarningCount = nullptr;
 		pWrapperTable->m_Reader_AddKeyWrappingCallback = nullptr;
@@ -4764,12 +4764,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_Reader_SetAllowDegenerateTriangles = (PLib3MFReader_SetAllowDegenerateTrianglesPtr) GetProcAddress(hLibrary, "lib3mf_reader_setallowdegeneratetriangles");
+		pWrapperTable->m_Reader_SkipDegenerateTriangles = (PLib3MFReader_SkipDegenerateTrianglesPtr) GetProcAddress(hLibrary, "lib3mf_reader_skipdegeneratetriangles");
 		#else // _WIN32
-		pWrapperTable->m_Reader_SetAllowDegenerateTriangles = (PLib3MFReader_SetAllowDegenerateTrianglesPtr) dlsym(hLibrary, "lib3mf_reader_setallowdegeneratetriangles");
+		pWrapperTable->m_Reader_SkipDegenerateTriangles = (PLib3MFReader_SkipDegenerateTrianglesPtr) dlsym(hLibrary, "lib3mf_reader_skipdegeneratetriangles");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_Reader_SetAllowDegenerateTriangles == nullptr)
+		if (pWrapperTable->m_Reader_SkipDegenerateTriangles == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -4782,12 +4782,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_Reader_GetAllowDegenerateTriangles = (PLib3MFReader_GetAllowDegenerateTrianglesPtr) GetProcAddress(hLibrary, "lib3mf_reader_getallowdegeneratetriangles");
+		pWrapperTable->m_Reader_AreDegenerateTrianglesSkipped = (PLib3MFReader_AreDegenerateTrianglesSkippedPtr) GetProcAddress(hLibrary, "lib3mf_reader_aredegeneratetrianglesskipped");
 		#else // _WIN32
-		pWrapperTable->m_Reader_GetAllowDegenerateTriangles = (PLib3MFReader_GetAllowDegenerateTrianglesPtr) dlsym(hLibrary, "lib3mf_reader_getallowdegeneratetriangles");
+		pWrapperTable->m_Reader_AreDegenerateTrianglesSkipped = (PLib3MFReader_AreDegenerateTrianglesSkippedPtr) dlsym(hLibrary, "lib3mf_reader_aredegeneratetrianglesskipped");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_Reader_GetAllowDegenerateTriangles == nullptr)
+		if (pWrapperTable->m_Reader_AreDegenerateTrianglesSkipped == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -10308,16 +10308,16 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_Reader_SetStrictModeActive == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_reader_setallowdegeneratetriangles", (void**)&(pWrapperTable->m_Reader_SetAllowDegenerateTriangles));
-		if ( (eLookupError != 0) || (pWrapperTable->m_Reader_SetAllowDegenerateTriangles == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_reader_skipdegeneratetriangles", (void**)&(pWrapperTable->m_Reader_SkipDegenerateTriangles));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Reader_SkipDegenerateTriangles == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_reader_getstrictmodeactive", (void**)&(pWrapperTable->m_Reader_GetStrictModeActive));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Reader_GetStrictModeActive == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_reader_getallowdegeneratetriangles", (void**)&(pWrapperTable->m_Reader_GetAllowDegenerateTriangles));
-		if ( (eLookupError != 0) || (pWrapperTable->m_Reader_GetAllowDegenerateTriangles == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_reader_aredegeneratetrianglesskipped", (void**)&(pWrapperTable->m_Reader_AreDegenerateTrianglesSkipped));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Reader_AreDegenerateTrianglesSkipped == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_reader_getwarning", (void**)&(pWrapperTable->m_Reader_GetWarning));
@@ -12972,12 +12972,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CReader::SetAllowDegenerateTriangles - Allows degenerate triangles to be collected instead of causing strict-mode failures.
-	* @param[in] bAllowDegenerateTriangles - flag whether degenerate triangles should be collected even in strict mode.
+	* CReader::SkipDegenerateTriangles - Allows degenerate triangles to be collected instead of causing strict-mode failures.
+	* @param[in] bShouldSkipDegenerateTriangles - flag whether degenerate triangles should be collected even in strict mode.
 	*/
-	void CReader::SetAllowDegenerateTriangles(const bool bAllowDegenerateTriangles)
+	void CReader::SkipDegenerateTriangles(const bool bShouldSkipDegenerateTriangles)
 	{
-		CheckError(m_pWrapper->m_WrapperTable.m_Reader_SetAllowDegenerateTriangles(m_pHandle, bAllowDegenerateTriangles));
+		CheckError(m_pWrapper->m_WrapperTable.m_Reader_SkipDegenerateTriangles(m_pHandle, bShouldSkipDegenerateTriangles));
 	}
 	
 	/**
@@ -12993,15 +12993,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CReader::GetAllowDegenerateTriangles - Queries whether degenerate triangles are collected without raising strict-mode errors.
+	* CReader::AreDegenerateTrianglesSkipped - Queries whether degenerate triangles are collected without raising strict-mode errors.
 	* @return returns flag whether degenerate triangles are collected even in strict mode.
 	*/
-	bool CReader::GetAllowDegenerateTriangles()
+	bool CReader::AreDegenerateTrianglesSkipped()
 	{
-		bool resultAllowDegenerateTriangles = 0;
-		CheckError(m_pWrapper->m_WrapperTable.m_Reader_GetAllowDegenerateTriangles(m_pHandle, &resultAllowDegenerateTriangles));
+		bool resultAreDegenerateTrianglesSkipped = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Reader_AreDegenerateTrianglesSkipped(m_pHandle, &resultAreDegenerateTrianglesSkipped));
 		
-		return resultAllowDegenerateTriangles;
+		return resultAreDegenerateTrianglesSkipped;
 	}
 	
 	/**

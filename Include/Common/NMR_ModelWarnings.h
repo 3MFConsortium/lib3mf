@@ -72,15 +72,15 @@ namespace NMR {
 	private:
 		std::vector<PModelReaderWarning> m_Warnings;
 		eModelWarningLevel m_CriticalWarningLevel;
-		bool m_bAllowDegenerateTrianglesInStrictMode;
+		bool m_bSkipDegenerateTriangles;
 	public:
 		CModelWarnings();
 
 		eModelWarningLevel getCriticalWarningLevel ();
 		void setCriticalWarningLevel(_In_ eModelWarningLevel WarningLevel);
 
-		void setAllowDegenerateTrianglesInStrictMode(_In_ bool bAllow);
-		bool getAllowDegenerateTrianglesInStrictMode() const;
+		void setSkipDegenerateTriangles(_In_ bool bSkip);
+		bool getSkipDegenerateTriangles() const;
 
 		void addWarning(_In_ nfError nErrorCode, _In_ eModelWarningLevel WarningLevel);
 		void addException(const _In_ CNMRException & Exception, _In_ eModelWarningLevel WarningLevel);

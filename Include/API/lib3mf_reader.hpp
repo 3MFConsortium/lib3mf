@@ -96,9 +96,9 @@ public:
 
 	bool GetStrictModeActive ();
 
-	void SetAllowDegenerateTriangles (const bool bAllowDegenerateTriangles);
+	void SkipDegenerateTriangles (const bool bSkipDegenerateTriangles);
 
-	bool GetAllowDegenerateTriangles ();
+	bool AreDegenerateTrianglesSkipped ();
 
 	std::string GetWarning (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode);
 

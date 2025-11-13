@@ -474,9 +474,9 @@
 			<param name="StrictModeActive" type="bool" pass="in"
 				description="flag whether strict mode is active or not." />
 		</method>
-		<method name="SetAllowDegenerateTriangles"
+		<method name="SkipDegenerateTriangles"
 			description="Allows degenerate triangles to be collected instead of causing strict-mode failures.">
-			<param name="AllowDegenerateTriangles" type="bool" pass="in"
+			<param name="ShouldSkipDegenerateTriangles" type="bool" pass="in"
 				description="flag whether degenerate triangles should be collected even in strict mode." />
 		</method>
 		<method name="GetStrictModeActive"
@@ -484,9 +484,9 @@
 			<param name="StrictModeActive" type="bool" pass="return"
 				description="returns flag whether strict mode is active or not." />
 		</method>
-		<method name="GetAllowDegenerateTriangles"
+		<method name="AreDegenerateTrianglesSkipped"
 			description="Queries whether degenerate triangles are collected without raising strict-mode errors.">
-			<param name="AllowDegenerateTriangles" type="bool" pass="return"
+			<param name="AreDegenerateTrianglesSkipped" type="bool" pass="return"
 				description="returns flag whether degenerate triangles are collected even in strict mode." />
 		</method>
 		<method name="GetWarning"

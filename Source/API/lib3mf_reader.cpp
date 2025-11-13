@@ -166,14 +166,14 @@ bool CReader::GetStrictModeActive ()
 	return reader().warnings()->getCriticalWarningLevel() == NMR::mrwInvalidOptionalValue;
 }
 
-void CReader::SetAllowDegenerateTriangles (const bool bAllowDegenerateTriangles)
+void CReader::SkipDegenerateTriangles (const bool bSkipDegenerateTriangles)
 {
-	reader().setAllowDegenerateTriangles(bAllowDegenerateTriangles);
+	reader().setSkipDegenerateTriangles(bSkipDegenerateTriangles);
 }
 
-bool CReader::GetAllowDegenerateTriangles ()
+bool CReader::AreDegenerateTrianglesSkipped ()
 {
-	return reader().getAllowDegenerateTriangles();
+	return reader().getSkipDegenerateTriangles();
 }
 
 std::string CReader::GetWarning (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode)
