@@ -19,6 +19,11 @@ project(lib3mf
   DESCRIPTION "An implementation of the 3D Manufacturing Format file standard"
 )
 
+# macOS: ensure zlib includes <unistd.h> (affects ALL targets incl. Tests)
+if(APPLE)
+  add_compile_definitions(Z_HAVE_UNISTD_H=1)
+endif()
+
 find_program(buildcache_program buildcache)
 if(buildcache_program)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${buildcache_program}")
@@ -207,6 +212,12 @@ endif()
 
 if (USE_INCLUDED_ZLIB)
     target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zlib/Include)
+
+    if(APPLE)
+      # macOS fix for undeclared lseek() in gzlib.c
+      target_compile_definitions(${PROJECT_NAME} PRIVATE Z_HAVE_UNISTD_H=1)
+    endif()
+
 else()
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(ZLIB REQUIRED zlib)
@@ -232,6 +243,7 @@ if (UNIX OR MINGW)
   # Uncomment the following to put the version info into the .so-file.
   set_target_properties(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
   set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wno-incompatible-pointer-types)
   if (STRIP_BINARIES AND NOT APPLE)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS -s)
   endif()
@@ -248,7 +260,7 @@ if(WIN32)
 else()
   if (USE_PLATFORM_UUID)
     if (APPLE)
-      target_compile_definitions(${PROJECT_NAME} PRIVATE GUID_CFUUID)
+      target_compile_definitions(${PROJECT_NAME} PRIVATE GUID_CFUUID HAVE_UNISTD_H=1)
       target_link_libraries(${PROJECT_NAME} "-framework Foundation")
     else()
       target_compile_definitions(${PROJECT_NAME} PRIVATE GUID_LIBUUID)
