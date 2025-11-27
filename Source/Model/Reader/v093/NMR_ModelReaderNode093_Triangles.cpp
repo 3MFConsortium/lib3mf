@@ -42,6 +42,7 @@ XML Model Stream.
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/Math/NMR_Vector.h"
+#include "Common/Mesh/NMR_MeshTypes.h"
 
 namespace NMR {
 
@@ -98,7 +99,6 @@ namespace NMR {
 				pXMLNode->retrieveIndices(nIndex1, nIndex2, nIndex3, m_pMesh->getNodeCount());
 
 				nfInt32 nTextureIndex1, nTextureIndex2, nTextureIndex3;
-				static const nfFloat fDegenerateEpsilon = 1e-12f;
 				bool bDegenerate = false;
 
 				if ((nIndex1 == nIndex2) || (nIndex1 == nIndex3) || (nIndex2 == nIndex3))
@@ -118,7 +118,7 @@ namespace NMR {
 						(vNormal.m_fields[1] * vNormal.m_fields[1]) +
 						(vNormal.m_fields[2] * vNormal.m_fields[2]);
 
-					if (fNormalSquared <= fDegenerateEpsilon)
+					if (fNormalSquared <= NMR_DEGENERATE_TRIANGLE_EPSILON)
 						bDegenerate = true;
 				}
 

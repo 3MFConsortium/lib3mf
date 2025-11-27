@@ -544,10 +544,10 @@ public:
 	virtual void SetStrictModeActive(const bool bStrictModeActive) = 0;
 
 	/**
-	* IReader::SkipDegenerateTriangles - Allows degenerate triangles to be collected instead of causing strict-mode failures.
-	* @param[in] bShouldSkipDegenerateTriangles - flag whether degenerate triangles should be collected even in strict mode.
+	* IReader::AllowDegenerateTriangles - When true, degenerate triangles are collected regardless of strict mode.
+	* @param[in] bAllowDegenerateTriangles - flag whether degenerate triangles should be collected regardless of strict mode.
 	*/
-	virtual void SkipDegenerateTriangles(const bool bShouldSkipDegenerateTriangles) = 0;
+	virtual void AllowDegenerateTriangles(const bool bAllowDegenerateTriangles) = 0;
 
 	/**
 	* IReader::GetStrictModeActive - Queries whether the strict mode of the reader is active or not
@@ -556,10 +556,10 @@ public:
 	virtual bool GetStrictModeActive() = 0;
 
 	/**
-	* IReader::AreDegenerateTrianglesSkipped - Queries whether degenerate triangles are collected without raising strict-mode errors.
-	* @return returns flag whether degenerate triangles are collected even in strict mode.
+	* IReader::AreDegenerateTrianglesAllowed - Queries whether degenerate triangles are collected regardless of strict mode.
+	* @return returns flag whether degenerate triangles are collected regardless of strict mode.
 	*/
-	virtual bool AreDegenerateTrianglesSkipped() = 0;
+	virtual bool AreDegenerateTrianglesAllowed() = 0;
 
 	/**
 	* IReader::GetWarning - Returns Warning and Error Information of the read process

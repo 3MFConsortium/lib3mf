@@ -34,6 +34,7 @@ This is a derived class for Importing the binary STL and color STL Mesh Format.
 #include "Common/MeshImport/NMR_MeshImporter_STL.h"
 #include "Common/MeshInformation/NMR_MeshInformation.h"
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+#include "Common/Mesh/NMR_MeshTypes.h"
 #include "Common/Math/NMR_VectorTree.h"
 #include "Common/Math/NMR_Matrix.h"
 #include "Common/Math/NMR_Vector.h"
@@ -176,7 +177,7 @@ namespace NMR {
 
 		CVectorTree VectorTree;
 		VectorTree.setUnits(m_fUnits);
-		const nfFloat fDegenerateEpsilon = 1e-12f;
+		const nfFloat fDegenerateEpsilon = NMR_DEGENERATE_TRIANGLE_EPSILON;
 
 		auto processTriangle = [&](const std::array<NVEC3, 3> & vertices, nfUint32 nElementIndex)
 		{

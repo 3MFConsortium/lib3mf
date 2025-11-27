@@ -825,21 +825,21 @@ Lib3MFResult lib3mf_reader_setstrictmodeactive(Lib3MF_Reader pReader, bool bStri
 	}
 }
 
-Lib3MFResult lib3mf_reader_skipdegeneratetriangles(Lib3MF_Reader pReader, bool bShouldSkipDegenerateTriangles)
+Lib3MFResult lib3mf_reader_allowdegeneratetriangles(Lib3MF_Reader pReader, bool bAllowDegenerateTriangles)
 {
 	IBase* pIBaseClass = (IBase *)pReader;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pReader, "Reader", "SkipDegenerateTriangles");
-			pJournalEntry->addBooleanParameter("ShouldSkipDegenerateTriangles", bShouldSkipDegenerateTriangles);
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pReader, "Reader", "AllowDegenerateTriangles");
+			pJournalEntry->addBooleanParameter("AllowDegenerateTriangles", bAllowDegenerateTriangles);
 		}
 		IReader* pIReader = dynamic_cast<IReader*>(pIBaseClass);
 		if (!pIReader)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIReader->SkipDegenerateTriangles(bShouldSkipDegenerateTriangles);
+		pIReader->AllowDegenerateTriangles(bAllowDegenerateTriangles);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -891,25 +891,25 @@ Lib3MFResult lib3mf_reader_getstrictmodeactive(Lib3MF_Reader pReader, bool * pSt
 	}
 }
 
-Lib3MFResult lib3mf_reader_aredegeneratetrianglesskipped(Lib3MF_Reader pReader, bool * pAreDegenerateTrianglesSkipped)
+Lib3MFResult lib3mf_reader_aredegeneratetrianglesallowed(Lib3MF_Reader pReader, bool * pAreDegenerateTrianglesAllowed)
 {
 	IBase* pIBaseClass = (IBase *)pReader;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pReader, "Reader", "AreDegenerateTrianglesSkipped");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pReader, "Reader", "AreDegenerateTrianglesAllowed");
 		}
-		if (pAreDegenerateTrianglesSkipped == nullptr)
+		if (pAreDegenerateTrianglesAllowed == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		IReader* pIReader = dynamic_cast<IReader*>(pIBaseClass);
 		if (!pIReader)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pAreDegenerateTrianglesSkipped = pIReader->AreDegenerateTrianglesSkipped();
+		*pAreDegenerateTrianglesAllowed = pIReader->AreDegenerateTrianglesAllowed();
 
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addBooleanResult("AreDegenerateTrianglesSkipped", *pAreDegenerateTrianglesSkipped);
+			pJournalEntry->addBooleanResult("AreDegenerateTrianglesAllowed", *pAreDegenerateTrianglesAllowed);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -23589,12 +23589,12 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_reader_removerelationtoread;
 	if (sProcName == "lib3mf_reader_setstrictmodeactive") 
 		*ppProcAddress = (void*) &lib3mf_reader_setstrictmodeactive;
-	if (sProcName == "lib3mf_reader_skipdegeneratetriangles") 
-		*ppProcAddress = (void*) &lib3mf_reader_skipdegeneratetriangles;
+	if (sProcName == "lib3mf_reader_allowdegeneratetriangles") 
+		*ppProcAddress = (void*) &lib3mf_reader_allowdegeneratetriangles;
 	if (sProcName == "lib3mf_reader_getstrictmodeactive") 
 		*ppProcAddress = (void*) &lib3mf_reader_getstrictmodeactive;
-	if (sProcName == "lib3mf_reader_aredegeneratetrianglesskipped") 
-		*ppProcAddress = (void*) &lib3mf_reader_aredegeneratetrianglesskipped;
+	if (sProcName == "lib3mf_reader_aredegeneratetrianglesallowed") 
+		*ppProcAddress = (void*) &lib3mf_reader_aredegeneratetrianglesallowed;
 	if (sProcName == "lib3mf_reader_getwarning") 
 		*ppProcAddress = (void*) &lib3mf_reader_getwarning;
 	if (sProcName == "lib3mf_reader_getwarningcount") 

@@ -196,7 +196,7 @@ void ExtractInfoExample(const std::string& sFileName, bool strictMode, bool allo
 	{
 		PReader reader = model->QueryReader("3mf");
 		reader->SetStrictModeActive(strictMode);
-		reader->SkipDegenerateTriangles(allowDegenerateTriangles);
+		reader->AllowDegenerateTriangles(allowDegenerateTriangles);
 		if (strictMode)
 			std::cout << "Strict reader mode enabled" << std::endl;
 		if (allowDegenerateTriangles)

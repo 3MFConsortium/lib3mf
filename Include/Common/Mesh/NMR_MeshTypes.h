@@ -58,6 +58,9 @@ In addition, some constants are defined here.
 #define NMR_MESH_BALLBLOCKCOUNT 256
 #define NMR_MESH_NODEEDGELINKBLOCKCOUNT 256
 
+// Threshold below which a triangle is treated as degenerate
+#define NMR_DEGENERATE_TRIANGLE_EPSILON 1e-12f
+
 namespace NMR {
 
 	typedef struct {

@@ -955,9 +955,9 @@ func (inst Reader) SetStrictModeActive(strictModeActive bool) error {
 	return nil
 }
 
-// SkipDegenerateTriangles allows degenerate triangles to be collected instead of causing strict-mode failures.
-func (inst Reader) SkipDegenerateTriangles(shouldSkipDegenerateTriangles bool) error {
-	ret := C.CCall_lib3mf_reader_skipdegeneratetriangles(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(shouldSkipDegenerateTriangles))
+// AllowDegenerateTriangles when true, degenerate triangles are collected regardless of strict mode.
+func (inst Reader) AllowDegenerateTriangles(allowDegenerateTriangles bool) error {
+	ret := C.CCall_lib3mf_reader_allowdegeneratetriangles(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(allowDegenerateTriangles))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
@@ -974,14 +974,14 @@ func (inst Reader) GetStrictModeActive() (bool, error) {
 	return bool(strictModeActive), nil
 }
 
-// AreDegenerateTrianglesSkipped queries whether degenerate triangles are collected without raising strict-mode errors.
-func (inst Reader) AreDegenerateTrianglesSkipped() (bool, error) {
-	var areDegenerateTrianglesSkipped C.bool
-	ret := C.CCall_lib3mf_reader_aredegeneratetrianglesskipped(inst.wrapperRef.LibraryHandle, inst.Ref, &areDegenerateTrianglesSkipped)
+// AreDegenerateTrianglesAllowed queries whether degenerate triangles are collected regardless of strict mode.
+func (inst Reader) AreDegenerateTrianglesAllowed() (bool, error) {
+	var areDegenerateTrianglesAllowed C.bool
+	ret := C.CCall_lib3mf_reader_aredegeneratetrianglesallowed(inst.wrapperRef.LibraryHandle, inst.Ref, &areDegenerateTrianglesAllowed)
 	if ret != 0 {
 		return false, makeError(uint32(ret))
 	}
-	return bool(areDegenerateTrianglesSkipped), nil
+	return bool(areDegenerateTrianglesAllowed), nil
 }
 
 // GetWarning returns Warning and Error Information of the read process.

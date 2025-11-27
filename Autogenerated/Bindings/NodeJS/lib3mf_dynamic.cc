@@ -69,9 +69,9 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Reader_AddRelationToRead = NULL;
 	pWrapperTable->m_Reader_RemoveRelationToRead = NULL;
 	pWrapperTable->m_Reader_SetStrictModeActive = NULL;
-	pWrapperTable->m_Reader_SkipDegenerateTriangles = NULL;
+	pWrapperTable->m_Reader_AllowDegenerateTriangles = NULL;
 	pWrapperTable->m_Reader_GetStrictModeActive = NULL;
-	pWrapperTable->m_Reader_AreDegenerateTrianglesSkipped = NULL;
+	pWrapperTable->m_Reader_AreDegenerateTrianglesAllowed = NULL;
 	pWrapperTable->m_Reader_GetWarning = NULL;
 	pWrapperTable->m_Reader_GetWarningCount = NULL;
 	pWrapperTable->m_Reader_AddKeyWrappingCallback = NULL;
@@ -918,12 +918,12 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_Reader_SkipDegenerateTriangles = (PLib3MFReader_SkipDegenerateTrianglesPtr) GetProcAddress(hLibrary, "lib3mf_reader_skipdegeneratetriangles");
+	pWrapperTable->m_Reader_AllowDegenerateTriangles = (PLib3MFReader_AllowDegenerateTrianglesPtr) GetProcAddress(hLibrary, "lib3mf_reader_allowdegeneratetriangles");
 	#else // _WIN32
-	pWrapperTable->m_Reader_SkipDegenerateTriangles = (PLib3MFReader_SkipDegenerateTrianglesPtr) dlsym(hLibrary, "lib3mf_reader_skipdegeneratetriangles");
+	pWrapperTable->m_Reader_AllowDegenerateTriangles = (PLib3MFReader_AllowDegenerateTrianglesPtr) dlsym(hLibrary, "lib3mf_reader_allowdegeneratetriangles");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_Reader_SkipDegenerateTriangles == NULL)
+	if (pWrapperTable->m_Reader_AllowDegenerateTriangles == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -936,12 +936,12 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_Reader_AreDegenerateTrianglesSkipped = (PLib3MFReader_AreDegenerateTrianglesSkippedPtr) GetProcAddress(hLibrary, "lib3mf_reader_aredegeneratetrianglesskipped");
+	pWrapperTable->m_Reader_AreDegenerateTrianglesAllowed = (PLib3MFReader_AreDegenerateTrianglesAllowedPtr) GetProcAddress(hLibrary, "lib3mf_reader_aredegeneratetrianglesallowed");
 	#else // _WIN32
-	pWrapperTable->m_Reader_AreDegenerateTrianglesSkipped = (PLib3MFReader_AreDegenerateTrianglesSkippedPtr) dlsym(hLibrary, "lib3mf_reader_aredegeneratetrianglesskipped");
+	pWrapperTable->m_Reader_AreDegenerateTrianglesAllowed = (PLib3MFReader_AreDegenerateTrianglesAllowedPtr) dlsym(hLibrary, "lib3mf_reader_aredegeneratetrianglesallowed");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_Reader_AreDegenerateTrianglesSkipped == NULL)
+	if (pWrapperTable->m_Reader_AreDegenerateTrianglesAllowed == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

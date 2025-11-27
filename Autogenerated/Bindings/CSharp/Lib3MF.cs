@@ -498,14 +498,14 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_setstrictmodeactive", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Reader_SetStrictModeActive (IntPtr Handle, Byte AStrictModeActive);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_skipdegeneratetriangles", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Reader_SkipDegenerateTriangles (IntPtr Handle, Byte AShouldSkipDegenerateTriangles);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_allowdegeneratetriangles", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Reader_AllowDegenerateTriangles (IntPtr Handle, Byte AAllowDegenerateTriangles);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_getstrictmodeactive", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Reader_GetStrictModeActive (IntPtr Handle, out Byte AStrictModeActive);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_aredegeneratetrianglesskipped", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Reader_AreDegenerateTrianglesSkipped (IntPtr Handle, out Byte AAreDegenerateTrianglesSkipped);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_aredegeneratetrianglesallowed", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Reader_AreDegenerateTrianglesAllowed (IntPtr Handle, out Byte AAreDegenerateTrianglesAllowed);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_getwarning", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Reader_GetWarning (IntPtr Handle, UInt32 AIndex, out UInt32 AErrorCode, UInt32 sizeWarning, out UInt32 neededWarning, IntPtr dataWarning);
@@ -3010,10 +3010,10 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.Reader_SetStrictModeActive (Handle, (Byte)( AStrictModeActive ? 1 : 0 )));
 		}
 
-		public void SkipDegenerateTriangles (bool AShouldSkipDegenerateTriangles)
+		public void AllowDegenerateTriangles (bool AAllowDegenerateTriangles)
 		{
 
-			CheckError(Internal.Lib3MFWrapper.Reader_SkipDegenerateTriangles (Handle, (Byte)( AShouldSkipDegenerateTriangles ? 1 : 0 )));
+			CheckError(Internal.Lib3MFWrapper.Reader_AllowDegenerateTriangles (Handle, (Byte)( AAllowDegenerateTriangles ? 1 : 0 )));
 		}
 
 		public bool GetStrictModeActive ()
@@ -3024,12 +3024,12 @@ namespace Lib3MF {
 			return (resultStrictModeActive != 0);
 		}
 
-		public bool AreDegenerateTrianglesSkipped ()
+		public bool AreDegenerateTrianglesAllowed ()
 		{
-			Byte resultAreDegenerateTrianglesSkipped = 0;
+			Byte resultAreDegenerateTrianglesAllowed = 0;
 
-			CheckError(Internal.Lib3MFWrapper.Reader_AreDegenerateTrianglesSkipped (Handle, out resultAreDegenerateTrianglesSkipped));
-			return (resultAreDegenerateTrianglesSkipped != 0);
+			CheckError(Internal.Lib3MFWrapper.Reader_AreDegenerateTrianglesAllowed (Handle, out resultAreDegenerateTrianglesAllowed));
+			return (resultAreDegenerateTrianglesAllowed != 0);
 		}
 
 		public String GetWarning (UInt32 AIndex, out UInt32 AErrorCode)

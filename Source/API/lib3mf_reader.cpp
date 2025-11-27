@@ -166,12 +166,12 @@ bool CReader::GetStrictModeActive ()
 	return reader().warnings()->getCriticalWarningLevel() == NMR::mrwInvalidOptionalValue;
 }
 
-void CReader::SkipDegenerateTriangles (const bool bSkipDegenerateTriangles)
+void CReader::AllowDegenerateTriangles (const bool bAllowDegenerateTriangles)
 {
-	reader().setSkipDegenerateTriangles(bSkipDegenerateTriangles);
+	reader().setSkipDegenerateTriangles(bAllowDegenerateTriangles);
 }
 
-bool CReader::AreDegenerateTrianglesSkipped ()
+bool CReader::AreDegenerateTrianglesAllowed ()
 {
 	return reader().getSkipDegenerateTriangles();
 }

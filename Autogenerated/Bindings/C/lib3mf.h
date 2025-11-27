@@ -272,13 +272,13 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_removerelationtoread(Lib3MF_Reader pR
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_setstrictmodeactive(Lib3MF_Reader pReader, bool bStrictModeActive);
 
 /**
-* Allows degenerate triangles to be collected instead of causing strict-mode failures.
+* When true, degenerate triangles are collected regardless of strict mode.
 *
 * @param[in] pReader - Reader instance.
-* @param[in] bShouldSkipDegenerateTriangles - flag whether degenerate triangles should be collected even in strict mode.
+* @param[in] bAllowDegenerateTriangles - flag whether degenerate triangles should be collected regardless of strict mode.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_skipdegeneratetriangles(Lib3MF_Reader pReader, bool bShouldSkipDegenerateTriangles);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_allowdegeneratetriangles(Lib3MF_Reader pReader, bool bAllowDegenerateTriangles);
 
 /**
 * Queries whether the strict mode of the reader is active or not
@@ -290,13 +290,13 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_skipdegeneratetriangles(Lib3MF_Reader
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_getstrictmodeactive(Lib3MF_Reader pReader, bool * pStrictModeActive);
 
 /**
-* Queries whether degenerate triangles are collected without raising strict-mode errors.
+* Queries whether degenerate triangles are collected regardless of strict mode.
 *
 * @param[in] pReader - Reader instance.
-* @param[out] pAreDegenerateTrianglesSkipped - returns flag whether degenerate triangles are collected even in strict mode.
+* @param[out] pAreDegenerateTrianglesAllowed - returns flag whether degenerate triangles are collected regardless of strict mode.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_aredegeneratetrianglesskipped(Lib3MF_Reader pReader, bool * pAreDegenerateTrianglesSkipped);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_aredegeneratetrianglesallowed(Lib3MF_Reader pReader, bool * pAreDegenerateTrianglesAllowed);
 
 /**
 * Returns Warning and Error Information of the read process

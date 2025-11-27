@@ -1060,9 +1060,9 @@ public:
 	inline void AddRelationToRead(const std::string & sRelationShipType);
 	inline void RemoveRelationToRead(const std::string & sRelationShipType);
 	inline void SetStrictModeActive(const bool bStrictModeActive);
-	inline void SkipDegenerateTriangles(const bool bShouldSkipDegenerateTriangles);
+	inline void AllowDegenerateTriangles(const bool bAllowDegenerateTriangles);
 	inline bool GetStrictModeActive();
-	inline bool AreDegenerateTrianglesSkipped();
+	inline bool AreDegenerateTrianglesAllowed();
 	inline std::string GetWarning(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode);
 	inline Lib3MF_uint32 GetWarningCount();
 	inline void AddKeyWrappingCallback(const std::string & sConsumerID, const KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData);
@@ -4109,12 +4109,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CReader::SkipDegenerateTriangles - Allows degenerate triangles to be collected instead of causing strict-mode failures.
-	* @param[in] bShouldSkipDegenerateTriangles - flag whether degenerate triangles should be collected even in strict mode.
+	* CReader::AllowDegenerateTriangles - When true, degenerate triangles are collected regardless of strict mode.
+	* @param[in] bAllowDegenerateTriangles - flag whether degenerate triangles should be collected regardless of strict mode.
 	*/
-	void CReader::SkipDegenerateTriangles(const bool bShouldSkipDegenerateTriangles)
+	void CReader::AllowDegenerateTriangles(const bool bAllowDegenerateTriangles)
 	{
-		CheckError(lib3mf_reader_skipdegeneratetriangles(m_pHandle, bShouldSkipDegenerateTriangles));
+		CheckError(lib3mf_reader_allowdegeneratetriangles(m_pHandle, bAllowDegenerateTriangles));
 	}
 	
 	/**
@@ -4130,15 +4130,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CReader::AreDegenerateTrianglesSkipped - Queries whether degenerate triangles are collected without raising strict-mode errors.
-	* @return returns flag whether degenerate triangles are collected even in strict mode.
+	* CReader::AreDegenerateTrianglesAllowed - Queries whether degenerate triangles are collected regardless of strict mode.
+	* @return returns flag whether degenerate triangles are collected regardless of strict mode.
 	*/
-	bool CReader::AreDegenerateTrianglesSkipped()
+	bool CReader::AreDegenerateTrianglesAllowed()
 	{
-		bool resultAreDegenerateTrianglesSkipped = 0;
-		CheckError(lib3mf_reader_aredegeneratetrianglesskipped(m_pHandle, &resultAreDegenerateTrianglesSkipped));
+		bool resultAreDegenerateTrianglesAllowed = 0;
+		CheckError(lib3mf_reader_aredegeneratetrianglesallowed(m_pHandle, &resultAreDegenerateTrianglesAllowed));
 		
-		return resultAreDegenerateTrianglesSkipped;
+		return resultAreDegenerateTrianglesAllowed;
 	}
 	
 	/**
