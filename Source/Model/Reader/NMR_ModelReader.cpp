@@ -45,7 +45,6 @@ namespace NMR {
 	CModelReader::CModelReader(_In_ PModel pModel)
 		:CModelContext(pModel)
 	{
-		m_bSkipDegenerateTriangles = false;
 		if (warnings())
 			warnings()->setSkipDegenerateTriangles(false);
 	}

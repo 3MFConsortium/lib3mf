@@ -499,19 +499,30 @@ void CMeshObject::GetDegenerateTriangles(Lib3MF_uint64 nTriangleElementIndicesBu
 	if (pTriangleInfosNeededCount)
 		*pTriangleInfosNeededCount = nCount;
 
-	if ((nTriangleElementIndicesBufferSize >= nCount) && pTriangleElementIndicesBuffer) {
+	if ((nTriangleElementIndicesBufferSize >= nCount) && pTriangleElementIndicesBuffer &&
+		(nTriangleInfosBufferSize >= nCount) && pTriangleInfosBuffer) {
 		for (Lib3MF_uint32 i = 0; i < nCount; ++i) {
 			const NMR::MESHDEGENERATETRIANGLE & sRecord = mesh()->getDegenerateTriangle(i);
 			pTriangleElementIndicesBuffer[i] = sRecord.m_nTriangleElementIndex;
-		}
-	}
-
-	if ((nTriangleInfosBufferSize >= nCount) && pTriangleInfosBuffer) {
-		for (Lib3MF_uint32 i = 0; i < nCount; ++i) {
-			const NMR::MESHDEGENERATETRIANGLE & sRecord = mesh()->getDegenerateTriangle(i);
 			pTriangleInfosBuffer[i].m_Indices[0] = sRecord.m_nNodeIndices[0];
 			pTriangleInfosBuffer[i].m_Indices[1] = sRecord.m_nNodeIndices[1];
 			pTriangleInfosBuffer[i].m_Indices[2] = sRecord.m_nNodeIndices[2];
+		}
+	} else {
+		if ((nTriangleElementIndicesBufferSize >= nCount) && pTriangleElementIndicesBuffer) {
+			for (Lib3MF_uint32 i = 0; i < nCount; ++i) {
+				const NMR::MESHDEGENERATETRIANGLE & sRecord = mesh()->getDegenerateTriangle(i);
+				pTriangleElementIndicesBuffer[i] = sRecord.m_nTriangleElementIndex;
+			}
+		}
+
+		if ((nTriangleInfosBufferSize >= nCount) && pTriangleInfosBuffer) {
+			for (Lib3MF_uint32 i = 0; i < nCount; ++i) {
+				const NMR::MESHDEGENERATETRIANGLE & sRecord = mesh()->getDegenerateTriangle(i);
+				pTriangleInfosBuffer[i].m_Indices[0] = sRecord.m_nNodeIndices[0];
+				pTriangleInfosBuffer[i].m_Indices[1] = sRecord.m_nNodeIndices[1];
+				pTriangleInfosBuffer[i].m_Indices[2] = sRecord.m_nNodeIndices[2];
+			}
 		}
 	}
 }

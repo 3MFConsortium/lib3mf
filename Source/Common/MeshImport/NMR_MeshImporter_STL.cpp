@@ -181,24 +181,50 @@ namespace NMR {
 
 		auto processTriangle = [&](const std::array<NVEC3, 3> & vertices, nfUint32 nElementIndex)
 		{
-			MESHNODE* pNodes[3];
-			nfUint32 nNodeIdx = 0;
-			bool bIsValid = true;
-
-			for (nfUint32 j = 0; j < 3 && bIsValid; ++j) {
-				NVEC3 vPosition = vertices[j];
+			std::array<NVEC3, 3> positions = vertices;
+			for (NVEC3 & position : positions) {
 				if (pmMatrix)
-					vPosition = fnMATRIX3_apply(*pmMatrix, vPosition);
+					position = fnMATRIX3_apply(*pmMatrix, position);
+			}
 
+			for (const NVEC3 & position : positions) {
 				for (nfUint32 k = 0; k < 3; k++) {
-					if (fabs(vPosition.m_fields[k]) > NMR_MESH_MAXCOORDINATE) {
-						bIsValid = false;
-						break;
+					if (fabs(position.m_fields[k]) > NMR_MESH_MAXCOORDINATE) {
+						if (!m_bIgnoreInvalidFaces)
+							throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+						return;
 					}
 				}
-				if (!bIsValid)
-					break;
+			}
 
+			auto positionsEqual = [](const NVEC3 & a, const NVEC3 & b) {
+				return (a.m_fields[0] == b.m_fields[0]) &&
+					(a.m_fields[1] == b.m_fields[1]) &&
+					(a.m_fields[2] == b.m_fields[2]);
+			};
+
+			const bool bHasDuplicateNodes =
+				positionsEqual(positions[0], positions[1]) ||
+				positionsEqual(positions[0], positions[2]) ||
+				positionsEqual(positions[1], positions[2]);
+
+			NVEC3 vEdge1 = fnVEC3_sub(positions[1], positions[0]);
+			NVEC3 vEdge2 = fnVEC3_sub(positions[2], positions[0]);
+			NVEC3 vNormal = fnVEC3_crossproduct(vEdge1, vEdge2);
+
+			nfFloat fNormalSquared =
+				(vNormal.m_fields[0] * vNormal.m_fields[0]) +
+				(vNormal.m_fields[1] * vNormal.m_fields[1]) +
+				(vNormal.m_fields[2] * vNormal.m_fields[2]);
+
+			const bool bDegenerate = bHasDuplicateNodes || (fNormalSquared <= fDegenerateEpsilon);
+			if (bDegenerate && !m_bIgnoreInvalidFaces)
+				throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+
+			MESHNODE* pNodes[3];
+			nfUint32 nNodeIdx = 0;
+			for (nfUint32 j = 0; j < 3; ++j) {
+				const NVEC3 & vPosition = positions[j];
 				if (VectorTree.findVector3(vPosition, nNodeIdx)) {
 					pNodes[j] = pMesh->getNode(nNodeIdx);
 				}
@@ -208,34 +234,7 @@ namespace NMR {
 				}
 			}
 
-			if (!bIsValid) {
-				if (!m_bIgnoreInvalidFaces)
-					throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
-				return;
-			}
-
-			bool bHasDuplicateNodes = (pNodes[0] == pNodes[1]) || (pNodes[0] == pNodes[2]) || (pNodes[1] == pNodes[2]);
-			if (bHasDuplicateNodes) {
-				if (!m_bIgnoreInvalidFaces)
-					throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
-
-				pMesh->addDegenerateTriangle(nElementIndex, pNodes[0]->m_index, pNodes[1]->m_index, pNodes[2]->m_index);
-				return;
-			}
-
-			NVEC3 vEdge1 = fnVEC3_sub(pNodes[1]->m_position, pNodes[0]->m_position);
-			NVEC3 vEdge2 = fnVEC3_sub(pNodes[2]->m_position, pNodes[0]->m_position);
-			NVEC3 vNormal = fnVEC3_crossproduct(vEdge1, vEdge2);
-
-			nfFloat fNormalSquared =
-				(vNormal.m_fields[0] * vNormal.m_fields[0]) +
-				(vNormal.m_fields[1] * vNormal.m_fields[1]) +
-				(vNormal.m_fields[2] * vNormal.m_fields[2]);
-
-			if (fNormalSquared <= fDegenerateEpsilon) {
-				if (!m_bIgnoreInvalidFaces)
-					throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
-
+			if (bDegenerate) {
 				pMesh->addDegenerateTriangle(nElementIndex, pNodes[0]->m_index, pNodes[1]->m_index, pNodes[2]->m_index);
 				return;
 			}

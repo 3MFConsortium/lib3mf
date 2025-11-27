@@ -101,8 +101,6 @@ namespace NMR {
 		}
 
 		bool bShouldThrow = ((nfInt32)WarningLevel <= (nfInt32)m_CriticalWarningLevel);
-		if (bShouldThrow && m_bSkipDegenerateTriangles && Exception.getErrorCode() == NMR_ERROR_INVALIDMODELCOORDINATEINDICES)
-			bShouldThrow = false;
 
 		if (bShouldThrow)
 			throw Exception;

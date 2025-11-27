@@ -222,6 +222,34 @@ namespace Lib3MF
 		ExpectDegenerateTriangleResult();
 	}
 
+	TEST_F(Reader, STLSphereAsciiMatchesBinary)
+	{
+		auto loadCounts = [&](const std::string & filename, Lib3MF_uint32 & vertexCount, Lib3MF_uint32 & triangleCount) {
+			auto localModel = wrapper->CreateModel();
+			auto localReader = localModel->QueryReader("stl");
+			localReader->ReadFromFile(sTestFilesPath + "/CPP_UnitTests/" + filename);
+			CheckReaderWarnings(localReader, 0);
+
+			auto meshObjects = localModel->GetMeshObjects();
+			ASSERT_EQ(1u, meshObjects->Count());
+			ASSERT_TRUE(meshObjects->MoveNext());
+			auto meshObject = meshObjects->GetCurrentMeshObject();
+			vertexCount = meshObject->GetVertexCount();
+			triangleCount = meshObject->GetTriangleCount();
+		};
+
+		Lib3MF_uint32 binaryVertices = 0;
+		Lib3MF_uint32 binaryTriangles = 0;
+		Lib3MF_uint32 asciiVertices = 0;
+		Lib3MF_uint32 asciiTriangles = 0;
+
+		loadCounts("Sphere.stl", binaryVertices, binaryTriangles);
+		loadCounts("Sphere_ASCII.stl", asciiVertices, asciiTriangles);
+
+		EXPECT_EQ(binaryVertices, asciiVertices);
+		EXPECT_EQ(binaryTriangles, asciiTriangles);
+	}
+
 	TEST_F(Reader, Production)
 	{
 		auto buffer = ReadFileIntoBuffer(sTestFilesPath + "/Production/" + "2ProductionBoxes.3mf");

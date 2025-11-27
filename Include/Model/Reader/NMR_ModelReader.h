@@ -48,7 +48,7 @@ namespace NMR {
 		PImportStream m_pPrintTicketStream;
 		std::string m_sPrintTicketContentType;
 		std::set<std::string> m_RelationsToRead;
-		bool m_bSkipDegenerateTriangles;
+		bool m_bSkipDegenerateTriangles = false;
 
 
 		void readFromMeshImporter(_In_ CMeshImporter * pImporter);
