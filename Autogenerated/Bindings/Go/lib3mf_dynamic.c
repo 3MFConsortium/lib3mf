@@ -422,6 +422,29 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_UnsignedMeshNode_GetInputMesh = NULL;
 	pWrapperTable->m_UnsignedMeshNode_GetInputPos = NULL;
 	pWrapperTable->m_UnsignedMeshNode_GetOutputDistance = NULL;
+	pWrapperTable->m_BeamLatticeNode_GetInputBeamLattice = NULL;
+	pWrapperTable->m_BeamLatticeNode_GetInputPos = NULL;
+	pWrapperTable->m_BeamLatticeNode_GetOutputDistance = NULL;
+	pWrapperTable->m_BeamLatticeNode_SetAccurateRange = NULL;
+	pWrapperTable->m_BeamLatticeNode_GetAccurateRange = NULL;
+	pWrapperTable->m_FunctionGradientNode_GetInputFunctionID = NULL;
+	pWrapperTable->m_FunctionGradientNode_GetInputPos = NULL;
+	pWrapperTable->m_FunctionGradientNode_GetInputStep = NULL;
+	pWrapperTable->m_FunctionGradientNode_SetScalarOutputName = NULL;
+	pWrapperTable->m_FunctionGradientNode_GetScalarOutputName = NULL;
+	pWrapperTable->m_FunctionGradientNode_SetVectorInputName = NULL;
+	pWrapperTable->m_FunctionGradientNode_GetVectorInputName = NULL;
+	pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient = NULL;
+	pWrapperTable->m_FunctionGradientNode_GetOutputGradient = NULL;
+	pWrapperTable->m_FunctionGradientNode_GetOutputMagnitude = NULL;
+	pWrapperTable->m_NormalizeDistanceNode_GetInputFunctionID = NULL;
+	pWrapperTable->m_NormalizeDistanceNode_GetInputPos = NULL;
+	pWrapperTable->m_NormalizeDistanceNode_GetInputStep = NULL;
+	pWrapperTable->m_NormalizeDistanceNode_SetScalarOutputName = NULL;
+	pWrapperTable->m_NormalizeDistanceNode_GetScalarOutputName = NULL;
+	pWrapperTable->m_NormalizeDistanceNode_SetVectorInputName = NULL;
+	pWrapperTable->m_NormalizeDistanceNode_GetVectorInputName = NULL;
+	pWrapperTable->m_NormalizeDistanceNode_GetOutputResult = NULL;
 	pWrapperTable->m_FunctionCallNode_GetInputFunctionID = NULL;
 	pWrapperTable->m_NodeIterator_GetCurrent = NULL;
 	pWrapperTable->m_Function_GetDisplayName = NULL;
@@ -485,6 +508,9 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ImplicitFunction_AddConstMatNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddMeshNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddUnsignedMeshNode = NULL;
+	pWrapperTable->m_ImplicitFunction_AddBeamLatticeNode = NULL;
+	pWrapperTable->m_ImplicitFunction_AddFunctionGradientNode = NULL;
+	pWrapperTable->m_ImplicitFunction_AddNormalizeDistanceNode = NULL;
 	pWrapperTable->m_ImplicitFunction_AddFunctionCallNode = NULL;
 	pWrapperTable->m_ImplicitFunction_GetNodes = NULL;
 	pWrapperTable->m_ImplicitFunction_RemoveNode = NULL;
@@ -4089,6 +4115,213 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_BeamLatticeNode_GetInputBeamLattice = (PLib3MFBeamLatticeNode_GetInputBeamLatticePtr) GetProcAddress(hLibrary, "lib3mf_beamlatticenode_getinputbeamlattice");
+	#else // _WIN32
+	pWrapperTable->m_BeamLatticeNode_GetInputBeamLattice = (PLib3MFBeamLatticeNode_GetInputBeamLatticePtr) dlsym(hLibrary, "lib3mf_beamlatticenode_getinputbeamlattice");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_BeamLatticeNode_GetInputBeamLattice == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_BeamLatticeNode_GetInputPos = (PLib3MFBeamLatticeNode_GetInputPosPtr) GetProcAddress(hLibrary, "lib3mf_beamlatticenode_getinputpos");
+	#else // _WIN32
+	pWrapperTable->m_BeamLatticeNode_GetInputPos = (PLib3MFBeamLatticeNode_GetInputPosPtr) dlsym(hLibrary, "lib3mf_beamlatticenode_getinputpos");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_BeamLatticeNode_GetInputPos == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_BeamLatticeNode_GetOutputDistance = (PLib3MFBeamLatticeNode_GetOutputDistancePtr) GetProcAddress(hLibrary, "lib3mf_beamlatticenode_getoutputdistance");
+	#else // _WIN32
+	pWrapperTable->m_BeamLatticeNode_GetOutputDistance = (PLib3MFBeamLatticeNode_GetOutputDistancePtr) dlsym(hLibrary, "lib3mf_beamlatticenode_getoutputdistance");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_BeamLatticeNode_GetOutputDistance == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_BeamLatticeNode_SetAccurateRange = (PLib3MFBeamLatticeNode_SetAccurateRangePtr) GetProcAddress(hLibrary, "lib3mf_beamlatticenode_setaccuraterange");
+	#else // _WIN32
+	pWrapperTable->m_BeamLatticeNode_SetAccurateRange = (PLib3MFBeamLatticeNode_SetAccurateRangePtr) dlsym(hLibrary, "lib3mf_beamlatticenode_setaccuraterange");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_BeamLatticeNode_SetAccurateRange == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_BeamLatticeNode_GetAccurateRange = (PLib3MFBeamLatticeNode_GetAccurateRangePtr) GetProcAddress(hLibrary, "lib3mf_beamlatticenode_getaccuraterange");
+	#else // _WIN32
+	pWrapperTable->m_BeamLatticeNode_GetAccurateRange = (PLib3MFBeamLatticeNode_GetAccurateRangePtr) dlsym(hLibrary, "lib3mf_beamlatticenode_getaccuraterange");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_BeamLatticeNode_GetAccurateRange == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetInputFunctionID = (PLib3MFFunctionGradientNode_GetInputFunctionIDPtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getinputfunctionid");
+	#else // _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetInputFunctionID = (PLib3MFFunctionGradientNode_GetInputFunctionIDPtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getinputfunctionid");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionGradientNode_GetInputFunctionID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetInputPos = (PLib3MFFunctionGradientNode_GetInputPosPtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getinputpos");
+	#else // _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetInputPos = (PLib3MFFunctionGradientNode_GetInputPosPtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getinputpos");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionGradientNode_GetInputPos == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetInputStep = (PLib3MFFunctionGradientNode_GetInputStepPtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getinputstep");
+	#else // _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetInputStep = (PLib3MFFunctionGradientNode_GetInputStepPtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getinputstep");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionGradientNode_GetInputStep == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionGradientNode_SetScalarOutputName = (PLib3MFFunctionGradientNode_SetScalarOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_setscalaroutputname");
+	#else // _WIN32
+	pWrapperTable->m_FunctionGradientNode_SetScalarOutputName = (PLib3MFFunctionGradientNode_SetScalarOutputNamePtr) dlsym(hLibrary, "lib3mf_functiongradientnode_setscalaroutputname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionGradientNode_SetScalarOutputName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetScalarOutputName = (PLib3MFFunctionGradientNode_GetScalarOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getscalaroutputname");
+	#else // _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetScalarOutputName = (PLib3MFFunctionGradientNode_GetScalarOutputNamePtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getscalaroutputname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionGradientNode_GetScalarOutputName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionGradientNode_SetVectorInputName = (PLib3MFFunctionGradientNode_SetVectorInputNamePtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_setvectorinputname");
+	#else // _WIN32
+	pWrapperTable->m_FunctionGradientNode_SetVectorInputName = (PLib3MFFunctionGradientNode_SetVectorInputNamePtr) dlsym(hLibrary, "lib3mf_functiongradientnode_setvectorinputname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionGradientNode_SetVectorInputName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetVectorInputName = (PLib3MFFunctionGradientNode_GetVectorInputNamePtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getvectorinputname");
+	#else // _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetVectorInputName = (PLib3MFFunctionGradientNode_GetVectorInputNamePtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getvectorinputname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionGradientNode_GetVectorInputName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient = (PLib3MFFunctionGradientNode_GetOutputNormalizedGradientPtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getoutputnormalizedgradient");
+	#else // _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient = (PLib3MFFunctionGradientNode_GetOutputNormalizedGradientPtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getoutputnormalizedgradient");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetOutputGradient = (PLib3MFFunctionGradientNode_GetOutputGradientPtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getoutputgradient");
+	#else // _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetOutputGradient = (PLib3MFFunctionGradientNode_GetOutputGradientPtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getoutputgradient");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionGradientNode_GetOutputGradient == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetOutputMagnitude = (PLib3MFFunctionGradientNode_GetOutputMagnitudePtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getoutputmagnitude");
+	#else // _WIN32
+	pWrapperTable->m_FunctionGradientNode_GetOutputMagnitude = (PLib3MFFunctionGradientNode_GetOutputMagnitudePtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getoutputmagnitude");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_FunctionGradientNode_GetOutputMagnitude == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_GetInputFunctionID = (PLib3MFNormalizeDistanceNode_GetInputFunctionIDPtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_getinputfunctionid");
+	#else // _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_GetInputFunctionID = (PLib3MFNormalizeDistanceNode_GetInputFunctionIDPtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_getinputfunctionid");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NormalizeDistanceNode_GetInputFunctionID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_GetInputPos = (PLib3MFNormalizeDistanceNode_GetInputPosPtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_getinputpos");
+	#else // _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_GetInputPos = (PLib3MFNormalizeDistanceNode_GetInputPosPtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_getinputpos");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NormalizeDistanceNode_GetInputPos == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_GetInputStep = (PLib3MFNormalizeDistanceNode_GetInputStepPtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_getinputstep");
+	#else // _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_GetInputStep = (PLib3MFNormalizeDistanceNode_GetInputStepPtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_getinputstep");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NormalizeDistanceNode_GetInputStep == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_SetScalarOutputName = (PLib3MFNormalizeDistanceNode_SetScalarOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_setscalaroutputname");
+	#else // _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_SetScalarOutputName = (PLib3MFNormalizeDistanceNode_SetScalarOutputNamePtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_setscalaroutputname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NormalizeDistanceNode_SetScalarOutputName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_GetScalarOutputName = (PLib3MFNormalizeDistanceNode_GetScalarOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_getscalaroutputname");
+	#else // _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_GetScalarOutputName = (PLib3MFNormalizeDistanceNode_GetScalarOutputNamePtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_getscalaroutputname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NormalizeDistanceNode_GetScalarOutputName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_SetVectorInputName = (PLib3MFNormalizeDistanceNode_SetVectorInputNamePtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_setvectorinputname");
+	#else // _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_SetVectorInputName = (PLib3MFNormalizeDistanceNode_SetVectorInputNamePtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_setvectorinputname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NormalizeDistanceNode_SetVectorInputName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_GetVectorInputName = (PLib3MFNormalizeDistanceNode_GetVectorInputNamePtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_getvectorinputname");
+	#else // _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_GetVectorInputName = (PLib3MFNormalizeDistanceNode_GetVectorInputNamePtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_getvectorinputname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NormalizeDistanceNode_GetVectorInputName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_GetOutputResult = (PLib3MFNormalizeDistanceNode_GetOutputResultPtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_getoutputresult");
+	#else // _WIN32
+	pWrapperTable->m_NormalizeDistanceNode_GetOutputResult = (PLib3MFNormalizeDistanceNode_GetOutputResultPtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_getoutputresult");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NormalizeDistanceNode_GetOutputResult == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_FunctionCallNode_GetInputFunctionID = (PLib3MFFunctionCallNode_GetInputFunctionIDPtr) GetProcAddress(hLibrary, "lib3mf_functioncallnode_getinputfunctionid");
 	#else // _WIN32
 	pWrapperTable->m_FunctionCallNode_GetInputFunctionID = (PLib3MFFunctionCallNode_GetInputFunctionIDPtr) dlsym(hLibrary, "lib3mf_functioncallnode_getinputfunctionid");
@@ -4653,6 +4886,33 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ImplicitFunction_AddUnsignedMeshNode == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_AddBeamLatticeNode = (PLib3MFImplicitFunction_AddBeamLatticeNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addbeamlatticenode");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_AddBeamLatticeNode = (PLib3MFImplicitFunction_AddBeamLatticeNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_addbeamlatticenode");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_AddBeamLatticeNode == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_AddFunctionGradientNode = (PLib3MFImplicitFunction_AddFunctionGradientNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addfunctiongradientnode");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_AddFunctionGradientNode = (PLib3MFImplicitFunction_AddFunctionGradientNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_addfunctiongradientnode");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_AddFunctionGradientNode == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ImplicitFunction_AddNormalizeDistanceNode = (PLib3MFImplicitFunction_AddNormalizeDistanceNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addnormalizedistancenode");
+	#else // _WIN32
+	pWrapperTable->m_ImplicitFunction_AddNormalizeDistanceNode = (PLib3MFImplicitFunction_AddNormalizeDistanceNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_addnormalizedistancenode");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ImplicitFunction_AddNormalizeDistanceNode == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -9703,6 +9963,213 @@ Lib3MFResult CCall_lib3mf_unsignedmeshnode_getoutputdistance(Lib3MFHandle librar
 }
 
 
+Lib3MFResult CCall_lib3mf_beamlatticenode_getinputbeamlattice(Lib3MFHandle libraryHandle, Lib3MF_BeamLatticeNode pBeamLatticeNode, Lib3MF_ImplicitPort * pBeamLattice)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BeamLatticeNode_GetInputBeamLattice (pBeamLatticeNode, pBeamLattice);
+}
+
+
+Lib3MFResult CCall_lib3mf_beamlatticenode_getinputpos(Lib3MFHandle libraryHandle, Lib3MF_BeamLatticeNode pBeamLatticeNode, Lib3MF_ImplicitPort * pPos)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BeamLatticeNode_GetInputPos (pBeamLatticeNode, pPos);
+}
+
+
+Lib3MFResult CCall_lib3mf_beamlatticenode_getoutputdistance(Lib3MFHandle libraryHandle, Lib3MF_BeamLatticeNode pBeamLatticeNode, Lib3MF_ImplicitPort * pDistance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BeamLatticeNode_GetOutputDistance (pBeamLatticeNode, pDistance);
+}
+
+
+Lib3MFResult CCall_lib3mf_beamlatticenode_setaccuraterange(Lib3MFHandle libraryHandle, Lib3MF_BeamLatticeNode pBeamLatticeNode, Lib3MF_double dAccurateRange)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BeamLatticeNode_SetAccurateRange (pBeamLatticeNode, dAccurateRange);
+}
+
+
+Lib3MFResult CCall_lib3mf_beamlatticenode_getaccuraterange(Lib3MFHandle libraryHandle, Lib3MF_BeamLatticeNode pBeamLatticeNode, Lib3MF_double * pAccurateRange)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BeamLatticeNode_GetAccurateRange (pBeamLatticeNode, pAccurateRange);
+}
+
+
+Lib3MFResult CCall_lib3mf_functiongradientnode_getinputfunctionid(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pFunction)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionGradientNode_GetInputFunctionID (pFunctionGradientNode, pFunction);
+}
+
+
+Lib3MFResult CCall_lib3mf_functiongradientnode_getinputpos(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pPos)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionGradientNode_GetInputPos (pFunctionGradientNode, pPos);
+}
+
+
+Lib3MFResult CCall_lib3mf_functiongradientnode_getinputstep(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pStep)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionGradientNode_GetInputStep (pFunctionGradientNode, pStep);
+}
+
+
+Lib3MFResult CCall_lib3mf_functiongradientnode_setscalaroutputname(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, const char * pScalarOutputName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionGradientNode_SetScalarOutputName (pFunctionGradientNode, pScalarOutputName);
+}
+
+
+Lib3MFResult CCall_lib3mf_functiongradientnode_getscalaroutputname(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, const Lib3MF_uint32 nScalarOutputNameBufferSize, Lib3MF_uint32* pScalarOutputNameNeededChars, char * pScalarOutputNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionGradientNode_GetScalarOutputName (pFunctionGradientNode, nScalarOutputNameBufferSize, pScalarOutputNameNeededChars, pScalarOutputNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_functiongradientnode_setvectorinputname(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, const char * pVectorInputName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionGradientNode_SetVectorInputName (pFunctionGradientNode, pVectorInputName);
+}
+
+
+Lib3MFResult CCall_lib3mf_functiongradientnode_getvectorinputname(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, const Lib3MF_uint32 nVectorInputNameBufferSize, Lib3MF_uint32* pVectorInputNameNeededChars, char * pVectorInputNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionGradientNode_GetVectorInputName (pFunctionGradientNode, nVectorInputNameBufferSize, pVectorInputNameNeededChars, pVectorInputNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_functiongradientnode_getoutputnormalizedgradient(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pNormalizedGradient)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient (pFunctionGradientNode, pNormalizedGradient);
+}
+
+
+Lib3MFResult CCall_lib3mf_functiongradientnode_getoutputgradient(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pGradient)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionGradientNode_GetOutputGradient (pFunctionGradientNode, pGradient);
+}
+
+
+Lib3MFResult CCall_lib3mf_functiongradientnode_getoutputmagnitude(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pMagnitude)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_FunctionGradientNode_GetOutputMagnitude (pFunctionGradientNode, pMagnitude);
+}
+
+
+Lib3MFResult CCall_lib3mf_normalizedistancenode_getinputfunctionid(Lib3MFHandle libraryHandle, Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, Lib3MF_ImplicitPort * pFunction)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_NormalizeDistanceNode_GetInputFunctionID (pNormalizeDistanceNode, pFunction);
+}
+
+
+Lib3MFResult CCall_lib3mf_normalizedistancenode_getinputpos(Lib3MFHandle libraryHandle, Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, Lib3MF_ImplicitPort * pPos)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_NormalizeDistanceNode_GetInputPos (pNormalizeDistanceNode, pPos);
+}
+
+
+Lib3MFResult CCall_lib3mf_normalizedistancenode_getinputstep(Lib3MFHandle libraryHandle, Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, Lib3MF_ImplicitPort * pStep)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_NormalizeDistanceNode_GetInputStep (pNormalizeDistanceNode, pStep);
+}
+
+
+Lib3MFResult CCall_lib3mf_normalizedistancenode_setscalaroutputname(Lib3MFHandle libraryHandle, Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, const char * pScalarOutputName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_NormalizeDistanceNode_SetScalarOutputName (pNormalizeDistanceNode, pScalarOutputName);
+}
+
+
+Lib3MFResult CCall_lib3mf_normalizedistancenode_getscalaroutputname(Lib3MFHandle libraryHandle, Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, const Lib3MF_uint32 nScalarOutputNameBufferSize, Lib3MF_uint32* pScalarOutputNameNeededChars, char * pScalarOutputNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_NormalizeDistanceNode_GetScalarOutputName (pNormalizeDistanceNode, nScalarOutputNameBufferSize, pScalarOutputNameNeededChars, pScalarOutputNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_normalizedistancenode_setvectorinputname(Lib3MFHandle libraryHandle, Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, const char * pVectorInputName)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_NormalizeDistanceNode_SetVectorInputName (pNormalizeDistanceNode, pVectorInputName);
+}
+
+
+Lib3MFResult CCall_lib3mf_normalizedistancenode_getvectorinputname(Lib3MFHandle libraryHandle, Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, const Lib3MF_uint32 nVectorInputNameBufferSize, Lib3MF_uint32* pVectorInputNameNeededChars, char * pVectorInputNameBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_NormalizeDistanceNode_GetVectorInputName (pNormalizeDistanceNode, nVectorInputNameBufferSize, pVectorInputNameNeededChars, pVectorInputNameBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_normalizedistancenode_getoutputresult(Lib3MFHandle libraryHandle, Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, Lib3MF_ImplicitPort * pResult)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_NormalizeDistanceNode_GetOutputResult (pNormalizeDistanceNode, pResult);
+}
+
+
 Lib3MFResult CCall_lib3mf_functioncallnode_getinputfunctionid(Lib3MFHandle libraryHandle, Lib3MF_FunctionCallNode pFunctionCallNode, Lib3MF_ImplicitPort * pFunction)
 {
 	if (libraryHandle == 0) 
@@ -10267,6 +10734,33 @@ Lib3MFResult CCall_lib3mf_implicitfunction_addunsignedmeshnode(Lib3MFHandle libr
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ImplicitFunction_AddUnsignedMeshNode (pImplicitFunction, pIdentifier, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addbeamlatticenode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_BeamLatticeNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddBeamLatticeNode (pImplicitFunction, pIdentifier, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addfunctiongradientnode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_FunctionGradientNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddFunctionGradientNode (pImplicitFunction, pIdentifier, pDisplayName, pTag, pNode);
+}
+
+
+Lib3MFResult CCall_lib3mf_implicitfunction_addnormalizedistancenode(Lib3MFHandle libraryHandle, Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_NormalizeDistanceNode * pNode)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ImplicitFunction_AddNormalizeDistanceNode (pImplicitFunction, pIdentifier, pDisplayName, pTag, pNode);
 }
 
 

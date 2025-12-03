@@ -511,6 +511,29 @@ class FunctionTable:
 	lib3mf_unsignedmeshnode_getinputmesh = None
 	lib3mf_unsignedmeshnode_getinputpos = None
 	lib3mf_unsignedmeshnode_getoutputdistance = None
+	lib3mf_beamlatticenode_getinputbeamlattice = None
+	lib3mf_beamlatticenode_getinputpos = None
+	lib3mf_beamlatticenode_getoutputdistance = None
+	lib3mf_beamlatticenode_setaccuraterange = None
+	lib3mf_beamlatticenode_getaccuraterange = None
+	lib3mf_functiongradientnode_getinputfunctionid = None
+	lib3mf_functiongradientnode_getinputpos = None
+	lib3mf_functiongradientnode_getinputstep = None
+	lib3mf_functiongradientnode_setscalaroutputname = None
+	lib3mf_functiongradientnode_getscalaroutputname = None
+	lib3mf_functiongradientnode_setvectorinputname = None
+	lib3mf_functiongradientnode_getvectorinputname = None
+	lib3mf_functiongradientnode_getoutputnormalizedgradient = None
+	lib3mf_functiongradientnode_getoutputgradient = None
+	lib3mf_functiongradientnode_getoutputmagnitude = None
+	lib3mf_normalizedistancenode_getinputfunctionid = None
+	lib3mf_normalizedistancenode_getinputpos = None
+	lib3mf_normalizedistancenode_getinputstep = None
+	lib3mf_normalizedistancenode_setscalaroutputname = None
+	lib3mf_normalizedistancenode_getscalaroutputname = None
+	lib3mf_normalizedistancenode_setvectorinputname = None
+	lib3mf_normalizedistancenode_getvectorinputname = None
+	lib3mf_normalizedistancenode_getoutputresult = None
 	lib3mf_functioncallnode_getinputfunctionid = None
 	lib3mf_nodeiterator_getcurrent = None
 	lib3mf_function_getdisplayname = None
@@ -574,6 +597,9 @@ class FunctionTable:
 	lib3mf_implicitfunction_addconstmatnode = None
 	lib3mf_implicitfunction_addmeshnode = None
 	lib3mf_implicitfunction_addunsignedmeshnode = None
+	lib3mf_implicitfunction_addbeamlatticenode = None
+	lib3mf_implicitfunction_addfunctiongradientnode = None
+	lib3mf_implicitfunction_addnormalizedistancenode = None
 	lib3mf_implicitfunction_addfunctioncallnode = None
 	lib3mf_implicitfunction_getnodes = None
 	lib3mf_implicitfunction_removenode = None
@@ -922,6 +948,9 @@ class ImplicitNodeType(CTypesEnum):
 	VectorFromScalar = 48
 	UnsignedMesh = 49
 	Mod = 50
+	BeamLattice = 51
+	FunctionGradient = 52
+	NormalizeDistance = 53
 '''Definition of ImplicitPortType
 '''
 class ImplicitPortType(CTypesEnum):
@@ -3506,6 +3535,144 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_unsignedmeshnode_getoutputdistance = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_beamlatticenode_getinputbeamlattice")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_beamlatticenode_getinputbeamlattice = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_beamlatticenode_getinputpos")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_beamlatticenode_getinputpos = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_beamlatticenode_getoutputdistance")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_beamlatticenode_getoutputdistance = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_beamlatticenode_setaccuraterange")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double)
+			self.lib.lib3mf_beamlatticenode_setaccuraterange = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_beamlatticenode_getaccuraterange")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_beamlatticenode_getaccuraterange = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functiongradientnode_getinputfunctionid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_functiongradientnode_getinputfunctionid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functiongradientnode_getinputpos")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_functiongradientnode_getinputpos = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functiongradientnode_getinputstep")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_functiongradientnode_getinputstep = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functiongradientnode_setscalaroutputname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_functiongradientnode_setscalaroutputname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functiongradientnode_getscalaroutputname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_functiongradientnode_getscalaroutputname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functiongradientnode_setvectorinputname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_functiongradientnode_setvectorinputname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functiongradientnode_getvectorinputname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_functiongradientnode_getvectorinputname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functiongradientnode_getoutputnormalizedgradient")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_functiongradientnode_getoutputnormalizedgradient = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functiongradientnode_getoutputgradient")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_functiongradientnode_getoutputgradient = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functiongradientnode_getoutputmagnitude")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_functiongradientnode_getoutputmagnitude = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_normalizedistancenode_getinputfunctionid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_normalizedistancenode_getinputfunctionid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_normalizedistancenode_getinputpos")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_normalizedistancenode_getinputpos = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_normalizedistancenode_getinputstep")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_normalizedistancenode_getinputstep = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_normalizedistancenode_setscalaroutputname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_normalizedistancenode_setscalaroutputname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_normalizedistancenode_getscalaroutputname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_normalizedistancenode_getscalaroutputname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_normalizedistancenode_setvectorinputname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_normalizedistancenode_setvectorinputname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_normalizedistancenode_getvectorinputname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_normalizedistancenode_getvectorinputname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_normalizedistancenode_getoutputresult")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_normalizedistancenode_getoutputresult = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functioncallnode_getinputfunctionid")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -3883,6 +4050,24 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_implicitfunction_addunsignedmeshnode = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addbeamlatticenode")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_implicitfunction_addbeamlatticenode = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addfunctiongradientnode")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_implicitfunction_addfunctiongradientnode = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addnormalizedistancenode")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_implicitfunction_addnormalizedistancenode = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_implicitfunction_addfunctioncallnode")), methodAddress)
 			if err != 0:
@@ -6052,6 +6237,75 @@ class Wrapper:
 			self.lib.lib3mf_unsignedmeshnode_getoutputdistance.restype = ctypes.c_int32
 			self.lib.lib3mf_unsignedmeshnode_getoutputdistance.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_beamlatticenode_getinputbeamlattice.restype = ctypes.c_int32
+			self.lib.lib3mf_beamlatticenode_getinputbeamlattice.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_beamlatticenode_getinputpos.restype = ctypes.c_int32
+			self.lib.lib3mf_beamlatticenode_getinputpos.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_beamlatticenode_getoutputdistance.restype = ctypes.c_int32
+			self.lib.lib3mf_beamlatticenode_getoutputdistance.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_beamlatticenode_setaccuraterange.restype = ctypes.c_int32
+			self.lib.lib3mf_beamlatticenode_setaccuraterange.argtypes = [ctypes.c_void_p, ctypes.c_double]
+			
+			self.lib.lib3mf_beamlatticenode_getaccuraterange.restype = ctypes.c_int32
+			self.lib.lib3mf_beamlatticenode_getaccuraterange.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_functiongradientnode_getinputfunctionid.restype = ctypes.c_int32
+			self.lib.lib3mf_functiongradientnode_getinputfunctionid.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_functiongradientnode_getinputpos.restype = ctypes.c_int32
+			self.lib.lib3mf_functiongradientnode_getinputpos.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_functiongradientnode_getinputstep.restype = ctypes.c_int32
+			self.lib.lib3mf_functiongradientnode_getinputstep.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_functiongradientnode_setscalaroutputname.restype = ctypes.c_int32
+			self.lib.lib3mf_functiongradientnode_setscalaroutputname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_functiongradientnode_getscalaroutputname.restype = ctypes.c_int32
+			self.lib.lib3mf_functiongradientnode_getscalaroutputname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_functiongradientnode_setvectorinputname.restype = ctypes.c_int32
+			self.lib.lib3mf_functiongradientnode_setvectorinputname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_functiongradientnode_getvectorinputname.restype = ctypes.c_int32
+			self.lib.lib3mf_functiongradientnode_getvectorinputname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_functiongradientnode_getoutputnormalizedgradient.restype = ctypes.c_int32
+			self.lib.lib3mf_functiongradientnode_getoutputnormalizedgradient.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_functiongradientnode_getoutputgradient.restype = ctypes.c_int32
+			self.lib.lib3mf_functiongradientnode_getoutputgradient.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_functiongradientnode_getoutputmagnitude.restype = ctypes.c_int32
+			self.lib.lib3mf_functiongradientnode_getoutputmagnitude.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_normalizedistancenode_getinputfunctionid.restype = ctypes.c_int32
+			self.lib.lib3mf_normalizedistancenode_getinputfunctionid.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_normalizedistancenode_getinputpos.restype = ctypes.c_int32
+			self.lib.lib3mf_normalizedistancenode_getinputpos.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_normalizedistancenode_getinputstep.restype = ctypes.c_int32
+			self.lib.lib3mf_normalizedistancenode_getinputstep.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_normalizedistancenode_setscalaroutputname.restype = ctypes.c_int32
+			self.lib.lib3mf_normalizedistancenode_setscalaroutputname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_normalizedistancenode_getscalaroutputname.restype = ctypes.c_int32
+			self.lib.lib3mf_normalizedistancenode_getscalaroutputname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_normalizedistancenode_setvectorinputname.restype = ctypes.c_int32
+			self.lib.lib3mf_normalizedistancenode_setvectorinputname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_normalizedistancenode_getvectorinputname.restype = ctypes.c_int32
+			self.lib.lib3mf_normalizedistancenode_getvectorinputname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_normalizedistancenode_getoutputresult.restype = ctypes.c_int32
+			self.lib.lib3mf_normalizedistancenode_getoutputresult.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 			self.lib.lib3mf_functioncallnode_getinputfunctionid.restype = ctypes.c_int32
 			self.lib.lib3mf_functioncallnode_getinputfunctionid.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
@@ -6240,6 +6494,15 @@ class Wrapper:
 			
 			self.lib.lib3mf_implicitfunction_addunsignedmeshnode.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitfunction_addunsignedmeshnode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_implicitfunction_addbeamlatticenode.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_addbeamlatticenode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_implicitfunction_addfunctiongradientnode.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_addfunctiongradientnode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_implicitfunction_addnormalizedistancenode.restype = ctypes.c_int32
+			self.lib.lib3mf_implicitfunction_addnormalizedistancenode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_implicitfunction_addfunctioncallnode.restype = ctypes.c_int32
 			self.lib.lib3mf_implicitfunction_addfunctioncallnode.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -7139,6 +7402,12 @@ class Wrapper:
 				return MeshNode(handle, wrapper)
 			def getObjectById_29985A628251A9CD(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::UnsignedMeshNode"
 				return UnsignedMeshNode(handle, wrapper)
+			def getObjectById_0F3A4EE98F7FEC0C(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::BeamLatticeNode"
+				return BeamLatticeNode(handle, wrapper)
+			def getObjectById_0437E27AEF740121(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::FunctionGradientNode"
+				return FunctionGradientNode(handle, wrapper)
+			def getObjectById_817D2E566E73AA8F(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::NormalizeDistanceNode"
+				return NormalizeDistanceNode(handle, wrapper)
 			def getObjectById_0765C17C952F24E3(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::FunctionCallNode"
 				return FunctionCallNode(handle, wrapper)
 			def getObjectById_FC006BC888CAB4D0(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
@@ -10834,6 +11103,232 @@ class UnsignedMeshNode(ImplicitNode):
 	
 
 
+''' Class Implementation for BeamLatticeNode
+'''
+class BeamLatticeNode(ImplicitNode):
+	def __init__(self, handle, wrapper):
+		ImplicitNode.__init__(self, handle, wrapper)
+	def GetInputBeamLattice(self):
+		BeamLatticeHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_beamlatticenode_getinputbeamlattice(self._handle, BeamLatticeHandle))
+		if BeamLatticeHandle:
+			BeamLatticeObject = self._wrapper._polymorphicFactory(BeamLatticeHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return BeamLatticeObject
+	
+	def GetInputPos(self):
+		PosHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_beamlatticenode_getinputpos(self._handle, PosHandle))
+		if PosHandle:
+			PosObject = self._wrapper._polymorphicFactory(PosHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return PosObject
+	
+	def GetOutputDistance(self):
+		DistanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_beamlatticenode_getoutputdistance(self._handle, DistanceHandle))
+		if DistanceHandle:
+			DistanceObject = self._wrapper._polymorphicFactory(DistanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return DistanceObject
+	
+	def SetAccurateRange(self, AccurateRange):
+		dAccurateRange = ctypes.c_double(AccurateRange)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_beamlatticenode_setaccuraterange(self._handle, dAccurateRange))
+		
+	
+	def GetAccurateRange(self):
+		pAccurateRange = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_beamlatticenode_getaccuraterange(self._handle, pAccurateRange))
+		
+		return pAccurateRange.value
+	
+
+
+''' Class Implementation for FunctionGradientNode
+'''
+class FunctionGradientNode(ImplicitNode):
+	def __init__(self, handle, wrapper):
+		ImplicitNode.__init__(self, handle, wrapper)
+	def GetInputFunctionID(self):
+		FunctionHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functiongradientnode_getinputfunctionid(self._handle, FunctionHandle))
+		if FunctionHandle:
+			FunctionObject = self._wrapper._polymorphicFactory(FunctionHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return FunctionObject
+	
+	def GetInputPos(self):
+		PosHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functiongradientnode_getinputpos(self._handle, PosHandle))
+		if PosHandle:
+			PosObject = self._wrapper._polymorphicFactory(PosHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return PosObject
+	
+	def GetInputStep(self):
+		StepHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functiongradientnode_getinputstep(self._handle, StepHandle))
+		if StepHandle:
+			StepObject = self._wrapper._polymorphicFactory(StepHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return StepObject
+	
+	def SetScalarOutputName(self, ScalarOutputName):
+		pScalarOutputName = ctypes.c_char_p(str.encode(ScalarOutputName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functiongradientnode_setscalaroutputname(self._handle, pScalarOutputName))
+		
+	
+	def GetScalarOutputName(self):
+		nScalarOutputNameBufferSize = ctypes.c_uint64(0)
+		nScalarOutputNameNeededChars = ctypes.c_uint64(0)
+		pScalarOutputNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functiongradientnode_getscalaroutputname(self._handle, nScalarOutputNameBufferSize, nScalarOutputNameNeededChars, pScalarOutputNameBuffer))
+		nScalarOutputNameBufferSize = ctypes.c_uint64(nScalarOutputNameNeededChars.value)
+		pScalarOutputNameBuffer = (ctypes.c_char * (nScalarOutputNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functiongradientnode_getscalaroutputname(self._handle, nScalarOutputNameBufferSize, nScalarOutputNameNeededChars, pScalarOutputNameBuffer))
+		
+		return pScalarOutputNameBuffer.value.decode()
+	
+	def SetVectorInputName(self, VectorInputName):
+		pVectorInputName = ctypes.c_char_p(str.encode(VectorInputName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functiongradientnode_setvectorinputname(self._handle, pVectorInputName))
+		
+	
+	def GetVectorInputName(self):
+		nVectorInputNameBufferSize = ctypes.c_uint64(0)
+		nVectorInputNameNeededChars = ctypes.c_uint64(0)
+		pVectorInputNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functiongradientnode_getvectorinputname(self._handle, nVectorInputNameBufferSize, nVectorInputNameNeededChars, pVectorInputNameBuffer))
+		nVectorInputNameBufferSize = ctypes.c_uint64(nVectorInputNameNeededChars.value)
+		pVectorInputNameBuffer = (ctypes.c_char * (nVectorInputNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functiongradientnode_getvectorinputname(self._handle, nVectorInputNameBufferSize, nVectorInputNameNeededChars, pVectorInputNameBuffer))
+		
+		return pVectorInputNameBuffer.value.decode()
+	
+	def GetOutputNormalizedGradient(self):
+		NormalizedGradientHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functiongradientnode_getoutputnormalizedgradient(self._handle, NormalizedGradientHandle))
+		if NormalizedGradientHandle:
+			NormalizedGradientObject = self._wrapper._polymorphicFactory(NormalizedGradientHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return NormalizedGradientObject
+	
+	def GetOutputGradient(self):
+		GradientHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functiongradientnode_getoutputgradient(self._handle, GradientHandle))
+		if GradientHandle:
+			GradientObject = self._wrapper._polymorphicFactory(GradientHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return GradientObject
+	
+	def GetOutputMagnitude(self):
+		MagnitudeHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functiongradientnode_getoutputmagnitude(self._handle, MagnitudeHandle))
+		if MagnitudeHandle:
+			MagnitudeObject = self._wrapper._polymorphicFactory(MagnitudeHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return MagnitudeObject
+	
+
+
+''' Class Implementation for NormalizeDistanceNode
+'''
+class NormalizeDistanceNode(ImplicitNode):
+	def __init__(self, handle, wrapper):
+		ImplicitNode.__init__(self, handle, wrapper)
+	def GetInputFunctionID(self):
+		FunctionHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_normalizedistancenode_getinputfunctionid(self._handle, FunctionHandle))
+		if FunctionHandle:
+			FunctionObject = self._wrapper._polymorphicFactory(FunctionHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return FunctionObject
+	
+	def GetInputPos(self):
+		PosHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_normalizedistancenode_getinputpos(self._handle, PosHandle))
+		if PosHandle:
+			PosObject = self._wrapper._polymorphicFactory(PosHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return PosObject
+	
+	def GetInputStep(self):
+		StepHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_normalizedistancenode_getinputstep(self._handle, StepHandle))
+		if StepHandle:
+			StepObject = self._wrapper._polymorphicFactory(StepHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return StepObject
+	
+	def SetScalarOutputName(self, ScalarOutputName):
+		pScalarOutputName = ctypes.c_char_p(str.encode(ScalarOutputName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_normalizedistancenode_setscalaroutputname(self._handle, pScalarOutputName))
+		
+	
+	def GetScalarOutputName(self):
+		nScalarOutputNameBufferSize = ctypes.c_uint64(0)
+		nScalarOutputNameNeededChars = ctypes.c_uint64(0)
+		pScalarOutputNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_normalizedistancenode_getscalaroutputname(self._handle, nScalarOutputNameBufferSize, nScalarOutputNameNeededChars, pScalarOutputNameBuffer))
+		nScalarOutputNameBufferSize = ctypes.c_uint64(nScalarOutputNameNeededChars.value)
+		pScalarOutputNameBuffer = (ctypes.c_char * (nScalarOutputNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_normalizedistancenode_getscalaroutputname(self._handle, nScalarOutputNameBufferSize, nScalarOutputNameNeededChars, pScalarOutputNameBuffer))
+		
+		return pScalarOutputNameBuffer.value.decode()
+	
+	def SetVectorInputName(self, VectorInputName):
+		pVectorInputName = ctypes.c_char_p(str.encode(VectorInputName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_normalizedistancenode_setvectorinputname(self._handle, pVectorInputName))
+		
+	
+	def GetVectorInputName(self):
+		nVectorInputNameBufferSize = ctypes.c_uint64(0)
+		nVectorInputNameNeededChars = ctypes.c_uint64(0)
+		pVectorInputNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_normalizedistancenode_getvectorinputname(self._handle, nVectorInputNameBufferSize, nVectorInputNameNeededChars, pVectorInputNameBuffer))
+		nVectorInputNameBufferSize = ctypes.c_uint64(nVectorInputNameNeededChars.value)
+		pVectorInputNameBuffer = (ctypes.c_char * (nVectorInputNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_normalizedistancenode_getvectorinputname(self._handle, nVectorInputNameBufferSize, nVectorInputNameNeededChars, pVectorInputNameBuffer))
+		
+		return pVectorInputNameBuffer.value.decode()
+	
+	def GetOutputResult(self):
+		ResultHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_normalizedistancenode_getoutputresult(self._handle, ResultHandle))
+		if ResultHandle:
+			ResultObject = self._wrapper._polymorphicFactory(ResultHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResultObject
+	
+
+
 ''' Class Implementation for FunctionCallNode
 '''
 class FunctionCallNode(ImplicitNode):
@@ -11626,6 +12121,45 @@ class ImplicitFunction(Function):
 		pTag = ctypes.c_char_p(str.encode(Tag))
 		NodeHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addunsignedmeshnode(self._handle, pIdentifier, pDisplayName, pTag, NodeHandle))
+		if NodeHandle:
+			NodeObject = self._wrapper._polymorphicFactory(NodeHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return NodeObject
+	
+	def AddBeamLatticeNode(self, Identifier, DisplayName, Tag):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
+		pTag = ctypes.c_char_p(str.encode(Tag))
+		NodeHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addbeamlatticenode(self._handle, pIdentifier, pDisplayName, pTag, NodeHandle))
+		if NodeHandle:
+			NodeObject = self._wrapper._polymorphicFactory(NodeHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return NodeObject
+	
+	def AddFunctionGradientNode(self, Identifier, DisplayName, Tag):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
+		pTag = ctypes.c_char_p(str.encode(Tag))
+		NodeHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addfunctiongradientnode(self._handle, pIdentifier, pDisplayName, pTag, NodeHandle))
+		if NodeHandle:
+			NodeObject = self._wrapper._polymorphicFactory(NodeHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return NodeObject
+	
+	def AddNormalizeDistanceNode(self, Identifier, DisplayName, Tag):
+		pIdentifier = ctypes.c_char_p(str.encode(Identifier))
+		pDisplayName = ctypes.c_char_p(str.encode(DisplayName))
+		pTag = ctypes.c_char_p(str.encode(Tag))
+		NodeHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_implicitfunction_addnormalizedistancenode(self._handle, pIdentifier, pDisplayName, pTag, NodeHandle))
 		if NodeHandle:
 			NodeObject = self._wrapper._polymorphicFactory(NodeHandle)
 		else:

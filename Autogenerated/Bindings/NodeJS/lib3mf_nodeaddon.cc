@@ -148,6 +148,9 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFConstMatNode::Init();
 	CLib3MFMeshNode::Init();
 	CLib3MFUnsignedMeshNode::Init();
+	CLib3MFBeamLatticeNode::Init();
+	CLib3MFFunctionGradientNode::Init();
+	CLib3MFNormalizeDistanceNode::Init();
 	CLib3MFFunctionCallNode::Init();
 	CLib3MFNodeIterator::Init();
 	CLib3MFFunction::Init();

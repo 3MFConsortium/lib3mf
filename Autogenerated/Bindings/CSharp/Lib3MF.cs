@@ -210,7 +210,10 @@ namespace Lib3MF {
 		ConstResourceID = 47,
 		VectorFromScalar = 48,
 		UnsignedMesh = 49,
-		Mod = 50
+		Mod = 50,
+		BeamLattice = 51,
+		FunctionGradient = 52,
+		NormalizeDistance = 53
 	};
 
 	public enum eImplicitPortType {
@@ -757,10 +760,10 @@ namespace Lib3MF {
 			public unsafe extern static Int32 MeshObject_GetVertex (IntPtr Handle, UInt32 AIndex, out InternalPosition ACoordinates);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_setvertex", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 MeshObject_SetVertex (IntPtr Handle, UInt32 AIndex, ref InternalPosition ACoordinates);
+			public unsafe extern static Int32 MeshObject_SetVertex (IntPtr Handle, UInt32 AIndex, InternalPosition ACoordinates);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_addvertex", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 MeshObject_AddVertex (IntPtr Handle, ref InternalPosition ACoordinates, out UInt32 ANewIndex);
+			public unsafe extern static Int32 MeshObject_AddVertex (IntPtr Handle, InternalPosition ACoordinates, out UInt32 ANewIndex);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_getvertices", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 MeshObject_GetVertices (IntPtr Handle, UInt64 sizeVertices, out UInt64 neededVertices, IntPtr dataVertices);
@@ -769,10 +772,10 @@ namespace Lib3MF {
 			public unsafe extern static Int32 MeshObject_GetTriangle (IntPtr Handle, UInt32 AIndex, out InternalTriangle AIndices);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_settriangle", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 MeshObject_SetTriangle (IntPtr Handle, UInt32 AIndex, ref InternalTriangle AIndices);
+			public unsafe extern static Int32 MeshObject_SetTriangle (IntPtr Handle, UInt32 AIndex, InternalTriangle AIndices);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_addtriangle", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 MeshObject_AddTriangle (IntPtr Handle, ref InternalTriangle AIndices, out UInt32 ANewIndex);
+			public unsafe extern static Int32 MeshObject_AddTriangle (IntPtr Handle, InternalTriangle AIndices, out UInt32 ANewIndex);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_gettriangleindices", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 MeshObject_GetTriangleIndices (IntPtr Handle, UInt64 sizeIndices, out UInt64 neededIndices, IntPtr dataIndices);
@@ -784,7 +787,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 MeshObject_GetObjectLevelProperty (IntPtr Handle, out UInt32 AUniqueResourceID, out UInt32 APropertyID, out Byte AHasObjectLevelProperty);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_settriangleproperties", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 MeshObject_SetTriangleProperties (IntPtr Handle, UInt32 AIndex, ref InternalTriangleProperties AProperties);
+			public unsafe extern static Int32 MeshObject_SetTriangleProperties (IntPtr Handle, UInt32 AIndex, InternalTriangleProperties AProperties);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_gettriangleproperties", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 MeshObject_GetTriangleProperties (IntPtr Handle, UInt32 AIndex, out InternalTriangleProperties AProperty);
@@ -838,7 +841,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 LevelSet_GetTransform (IntPtr Handle, out InternalTransform ATransform);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_settransform", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 LevelSet_SetTransform (IntPtr Handle, ref InternalTransform ATransform);
+			public unsafe extern static Int32 LevelSet_SetTransform (IntPtr Handle, InternalTransform ATransform);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_getchannelname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 LevelSet_GetChannelName (IntPtr Handle, UInt32 sizeChannelName, out UInt32 neededChannelName, IntPtr dataChannelName);
@@ -907,10 +910,10 @@ namespace Lib3MF {
 			public unsafe extern static Int32 BeamLattice_GetBeam (IntPtr Handle, UInt32 AIndex, out InternalBeam ABeamInfo);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlattice_addbeam", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BeamLattice_AddBeam (IntPtr Handle, ref InternalBeam ABeamInfo, out UInt32 AIndex);
+			public unsafe extern static Int32 BeamLattice_AddBeam (IntPtr Handle, InternalBeam ABeamInfo, out UInt32 AIndex);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlattice_setbeam", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BeamLattice_SetBeam (IntPtr Handle, UInt32 AIndex, ref InternalBeam ABeamInfo);
+			public unsafe extern static Int32 BeamLattice_SetBeam (IntPtr Handle, UInt32 AIndex, InternalBeam ABeamInfo);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlattice_setbeams", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BeamLattice_SetBeams (IntPtr Handle, UInt64 sizeBeamInfo, IntPtr dataBeamInfo);
@@ -925,10 +928,10 @@ namespace Lib3MF {
 			public unsafe extern static Int32 BeamLattice_GetBall (IntPtr Handle, UInt32 AIndex, out InternalBall ABallInfo);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlattice_addball", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BeamLattice_AddBall (IntPtr Handle, ref InternalBall ABallInfo, out UInt32 AIndex);
+			public unsafe extern static Int32 BeamLattice_AddBall (IntPtr Handle, InternalBall ABallInfo, out UInt32 AIndex);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlattice_setball", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BeamLattice_SetBall (IntPtr Handle, UInt32 AIndex, ref InternalBall ABallInfo);
+			public unsafe extern static Int32 BeamLattice_SetBall (IntPtr Handle, UInt32 AIndex, InternalBall ABallInfo);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlattice_setballs", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BeamLattice_SetBalls (IntPtr Handle, UInt64 sizeBallInfo, IntPtr dataBallInfo);
@@ -955,7 +958,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 FunctionReference_GetTransform (IntPtr Handle, out InternalTransform ATransform);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_settransform", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 FunctionReference_SetTransform (IntPtr Handle, ref InternalTransform ATransform);
+			public unsafe extern static Int32 FunctionReference_SetTransform (IntPtr Handle, InternalTransform ATransform);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functionreference_getchannelname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FunctionReference_GetChannelName (IntPtr Handle, UInt32 sizeChannelName, out UInt32 neededChannelName, IntPtr dataChannelName);
@@ -988,7 +991,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 VolumeDataComposite_GetMaterialMapping (IntPtr Handle, UInt32 AIndex, out IntPtr ATheMaterialMapping);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatacomposite_addmaterialmapping", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataComposite_AddMaterialMapping (IntPtr Handle, ref InternalTransform ATransform, out IntPtr ATheMaterialMapping);
+			public unsafe extern static Int32 VolumeDataComposite_AddMaterialMapping (IntPtr Handle, InternalTransform ATransform, out IntPtr ATheMaterialMapping);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatacomposite_removematerialmapping", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataComposite_RemoveMaterialMapping (IntPtr Handle, UInt32 AIndex);
@@ -1051,10 +1054,10 @@ namespace Lib3MF {
 			public unsafe extern static Int32 Component_GetTransform (IntPtr Handle, out InternalTransform ATransform);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_component_settransform", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Component_SetTransform (IntPtr Handle, ref InternalTransform ATransform);
+			public unsafe extern static Int32 Component_SetTransform (IntPtr Handle, InternalTransform ATransform);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_componentsobject_addcomponent", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ComponentsObject_AddComponent (IntPtr Handle, IntPtr AObjectResource, ref InternalTransform ATransform, out IntPtr AComponentInstance);
+			public unsafe extern static Int32 ComponentsObject_AddComponent (IntPtr Handle, IntPtr AObjectResource, InternalTransform ATransform, out IntPtr AComponentInstance);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_componentsobject_getcomponent", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ComponentsObject_GetComponent (IntPtr Handle, UInt32 AIndex, out IntPtr AComponentInstance);
@@ -1099,7 +1102,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 BaseMaterialGroup_GetAllPropertyIDs (IntPtr Handle, UInt64 sizePropertyIDs, out UInt64 neededPropertyIDs, IntPtr dataPropertyIDs);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_basematerialgroup_addmaterial", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BaseMaterialGroup_AddMaterial (IntPtr Handle, byte[] AName, ref InternalColor ADisplayColor, out UInt32 APropertyID);
+			public unsafe extern static Int32 BaseMaterialGroup_AddMaterial (IntPtr Handle, byte[] AName, InternalColor ADisplayColor, out UInt32 APropertyID);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_basematerialgroup_removematerial", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BaseMaterialGroup_RemoveMaterial (IntPtr Handle, UInt32 APropertyID);
@@ -1111,7 +1114,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 BaseMaterialGroup_SetName (IntPtr Handle, UInt32 APropertyID, byte[] AName);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_basematerialgroup_setdisplaycolor", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BaseMaterialGroup_SetDisplayColor (IntPtr Handle, UInt32 APropertyID, ref InternalColor ATheColor);
+			public unsafe extern static Int32 BaseMaterialGroup_SetDisplayColor (IntPtr Handle, UInt32 APropertyID, InternalColor ATheColor);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_basematerialgroup_getdisplaycolor", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BaseMaterialGroup_GetDisplayColor (IntPtr Handle, UInt32 APropertyID, out InternalColor ATheColor);
@@ -1123,13 +1126,13 @@ namespace Lib3MF {
 			public unsafe extern static Int32 ColorGroup_GetAllPropertyIDs (IntPtr Handle, UInt64 sizePropertyIDs, out UInt64 neededPropertyIDs, IntPtr dataPropertyIDs);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_colorgroup_addcolor", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ColorGroup_AddColor (IntPtr Handle, ref InternalColor ATheColor, out UInt32 APropertyID);
+			public unsafe extern static Int32 ColorGroup_AddColor (IntPtr Handle, InternalColor ATheColor, out UInt32 APropertyID);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_colorgroup_removecolor", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ColorGroup_RemoveColor (IntPtr Handle, UInt32 APropertyID);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_colorgroup_setcolor", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ColorGroup_SetColor (IntPtr Handle, UInt32 APropertyID, ref InternalColor ATheColor);
+			public unsafe extern static Int32 ColorGroup_SetColor (IntPtr Handle, UInt32 APropertyID, InternalColor ATheColor);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_colorgroup_getcolor", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ColorGroup_GetColor (IntPtr Handle, UInt32 APropertyID, out InternalColor ATheColor);
@@ -1141,7 +1144,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 Texture2DGroup_GetAllPropertyIDs (IntPtr Handle, UInt64 sizePropertyIDs, out UInt64 neededPropertyIDs, IntPtr dataPropertyIDs);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_texture2dgroup_addtex2coord", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Texture2DGroup_AddTex2Coord (IntPtr Handle, ref InternalTex2Coord AUVCoordinate, out UInt32 APropertyID);
+			public unsafe extern static Int32 Texture2DGroup_AddTex2Coord (IntPtr Handle, InternalTex2Coord AUVCoordinate, out UInt32 APropertyID);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_texture2dgroup_gettex2coord", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Texture2DGroup_GetTex2Coord (IntPtr Handle, UInt32 APropertyID, out InternalTex2Coord AUVCoordinate);
@@ -1192,7 +1195,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 MultiPropertyGroup_GetLayerCount (IntPtr Handle, out UInt32 ACount);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_multipropertygroup_addlayer", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 MultiPropertyGroup_AddLayer (IntPtr Handle, ref InternalMultiPropertyLayer ATheLayer, out UInt32 ALayerIndex);
+			public unsafe extern static Int32 MultiPropertyGroup_AddLayer (IntPtr Handle, InternalMultiPropertyLayer ATheLayer, out UInt32 ALayerIndex);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_multipropertygroup_getlayer", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 MultiPropertyGroup_GetLayer (IntPtr Handle, UInt32 ALayerIndex, out InternalMultiPropertyLayer ATheLayer);
@@ -1522,7 +1525,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 ConstantNode_GetOutputValue (IntPtr Handle, out IntPtr AValue);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_constvecnode_setvector", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ConstVecNode_SetVector (IntPtr Handle, ref InternalVector AValue);
+			public unsafe extern static Int32 ConstVecNode_SetVector (IntPtr Handle, InternalVector AValue);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_constvecnode_getvector", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ConstVecNode_GetVector (IntPtr Handle, out InternalVector AValue);
@@ -1531,7 +1534,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 ConstVecNode_GetOutputVector (IntPtr Handle, out IntPtr AVector);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_constmatnode_setmatrix", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ConstMatNode_SetMatrix (IntPtr Handle, ref InternalMatrix4x4 AValue);
+			public unsafe extern static Int32 ConstMatNode_SetMatrix (IntPtr Handle, InternalMatrix4x4 AValue);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_constmatnode_getmatrix", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ConstMatNode_GetMatrix (IntPtr Handle, out InternalMatrix4x4 AValue);
@@ -1556,6 +1559,75 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_unsignedmeshnode_getoutputdistance", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 UnsignedMeshNode_GetOutputDistance (IntPtr Handle, out IntPtr ADistance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlatticenode_getinputbeamlattice", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BeamLatticeNode_GetInputBeamLattice (IntPtr Handle, out IntPtr ABeamLattice);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlatticenode_getinputpos", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BeamLatticeNode_GetInputPos (IntPtr Handle, out IntPtr APos);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlatticenode_getoutputdistance", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BeamLatticeNode_GetOutputDistance (IntPtr Handle, out IntPtr ADistance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlatticenode_setaccuraterange", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BeamLatticeNode_SetAccurateRange (IntPtr Handle, Double AAccurateRange);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlatticenode_getaccuraterange", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BeamLatticeNode_GetAccurateRange (IntPtr Handle, out Double AAccurateRange);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functiongradientnode_getinputfunctionid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionGradientNode_GetInputFunctionID (IntPtr Handle, out IntPtr AFunction);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functiongradientnode_getinputpos", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionGradientNode_GetInputPos (IntPtr Handle, out IntPtr APos);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functiongradientnode_getinputstep", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionGradientNode_GetInputStep (IntPtr Handle, out IntPtr AStep);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functiongradientnode_setscalaroutputname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionGradientNode_SetScalarOutputName (IntPtr Handle, byte[] AScalarOutputName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functiongradientnode_getscalaroutputname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionGradientNode_GetScalarOutputName (IntPtr Handle, UInt32 sizeScalarOutputName, out UInt32 neededScalarOutputName, IntPtr dataScalarOutputName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functiongradientnode_setvectorinputname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionGradientNode_SetVectorInputName (IntPtr Handle, byte[] AVectorInputName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functiongradientnode_getvectorinputname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionGradientNode_GetVectorInputName (IntPtr Handle, UInt32 sizeVectorInputName, out UInt32 neededVectorInputName, IntPtr dataVectorInputName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functiongradientnode_getoutputnormalizedgradient", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionGradientNode_GetOutputNormalizedGradient (IntPtr Handle, out IntPtr ANormalizedGradient);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functiongradientnode_getoutputgradient", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionGradientNode_GetOutputGradient (IntPtr Handle, out IntPtr AGradient);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functiongradientnode_getoutputmagnitude", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionGradientNode_GetOutputMagnitude (IntPtr Handle, out IntPtr AMagnitude);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_normalizedistancenode_getinputfunctionid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NormalizeDistanceNode_GetInputFunctionID (IntPtr Handle, out IntPtr AFunction);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_normalizedistancenode_getinputpos", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NormalizeDistanceNode_GetInputPos (IntPtr Handle, out IntPtr APos);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_normalizedistancenode_getinputstep", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NormalizeDistanceNode_GetInputStep (IntPtr Handle, out IntPtr AStep);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_normalizedistancenode_setscalaroutputname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NormalizeDistanceNode_SetScalarOutputName (IntPtr Handle, byte[] AScalarOutputName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_normalizedistancenode_getscalaroutputname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NormalizeDistanceNode_GetScalarOutputName (IntPtr Handle, UInt32 sizeScalarOutputName, out UInt32 neededScalarOutputName, IntPtr dataScalarOutputName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_normalizedistancenode_setvectorinputname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NormalizeDistanceNode_SetVectorInputName (IntPtr Handle, byte[] AVectorInputName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_normalizedistancenode_getvectorinputname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NormalizeDistanceNode_GetVectorInputName (IntPtr Handle, UInt32 sizeVectorInputName, out UInt32 neededVectorInputName, IntPtr dataVectorInputName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_normalizedistancenode_getoutputresult", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NormalizeDistanceNode_GetOutputResult (IntPtr Handle, out IntPtr AResult);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functioncallnode_getinputfunctionid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FunctionCallNode_GetInputFunctionID (IntPtr Handle, out IntPtr AFunction);
@@ -1746,6 +1818,15 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addunsignedmeshnode", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_AddUnsignedMeshNode (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addbeamlatticenode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddBeamLatticeNode (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addfunctiongradientnode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddFunctionGradientNode (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addnormalizedistancenode", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImplicitFunction_AddNormalizeDistanceNode (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_implicitfunction_addfunctioncallnode", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ImplicitFunction_AddFunctionCallNode (IntPtr Handle, byte[] AIdentifier, byte[] ADisplayName, byte[] ATag, out IntPtr ANode);
 
@@ -1816,7 +1897,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 BuildItem_GetObjectTransform (IntPtr Handle, out InternalTransform ATransform);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_builditem_setobjecttransform", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BuildItem_SetObjectTransform (IntPtr Handle, ref InternalTransform ATransform);
+			public unsafe extern static Int32 BuildItem_SetObjectTransform (IntPtr Handle, InternalTransform ATransform);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_builditem_getpartnumber", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BuildItem_GetPartNumber (IntPtr Handle, UInt32 sizePartNumber, out UInt32 neededPartNumber, IntPtr dataPartNumber);
@@ -2170,7 +2251,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 Model_GetImageStackByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AImageStackInstance);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addbuilditem", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddBuildItem (IntPtr Handle, IntPtr AObject, ref InternalTransform ATransform, out IntPtr ABuildItemInstance);
+			public unsafe extern static Int32 Model_AddBuildItem (IntPtr Handle, IntPtr AObject, InternalTransform ATransform, out IntPtr ABuildItemInstance);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_removebuilditem", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_RemoveBuildItem (IntPtr Handle, IntPtr ABuildItemInstance);
@@ -2278,10 +2359,10 @@ namespace Lib3MF {
 			public extern static Int32 FloatRGBAToColor (Single ARed, Single AGreen, Single ABlue, Single AAlpha, out InternalColor ATheColor);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_colortorgba", CharSet = CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
-			public extern static Int32 ColorToRGBA (ref InternalColor ATheColor, out Byte ARed, out Byte AGreen, out Byte ABlue, out Byte AAlpha);
+			public extern static Int32 ColorToRGBA (InternalColor ATheColor, out Byte ARed, out Byte AGreen, out Byte ABlue, out Byte AAlpha);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_colortofloatrgba", CharSet = CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
-			public extern static Int32 ColorToFloatRGBA (ref InternalColor ATheColor, out Single ARed, out Single AGreen, out Single ABlue, out Single AAlpha);
+			public extern static Int32 ColorToFloatRGBA (InternalColor ATheColor, out Single ARed, out Single AGreen, out Single ABlue, out Single AAlpha);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_getidentitytransform", CharSet = CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
 			public extern static Int32 GetIdentityTransform (out InternalTransform ATransform);
@@ -2750,6 +2831,9 @@ namespace Lib3MF {
 					case 0xF85C90EDCE6F90A4: Object = new CConstMatNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstMatNode"
 					case 0x53601FD432E3DEF4: Object = new CMeshNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshNode"
 					case 0x29985A628251A9CD: Object = new CUnsignedMeshNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::UnsignedMeshNode"
+					case 0x0F3A4EE98F7FEC0C: Object = new CBeamLatticeNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BeamLatticeNode"
+					case 0x0437E27AEF740121: Object = new CFunctionGradientNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionGradientNode"
+					case 0x817D2E566E73AA8F: Object = new CNormalizeDistanceNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::NormalizeDistanceNode"
 					case 0x0765C17C952F24E3: Object = new CFunctionCallNode(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionCallNode"
 					case 0xFC006BC888CAB4D0: Object = new CNodeIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
 					case 0x9EFB2757CA1A5231: Object = new CFunction(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
@@ -3912,7 +3996,7 @@ namespace Lib3MF {
 		{
 			Internal.InternalPosition intCoordinates = Internal.Lib3MFWrapper.convertStructToInternal_Position (ACoordinates);
 
-			CheckError(Internal.Lib3MFWrapper.MeshObject_SetVertex (Handle, AIndex, ref intCoordinates));
+			CheckError(Internal.Lib3MFWrapper.MeshObject_SetVertex (Handle, AIndex, intCoordinates));
 		}
 
 		public UInt32 AddVertex (sPosition ACoordinates)
@@ -3920,7 +4004,7 @@ namespace Lib3MF {
 			Internal.InternalPosition intCoordinates = Internal.Lib3MFWrapper.convertStructToInternal_Position (ACoordinates);
 			UInt32 resultNewIndex = 0;
 
-			CheckError(Internal.Lib3MFWrapper.MeshObject_AddVertex (Handle, ref intCoordinates, out resultNewIndex));
+			CheckError(Internal.Lib3MFWrapper.MeshObject_AddVertex (Handle, intCoordinates, out resultNewIndex));
 			return resultNewIndex;
 		}
 
@@ -3952,7 +4036,7 @@ namespace Lib3MF {
 		{
 			Internal.InternalTriangle intIndices = Internal.Lib3MFWrapper.convertStructToInternal_Triangle (AIndices);
 
-			CheckError(Internal.Lib3MFWrapper.MeshObject_SetTriangle (Handle, AIndex, ref intIndices));
+			CheckError(Internal.Lib3MFWrapper.MeshObject_SetTriangle (Handle, AIndex, intIndices));
 		}
 
 		public UInt32 AddTriangle (sTriangle AIndices)
@@ -3960,7 +4044,7 @@ namespace Lib3MF {
 			Internal.InternalTriangle intIndices = Internal.Lib3MFWrapper.convertStructToInternal_Triangle (AIndices);
 			UInt32 resultNewIndex = 0;
 
-			CheckError(Internal.Lib3MFWrapper.MeshObject_AddTriangle (Handle, ref intIndices, out resultNewIndex));
+			CheckError(Internal.Lib3MFWrapper.MeshObject_AddTriangle (Handle, intIndices, out resultNewIndex));
 			return resultNewIndex;
 		}
 
@@ -3998,7 +4082,7 @@ namespace Lib3MF {
 		{
 			Internal.InternalTriangleProperties intProperties = Internal.Lib3MFWrapper.convertStructToInternal_TriangleProperties (AProperties);
 
-			CheckError(Internal.Lib3MFWrapper.MeshObject_SetTriangleProperties (Handle, AIndex, ref intProperties));
+			CheckError(Internal.Lib3MFWrapper.MeshObject_SetTriangleProperties (Handle, AIndex, intProperties));
 		}
 
 		public void GetTriangleProperties (UInt32 AIndex, out sTriangleProperties AProperty)
@@ -4172,7 +4256,7 @@ namespace Lib3MF {
 		{
 			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
 
-			CheckError(Internal.Lib3MFWrapper.LevelSet_SetTransform (Handle, ref intTransform));
+			CheckError(Internal.Lib3MFWrapper.LevelSet_SetTransform (Handle, intTransform));
 		}
 
 		public String GetChannelName ()
@@ -4359,7 +4443,7 @@ namespace Lib3MF {
 			Internal.InternalBeam intBeamInfo = Internal.Lib3MFWrapper.convertStructToInternal_Beam (ABeamInfo);
 			UInt32 resultIndex = 0;
 
-			CheckError(Internal.Lib3MFWrapper.BeamLattice_AddBeam (Handle, ref intBeamInfo, out resultIndex));
+			CheckError(Internal.Lib3MFWrapper.BeamLattice_AddBeam (Handle, intBeamInfo, out resultIndex));
 			return resultIndex;
 		}
 
@@ -4367,7 +4451,7 @@ namespace Lib3MF {
 		{
 			Internal.InternalBeam intBeamInfo = Internal.Lib3MFWrapper.convertStructToInternal_Beam (ABeamInfo);
 
-			CheckError(Internal.Lib3MFWrapper.BeamLattice_SetBeam (Handle, AIndex, ref intBeamInfo));
+			CheckError(Internal.Lib3MFWrapper.BeamLattice_SetBeam (Handle, AIndex, intBeamInfo));
 		}
 
 		public void SetBeams (sBeam[] ABeamInfo)
@@ -4418,7 +4502,7 @@ namespace Lib3MF {
 			Internal.InternalBall intBallInfo = Internal.Lib3MFWrapper.convertStructToInternal_Ball (ABallInfo);
 			UInt32 resultIndex = 0;
 
-			CheckError(Internal.Lib3MFWrapper.BeamLattice_AddBall (Handle, ref intBallInfo, out resultIndex));
+			CheckError(Internal.Lib3MFWrapper.BeamLattice_AddBall (Handle, intBallInfo, out resultIndex));
 			return resultIndex;
 		}
 
@@ -4426,7 +4510,7 @@ namespace Lib3MF {
 		{
 			Internal.InternalBall intBallInfo = Internal.Lib3MFWrapper.convertStructToInternal_Ball (ABallInfo);
 
-			CheckError(Internal.Lib3MFWrapper.BeamLattice_SetBall (Handle, AIndex, ref intBallInfo));
+			CheckError(Internal.Lib3MFWrapper.BeamLattice_SetBall (Handle, AIndex, intBallInfo));
 		}
 
 		public void SetBalls (sBall[] ABallInfo)
@@ -4514,7 +4598,7 @@ namespace Lib3MF {
 		{
 			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
 
-			CheckError(Internal.Lib3MFWrapper.FunctionReference_SetTransform (Handle, ref intTransform));
+			CheckError(Internal.Lib3MFWrapper.FunctionReference_SetTransform (Handle, intTransform));
 		}
 
 		public String GetChannelName ()
@@ -4628,7 +4712,7 @@ namespace Lib3MF {
 			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
 			IntPtr newTheMaterialMapping = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeDataComposite_AddMaterialMapping (Handle, ref intTransform, out newTheMaterialMapping));
+			CheckError(Internal.Lib3MFWrapper.VolumeDataComposite_AddMaterialMapping (Handle, intTransform, out newTheMaterialMapping));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CMaterialMapping>(newTheMaterialMapping);
 		}
 
@@ -4830,7 +4914,7 @@ namespace Lib3MF {
 		{
 			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
 
-			CheckError(Internal.Lib3MFWrapper.Component_SetTransform (Handle, ref intTransform));
+			CheckError(Internal.Lib3MFWrapper.Component_SetTransform (Handle, intTransform));
 		}
 
 	}
@@ -4849,7 +4933,7 @@ namespace Lib3MF {
 			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
 			IntPtr newComponentInstance = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ComponentsObject_AddComponent (Handle, AObjectResourceHandle, ref intTransform, out newComponentInstance));
+			CheckError(Internal.Lib3MFWrapper.ComponentsObject_AddComponent (Handle, AObjectResourceHandle, intTransform, out newComponentInstance));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CComponent>(newComponentInstance);
 		}
 
@@ -5012,7 +5096,7 @@ namespace Lib3MF {
 			Internal.InternalColor intDisplayColor = Internal.Lib3MFWrapper.convertStructToInternal_Color (ADisplayColor);
 			UInt32 resultPropertyID = 0;
 
-			CheckError(Internal.Lib3MFWrapper.BaseMaterialGroup_AddMaterial (Handle, byteName, ref intDisplayColor, out resultPropertyID));
+			CheckError(Internal.Lib3MFWrapper.BaseMaterialGroup_AddMaterial (Handle, byteName, intDisplayColor, out resultPropertyID));
 			return resultPropertyID;
 		}
 
@@ -5047,7 +5131,7 @@ namespace Lib3MF {
 		{
 			Internal.InternalColor intTheColor = Internal.Lib3MFWrapper.convertStructToInternal_Color (ATheColor);
 
-			CheckError(Internal.Lib3MFWrapper.BaseMaterialGroup_SetDisplayColor (Handle, APropertyID, ref intTheColor));
+			CheckError(Internal.Lib3MFWrapper.BaseMaterialGroup_SetDisplayColor (Handle, APropertyID, intTheColor));
 		}
 
 		public sColor GetDisplayColor (UInt32 APropertyID)
@@ -5092,7 +5176,7 @@ namespace Lib3MF {
 			Internal.InternalColor intTheColor = Internal.Lib3MFWrapper.convertStructToInternal_Color (ATheColor);
 			UInt32 resultPropertyID = 0;
 
-			CheckError(Internal.Lib3MFWrapper.ColorGroup_AddColor (Handle, ref intTheColor, out resultPropertyID));
+			CheckError(Internal.Lib3MFWrapper.ColorGroup_AddColor (Handle, intTheColor, out resultPropertyID));
 			return resultPropertyID;
 		}
 
@@ -5106,7 +5190,7 @@ namespace Lib3MF {
 		{
 			Internal.InternalColor intTheColor = Internal.Lib3MFWrapper.convertStructToInternal_Color (ATheColor);
 
-			CheckError(Internal.Lib3MFWrapper.ColorGroup_SetColor (Handle, APropertyID, ref intTheColor));
+			CheckError(Internal.Lib3MFWrapper.ColorGroup_SetColor (Handle, APropertyID, intTheColor));
 		}
 
 		public sColor GetColor (UInt32 APropertyID)
@@ -5151,7 +5235,7 @@ namespace Lib3MF {
 			Internal.InternalTex2Coord intUVCoordinate = Internal.Lib3MFWrapper.convertStructToInternal_Tex2Coord (AUVCoordinate);
 			UInt32 resultPropertyID = 0;
 
-			CheckError(Internal.Lib3MFWrapper.Texture2DGroup_AddTex2Coord (Handle, ref intUVCoordinate, out resultPropertyID));
+			CheckError(Internal.Lib3MFWrapper.Texture2DGroup_AddTex2Coord (Handle, intUVCoordinate, out resultPropertyID));
 			return resultPropertyID;
 		}
 
@@ -5328,7 +5412,7 @@ namespace Lib3MF {
 			Internal.InternalMultiPropertyLayer intTheLayer = Internal.Lib3MFWrapper.convertStructToInternal_MultiPropertyLayer (ATheLayer);
 			UInt32 resultLayerIndex = 0;
 
-			CheckError(Internal.Lib3MFWrapper.MultiPropertyGroup_AddLayer (Handle, ref intTheLayer, out resultLayerIndex));
+			CheckError(Internal.Lib3MFWrapper.MultiPropertyGroup_AddLayer (Handle, intTheLayer, out resultLayerIndex));
 			return resultLayerIndex;
 		}
 
@@ -6716,7 +6800,7 @@ namespace Lib3MF {
 		{
 			Internal.InternalVector intValue = Internal.Lib3MFWrapper.convertStructToInternal_Vector (AValue);
 
-			CheckError(Internal.Lib3MFWrapper.ConstVecNode_SetVector (Handle, ref intValue));
+			CheckError(Internal.Lib3MFWrapper.ConstVecNode_SetVector (Handle, intValue));
 		}
 
 		public sVector GetVector ()
@@ -6747,7 +6831,7 @@ namespace Lib3MF {
 		{
 			Internal.InternalMatrix4x4 intValue = Internal.Lib3MFWrapper.convertStructToInternal_Matrix4x4 (AValue);
 
-			CheckError(Internal.Lib3MFWrapper.ConstMatNode_SetMatrix (Handle, ref intValue));
+			CheckError(Internal.Lib3MFWrapper.ConstMatNode_SetMatrix (Handle, intValue));
 		}
 
 		public sMatrix4x4 GetMatrix ()
@@ -6828,6 +6912,232 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.UnsignedMeshNode_GetOutputDistance (Handle, out newDistance));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newDistance);
+		}
+
+	}
+
+	public class CBeamLatticeNode : CImplicitNode
+	{
+		public CBeamLatticeNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImplicitPort GetInputBeamLattice ()
+		{
+			IntPtr newBeamLattice = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.BeamLatticeNode_GetInputBeamLattice (Handle, out newBeamLattice));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newBeamLattice);
+		}
+
+		public CImplicitPort GetInputPos ()
+		{
+			IntPtr newPos = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.BeamLatticeNode_GetInputPos (Handle, out newPos));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newPos);
+		}
+
+		public CImplicitPort GetOutputDistance ()
+		{
+			IntPtr newDistance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.BeamLatticeNode_GetOutputDistance (Handle, out newDistance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newDistance);
+		}
+
+		public void SetAccurateRange (Double AAccurateRange)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.BeamLatticeNode_SetAccurateRange (Handle, AAccurateRange));
+		}
+
+		public Double GetAccurateRange ()
+		{
+			Double resultAccurateRange = 0;
+
+			CheckError(Internal.Lib3MFWrapper.BeamLatticeNode_GetAccurateRange (Handle, out resultAccurateRange));
+			return resultAccurateRange;
+		}
+
+	}
+
+	public class CFunctionGradientNode : CImplicitNode
+	{
+		public CFunctionGradientNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImplicitPort GetInputFunctionID ()
+		{
+			IntPtr newFunction = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionGradientNode_GetInputFunctionID (Handle, out newFunction));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newFunction);
+		}
+
+		public CImplicitPort GetInputPos ()
+		{
+			IntPtr newPos = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionGradientNode_GetInputPos (Handle, out newPos));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newPos);
+		}
+
+		public CImplicitPort GetInputStep ()
+		{
+			IntPtr newStep = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionGradientNode_GetInputStep (Handle, out newStep));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newStep);
+		}
+
+		public void SetScalarOutputName (String AScalarOutputName)
+		{
+			byte[] byteScalarOutputName = Encoding.UTF8.GetBytes(AScalarOutputName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.FunctionGradientNode_SetScalarOutputName (Handle, byteScalarOutputName));
+		}
+
+		public String GetScalarOutputName ()
+		{
+			UInt32 sizeScalarOutputName = 0;
+			UInt32 neededScalarOutputName = 0;
+			CheckError(Internal.Lib3MFWrapper.FunctionGradientNode_GetScalarOutputName (Handle, sizeScalarOutputName, out neededScalarOutputName, IntPtr.Zero));
+			sizeScalarOutputName = neededScalarOutputName;
+			byte[] bytesScalarOutputName = new byte[sizeScalarOutputName];
+			GCHandle dataScalarOutputName = GCHandle.Alloc(bytesScalarOutputName, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.FunctionGradientNode_GetScalarOutputName (Handle, sizeScalarOutputName, out neededScalarOutputName, dataScalarOutputName.AddrOfPinnedObject()));
+			dataScalarOutputName.Free();
+			return Encoding.UTF8.GetString(bytesScalarOutputName).TrimEnd(char.MinValue);
+		}
+
+		public void SetVectorInputName (String AVectorInputName)
+		{
+			byte[] byteVectorInputName = Encoding.UTF8.GetBytes(AVectorInputName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.FunctionGradientNode_SetVectorInputName (Handle, byteVectorInputName));
+		}
+
+		public String GetVectorInputName ()
+		{
+			UInt32 sizeVectorInputName = 0;
+			UInt32 neededVectorInputName = 0;
+			CheckError(Internal.Lib3MFWrapper.FunctionGradientNode_GetVectorInputName (Handle, sizeVectorInputName, out neededVectorInputName, IntPtr.Zero));
+			sizeVectorInputName = neededVectorInputName;
+			byte[] bytesVectorInputName = new byte[sizeVectorInputName];
+			GCHandle dataVectorInputName = GCHandle.Alloc(bytesVectorInputName, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.FunctionGradientNode_GetVectorInputName (Handle, sizeVectorInputName, out neededVectorInputName, dataVectorInputName.AddrOfPinnedObject()));
+			dataVectorInputName.Free();
+			return Encoding.UTF8.GetString(bytesVectorInputName).TrimEnd(char.MinValue);
+		}
+
+		public CImplicitPort GetOutputNormalizedGradient ()
+		{
+			IntPtr newNormalizedGradient = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionGradientNode_GetOutputNormalizedGradient (Handle, out newNormalizedGradient));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newNormalizedGradient);
+		}
+
+		public CImplicitPort GetOutputGradient ()
+		{
+			IntPtr newGradient = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionGradientNode_GetOutputGradient (Handle, out newGradient));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newGradient);
+		}
+
+		public CImplicitPort GetOutputMagnitude ()
+		{
+			IntPtr newMagnitude = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.FunctionGradientNode_GetOutputMagnitude (Handle, out newMagnitude));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newMagnitude);
+		}
+
+	}
+
+	public class CNormalizeDistanceNode : CImplicitNode
+	{
+		public CNormalizeDistanceNode (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImplicitPort GetInputFunctionID ()
+		{
+			IntPtr newFunction = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.NormalizeDistanceNode_GetInputFunctionID (Handle, out newFunction));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newFunction);
+		}
+
+		public CImplicitPort GetInputPos ()
+		{
+			IntPtr newPos = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.NormalizeDistanceNode_GetInputPos (Handle, out newPos));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newPos);
+		}
+
+		public CImplicitPort GetInputStep ()
+		{
+			IntPtr newStep = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.NormalizeDistanceNode_GetInputStep (Handle, out newStep));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newStep);
+		}
+
+		public void SetScalarOutputName (String AScalarOutputName)
+		{
+			byte[] byteScalarOutputName = Encoding.UTF8.GetBytes(AScalarOutputName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.NormalizeDistanceNode_SetScalarOutputName (Handle, byteScalarOutputName));
+		}
+
+		public String GetScalarOutputName ()
+		{
+			UInt32 sizeScalarOutputName = 0;
+			UInt32 neededScalarOutputName = 0;
+			CheckError(Internal.Lib3MFWrapper.NormalizeDistanceNode_GetScalarOutputName (Handle, sizeScalarOutputName, out neededScalarOutputName, IntPtr.Zero));
+			sizeScalarOutputName = neededScalarOutputName;
+			byte[] bytesScalarOutputName = new byte[sizeScalarOutputName];
+			GCHandle dataScalarOutputName = GCHandle.Alloc(bytesScalarOutputName, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.NormalizeDistanceNode_GetScalarOutputName (Handle, sizeScalarOutputName, out neededScalarOutputName, dataScalarOutputName.AddrOfPinnedObject()));
+			dataScalarOutputName.Free();
+			return Encoding.UTF8.GetString(bytesScalarOutputName).TrimEnd(char.MinValue);
+		}
+
+		public void SetVectorInputName (String AVectorInputName)
+		{
+			byte[] byteVectorInputName = Encoding.UTF8.GetBytes(AVectorInputName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.NormalizeDistanceNode_SetVectorInputName (Handle, byteVectorInputName));
+		}
+
+		public String GetVectorInputName ()
+		{
+			UInt32 sizeVectorInputName = 0;
+			UInt32 neededVectorInputName = 0;
+			CheckError(Internal.Lib3MFWrapper.NormalizeDistanceNode_GetVectorInputName (Handle, sizeVectorInputName, out neededVectorInputName, IntPtr.Zero));
+			sizeVectorInputName = neededVectorInputName;
+			byte[] bytesVectorInputName = new byte[sizeVectorInputName];
+			GCHandle dataVectorInputName = GCHandle.Alloc(bytesVectorInputName, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.NormalizeDistanceNode_GetVectorInputName (Handle, sizeVectorInputName, out neededVectorInputName, dataVectorInputName.AddrOfPinnedObject()));
+			dataVectorInputName.Free();
+			return Encoding.UTF8.GetString(bytesVectorInputName).TrimEnd(char.MinValue);
+		}
+
+		public CImplicitPort GetOutputResult ()
+		{
+			IntPtr newResult = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.NormalizeDistanceNode_GetOutputResult (Handle, out newResult));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newResult);
 		}
 
 	}
@@ -7566,6 +7876,39 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CUnsignedMeshNode>(newNode);
 		}
 
+		public CBeamLatticeNode AddBeamLatticeNode (String AIdentifier, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddBeamLatticeNode (Handle, byteIdentifier, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CBeamLatticeNode>(newNode);
+		}
+
+		public CFunctionGradientNode AddFunctionGradientNode (String AIdentifier, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddFunctionGradientNode (Handle, byteIdentifier, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CFunctionGradientNode>(newNode);
+		}
+
+		public CNormalizeDistanceNode AddNormalizeDistanceNode (String AIdentifier, String ADisplayName, String ATag)
+		{
+			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
+			byte[] byteDisplayName = Encoding.UTF8.GetBytes(ADisplayName + char.MinValue);
+			byte[] byteTag = Encoding.UTF8.GetBytes(ATag + char.MinValue);
+			IntPtr newNode = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImplicitFunction_AddNormalizeDistanceNode (Handle, byteIdentifier, byteDisplayName, byteTag, out newNode));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CNormalizeDistanceNode>(newNode);
+		}
+
 		public CFunctionCallNode AddFunctionCallNode (String AIdentifier, String ADisplayName, String ATag)
 		{
 			byte[] byteIdentifier = Encoding.UTF8.GetBytes(AIdentifier + char.MinValue);
@@ -7782,7 +8125,7 @@ namespace Lib3MF {
 		{
 			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
 
-			CheckError(Internal.Lib3MFWrapper.BuildItem_SetObjectTransform (Handle, ref intTransform));
+			CheckError(Internal.Lib3MFWrapper.BuildItem_SetObjectTransform (Handle, intTransform));
 		}
 
 		public String GetPartNumber ()
@@ -8955,7 +9298,7 @@ namespace Lib3MF {
 			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
 			IntPtr newBuildItemInstance = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Model_AddBuildItem (Handle, AObjectHandle, ref intTransform, out newBuildItemInstance));
+			CheckError(Internal.Lib3MFWrapper.Model_AddBuildItem (Handle, AObjectHandle, intTransform, out newBuildItemInstance));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CBuildItem>(newBuildItemInstance);
 		}
 
@@ -9292,14 +9635,14 @@ namespace Lib3MF {
 		{
 			Internal.InternalColor intTheColor = Internal.Lib3MFWrapper.convertStructToInternal_Color (ATheColor);
 
-			CheckError(Internal.Lib3MFWrapper.ColorToRGBA (ref intTheColor, out ARed, out AGreen, out ABlue, out AAlpha));
+			CheckError(Internal.Lib3MFWrapper.ColorToRGBA (intTheColor, out ARed, out AGreen, out ABlue, out AAlpha));
 		}
 
 		public static void ColorToFloatRGBA (sColor ATheColor, out Single ARed, out Single AGreen, out Single ABlue, out Single AAlpha)
 		{
 			Internal.InternalColor intTheColor = Internal.Lib3MFWrapper.convertStructToInternal_Color (ATheColor);
 
-			CheckError(Internal.Lib3MFWrapper.ColorToFloatRGBA (ref intTheColor, out ARed, out AGreen, out ABlue, out AAlpha));
+			CheckError(Internal.Lib3MFWrapper.ColorToFloatRGBA (intTheColor, out ARed, out AGreen, out ABlue, out AAlpha));
 		}
 
 		public static sTransform GetIdentityTransform ()

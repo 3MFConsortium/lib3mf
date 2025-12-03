@@ -147,6 +147,25 @@ namespace NMR
                 m_pImplicitNode->setModelResourceID(std::stoi(pAttributeValue));
             }
 		}
+        else if (m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::BeamLattice)
+        {
+            if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_ACCURATERANGE) == 0)
+            {
+                m_pImplicitNode->setAccurateRange(strtod(pAttributeValue, nullptr));
+            }
+        }
+        else if (m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::FunctionGradient ||
+                 m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::NormalizeDistance)
+        {
+            if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_SCALAROUTPUT) == 0)
+            {
+                m_pImplicitNode->setScalarOutputName(pAttributeValue);
+            }
+            else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_VECTORINPUT) == 0)
+            {
+                m_pImplicitNode->setVectorInputName(pAttributeValue);
+            }
+        }
     }
 
     void NMR::CModelReaderNode_Implicit_Node::OnNSChildElement(_In_z_ const nfChar * pChildName,

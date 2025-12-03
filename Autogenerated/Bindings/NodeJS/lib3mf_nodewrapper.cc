@@ -141,6 +141,9 @@ Persistent<Function> CLib3MFConstVecNode::constructor;
 Persistent<Function> CLib3MFConstMatNode::constructor;
 Persistent<Function> CLib3MFMeshNode::constructor;
 Persistent<Function> CLib3MFUnsignedMeshNode::constructor;
+Persistent<Function> CLib3MFBeamLatticeNode::constructor;
+Persistent<Function> CLib3MFFunctionGradientNode::constructor;
+Persistent<Function> CLib3MFNormalizeDistanceNode::constructor;
 Persistent<Function> CLib3MFFunctionCallNode::constructor;
 Persistent<Function> CLib3MFNodeIterator::constructor;
 Persistent<Function> CLib3MFFunction::constructor;
@@ -16381,6 +16384,747 @@ void CLib3MFUnsignedMeshNode::GetOutputDistance(const FunctionCallbackInfo<Value
 }
 
 /*************************************************************************************************************************
+ Class CLib3MFBeamLatticeNode Implementation
+**************************************************************************************************************************/
+
+CLib3MFBeamLatticeNode::CLib3MFBeamLatticeNode()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFBeamLatticeNode::~CLib3MFBeamLatticeNode()
+{
+}
+
+void CLib3MFBeamLatticeNode::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFBeamLatticeNode"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputBeamLattice", GetInputBeamLattice);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputPos", GetInputPos);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputDistance", GetOutputDistance);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetAccurateRange", SetAccurateRange);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetAccurateRange", GetAccurateRange);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFBeamLatticeNode::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFBeamLatticeNode * beamlatticenodeInstance = new CLib3MFBeamLatticeNode();
+				beamlatticenodeInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFBeamLatticeNode: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFBeamLatticeNode::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFBeamLatticeNode::GetInputBeamLattice(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnBeamLattice = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputBeamLattice.");
+        if (wrapperTable->m_BeamLatticeNode_GetInputBeamLattice == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BeamLatticeNode::GetInputBeamLattice.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BeamLatticeNode_GetInputBeamLattice(instanceHandle, &hReturnBeamLattice);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjBeamLattice = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnBeamLattice);
+        args.GetReturnValue().Set(instanceObjBeamLattice);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBeamLatticeNode::GetInputPos(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnPos = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputPos.");
+        if (wrapperTable->m_BeamLatticeNode_GetInputPos == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BeamLatticeNode::GetInputPos.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BeamLatticeNode_GetInputPos(instanceHandle, &hReturnPos);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjPos = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnPos);
+        args.GetReturnValue().Set(instanceObjPos);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBeamLatticeNode::GetOutputDistance(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnDistance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetOutputDistance.");
+        if (wrapperTable->m_BeamLatticeNode_GetOutputDistance == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BeamLatticeNode::GetOutputDistance.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BeamLatticeNode_GetOutputDistance(instanceHandle, &hReturnDistance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjDistance = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnDistance);
+        args.GetReturnValue().Set(instanceObjDistance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBeamLatticeNode::SetAccurateRange(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 0 (AccurateRange)");
+        }
+        double dAccurateRange = (double) args[0]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetAccurateRange.");
+        if (wrapperTable->m_BeamLatticeNode_SetAccurateRange == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BeamLatticeNode::SetAccurateRange.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BeamLatticeNode_SetAccurateRange(instanceHandle, dAccurateRange);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBeamLatticeNode::GetAccurateRange(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        double dReturnAccurateRange = 0.0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetAccurateRange.");
+        if (wrapperTable->m_BeamLatticeNode_GetAccurateRange == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BeamLatticeNode::GetAccurateRange.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BeamLatticeNode_GetAccurateRange(instanceHandle, &dReturnAccurateRange);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Number::New(isolate, dReturnAccurateRange));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFFunctionGradientNode Implementation
+**************************************************************************************************************************/
+
+CLib3MFFunctionGradientNode::CLib3MFFunctionGradientNode()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFFunctionGradientNode::~CLib3MFFunctionGradientNode()
+{
+}
+
+void CLib3MFFunctionGradientNode::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFFunctionGradientNode"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputFunctionID", GetInputFunctionID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputPos", GetInputPos);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputStep", GetInputStep);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetScalarOutputName", SetScalarOutputName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetScalarOutputName", GetScalarOutputName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetVectorInputName", SetVectorInputName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetVectorInputName", GetVectorInputName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputNormalizedGradient", GetOutputNormalizedGradient);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputGradient", GetOutputGradient);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputMagnitude", GetOutputMagnitude);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFFunctionGradientNode::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFFunctionGradientNode * functiongradientnodeInstance = new CLib3MFFunctionGradientNode();
+				functiongradientnodeInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFFunctionGradientNode: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFFunctionGradientNode::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFFunctionGradientNode::GetInputFunctionID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnFunction = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputFunctionID.");
+        if (wrapperTable->m_FunctionGradientNode_GetInputFunctionID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionGradientNode::GetInputFunctionID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_FunctionGradientNode_GetInputFunctionID(instanceHandle, &hReturnFunction);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjFunction = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnFunction);
+        args.GetReturnValue().Set(instanceObjFunction);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFFunctionGradientNode::GetInputPos(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnPos = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputPos.");
+        if (wrapperTable->m_FunctionGradientNode_GetInputPos == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionGradientNode::GetInputPos.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_FunctionGradientNode_GetInputPos(instanceHandle, &hReturnPos);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjPos = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnPos);
+        args.GetReturnValue().Set(instanceObjPos);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFFunctionGradientNode::GetInputStep(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnStep = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputStep.");
+        if (wrapperTable->m_FunctionGradientNode_GetInputStep == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionGradientNode::GetInputStep.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_FunctionGradientNode_GetInputStep(instanceHandle, &hReturnStep);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjStep = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnStep);
+        args.GetReturnValue().Set(instanceObjStep);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFFunctionGradientNode::SetScalarOutputName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (ScalarOutputName)");
+        }
+        v8::String::Utf8Value sutf8ScalarOutputName(isolate, args[0]);
+        std::string sScalarOutputName = *sutf8ScalarOutputName;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetScalarOutputName.");
+        if (wrapperTable->m_FunctionGradientNode_SetScalarOutputName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionGradientNode::SetScalarOutputName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_FunctionGradientNode_SetScalarOutputName(instanceHandle, sScalarOutputName.c_str());
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFFunctionGradientNode::GetScalarOutputName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededScalarOutputName = 0;
+        unsigned int bytesWrittenScalarOutputName = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetScalarOutputName.");
+        if (wrapperTable->m_FunctionGradientNode_GetScalarOutputName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionGradientNode::GetScalarOutputName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_FunctionGradientNode_GetScalarOutputName(instanceHandle, 0, &bytesNeededScalarOutputName, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferScalarOutputName;
+        bufferScalarOutputName.resize(bytesNeededScalarOutputName);
+        Lib3MFResult errorCode = wrapperTable->m_FunctionGradientNode_GetScalarOutputName(instanceHandle, bytesNeededScalarOutputName, &bytesWrittenScalarOutputName, &bufferScalarOutputName[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferScalarOutputName[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFFunctionGradientNode::SetVectorInputName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (VectorInputName)");
+        }
+        v8::String::Utf8Value sutf8VectorInputName(isolate, args[0]);
+        std::string sVectorInputName = *sutf8VectorInputName;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetVectorInputName.");
+        if (wrapperTable->m_FunctionGradientNode_SetVectorInputName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionGradientNode::SetVectorInputName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_FunctionGradientNode_SetVectorInputName(instanceHandle, sVectorInputName.c_str());
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFFunctionGradientNode::GetVectorInputName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededVectorInputName = 0;
+        unsigned int bytesWrittenVectorInputName = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetVectorInputName.");
+        if (wrapperTable->m_FunctionGradientNode_GetVectorInputName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionGradientNode::GetVectorInputName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_FunctionGradientNode_GetVectorInputName(instanceHandle, 0, &bytesNeededVectorInputName, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferVectorInputName;
+        bufferVectorInputName.resize(bytesNeededVectorInputName);
+        Lib3MFResult errorCode = wrapperTable->m_FunctionGradientNode_GetVectorInputName(instanceHandle, bytesNeededVectorInputName, &bytesWrittenVectorInputName, &bufferVectorInputName[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferVectorInputName[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFFunctionGradientNode::GetOutputNormalizedGradient(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnNormalizedGradient = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetOutputNormalizedGradient.");
+        if (wrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionGradientNode::GetOutputNormalizedGradient.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient(instanceHandle, &hReturnNormalizedGradient);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjNormalizedGradient = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnNormalizedGradient);
+        args.GetReturnValue().Set(instanceObjNormalizedGradient);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFFunctionGradientNode::GetOutputGradient(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnGradient = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetOutputGradient.");
+        if (wrapperTable->m_FunctionGradientNode_GetOutputGradient == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionGradientNode::GetOutputGradient.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_FunctionGradientNode_GetOutputGradient(instanceHandle, &hReturnGradient);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjGradient = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnGradient);
+        args.GetReturnValue().Set(instanceObjGradient);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFFunctionGradientNode::GetOutputMagnitude(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnMagnitude = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetOutputMagnitude.");
+        if (wrapperTable->m_FunctionGradientNode_GetOutputMagnitude == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionGradientNode::GetOutputMagnitude.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_FunctionGradientNode_GetOutputMagnitude(instanceHandle, &hReturnMagnitude);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjMagnitude = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnMagnitude);
+        args.GetReturnValue().Set(instanceObjMagnitude);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFNormalizeDistanceNode Implementation
+**************************************************************************************************************************/
+
+CLib3MFNormalizeDistanceNode::CLib3MFNormalizeDistanceNode()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFNormalizeDistanceNode::~CLib3MFNormalizeDistanceNode()
+{
+}
+
+void CLib3MFNormalizeDistanceNode::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFNormalizeDistanceNode"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputFunctionID", GetInputFunctionID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputPos", GetInputPos);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetInputStep", GetInputStep);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetScalarOutputName", SetScalarOutputName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetScalarOutputName", GetScalarOutputName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetVectorInputName", SetVectorInputName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetVectorInputName", GetVectorInputName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputResult", GetOutputResult);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFNormalizeDistanceNode::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFNormalizeDistanceNode * normalizedistancenodeInstance = new CLib3MFNormalizeDistanceNode();
+				normalizedistancenodeInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFNormalizeDistanceNode: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFNormalizeDistanceNode::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFNormalizeDistanceNode::GetInputFunctionID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnFunction = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputFunctionID.");
+        if (wrapperTable->m_NormalizeDistanceNode_GetInputFunctionID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NormalizeDistanceNode::GetInputFunctionID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_NormalizeDistanceNode_GetInputFunctionID(instanceHandle, &hReturnFunction);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjFunction = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnFunction);
+        args.GetReturnValue().Set(instanceObjFunction);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFNormalizeDistanceNode::GetInputPos(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnPos = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputPos.");
+        if (wrapperTable->m_NormalizeDistanceNode_GetInputPos == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NormalizeDistanceNode::GetInputPos.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_NormalizeDistanceNode_GetInputPos(instanceHandle, &hReturnPos);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjPos = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnPos);
+        args.GetReturnValue().Set(instanceObjPos);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFNormalizeDistanceNode::GetInputStep(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnStep = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetInputStep.");
+        if (wrapperTable->m_NormalizeDistanceNode_GetInputStep == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NormalizeDistanceNode::GetInputStep.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_NormalizeDistanceNode_GetInputStep(instanceHandle, &hReturnStep);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjStep = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnStep);
+        args.GetReturnValue().Set(instanceObjStep);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFNormalizeDistanceNode::SetScalarOutputName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (ScalarOutputName)");
+        }
+        v8::String::Utf8Value sutf8ScalarOutputName(isolate, args[0]);
+        std::string sScalarOutputName = *sutf8ScalarOutputName;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetScalarOutputName.");
+        if (wrapperTable->m_NormalizeDistanceNode_SetScalarOutputName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NormalizeDistanceNode::SetScalarOutputName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_NormalizeDistanceNode_SetScalarOutputName(instanceHandle, sScalarOutputName.c_str());
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFNormalizeDistanceNode::GetScalarOutputName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededScalarOutputName = 0;
+        unsigned int bytesWrittenScalarOutputName = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetScalarOutputName.");
+        if (wrapperTable->m_NormalizeDistanceNode_GetScalarOutputName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NormalizeDistanceNode::GetScalarOutputName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_NormalizeDistanceNode_GetScalarOutputName(instanceHandle, 0, &bytesNeededScalarOutputName, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferScalarOutputName;
+        bufferScalarOutputName.resize(bytesNeededScalarOutputName);
+        Lib3MFResult errorCode = wrapperTable->m_NormalizeDistanceNode_GetScalarOutputName(instanceHandle, bytesNeededScalarOutputName, &bytesWrittenScalarOutputName, &bufferScalarOutputName[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferScalarOutputName[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFNormalizeDistanceNode::SetVectorInputName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (VectorInputName)");
+        }
+        v8::String::Utf8Value sutf8VectorInputName(isolate, args[0]);
+        std::string sVectorInputName = *sutf8VectorInputName;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetVectorInputName.");
+        if (wrapperTable->m_NormalizeDistanceNode_SetVectorInputName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NormalizeDistanceNode::SetVectorInputName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_NormalizeDistanceNode_SetVectorInputName(instanceHandle, sVectorInputName.c_str());
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFNormalizeDistanceNode::GetVectorInputName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededVectorInputName = 0;
+        unsigned int bytesWrittenVectorInputName = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetVectorInputName.");
+        if (wrapperTable->m_NormalizeDistanceNode_GetVectorInputName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NormalizeDistanceNode::GetVectorInputName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_NormalizeDistanceNode_GetVectorInputName(instanceHandle, 0, &bytesNeededVectorInputName, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferVectorInputName;
+        bufferVectorInputName.resize(bytesNeededVectorInputName);
+        Lib3MFResult errorCode = wrapperTable->m_NormalizeDistanceNode_GetVectorInputName(instanceHandle, bytesNeededVectorInputName, &bytesWrittenVectorInputName, &bufferVectorInputName[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferVectorInputName[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFNormalizeDistanceNode::GetOutputResult(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnResult = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetOutputResult.");
+        if (wrapperTable->m_NormalizeDistanceNode_GetOutputResult == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NormalizeDistanceNode::GetOutputResult.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_NormalizeDistanceNode_GetOutputResult(instanceHandle, &hReturnResult);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjResult = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnResult);
+        args.GetReturnValue().Set(instanceObjResult);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
  Class CLib3MFFunctionCallNode Implementation
 **************************************************************************************************************************/
 
@@ -16961,6 +17705,9 @@ void CLib3MFImplicitFunction::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddConstMatNode", AddConstMatNode);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddMeshNode", AddMeshNode);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddUnsignedMeshNode", AddUnsignedMeshNode);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddBeamLatticeNode", AddBeamLatticeNode);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddFunctionGradientNode", AddFunctionGradientNode);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddNormalizeDistanceNode", AddNormalizeDistanceNode);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddFunctionCallNode", AddFunctionCallNode);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetNodes", GetNodes);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveNode", RemoveNode);
@@ -19039,6 +19786,120 @@ void CLib3MFImplicitFunction::AddUnsignedMeshNode(const FunctionCallbackInfo<Val
         Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddUnsignedMeshNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjNode = CLib3MFUnsignedMeshNode::NewInstance(args.Holder(), hReturnNode);
+        args.GetReturnValue().Set(instanceObjNode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFImplicitFunction::AddBeamLatticeNode(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Identifier)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
+        }
+        if (!args[2]->IsString()) {
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
+        }
+        v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
+        std::string sIdentifier = *sutf8Identifier;
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
+        std::string sDisplayName = *sutf8DisplayName;
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
+        std::string sTag = *sutf8Tag;
+        Lib3MFHandle hReturnNode = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddBeamLatticeNode.");
+        if (wrapperTable->m_ImplicitFunction_AddBeamLatticeNode == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddBeamLatticeNode.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddBeamLatticeNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjNode = CLib3MFBeamLatticeNode::NewInstance(args.Holder(), hReturnNode);
+        args.GetReturnValue().Set(instanceObjNode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFImplicitFunction::AddFunctionGradientNode(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Identifier)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
+        }
+        if (!args[2]->IsString()) {
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
+        }
+        v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
+        std::string sIdentifier = *sutf8Identifier;
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
+        std::string sDisplayName = *sutf8DisplayName;
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
+        std::string sTag = *sutf8Tag;
+        Lib3MFHandle hReturnNode = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddFunctionGradientNode.");
+        if (wrapperTable->m_ImplicitFunction_AddFunctionGradientNode == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddFunctionGradientNode.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddFunctionGradientNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjNode = CLib3MFFunctionGradientNode::NewInstance(args.Holder(), hReturnNode);
+        args.GetReturnValue().Set(instanceObjNode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFImplicitFunction::AddNormalizeDistanceNode(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Identifier)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (DisplayName)");
+        }
+        if (!args[2]->IsString()) {
+            throw std::runtime_error("Expected string parameter 2 (Tag)");
+        }
+        v8::String::Utf8Value sutf8Identifier(isolate, args[0]);
+        std::string sIdentifier = *sutf8Identifier;
+        v8::String::Utf8Value sutf8DisplayName(isolate, args[1]);
+        std::string sDisplayName = *sutf8DisplayName;
+        v8::String::Utf8Value sutf8Tag(isolate, args[2]);
+        std::string sTag = *sutf8Tag;
+        Lib3MFHandle hReturnNode = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddNormalizeDistanceNode.");
+        if (wrapperTable->m_ImplicitFunction_AddNormalizeDistanceNode == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ImplicitFunction::AddNormalizeDistanceNode.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ImplicitFunction_AddNormalizeDistanceNode(instanceHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hReturnNode);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjNode = CLib3MFNormalizeDistanceNode::NewInstance(args.Holder(), hReturnNode);
         args.GetReturnValue().Set(instanceObjNode);
 
 		} catch (std::exception & E) {
@@ -24232,6 +25093,9 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_VectorFromScalar"), Integer::New(isolate, 48));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_UnsignedMesh"), Integer::New(isolate, 49));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_Mod"), Integer::New(isolate, 50));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_BeamLattice"), Integer::New(isolate, 51));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_FunctionGradient"), Integer::New(isolate, 52));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitNodeType_NormalizeDistance"), Integer::New(isolate, 53));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Scalar"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Vector"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eImplicitPortType_Matrix"), Integer::New(isolate, 2));

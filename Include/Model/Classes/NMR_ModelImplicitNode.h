@@ -64,6 +64,11 @@ namespace NMR
         // resource ID that is unique in the scope of a model to reference mesh objects, functions etc.
         ModelResourceID m_modelResourceID;
         
+        // Attributes specific to new nodes
+        double m_accurateRange = 0.0;  // For BeamLatticeNode
+        std::string m_scalarOutputName;  // For FunctionGradient and NormalizeDistance
+        std::string m_vectorInputName;   // For FunctionGradient and NormalizeDistance
+        
         CModelImplicitFunction * m_parent = nullptr;
 
         // ID of the node in the graph, used for the topological sort
@@ -113,6 +118,16 @@ namespace NMR
         void setModelResourceID(ModelResourceID resourceID);
         ModelResourceID getModelResourceID() const;
         PModelResource getResource() const;
+
+        // BeamLatticeNode attribute
+        void setAccurateRange(double accurateRange);
+        double getAccurateRange() const;
+
+        // FunctionGradient and NormalizeDistance attributes
+        void setScalarOutputName(const std::string& name);
+        std::string getScalarOutputName() const;
+        void setVectorInputName(const std::string& name);
+        std::string getVectorInputName() const;
 
         bool arePortsValid() const;
 

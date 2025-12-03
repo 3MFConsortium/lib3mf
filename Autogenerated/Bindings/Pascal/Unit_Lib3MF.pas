@@ -305,7 +305,10 @@ type
 		eImplicitNodeTypeConstResourceID,
 		eImplicitNodeTypeVectorFromScalar,
 		eImplicitNodeTypeUnsignedMesh,
-		eImplicitNodeTypeMod
+		eImplicitNodeTypeMod,
+		eImplicitNodeTypeBeamLattice,
+		eImplicitNodeTypeFunctionGradient,
+		eImplicitNodeTypeNormalizeDistance
 	);
 
 	TLib3MFImplicitPortType = (
@@ -575,6 +578,9 @@ type
 	TLib3MFConstMatNode = class;
 	TLib3MFMeshNode = class;
 	TLib3MFUnsignedMeshNode = class;
+	TLib3MFBeamLatticeNode = class;
+	TLib3MFFunctionGradientNode = class;
+	TLib3MFNormalizeDistanceNode = class;
 	TLib3MFFunctionCallNode = class;
 	TLib3MFNodeIterator = class;
 	TLib3MFFunction = class;
@@ -4667,6 +4673,236 @@ type
 	
 
 (*************************************************************************************************************************
+ Function type definitions for BeamLatticeNode
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the input for the model resource id of the beam lattice
+	*
+	* @param[in] pBeamLatticeNode - BeamLatticeNode instance.
+	* @param[out] pBeamLattice - the input port for the model resource id of the beam lattice (mesh with beamlattice extension)
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBeamLatticeNode_GetInputBeamLatticeFunc = function(pBeamLatticeNode: TLib3MFHandle; out pBeamLattice: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the position
+	*
+	* @param[in] pBeamLatticeNode - BeamLatticeNode instance.
+	* @param[out] pPos - the input port for the position
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBeamLatticeNode_GetInputPosFunc = function(pBeamLatticeNode: TLib3MFHandle; out pPos: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the output
+	*
+	* @param[in] pBeamLatticeNode - BeamLatticeNode instance.
+	* @param[out] pDistance - the output port for the signed distance to the beam lattice
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBeamLatticeNode_GetOutputDistanceFunc = function(pBeamLatticeNode: TLib3MFHandle; out pDistance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the accurate range for distance computation
+	*
+	* @param[in] pBeamLatticeNode - BeamLatticeNode instance.
+	* @param[in] dAccurateRange - the accurate range in model units
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBeamLatticeNode_SetAccurateRangeFunc = function(pBeamLatticeNode: TLib3MFHandle; const dAccurateRange: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the accurate range for distance computation
+	*
+	* @param[in] pBeamLatticeNode - BeamLatticeNode instance.
+	* @param[out] pAccurateRange - the accurate range in model units
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBeamLatticeNode_GetAccurateRangeFunc = function(pBeamLatticeNode: TLib3MFHandle; out pAccurateRange: Double): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for FunctionGradientNode
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the input for the function id
+	*
+	* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+	* @param[out] pFunction - the input port for the function
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionGradientNode_GetInputFunctionIDFunc = function(pFunctionGradientNode: TLib3MFHandle; out pFunction: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the position
+	*
+	* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+	* @param[out] pPos - the input port for the position
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionGradientNode_GetInputPosFunc = function(pFunctionGradientNode: TLib3MFHandle; out pPos: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the finite difference step
+	*
+	* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+	* @param[out] pStep - the input port for the finite difference step
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionGradientNode_GetInputStepFunc = function(pFunctionGradientNode: TLib3MFHandle; out pStep: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the name of the referenced scalar output
+	*
+	* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+	* @param[in] pScalarOutputName - the name of the scalar output of the referenced function
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionGradientNode_SetScalarOutputNameFunc = function(pFunctionGradientNode: TLib3MFHandle; const pScalarOutputName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the name of the referenced scalar output
+	*
+	* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+	* @param[in] nScalarOutputNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pScalarOutputNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pScalarOutputNameBuffer -  buffer of the name of the scalar output of the referenced function, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionGradientNode_GetScalarOutputNameFunc = function(pFunctionGradientNode: TLib3MFHandle; const nScalarOutputNameBufferSize: Cardinal; out pScalarOutputNameNeededChars: Cardinal; pScalarOutputNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the name of the referenced vector input
+	*
+	* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+	* @param[in] pVectorInputName - the name of the vector input (float3) of the referenced function
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionGradientNode_SetVectorInputNameFunc = function(pFunctionGradientNode: TLib3MFHandle; const pVectorInputName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the name of the referenced vector input
+	*
+	* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+	* @param[in] nVectorInputNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pVectorInputNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pVectorInputNameBuffer -  buffer of the name of the vector input (float3) of the referenced function, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionGradientNode_GetVectorInputNameFunc = function(pFunctionGradientNode: TLib3MFHandle; const nVectorInputNameBufferSize: Cardinal; out pVectorInputNameNeededChars: Cardinal; pVectorInputNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the normalized gradient output
+	*
+	* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+	* @param[out] pNormalizedGradient - the output port for the normalized gradient
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc = function(pFunctionGradientNode: TLib3MFHandle; out pNormalizedGradient: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the raw gradient output
+	*
+	* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+	* @param[out] pGradient - the output port for the raw gradient
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionGradientNode_GetOutputGradientFunc = function(pFunctionGradientNode: TLib3MFHandle; out pGradient: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the gradient magnitude output
+	*
+	* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+	* @param[out] pMagnitude - the output port for the gradient magnitude
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFunctionGradientNode_GetOutputMagnitudeFunc = function(pFunctionGradientNode: TLib3MFHandle; out pMagnitude: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for NormalizeDistanceNode
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the input for the function id
+	*
+	* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+	* @param[out] pFunction - the input port for the function
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNormalizeDistanceNode_GetInputFunctionIDFunc = function(pNormalizeDistanceNode: TLib3MFHandle; out pFunction: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the position
+	*
+	* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+	* @param[out] pPos - the input port for the position (vector)
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNormalizeDistanceNode_GetInputPosFunc = function(pNormalizeDistanceNode: TLib3MFHandle; out pPos: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the input for the finite difference step
+	*
+	* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+	* @param[out] pStep - the input port for the finite difference step
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNormalizeDistanceNode_GetInputStepFunc = function(pNormalizeDistanceNode: TLib3MFHandle; out pStep: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the name of the referenced scalar output
+	*
+	* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+	* @param[in] pScalarOutputName - the name of the scalar output of the referenced function
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNormalizeDistanceNode_SetScalarOutputNameFunc = function(pNormalizeDistanceNode: TLib3MFHandle; const pScalarOutputName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the name of the referenced scalar output
+	*
+	* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+	* @param[in] nScalarOutputNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pScalarOutputNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pScalarOutputNameBuffer -  buffer of the name of the scalar output of the referenced function, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNormalizeDistanceNode_GetScalarOutputNameFunc = function(pNormalizeDistanceNode: TLib3MFHandle; const nScalarOutputNameBufferSize: Cardinal; out pScalarOutputNameNeededChars: Cardinal; pScalarOutputNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the name of the referenced vector input
+	*
+	* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+	* @param[in] pVectorInputName - the name of the vector input (float3) of the referenced function
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNormalizeDistanceNode_SetVectorInputNameFunc = function(pNormalizeDistanceNode: TLib3MFHandle; const pVectorInputName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the name of the referenced vector input
+	*
+	* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+	* @param[in] nVectorInputNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pVectorInputNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pVectorInputNameBuffer -  buffer of the name of the vector input (float3) of the referenced function, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNormalizeDistanceNode_GetVectorInputNameFunc = function(pNormalizeDistanceNode: TLib3MFHandle; const nVectorInputNameBufferSize: Cardinal; out pVectorInputNameNeededChars: Cardinal; pVectorInputNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the normalized result output
+	*
+	* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+	* @param[out] pResult - the output port for the normalized distance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNormalizeDistanceNode_GetOutputResultFunc = function(pNormalizeDistanceNode: TLib3MFHandle; out pResult: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
  Function type definitions for FunctionCallNode
 **************************************************************************************************************************)
 
@@ -5443,6 +5679,42 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFImplicitFunction_AddUnsignedMeshNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a BeamLatticeNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddBeamLatticeNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a FunctionGradientNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddFunctionGradientNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Add a NormalizeDistanceNode
+	*
+	* @param[in] pImplicitFunction - ImplicitFunction instance.
+	* @param[in] pIdentifier - the identifier of the node
+	* @param[in] pDisplayName - the display name of the node
+	* @param[in] pTag - the tag of the node
+	* @param[out] pNode - the added node
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImplicitFunction_AddNormalizeDistanceNodeFunc = function(pImplicitFunction: TLib3MFHandle; const pIdentifier: PAnsiChar; const pDisplayName: PAnsiChar; const pTag: PAnsiChar; out pNode: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Add a FunctionCallNode
@@ -8786,6 +9058,62 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
+ Class definition for BeamLatticeNode
+**************************************************************************************************************************)
+
+	TLib3MFBeamLatticeNode = class(TLib3MFImplicitNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetInputBeamLattice(): TLib3MFImplicitPort;
+		function GetInputPos(): TLib3MFImplicitPort;
+		function GetOutputDistance(): TLib3MFImplicitPort;
+		procedure SetAccurateRange(const AAccurateRange: Double);
+		function GetAccurateRange(): Double;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for FunctionGradientNode
+**************************************************************************************************************************)
+
+	TLib3MFFunctionGradientNode = class(TLib3MFImplicitNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetInputFunctionID(): TLib3MFImplicitPort;
+		function GetInputPos(): TLib3MFImplicitPort;
+		function GetInputStep(): TLib3MFImplicitPort;
+		procedure SetScalarOutputName(const AScalarOutputName: String);
+		function GetScalarOutputName(): String;
+		procedure SetVectorInputName(const AVectorInputName: String);
+		function GetVectorInputName(): String;
+		function GetOutputNormalizedGradient(): TLib3MFImplicitPort;
+		function GetOutputGradient(): TLib3MFImplicitPort;
+		function GetOutputMagnitude(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for NormalizeDistanceNode
+**************************************************************************************************************************)
+
+	TLib3MFNormalizeDistanceNode = class(TLib3MFImplicitNode)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetInputFunctionID(): TLib3MFImplicitPort;
+		function GetInputPos(): TLib3MFImplicitPort;
+		function GetInputStep(): TLib3MFImplicitPort;
+		procedure SetScalarOutputName(const AScalarOutputName: String);
+		function GetScalarOutputName(): String;
+		procedure SetVectorInputName(const AVectorInputName: String);
+		function GetVectorInputName(): String;
+		function GetOutputResult(): TLib3MFImplicitPort;
+	end;
+
+
+(*************************************************************************************************************************
  Class definition for FunctionCallNode
 **************************************************************************************************************************)
 
@@ -8889,6 +9217,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddConstMatNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFConstMatNode;
 		function AddMeshNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFMeshNode;
 		function AddUnsignedMeshNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFUnsignedMeshNode;
+		function AddBeamLatticeNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFBeamLatticeNode;
+		function AddFunctionGradientNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFFunctionGradientNode;
+		function AddNormalizeDistanceNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFNormalizeDistanceNode;
 		function AddFunctionCallNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFFunctionCallNode;
 		function GetNodes(): TLib3MFNodeIterator;
 		procedure RemoveNode(const ANode: TLib3MFImplicitNode);
@@ -9568,6 +9899,29 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFUnsignedMeshNode_GetInputMeshFunc: TLib3MFUnsignedMeshNode_GetInputMeshFunc;
 		FLib3MFUnsignedMeshNode_GetInputPosFunc: TLib3MFUnsignedMeshNode_GetInputPosFunc;
 		FLib3MFUnsignedMeshNode_GetOutputDistanceFunc: TLib3MFUnsignedMeshNode_GetOutputDistanceFunc;
+		FLib3MFBeamLatticeNode_GetInputBeamLatticeFunc: TLib3MFBeamLatticeNode_GetInputBeamLatticeFunc;
+		FLib3MFBeamLatticeNode_GetInputPosFunc: TLib3MFBeamLatticeNode_GetInputPosFunc;
+		FLib3MFBeamLatticeNode_GetOutputDistanceFunc: TLib3MFBeamLatticeNode_GetOutputDistanceFunc;
+		FLib3MFBeamLatticeNode_SetAccurateRangeFunc: TLib3MFBeamLatticeNode_SetAccurateRangeFunc;
+		FLib3MFBeamLatticeNode_GetAccurateRangeFunc: TLib3MFBeamLatticeNode_GetAccurateRangeFunc;
+		FLib3MFFunctionGradientNode_GetInputFunctionIDFunc: TLib3MFFunctionGradientNode_GetInputFunctionIDFunc;
+		FLib3MFFunctionGradientNode_GetInputPosFunc: TLib3MFFunctionGradientNode_GetInputPosFunc;
+		FLib3MFFunctionGradientNode_GetInputStepFunc: TLib3MFFunctionGradientNode_GetInputStepFunc;
+		FLib3MFFunctionGradientNode_SetScalarOutputNameFunc: TLib3MFFunctionGradientNode_SetScalarOutputNameFunc;
+		FLib3MFFunctionGradientNode_GetScalarOutputNameFunc: TLib3MFFunctionGradientNode_GetScalarOutputNameFunc;
+		FLib3MFFunctionGradientNode_SetVectorInputNameFunc: TLib3MFFunctionGradientNode_SetVectorInputNameFunc;
+		FLib3MFFunctionGradientNode_GetVectorInputNameFunc: TLib3MFFunctionGradientNode_GetVectorInputNameFunc;
+		FLib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc: TLib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc;
+		FLib3MFFunctionGradientNode_GetOutputGradientFunc: TLib3MFFunctionGradientNode_GetOutputGradientFunc;
+		FLib3MFFunctionGradientNode_GetOutputMagnitudeFunc: TLib3MFFunctionGradientNode_GetOutputMagnitudeFunc;
+		FLib3MFNormalizeDistanceNode_GetInputFunctionIDFunc: TLib3MFNormalizeDistanceNode_GetInputFunctionIDFunc;
+		FLib3MFNormalizeDistanceNode_GetInputPosFunc: TLib3MFNormalizeDistanceNode_GetInputPosFunc;
+		FLib3MFNormalizeDistanceNode_GetInputStepFunc: TLib3MFNormalizeDistanceNode_GetInputStepFunc;
+		FLib3MFNormalizeDistanceNode_SetScalarOutputNameFunc: TLib3MFNormalizeDistanceNode_SetScalarOutputNameFunc;
+		FLib3MFNormalizeDistanceNode_GetScalarOutputNameFunc: TLib3MFNormalizeDistanceNode_GetScalarOutputNameFunc;
+		FLib3MFNormalizeDistanceNode_SetVectorInputNameFunc: TLib3MFNormalizeDistanceNode_SetVectorInputNameFunc;
+		FLib3MFNormalizeDistanceNode_GetVectorInputNameFunc: TLib3MFNormalizeDistanceNode_GetVectorInputNameFunc;
+		FLib3MFNormalizeDistanceNode_GetOutputResultFunc: TLib3MFNormalizeDistanceNode_GetOutputResultFunc;
 		FLib3MFFunctionCallNode_GetInputFunctionIDFunc: TLib3MFFunctionCallNode_GetInputFunctionIDFunc;
 		FLib3MFNodeIterator_GetCurrentFunc: TLib3MFNodeIterator_GetCurrentFunc;
 		FLib3MFFunction_GetDisplayNameFunc: TLib3MFFunction_GetDisplayNameFunc;
@@ -9631,6 +9985,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImplicitFunction_AddConstMatNodeFunc: TLib3MFImplicitFunction_AddConstMatNodeFunc;
 		FLib3MFImplicitFunction_AddMeshNodeFunc: TLib3MFImplicitFunction_AddMeshNodeFunc;
 		FLib3MFImplicitFunction_AddUnsignedMeshNodeFunc: TLib3MFImplicitFunction_AddUnsignedMeshNodeFunc;
+		FLib3MFImplicitFunction_AddBeamLatticeNodeFunc: TLib3MFImplicitFunction_AddBeamLatticeNodeFunc;
+		FLib3MFImplicitFunction_AddFunctionGradientNodeFunc: TLib3MFImplicitFunction_AddFunctionGradientNodeFunc;
+		FLib3MFImplicitFunction_AddNormalizeDistanceNodeFunc: TLib3MFImplicitFunction_AddNormalizeDistanceNodeFunc;
 		FLib3MFImplicitFunction_AddFunctionCallNodeFunc: TLib3MFImplicitFunction_AddFunctionCallNodeFunc;
 		FLib3MFImplicitFunction_GetNodesFunc: TLib3MFImplicitFunction_GetNodesFunc;
 		FLib3MFImplicitFunction_RemoveNodeFunc: TLib3MFImplicitFunction_RemoveNodeFunc;
@@ -10198,6 +10555,29 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFUnsignedMeshNode_GetInputMeshFunc: TLib3MFUnsignedMeshNode_GetInputMeshFunc read FLib3MFUnsignedMeshNode_GetInputMeshFunc;
 		property Lib3MFUnsignedMeshNode_GetInputPosFunc: TLib3MFUnsignedMeshNode_GetInputPosFunc read FLib3MFUnsignedMeshNode_GetInputPosFunc;
 		property Lib3MFUnsignedMeshNode_GetOutputDistanceFunc: TLib3MFUnsignedMeshNode_GetOutputDistanceFunc read FLib3MFUnsignedMeshNode_GetOutputDistanceFunc;
+		property Lib3MFBeamLatticeNode_GetInputBeamLatticeFunc: TLib3MFBeamLatticeNode_GetInputBeamLatticeFunc read FLib3MFBeamLatticeNode_GetInputBeamLatticeFunc;
+		property Lib3MFBeamLatticeNode_GetInputPosFunc: TLib3MFBeamLatticeNode_GetInputPosFunc read FLib3MFBeamLatticeNode_GetInputPosFunc;
+		property Lib3MFBeamLatticeNode_GetOutputDistanceFunc: TLib3MFBeamLatticeNode_GetOutputDistanceFunc read FLib3MFBeamLatticeNode_GetOutputDistanceFunc;
+		property Lib3MFBeamLatticeNode_SetAccurateRangeFunc: TLib3MFBeamLatticeNode_SetAccurateRangeFunc read FLib3MFBeamLatticeNode_SetAccurateRangeFunc;
+		property Lib3MFBeamLatticeNode_GetAccurateRangeFunc: TLib3MFBeamLatticeNode_GetAccurateRangeFunc read FLib3MFBeamLatticeNode_GetAccurateRangeFunc;
+		property Lib3MFFunctionGradientNode_GetInputFunctionIDFunc: TLib3MFFunctionGradientNode_GetInputFunctionIDFunc read FLib3MFFunctionGradientNode_GetInputFunctionIDFunc;
+		property Lib3MFFunctionGradientNode_GetInputPosFunc: TLib3MFFunctionGradientNode_GetInputPosFunc read FLib3MFFunctionGradientNode_GetInputPosFunc;
+		property Lib3MFFunctionGradientNode_GetInputStepFunc: TLib3MFFunctionGradientNode_GetInputStepFunc read FLib3MFFunctionGradientNode_GetInputStepFunc;
+		property Lib3MFFunctionGradientNode_SetScalarOutputNameFunc: TLib3MFFunctionGradientNode_SetScalarOutputNameFunc read FLib3MFFunctionGradientNode_SetScalarOutputNameFunc;
+		property Lib3MFFunctionGradientNode_GetScalarOutputNameFunc: TLib3MFFunctionGradientNode_GetScalarOutputNameFunc read FLib3MFFunctionGradientNode_GetScalarOutputNameFunc;
+		property Lib3MFFunctionGradientNode_SetVectorInputNameFunc: TLib3MFFunctionGradientNode_SetVectorInputNameFunc read FLib3MFFunctionGradientNode_SetVectorInputNameFunc;
+		property Lib3MFFunctionGradientNode_GetVectorInputNameFunc: TLib3MFFunctionGradientNode_GetVectorInputNameFunc read FLib3MFFunctionGradientNode_GetVectorInputNameFunc;
+		property Lib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc: TLib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc read FLib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc;
+		property Lib3MFFunctionGradientNode_GetOutputGradientFunc: TLib3MFFunctionGradientNode_GetOutputGradientFunc read FLib3MFFunctionGradientNode_GetOutputGradientFunc;
+		property Lib3MFFunctionGradientNode_GetOutputMagnitudeFunc: TLib3MFFunctionGradientNode_GetOutputMagnitudeFunc read FLib3MFFunctionGradientNode_GetOutputMagnitudeFunc;
+		property Lib3MFNormalizeDistanceNode_GetInputFunctionIDFunc: TLib3MFNormalizeDistanceNode_GetInputFunctionIDFunc read FLib3MFNormalizeDistanceNode_GetInputFunctionIDFunc;
+		property Lib3MFNormalizeDistanceNode_GetInputPosFunc: TLib3MFNormalizeDistanceNode_GetInputPosFunc read FLib3MFNormalizeDistanceNode_GetInputPosFunc;
+		property Lib3MFNormalizeDistanceNode_GetInputStepFunc: TLib3MFNormalizeDistanceNode_GetInputStepFunc read FLib3MFNormalizeDistanceNode_GetInputStepFunc;
+		property Lib3MFNormalizeDistanceNode_SetScalarOutputNameFunc: TLib3MFNormalizeDistanceNode_SetScalarOutputNameFunc read FLib3MFNormalizeDistanceNode_SetScalarOutputNameFunc;
+		property Lib3MFNormalizeDistanceNode_GetScalarOutputNameFunc: TLib3MFNormalizeDistanceNode_GetScalarOutputNameFunc read FLib3MFNormalizeDistanceNode_GetScalarOutputNameFunc;
+		property Lib3MFNormalizeDistanceNode_SetVectorInputNameFunc: TLib3MFNormalizeDistanceNode_SetVectorInputNameFunc read FLib3MFNormalizeDistanceNode_SetVectorInputNameFunc;
+		property Lib3MFNormalizeDistanceNode_GetVectorInputNameFunc: TLib3MFNormalizeDistanceNode_GetVectorInputNameFunc read FLib3MFNormalizeDistanceNode_GetVectorInputNameFunc;
+		property Lib3MFNormalizeDistanceNode_GetOutputResultFunc: TLib3MFNormalizeDistanceNode_GetOutputResultFunc read FLib3MFNormalizeDistanceNode_GetOutputResultFunc;
 		property Lib3MFFunctionCallNode_GetInputFunctionIDFunc: TLib3MFFunctionCallNode_GetInputFunctionIDFunc read FLib3MFFunctionCallNode_GetInputFunctionIDFunc;
 		property Lib3MFNodeIterator_GetCurrentFunc: TLib3MFNodeIterator_GetCurrentFunc read FLib3MFNodeIterator_GetCurrentFunc;
 		property Lib3MFFunction_GetDisplayNameFunc: TLib3MFFunction_GetDisplayNameFunc read FLib3MFFunction_GetDisplayNameFunc;
@@ -10261,6 +10641,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImplicitFunction_AddConstMatNodeFunc: TLib3MFImplicitFunction_AddConstMatNodeFunc read FLib3MFImplicitFunction_AddConstMatNodeFunc;
 		property Lib3MFImplicitFunction_AddMeshNodeFunc: TLib3MFImplicitFunction_AddMeshNodeFunc read FLib3MFImplicitFunction_AddMeshNodeFunc;
 		property Lib3MFImplicitFunction_AddUnsignedMeshNodeFunc: TLib3MFImplicitFunction_AddUnsignedMeshNodeFunc read FLib3MFImplicitFunction_AddUnsignedMeshNodeFunc;
+		property Lib3MFImplicitFunction_AddBeamLatticeNodeFunc: TLib3MFImplicitFunction_AddBeamLatticeNodeFunc read FLib3MFImplicitFunction_AddBeamLatticeNodeFunc;
+		property Lib3MFImplicitFunction_AddFunctionGradientNodeFunc: TLib3MFImplicitFunction_AddFunctionGradientNodeFunc read FLib3MFImplicitFunction_AddFunctionGradientNodeFunc;
+		property Lib3MFImplicitFunction_AddNormalizeDistanceNodeFunc: TLib3MFImplicitFunction_AddNormalizeDistanceNodeFunc read FLib3MFImplicitFunction_AddNormalizeDistanceNodeFunc;
 		property Lib3MFImplicitFunction_AddFunctionCallNodeFunc: TLib3MFImplicitFunction_AddFunctionCallNodeFunc read FLib3MFImplicitFunction_AddFunctionCallNodeFunc;
 		property Lib3MFImplicitFunction_GetNodesFunc: TLib3MFImplicitFunction_GetNodesFunc read FLib3MFImplicitFunction_GetNodesFunc;
 		property Lib3MFImplicitFunction_RemoveNodeFunc: TLib3MFImplicitFunction_RemoveNodeFunc read FLib3MFImplicitFunction_RemoveNodeFunc;
@@ -10624,6 +11007,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeConstMatNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFConstMatNode;
 	function TLib3MFPolymorphicFactoryMakeMeshNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMeshNode;
 	function TLib3MFPolymorphicFactoryMakeUnsignedMeshNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFUnsignedMeshNode;
+	function TLib3MFPolymorphicFactoryMakeBeamLatticeNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBeamLatticeNode;
+	function TLib3MFPolymorphicFactoryMakeFunctionGradientNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFunctionGradientNode;
+	function TLib3MFPolymorphicFactoryMakeNormalizeDistanceNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNormalizeDistanceNode;
 	function TLib3MFPolymorphicFactoryMakeFunctionCallNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFunctionCallNode;
 	function TLib3MFPolymorphicFactoryMakeNodeIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNodeIterator;
 	function TLib3MFPolymorphicFactoryMakeFunction(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFunction;
@@ -11106,6 +11492,9 @@ implementation
 			eImplicitNodeTypeVectorFromScalar: Result := 48;
 			eImplicitNodeTypeUnsignedMesh: Result := 49;
 			eImplicitNodeTypeMod: Result := 50;
+			eImplicitNodeTypeBeamLattice: Result := 51;
+			eImplicitNodeTypeFunctionGradient: Result := 52;
+			eImplicitNodeTypeNormalizeDistance: Result := 53;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
 		end;
@@ -11165,6 +11554,9 @@ implementation
 			48: Result := eImplicitNodeTypeVectorFromScalar;
 			49: Result := eImplicitNodeTypeUnsignedMesh;
 			50: Result := eImplicitNodeTypeMod;
+			51: Result := eImplicitNodeTypeBeamLattice;
+			52: Result := eImplicitNodeTypeFunctionGradient;
+			53: Result := eImplicitNodeTypeNormalizeDistance;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -11449,6 +11841,9 @@ implementation
 			QWord($F85C90EDCE6F90A4): begin Obj := TLIB3MFConstMatNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ConstMatNode"
 			QWord($53601FD432E3DEF4): begin Obj := TLIB3MFMeshNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MeshNode"
 			QWord($29985A628251A9CD): begin Obj := TLIB3MFUnsignedMeshNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::UnsignedMeshNode"
+			QWord($0F3A4EE98F7FEC0C): begin Obj := TLIB3MFBeamLatticeNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BeamLatticeNode"
+			QWord($0437E27AEF740121): begin Obj := TLIB3MFFunctionGradientNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionGradientNode"
+			QWord($817D2E566E73AA8F): begin Obj := TLIB3MFNormalizeDistanceNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::NormalizeDistanceNode"
 			QWord($0765C17C952F24E3): begin Obj := TLIB3MFFunctionCallNode.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionCallNode"
 			QWord($FC006BC888CAB4D0): begin Obj := TLIB3MFNodeIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
 			QWord($9EFB2757CA1A5231): begin Obj := TLIB3MFFunction.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
@@ -11867,6 +12262,18 @@ implementation
 	function TLib3MFPolymorphicFactoryMakeUnsignedMeshNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFUnsignedMeshNode;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFUnsignedMeshNode, TLIB3MFUnsignedMeshNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeBeamLatticeNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBeamLatticeNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFBeamLatticeNode, TLIB3MFBeamLatticeNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeFunctionGradientNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFunctionGradientNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFFunctionGradientNode, TLIB3MFFunctionGradientNode>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeNormalizeDistanceNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNormalizeDistanceNode;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFNormalizeDistanceNode, TLIB3MFNormalizeDistanceNode>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeFunctionCallNode(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFFunctionCallNode;
 	begin
@@ -16759,6 +17166,277 @@ implementation
 	end;
 
 (*************************************************************************************************************************
+ Class implementation for BeamLatticeNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFBeamLatticeNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFBeamLatticeNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFBeamLatticeNode.GetInputBeamLattice(): TLib3MFImplicitPort;
+	var
+		HBeamLattice: TLib3MFHandle;
+	begin
+		Result := nil;
+		HBeamLattice := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBeamLatticeNode_GetInputBeamLatticeFunc(FHandle, HBeamLattice));
+		if Assigned(HBeamLattice) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HBeamLattice);
+	end;
+
+	function TLib3MFBeamLatticeNode.GetInputPos(): TLib3MFImplicitPort;
+	var
+		HPos: TLib3MFHandle;
+	begin
+		Result := nil;
+		HPos := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBeamLatticeNode_GetInputPosFunc(FHandle, HPos));
+		if Assigned(HPos) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HPos);
+	end;
+
+	function TLib3MFBeamLatticeNode.GetOutputDistance(): TLib3MFImplicitPort;
+	var
+		HDistance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HDistance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBeamLatticeNode_GetOutputDistanceFunc(FHandle, HDistance));
+		if Assigned(HDistance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HDistance);
+	end;
+
+	procedure TLib3MFBeamLatticeNode.SetAccurateRange(const AAccurateRange: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBeamLatticeNode_SetAccurateRangeFunc(FHandle, AAccurateRange));
+	end;
+
+	function TLib3MFBeamLatticeNode.GetAccurateRange(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBeamLatticeNode_GetAccurateRangeFunc(FHandle, Result));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for FunctionGradientNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFFunctionGradientNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFFunctionGradientNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFFunctionGradientNode.GetInputFunctionID(): TLib3MFImplicitPort;
+	var
+		HFunction: TLib3MFHandle;
+	begin
+		Result := nil;
+		HFunction := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionGradientNode_GetInputFunctionIDFunc(FHandle, HFunction));
+		if Assigned(HFunction) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HFunction);
+	end;
+
+	function TLib3MFFunctionGradientNode.GetInputPos(): TLib3MFImplicitPort;
+	var
+		HPos: TLib3MFHandle;
+	begin
+		Result := nil;
+		HPos := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionGradientNode_GetInputPosFunc(FHandle, HPos));
+		if Assigned(HPos) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HPos);
+	end;
+
+	function TLib3MFFunctionGradientNode.GetInputStep(): TLib3MFImplicitPort;
+	var
+		HStep: TLib3MFHandle;
+	begin
+		Result := nil;
+		HStep := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionGradientNode_GetInputStepFunc(FHandle, HStep));
+		if Assigned(HStep) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HStep);
+	end;
+
+	procedure TLib3MFFunctionGradientNode.SetScalarOutputName(const AScalarOutputName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionGradientNode_SetScalarOutputNameFunc(FHandle, PAnsiChar(AScalarOutputName)));
+	end;
+
+	function TLib3MFFunctionGradientNode.GetScalarOutputName(): String;
+	var
+		bytesNeededScalarOutputName: Cardinal;
+		bytesWrittenScalarOutputName: Cardinal;
+		bufferScalarOutputName: array of Char;
+	begin
+		bytesNeededScalarOutputName:= 0;
+		bytesWrittenScalarOutputName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionGradientNode_GetScalarOutputNameFunc(FHandle, 0, bytesNeededScalarOutputName, nil));
+		SetLength(bufferScalarOutputName, bytesNeededScalarOutputName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionGradientNode_GetScalarOutputNameFunc(FHandle, bytesNeededScalarOutputName, bytesWrittenScalarOutputName, @bufferScalarOutputName[0]));
+		Result := StrPas(@bufferScalarOutputName[0]);
+	end;
+
+	procedure TLib3MFFunctionGradientNode.SetVectorInputName(const AVectorInputName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionGradientNode_SetVectorInputNameFunc(FHandle, PAnsiChar(AVectorInputName)));
+	end;
+
+	function TLib3MFFunctionGradientNode.GetVectorInputName(): String;
+	var
+		bytesNeededVectorInputName: Cardinal;
+		bytesWrittenVectorInputName: Cardinal;
+		bufferVectorInputName: array of Char;
+	begin
+		bytesNeededVectorInputName:= 0;
+		bytesWrittenVectorInputName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionGradientNode_GetVectorInputNameFunc(FHandle, 0, bytesNeededVectorInputName, nil));
+		SetLength(bufferVectorInputName, bytesNeededVectorInputName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionGradientNode_GetVectorInputNameFunc(FHandle, bytesNeededVectorInputName, bytesWrittenVectorInputName, @bufferVectorInputName[0]));
+		Result := StrPas(@bufferVectorInputName[0]);
+	end;
+
+	function TLib3MFFunctionGradientNode.GetOutputNormalizedGradient(): TLib3MFImplicitPort;
+	var
+		HNormalizedGradient: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNormalizedGradient := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc(FHandle, HNormalizedGradient));
+		if Assigned(HNormalizedGradient) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HNormalizedGradient);
+	end;
+
+	function TLib3MFFunctionGradientNode.GetOutputGradient(): TLib3MFImplicitPort;
+	var
+		HGradient: TLib3MFHandle;
+	begin
+		Result := nil;
+		HGradient := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionGradientNode_GetOutputGradientFunc(FHandle, HGradient));
+		if Assigned(HGradient) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HGradient);
+	end;
+
+	function TLib3MFFunctionGradientNode.GetOutputMagnitude(): TLib3MFImplicitPort;
+	var
+		HMagnitude: TLib3MFHandle;
+	begin
+		Result := nil;
+		HMagnitude := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionGradientNode_GetOutputMagnitudeFunc(FHandle, HMagnitude));
+		if Assigned(HMagnitude) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HMagnitude);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for NormalizeDistanceNode
+**************************************************************************************************************************)
+
+	constructor TLib3MFNormalizeDistanceNode.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFNormalizeDistanceNode.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFNormalizeDistanceNode.GetInputFunctionID(): TLib3MFImplicitPort;
+	var
+		HFunction: TLib3MFHandle;
+	begin
+		Result := nil;
+		HFunction := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNormalizeDistanceNode_GetInputFunctionIDFunc(FHandle, HFunction));
+		if Assigned(HFunction) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HFunction);
+	end;
+
+	function TLib3MFNormalizeDistanceNode.GetInputPos(): TLib3MFImplicitPort;
+	var
+		HPos: TLib3MFHandle;
+	begin
+		Result := nil;
+		HPos := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNormalizeDistanceNode_GetInputPosFunc(FHandle, HPos));
+		if Assigned(HPos) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HPos);
+	end;
+
+	function TLib3MFNormalizeDistanceNode.GetInputStep(): TLib3MFImplicitPort;
+	var
+		HStep: TLib3MFHandle;
+	begin
+		Result := nil;
+		HStep := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNormalizeDistanceNode_GetInputStepFunc(FHandle, HStep));
+		if Assigned(HStep) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HStep);
+	end;
+
+	procedure TLib3MFNormalizeDistanceNode.SetScalarOutputName(const AScalarOutputName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNormalizeDistanceNode_SetScalarOutputNameFunc(FHandle, PAnsiChar(AScalarOutputName)));
+	end;
+
+	function TLib3MFNormalizeDistanceNode.GetScalarOutputName(): String;
+	var
+		bytesNeededScalarOutputName: Cardinal;
+		bytesWrittenScalarOutputName: Cardinal;
+		bufferScalarOutputName: array of Char;
+	begin
+		bytesNeededScalarOutputName:= 0;
+		bytesWrittenScalarOutputName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNormalizeDistanceNode_GetScalarOutputNameFunc(FHandle, 0, bytesNeededScalarOutputName, nil));
+		SetLength(bufferScalarOutputName, bytesNeededScalarOutputName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNormalizeDistanceNode_GetScalarOutputNameFunc(FHandle, bytesNeededScalarOutputName, bytesWrittenScalarOutputName, @bufferScalarOutputName[0]));
+		Result := StrPas(@bufferScalarOutputName[0]);
+	end;
+
+	procedure TLib3MFNormalizeDistanceNode.SetVectorInputName(const AVectorInputName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNormalizeDistanceNode_SetVectorInputNameFunc(FHandle, PAnsiChar(AVectorInputName)));
+	end;
+
+	function TLib3MFNormalizeDistanceNode.GetVectorInputName(): String;
+	var
+		bytesNeededVectorInputName: Cardinal;
+		bytesWrittenVectorInputName: Cardinal;
+		bufferVectorInputName: array of Char;
+	begin
+		bytesNeededVectorInputName:= 0;
+		bytesWrittenVectorInputName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNormalizeDistanceNode_GetVectorInputNameFunc(FHandle, 0, bytesNeededVectorInputName, nil));
+		SetLength(bufferVectorInputName, bytesNeededVectorInputName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNormalizeDistanceNode_GetVectorInputNameFunc(FHandle, bytesNeededVectorInputName, bytesWrittenVectorInputName, @bufferVectorInputName[0]));
+		Result := StrPas(@bufferVectorInputName[0]);
+	end;
+
+	function TLib3MFNormalizeDistanceNode.GetOutputResult(): TLib3MFImplicitPort;
+	var
+		HResult: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResult := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNormalizeDistanceNode_GetOutputResultFunc(FHandle, HResult));
+		if Assigned(HResult) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HResult);
+	end;
+
+(*************************************************************************************************************************
  Class implementation for FunctionCallNode
 **************************************************************************************************************************)
 
@@ -17499,6 +18177,39 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddUnsignedMeshNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
 		if Assigned(HNode) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFUnsignedMeshNode, TLib3MFUnsignedMeshNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddBeamLatticeNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFBeamLatticeNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddBeamLatticeNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFBeamLatticeNode, TLib3MFBeamLatticeNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddFunctionGradientNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFFunctionGradientNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddFunctionGradientNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFFunctionGradientNode, TLib3MFFunctionGradientNode>.Make(FWrapper, HNode);
+	end;
+
+	function TLib3MFImplicitFunction.AddNormalizeDistanceNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFNormalizeDistanceNode;
+	var
+		HNode: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNode := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImplicitFunction_AddNormalizeDistanceNodeFunc(FHandle, PAnsiChar(AIdentifier), PAnsiChar(ADisplayName), PAnsiChar(ATag), HNode));
+		if Assigned(HNode) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFNormalizeDistanceNode, TLib3MFNormalizeDistanceNode>.Make(FWrapper, HNode);
 	end;
 
 	function TLib3MFImplicitFunction.AddFunctionCallNode(const AIdentifier: String; const ADisplayName: String; const ATag: String): TLib3MFFunctionCallNode;
@@ -19754,6 +20465,29 @@ implementation
 		FLib3MFUnsignedMeshNode_GetInputMeshFunc := LoadFunction('lib3mf_unsignedmeshnode_getinputmesh');
 		FLib3MFUnsignedMeshNode_GetInputPosFunc := LoadFunction('lib3mf_unsignedmeshnode_getinputpos');
 		FLib3MFUnsignedMeshNode_GetOutputDistanceFunc := LoadFunction('lib3mf_unsignedmeshnode_getoutputdistance');
+		FLib3MFBeamLatticeNode_GetInputBeamLatticeFunc := LoadFunction('lib3mf_beamlatticenode_getinputbeamlattice');
+		FLib3MFBeamLatticeNode_GetInputPosFunc := LoadFunction('lib3mf_beamlatticenode_getinputpos');
+		FLib3MFBeamLatticeNode_GetOutputDistanceFunc := LoadFunction('lib3mf_beamlatticenode_getoutputdistance');
+		FLib3MFBeamLatticeNode_SetAccurateRangeFunc := LoadFunction('lib3mf_beamlatticenode_setaccuraterange');
+		FLib3MFBeamLatticeNode_GetAccurateRangeFunc := LoadFunction('lib3mf_beamlatticenode_getaccuraterange');
+		FLib3MFFunctionGradientNode_GetInputFunctionIDFunc := LoadFunction('lib3mf_functiongradientnode_getinputfunctionid');
+		FLib3MFFunctionGradientNode_GetInputPosFunc := LoadFunction('lib3mf_functiongradientnode_getinputpos');
+		FLib3MFFunctionGradientNode_GetInputStepFunc := LoadFunction('lib3mf_functiongradientnode_getinputstep');
+		FLib3MFFunctionGradientNode_SetScalarOutputNameFunc := LoadFunction('lib3mf_functiongradientnode_setscalaroutputname');
+		FLib3MFFunctionGradientNode_GetScalarOutputNameFunc := LoadFunction('lib3mf_functiongradientnode_getscalaroutputname');
+		FLib3MFFunctionGradientNode_SetVectorInputNameFunc := LoadFunction('lib3mf_functiongradientnode_setvectorinputname');
+		FLib3MFFunctionGradientNode_GetVectorInputNameFunc := LoadFunction('lib3mf_functiongradientnode_getvectorinputname');
+		FLib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc := LoadFunction('lib3mf_functiongradientnode_getoutputnormalizedgradient');
+		FLib3MFFunctionGradientNode_GetOutputGradientFunc := LoadFunction('lib3mf_functiongradientnode_getoutputgradient');
+		FLib3MFFunctionGradientNode_GetOutputMagnitudeFunc := LoadFunction('lib3mf_functiongradientnode_getoutputmagnitude');
+		FLib3MFNormalizeDistanceNode_GetInputFunctionIDFunc := LoadFunction('lib3mf_normalizedistancenode_getinputfunctionid');
+		FLib3MFNormalizeDistanceNode_GetInputPosFunc := LoadFunction('lib3mf_normalizedistancenode_getinputpos');
+		FLib3MFNormalizeDistanceNode_GetInputStepFunc := LoadFunction('lib3mf_normalizedistancenode_getinputstep');
+		FLib3MFNormalizeDistanceNode_SetScalarOutputNameFunc := LoadFunction('lib3mf_normalizedistancenode_setscalaroutputname');
+		FLib3MFNormalizeDistanceNode_GetScalarOutputNameFunc := LoadFunction('lib3mf_normalizedistancenode_getscalaroutputname');
+		FLib3MFNormalizeDistanceNode_SetVectorInputNameFunc := LoadFunction('lib3mf_normalizedistancenode_setvectorinputname');
+		FLib3MFNormalizeDistanceNode_GetVectorInputNameFunc := LoadFunction('lib3mf_normalizedistancenode_getvectorinputname');
+		FLib3MFNormalizeDistanceNode_GetOutputResultFunc := LoadFunction('lib3mf_normalizedistancenode_getoutputresult');
 		FLib3MFFunctionCallNode_GetInputFunctionIDFunc := LoadFunction('lib3mf_functioncallnode_getinputfunctionid');
 		FLib3MFNodeIterator_GetCurrentFunc := LoadFunction('lib3mf_nodeiterator_getcurrent');
 		FLib3MFFunction_GetDisplayNameFunc := LoadFunction('lib3mf_function_getdisplayname');
@@ -19817,6 +20551,9 @@ implementation
 		FLib3MFImplicitFunction_AddConstMatNodeFunc := LoadFunction('lib3mf_implicitfunction_addconstmatnode');
 		FLib3MFImplicitFunction_AddMeshNodeFunc := LoadFunction('lib3mf_implicitfunction_addmeshnode');
 		FLib3MFImplicitFunction_AddUnsignedMeshNodeFunc := LoadFunction('lib3mf_implicitfunction_addunsignedmeshnode');
+		FLib3MFImplicitFunction_AddBeamLatticeNodeFunc := LoadFunction('lib3mf_implicitfunction_addbeamlatticenode');
+		FLib3MFImplicitFunction_AddFunctionGradientNodeFunc := LoadFunction('lib3mf_implicitfunction_addfunctiongradientnode');
+		FLib3MFImplicitFunction_AddNormalizeDistanceNodeFunc := LoadFunction('lib3mf_implicitfunction_addnormalizedistancenode');
 		FLib3MFImplicitFunction_AddFunctionCallNodeFunc := LoadFunction('lib3mf_implicitfunction_addfunctioncallnode');
 		FLib3MFImplicitFunction_GetNodesFunc := LoadFunction('lib3mf_implicitfunction_getnodes');
 		FLib3MFImplicitFunction_RemoveNodeFunc := LoadFunction('lib3mf_implicitfunction_removenode');
@@ -21133,6 +21870,75 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_unsignedmeshnode_getoutputdistance'), @FLib3MFUnsignedMeshNode_GetOutputDistanceFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_beamlatticenode_getinputbeamlattice'), @FLib3MFBeamLatticeNode_GetInputBeamLatticeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_beamlatticenode_getinputpos'), @FLib3MFBeamLatticeNode_GetInputPosFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_beamlatticenode_getoutputdistance'), @FLib3MFBeamLatticeNode_GetOutputDistanceFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_beamlatticenode_setaccuraterange'), @FLib3MFBeamLatticeNode_SetAccurateRangeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_beamlatticenode_getaccuraterange'), @FLib3MFBeamLatticeNode_GetAccurateRangeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functiongradientnode_getinputfunctionid'), @FLib3MFFunctionGradientNode_GetInputFunctionIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functiongradientnode_getinputpos'), @FLib3MFFunctionGradientNode_GetInputPosFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functiongradientnode_getinputstep'), @FLib3MFFunctionGradientNode_GetInputStepFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functiongradientnode_setscalaroutputname'), @FLib3MFFunctionGradientNode_SetScalarOutputNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functiongradientnode_getscalaroutputname'), @FLib3MFFunctionGradientNode_GetScalarOutputNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functiongradientnode_setvectorinputname'), @FLib3MFFunctionGradientNode_SetVectorInputNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functiongradientnode_getvectorinputname'), @FLib3MFFunctionGradientNode_GetVectorInputNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functiongradientnode_getoutputnormalizedgradient'), @FLib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functiongradientnode_getoutputgradient'), @FLib3MFFunctionGradientNode_GetOutputGradientFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functiongradientnode_getoutputmagnitude'), @FLib3MFFunctionGradientNode_GetOutputMagnitudeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_normalizedistancenode_getinputfunctionid'), @FLib3MFNormalizeDistanceNode_GetInputFunctionIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_normalizedistancenode_getinputpos'), @FLib3MFNormalizeDistanceNode_GetInputPosFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_normalizedistancenode_getinputstep'), @FLib3MFNormalizeDistanceNode_GetInputStepFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_normalizedistancenode_setscalaroutputname'), @FLib3MFNormalizeDistanceNode_SetScalarOutputNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_normalizedistancenode_getscalaroutputname'), @FLib3MFNormalizeDistanceNode_GetScalarOutputNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_normalizedistancenode_setvectorinputname'), @FLib3MFNormalizeDistanceNode_SetVectorInputNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_normalizedistancenode_getvectorinputname'), @FLib3MFNormalizeDistanceNode_GetVectorInputNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_normalizedistancenode_getoutputresult'), @FLib3MFNormalizeDistanceNode_GetOutputResultFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_functioncallnode_getinputfunctionid'), @FLib3MFFunctionCallNode_GetInputFunctionIDFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -21320,6 +22126,15 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addunsignedmeshnode'), @FLib3MFImplicitFunction_AddUnsignedMeshNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addbeamlatticenode'), @FLib3MFImplicitFunction_AddBeamLatticeNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addfunctiongradientnode'), @FLib3MFImplicitFunction_AddFunctionGradientNodeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addnormalizedistancenode'), @FLib3MFImplicitFunction_AddNormalizeDistanceNodeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_implicitfunction_addfunctioncallnode'), @FLib3MFImplicitFunction_AddFunctionCallNodeFunc);

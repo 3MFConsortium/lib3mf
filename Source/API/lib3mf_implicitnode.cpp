@@ -83,7 +83,9 @@ IImplicitPort* Lib3MF::Impl::CImplicitNode::FindInputOrThrow(
     auto pPort = FindInput(sIdentifier);
     if (!pPort)
     {
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+        std::string errorMsg = "Input port '" + sIdentifier + "' not found on node '" + 
+                               m_pImplicitNode->getIdentifier() + "'";
+        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM, errorMsg);
     }
     return pPort;
 }
@@ -94,7 +96,9 @@ IImplicitPort* Lib3MF::Impl::CImplicitNode::FindOutputOrThrow(
     auto pPort = FindOutput(sIdentifier);
     if (!pPort)
     {
-        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+        std::string errorMsg = "Output port '" + sIdentifier + "' not found on node '" + 
+                               m_pImplicitNode->getIdentifier() + "'";
+        throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM, errorMsg);
     }
     return pPort;
 }

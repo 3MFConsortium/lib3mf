@@ -2004,6 +2004,12 @@
 		<option name="Mod"
 			description="Calculates the modulo of two values (same behaviour as glsl mod)"
 			value="50" />
+		<option name="BeamLattice" description="Calculates the signed distance to a beam lattice"
+			value="51" />
+		<option name="FunctionGradient" description="Calculates the gradient of a function"
+			value="52" />
+		<option name="NormalizeDistance" description="Normalizes a distance field"
+			value="53" />
 	</enum>
 
 	<enum name="ImplicitPortType" description="The type of the port">
@@ -2575,6 +2581,130 @@
 		<method name="GetOutputDistance" description="Retrieves the output">
 			<param name="Distance" type="class" class="ImplicitPort" pass="return"
 				description="the output port for the unsigned distance to the mesh" />
+		</method>
+	</class>
+
+	<class name="BeamLatticeNode" parent="ImplicitNode" description="Signed distance to beam lattice">
+		<method name="GetInputBeamLattice"
+			description="Retrieves the input for the model resource id of the beam lattice">
+			<param name="BeamLattice" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the model resource id of the beam lattice (mesh with beamlattice extension)" />
+		</method>
+
+		<method name="GetInputPos" description="Retrieves the input for the position">
+			<param name="Pos" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the position" />
+		</method>
+
+		<method name="GetOutputDistance" description="Retrieves the output">
+			<param name="Distance" type="class" class="ImplicitPort" pass="return"
+				description="the output port for the signed distance to the beam lattice" />
+		</method>
+
+		<method name="SetAccurateRange" description="Sets the accurate range for distance computation">
+			<param name="AccurateRange" type="double" pass="in"
+				description="the accurate range in model units" />
+		</method>
+
+		<method name="GetAccurateRange" description="Retrieves the accurate range for distance computation">
+			<param name="AccurateRange" type="double" pass="return"
+				description="the accurate range in model units" />
+		</method>
+	</class>
+
+	<class name="FunctionGradientNode" parent="ImplicitNode" description="Gradient of a function">
+		<method name="GetInputFunctionID" description="Retrieves the input for the function id">
+			<param name="Function" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the function" />
+		</method>
+
+		<method name="GetInputPos" description="Retrieves the input for the position">
+			<param name="Pos" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the position" />
+		</method>
+
+		<method name="GetInputStep" description="Retrieves the input for the finite difference step">
+			<param name="Step" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the finite difference step" />
+		</method>
+
+		<!-- Attributes required by schema: scalaroutput (selects referenced scalar output) and vectorinput (selects referenced vector input) -->
+		<method name="SetScalarOutputName" description="Sets the name of the referenced scalar output">
+			<param name="ScalarOutputName" type="string" pass="in"
+				description="the name of the scalar output of the referenced function" />
+		</method>
+
+		<method name="GetScalarOutputName" description="Retrieves the name of the referenced scalar output">
+			<param name="ScalarOutputName" type="string" pass="return"
+				description="the name of the scalar output of the referenced function" />
+		</method>
+
+		<method name="SetVectorInputName" description="Sets the name of the referenced vector input">
+			<param name="VectorInputName" type="string" pass="in"
+				description="the name of the vector input (float3) of the referenced function" />
+		</method>
+
+		<method name="GetVectorInputName" description="Retrieves the name of the referenced vector input">
+			<param name="VectorInputName" type="string" pass="return"
+				description="the name of the vector input (float3) of the referenced function" />
+		</method>
+
+		<method name="GetOutputNormalizedGradient" description="Retrieves the normalized gradient output">
+			<param name="NormalizedGradient" type="class" class="ImplicitPort" pass="return"
+				description="the output port for the normalized gradient" />
+		</method>
+
+		<method name="GetOutputGradient" description="Retrieves the raw gradient output">
+			<param name="Gradient" type="class" class="ImplicitPort" pass="return"
+				description="the output port for the raw gradient" />
+		</method>
+
+		<method name="GetOutputMagnitude" description="Retrieves the gradient magnitude output">
+			<param name="Magnitude" type="class" class="ImplicitPort" pass="return"
+				description="the output port for the gradient magnitude" />
+		</method>
+	</class>
+
+	<class name="NormalizeDistanceNode" parent="ImplicitNode" description="Normalized signed distance from referenced function">
+		<method name="GetInputFunctionID" description="Retrieves the input for the function id">
+			<param name="Function" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the function" />
+		</method>
+
+		<method name="GetInputPos" description="Retrieves the input for the position">
+			<param name="Pos" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the position (vector)" />
+		</method>
+
+		<method name="GetInputStep" description="Retrieves the input for the finite difference step">
+			<param name="Step" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the finite difference step" />
+		</method>
+
+		<!-- Attributes required by schema: scalaroutput (selects referenced scalar output) and vectorinput (selects referenced vector input) -->
+		<method name="SetScalarOutputName" description="Sets the name of the referenced scalar output">
+			<param name="ScalarOutputName" type="string" pass="in"
+				description="the name of the scalar output of the referenced function" />
+		</method>
+
+		<method name="GetScalarOutputName" description="Retrieves the name of the referenced scalar output">
+			<param name="ScalarOutputName" type="string" pass="return"
+				description="the name of the scalar output of the referenced function" />
+		</method>
+
+		<method name="SetVectorInputName" description="Sets the name of the referenced vector input">
+			<param name="VectorInputName" type="string" pass="in"
+				description="the name of the vector input (float3) of the referenced function" />
+		</method>
+
+		<method name="GetVectorInputName" description="Retrieves the name of the referenced vector input">
+			<param name="VectorInputName" type="string" pass="return"
+				description="the name of the vector input (float3) of the referenced function" />
+		</method>
+
+		<method name="GetOutputResult" description="Retrieves the normalized result output">
+			<param name="Result" type="class" class="ImplicitPort" pass="return"
+				description="the output port for the normalized distance" />
 		</method>
 	</class>
 
@@ -3270,6 +3400,39 @@
 			<param name="Tag" pass="in" type="string"
 				description="the tag of the node" />
 			<param name="Node" pass="return" type="class" class="UnsignedMeshNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddBeamLatticeNode" description="Add a BeamLatticeNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="BeamLatticeNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddFunctionGradientNode" description="Add a FunctionGradientNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="FunctionGradientNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddNormalizeDistanceNode" description="Add a NormalizeDistanceNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="NormalizeDistanceNode"
 				description="the added node" />
 		</method>
 

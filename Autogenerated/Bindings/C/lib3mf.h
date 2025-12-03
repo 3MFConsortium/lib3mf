@@ -4027,6 +4027,233 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_unsignedmeshnode_getinputpos(Lib3MF_Unsigned
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_unsignedmeshnode_getoutputdistance(Lib3MF_UnsignedMeshNode pUnsignedMeshNode, Lib3MF_ImplicitPort * pDistance);
 
 /*************************************************************************************************************************
+ Class definition for BeamLatticeNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input for the model resource id of the beam lattice
+*
+* @param[in] pBeamLatticeNode - BeamLatticeNode instance.
+* @param[out] pBeamLattice - the input port for the model resource id of the beam lattice (mesh with beamlattice extension)
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_beamlatticenode_getinputbeamlattice(Lib3MF_BeamLatticeNode pBeamLatticeNode, Lib3MF_ImplicitPort * pBeamLattice);
+
+/**
+* Retrieves the input for the position
+*
+* @param[in] pBeamLatticeNode - BeamLatticeNode instance.
+* @param[out] pPos - the input port for the position
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_beamlatticenode_getinputpos(Lib3MF_BeamLatticeNode pBeamLatticeNode, Lib3MF_ImplicitPort * pPos);
+
+/**
+* Retrieves the output
+*
+* @param[in] pBeamLatticeNode - BeamLatticeNode instance.
+* @param[out] pDistance - the output port for the signed distance to the beam lattice
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_beamlatticenode_getoutputdistance(Lib3MF_BeamLatticeNode pBeamLatticeNode, Lib3MF_ImplicitPort * pDistance);
+
+/**
+* Sets the accurate range for distance computation
+*
+* @param[in] pBeamLatticeNode - BeamLatticeNode instance.
+* @param[in] dAccurateRange - the accurate range in model units
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_beamlatticenode_setaccuraterange(Lib3MF_BeamLatticeNode pBeamLatticeNode, Lib3MF_double dAccurateRange);
+
+/**
+* Retrieves the accurate range for distance computation
+*
+* @param[in] pBeamLatticeNode - BeamLatticeNode instance.
+* @param[out] pAccurateRange - the accurate range in model units
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_beamlatticenode_getaccuraterange(Lib3MF_BeamLatticeNode pBeamLatticeNode, Lib3MF_double * pAccurateRange);
+
+/*************************************************************************************************************************
+ Class definition for FunctionGradientNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input for the function id
+*
+* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+* @param[out] pFunction - the input port for the function
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functiongradientnode_getinputfunctionid(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pFunction);
+
+/**
+* Retrieves the input for the position
+*
+* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+* @param[out] pPos - the input port for the position
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functiongradientnode_getinputpos(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pPos);
+
+/**
+* Retrieves the input for the finite difference step
+*
+* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+* @param[out] pStep - the input port for the finite difference step
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functiongradientnode_getinputstep(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pStep);
+
+/**
+* Sets the name of the referenced scalar output
+*
+* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+* @param[in] pScalarOutputName - the name of the scalar output of the referenced function
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functiongradientnode_setscalaroutputname(Lib3MF_FunctionGradientNode pFunctionGradientNode, const char * pScalarOutputName);
+
+/**
+* Retrieves the name of the referenced scalar output
+*
+* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+* @param[in] nScalarOutputNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pScalarOutputNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pScalarOutputNameBuffer -  buffer of the name of the scalar output of the referenced function, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functiongradientnode_getscalaroutputname(Lib3MF_FunctionGradientNode pFunctionGradientNode, const Lib3MF_uint32 nScalarOutputNameBufferSize, Lib3MF_uint32* pScalarOutputNameNeededChars, char * pScalarOutputNameBuffer);
+
+/**
+* Sets the name of the referenced vector input
+*
+* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+* @param[in] pVectorInputName - the name of the vector input (float3) of the referenced function
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functiongradientnode_setvectorinputname(Lib3MF_FunctionGradientNode pFunctionGradientNode, const char * pVectorInputName);
+
+/**
+* Retrieves the name of the referenced vector input
+*
+* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+* @param[in] nVectorInputNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pVectorInputNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pVectorInputNameBuffer -  buffer of the name of the vector input (float3) of the referenced function, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functiongradientnode_getvectorinputname(Lib3MF_FunctionGradientNode pFunctionGradientNode, const Lib3MF_uint32 nVectorInputNameBufferSize, Lib3MF_uint32* pVectorInputNameNeededChars, char * pVectorInputNameBuffer);
+
+/**
+* Retrieves the normalized gradient output
+*
+* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+* @param[out] pNormalizedGradient - the output port for the normalized gradient
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functiongradientnode_getoutputnormalizedgradient(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pNormalizedGradient);
+
+/**
+* Retrieves the raw gradient output
+*
+* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+* @param[out] pGradient - the output port for the raw gradient
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functiongradientnode_getoutputgradient(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pGradient);
+
+/**
+* Retrieves the gradient magnitude output
+*
+* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
+* @param[out] pMagnitude - the output port for the gradient magnitude
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functiongradientnode_getoutputmagnitude(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pMagnitude);
+
+/*************************************************************************************************************************
+ Class definition for NormalizeDistanceNode
+**************************************************************************************************************************/
+
+/**
+* Retrieves the input for the function id
+*
+* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+* @param[out] pFunction - the input port for the function
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_normalizedistancenode_getinputfunctionid(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, Lib3MF_ImplicitPort * pFunction);
+
+/**
+* Retrieves the input for the position
+*
+* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+* @param[out] pPos - the input port for the position (vector)
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_normalizedistancenode_getinputpos(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, Lib3MF_ImplicitPort * pPos);
+
+/**
+* Retrieves the input for the finite difference step
+*
+* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+* @param[out] pStep - the input port for the finite difference step
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_normalizedistancenode_getinputstep(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, Lib3MF_ImplicitPort * pStep);
+
+/**
+* Sets the name of the referenced scalar output
+*
+* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+* @param[in] pScalarOutputName - the name of the scalar output of the referenced function
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_normalizedistancenode_setscalaroutputname(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, const char * pScalarOutputName);
+
+/**
+* Retrieves the name of the referenced scalar output
+*
+* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+* @param[in] nScalarOutputNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pScalarOutputNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pScalarOutputNameBuffer -  buffer of the name of the scalar output of the referenced function, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_normalizedistancenode_getscalaroutputname(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, const Lib3MF_uint32 nScalarOutputNameBufferSize, Lib3MF_uint32* pScalarOutputNameNeededChars, char * pScalarOutputNameBuffer);
+
+/**
+* Sets the name of the referenced vector input
+*
+* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+* @param[in] pVectorInputName - the name of the vector input (float3) of the referenced function
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_normalizedistancenode_setvectorinputname(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, const char * pVectorInputName);
+
+/**
+* Retrieves the name of the referenced vector input
+*
+* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+* @param[in] nVectorInputNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pVectorInputNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pVectorInputNameBuffer -  buffer of the name of the vector input (float3) of the referenced function, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_normalizedistancenode_getvectorinputname(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, const Lib3MF_uint32 nVectorInputNameBufferSize, Lib3MF_uint32* pVectorInputNameNeededChars, char * pVectorInputNameBuffer);
+
+/**
+* Retrieves the normalized result output
+*
+* @param[in] pNormalizeDistanceNode - NormalizeDistanceNode instance.
+* @param[out] pResult - the output port for the normalized distance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_normalizedistancenode_getoutputresult(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, Lib3MF_ImplicitPort * pResult);
+
+/*************************************************************************************************************************
  Class definition for FunctionCallNode
 **************************************************************************************************************************/
 
@@ -4800,6 +5027,42 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addmeshnode(Lib3MF_Implicit
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addunsignedmeshnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_UnsignedMeshNode * pNode);
+
+/**
+* Add a BeamLatticeNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addbeamlatticenode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_BeamLatticeNode * pNode);
+
+/**
+* Add a FunctionGradientNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addfunctiongradientnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_FunctionGradientNode * pNode);
+
+/**
+* Add a NormalizeDistanceNode
+*
+* @param[in] pImplicitFunction - ImplicitFunction instance.
+* @param[in] pIdentifier - the identifier of the node
+* @param[in] pDisplayName - the display name of the node
+* @param[in] pTag - the tag of the node
+* @param[out] pNode - the added node
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_implicitfunction_addnormalizedistancenode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_NormalizeDistanceNode * pNode);
 
 /**
 * Add a FunctionCallNode

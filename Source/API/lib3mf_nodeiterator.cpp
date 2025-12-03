@@ -83,6 +83,9 @@ Abstract: This is a stub class definition of CNodeIterator
 #include "lib3mf_unsignedmeshnode.hpp"
 #include "lib3mf_vectorfromscalarnode.hpp"
 #include "lib3mf_modnode.hpp"
+#include "lib3mf_beamlatticenode.hpp"
+#include "lib3mf_functiongradientnode.hpp"
+#include "lib3mf_normalizedistancenode.hpp"
 
 
 using namespace Lib3MF::Impl;
@@ -263,6 +266,12 @@ IImplicitNode* Lib3MF::Impl::CNodeIterator::implicitNodeFromModelImplicitNode(
         return new CResourceIdNode(pNode);
     case eImplicitNodeType::Mod:
         return new CModNode(pNode);
+    case eImplicitNodeType::BeamLattice:
+        return new CBeamLatticeNode(pNode);
+    case eImplicitNodeType::FunctionGradient:
+        return new CFunctionGradientNode(pNode);
+    case eImplicitNodeType::NormalizeDistance:
+        return new CNormalizeDistanceNode(pNode);
 
     default:
         throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);

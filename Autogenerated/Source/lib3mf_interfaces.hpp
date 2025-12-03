@@ -151,6 +151,9 @@ class IConstVecNode;
 class IConstMatNode;
 class IMeshNode;
 class IUnsignedMeshNode;
+class IBeamLatticeNode;
+class IFunctionGradientNode;
+class INormalizeDistanceNode;
 class IFunctionCallNode;
 class INodeIterator;
 class IFunction;
@@ -4741,6 +4744,204 @@ typedef IBaseSharedPtr<IUnsignedMeshNode> PIUnsignedMeshNode;
 
 
 /*************************************************************************************************************************
+ Class interface for BeamLatticeNode 
+**************************************************************************************************************************/
+
+class IBeamLatticeNode : public virtual IImplicitNode {
+public:
+	/**
+	* IBeamLatticeNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xF3A4EE98F7FEC0CUL; // First 64 bits of SHA1 of a string: "Lib3MF::BeamLatticeNode"
+	}
+
+	/**
+	* IBeamLatticeNode::GetInputBeamLattice - Retrieves the input for the model resource id of the beam lattice
+	* @return the input port for the model resource id of the beam lattice (mesh with beamlattice extension)
+	*/
+	virtual IImplicitPort * GetInputBeamLattice() = 0;
+
+	/**
+	* IBeamLatticeNode::GetInputPos - Retrieves the input for the position
+	* @return the input port for the position
+	*/
+	virtual IImplicitPort * GetInputPos() = 0;
+
+	/**
+	* IBeamLatticeNode::GetOutputDistance - Retrieves the output
+	* @return the output port for the signed distance to the beam lattice
+	*/
+	virtual IImplicitPort * GetOutputDistance() = 0;
+
+	/**
+	* IBeamLatticeNode::SetAccurateRange - Sets the accurate range for distance computation
+	* @param[in] dAccurateRange - the accurate range in model units
+	*/
+	virtual void SetAccurateRange(const Lib3MF_double dAccurateRange) = 0;
+
+	/**
+	* IBeamLatticeNode::GetAccurateRange - Retrieves the accurate range for distance computation
+	* @return the accurate range in model units
+	*/
+	virtual Lib3MF_double GetAccurateRange() = 0;
+
+};
+
+typedef IBaseSharedPtr<IBeamLatticeNode> PIBeamLatticeNode;
+
+
+/*************************************************************************************************************************
+ Class interface for FunctionGradientNode 
+**************************************************************************************************************************/
+
+class IFunctionGradientNode : public virtual IImplicitNode {
+public:
+	/**
+	* IFunctionGradientNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x437E27AEF740121UL; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionGradientNode"
+	}
+
+	/**
+	* IFunctionGradientNode::GetInputFunctionID - Retrieves the input for the function id
+	* @return the input port for the function
+	*/
+	virtual IImplicitPort * GetInputFunctionID() = 0;
+
+	/**
+	* IFunctionGradientNode::GetInputPos - Retrieves the input for the position
+	* @return the input port for the position
+	*/
+	virtual IImplicitPort * GetInputPos() = 0;
+
+	/**
+	* IFunctionGradientNode::GetInputStep - Retrieves the input for the finite difference step
+	* @return the input port for the finite difference step
+	*/
+	virtual IImplicitPort * GetInputStep() = 0;
+
+	/**
+	* IFunctionGradientNode::SetScalarOutputName - Sets the name of the referenced scalar output
+	* @param[in] sScalarOutputName - the name of the scalar output of the referenced function
+	*/
+	virtual void SetScalarOutputName(const std::string & sScalarOutputName) = 0;
+
+	/**
+	* IFunctionGradientNode::GetScalarOutputName - Retrieves the name of the referenced scalar output
+	* @return the name of the scalar output of the referenced function
+	*/
+	virtual std::string GetScalarOutputName() = 0;
+
+	/**
+	* IFunctionGradientNode::SetVectorInputName - Sets the name of the referenced vector input
+	* @param[in] sVectorInputName - the name of the vector input (float3) of the referenced function
+	*/
+	virtual void SetVectorInputName(const std::string & sVectorInputName) = 0;
+
+	/**
+	* IFunctionGradientNode::GetVectorInputName - Retrieves the name of the referenced vector input
+	* @return the name of the vector input (float3) of the referenced function
+	*/
+	virtual std::string GetVectorInputName() = 0;
+
+	/**
+	* IFunctionGradientNode::GetOutputNormalizedGradient - Retrieves the normalized gradient output
+	* @return the output port for the normalized gradient
+	*/
+	virtual IImplicitPort * GetOutputNormalizedGradient() = 0;
+
+	/**
+	* IFunctionGradientNode::GetOutputGradient - Retrieves the raw gradient output
+	* @return the output port for the raw gradient
+	*/
+	virtual IImplicitPort * GetOutputGradient() = 0;
+
+	/**
+	* IFunctionGradientNode::GetOutputMagnitude - Retrieves the gradient magnitude output
+	* @return the output port for the gradient magnitude
+	*/
+	virtual IImplicitPort * GetOutputMagnitude() = 0;
+
+};
+
+typedef IBaseSharedPtr<IFunctionGradientNode> PIFunctionGradientNode;
+
+
+/*************************************************************************************************************************
+ Class interface for NormalizeDistanceNode 
+**************************************************************************************************************************/
+
+class INormalizeDistanceNode : public virtual IImplicitNode {
+public:
+	/**
+	* INormalizeDistanceNode::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x817D2E566E73AA8FUL; // First 64 bits of SHA1 of a string: "Lib3MF::NormalizeDistanceNode"
+	}
+
+	/**
+	* INormalizeDistanceNode::GetInputFunctionID - Retrieves the input for the function id
+	* @return the input port for the function
+	*/
+	virtual IImplicitPort * GetInputFunctionID() = 0;
+
+	/**
+	* INormalizeDistanceNode::GetInputPos - Retrieves the input for the position
+	* @return the input port for the position (vector)
+	*/
+	virtual IImplicitPort * GetInputPos() = 0;
+
+	/**
+	* INormalizeDistanceNode::GetInputStep - Retrieves the input for the finite difference step
+	* @return the input port for the finite difference step
+	*/
+	virtual IImplicitPort * GetInputStep() = 0;
+
+	/**
+	* INormalizeDistanceNode::SetScalarOutputName - Sets the name of the referenced scalar output
+	* @param[in] sScalarOutputName - the name of the scalar output of the referenced function
+	*/
+	virtual void SetScalarOutputName(const std::string & sScalarOutputName) = 0;
+
+	/**
+	* INormalizeDistanceNode::GetScalarOutputName - Retrieves the name of the referenced scalar output
+	* @return the name of the scalar output of the referenced function
+	*/
+	virtual std::string GetScalarOutputName() = 0;
+
+	/**
+	* INormalizeDistanceNode::SetVectorInputName - Sets the name of the referenced vector input
+	* @param[in] sVectorInputName - the name of the vector input (float3) of the referenced function
+	*/
+	virtual void SetVectorInputName(const std::string & sVectorInputName) = 0;
+
+	/**
+	* INormalizeDistanceNode::GetVectorInputName - Retrieves the name of the referenced vector input
+	* @return the name of the vector input (float3) of the referenced function
+	*/
+	virtual std::string GetVectorInputName() = 0;
+
+	/**
+	* INormalizeDistanceNode::GetOutputResult - Retrieves the normalized result output
+	* @return the output port for the normalized distance
+	*/
+	virtual IImplicitPort * GetOutputResult() = 0;
+
+};
+
+typedef IBaseSharedPtr<INormalizeDistanceNode> PINormalizeDistanceNode;
+
+
+/*************************************************************************************************************************
  Class interface for FunctionCallNode 
 **************************************************************************************************************************/
 
@@ -5380,6 +5581,33 @@ public:
 	* @return the added node
 	*/
 	virtual IUnsignedMeshNode * AddUnsignedMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddBeamLatticeNode - Add a BeamLatticeNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IBeamLatticeNode * AddBeamLatticeNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddFunctionGradientNode - Add a FunctionGradientNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual IFunctionGradientNode * AddFunctionGradientNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
+
+	/**
+	* IImplicitFunction::AddNormalizeDistanceNode - Add a NormalizeDistanceNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	virtual INormalizeDistanceNode * AddNormalizeDistanceNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag) = 0;
 
 	/**
 	* IImplicitFunction::AddFunctionCallNode - Add a FunctionCallNode

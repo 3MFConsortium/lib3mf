@@ -745,6 +745,39 @@ namespace Lib3MF
                 const std::string& sTag) override;
 
             /**
+             * IImplicitFunction::AddBeamLatticeNode - Add a BeamLatticeNode
+             * @param[in] sIdentifier - the identifier of the node
+             * @param[in] sDisplayName - the display name of the node
+             * @param[in] sTag - the tag of the node
+             * @return the added node
+             */
+            IBeamLatticeNode* AddBeamLatticeNode(
+                const std::string& sIdentifier, const std::string& sDisplayName,
+                const std::string& sTag) override;
+
+            /**
+             * IImplicitFunction::AddFunctionGradientNode - Add a FunctionGradientNode
+             * @param[in] sIdentifier - the identifier of the node
+             * @param[in] sDisplayName - the display name of the node
+             * @param[in] sTag - the tag of the node
+             * @return the added node
+             */
+            IFunctionGradientNode* AddFunctionGradientNode(
+                const std::string& sIdentifier, const std::string& sDisplayName,
+                const std::string& sTag) override;
+
+            /**
+             * IImplicitFunction::AddNormalizeDistanceNode - Add a NormalizeDistanceNode
+             * @param[in] sIdentifier - the identifier of the node
+             * @param[in] sDisplayName - the display name of the node
+             * @param[in] sTag - the tag of the node
+             * @return the added node
+             */
+            INormalizeDistanceNode* AddNormalizeDistanceNode(
+                const std::string& sIdentifier, const std::string& sDisplayName,
+                const std::string& sTag) override;
+
+            /**
              * IImplicitFunction::GetNodes - Retrieves the nodes
              * @return the accessor to the nodes
              */
