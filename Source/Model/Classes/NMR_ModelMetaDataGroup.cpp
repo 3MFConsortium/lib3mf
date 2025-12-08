@@ -47,7 +47,6 @@ namespace NMR {
 		m_MetaDataMap.clear();
 	}
 
-
 	PModelMetaData CModelMetaDataGroup::addMetaData(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue, _In_ std::string sType, _In_ nfBool bPreserve)
 	{
 		if (hasMetaData(composeNamespaceAndNameIntoKey(sNameSpace, sName))) {
@@ -114,7 +113,11 @@ namespace NMR {
 			std::string sName;
 			std::string sValue;
 			PModelMetaData metaData = pSourceMetaDataGroup->getMetaData(nIndex);
-			addMetaData(metaData->getNameSpace(), metaData->getName(), metaData->getValue(), metaData->getType(), metaData->getPreserve());
+
+			// only add metadata, if the key does not exist yet
+			if (!hasMetaData(metaData->getKey())) {
+				addMetaData(metaData->getNameSpace(), metaData->getName(), metaData->getValue(), metaData->getType(), metaData->getPreserve());
+			}
 		}
 	}
 }

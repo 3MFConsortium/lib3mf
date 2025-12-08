@@ -86,6 +86,7 @@ public:
 
 	bool IsComponentsObject();
 
+    bool IsLevelSetObject() override;
 };
 
 }

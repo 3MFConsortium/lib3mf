@@ -82,6 +82,20 @@ namespace NMR {
 		m_sRelationShipType = sRelationShipType;
 	}
 
+	PModelAttachment CModelAttachment::cloneIntoNewModel(_In_ CModel * pModel, _In_ nfBool bCloneMemory)
+	{
+		PImportStream pNewStream;
+		if (m_pStream.get() != nullptr) {
+			if (bCloneMemory) {
+				pNewStream = m_pStream->copyToMemory();
+			}
+			else {
+				pNewStream = m_pStream;
+			}
+		}
+
+		return pModel->addAttachment (m_sPathURI, m_sRelationShipType, pNewStream);
+	}
 
 
 }

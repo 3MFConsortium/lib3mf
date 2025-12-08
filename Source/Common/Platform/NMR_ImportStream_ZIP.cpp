@@ -35,7 +35,7 @@ This is a stream class for importing from a libZIP object.
 #include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
-#include <math.h>
+#include <cmath>
 #include <vector>
 
 namespace NMR {

@@ -36,6 +36,8 @@ mesh object.
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Common/Math/NMR_PairMatchingTree.h" 
 
+#define TRIANGLESET_MAXCOUNT (1024 * 1024 * 1024)
+
 namespace NMR {
 
 	CModelMeshObject::CModelMeshObject(_In_ const ModelResourceID sID, _In_ CModel * pModel)
@@ -221,10 +223,110 @@ namespace NMR {
 		m_pBeamLatticeAttributes = pBeamLatticeAttributes;
 	}
 
+	PModelVolumeData CModelMeshObject::getVolumeData()
+	{
+		return m_pVolumeData;
+	}
+
+	void CModelMeshObject::setVolumeData(_In_ PModelVolumeData pVolumeData)
+	{
+		if (!pVolumeData)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		m_pVolumeData = pVolumeData;
+	}
+
 	void CModelMeshObject::extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix)
 	{
 		m_pMesh->extendOutbox(vOutBox, mAccumulatedMatrix);
 	}
+
+	ResourceDependencies CModelMeshObject::getDependencies()
+	{
+		ResourceDependencies dependencies;
+		if(m_pVolumeData)
+		{
+			dependencies.push_back(
+				m_pVolumeData->getPackageResourceID());
+		}
+
+		return dependencies;
+	}
+
+	void CModelMeshObject::deleteTriangleSet(_In_ CModelTriangleSet* pTriangleSet)
+	{
+		if (pTriangleSet != nullptr) {
+			auto sIdentifier = pTriangleSet->getIdentifier();
+			m_TriangleSets.erase(std::remove_if(
+				m_TriangleSets.begin(),
+				m_TriangleSets.end(),
+				[sIdentifier](PModelTriangleSet const& pSet) { return (pSet->getIdentifier() == sIdentifier); }
+			));
+			
+			m_TriangleSetMap.erase(sIdentifier);
+	
+		}
+	}
+
+	PModelTriangleSet CModelMeshObject::findTriangleSet(const std::string& sIdentifier)
+	{
+		auto iIterator = m_TriangleSetMap.find(sIdentifier);
+		if (iIterator == m_TriangleSetMap.end())
+			return nullptr;
+
+		return iIterator->second;
+
+	}
+
+	PModelTriangleSet CModelMeshObject::addTriangleSet(const std::string& sIdentifier, const std::string& sName)
+	{
+		auto iIterator = m_TriangleSetMap.find(sIdentifier);
+		if (iIterator != m_TriangleSetMap.end())
+			throw CNMRException(NMR_ERROR_DUPLICATETRIANGLESET);
+
+		if (m_TriangleSets.size() >= TRIANGLESET_MAXCOUNT)
+			throw CNMRException(NMR_ERROR_TOOMANYTRIANGLESETS);
+
+		auto pTriangleSet = std::make_shared<CModelTriangleSet>(sName, sIdentifier);
+		m_TriangleSets.push_back(pTriangleSet);
+		m_TriangleSetMap.insert(std::make_pair (sIdentifier, pTriangleSet));
+
+		return pTriangleSet;
+
+	}
+
+	PModelTriangleSet CModelMeshObject::addTriangleSet(PModelTriangleSet pModelTriangleSet)
+	{
+		if (pModelTriangleSet.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		auto iIterator = m_TriangleSetMap.find(pModelTriangleSet->getIdentifier());
+		if (iIterator != m_TriangleSetMap.end())
+			throw CNMRException(NMR_ERROR_DUPLICATETRIANGLESET);
+
+		if (m_TriangleSets.size() >= TRIANGLESET_MAXCOUNT)
+			throw CNMRException(NMR_ERROR_TOOMANYTRIANGLESETS);
+
+		m_TriangleSets.push_back(pModelTriangleSet);
+		m_TriangleSetMap.insert(std::make_pair(pModelTriangleSet->getIdentifier(), pModelTriangleSet));
+
+		return pModelTriangleSet;
+	}
+
+	uint32_t CModelMeshObject::getTriangleSetCount()
+	{
+		return (uint32_t)m_TriangleSets.size();
+	}
+
+	PModelTriangleSet CModelMeshObject::getTriangleSet(const uint32_t nIndex)
+	{
+		if (nIndex >= m_TriangleSets.size())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_TriangleSets[nIndex];
+
+	}
+
 }
 
 

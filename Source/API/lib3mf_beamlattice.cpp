@@ -139,7 +139,7 @@ void CBeamLattice::GetBallOptions (eLib3MFBeamLatticeBallMode & eBallMode, Lib3M
 
 void CBeamLattice::SetBallOptions (const eLib3MFBeamLatticeBallMode eBallMode, const Lib3MF_double dBallRadius)
 {
-	if (eBallMode == eLib3MFBeamLatticeBallMode::None || dBallRadius > 0.0) {
+	if (eBallMode == eLib3MFBeamLatticeBallMode::BeamLatticeBallModeNone || dBallRadius > 0.0) {
 		m_mesh.setBeamLatticeBallMode((NMR::eModelBeamLatticeBallMode)eBallMode);
 		m_mesh.setDefaultBallRadius(dBallRadius);
 	}
@@ -307,7 +307,7 @@ sLib3MFBall CBeamLattice::GetBall (const Lib3MF_uint32 nIndex)
 		return ball;
 	}
 	else if (ballMode == eBeamLatticeBallMode::All) {
-		Lib3MF_uint32 ballNodeIndex = m_mesh.getOccupiedNode(nIndex)->m_index;
+		Lib3MF_int32 ballNodeIndex = m_mesh.getOccupiedNode(nIndex)->m_index;
 
 		Lib3MF_uint32 meshBallCount = m_mesh.getBallCount();
 		for (Lib3MF_uint32 iBall = 0; iBall < meshBallCount; iBall++) {
@@ -377,7 +377,7 @@ void CBeamLattice::SetBall (const Lib3MF_uint32 nIndex, const sLib3MFBall BallIn
 		meshBall->m_radius = BallInfo.m_Radius;
 	}
 	else if (ballMode == eBeamLatticeBallMode::All) {
-		Lib3MF_uint32 ballNodeIndex = m_mesh.getOccupiedNode(nIndex)->m_index;
+		Lib3MF_int32 ballNodeIndex = m_mesh.getOccupiedNode(nIndex)->m_index;
 		Lib3MF_uint32 meshBallCount = m_mesh.getBallCount();
 		for (Lib3MF_uint32 iBall = 0; iBall < meshBallCount; iBall++) {
 			NMR::MESHBALL * meshBall = m_mesh.getBall(iBall);

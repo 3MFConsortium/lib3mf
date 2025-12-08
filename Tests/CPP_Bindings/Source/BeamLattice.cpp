@@ -152,7 +152,7 @@ namespace Lib3MF
 
 	TEST_F(BeamLattice, BallMode)
 	{
-		beamLattice->SetBallOptions(eBeamLatticeBallMode::None, 1.2);
+		beamLattice->SetBallOptions(eBeamLatticeBallMode::BeamLatticeBallModeNone, 1.2);
 
 		sBeam beam;
 		beam.m_Radii[0] = 1.0;
@@ -272,7 +272,7 @@ namespace Lib3MF
 			beamLattice->AddBeam(beam);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 
@@ -291,7 +291,7 @@ namespace Lib3MF
 			beamLattice->SetBeam(0, beam);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 
@@ -299,7 +299,7 @@ namespace Lib3MF
 		try {
 			beamLattice->SetBallOptions(eBeamLatticeBallMode::All, 0.0);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 
@@ -316,7 +316,7 @@ namespace Lib3MF
 			beamLattice->SetBall(0, ball);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 
@@ -326,7 +326,7 @@ namespace Lib3MF
 			beamLattice->AddBall(ball);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 	}
@@ -420,7 +420,7 @@ namespace Lib3MF
 			beamLattice->SetBeams(beams);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 
@@ -463,7 +463,7 @@ namespace Lib3MF
 			beamLattice->SetBalls(balls);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 	}
@@ -501,14 +501,14 @@ namespace Lib3MF
 			mesh->SetType(eObjectType::Support);
 			ASSERT_FALSE(true) << "Could set eObjectTypeSupport";
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 		try {
 			mesh->SetType(eObjectType::Other);
 			ASSERT_FALSE(true) << "Could set eObjectTypeOther";
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 	}
@@ -530,7 +530,7 @@ namespace Lib3MF
 			beamLattice->AddBeam(beam);
 			ASSERT_FALSE(true) << "Could add beam on eObjectTypeSupport";
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 	}
@@ -663,6 +663,38 @@ namespace Lib3MF
 	TEST_P(BeamLattice_Attributes_Negative, Read)
 	{
 		Read_Attributes_Negative(GetParam());
+	}
+
+	TEST_F(BeamLattice, Read_BallExtension_TestSuite_P_BXX_2021_06)
+	{
+		std::string fName("testsuite_P_BXX_2021_06.3mf");
+		auto model = wrapper->CreateModel();
+		{
+			auto reader = model->QueryReader("3mf");
+			reader->SetStrictModeActive(true);
+			reader->ReadFromFile(sTestFilesPath + "/" + "BeamLattice" + "/" + fName);
+			ASSERT_EQ(reader->GetWarningCount(), 0) << "Warnings encountered while reading test suite file.";
+		}
+
+		Lib3MF_uint64 totalBalls = 0;
+		Lib3MF_uint64 checkedBallModeMeshes = 0;
+		auto meshObjects = model->GetMeshObjects();
+		while (meshObjects->MoveNext()) {
+			auto meshObject = meshObjects->GetCurrentMeshObject();
+			auto bl = meshObject->BeamLattice();
+			if (bl->GetBeamCount() > 0 || bl->GetBallCount() > 0) {
+				eBeamLatticeBallMode ballMode; double defaultRadius;
+				bl->GetBallOptions(ballMode, defaultRadius);
+				if (bl->GetBallCount() > 0) {
+					checkedBallModeMeshes++;
+					ASSERT_EQ(ballMode, eBeamLatticeBallMode::All);
+					ASSERT_NEAR(defaultRadius, 3.0, 1e-7);
+				}
+				totalBalls += bl->GetBallCount();
+			}
+		}
+		ASSERT_EQ(checkedBallModeMeshes, 1u) << "Expected exactly one mesh with ball mode All.";
+		ASSERT_EQ(totalBalls, 8u) << "Unexpected total ball count.";
 	}
 
 }

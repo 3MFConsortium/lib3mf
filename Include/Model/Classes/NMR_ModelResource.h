@@ -41,8 +41,11 @@ resource object.
 #include "Model/Classes/NMR_Model.h" 
 
 #include <string>
+#include <vector>
 
 namespace NMR {
+
+	using ResourceDependencies = std::vector<PPackageResourceID>;
 
 	class CModelResource {
 	private:
@@ -52,15 +55,14 @@ namespace NMR {
 	protected:
 		std::vector<ModelPropertyID> m_ResourceIndexMap;
 		nfBool m_bHasResourceIndexMap;
-		CModel * Model();
-		
+		CModel * Model();		
 	public:
 		CModelResource() = delete;
 		// CModelResource(_In_ const PPackageResourceID sResourceID, _In_ CModel * pModel);
 		CModelResource(_In_ const ModelResourceID sResourceID, _In_ CModel * pModel);
 		virtual ~CModelResource();
 		
-		virtual PPackageResourceID getPackageResourceID();
+		PPackageResourceID getPackageResourceID();
 		void setPackageResourceID(PPackageResourceID pID);
 
 		bool mapResourceIndexToPropertyID (_In_ ModelResourceIndex nPropertyIndex, _Out_ ModelPropertyID & nPropertyID);
@@ -69,6 +71,11 @@ namespace NMR {
 		nfBool hasResourceIndexMap();
 
 		_Ret_notnull_ CModel * getModel();
+		void setModel(CModel * pModel);
+
+    	/// Returns all dependencies of this resource, usd for topological sorting during writing
+    	virtual ResourceDependencies getDependencies();
+                
 	};
 
 	typedef std::shared_ptr <CModelResource> PModelResource;

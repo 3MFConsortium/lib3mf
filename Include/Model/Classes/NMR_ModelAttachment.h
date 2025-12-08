@@ -42,6 +42,8 @@ NMR_ModelAttachment.h defines the Model Attachment Class.
 
 namespace NMR {
 
+	typedef std::shared_ptr <CModelAttachment> PModelAttachment;
+
 	class CModelAttachment {
 	private:
 		CModel * m_pModel;
@@ -61,9 +63,10 @@ namespace NMR {
 
 		void setStream(_In_ PImportStream pStream);
 		void setRelationShipType(_In_ const std::string sRelationShipType);
+
+		PModelAttachment cloneIntoNewModel (_In_ CModel * pModel, _In_ nfBool bCloneMemory);
 	};
 
-	typedef std::shared_ptr <CModelAttachment> PModelAttachment;
 
 }
 

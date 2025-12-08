@@ -8,6 +8,7 @@
 #include "Common/Platform/NMR_ExportStream.h"
 
 #include "Common/NMR_Architecture_Utils.h"
+#include <cstdint>
 #include <cstring>
 
 #define LIB3MF_MAXENCRYPTIONHEADERSIZE (1UL << 31)

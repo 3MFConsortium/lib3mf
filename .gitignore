@@ -5,4 +5,18 @@ Include/Model/COM/NMR_COMVersion.h
 debug
 .DS_Store
 .vscode
+<<<<<<< HEAD
 .vs
+=======
+TestOutput
+nonrootmodels.3mf
+SetupWriteRead1.3mf
+SetupWriteRead2.3mf
+SetupWriteRead3.3mf
+SetupWriteRead4.3mf
+SetupWriteRead5.3mf
+v093reout.3mf
+.vs
+.idea
+cmake-build-*
+>>>>>>> 3732957fa520612a7156de3e01d935ec2569de07

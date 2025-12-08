@@ -79,8 +79,8 @@ namespace NMR {
 	};
 
 	typedef struct MODELMESHBEAM {
-		DWORD m_nIndices[2];
-		DOUBLE m_dRadius[2];	// the radius of end 0 or 1 of this beam
+		DWORD m_nIndices[2] = {0,0};
+		DOUBLE m_dRadius[2] = { 1.,1. };	// the radius of end 0 or 1 of this beam
 		eModelBeamLatticeCapMode m_eCapMode[2];
 		MODELMESHBEAM() {
 			m_eCapMode[0] = MODELBEAMLATTICECAPMODE_SPHERE;
@@ -89,15 +89,11 @@ namespace NMR {
 	} MODELMESHBEAM;
 
 	typedef struct MODELMESHBALL {
-		DWORD m_nIndex;
-		DOUBLE m_dRadius;	// the radius of this ball
+		DWORD m_nIndex = 0;
+		DOUBLE m_dRadius = 1.;	// the radius of this ball
 		MODELMESHBALL() {
 		}
 	} MODELMESHBALL;
-
-	typedef struct {
-		FLOAT m_fFields[3][4];
-	} MODELTRANSFORM;
 
 	typedef struct {
 		BYTE m_Red;
@@ -124,9 +120,9 @@ namespace NMR {
 #pragma pack()
 
 	typedef DWORD ModelPropertyID;
-	typedef DWORD ModelResourceID;
-	typedef DWORD UniqueResourceID;
-	typedef DWORD ModelResourceIndex;
+	typedef DWORD ModelResourceID;	// Resource ID unique within a model, the id that you actually see as id in the xml
+	typedef DWORD UniqueResourceID;	// Resource ID unique within a package, handled internally to allow access to resources across models
+	typedef DWORD ModelResourceIndex;	//TODO: Add explanation
 
 	enum eModelUnit {
 		MODELUNIT_MICROMETER = 0,
@@ -173,9 +169,29 @@ namespace NMR {
 	};
 
 	enum eModelBlendMethod {
-		MODELBLENDMETHOD_NONE = 0,
-		MODELBLENDMETHOD_MIX = 1,
-		MODELBLENDMETHOD_MULTIPLY = 2
+		MODELBLENDMETHOD_MIX = 0,
+		MODELBLENDMETHOD_MULTIPLY = 1,
+		MODELBLENDMETHOD_MASK = 2
+	};
+
+	enum eModelColorChannel {
+		MODELCOLORCHANNEL_RED = 0,
+		MODELCOLORCHANNEL_GREEN = 1,
+		MODELCOLORCHANNEL_BLUE = 2,
+		MODELCOLORCHANNEL_ALPHA = 3
+	};
+
+	enum class eModelCompositionMethod {
+		MODELCOMPOSITIONMETHOD_WEIGHTEDSUM = 0,
+		MODELCOMPOSITIONMETHOD_MULTIPLY= 1,
+		MODELCOMPOSITIONMETHOD_MIN = 2,
+		MODELCOMPOSITIONMETHOD_MAX = 3,
+		MODELCOMPOSITIONMETHOD_MASK = 4
+	};
+
+	enum class eModelCompositionSpace {
+		MODELCOMPOSITIONSPACE_RAW = 0,
+		MODELCOMPOSITIONSPACE_LINEARCOLOR = 1
 	};
 
 	typedef struct {
@@ -191,7 +207,6 @@ namespace NMR {
 		UniqueResourceID m_nUniqueResourceID;
 		eModelBlendMethod m_nMethod;
 	} MODELMULTIPROPERTYLAYER;
-
 }
 
 #endif // __NMR_MODELTYPES

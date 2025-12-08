@@ -46,10 +46,22 @@ using namespace Lib3MF::Impl;
 
 NMR::PModelResource CResource::resource()
 {
-	if (m_pResource.get()==nullptr)
+	if (m_pResource.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
 
 	return m_pResource;
+}
+
+NMR::CModel* CResource::model()
+{
+	if (m_pResource.get() == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+
+
+	if (m_pResource->getModel() == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODEL);
+
+	return m_pResource->getModel();
 }
 
 CResource::CResource(NMR::PModelResource pResource)

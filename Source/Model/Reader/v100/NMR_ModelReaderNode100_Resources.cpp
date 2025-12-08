@@ -40,6 +40,11 @@ XML Model Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_CompositeMaterials.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_MultiProperties.h"
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceStack.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Image3D.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Implicit_Function.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_FunctionFromImage3D.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_LevelSet.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_VolumeData.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_StringUtils.h"
@@ -141,6 +146,36 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_IMAGE3D) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Image3D>(
+					m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_FUNCTION_FROM_IMAGE3D) == 0)
+			{
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_FunctionFromImage3D>(
+					m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			} if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMEDATA) == 0)
+			{
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_VolumeData>(
+					m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		}
+
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_IMPLICITSPEC) == 0) {
+			if ((strcmp(pChildName, XML_3MF_ELEMENT_IMPLICIT_FUNCTION_DEPRECATED) == 0) || (strcmp(pChildName, XML_3MF_ELEMENT_IMPLICIT_FUNCTION) == 0))
+			{
+				PModelReaderNode_ImplicitFunction pXMLNode = std::make_shared<CModelReaderNode_ImplicitFunction>(m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		}
 
 	}
 

@@ -97,6 +97,8 @@ public:
 
 	void ReadFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);
 
+	NMR::PModelAttachment getModelAttachment ();
+
 };
 
 }

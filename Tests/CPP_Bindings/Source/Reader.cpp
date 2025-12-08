@@ -33,6 +33,8 @@ UnitTest_Reader.cpp: Defines Unittests for the Reader classes
 #include "UnitTest_Utilities.h"
 #include "lib3mf_implicit.hpp"
 
+#include <algorithm>
+
 namespace Lib3MF
 {
 	class Reader : public Lib3MFTest {
@@ -58,6 +60,30 @@ namespace Lib3MF
 		Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "Pyramid.3mf");
 		CheckReaderWarnings(Reader::reader3MF, 0);
 	}
+
+    TEST_F(Reader, 3MFReadFromFileAndAddMeshObjects)
+    {
+        auto reader = model->QueryReader("3mf");
+        reader->ReadFromFile(sTestFilesPath + "/Reader/" + "Box.3mf");
+        ASSERT_NO_THROW(model->AddMeshObject());
+        ASSERT_NO_THROW(model->AddMeshObject());
+        ASSERT_NO_THROW(model->AddMeshObject());
+
+        auto objectIterator = model->GetObjects();
+		EXPECT_EQ(objectIterator->Count(), 5);
+    }
+
+    TEST_F(Reader, 3MFReadFromFileAndAddComponents)
+    {
+        auto reader = model->QueryReader("3mf");
+        reader->ReadFromFile(sTestFilesPath + "/Reader/" + "Globo.3mf");
+        ASSERT_NO_THROW(model->AddComponentsObject());
+        ASSERT_NO_THROW(model->AddComponentsObject());
+        ASSERT_NO_THROW(model->AddComponentsObject());
+
+        auto objectIterator = model->GetObjects();
+		EXPECT_EQ(objectIterator->Count(), 8);
+    }
 
 	TEST_F(Reader, STLReadFromFile)
 	{
@@ -161,9 +187,17 @@ namespace Lib3MF
 
 	TEST_F(Reader, ReadVerticesWithLeadingPLUSSign) {
 		// This file P_XXM_0519_01.3mf contains vertices with leading + sign e.g +1E+2.
-		// The 3MFReader allows leading = sign at NMR_StringUtils::fnStringToDouble when reading this file.
+		// The 3MFReader allows leading + sign at NMR_StringUtils::fnStringToDouble when reading this file.
 		auto reader = model->QueryReader("3mf");
 		reader->ReadFromFile(sTestFilesPath + "/Reader/" + "P_XXM_0519_01.3mf");
+		CheckReaderWarnings(Reader::reader3MF, 0);
+	}
+
+	TEST_F(Reader, ReadVerticesValueWithLeadingTrialingSpaces) {
+		// This file cam-51476-test.3mf contains vertices with leading whitespaces.
+		// The 3MFReader allows leading/trialing whitespaces at NMR_StringUtils::fnStringToDouble when reading this file.
+		auto reader = model->QueryReader("3mf");
+		reader->ReadFromFile(sTestFilesPath + "/Reader/" + "cam_51476_test.3mf");
 		CheckReaderWarnings(Reader::reader3MF, 0);
 	}
 }

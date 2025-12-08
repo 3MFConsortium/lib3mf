@@ -297,7 +297,7 @@ namespace Lib3MF
 		EXPECT_TRUE(std::fabs(A->GetBottomZ() - B->GetBottomZ()) < 1e-5);
 		EXPECT_TRUE(A->GetOwnPath() == B->GetOwnPath());
 		ASSERT_EQ(A->GetSliceCount(), B->GetSliceCount());
-		for (int i = 0; i < A->GetSliceCount(); i++) {
+		for (Lib3MF_uint64 i = 0u; i < A->GetSliceCount(); i++) {
 			auto slice = A->GetSlice(i);
 			auto readSlice = B->GetSlice(i);
 
@@ -306,7 +306,7 @@ namespace Lib3MF
 		}
 
 		ASSERT_EQ(A->GetSliceRefCount(), B->GetSliceRefCount());
-		for (int i = 0; i < A->GetSliceRefCount(); i++) {
+		for (Lib3MF_uint64 i = 0u; i < A->GetSliceRefCount(); i++) {
 			auto sliceRef = A->GetSliceStackReference(i);
 			auto readSliceRef = B->GetSliceStackReference(i);
 

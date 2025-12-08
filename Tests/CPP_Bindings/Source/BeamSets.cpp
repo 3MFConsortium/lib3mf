@@ -121,7 +121,7 @@ namespace Lib3MF
 			beamSet->SetIdentifier(ident1);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 	}
@@ -159,7 +159,7 @@ namespace Lib3MF
 			beamSet->SetReferences(references);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 
@@ -191,7 +191,7 @@ namespace Lib3MF
 			beamSet->SetBallReferences(ballReferences);
 			ASSERT_FALSE(true);
 		}
-		catch (ELib3MFException) {
+		catch (ELib3MFException&) {
 			ASSERT_TRUE(true);
 		}
 
