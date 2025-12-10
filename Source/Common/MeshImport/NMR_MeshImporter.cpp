@@ -57,4 +57,14 @@ namespace NMR {
 		return m_pStream.get();
 	}
 
+	void CMeshImporter::setWarnings(_In_ PModelWarnings pWarnings)
+	{
+		m_pWarnings = pWarnings;
+	}
+
+	PModelWarnings CMeshImporter::getWarnings() const
+	{
+		return m_pWarnings;
+	}
+
 }

@@ -70,7 +70,8 @@ namespace Lib3MF
         ASSERT_NO_THROW(model->AddMeshObject());
 
         auto objectIterator = model->GetObjects();
-		EXPECT_EQ(objectIterator->Count(), 5);
+		auto objectCount = objectIterator->Count();
+		EXPECT_EQ(objectCount, static_cast<decltype(objectCount)>(5));
     }
 
     TEST_F(Reader, 3MFReadFromFileAndAddComponents)
@@ -82,7 +83,8 @@ namespace Lib3MF
         ASSERT_NO_THROW(model->AddComponentsObject());
 
         auto objectIterator = model->GetObjects();
-		EXPECT_EQ(objectIterator->Count(), 8);
+		auto objectCount = objectIterator->Count();
+		EXPECT_EQ(objectCount, static_cast<decltype(objectCount)>(8));
     }
 
 	TEST_F(Reader, STLReadFromFile)
@@ -96,6 +98,20 @@ namespace Lib3MF
 			ASSERT_TRUE(meshObject->GetVertexCount() > 0);
 			ASSERT_TRUE(meshObject->GetTriangleCount() > 0);
 		}
+	}
+
+	TEST_F(Reader, STLReadDegenerateTriangleWarnsAndSkips)
+	{
+		Reader::readerSTL->ReadFromFile(sTestFilesPath + "/Reader/" + "DegenerateTriangle.stl");
+		CheckReaderWarnings(Reader::readerSTL, 1);
+
+		auto meshObjects = model->GetMeshObjects();
+		auto meshObjectCount = meshObjects->Count();
+		ASSERT_EQ(meshObjectCount, static_cast<decltype(meshObjectCount)>(1));
+		meshObjects->MoveNext();
+		auto meshObject = meshObjects->GetCurrentMeshObject();
+		auto triangleCount = meshObject->GetTriangleCount();
+		EXPECT_EQ(triangleCount, static_cast<decltype(triangleCount)>(1)); // one valid triangle remains
 	}
 
 	TEST_F(Reader, STLReadWriteRead)
@@ -148,8 +164,24 @@ namespace Lib3MF
 	TEST_F(Reader, ProductionExternalModel) {
 		auto reader = model->QueryReader("3mf");
 		reader->ReadFromFile(sTestFilesPath + "/Production/" + "detachedmodel.3mf");
-		ASSERT_EQ(27, model->GetBuildItems()->Count());
-		ASSERT_EQ(28, model->GetObjects()->Count());
+		auto buildItemCount = model->GetBuildItems()->Count();
+		auto objectCount = model->GetObjects()->Count();
+		ASSERT_EQ(buildItemCount, static_cast<decltype(buildItemCount)>(27));
+		ASSERT_EQ(objectCount, static_cast<decltype(objectCount)>(28));
+	}
+
+	TEST_F(Reader, ThreeMFReadDegenerateTriangleWarnsAndSkips)
+	{
+		Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "DegenerateTriangle.3mf");
+		CheckReaderWarnings(Reader::reader3MF, 1);
+
+		auto meshObjects = model->GetMeshObjects();
+		auto meshObjectCount = meshObjects->Count();
+		ASSERT_EQ(meshObjectCount, static_cast<decltype(meshObjectCount)>(1));
+		meshObjects->MoveNext();
+		auto meshObject = meshObjects->GetCurrentMeshObject();
+		auto triangleCount = meshObject->GetTriangleCount();
+		EXPECT_EQ(triangleCount, static_cast<decltype(triangleCount)>(1)); // degenerate face was dropped
 	}
 
 	TEST_F(Reader, DuplicateStartPart)

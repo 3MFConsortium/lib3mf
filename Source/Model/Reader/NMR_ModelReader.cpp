@@ -51,6 +51,8 @@ namespace NMR {
 	{
 		__NMRASSERT(pImporter);
 
+		pImporter->setWarnings(warnings());
+
 		// Create Empty Mesh
 		PMesh pMesh = std::make_shared<CMesh>();
 

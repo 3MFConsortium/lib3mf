@@ -38,6 +38,7 @@ This is an abstract base class for Importing different Mesh Formats.
 #include "Common/Math/NMR_Geometry.h" 
 #include "Common/Mesh/NMR_Mesh.h" 
 #include "Common/Platform/NMR_ImportStream.h" 
+#include "Common/NMR_ModelWarnings.h"
 
 #include <vector>
 
@@ -46,6 +47,7 @@ namespace NMR {
 	class CMeshImporter {
 	private:
 		PImportStream m_pStream;
+		PModelWarnings m_pWarnings;
 	public:
 		CMeshImporter();
 		CMeshImporter(_In_ PImportStream pStream);
@@ -53,6 +55,8 @@ namespace NMR {
 
 		void setStream(_In_ PImportStream pStream);
 		CImportStream * getStream();
+		void setWarnings(_In_ PModelWarnings pWarnings);
+		PModelWarnings getWarnings() const;
 
 		virtual void loadMesh(_In_ CMesh * pMesh, _In_opt_ NMATRIX3 * pMatrix) = 0;
 	};

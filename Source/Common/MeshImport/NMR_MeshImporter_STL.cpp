@@ -37,6 +37,7 @@ This is a derived class for Importing the binary STL and color STL Mesh Format.
 #include "Common/Math/NMR_VectorTree.h" 
 #include "Common/Math/NMR_Matrix.h" 
 #include "Common/NMR_Exception.h" 
+#include "Common/NMR_ModelWarnings.h"
 #include <cmath>
 #include <array>
 #include <list>
@@ -151,7 +152,7 @@ namespace NMR {
 		MESHNODE * pNodes[3];
 		MESHFORMAT_STL_FACET Facet;
 		CVectorTree VectorTree;
-		nfBool bIsValid;
+		PModelWarnings pWarnings = getWarnings();
 
 		VectorTree.setUnits(m_fUnits);
 
@@ -162,47 +163,53 @@ namespace NMR {
 			}
 
 			// Check, if Coordinates are in Valid Space
-			bIsValid = true;
+			nfBool bCoordinatesValid = true;
 			for (nfUint32 j = 0; j < 3; j++)
 				for (nfUint32 k = 0; k < 3; k++)
-					bIsValid &= (fabs(Facet.m_vertices[j].m_fields[k]) < NMR_MESH_MAXCOORDINATE);
+					bCoordinatesValid &= (fabs(Facet.m_vertices[j].m_fields[k]) < NMR_MESH_MAXCOORDINATE);
+
+			if (!bCoordinatesValid) {
+				if (!m_bIgnoreInvalidFaces)
+					throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+				continue;
+			}
 
 			// Identify Nodes via Tree
-			if (bIsValid) {
+			for (nfUint32 j = 0; j < 3; j++) {
+				NVEC3 vPosition = Facet.m_vertices[j];
+				if (pmMatrix)
+					vPosition = fnMATRIX3_apply(*pmMatrix, vPosition);
 
-				for (nfUint32 j = 0; j < 3; j++) {
-					NVEC3 vPosition = Facet.m_vertices[j];
-					if (pmMatrix)
-						vPosition = fnMATRIX3_apply(*pmMatrix, vPosition);
-
-					if (VectorTree.findVector3(vPosition, nNodeIdx)) {
-						pNodes[j] = pMesh->getNode(nNodeIdx);
-					}
-					else {
-						pNodes[j] = pMesh->addNode(vPosition);
-						VectorTree.addVector3(pNodes[j]->m_position, (nfUint32)pNodes[j]->m_index);
-					}
+				if (VectorTree.findVector3(vPosition, nNodeIdx)) {
+					pNodes[j] = pMesh->getNode(nNodeIdx);
 				}
-
-				// check, if Nodes are separate
-				bIsValid = (pNodes[0] != pNodes[1]) && (pNodes[0] != pNodes[2]) && (pNodes[1] != pNodes[2]);
+				else {
+					pNodes[j] = pMesh->addNode(vPosition);
+					VectorTree.addVector3(pNodes[j]->m_position, (nfUint32)pNodes[j]->m_index);
+				}
 			}
 
-			// Throw "Invalid Exception"
-			if ((!bIsValid) && !m_bIgnoreInvalidFaces)
-				throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+			nfBool bIsDegenerate = (pNodes[0] == pNodes[1]) || (pNodes[0] == pNodes[2]) || (pNodes[1] == pNodes[2]);
 
-			if (bIsValid) {
-				pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
-				// MESHFACE * pFace = pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
-				//if (pProperties) {
-				//	nfUint32 nRed = (nfUint32) ((nfFloat) (Facet.m_attribute & 0x1f) / (255.0f / 31.0f));
-				//	nfUint32 nGreen = (nfUint32)((nfFloat)((Facet.m_attribute >> 5) & 0x1f) / (255.0f / 31.0f));
-				//	nfUint32 nBlue = (nfUint32)((nfFloat)((Facet.m_attribute >> 10) & 0x1f) / (255.0f / 31.0f));
-
-				//	// MESHINFORMATION_PROPERTIES * pFaceData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getFaceData(pFace->m_index);
-				//}
+			if (bIsDegenerate) {
+				if (pWarnings) {
+					pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATENODE), mrwInvalidOptionalValue);
+				}
+				else if (!m_bIgnoreInvalidFaces) {
+					throw CNMRException(NMR_ERROR_DUPLICATENODE);
+				}
+				continue;
 			}
+
+			pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
+			// MESHFACE * pFace = pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
+			//if (pProperties) {
+			//	nfUint32 nRed = (nfUint32) ((nfFloat) (Facet.m_attribute & 0x1f) / (255.0f / 31.0f));
+			//	nfUint32 nGreen = (nfUint32)((nfFloat)((Facet.m_attribute >> 5) & 0x1f) / (255.0f / 31.0f));
+			//	nfUint32 nBlue = (nfUint32)((nfFloat)((Facet.m_attribute >> 10) & 0x1f) / (255.0f / 31.0f));
+
+			//	// MESHINFORMATION_PROPERTIES * pFaceData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getFaceData(pFace->m_index);
+			//}
 		}
 
 	}

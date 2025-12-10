@@ -102,7 +102,17 @@ namespace NMR {
 					MESHNODE * pNode1 = m_pMesh->getNode(nIndex1);
 					MESHNODE * pNode2 = m_pMesh->getNode(nIndex2);
 					MESHNODE * pNode3 = m_pMesh->getNode(nIndex3);
-					MESHFACE * pFace = m_pMesh->addFace(pNode1, pNode2, pNode3);
+					MESHFACE * pFace = nullptr;
+					try {
+						pFace = m_pMesh->addFace(pNode1, pNode2, pNode3);
+					}
+					catch (const CNMRException& e) {
+						if (e.getErrorCode() == NMR_ERROR_DUPLICATENODE) {
+							m_pWarnings->addException(e, mrwInvalidOptionalValue);
+							return;
+						}
+						throw;
+					}
 
 					nfInt32 nColorID1, nColorID2, nColorID3;
 					pXMLNode->retrieveColorIDs(nColorID1, nColorID2, nColorID3);
@@ -214,6 +224,9 @@ namespace NMR {
 						}
 					}
 				}
+				else {
+					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATENODE), mrwInvalidOptionalValue);
+				}
 			}
 		}
 	}
@@ -238,6 +251,5 @@ namespace NMR {
 		return pProperties;
 	}
 }
-
 
 

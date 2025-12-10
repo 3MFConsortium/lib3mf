@@ -120,7 +120,17 @@ namespace NMR {
 					MESHNODE * pNode1 = m_pMesh->getNode(nIndex1);
 					MESHNODE * pNode2 = m_pMesh->getNode(nIndex2);
 					MESHNODE * pNode3 = m_pMesh->getNode(nIndex3);
-					MESHFACE * pFace = m_pMesh->addFace(pNode1, pNode2, pNode3);
+					MESHFACE * pFace = nullptr;
+					try {
+						pFace = m_pMesh->addFace(pNode1, pNode2, pNode3);
+					}
+					catch (const CNMRException& e) {
+						if (e.getErrorCode() == NMR_ERROR_DUPLICATENODE) {
+							m_pWarnings->addException(e, mrwInvalidOptionalValue);
+							return;
+						}
+						throw;
+					}
 
 					ModelResourceID nModelResourceID = 0;
 					if (m_pObjectLevelPropertyID)
@@ -168,7 +178,7 @@ namespace NMR {
 					}
 				}
 				else
-					throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATEINDICES);
+					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATENODE), mrwInvalidOptionalValue);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
