@@ -2144,6 +2144,80 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFBeamLatticeNode 
+**************************************************************************************************************************/
+class CLib3MFBeamLatticeNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputBeamLattice(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputPos(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputDistance(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetAccurateRange(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetAccurateRange(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFBeamLatticeNode();
+	~CLib3MFBeamLatticeNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFFunctionGradientNode 
+**************************************************************************************************************************/
+class CLib3MFFunctionGradientNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputFunctionID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputPos(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputStep(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetScalarOutputName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetScalarOutputName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetVectorInputName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetVectorInputName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputNormalizedGradient(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputGradient(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputMagnitude(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFFunctionGradientNode();
+	~CLib3MFFunctionGradientNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFNormalizeDistanceNode 
+**************************************************************************************************************************/
+class CLib3MFNormalizeDistanceNode : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetInputFunctionID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputPos(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetInputStep(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetScalarOutputName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetScalarOutputName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetVectorInputName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetVectorInputName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputResult(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFNormalizeDistanceNode();
+	~CLib3MFNormalizeDistanceNode();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
  Class CLib3MFFunctionCallNode 
 **************************************************************************************************************************/
 class CLib3MFFunctionCallNode : public CLib3MFBaseClass {
@@ -2264,6 +2338,9 @@ private:
 	static void AddConstMatNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddMeshNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddUnsignedMeshNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddBeamLatticeNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddFunctionGradientNode(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddNormalizeDistanceNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddFunctionCallNode(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetNodes(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveNode(const v8::FunctionCallbackInfo<v8::Value>& args);

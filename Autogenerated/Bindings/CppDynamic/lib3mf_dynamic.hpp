@@ -157,6 +157,9 @@ class CConstVecNode;
 class CConstMatNode;
 class CMeshNode;
 class CUnsignedMeshNode;
+class CBeamLatticeNode;
+class CFunctionGradientNode;
+class CNormalizeDistanceNode;
 class CFunctionCallNode;
 class CNodeIterator;
 class CFunction;
@@ -278,6 +281,9 @@ typedef CConstVecNode CLib3MFConstVecNode;
 typedef CConstMatNode CLib3MFConstMatNode;
 typedef CMeshNode CLib3MFMeshNode;
 typedef CUnsignedMeshNode CLib3MFUnsignedMeshNode;
+typedef CBeamLatticeNode CLib3MFBeamLatticeNode;
+typedef CFunctionGradientNode CLib3MFFunctionGradientNode;
+typedef CNormalizeDistanceNode CLib3MFNormalizeDistanceNode;
 typedef CFunctionCallNode CLib3MFFunctionCallNode;
 typedef CNodeIterator CLib3MFNodeIterator;
 typedef CFunction CLib3MFFunction;
@@ -399,6 +405,9 @@ typedef std::shared_ptr<CConstVecNode> PConstVecNode;
 typedef std::shared_ptr<CConstMatNode> PConstMatNode;
 typedef std::shared_ptr<CMeshNode> PMeshNode;
 typedef std::shared_ptr<CUnsignedMeshNode> PUnsignedMeshNode;
+typedef std::shared_ptr<CBeamLatticeNode> PBeamLatticeNode;
+typedef std::shared_ptr<CFunctionGradientNode> PFunctionGradientNode;
+typedef std::shared_ptr<CNormalizeDistanceNode> PNormalizeDistanceNode;
 typedef std::shared_ptr<CFunctionCallNode> PFunctionCallNode;
 typedef std::shared_ptr<CNodeIterator> PNodeIterator;
 typedef std::shared_ptr<CFunction> PFunction;
@@ -520,6 +529,9 @@ typedef PConstVecNode PLib3MFConstVecNode;
 typedef PConstMatNode PLib3MFConstMatNode;
 typedef PMeshNode PLib3MFMeshNode;
 typedef PUnsignedMeshNode PLib3MFUnsignedMeshNode;
+typedef PBeamLatticeNode PLib3MFBeamLatticeNode;
+typedef PFunctionGradientNode PLib3MFFunctionGradientNode;
+typedef PNormalizeDistanceNode PLib3MFNormalizeDistanceNode;
 typedef PFunctionCallNode PLib3MFFunctionCallNode;
 typedef PNodeIterator PLib3MFNodeIterator;
 typedef PFunction PLib3MFFunction;
@@ -957,6 +969,9 @@ private:
 	friend class CConstMatNode;
 	friend class CMeshNode;
 	friend class CUnsignedMeshNode;
+	friend class CBeamLatticeNode;
+	friend class CFunctionGradientNode;
+	friend class CNormalizeDistanceNode;
 	friend class CFunctionCallNode;
 	friend class CNodeIterator;
 	friend class CFunction;
@@ -2992,6 +3007,77 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CBeamLatticeNode 
+**************************************************************************************************************************/
+class CBeamLatticeNode : public CImplicitNode {
+public:
+	
+	/**
+	* CBeamLatticeNode::CBeamLatticeNode - Constructor for BeamLatticeNode class.
+	*/
+	CBeamLatticeNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CImplicitNode(pWrapper, pHandle)
+	{
+	}
+	
+	inline PImplicitPort GetInputBeamLattice();
+	inline PImplicitPort GetInputPos();
+	inline PImplicitPort GetOutputDistance();
+	inline void SetAccurateRange(const Lib3MF_double dAccurateRange);
+	inline Lib3MF_double GetAccurateRange();
+};
+	
+/*************************************************************************************************************************
+ Class CFunctionGradientNode 
+**************************************************************************************************************************/
+class CFunctionGradientNode : public CImplicitNode {
+public:
+	
+	/**
+	* CFunctionGradientNode::CFunctionGradientNode - Constructor for FunctionGradientNode class.
+	*/
+	CFunctionGradientNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CImplicitNode(pWrapper, pHandle)
+	{
+	}
+	
+	inline PImplicitPort GetInputFunctionID();
+	inline PImplicitPort GetInputPos();
+	inline PImplicitPort GetInputStep();
+	inline void SetScalarOutputName(const std::string & sScalarOutputName);
+	inline std::string GetScalarOutputName();
+	inline void SetVectorInputName(const std::string & sVectorInputName);
+	inline std::string GetVectorInputName();
+	inline PImplicitPort GetOutputNormalizedGradient();
+	inline PImplicitPort GetOutputGradient();
+	inline PImplicitPort GetOutputMagnitude();
+};
+	
+/*************************************************************************************************************************
+ Class CNormalizeDistanceNode 
+**************************************************************************************************************************/
+class CNormalizeDistanceNode : public CImplicitNode {
+public:
+	
+	/**
+	* CNormalizeDistanceNode::CNormalizeDistanceNode - Constructor for NormalizeDistanceNode class.
+	*/
+	CNormalizeDistanceNode(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CImplicitNode(pWrapper, pHandle)
+	{
+	}
+	
+	inline PImplicitPort GetInputFunctionID();
+	inline PImplicitPort GetInputPos();
+	inline PImplicitPort GetInputStep();
+	inline void SetScalarOutputName(const std::string & sScalarOutputName);
+	inline std::string GetScalarOutputName();
+	inline void SetVectorInputName(const std::string & sVectorInputName);
+	inline std::string GetVectorInputName();
+	inline PImplicitPort GetOutputResult();
+};
+	
+/*************************************************************************************************************************
  Class CFunctionCallNode 
 **************************************************************************************************************************/
 class CFunctionCallNode : public CImplicitNode {
@@ -3116,6 +3202,9 @@ public:
 	inline PConstMatNode AddConstMatNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PMeshNode AddMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PUnsignedMeshNode AddUnsignedMeshNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PBeamLatticeNode AddBeamLatticeNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PFunctionGradientNode AddFunctionGradientNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
+	inline PNormalizeDistanceNode AddNormalizeDistanceNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PFunctionCallNode AddFunctionCallNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag);
 	inline PNodeIterator GetNodes();
 	inline void RemoveNode(classParam<CImplicitNode> pNode);
@@ -3590,6 +3679,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0xF85C90EDCE6F90A4UL: return new CConstMatNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ConstMatNode"
 		case 0x53601FD432E3DEF4UL: return new CMeshNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshNode"
 		case 0x29985A628251A9CDUL: return new CUnsignedMeshNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::UnsignedMeshNode"
+		case 0x0F3A4EE98F7FEC0CUL: return new CBeamLatticeNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BeamLatticeNode"
+		case 0x0437E27AEF740121UL: return new CFunctionGradientNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionGradientNode"
+		case 0x817D2E566E73AA8FUL: return new CNormalizeDistanceNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::NormalizeDistanceNode"
 		case 0x0765C17C952F24E3UL: return new CFunctionCallNode(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionCallNode"
 		case 0xFC006BC888CAB4D0UL: return new CNodeIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::NodeIterator"
 		case 0x9EFB2757CA1A5231UL: return new CFunction(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Function"
@@ -4266,6 +4358,29 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_UnsignedMeshNode_GetInputMesh = nullptr;
 		pWrapperTable->m_UnsignedMeshNode_GetInputPos = nullptr;
 		pWrapperTable->m_UnsignedMeshNode_GetOutputDistance = nullptr;
+		pWrapperTable->m_BeamLatticeNode_GetInputBeamLattice = nullptr;
+		pWrapperTable->m_BeamLatticeNode_GetInputPos = nullptr;
+		pWrapperTable->m_BeamLatticeNode_GetOutputDistance = nullptr;
+		pWrapperTable->m_BeamLatticeNode_SetAccurateRange = nullptr;
+		pWrapperTable->m_BeamLatticeNode_GetAccurateRange = nullptr;
+		pWrapperTable->m_FunctionGradientNode_GetInputFunctionID = nullptr;
+		pWrapperTable->m_FunctionGradientNode_GetInputPos = nullptr;
+		pWrapperTable->m_FunctionGradientNode_GetInputStep = nullptr;
+		pWrapperTable->m_FunctionGradientNode_SetScalarOutputName = nullptr;
+		pWrapperTable->m_FunctionGradientNode_GetScalarOutputName = nullptr;
+		pWrapperTable->m_FunctionGradientNode_SetVectorInputName = nullptr;
+		pWrapperTable->m_FunctionGradientNode_GetVectorInputName = nullptr;
+		pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient = nullptr;
+		pWrapperTable->m_FunctionGradientNode_GetOutputGradient = nullptr;
+		pWrapperTable->m_FunctionGradientNode_GetOutputMagnitude = nullptr;
+		pWrapperTable->m_NormalizeDistanceNode_GetInputFunctionID = nullptr;
+		pWrapperTable->m_NormalizeDistanceNode_GetInputPos = nullptr;
+		pWrapperTable->m_NormalizeDistanceNode_GetInputStep = nullptr;
+		pWrapperTable->m_NormalizeDistanceNode_SetScalarOutputName = nullptr;
+		pWrapperTable->m_NormalizeDistanceNode_GetScalarOutputName = nullptr;
+		pWrapperTable->m_NormalizeDistanceNode_SetVectorInputName = nullptr;
+		pWrapperTable->m_NormalizeDistanceNode_GetVectorInputName = nullptr;
+		pWrapperTable->m_NormalizeDistanceNode_GetOutputResult = nullptr;
 		pWrapperTable->m_FunctionCallNode_GetInputFunctionID = nullptr;
 		pWrapperTable->m_NodeIterator_GetCurrent = nullptr;
 		pWrapperTable->m_Function_GetDisplayName = nullptr;
@@ -4329,6 +4444,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ImplicitFunction_AddConstMatNode = nullptr;
 		pWrapperTable->m_ImplicitFunction_AddMeshNode = nullptr;
 		pWrapperTable->m_ImplicitFunction_AddUnsignedMeshNode = nullptr;
+		pWrapperTable->m_ImplicitFunction_AddBeamLatticeNode = nullptr;
+		pWrapperTable->m_ImplicitFunction_AddFunctionGradientNode = nullptr;
+		pWrapperTable->m_ImplicitFunction_AddNormalizeDistanceNode = nullptr;
 		pWrapperTable->m_ImplicitFunction_AddFunctionCallNode = nullptr;
 		pWrapperTable->m_ImplicitFunction_GetNodes = nullptr;
 		pWrapperTable->m_ImplicitFunction_RemoveNode = nullptr;
@@ -7929,6 +8047,213 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_BeamLatticeNode_GetInputBeamLattice = (PLib3MFBeamLatticeNode_GetInputBeamLatticePtr) GetProcAddress(hLibrary, "lib3mf_beamlatticenode_getinputbeamlattice");
+		#else // _WIN32
+		pWrapperTable->m_BeamLatticeNode_GetInputBeamLattice = (PLib3MFBeamLatticeNode_GetInputBeamLatticePtr) dlsym(hLibrary, "lib3mf_beamlatticenode_getinputbeamlattice");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BeamLatticeNode_GetInputBeamLattice == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BeamLatticeNode_GetInputPos = (PLib3MFBeamLatticeNode_GetInputPosPtr) GetProcAddress(hLibrary, "lib3mf_beamlatticenode_getinputpos");
+		#else // _WIN32
+		pWrapperTable->m_BeamLatticeNode_GetInputPos = (PLib3MFBeamLatticeNode_GetInputPosPtr) dlsym(hLibrary, "lib3mf_beamlatticenode_getinputpos");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BeamLatticeNode_GetInputPos == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BeamLatticeNode_GetOutputDistance = (PLib3MFBeamLatticeNode_GetOutputDistancePtr) GetProcAddress(hLibrary, "lib3mf_beamlatticenode_getoutputdistance");
+		#else // _WIN32
+		pWrapperTable->m_BeamLatticeNode_GetOutputDistance = (PLib3MFBeamLatticeNode_GetOutputDistancePtr) dlsym(hLibrary, "lib3mf_beamlatticenode_getoutputdistance");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BeamLatticeNode_GetOutputDistance == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BeamLatticeNode_SetAccurateRange = (PLib3MFBeamLatticeNode_SetAccurateRangePtr) GetProcAddress(hLibrary, "lib3mf_beamlatticenode_setaccuraterange");
+		#else // _WIN32
+		pWrapperTable->m_BeamLatticeNode_SetAccurateRange = (PLib3MFBeamLatticeNode_SetAccurateRangePtr) dlsym(hLibrary, "lib3mf_beamlatticenode_setaccuraterange");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BeamLatticeNode_SetAccurateRange == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BeamLatticeNode_GetAccurateRange = (PLib3MFBeamLatticeNode_GetAccurateRangePtr) GetProcAddress(hLibrary, "lib3mf_beamlatticenode_getaccuraterange");
+		#else // _WIN32
+		pWrapperTable->m_BeamLatticeNode_GetAccurateRange = (PLib3MFBeamLatticeNode_GetAccurateRangePtr) dlsym(hLibrary, "lib3mf_beamlatticenode_getaccuraterange");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BeamLatticeNode_GetAccurateRange == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetInputFunctionID = (PLib3MFFunctionGradientNode_GetInputFunctionIDPtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getinputfunctionid");
+		#else // _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetInputFunctionID = (PLib3MFFunctionGradientNode_GetInputFunctionIDPtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getinputfunctionid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionGradientNode_GetInputFunctionID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetInputPos = (PLib3MFFunctionGradientNode_GetInputPosPtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getinputpos");
+		#else // _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetInputPos = (PLib3MFFunctionGradientNode_GetInputPosPtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getinputpos");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionGradientNode_GetInputPos == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetInputStep = (PLib3MFFunctionGradientNode_GetInputStepPtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getinputstep");
+		#else // _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetInputStep = (PLib3MFFunctionGradientNode_GetInputStepPtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getinputstep");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionGradientNode_GetInputStep == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionGradientNode_SetScalarOutputName = (PLib3MFFunctionGradientNode_SetScalarOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_setscalaroutputname");
+		#else // _WIN32
+		pWrapperTable->m_FunctionGradientNode_SetScalarOutputName = (PLib3MFFunctionGradientNode_SetScalarOutputNamePtr) dlsym(hLibrary, "lib3mf_functiongradientnode_setscalaroutputname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionGradientNode_SetScalarOutputName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetScalarOutputName = (PLib3MFFunctionGradientNode_GetScalarOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getscalaroutputname");
+		#else // _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetScalarOutputName = (PLib3MFFunctionGradientNode_GetScalarOutputNamePtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getscalaroutputname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionGradientNode_GetScalarOutputName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionGradientNode_SetVectorInputName = (PLib3MFFunctionGradientNode_SetVectorInputNamePtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_setvectorinputname");
+		#else // _WIN32
+		pWrapperTable->m_FunctionGradientNode_SetVectorInputName = (PLib3MFFunctionGradientNode_SetVectorInputNamePtr) dlsym(hLibrary, "lib3mf_functiongradientnode_setvectorinputname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionGradientNode_SetVectorInputName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetVectorInputName = (PLib3MFFunctionGradientNode_GetVectorInputNamePtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getvectorinputname");
+		#else // _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetVectorInputName = (PLib3MFFunctionGradientNode_GetVectorInputNamePtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getvectorinputname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionGradientNode_GetVectorInputName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient = (PLib3MFFunctionGradientNode_GetOutputNormalizedGradientPtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getoutputnormalizedgradient");
+		#else // _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient = (PLib3MFFunctionGradientNode_GetOutputNormalizedGradientPtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getoutputnormalizedgradient");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetOutputGradient = (PLib3MFFunctionGradientNode_GetOutputGradientPtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getoutputgradient");
+		#else // _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetOutputGradient = (PLib3MFFunctionGradientNode_GetOutputGradientPtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getoutputgradient");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionGradientNode_GetOutputGradient == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetOutputMagnitude = (PLib3MFFunctionGradientNode_GetOutputMagnitudePtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getoutputmagnitude");
+		#else // _WIN32
+		pWrapperTable->m_FunctionGradientNode_GetOutputMagnitude = (PLib3MFFunctionGradientNode_GetOutputMagnitudePtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getoutputmagnitude");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_FunctionGradientNode_GetOutputMagnitude == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_GetInputFunctionID = (PLib3MFNormalizeDistanceNode_GetInputFunctionIDPtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_getinputfunctionid");
+		#else // _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_GetInputFunctionID = (PLib3MFNormalizeDistanceNode_GetInputFunctionIDPtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_getinputfunctionid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_NormalizeDistanceNode_GetInputFunctionID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_GetInputPos = (PLib3MFNormalizeDistanceNode_GetInputPosPtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_getinputpos");
+		#else // _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_GetInputPos = (PLib3MFNormalizeDistanceNode_GetInputPosPtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_getinputpos");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_NormalizeDistanceNode_GetInputPos == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_GetInputStep = (PLib3MFNormalizeDistanceNode_GetInputStepPtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_getinputstep");
+		#else // _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_GetInputStep = (PLib3MFNormalizeDistanceNode_GetInputStepPtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_getinputstep");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_NormalizeDistanceNode_GetInputStep == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_SetScalarOutputName = (PLib3MFNormalizeDistanceNode_SetScalarOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_setscalaroutputname");
+		#else // _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_SetScalarOutputName = (PLib3MFNormalizeDistanceNode_SetScalarOutputNamePtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_setscalaroutputname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_NormalizeDistanceNode_SetScalarOutputName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_GetScalarOutputName = (PLib3MFNormalizeDistanceNode_GetScalarOutputNamePtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_getscalaroutputname");
+		#else // _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_GetScalarOutputName = (PLib3MFNormalizeDistanceNode_GetScalarOutputNamePtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_getscalaroutputname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_NormalizeDistanceNode_GetScalarOutputName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_SetVectorInputName = (PLib3MFNormalizeDistanceNode_SetVectorInputNamePtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_setvectorinputname");
+		#else // _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_SetVectorInputName = (PLib3MFNormalizeDistanceNode_SetVectorInputNamePtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_setvectorinputname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_NormalizeDistanceNode_SetVectorInputName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_GetVectorInputName = (PLib3MFNormalizeDistanceNode_GetVectorInputNamePtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_getvectorinputname");
+		#else // _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_GetVectorInputName = (PLib3MFNormalizeDistanceNode_GetVectorInputNamePtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_getvectorinputname");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_NormalizeDistanceNode_GetVectorInputName == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_GetOutputResult = (PLib3MFNormalizeDistanceNode_GetOutputResultPtr) GetProcAddress(hLibrary, "lib3mf_normalizedistancenode_getoutputresult");
+		#else // _WIN32
+		pWrapperTable->m_NormalizeDistanceNode_GetOutputResult = (PLib3MFNormalizeDistanceNode_GetOutputResultPtr) dlsym(hLibrary, "lib3mf_normalizedistancenode_getoutputresult");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_NormalizeDistanceNode_GetOutputResult == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_FunctionCallNode_GetInputFunctionID = (PLib3MFFunctionCallNode_GetInputFunctionIDPtr) GetProcAddress(hLibrary, "lib3mf_functioncallnode_getinputfunctionid");
 		#else // _WIN32
 		pWrapperTable->m_FunctionCallNode_GetInputFunctionID = (PLib3MFFunctionCallNode_GetInputFunctionIDPtr) dlsym(hLibrary, "lib3mf_functioncallnode_getinputfunctionid");
@@ -8493,6 +8818,33 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ImplicitFunction_AddUnsignedMeshNode == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_AddBeamLatticeNode = (PLib3MFImplicitFunction_AddBeamLatticeNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addbeamlatticenode");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_AddBeamLatticeNode = (PLib3MFImplicitFunction_AddBeamLatticeNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_addbeamlatticenode");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_AddBeamLatticeNode == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_AddFunctionGradientNode = (PLib3MFImplicitFunction_AddFunctionGradientNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addfunctiongradientnode");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_AddFunctionGradientNode = (PLib3MFImplicitFunction_AddFunctionGradientNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_addfunctiongradientnode");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_AddFunctionGradientNode == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ImplicitFunction_AddNormalizeDistanceNode = (PLib3MFImplicitFunction_AddNormalizeDistanceNodePtr) GetProcAddress(hLibrary, "lib3mf_implicitfunction_addnormalizedistancenode");
+		#else // _WIN32
+		pWrapperTable->m_ImplicitFunction_AddNormalizeDistanceNode = (PLib3MFImplicitFunction_AddNormalizeDistanceNodePtr) dlsym(hLibrary, "lib3mf_implicitfunction_addnormalizedistancenode");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ImplicitFunction_AddNormalizeDistanceNode == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -11654,6 +12006,98 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_UnsignedMeshNode_GetOutputDistance == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_beamlatticenode_getinputbeamlattice", (void**)&(pWrapperTable->m_BeamLatticeNode_GetInputBeamLattice));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BeamLatticeNode_GetInputBeamLattice == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_beamlatticenode_getinputpos", (void**)&(pWrapperTable->m_BeamLatticeNode_GetInputPos));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BeamLatticeNode_GetInputPos == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_beamlatticenode_getoutputdistance", (void**)&(pWrapperTable->m_BeamLatticeNode_GetOutputDistance));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BeamLatticeNode_GetOutputDistance == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_beamlatticenode_setaccuraterange", (void**)&(pWrapperTable->m_BeamLatticeNode_SetAccurateRange));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BeamLatticeNode_SetAccurateRange == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_beamlatticenode_getaccuraterange", (void**)&(pWrapperTable->m_BeamLatticeNode_GetAccurateRange));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BeamLatticeNode_GetAccurateRange == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_functiongradientnode_getinputfunctionid", (void**)&(pWrapperTable->m_FunctionGradientNode_GetInputFunctionID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionGradientNode_GetInputFunctionID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_functiongradientnode_getinputpos", (void**)&(pWrapperTable->m_FunctionGradientNode_GetInputPos));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionGradientNode_GetInputPos == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_functiongradientnode_getinputstep", (void**)&(pWrapperTable->m_FunctionGradientNode_GetInputStep));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionGradientNode_GetInputStep == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_functiongradientnode_setscalaroutputname", (void**)&(pWrapperTable->m_FunctionGradientNode_SetScalarOutputName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionGradientNode_SetScalarOutputName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_functiongradientnode_getscalaroutputname", (void**)&(pWrapperTable->m_FunctionGradientNode_GetScalarOutputName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionGradientNode_GetScalarOutputName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_functiongradientnode_setvectorinputname", (void**)&(pWrapperTable->m_FunctionGradientNode_SetVectorInputName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionGradientNode_SetVectorInputName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_functiongradientnode_getvectorinputname", (void**)&(pWrapperTable->m_FunctionGradientNode_GetVectorInputName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionGradientNode_GetVectorInputName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_functiongradientnode_getoutputnormalizedgradient", (void**)&(pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_functiongradientnode_getoutputgradient", (void**)&(pWrapperTable->m_FunctionGradientNode_GetOutputGradient));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionGradientNode_GetOutputGradient == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_functiongradientnode_getoutputmagnitude", (void**)&(pWrapperTable->m_FunctionGradientNode_GetOutputMagnitude));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionGradientNode_GetOutputMagnitude == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_normalizedistancenode_getinputfunctionid", (void**)&(pWrapperTable->m_NormalizeDistanceNode_GetInputFunctionID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_NormalizeDistanceNode_GetInputFunctionID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_normalizedistancenode_getinputpos", (void**)&(pWrapperTable->m_NormalizeDistanceNode_GetInputPos));
+		if ( (eLookupError != 0) || (pWrapperTable->m_NormalizeDistanceNode_GetInputPos == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_normalizedistancenode_getinputstep", (void**)&(pWrapperTable->m_NormalizeDistanceNode_GetInputStep));
+		if ( (eLookupError != 0) || (pWrapperTable->m_NormalizeDistanceNode_GetInputStep == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_normalizedistancenode_setscalaroutputname", (void**)&(pWrapperTable->m_NormalizeDistanceNode_SetScalarOutputName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_NormalizeDistanceNode_SetScalarOutputName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_normalizedistancenode_getscalaroutputname", (void**)&(pWrapperTable->m_NormalizeDistanceNode_GetScalarOutputName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_NormalizeDistanceNode_GetScalarOutputName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_normalizedistancenode_setvectorinputname", (void**)&(pWrapperTable->m_NormalizeDistanceNode_SetVectorInputName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_NormalizeDistanceNode_SetVectorInputName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_normalizedistancenode_getvectorinputname", (void**)&(pWrapperTable->m_NormalizeDistanceNode_GetVectorInputName));
+		if ( (eLookupError != 0) || (pWrapperTable->m_NormalizeDistanceNode_GetVectorInputName == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_normalizedistancenode_getoutputresult", (void**)&(pWrapperTable->m_NormalizeDistanceNode_GetOutputResult));
+		if ( (eLookupError != 0) || (pWrapperTable->m_NormalizeDistanceNode_GetOutputResult == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_functioncallnode_getinputfunctionid", (void**)&(pWrapperTable->m_FunctionCallNode_GetInputFunctionID));
 		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionCallNode_GetInputFunctionID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -11904,6 +12348,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_implicitfunction_addunsignedmeshnode", (void**)&(pWrapperTable->m_ImplicitFunction_AddUnsignedMeshNode));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_AddUnsignedMeshNode == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_addbeamlatticenode", (void**)&(pWrapperTable->m_ImplicitFunction_AddBeamLatticeNode));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_AddBeamLatticeNode == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_addfunctiongradientnode", (void**)&(pWrapperTable->m_ImplicitFunction_AddFunctionGradientNode));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_AddFunctionGradientNode == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_implicitfunction_addnormalizedistancenode", (void**)&(pWrapperTable->m_ImplicitFunction_AddNormalizeDistanceNode));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ImplicitFunction_AddNormalizeDistanceNode == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_implicitfunction_addfunctioncallnode", (void**)&(pWrapperTable->m_ImplicitFunction_AddFunctionCallNode));
@@ -17748,6 +18204,330 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CBeamLatticeNode
+	 */
+	
+	/**
+	* CBeamLatticeNode::GetInputBeamLattice - Retrieves the input for the model resource id of the beam lattice
+	* @return the input port for the model resource id of the beam lattice (mesh with beamlattice extension)
+	*/
+	PImplicitPort CBeamLatticeNode::GetInputBeamLattice()
+	{
+		Lib3MFHandle hBeamLattice = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_BeamLatticeNode_GetInputBeamLattice(m_pHandle, &hBeamLattice));
+		
+		if (!hBeamLattice) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hBeamLattice)));
+	}
+	
+	/**
+	* CBeamLatticeNode::GetInputPos - Retrieves the input for the position
+	* @return the input port for the position
+	*/
+	PImplicitPort CBeamLatticeNode::GetInputPos()
+	{
+		Lib3MFHandle hPos = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_BeamLatticeNode_GetInputPos(m_pHandle, &hPos));
+		
+		if (!hPos) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hPos)));
+	}
+	
+	/**
+	* CBeamLatticeNode::GetOutputDistance - Retrieves the output
+	* @return the output port for the signed distance to the beam lattice
+	*/
+	PImplicitPort CBeamLatticeNode::GetOutputDistance()
+	{
+		Lib3MFHandle hDistance = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_BeamLatticeNode_GetOutputDistance(m_pHandle, &hDistance));
+		
+		if (!hDistance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hDistance)));
+	}
+	
+	/**
+	* CBeamLatticeNode::SetAccurateRange - Sets the accurate range for distance computation
+	* @param[in] dAccurateRange - the accurate range in model units
+	*/
+	void CBeamLatticeNode::SetAccurateRange(const Lib3MF_double dAccurateRange)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_BeamLatticeNode_SetAccurateRange(m_pHandle, dAccurateRange));
+	}
+	
+	/**
+	* CBeamLatticeNode::GetAccurateRange - Retrieves the accurate range for distance computation
+	* @return the accurate range in model units
+	*/
+	Lib3MF_double CBeamLatticeNode::GetAccurateRange()
+	{
+		Lib3MF_double resultAccurateRange = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_BeamLatticeNode_GetAccurateRange(m_pHandle, &resultAccurateRange));
+		
+		return resultAccurateRange;
+	}
+	
+	/**
+	 * Method definitions for class CFunctionGradientNode
+	 */
+	
+	/**
+	* CFunctionGradientNode::GetInputFunctionID - Retrieves the input for the function id
+	* @return the input port for the function
+	*/
+	PImplicitPort CFunctionGradientNode::GetInputFunctionID()
+	{
+		Lib3MFHandle hFunction = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionGradientNode_GetInputFunctionID(m_pHandle, &hFunction));
+		
+		if (!hFunction) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hFunction)));
+	}
+	
+	/**
+	* CFunctionGradientNode::GetInputPos - Retrieves the input for the position
+	* @return the input port for the position
+	*/
+	PImplicitPort CFunctionGradientNode::GetInputPos()
+	{
+		Lib3MFHandle hPos = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionGradientNode_GetInputPos(m_pHandle, &hPos));
+		
+		if (!hPos) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hPos)));
+	}
+	
+	/**
+	* CFunctionGradientNode::GetInputStep - Retrieves the input for the finite difference step
+	* @return the input port for the finite difference step
+	*/
+	PImplicitPort CFunctionGradientNode::GetInputStep()
+	{
+		Lib3MFHandle hStep = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionGradientNode_GetInputStep(m_pHandle, &hStep));
+		
+		if (!hStep) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hStep)));
+	}
+	
+	/**
+	* CFunctionGradientNode::SetScalarOutputName - Sets the name of the referenced scalar output
+	* @param[in] sScalarOutputName - the name of the scalar output of the referenced function
+	*/
+	void CFunctionGradientNode::SetScalarOutputName(const std::string & sScalarOutputName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionGradientNode_SetScalarOutputName(m_pHandle, sScalarOutputName.c_str()));
+	}
+	
+	/**
+	* CFunctionGradientNode::GetScalarOutputName - Retrieves the name of the referenced scalar output
+	* @return the name of the scalar output of the referenced function
+	*/
+	std::string CFunctionGradientNode::GetScalarOutputName()
+	{
+		Lib3MF_uint32 bytesNeededScalarOutputName = 0;
+		Lib3MF_uint32 bytesWrittenScalarOutputName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionGradientNode_GetScalarOutputName(m_pHandle, 0, &bytesNeededScalarOutputName, nullptr));
+		std::vector<char> bufferScalarOutputName(bytesNeededScalarOutputName);
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionGradientNode_GetScalarOutputName(m_pHandle, bytesNeededScalarOutputName, &bytesWrittenScalarOutputName, &bufferScalarOutputName[0]));
+		
+		return std::string(&bufferScalarOutputName[0]);
+	}
+	
+	/**
+	* CFunctionGradientNode::SetVectorInputName - Sets the name of the referenced vector input
+	* @param[in] sVectorInputName - the name of the vector input (float3) of the referenced function
+	*/
+	void CFunctionGradientNode::SetVectorInputName(const std::string & sVectorInputName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionGradientNode_SetVectorInputName(m_pHandle, sVectorInputName.c_str()));
+	}
+	
+	/**
+	* CFunctionGradientNode::GetVectorInputName - Retrieves the name of the referenced vector input
+	* @return the name of the vector input (float3) of the referenced function
+	*/
+	std::string CFunctionGradientNode::GetVectorInputName()
+	{
+		Lib3MF_uint32 bytesNeededVectorInputName = 0;
+		Lib3MF_uint32 bytesWrittenVectorInputName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionGradientNode_GetVectorInputName(m_pHandle, 0, &bytesNeededVectorInputName, nullptr));
+		std::vector<char> bufferVectorInputName(bytesNeededVectorInputName);
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionGradientNode_GetVectorInputName(m_pHandle, bytesNeededVectorInputName, &bytesWrittenVectorInputName, &bufferVectorInputName[0]));
+		
+		return std::string(&bufferVectorInputName[0]);
+	}
+	
+	/**
+	* CFunctionGradientNode::GetOutputNormalizedGradient - Retrieves the normalized gradient output
+	* @return the output port for the normalized gradient
+	*/
+	PImplicitPort CFunctionGradientNode::GetOutputNormalizedGradient()
+	{
+		Lib3MFHandle hNormalizedGradient = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionGradientNode_GetOutputNormalizedGradient(m_pHandle, &hNormalizedGradient));
+		
+		if (!hNormalizedGradient) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hNormalizedGradient)));
+	}
+	
+	/**
+	* CFunctionGradientNode::GetOutputGradient - Retrieves the raw gradient output
+	* @return the output port for the raw gradient
+	*/
+	PImplicitPort CFunctionGradientNode::GetOutputGradient()
+	{
+		Lib3MFHandle hGradient = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionGradientNode_GetOutputGradient(m_pHandle, &hGradient));
+		
+		if (!hGradient) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hGradient)));
+	}
+	
+	/**
+	* CFunctionGradientNode::GetOutputMagnitude - Retrieves the gradient magnitude output
+	* @return the output port for the gradient magnitude
+	*/
+	PImplicitPort CFunctionGradientNode::GetOutputMagnitude()
+	{
+		Lib3MFHandle hMagnitude = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionGradientNode_GetOutputMagnitude(m_pHandle, &hMagnitude));
+		
+		if (!hMagnitude) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hMagnitude)));
+	}
+	
+	/**
+	 * Method definitions for class CNormalizeDistanceNode
+	 */
+	
+	/**
+	* CNormalizeDistanceNode::GetInputFunctionID - Retrieves the input for the function id
+	* @return the input port for the function
+	*/
+	PImplicitPort CNormalizeDistanceNode::GetInputFunctionID()
+	{
+		Lib3MFHandle hFunction = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_NormalizeDistanceNode_GetInputFunctionID(m_pHandle, &hFunction));
+		
+		if (!hFunction) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hFunction)));
+	}
+	
+	/**
+	* CNormalizeDistanceNode::GetInputPos - Retrieves the input for the position
+	* @return the input port for the position (vector)
+	*/
+	PImplicitPort CNormalizeDistanceNode::GetInputPos()
+	{
+		Lib3MFHandle hPos = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_NormalizeDistanceNode_GetInputPos(m_pHandle, &hPos));
+		
+		if (!hPos) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hPos)));
+	}
+	
+	/**
+	* CNormalizeDistanceNode::GetInputStep - Retrieves the input for the finite difference step
+	* @return the input port for the finite difference step
+	*/
+	PImplicitPort CNormalizeDistanceNode::GetInputStep()
+	{
+		Lib3MFHandle hStep = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_NormalizeDistanceNode_GetInputStep(m_pHandle, &hStep));
+		
+		if (!hStep) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hStep)));
+	}
+	
+	/**
+	* CNormalizeDistanceNode::SetScalarOutputName - Sets the name of the referenced scalar output
+	* @param[in] sScalarOutputName - the name of the scalar output of the referenced function
+	*/
+	void CNormalizeDistanceNode::SetScalarOutputName(const std::string & sScalarOutputName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_NormalizeDistanceNode_SetScalarOutputName(m_pHandle, sScalarOutputName.c_str()));
+	}
+	
+	/**
+	* CNormalizeDistanceNode::GetScalarOutputName - Retrieves the name of the referenced scalar output
+	* @return the name of the scalar output of the referenced function
+	*/
+	std::string CNormalizeDistanceNode::GetScalarOutputName()
+	{
+		Lib3MF_uint32 bytesNeededScalarOutputName = 0;
+		Lib3MF_uint32 bytesWrittenScalarOutputName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_NormalizeDistanceNode_GetScalarOutputName(m_pHandle, 0, &bytesNeededScalarOutputName, nullptr));
+		std::vector<char> bufferScalarOutputName(bytesNeededScalarOutputName);
+		CheckError(m_pWrapper->m_WrapperTable.m_NormalizeDistanceNode_GetScalarOutputName(m_pHandle, bytesNeededScalarOutputName, &bytesWrittenScalarOutputName, &bufferScalarOutputName[0]));
+		
+		return std::string(&bufferScalarOutputName[0]);
+	}
+	
+	/**
+	* CNormalizeDistanceNode::SetVectorInputName - Sets the name of the referenced vector input
+	* @param[in] sVectorInputName - the name of the vector input (float3) of the referenced function
+	*/
+	void CNormalizeDistanceNode::SetVectorInputName(const std::string & sVectorInputName)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_NormalizeDistanceNode_SetVectorInputName(m_pHandle, sVectorInputName.c_str()));
+	}
+	
+	/**
+	* CNormalizeDistanceNode::GetVectorInputName - Retrieves the name of the referenced vector input
+	* @return the name of the vector input (float3) of the referenced function
+	*/
+	std::string CNormalizeDistanceNode::GetVectorInputName()
+	{
+		Lib3MF_uint32 bytesNeededVectorInputName = 0;
+		Lib3MF_uint32 bytesWrittenVectorInputName = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_NormalizeDistanceNode_GetVectorInputName(m_pHandle, 0, &bytesNeededVectorInputName, nullptr));
+		std::vector<char> bufferVectorInputName(bytesNeededVectorInputName);
+		CheckError(m_pWrapper->m_WrapperTable.m_NormalizeDistanceNode_GetVectorInputName(m_pHandle, bytesNeededVectorInputName, &bytesWrittenVectorInputName, &bufferVectorInputName[0]));
+		
+		return std::string(&bufferVectorInputName[0]);
+	}
+	
+	/**
+	* CNormalizeDistanceNode::GetOutputResult - Retrieves the normalized result output
+	* @return the output port for the normalized distance
+	*/
+	PImplicitPort CNormalizeDistanceNode::GetOutputResult()
+	{
+		Lib3MFHandle hResult = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_NormalizeDistanceNode_GetOutputResult(m_pHandle, &hResult));
+		
+		if (!hResult) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hResult)));
+	}
+	
+	/**
 	 * Method definitions for class CFunctionCallNode
 	 */
 	
@@ -18872,6 +19652,60 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CUnsignedMeshNode>(dynamic_cast<CUnsignedMeshNode*>(m_pWrapper->polymorphicFactory(hNode)));
+	}
+	
+	/**
+	* CImplicitFunction::AddBeamLatticeNode - Add a BeamLatticeNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	PBeamLatticeNode CImplicitFunction::AddBeamLatticeNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
+	{
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddBeamLatticeNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
+		
+		if (!hNode) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CBeamLatticeNode>(dynamic_cast<CBeamLatticeNode*>(m_pWrapper->polymorphicFactory(hNode)));
+	}
+	
+	/**
+	* CImplicitFunction::AddFunctionGradientNode - Add a FunctionGradientNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	PFunctionGradientNode CImplicitFunction::AddFunctionGradientNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
+	{
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddFunctionGradientNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
+		
+		if (!hNode) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CFunctionGradientNode>(dynamic_cast<CFunctionGradientNode*>(m_pWrapper->polymorphicFactory(hNode)));
+	}
+	
+	/**
+	* CImplicitFunction::AddNormalizeDistanceNode - Add a NormalizeDistanceNode
+	* @param[in] sIdentifier - the identifier of the node
+	* @param[in] sDisplayName - the display name of the node
+	* @param[in] sTag - the tag of the node
+	* @return the added node
+	*/
+	PNormalizeDistanceNode CImplicitFunction::AddNormalizeDistanceNode(const std::string & sIdentifier, const std::string & sDisplayName, const std::string & sTag)
+	{
+		Lib3MFHandle hNode = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_ImplicitFunction_AddNormalizeDistanceNode(m_pHandle, sIdentifier.c_str(), sDisplayName.c_str(), sTag.c_str(), &hNode));
+		
+		if (!hNode) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CNormalizeDistanceNode>(dynamic_cast<CNormalizeDistanceNode*>(m_pWrapper->polymorphicFactory(hNode)));
 	}
 	
 	/**

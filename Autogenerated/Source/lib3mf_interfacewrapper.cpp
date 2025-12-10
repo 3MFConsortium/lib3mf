@@ -14147,6 +14147,916 @@ Lib3MFResult lib3mf_unsignedmeshnode_getoutputdistance(Lib3MF_UnsignedMeshNode p
 
 
 /*************************************************************************************************************************
+ Class implementation for BeamLatticeNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_beamlatticenode_getinputbeamlattice(Lib3MF_BeamLatticeNode pBeamLatticeNode, Lib3MF_ImplicitPort * pBeamLattice)
+{
+	IBase* pIBaseClass = (IBase *)pBeamLatticeNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBeamLatticeNode, "BeamLatticeNode", "GetInputBeamLattice");
+		}
+		if (pBeamLattice == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseBeamLattice(nullptr);
+		IBeamLatticeNode* pIBeamLatticeNode = dynamic_cast<IBeamLatticeNode*>(pIBaseClass);
+		if (!pIBeamLatticeNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseBeamLattice = pIBeamLatticeNode->GetInputBeamLattice();
+
+		*pBeamLattice = (IBase*)(pBaseBeamLattice);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("BeamLattice", *pBeamLattice);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_beamlatticenode_getinputpos(Lib3MF_BeamLatticeNode pBeamLatticeNode, Lib3MF_ImplicitPort * pPos)
+{
+	IBase* pIBaseClass = (IBase *)pBeamLatticeNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBeamLatticeNode, "BeamLatticeNode", "GetInputPos");
+		}
+		if (pPos == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBasePos(nullptr);
+		IBeamLatticeNode* pIBeamLatticeNode = dynamic_cast<IBeamLatticeNode*>(pIBaseClass);
+		if (!pIBeamLatticeNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBasePos = pIBeamLatticeNode->GetInputPos();
+
+		*pPos = (IBase*)(pBasePos);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Pos", *pPos);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_beamlatticenode_getoutputdistance(Lib3MF_BeamLatticeNode pBeamLatticeNode, Lib3MF_ImplicitPort * pDistance)
+{
+	IBase* pIBaseClass = (IBase *)pBeamLatticeNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBeamLatticeNode, "BeamLatticeNode", "GetOutputDistance");
+		}
+		if (pDistance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseDistance(nullptr);
+		IBeamLatticeNode* pIBeamLatticeNode = dynamic_cast<IBeamLatticeNode*>(pIBaseClass);
+		if (!pIBeamLatticeNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseDistance = pIBeamLatticeNode->GetOutputDistance();
+
+		*pDistance = (IBase*)(pBaseDistance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Distance", *pDistance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_beamlatticenode_setaccuraterange(Lib3MF_BeamLatticeNode pBeamLatticeNode, Lib3MF_double dAccurateRange)
+{
+	IBase* pIBaseClass = (IBase *)pBeamLatticeNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBeamLatticeNode, "BeamLatticeNode", "SetAccurateRange");
+			pJournalEntry->addDoubleParameter("AccurateRange", dAccurateRange);
+		}
+		IBeamLatticeNode* pIBeamLatticeNode = dynamic_cast<IBeamLatticeNode*>(pIBaseClass);
+		if (!pIBeamLatticeNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIBeamLatticeNode->SetAccurateRange(dAccurateRange);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_beamlatticenode_getaccuraterange(Lib3MF_BeamLatticeNode pBeamLatticeNode, Lib3MF_double * pAccurateRange)
+{
+	IBase* pIBaseClass = (IBase *)pBeamLatticeNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBeamLatticeNode, "BeamLatticeNode", "GetAccurateRange");
+		}
+		if (pAccurateRange == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBeamLatticeNode* pIBeamLatticeNode = dynamic_cast<IBeamLatticeNode*>(pIBaseClass);
+		if (!pIBeamLatticeNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pAccurateRange = pIBeamLatticeNode->GetAccurateRange();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("AccurateRange", *pAccurateRange);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for FunctionGradientNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_functiongradientnode_getinputfunctionid(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pFunction)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionGradientNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionGradientNode, "FunctionGradientNode", "GetInputFunctionID");
+		}
+		if (pFunction == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseFunction(nullptr);
+		IFunctionGradientNode* pIFunctionGradientNode = dynamic_cast<IFunctionGradientNode*>(pIBaseClass);
+		if (!pIFunctionGradientNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseFunction = pIFunctionGradientNode->GetInputFunctionID();
+
+		*pFunction = (IBase*)(pBaseFunction);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Function", *pFunction);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_functiongradientnode_getinputpos(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pPos)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionGradientNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionGradientNode, "FunctionGradientNode", "GetInputPos");
+		}
+		if (pPos == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBasePos(nullptr);
+		IFunctionGradientNode* pIFunctionGradientNode = dynamic_cast<IFunctionGradientNode*>(pIBaseClass);
+		if (!pIFunctionGradientNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBasePos = pIFunctionGradientNode->GetInputPos();
+
+		*pPos = (IBase*)(pBasePos);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Pos", *pPos);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_functiongradientnode_getinputstep(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pStep)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionGradientNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionGradientNode, "FunctionGradientNode", "GetInputStep");
+		}
+		if (pStep == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseStep(nullptr);
+		IFunctionGradientNode* pIFunctionGradientNode = dynamic_cast<IFunctionGradientNode*>(pIBaseClass);
+		if (!pIFunctionGradientNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseStep = pIFunctionGradientNode->GetInputStep();
+
+		*pStep = (IBase*)(pBaseStep);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Step", *pStep);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_functiongradientnode_setscalaroutputname(Lib3MF_FunctionGradientNode pFunctionGradientNode, const char * pScalarOutputName)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionGradientNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionGradientNode, "FunctionGradientNode", "SetScalarOutputName");
+			pJournalEntry->addStringParameter("ScalarOutputName", pScalarOutputName);
+		}
+		if (pScalarOutputName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sScalarOutputName(pScalarOutputName);
+		IFunctionGradientNode* pIFunctionGradientNode = dynamic_cast<IFunctionGradientNode*>(pIBaseClass);
+		if (!pIFunctionGradientNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIFunctionGradientNode->SetScalarOutputName(sScalarOutputName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_functiongradientnode_getscalaroutputname(Lib3MF_FunctionGradientNode pFunctionGradientNode, const Lib3MF_uint32 nScalarOutputNameBufferSize, Lib3MF_uint32* pScalarOutputNameNeededChars, char * pScalarOutputNameBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionGradientNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionGradientNode, "FunctionGradientNode", "GetScalarOutputName");
+		}
+		if ( (!pScalarOutputNameBuffer) && !(pScalarOutputNameNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sScalarOutputName("");
+		IFunctionGradientNode* pIFunctionGradientNode = dynamic_cast<IFunctionGradientNode*>(pIBaseClass);
+		if (!pIFunctionGradientNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pScalarOutputNameBuffer == nullptr);
+		if (isCacheCall) {
+			sScalarOutputName = pIFunctionGradientNode->GetScalarOutputName();
+
+			pIFunctionGradientNode->_setCache (new ParameterCache_1<std::string> (sScalarOutputName));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIFunctionGradientNode->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sScalarOutputName);
+			pIFunctionGradientNode->_setCache (nullptr);
+		}
+		
+		if (pScalarOutputNameNeededChars)
+			*pScalarOutputNameNeededChars = (Lib3MF_uint32) (sScalarOutputName.size()+1);
+		if (pScalarOutputNameBuffer) {
+			if (sScalarOutputName.size() >= nScalarOutputNameBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iScalarOutputName = 0; iScalarOutputName < sScalarOutputName.size(); iScalarOutputName++)
+				pScalarOutputNameBuffer[iScalarOutputName] = sScalarOutputName[iScalarOutputName];
+			pScalarOutputNameBuffer[sScalarOutputName.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("ScalarOutputName", sScalarOutputName.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_functiongradientnode_setvectorinputname(Lib3MF_FunctionGradientNode pFunctionGradientNode, const char * pVectorInputName)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionGradientNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionGradientNode, "FunctionGradientNode", "SetVectorInputName");
+			pJournalEntry->addStringParameter("VectorInputName", pVectorInputName);
+		}
+		if (pVectorInputName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sVectorInputName(pVectorInputName);
+		IFunctionGradientNode* pIFunctionGradientNode = dynamic_cast<IFunctionGradientNode*>(pIBaseClass);
+		if (!pIFunctionGradientNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIFunctionGradientNode->SetVectorInputName(sVectorInputName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_functiongradientnode_getvectorinputname(Lib3MF_FunctionGradientNode pFunctionGradientNode, const Lib3MF_uint32 nVectorInputNameBufferSize, Lib3MF_uint32* pVectorInputNameNeededChars, char * pVectorInputNameBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionGradientNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionGradientNode, "FunctionGradientNode", "GetVectorInputName");
+		}
+		if ( (!pVectorInputNameBuffer) && !(pVectorInputNameNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sVectorInputName("");
+		IFunctionGradientNode* pIFunctionGradientNode = dynamic_cast<IFunctionGradientNode*>(pIBaseClass);
+		if (!pIFunctionGradientNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pVectorInputNameBuffer == nullptr);
+		if (isCacheCall) {
+			sVectorInputName = pIFunctionGradientNode->GetVectorInputName();
+
+			pIFunctionGradientNode->_setCache (new ParameterCache_1<std::string> (sVectorInputName));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIFunctionGradientNode->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sVectorInputName);
+			pIFunctionGradientNode->_setCache (nullptr);
+		}
+		
+		if (pVectorInputNameNeededChars)
+			*pVectorInputNameNeededChars = (Lib3MF_uint32) (sVectorInputName.size()+1);
+		if (pVectorInputNameBuffer) {
+			if (sVectorInputName.size() >= nVectorInputNameBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iVectorInputName = 0; iVectorInputName < sVectorInputName.size(); iVectorInputName++)
+				pVectorInputNameBuffer[iVectorInputName] = sVectorInputName[iVectorInputName];
+			pVectorInputNameBuffer[sVectorInputName.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("VectorInputName", sVectorInputName.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_functiongradientnode_getoutputnormalizedgradient(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pNormalizedGradient)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionGradientNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionGradientNode, "FunctionGradientNode", "GetOutputNormalizedGradient");
+		}
+		if (pNormalizedGradient == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseNormalizedGradient(nullptr);
+		IFunctionGradientNode* pIFunctionGradientNode = dynamic_cast<IFunctionGradientNode*>(pIBaseClass);
+		if (!pIFunctionGradientNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNormalizedGradient = pIFunctionGradientNode->GetOutputNormalizedGradient();
+
+		*pNormalizedGradient = (IBase*)(pBaseNormalizedGradient);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("NormalizedGradient", *pNormalizedGradient);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_functiongradientnode_getoutputgradient(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pGradient)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionGradientNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionGradientNode, "FunctionGradientNode", "GetOutputGradient");
+		}
+		if (pGradient == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseGradient(nullptr);
+		IFunctionGradientNode* pIFunctionGradientNode = dynamic_cast<IFunctionGradientNode*>(pIBaseClass);
+		if (!pIFunctionGradientNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseGradient = pIFunctionGradientNode->GetOutputGradient();
+
+		*pGradient = (IBase*)(pBaseGradient);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Gradient", *pGradient);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_functiongradientnode_getoutputmagnitude(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pMagnitude)
+{
+	IBase* pIBaseClass = (IBase *)pFunctionGradientNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionGradientNode, "FunctionGradientNode", "GetOutputMagnitude");
+		}
+		if (pMagnitude == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseMagnitude(nullptr);
+		IFunctionGradientNode* pIFunctionGradientNode = dynamic_cast<IFunctionGradientNode*>(pIBaseClass);
+		if (!pIFunctionGradientNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseMagnitude = pIFunctionGradientNode->GetOutputMagnitude();
+
+		*pMagnitude = (IBase*)(pBaseMagnitude);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Magnitude", *pMagnitude);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for NormalizeDistanceNode
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_normalizedistancenode_getinputfunctionid(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, Lib3MF_ImplicitPort * pFunction)
+{
+	IBase* pIBaseClass = (IBase *)pNormalizeDistanceNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNormalizeDistanceNode, "NormalizeDistanceNode", "GetInputFunctionID");
+		}
+		if (pFunction == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseFunction(nullptr);
+		INormalizeDistanceNode* pINormalizeDistanceNode = dynamic_cast<INormalizeDistanceNode*>(pIBaseClass);
+		if (!pINormalizeDistanceNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseFunction = pINormalizeDistanceNode->GetInputFunctionID();
+
+		*pFunction = (IBase*)(pBaseFunction);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Function", *pFunction);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_normalizedistancenode_getinputpos(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, Lib3MF_ImplicitPort * pPos)
+{
+	IBase* pIBaseClass = (IBase *)pNormalizeDistanceNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNormalizeDistanceNode, "NormalizeDistanceNode", "GetInputPos");
+		}
+		if (pPos == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBasePos(nullptr);
+		INormalizeDistanceNode* pINormalizeDistanceNode = dynamic_cast<INormalizeDistanceNode*>(pIBaseClass);
+		if (!pINormalizeDistanceNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBasePos = pINormalizeDistanceNode->GetInputPos();
+
+		*pPos = (IBase*)(pBasePos);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Pos", *pPos);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_normalizedistancenode_getinputstep(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, Lib3MF_ImplicitPort * pStep)
+{
+	IBase* pIBaseClass = (IBase *)pNormalizeDistanceNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNormalizeDistanceNode, "NormalizeDistanceNode", "GetInputStep");
+		}
+		if (pStep == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseStep(nullptr);
+		INormalizeDistanceNode* pINormalizeDistanceNode = dynamic_cast<INormalizeDistanceNode*>(pIBaseClass);
+		if (!pINormalizeDistanceNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseStep = pINormalizeDistanceNode->GetInputStep();
+
+		*pStep = (IBase*)(pBaseStep);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Step", *pStep);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_normalizedistancenode_setscalaroutputname(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, const char * pScalarOutputName)
+{
+	IBase* pIBaseClass = (IBase *)pNormalizeDistanceNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNormalizeDistanceNode, "NormalizeDistanceNode", "SetScalarOutputName");
+			pJournalEntry->addStringParameter("ScalarOutputName", pScalarOutputName);
+		}
+		if (pScalarOutputName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sScalarOutputName(pScalarOutputName);
+		INormalizeDistanceNode* pINormalizeDistanceNode = dynamic_cast<INormalizeDistanceNode*>(pIBaseClass);
+		if (!pINormalizeDistanceNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pINormalizeDistanceNode->SetScalarOutputName(sScalarOutputName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_normalizedistancenode_getscalaroutputname(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, const Lib3MF_uint32 nScalarOutputNameBufferSize, Lib3MF_uint32* pScalarOutputNameNeededChars, char * pScalarOutputNameBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pNormalizeDistanceNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNormalizeDistanceNode, "NormalizeDistanceNode", "GetScalarOutputName");
+		}
+		if ( (!pScalarOutputNameBuffer) && !(pScalarOutputNameNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sScalarOutputName("");
+		INormalizeDistanceNode* pINormalizeDistanceNode = dynamic_cast<INormalizeDistanceNode*>(pIBaseClass);
+		if (!pINormalizeDistanceNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pScalarOutputNameBuffer == nullptr);
+		if (isCacheCall) {
+			sScalarOutputName = pINormalizeDistanceNode->GetScalarOutputName();
+
+			pINormalizeDistanceNode->_setCache (new ParameterCache_1<std::string> (sScalarOutputName));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pINormalizeDistanceNode->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sScalarOutputName);
+			pINormalizeDistanceNode->_setCache (nullptr);
+		}
+		
+		if (pScalarOutputNameNeededChars)
+			*pScalarOutputNameNeededChars = (Lib3MF_uint32) (sScalarOutputName.size()+1);
+		if (pScalarOutputNameBuffer) {
+			if (sScalarOutputName.size() >= nScalarOutputNameBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iScalarOutputName = 0; iScalarOutputName < sScalarOutputName.size(); iScalarOutputName++)
+				pScalarOutputNameBuffer[iScalarOutputName] = sScalarOutputName[iScalarOutputName];
+			pScalarOutputNameBuffer[sScalarOutputName.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("ScalarOutputName", sScalarOutputName.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_normalizedistancenode_setvectorinputname(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, const char * pVectorInputName)
+{
+	IBase* pIBaseClass = (IBase *)pNormalizeDistanceNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNormalizeDistanceNode, "NormalizeDistanceNode", "SetVectorInputName");
+			pJournalEntry->addStringParameter("VectorInputName", pVectorInputName);
+		}
+		if (pVectorInputName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sVectorInputName(pVectorInputName);
+		INormalizeDistanceNode* pINormalizeDistanceNode = dynamic_cast<INormalizeDistanceNode*>(pIBaseClass);
+		if (!pINormalizeDistanceNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pINormalizeDistanceNode->SetVectorInputName(sVectorInputName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_normalizedistancenode_getvectorinputname(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, const Lib3MF_uint32 nVectorInputNameBufferSize, Lib3MF_uint32* pVectorInputNameNeededChars, char * pVectorInputNameBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pNormalizeDistanceNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNormalizeDistanceNode, "NormalizeDistanceNode", "GetVectorInputName");
+		}
+		if ( (!pVectorInputNameBuffer) && !(pVectorInputNameNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sVectorInputName("");
+		INormalizeDistanceNode* pINormalizeDistanceNode = dynamic_cast<INormalizeDistanceNode*>(pIBaseClass);
+		if (!pINormalizeDistanceNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pVectorInputNameBuffer == nullptr);
+		if (isCacheCall) {
+			sVectorInputName = pINormalizeDistanceNode->GetVectorInputName();
+
+			pINormalizeDistanceNode->_setCache (new ParameterCache_1<std::string> (sVectorInputName));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pINormalizeDistanceNode->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sVectorInputName);
+			pINormalizeDistanceNode->_setCache (nullptr);
+		}
+		
+		if (pVectorInputNameNeededChars)
+			*pVectorInputNameNeededChars = (Lib3MF_uint32) (sVectorInputName.size()+1);
+		if (pVectorInputNameBuffer) {
+			if (sVectorInputName.size() >= nVectorInputNameBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iVectorInputName = 0; iVectorInputName < sVectorInputName.size(); iVectorInputName++)
+				pVectorInputNameBuffer[iVectorInputName] = sVectorInputName[iVectorInputName];
+			pVectorInputNameBuffer[sVectorInputName.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("VectorInputName", sVectorInputName.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_normalizedistancenode_getoutputresult(Lib3MF_NormalizeDistanceNode pNormalizeDistanceNode, Lib3MF_ImplicitPort * pResult)
+{
+	IBase* pIBaseClass = (IBase *)pNormalizeDistanceNode;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNormalizeDistanceNode, "NormalizeDistanceNode", "GetOutputResult");
+		}
+		if (pResult == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResult(nullptr);
+		INormalizeDistanceNode* pINormalizeDistanceNode = dynamic_cast<INormalizeDistanceNode*>(pIBaseClass);
+		if (!pINormalizeDistanceNode)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResult = pINormalizeDistanceNode->GetOutputResult();
+
+		*pResult = (IBase*)(pBaseResult);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Result", *pResult);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
  Class implementation for FunctionCallNode
 **************************************************************************************************************************/
 Lib3MFResult lib3mf_functioncallnode_getinputfunctionid(Lib3MF_FunctionCallNode pFunctionCallNode, Lib3MF_ImplicitPort * pFunction)
@@ -17097,6 +18007,150 @@ Lib3MFResult lib3mf_implicitfunction_addunsignedmeshnode(Lib3MF_ImplicitFunction
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pBaseNode = pIImplicitFunction->AddUnsignedMeshNode(sIdentifier, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addbeamlatticenode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_BeamLatticeNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddBeamLatticeNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddBeamLatticeNode(sIdentifier, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addfunctiongradientnode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_FunctionGradientNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddFunctionGradientNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddFunctionGradientNode(sIdentifier, sDisplayName, sTag);
+
+		*pNode = (IBase*)(pBaseNode);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Node", *pNode);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_implicitfunction_addnormalizedistancenode(Lib3MF_ImplicitFunction pImplicitFunction, const char * pIdentifier, const char * pDisplayName, const char * pTag, Lib3MF_NormalizeDistanceNode * pNode)
+{
+	IBase* pIBaseClass = (IBase *)pImplicitFunction;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImplicitFunction, "ImplicitFunction", "AddNormalizeDistanceNode");
+			pJournalEntry->addStringParameter("Identifier", pIdentifier);
+			pJournalEntry->addStringParameter("DisplayName", pDisplayName);
+			pJournalEntry->addStringParameter("Tag", pTag);
+		}
+		if (pIdentifier == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplayName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pNode == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sIdentifier(pIdentifier);
+		std::string sDisplayName(pDisplayName);
+		std::string sTag(pTag);
+		IBase* pBaseNode(nullptr);
+		IImplicitFunction* pIImplicitFunction = dynamic_cast<IImplicitFunction*>(pIBaseClass);
+		if (!pIImplicitFunction)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNode = pIImplicitFunction->AddNormalizeDistanceNode(sIdentifier, sDisplayName, sTag);
 
 		*pNode = (IBase*)(pBaseNode);
 		if (pJournalEntry.get() != nullptr) {
@@ -24089,6 +25143,52 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_unsignedmeshnode_getinputpos;
 	if (sProcName == "lib3mf_unsignedmeshnode_getoutputdistance") 
 		*ppProcAddress = (void*) &lib3mf_unsignedmeshnode_getoutputdistance;
+	if (sProcName == "lib3mf_beamlatticenode_getinputbeamlattice") 
+		*ppProcAddress = (void*) &lib3mf_beamlatticenode_getinputbeamlattice;
+	if (sProcName == "lib3mf_beamlatticenode_getinputpos") 
+		*ppProcAddress = (void*) &lib3mf_beamlatticenode_getinputpos;
+	if (sProcName == "lib3mf_beamlatticenode_getoutputdistance") 
+		*ppProcAddress = (void*) &lib3mf_beamlatticenode_getoutputdistance;
+	if (sProcName == "lib3mf_beamlatticenode_setaccuraterange") 
+		*ppProcAddress = (void*) &lib3mf_beamlatticenode_setaccuraterange;
+	if (sProcName == "lib3mf_beamlatticenode_getaccuraterange") 
+		*ppProcAddress = (void*) &lib3mf_beamlatticenode_getaccuraterange;
+	if (sProcName == "lib3mf_functiongradientnode_getinputfunctionid") 
+		*ppProcAddress = (void*) &lib3mf_functiongradientnode_getinputfunctionid;
+	if (sProcName == "lib3mf_functiongradientnode_getinputpos") 
+		*ppProcAddress = (void*) &lib3mf_functiongradientnode_getinputpos;
+	if (sProcName == "lib3mf_functiongradientnode_getinputstep") 
+		*ppProcAddress = (void*) &lib3mf_functiongradientnode_getinputstep;
+	if (sProcName == "lib3mf_functiongradientnode_setscalaroutputname") 
+		*ppProcAddress = (void*) &lib3mf_functiongradientnode_setscalaroutputname;
+	if (sProcName == "lib3mf_functiongradientnode_getscalaroutputname") 
+		*ppProcAddress = (void*) &lib3mf_functiongradientnode_getscalaroutputname;
+	if (sProcName == "lib3mf_functiongradientnode_setvectorinputname") 
+		*ppProcAddress = (void*) &lib3mf_functiongradientnode_setvectorinputname;
+	if (sProcName == "lib3mf_functiongradientnode_getvectorinputname") 
+		*ppProcAddress = (void*) &lib3mf_functiongradientnode_getvectorinputname;
+	if (sProcName == "lib3mf_functiongradientnode_getoutputnormalizedgradient") 
+		*ppProcAddress = (void*) &lib3mf_functiongradientnode_getoutputnormalizedgradient;
+	if (sProcName == "lib3mf_functiongradientnode_getoutputgradient") 
+		*ppProcAddress = (void*) &lib3mf_functiongradientnode_getoutputgradient;
+	if (sProcName == "lib3mf_functiongradientnode_getoutputmagnitude") 
+		*ppProcAddress = (void*) &lib3mf_functiongradientnode_getoutputmagnitude;
+	if (sProcName == "lib3mf_normalizedistancenode_getinputfunctionid") 
+		*ppProcAddress = (void*) &lib3mf_normalizedistancenode_getinputfunctionid;
+	if (sProcName == "lib3mf_normalizedistancenode_getinputpos") 
+		*ppProcAddress = (void*) &lib3mf_normalizedistancenode_getinputpos;
+	if (sProcName == "lib3mf_normalizedistancenode_getinputstep") 
+		*ppProcAddress = (void*) &lib3mf_normalizedistancenode_getinputstep;
+	if (sProcName == "lib3mf_normalizedistancenode_setscalaroutputname") 
+		*ppProcAddress = (void*) &lib3mf_normalizedistancenode_setscalaroutputname;
+	if (sProcName == "lib3mf_normalizedistancenode_getscalaroutputname") 
+		*ppProcAddress = (void*) &lib3mf_normalizedistancenode_getscalaroutputname;
+	if (sProcName == "lib3mf_normalizedistancenode_setvectorinputname") 
+		*ppProcAddress = (void*) &lib3mf_normalizedistancenode_setvectorinputname;
+	if (sProcName == "lib3mf_normalizedistancenode_getvectorinputname") 
+		*ppProcAddress = (void*) &lib3mf_normalizedistancenode_getvectorinputname;
+	if (sProcName == "lib3mf_normalizedistancenode_getoutputresult") 
+		*ppProcAddress = (void*) &lib3mf_normalizedistancenode_getoutputresult;
 	if (sProcName == "lib3mf_functioncallnode_getinputfunctionid") 
 		*ppProcAddress = (void*) &lib3mf_functioncallnode_getinputfunctionid;
 	if (sProcName == "lib3mf_nodeiterator_getcurrent") 
@@ -24215,6 +25315,12 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_addmeshnode;
 	if (sProcName == "lib3mf_implicitfunction_addunsignedmeshnode") 
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_addunsignedmeshnode;
+	if (sProcName == "lib3mf_implicitfunction_addbeamlatticenode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addbeamlatticenode;
+	if (sProcName == "lib3mf_implicitfunction_addfunctiongradientnode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addfunctiongradientnode;
+	if (sProcName == "lib3mf_implicitfunction_addnormalizedistancenode") 
+		*ppProcAddress = (void*) &lib3mf_implicitfunction_addnormalizedistancenode;
 	if (sProcName == "lib3mf_implicitfunction_addfunctioncallnode") 
 		*ppProcAddress = (void*) &lib3mf_implicitfunction_addfunctioncallnode;
 	if (sProcName == "lib3mf_implicitfunction_getnodes") 

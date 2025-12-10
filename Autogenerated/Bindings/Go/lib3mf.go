@@ -273,6 +273,9 @@ const (
 	ImplicitNodeType_VectorFromScalar = 48
 	ImplicitNodeType_UnsignedMesh = 49
 	ImplicitNodeType_Mod = 50
+	ImplicitNodeType_BeamLattice = 51
+	ImplicitNodeType_FunctionGradient = 52
+	ImplicitNodeType_NormalizeDistance = 53
 )
 
 // ImplicitPortType represents a Lib3MF enum.
@@ -5717,6 +5720,289 @@ func (inst UnsignedMeshNode) GetOutputDistance() (ImplicitPort, error) {
 }
 
 
+// BeamLatticeNode represents a Lib3MF class.
+type BeamLatticeNode struct {
+	ImplicitNode
+}
+
+func (wrapper Wrapper) NewBeamLatticeNode(r ref) BeamLatticeNode {
+	return BeamLatticeNode{wrapper.NewImplicitNode(r)}
+}
+
+// GetInputBeamLattice retrieves the input for the model resource id of the beam lattice.
+func (inst BeamLatticeNode) GetInputBeamLattice() (ImplicitPort, error) {
+	var beamLattice ref
+	ret := C.CCall_lib3mf_beamlatticenode_getinputbeamlattice(inst.wrapperRef.LibraryHandle, inst.Ref, &beamLattice)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(beamLattice), nil
+}
+
+// GetInputPos retrieves the input for the position.
+func (inst BeamLatticeNode) GetInputPos() (ImplicitPort, error) {
+	var pos ref
+	ret := C.CCall_lib3mf_beamlatticenode_getinputpos(inst.wrapperRef.LibraryHandle, inst.Ref, &pos)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(pos), nil
+}
+
+// GetOutputDistance retrieves the output.
+func (inst BeamLatticeNode) GetOutputDistance() (ImplicitPort, error) {
+	var distance ref
+	ret := C.CCall_lib3mf_beamlatticenode_getoutputdistance(inst.wrapperRef.LibraryHandle, inst.Ref, &distance)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(distance), nil
+}
+
+// SetAccurateRange sets the accurate range for distance computation.
+func (inst BeamLatticeNode) SetAccurateRange(accurateRange float64) error {
+	ret := C.CCall_lib3mf_beamlatticenode_setaccuraterange(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(accurateRange))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetAccurateRange retrieves the accurate range for distance computation.
+func (inst BeamLatticeNode) GetAccurateRange() (float64, error) {
+	var accurateRange C.double
+	ret := C.CCall_lib3mf_beamlatticenode_getaccuraterange(inst.wrapperRef.LibraryHandle, inst.Ref, &accurateRange)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(accurateRange), nil
+}
+
+
+// FunctionGradientNode represents a Lib3MF class.
+type FunctionGradientNode struct {
+	ImplicitNode
+}
+
+func (wrapper Wrapper) NewFunctionGradientNode(r ref) FunctionGradientNode {
+	return FunctionGradientNode{wrapper.NewImplicitNode(r)}
+}
+
+// GetInputFunctionID retrieves the input for the function id.
+func (inst FunctionGradientNode) GetInputFunctionID() (ImplicitPort, error) {
+	var function ref
+	ret := C.CCall_lib3mf_functiongradientnode_getinputfunctionid(inst.wrapperRef.LibraryHandle, inst.Ref, &function)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(function), nil
+}
+
+// GetInputPos retrieves the input for the position.
+func (inst FunctionGradientNode) GetInputPos() (ImplicitPort, error) {
+	var pos ref
+	ret := C.CCall_lib3mf_functiongradientnode_getinputpos(inst.wrapperRef.LibraryHandle, inst.Ref, &pos)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(pos), nil
+}
+
+// GetInputStep retrieves the input for the finite difference step.
+func (inst FunctionGradientNode) GetInputStep() (ImplicitPort, error) {
+	var step ref
+	ret := C.CCall_lib3mf_functiongradientnode_getinputstep(inst.wrapperRef.LibraryHandle, inst.Ref, &step)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(step), nil
+}
+
+// SetScalarOutputName sets the name of the referenced scalar output.
+func (inst FunctionGradientNode) SetScalarOutputName(scalarOutputName string) error {
+	ret := C.CCall_lib3mf_functiongradientnode_setscalaroutputname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(scalarOutputName)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetScalarOutputName retrieves the name of the referenced scalar output.
+func (inst FunctionGradientNode) GetScalarOutputName() (string, error) {
+	var neededforscalarOutputName C.uint32_t
+	var filledinscalarOutputName C.uint32_t
+	ret := C.CCall_lib3mf_functiongradientnode_getscalaroutputname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforscalarOutputName, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizescalarOutputName := neededforscalarOutputName
+	bufferscalarOutputName := make([]byte, bufferSizescalarOutputName)
+	ret = C.CCall_lib3mf_functiongradientnode_getscalaroutputname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizescalarOutputName, &filledinscalarOutputName, (*C.char)(unsafe.Pointer(&bufferscalarOutputName[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferscalarOutputName[:(filledinscalarOutputName-1)]), nil
+}
+
+// SetVectorInputName sets the name of the referenced vector input.
+func (inst FunctionGradientNode) SetVectorInputName(vectorInputName string) error {
+	ret := C.CCall_lib3mf_functiongradientnode_setvectorinputname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(vectorInputName)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetVectorInputName retrieves the name of the referenced vector input.
+func (inst FunctionGradientNode) GetVectorInputName() (string, error) {
+	var neededforvectorInputName C.uint32_t
+	var filledinvectorInputName C.uint32_t
+	ret := C.CCall_lib3mf_functiongradientnode_getvectorinputname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforvectorInputName, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizevectorInputName := neededforvectorInputName
+	buffervectorInputName := make([]byte, bufferSizevectorInputName)
+	ret = C.CCall_lib3mf_functiongradientnode_getvectorinputname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizevectorInputName, &filledinvectorInputName, (*C.char)(unsafe.Pointer(&buffervectorInputName[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffervectorInputName[:(filledinvectorInputName-1)]), nil
+}
+
+// GetOutputNormalizedGradient retrieves the normalized gradient output.
+func (inst FunctionGradientNode) GetOutputNormalizedGradient() (ImplicitPort, error) {
+	var normalizedGradient ref
+	ret := C.CCall_lib3mf_functiongradientnode_getoutputnormalizedgradient(inst.wrapperRef.LibraryHandle, inst.Ref, &normalizedGradient)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(normalizedGradient), nil
+}
+
+// GetOutputGradient retrieves the raw gradient output.
+func (inst FunctionGradientNode) GetOutputGradient() (ImplicitPort, error) {
+	var gradient ref
+	ret := C.CCall_lib3mf_functiongradientnode_getoutputgradient(inst.wrapperRef.LibraryHandle, inst.Ref, &gradient)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(gradient), nil
+}
+
+// GetOutputMagnitude retrieves the gradient magnitude output.
+func (inst FunctionGradientNode) GetOutputMagnitude() (ImplicitPort, error) {
+	var magnitude ref
+	ret := C.CCall_lib3mf_functiongradientnode_getoutputmagnitude(inst.wrapperRef.LibraryHandle, inst.Ref, &magnitude)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(magnitude), nil
+}
+
+
+// NormalizeDistanceNode represents a Lib3MF class.
+type NormalizeDistanceNode struct {
+	ImplicitNode
+}
+
+func (wrapper Wrapper) NewNormalizeDistanceNode(r ref) NormalizeDistanceNode {
+	return NormalizeDistanceNode{wrapper.NewImplicitNode(r)}
+}
+
+// GetInputFunctionID retrieves the input for the function id.
+func (inst NormalizeDistanceNode) GetInputFunctionID() (ImplicitPort, error) {
+	var function ref
+	ret := C.CCall_lib3mf_normalizedistancenode_getinputfunctionid(inst.wrapperRef.LibraryHandle, inst.Ref, &function)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(function), nil
+}
+
+// GetInputPos retrieves the input for the position.
+func (inst NormalizeDistanceNode) GetInputPos() (ImplicitPort, error) {
+	var pos ref
+	ret := C.CCall_lib3mf_normalizedistancenode_getinputpos(inst.wrapperRef.LibraryHandle, inst.Ref, &pos)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(pos), nil
+}
+
+// GetInputStep retrieves the input for the finite difference step.
+func (inst NormalizeDistanceNode) GetInputStep() (ImplicitPort, error) {
+	var step ref
+	ret := C.CCall_lib3mf_normalizedistancenode_getinputstep(inst.wrapperRef.LibraryHandle, inst.Ref, &step)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(step), nil
+}
+
+// SetScalarOutputName sets the name of the referenced scalar output.
+func (inst NormalizeDistanceNode) SetScalarOutputName(scalarOutputName string) error {
+	ret := C.CCall_lib3mf_normalizedistancenode_setscalaroutputname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(scalarOutputName)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetScalarOutputName retrieves the name of the referenced scalar output.
+func (inst NormalizeDistanceNode) GetScalarOutputName() (string, error) {
+	var neededforscalarOutputName C.uint32_t
+	var filledinscalarOutputName C.uint32_t
+	ret := C.CCall_lib3mf_normalizedistancenode_getscalaroutputname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforscalarOutputName, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizescalarOutputName := neededforscalarOutputName
+	bufferscalarOutputName := make([]byte, bufferSizescalarOutputName)
+	ret = C.CCall_lib3mf_normalizedistancenode_getscalaroutputname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizescalarOutputName, &filledinscalarOutputName, (*C.char)(unsafe.Pointer(&bufferscalarOutputName[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferscalarOutputName[:(filledinscalarOutputName-1)]), nil
+}
+
+// SetVectorInputName sets the name of the referenced vector input.
+func (inst NormalizeDistanceNode) SetVectorInputName(vectorInputName string) error {
+	ret := C.CCall_lib3mf_normalizedistancenode_setvectorinputname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(vectorInputName)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetVectorInputName retrieves the name of the referenced vector input.
+func (inst NormalizeDistanceNode) GetVectorInputName() (string, error) {
+	var neededforvectorInputName C.uint32_t
+	var filledinvectorInputName C.uint32_t
+	ret := C.CCall_lib3mf_normalizedistancenode_getvectorinputname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforvectorInputName, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizevectorInputName := neededforvectorInputName
+	buffervectorInputName := make([]byte, bufferSizevectorInputName)
+	ret = C.CCall_lib3mf_normalizedistancenode_getvectorinputname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizevectorInputName, &filledinvectorInputName, (*C.char)(unsafe.Pointer(&buffervectorInputName[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffervectorInputName[:(filledinvectorInputName-1)]), nil
+}
+
+// GetOutputResult retrieves the normalized result output.
+func (inst NormalizeDistanceNode) GetOutputResult() (ImplicitPort, error) {
+	var result ref
+	ret := C.CCall_lib3mf_normalizedistancenode_getoutputresult(inst.wrapperRef.LibraryHandle, inst.Ref, &result)
+	if ret != 0 {
+		return ImplicitPort{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewImplicitPort(result), nil
+}
+
+
 // FunctionCallNode represents a Lib3MF class.
 type FunctionCallNode struct {
 	ImplicitNode
@@ -6394,6 +6680,36 @@ func (inst ImplicitFunction) AddUnsignedMeshNode(identifier string, displayName 
 		return UnsignedMeshNode{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewUnsignedMeshNode(node), nil
+}
+
+// AddBeamLatticeNode add a BeamLatticeNode.
+func (inst ImplicitFunction) AddBeamLatticeNode(identifier string, displayName string, tag string) (BeamLatticeNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addbeamlatticenode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return BeamLatticeNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewBeamLatticeNode(node), nil
+}
+
+// AddFunctionGradientNode add a FunctionGradientNode.
+func (inst ImplicitFunction) AddFunctionGradientNode(identifier string, displayName string, tag string) (FunctionGradientNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addfunctiongradientnode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return FunctionGradientNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewFunctionGradientNode(node), nil
+}
+
+// AddNormalizeDistanceNode add a NormalizeDistanceNode.
+func (inst ImplicitFunction) AddNormalizeDistanceNode(identifier string, displayName string, tag string) (NormalizeDistanceNode, error) {
+	var node ref
+	ret := C.CCall_lib3mf_implicitfunction_addnormalizedistancenode(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(identifier)[0])), (*C.char)(unsafe.Pointer(&[]byte(displayName)[0])), (*C.char)(unsafe.Pointer(&[]byte(tag)[0])), &node)
+	if ret != 0 {
+		return NormalizeDistanceNode{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewNormalizeDistanceNode(node), nil
 }
 
 // AddFunctionCallNode add a FunctionCallNode.

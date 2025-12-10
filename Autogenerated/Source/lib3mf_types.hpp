@@ -309,6 +309,9 @@ typedef Lib3MFHandle Lib3MF_ConstVecNode;
 typedef Lib3MFHandle Lib3MF_ConstMatNode;
 typedef Lib3MFHandle Lib3MF_MeshNode;
 typedef Lib3MFHandle Lib3MF_UnsignedMeshNode;
+typedef Lib3MFHandle Lib3MF_BeamLatticeNode;
+typedef Lib3MFHandle Lib3MF_FunctionGradientNode;
+typedef Lib3MFHandle Lib3MF_NormalizeDistanceNode;
 typedef Lib3MFHandle Lib3MF_FunctionCallNode;
 typedef Lib3MFHandle Lib3MF_NodeIterator;
 typedef Lib3MFHandle Lib3MF_Function;
@@ -506,7 +509,10 @@ namespace Lib3MF {
     ConstResourceID = 47, /** Selects a resource (function, mesh etc.) */
     VectorFromScalar = 48, /** Creates a vector from one scalar values */
     UnsignedMesh = 49, /** Calculates the unsigned distance to a mesh */
-    Mod = 50 /** Calculates the modulo of two values (same behaviour as glsl mod) */
+    Mod = 50, /** Calculates the modulo of two values (same behaviour as glsl mod) */
+    BeamLattice = 51, /** Calculates the signed distance to a beam lattice */
+    FunctionGradient = 52, /** Calculates the gradient of a function */
+    NormalizeDistance = 53 /** Normalizes a distance field */
   };
   
   /**

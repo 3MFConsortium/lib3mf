@@ -81,6 +81,9 @@ Abstract: This is a stub class definition of CImplicitFunction
 #include "lib3mf_tannode.hpp"
 #include "lib3mf_transposenode.hpp"
 #include "lib3mf_unsignedmeshnode.hpp"
+#include "lib3mf_beamlatticenode.hpp"
+#include "lib3mf_functiongradientnode.hpp"
+#include "lib3mf_normalizedistancenode.hpp"
 #include "lib3mf_vectorfromscalarnode.hpp"
 
 // Include custom headers here.
@@ -659,6 +662,39 @@ IUnsignedMeshNode * CImplicitFunction::AddUnsignedMeshNode(const std::string & s
                                        sDisplayName,
                                        sTag);
     return new CUnsignedMeshNode(newNode);
+}
+
+IBeamLatticeNode* CImplicitFunction::AddBeamLatticeNode(const std::string& sIdentifier,
+                                                        const std::string& sDisplayName,
+                                                        const std::string& sTag)
+{
+    auto newNode =
+        function()->addNode(Lib3MF::eImplicitNodeType::BeamLattice,
+                            Lib3MF::eImplicitNodeConfiguration::Default,
+                            sIdentifier, sDisplayName, sTag);
+    return new CBeamLatticeNode(newNode);
+}
+
+IFunctionGradientNode* CImplicitFunction::AddFunctionGradientNode(const std::string& sIdentifier,
+                                                                  const std::string& sDisplayName,
+                                                                  const std::string& sTag)
+{
+    auto newNode =
+        function()->addNode(Lib3MF::eImplicitNodeType::FunctionGradient,
+                            Lib3MF::eImplicitNodeConfiguration::Default,
+                            sIdentifier, sDisplayName, sTag);
+    return new CFunctionGradientNode(newNode);
+}
+
+INormalizeDistanceNode* CImplicitFunction::AddNormalizeDistanceNode(const std::string& sIdentifier,
+                                                                    const std::string& sDisplayName,
+                                                                    const std::string& sTag)
+{
+    auto newNode =
+        function()->addNode(Lib3MF::eImplicitNodeType::NormalizeDistance,
+                            Lib3MF::eImplicitNodeConfiguration::Default,
+                            sIdentifier, sDisplayName, sTag);
+    return new CNormalizeDistanceNode(newNode);
 }
 
 IFunctionCallNode* CImplicitFunction::AddFunctionCallNode(
