@@ -1,2 +1,2 @@
-7e4f1fc0dd3523c807427b4efc0db165bdb1a936
-https://github.com/Autodesk/AutomaticComponentToolkit/releases/tag/v1.8.0-alpha
+5f800d355908a6f7156c45c69d2cb02572911b31
+https://github.com/Autodesk/AutomaticComponentToolkit/tree/refs/heads/develop
