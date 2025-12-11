@@ -621,8 +621,16 @@ jobs:
 
       - name: Download and unzip test suite
         run: |
-          wget --user "${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}" --password "${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}" "https://storage.3mf.dev/remote.php/dav/files/{{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" -O 3MF_Conformance_Test_Suites_v2.0.0.zip
+          USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
+          PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
+
+          wget --user "$USER" \
+               --password "$PASS" \
+               "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" \
+               -O 3MF_Conformance_Test_Suites_v2.0.0.zip
+
           unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+      
 
       - name: List files
         run: |
@@ -720,8 +728,16 @@ jobs:
 
       - name: Download and unzip test suite
         run: |
-          wget --user "${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}" --password "${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}" "https://storage.3mf.dev/remote.php/dav/files/{{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" -O 3MF_Conformance_Test_Suites_v2.0.0.zip
+          USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
+          PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
+
+          wget --user "$USER" \
+               --password "$PASS" \
+               "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" \
+               -O 3MF_Conformance_Test_Suites_v2.0.0.zip
+
           unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+      
 
       - name: Copy integration test script
         run: |
@@ -869,8 +885,16 @@ jobs:
 
       - name: Download and unzip test suite
         run: |
-          wget --user "${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}" --password "${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}" "https://storage.3mf.dev/remote.php/dav/files/{{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" -O 3MF_Conformance_Test_Suites_v2.0.0.zip
+          USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
+          PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
+
+          wget --user "$USER" \
+               --password "$PASS" \
+               "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" \
+               -O 3MF_Conformance_Test_Suites_v2.0.0.zip
+
           unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+      
 
       - name: Copy integration test script
         run: |
@@ -956,8 +980,16 @@ jobs:
 
       - name: Download and unzip test suite
         run: |
-          wget --user "${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}" --password "${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}" "https://storage.3mf.dev/remote.php/dav/files/{{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" -O 3MF_Conformance_Test_Suites_v2.0.0.zip
+          USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
+          PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
+
+          wget --user "$USER" \
+               --password "$PASS" \
+               "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" \
+               -O 3MF_Conformance_Test_Suites_v2.0.0.zip
+
           unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+      
 
       - name: Copy integration test script
         run: |
