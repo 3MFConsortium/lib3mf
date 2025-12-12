@@ -9,4 +9,4 @@ echo "Compile Java Bindings"
 javac -classpath *.jar lib3mf/*
 
 echo "Create JAR"
-jar cvf lib3mf-2.4.0.jar lib3mf
+jar cvf lib3mf-2.5.0.jar lib3mf
