@@ -38,6 +38,10 @@ jobs:
     needs: [set-lib3mf-version]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
+    outputs:
+      linux_zip_artifact: ${{ steps.extract-linux-zip.outputs.name }}
+      linux_deb_artifact: ${{ steps.extract-linux-deb.outputs.name }}
+      linux_rpm_artifact: ${{ steps.extract-linux-rpm.outputs.name }}
     steps:
       - run: sudo apt update
       - run: sudo apt install -y uuid-dev
@@ -79,41 +83,46 @@ jobs:
           name: lib3mf.so
           path: dist/lib3mf.so.2
       - name: Extract File Name (CPacked Archive)
+        id: extract-linux-zip
         run: |
           ZIP_FILE=$(ls dist/lib3mf-*.zip)
-          echo "ARTIFACT_NAME_ZIP=$(basename ${ZIP_FILE})" >> $GITHUB_ENV
+          echo "name=$(basename ${ZIP_FILE})" >> $GITHUB_OUTPUT
         shell: bash
       - name: Upload Artifact (CPacked Archive)
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_NAME_ZIP }}
-          path: dist/${{ env.ARTIFACT_NAME_ZIP }}
+          name: ${{ steps.extract-linux-zip.outputs.name }}
+          path: dist/${{ steps.extract-linux-zip.outputs.name }}
       - name: Extract File Name (Debian)
+        id: extract-linux-deb
         run: |
           DEB_FILE=$(ls dist/lib3mf-*.deb)
-          echo "ARTIFACT_NAME_DEB=$(basename ${DEB_FILE})" >> $GITHUB_ENV
+          echo "name=$(basename ${DEB_FILE})" >> $GITHUB_OUTPUT
         shell: bash
       - name: Upload Artifact (Debian Archive)
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_NAME_DEB }}
-          path: dist/${{ env.ARTIFACT_NAME_DEB }}
+          name: ${{ steps.extract-linux-deb.outputs.name }}
+          path: dist/${{ steps.extract-linux-deb.outputs.name }}
       - name: Extract File Name (RPM)
+        id: extract-linux-rpm
         run: |
           RPM_FILE=$(ls dist/lib3mf-*.rpm)
-          echo "ARTIFACT_NAME_RPM=$(basename ${RPM_FILE})" >> $GITHUB_ENV
+          echo "name=$(basename ${RPM_FILE})" >> $GITHUB_OUTPUT
         shell: bash
       - name: Upload Artifact (RPM Archive)
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_NAME_RPM }}
-          path: dist/${{ env.ARTIFACT_NAME_RPM }}
+          name: ${{ steps.extract-linux-rpm.outputs.name }}
+          path: dist/${{ steps.extract-linux-rpm.outputs.name }}
 
   build-macos:
     runs-on: macos-15
     needs: [set-lib3mf-version]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
+    outputs:
+      mac_zip_artifact: ${{ steps.extract-mac-zip.outputs.name }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -126,9 +135,10 @@ jobs:
       - run: cpack -G ZIP -C Release
         working-directory: ./build
       - name: Extract File Name
+        id: extract-mac-zip
         run: |
           ZIP_FILE=$(ls build/lib3mf-*.zip)
-          echo "ARTIFACT_NAME=$(basename ${ZIP_FILE})" >> $GITHUB_ENV
+          echo "name=$(basename ${ZIP_FILE})" >> $GITHUB_OUTPUT
         shell: bash
       - run: ls -al build/
       - name: Determine macOS dylib
@@ -149,8 +159,8 @@ jobs:
       - name: Upload Artifact (CPacked Archive)
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: build/${{ env.ARTIFACT_NAME }}
+          name: ${{ steps.extract-mac-zip.outputs.name }}
+          path: build/${{ steps.extract-mac-zip.outputs.name }}
 
   build-macos-debug:
     runs-on: macos-15
@@ -203,6 +213,8 @@ jobs:
     needs: [set-lib3mf-version]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
+    outputs:
+      windows_zip_artifact: ${{ steps.extract-windows-zip.outputs.name }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -215,9 +227,10 @@ jobs:
       - run: cpack -G ZIP -C Release
         working-directory: ./build
       - name: Extract File Name
+        id: extract-windows-zip
         run: |
           $zipFile = Get-ChildItem build\lib3mf-*.zip -Name
-          echo "ARTIFACT_NAME=$zipFile" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "name=$zipFile" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
         shell: pwsh
       - name: Archive Windows Release binary
         uses: actions/upload-artifact@v4
@@ -232,8 +245,8 @@ jobs:
       - name: Upload Artifact (CPacked Archive)
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: build/${{ env.ARTIFACT_NAME }}
+          name: ${{ steps.extract-windows-zip.outputs.name }}
+          path: build/${{ steps.extract-windows-zip.outputs.name }}
 
   build-windows-debug:
     runs-on: windows-2022
@@ -325,7 +338,7 @@ jobs:
 
   deploy-linux:
     runs-on: ubuntu-24.04
-    needs: [set-lib3mf-version, assemble-sdk]
+    needs: [set-lib3mf-version, assemble-sdk, build-linux-ubi8-gcc12]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
     steps:
@@ -364,11 +377,12 @@ jobs:
       - name: Download lib3mf cpack (Linux)
         uses: actions/download-artifact@v4
         with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip
-          path: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip
+          name: ${{ needs.build-linux-ubi8-gcc12.outputs.linux_zip_artifact }}
+          path: ${{ needs.build-linux-ubi8-gcc12.outputs.linux_zip_artifact }}
       - name: Unpack the cpacked SDK
         run: |
-          unzip lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.zip && ls -Rl
+          CPACK_ZIP="${{ needs.build-linux-ubi8-gcc12.outputs.linux_zip_artifact }}"
+          unzip "$CPACK_ZIP/$CPACK_ZIP" && ls -Rl
       - name: Build CppDynamic - CPack (Linux)
         run: | 
           sh SDK/CPackExamples/CppDynamic/GenerateMake.sh
@@ -384,17 +398,19 @@ jobs:
       - name: Download lib3mf (Debian Linux)
         uses: actions/download-artifact@v4
         with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
-          path: lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
+          name: ${{ needs.build-linux-ubi8-gcc12.outputs.linux_deb_artifact }}
+          path: ${{ needs.build-linux-ubi8-gcc12.outputs.linux_deb_artifact }}
       - name: Check the file type
         run: |
-          file lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
-          file lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
+          DEB_ARTIFACT="${{ needs.build-linux-ubi8-gcc12.outputs.linux_deb_artifact }}"
+          file "$DEB_ARTIFACT"
+          file "$DEB_ARTIFACT/$DEB_ARTIFACT"
       - run: pwd
       - run: ls -Rl .
       - name: Install the debian package
-        run: |
-          sudo dpkg -i lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb/lib3mf-${{ env.LIB3MF_VERSION }}-Linux.deb
+       run: |
+          DEB_ARTIFACT="${{ needs.build-linux-ubi8-gcc12.outputs.linux_deb_artifact }}"
+          sudo dpkg -i "$DEB_ARTIFACT/$DEB_ARTIFACT"
       - name: Build CppDynamic - CPack (Debian)
         run: |
           sh SDK/CPackExamples/CppDynamic/GenerateMake.sh
@@ -421,7 +437,7 @@ jobs:
 
   deploy-windows:
     runs-on: windows-2022
-    needs: [set-lib3mf-version, assemble-sdk]
+    needs: [set-lib3mf-version, assemble-sdk, build-windows-release]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
     steps:
@@ -455,11 +471,12 @@ jobs:
       - name: Download lib3mf cpack (Windows)
         uses: actions/download-artifact@v4
         with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
-          path: lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
+          name: ${{ needs.build-windows-release.outputs.windows_zip_artifact }}
+          path: ${{ needs.build-windows-release.outputs.windows_zip_artifact }}
       - name: Unpack the cpacked SDK
         run: |
-          unzip lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
+          ZIP_NAME="${{ needs.build-windows-release.outputs.windows_zip_artifact }}"
+          unzip "$ZIP_NAME/$ZIP_NAME"
       - name: Build CppDynamic - CPack (Windows)
         run: | 
           ./SDK/CPackExamples/CppDynamic/GenerateVS2022.bat
@@ -487,7 +504,7 @@ jobs:
 
   deploy-macos:
     runs-on: macos-latest
-    needs: [set-lib3mf-version, assemble-sdk]
+    needs: [set-lib3mf-version, assemble-sdk, build-macos]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
     steps:
@@ -522,12 +539,13 @@ jobs:
       - name: Download lib3mf cpack (Darwin)
         uses: actions/download-artifact@v4
         with:
-          name: lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
-          path: lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
+          name: ${{ needs.build-macos.outputs.mac_zip_artifact }}
+          path: ${{ needs.build-macos.outputs.mac_zip_artifact }}
       - run: ls -Rl .
       - name: Unpack the cpacked SDK (Darwin)
         run: |
-          unzip lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Darwin.zip
+          ZIP_NAME="${{ needs.build-macos.outputs.mac_zip_artifact }}"
+          unzip "$ZIP_NAME/$ZIP_NAME"
       - name: Build CppDynamic - CPack (Darwin)
         run: |
           sh SDK/CPackExamples/CppDynamic/GenerateMake.sh
