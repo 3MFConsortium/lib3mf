@@ -6276,7 +6276,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CVolumeDataComposite::GetMaterialMapping - Returns MaterialMappting with given index
+	* CVolumeDataComposite::GetMaterialMapping - Returns MaterialMapping with given index
 	* @param[in] nIndex - Index of the MaterialMapping in question.
 	* @return MaterialMapping used in this element
 	*/
@@ -6292,7 +6292,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CVolumeDataComposite::AddMaterialMapping - Adds a the MaterialMapping
+	* CVolumeDataComposite::AddMaterialMapping - Adds a MaterialMapping
 	* @param[in] Transform - new transformation matrix
 	* @return The new MaterialMapping
 	*/
@@ -6442,7 +6442,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	
 	/**
 	* CVolumeData::GetPropertyCount - Returns the number of VolumeDataProperty
-	* @return the number of VolumeDataProperty-elements within this VolumdeData
+	* @return the number of VolumeDataProperty-elements within this VolumeData
 	*/
 	Lib3MF_uint32 CVolumeData::GetPropertyCount()
 	{
@@ -7471,7 +7471,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CAttachment::ReadFromFile - Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
+	* CAttachment::ReadFromFile - Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.
 	* @param[in] sFileName - file to read from.
 	*/
 	void CAttachment::ReadFromFile(const std::string & sFileName)
@@ -7480,7 +7480,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CAttachment::ReadFromCallback - Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
+	* CAttachment::ReadFromCallback - Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.
 	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
 	* @param[in] nStreamSize - number of bytes the callback returns
 	* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
@@ -7517,7 +7517,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CAttachment::ReadFromBuffer - Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
+	* CAttachment::ReadFromBuffer - Reads an attachment from a memory buffer. This buffer is immediately read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 	* @param[in] BufferBuffer - Buffer to read from
 	*/
 	void CAttachment::ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer)

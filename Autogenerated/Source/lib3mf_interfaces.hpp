@@ -2119,14 +2119,14 @@ public:
 	virtual Lib3MF_uint32 GetMaterialMappingCount() = 0;
 
 	/**
-	* IVolumeDataComposite::GetMaterialMapping - Returns MaterialMappting with given index
+	* IVolumeDataComposite::GetMaterialMapping - Returns MaterialMapping with given index
 	* @param[in] nIndex - Index of the MaterialMapping in question.
 	* @return MaterialMapping used in this element
 	*/
 	virtual IMaterialMapping * GetMaterialMapping(const Lib3MF_uint32 nIndex) = 0;
 
 	/**
-	* IVolumeDataComposite::AddMaterialMapping - Adds a the MaterialMapping
+	* IVolumeDataComposite::AddMaterialMapping - Adds a MaterialMapping
 	* @param[in] Transform - new transformation matrix
 	* @return The new MaterialMapping
 	*/
@@ -2233,7 +2233,7 @@ public:
 
 	/**
 	* IVolumeData::GetPropertyCount - Returns the number of VolumeDataProperty
-	* @return the number of VolumeDataProperty-elements within this VolumdeData
+	* @return the number of VolumeDataProperty-elements within this VolumeData
 	*/
 	virtual Lib3MF_uint32 GetPropertyCount() = 0;
 
@@ -2985,13 +2985,13 @@ public:
 	virtual void WriteToFile(const std::string & sFileName) = 0;
 
 	/**
-	* IAttachment::ReadFromFile - Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
+	* IAttachment::ReadFromFile - Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.
 	* @param[in] sFileName - file to read from.
 	*/
 	virtual void ReadFromFile(const std::string & sFileName) = 0;
 
 	/**
-	* IAttachment::ReadFromCallback - Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
+	* IAttachment::ReadFromCallback - Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.
 	* @param[in] pTheReadCallback - callback function
 	* @param[in] nStreamSize - number of bytes the callback returns
 	* @param[in] pTheSeekCallback - callback function
@@ -3014,7 +3014,7 @@ public:
 	virtual void WriteToBuffer(Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer) = 0;
 
 	/**
-	* IAttachment::ReadFromBuffer - Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
+	* IAttachment::ReadFromBuffer - Reads an attachment from a memory buffer. This buffer is immediately read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 	* @param[in] nBufferBufferSize - Number of elements in buffer
 	* @param[in] pBufferBuffer - Buffer to read from
 	*/

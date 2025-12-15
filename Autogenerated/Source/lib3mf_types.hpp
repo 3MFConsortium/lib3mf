@@ -477,11 +477,11 @@ namespace Lib3MF {
     MatVecMultiplication = 14, /** Multiplies a matrix with a vector */
     Transpose = 15, /** Transposes a matrix */
     Inverse = 16, /** Computes the inverse of a matrix */
-    Sinus = 17, /** Calculates the sinus */
-    Cosinus = 18, /** Calculates the cosinus */
+    Sinus = 17, /** Calculates the sine */
+    Cosinus = 18, /** Calculates the cosine */
     Tan = 19, /** Calculates the tangent */
-    ArcSin = 20, /** Calculates the arcsinus */
-    ArcCos = 21, /** Calculates the arccosinus */
+    ArcSin = 20, /** Calculates the arcsine */
+    ArcCos = 21, /** Calculates the arccosine */
     ArcTan = 22, /** Calculates the arctangent */
     ArcTan2 = 23, /** Calculates the arctangent */
     Min = 24, /** Calculates the minimum of two values */
@@ -491,9 +491,9 @@ namespace Lib3MF {
     Pow = 28, /** Calculates the power A^B */
     Sqrt = 29, /** Calculates the square root */
     Exp = 30, /** Exponential function */
-    Log = 31, /** Natural logarithmus */
-    Log2 = 32, /** Logarithmus to the base 2 */
-    Log10 = 33, /** Logarithmus to the base 10 */
+    Log = 31, /** Natural logarithm */
+    Log2 = 32, /** Logarithm to the base 2 */
+    Log10 = 33, /** Logarithm to the base 10 */
     Select = 34, /** If A is less than B returns C, else D */
     Clamp = 35, /** Clamps the input value to min and max */
     Sinh = 36, /** Calculates the hyperbolic sine */
@@ -508,7 +508,7 @@ namespace Lib3MF {
     Mesh = 45, /** Calculates the signed distance to a mesh */
     Length = 46, /** Calculates the length of a vector */
     ConstResourceID = 47, /** Selects a resource (function, mesh etc.) */
-    VectorFromScalar = 48, /** Creates a vector from one scalar values */
+    VectorFromScalar = 48, /** Creates a vector from one scalar value */
     UnsignedMesh = 49, /** Calculates the unsigned distance to a mesh */
     Mod = 50, /** Calculates the modulo of two values (same behaviour as glsl mod) */
     BeamLattice = 51, /** Calculates the signed distance to a beam lattice */

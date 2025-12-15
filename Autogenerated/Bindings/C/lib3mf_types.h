@@ -476,11 +476,11 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypeMatVecMultiplication = 14, /** Multiplies a matrix with a vector */
   eImplicitNodeTypeTranspose = 15, /** Transposes a matrix */
   eImplicitNodeTypeInverse = 16, /** Computes the inverse of a matrix */
-  eImplicitNodeTypeSinus = 17, /** Calculates the sinus */
-  eImplicitNodeTypeCosinus = 18, /** Calculates the cosinus */
+  eImplicitNodeTypeSinus = 17, /** Calculates the sine */
+  eImplicitNodeTypeCosinus = 18, /** Calculates the cosine */
   eImplicitNodeTypeTan = 19, /** Calculates the tangent */
-  eImplicitNodeTypeArcSin = 20, /** Calculates the arcsinus */
-  eImplicitNodeTypeArcCos = 21, /** Calculates the arccosinus */
+  eImplicitNodeTypeArcSin = 20, /** Calculates the arcsine */
+  eImplicitNodeTypeArcCos = 21, /** Calculates the arccosine */
   eImplicitNodeTypeArcTan = 22, /** Calculates the arctangent */
   eImplicitNodeTypeArcTan2 = 23, /** Calculates the arctangent */
   eImplicitNodeTypeMin = 24, /** Calculates the minimum of two values */
@@ -490,9 +490,9 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypePow = 28, /** Calculates the power A^B */
   eImplicitNodeTypeSqrt = 29, /** Calculates the square root */
   eImplicitNodeTypeExp = 30, /** Exponential function */
-  eImplicitNodeTypeLog = 31, /** Natural logarithmus */
-  eImplicitNodeTypeLog2 = 32, /** Logarithmus to the base 2 */
-  eImplicitNodeTypeLog10 = 33, /** Logarithmus to the base 10 */
+  eImplicitNodeTypeLog = 31, /** Natural logarithm */
+  eImplicitNodeTypeLog2 = 32, /** Logarithm to the base 2 */
+  eImplicitNodeTypeLog10 = 33, /** Logarithm to the base 10 */
   eImplicitNodeTypeSelect = 34, /** If A is less than B returns C, else D */
   eImplicitNodeTypeClamp = 35, /** Clamps the input value to min and max */
   eImplicitNodeTypeSinh = 36, /** Calculates the hyperbolic sine */
@@ -507,7 +507,7 @@ typedef enum eLib3MFImplicitNodeType {
   eImplicitNodeTypeMesh = 45, /** Calculates the signed distance to a mesh */
   eImplicitNodeTypeLength = 46, /** Calculates the length of a vector */
   eImplicitNodeTypeConstResourceID = 47, /** Selects a resource (function, mesh etc.) */
-  eImplicitNodeTypeVectorFromScalar = 48, /** Creates a vector from one scalar values */
+  eImplicitNodeTypeVectorFromScalar = 48, /** Creates a vector from one scalar value */
   eImplicitNodeTypeUnsignedMesh = 49, /** Calculates the unsigned distance to a mesh */
   eImplicitNodeTypeMod = 50, /** Calculates the modulo of two values (same behaviour as glsl mod) */
   eImplicitNodeTypeBeamLattice = 51, /** Calculates the signed distance to a beam lattice */
