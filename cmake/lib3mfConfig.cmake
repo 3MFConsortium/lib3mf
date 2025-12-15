@@ -22,7 +22,7 @@ foreach(comp ${lib3mf_FIND_COMPONENTS})
 endforeach()
 
 # Configure paths based on the selected variant
-set(lib3mf_INCLUDE_DIR "${LIB3MF_ROOT_DIR}/include/Bindings/${lib3mf_selected_variant}")
+set(lib3mf_INCLUDE_DIR "${LIB3MF_ROOT_DIR}/include/lib3mf/Bindings/${lib3mf_selected_variant}")
 set(lib3mf_LIBRARY_DIR "${LIB3MF_ROOT_DIR}/lib")
 set(lib3mf_BINARY_DIR "${LIB3MF_ROOT_DIR}/bin")
 
