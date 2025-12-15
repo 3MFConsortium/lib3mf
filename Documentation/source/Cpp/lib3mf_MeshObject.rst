@@ -161,6 +161,60 @@ CMeshObject
 		:returns: the BeamLattice within this MeshObject
 
 
+	.. cpp:function:: PVolumeData GetVolumeData()
+
+		Retrieves the VolumeData of this MeshObject.
+
+		:returns: the VolumeData of this MeshObject
+
+
+	.. cpp:function:: void SetVolumeData(classParam<CVolumeData> pTheVolumeData)
+
+		Sets the VolumeData of this MeshObject.
+
+		:param pTheVolumeData: the VolumeData of this MeshObject 
+
+
+	.. cpp:function:: PTriangleSet AddTriangleSet(const std::string & sIdentifier, const std::string & sName)
+
+		Adds a new triangle set.
+
+		:param sIdentifier: the new identifier. MUST be unique within the mesh. MUST NOT be an empty string 
+		:param sName: the human readable name. MUST NOT be an empty string 
+		:returns: the new Triangle Set Instance.
+
+
+	.. cpp:function:: bool HasTriangleSet(const std::string & sIdentifier)
+
+		Checks if a triangle set exists.
+
+		:param sIdentifier: the identifier to be found. 
+		:returns: flag if the triangles set exists.
+
+
+	.. cpp:function:: PTriangleSet FindTriangleSet(const std::string & sIdentifier)
+
+		Finds a new triangle set by identifier. Fails if not existing.
+
+		:param sIdentifier: the identifier to be found. 
+		:returns: the triangle Set Instance.
+
+
+	.. cpp:function:: Lib3MF_uint32 GetTriangleSetCount()
+
+		Returns number of triangle sets.
+
+		:returns: the number of triangle sets of this mesh.
+
+
+	.. cpp:function:: PTriangleSet GetTriangleSet(const Lib3MF_uint32 nIndex)
+
+		Returns a specific triangle set by index.
+
+		:param nIndex: the index of the triangle set. 
+		:returns: the triangle Set Instance.
+
+
 .. cpp:type:: std::shared_ptr<CMeshObject> Lib3MF::PMeshObject
 
 	Shared pointer to CMeshObject to easily allow reference counting.

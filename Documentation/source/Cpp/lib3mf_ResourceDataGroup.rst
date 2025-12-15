@@ -17,7 +17,7 @@ CResourceDataGroup
 		:returns: The new resourcedatagroup keyuuid.
 
 
-	.. cpp:function:: PAccessRight AddAccessRight(CConsumer * pConsumer, const eWrappingAlgorithm eWrappingAlgorithm, const eMgfAlgorithm eMgfAlgorithm, const eDigestMethod eDigestMethod)
+	.. cpp:function:: PAccessRight AddAccessRight(classParam<CConsumer> pConsumer, const eWrappingAlgorithm eWrappingAlgorithm, const eMgfAlgorithm eMgfAlgorithm, const eDigestMethod eDigestMethod)
 
 		Add accessright to resourcedatagroup element
 
@@ -28,7 +28,7 @@ CResourceDataGroup
 		:returns: The acess right instance
 
 
-	.. cpp:function:: PAccessRight FindAccessRightByConsumer(CConsumer * pConsumer)
+	.. cpp:function:: PAccessRight FindAccessRightByConsumer(classParam<CConsumer> pConsumer)
 
 		Finds the AccessRight associated with a Consumer
 
@@ -36,7 +36,7 @@ CResourceDataGroup
 		:returns: The AcessRight instance
 
 
-	.. cpp:function:: void RemoveAccessRight(CConsumer * pConsumer)
+	.. cpp:function:: void RemoveAccessRight(classParam<CConsumer> pConsumer)
 
 		Removes access from a Consumer on this resource data group
 

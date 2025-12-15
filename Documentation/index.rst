@@ -1,7 +1,7 @@
 .. lib3mf documentation master file
 
 *********************************************
-lib3mf v2.3.2 documentation
+lib3mf v2.5.0 documentation
 *********************************************
 
 .. image:: https://github.com/3MFConsortium/lib3mf/workflows/Build/badge.svg?branch=master
@@ -27,7 +27,7 @@ lib3mf v2.3.2 documentation
 	:language: bash
 
 
-Welcome! This is the documentation for lib3mf v2.3.2.
+Welcome! This is the documentation for lib3mf v2.5.0.
 
 lib3mf is an implementation of the 3D Manufacturing Format file standard.
 

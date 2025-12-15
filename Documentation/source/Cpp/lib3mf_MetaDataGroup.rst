@@ -41,7 +41,7 @@ CMetaDataGroup
 		:param nIndex:  Index of the metadata to remove 
 
 
-	.. cpp:function:: void RemoveMetaData(CMetaData * pTheMetaData)
+	.. cpp:function:: void RemoveMetaData(classParam<CMetaData> pTheMetaData)
 
 		removes metadata from the model.
 
@@ -56,7 +56,7 @@ CMetaDataGroup
 		:param sName: the name of the metadata 
 		:param sValue: the value of the metadata 
 		:param sType: the type of the metadata 
-		:param bMustPreserve: shuold the metadata be preserved 
+		:param bMustPreserve: should the metadata be preserved 
 		:returns: a new instance of the metadata
 
 

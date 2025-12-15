@@ -33,7 +33,7 @@
 		<binding language="C" indentation="tabs" />
 		<binding language="CDynamic" indentation="tabs" />
 		<binding language="Cpp" indentation="tabs" />
-		<binding language="CppDynamic" indentation="tabs" />
+		<binding language="CppDynamic" indentation="tabs" documentation="sphinx" />
 		<binding language="Pascal" indentation="tabs" />
 		<binding language="Python" indentation="tabs" />
 		<binding language="Node" indentation="tabs" />

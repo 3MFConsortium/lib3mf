@@ -69,6 +69,14 @@ CModel
 		:returns:  string identifier for the file type
 
 
+	.. cpp:function:: PResource GetResourceByID(const Lib3MF_uint32 nUniqueResourceID)
+
+		finds a model resource by its UniqueResourceID
+
+		:param nUniqueResourceID: UniqueResourceID 
+		:returns: returns the resource instance
+
+
 	.. cpp:function:: PTexture2D GetTexture2DByID(const Lib3MF_uint32 nUniqueResourceID)
 
 		finds a model texture by its UniqueResourceID
@@ -147,6 +155,14 @@ CModel
 
 		:param nUniqueResourceID: UniqueResourceID 
 		:returns: returns the slicestack instance
+
+
+	.. cpp:function:: PLevelSet GetLevelSetByID(const Lib3MF_uint32 nUniqueResourceID)
+
+		finds a level set object by its UniqueResourceID
+
+		:param nUniqueResourceID: UniqueResourceID 
+		:returns: returns the level set object instance
 
 
 	.. cpp:function:: std::string GetBuildUUID(bool & bHasUUID)
@@ -255,11 +271,25 @@ CModel
 		:returns: returns the iterator instance.
 
 
+	.. cpp:function:: PImage3DIterator GetImage3Ds()
+
+		creates a resource iterator instance with all image3d resources.
+
+		:returns: returns the iterator instance.
+
+
 	.. cpp:function:: PModel MergeToModel()
 
 		Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.
 
 		:returns: returns the merged model instance
+
+
+	.. cpp:function:: void MergeFromModel(classParam<CModel> pModelInstance)
+
+		Merges the given model into this model.
+
+		:param pModelInstance: model to be merged 
 
 
 	.. cpp:function:: PMeshObject AddMeshObject()
@@ -284,7 +314,7 @@ CModel
 		:returns: returns the new slicestack instance
 
 
-	.. cpp:function:: PTexture2D AddTexture2DFromAttachment(CAttachment * pTextureAttachment)
+	.. cpp:function:: PTexture2D AddTexture2DFromAttachment(classParam<CAttachment> pTextureAttachment)
 
 		adds a texture2d resource to the model. Its path is given by that of an existing attachment.
 
@@ -306,7 +336,7 @@ CModel
 		:returns: returns the new ColorGroup instance.
 
 
-	.. cpp:function:: PTexture2DGroup AddTexture2DGroup(CTexture2D * pTexture2DInstance)
+	.. cpp:function:: PTexture2DGroup AddTexture2DGroup(classParam<CTexture2D> pTexture2DInstance)
 
 		adds an empty Texture2DGroup resource to the model.
 
@@ -314,7 +344,7 @@ CModel
 		:returns: returns the new Texture2DGroup instance.
 
 
-	.. cpp:function:: PCompositeMaterials AddCompositeMaterials(CBaseMaterialGroup * pBaseMaterialGroupInstance)
+	.. cpp:function:: PCompositeMaterials AddCompositeMaterials(classParam<CBaseMaterialGroup> pBaseMaterialGroupInstance)
 
 		adds an empty CompositeMaterials resource to the model.
 
@@ -329,7 +359,25 @@ CModel
 		:returns: returns the new MultiPropertyGroup instance.
 
 
-	.. cpp:function:: PBuildItem AddBuildItem(CObject * pObject, const sTransform & Transform)
+	.. cpp:function:: PImageStack AddImageStack(const Lib3MF_uint32 nColumnCount, const Lib3MF_uint32 nRowCount, const Lib3MF_uint32 nSheetCount)
+
+		creates a new 3D Image Resource
+
+		:param nColumnCount: the number of columns in each sheet. 
+		:param nRowCount: the number of rows in each sheet. 
+		:param nSheetCount: the number of sheets in the image stack. 
+		:returns: returns the new ImageStack instance
+
+
+	.. cpp:function:: PImageStack GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID)
+
+		finds an ImageStack object by its UniqueResourceID
+
+		:param nUniqueResourceID: UniqueResourceID 
+		:returns: returns the image stack instance
+
+
+	.. cpp:function:: PBuildItem AddBuildItem(classParam<CObject> pObject, const sTransform & Transform)
 
 		adds a build item to the model.
 
@@ -338,7 +386,7 @@ CModel
 		:returns: returns the build item instance.
 
 
-	.. cpp:function:: void RemoveBuildItem(CBuildItem * pBuildItemInstance)
+	.. cpp:function:: void RemoveBuildItem(classParam<CBuildItem> pBuildItemInstance)
 
 		removes a build item from the model
 
@@ -361,7 +409,7 @@ CModel
 		:returns: Instance of the attachment object
 
 
-	.. cpp:function:: void RemoveAttachment(CAttachment * pAttachmentInstance)
+	.. cpp:function:: void RemoveAttachment(classParam<CAttachment> pAttachmentInstance)
 
 		Removes attachment from the model.
 
@@ -446,6 +494,56 @@ CModel
 		Gets the keystore associated with this model
 
 		:returns: The package keystore
+
+
+	.. cpp:function:: PFunctionIterator GetFunctions()
+
+		creates a resource iterator for all functions
+
+		:returns: returns the resource iterator
+
+
+	.. cpp:function:: PImplicitFunction AddImplicitFunction()
+
+		adds a function described by nodes to the model
+
+		:returns: returns the function instance
+
+
+	.. cpp:function:: PFunctionFromImage3D AddFunctionFromImage3D(classParam<CImage3D> pImage3DInstance)
+
+		adds a function defined by an image3d to the model
+
+		:param pImage3DInstance: the Image3D-instance used for this function 
+		:returns: returns the function instance
+
+
+	.. cpp:function:: PVolumeData AddVolumeData()
+
+		adds a volume data resource to the model.
+
+		:returns: returns the new volume data instance.
+
+
+	.. cpp:function:: PLevelSet AddLevelSet()
+
+		adds an empty boundary shape object to the model.
+
+		:returns:  returns the mesh object instance
+
+
+	.. cpp:function:: PLevelSetIterator GetLevelSets()
+
+		creates a resource iterator instance with all boundary shape resources.
+
+		:returns: returns the iterator instance.
+
+
+	.. cpp:function:: void RemoveResource(classParam<CResource> pResource)
+
+		Removes a resource from the model
+
+		:param pResource: The resource to remove 
 
 
 .. cpp:type:: std::shared_ptr<CModel> Lib3MF::PModel

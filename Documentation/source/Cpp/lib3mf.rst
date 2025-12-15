@@ -53,14 +53,14 @@ The wrapper class CWrapper
 		:returns: returns an empty model instance
 
 	
-	.. cpp:function:: void Release(CBase * pInstance)
+	.. cpp:function:: void Release(classParam<CBase> pInstance)
 	
 		releases shared ownership of an object instance
 	
 		:param pInstance: the object instance to release 
 
 	
-	.. cpp:function:: void Acquire(CBase * pInstance)
+	.. cpp:function:: void Acquire(classParam<CBase> pInstance)
 	
 		acquires shared ownership of an object instance
 	
@@ -74,13 +74,20 @@ The wrapper class CWrapper
 		:param sJournalPath: File name of the journal file 
 
 	
-	.. cpp:function:: bool GetLastError(CBase * pInstance, std::string & sLastErrorString)
+	.. cpp:function:: bool GetLastError(classParam<CBase> pInstance, std::string & sLastErrorString)
 	
 		Retrieves the last error string of an instance
 	
 		:param pInstance: Object where the error occured. 
 		:param sLastErrorString: Last Error String 
 		:returns: Returns if the instance has a last error.
+
+	
+	.. cpp:function:: Lib3MF_pvoid GetSymbolLookupMethod()
+	
+		Returns the address of the SymbolLookupMethod
+	
+		:returns: Address of the SymbolAddressMethod
 
 	
 	.. cpp:function:: void RetrieveProgressMessage(const eProgressIdentifier eTheProgressIdentifier, std::string & sProgressMessage)
