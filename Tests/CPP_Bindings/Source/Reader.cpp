@@ -71,7 +71,7 @@ namespace Lib3MF
 
         auto objectIterator = model->GetObjects();
 		auto objectCount = objectIterator->Count();
-		EXPECT_EQ(objectCount, static_cast<decltype(objectCount)>(5));
+		EXPECT_EQ(5u, objectCount);
     }
 
     TEST_F(Reader, 3MFReadFromFileAndAddComponents)
@@ -84,7 +84,7 @@ namespace Lib3MF
 
         auto objectIterator = model->GetObjects();
 		auto objectCount = objectIterator->Count();
-		EXPECT_EQ(objectCount, static_cast<decltype(objectCount)>(8));
+		EXPECT_EQ(8u, objectCount);
     }
 
 	TEST_F(Reader, STLReadFromFile)
@@ -107,11 +107,11 @@ namespace Lib3MF
 
 		auto meshObjects = model->GetMeshObjects();
 		auto meshObjectCount = meshObjects->Count();
-		ASSERT_EQ(meshObjectCount, static_cast<decltype(meshObjectCount)>(1));
+		ASSERT_EQ(1u, meshObjectCount);
 		meshObjects->MoveNext();
 		auto meshObject = meshObjects->GetCurrentMeshObject();
 		auto triangleCount = meshObject->GetTriangleCount();
-		EXPECT_EQ(triangleCount, static_cast<decltype(triangleCount)>(1)); // one valid triangle remains
+		EXPECT_EQ(1u, triangleCount); // one valid triangle remains
 	}
 
 	TEST_F(Reader, STLReadWriteRead)
@@ -166,8 +166,8 @@ namespace Lib3MF
 		reader->ReadFromFile(sTestFilesPath + "/Production/" + "detachedmodel.3mf");
 		auto buildItemCount = model->GetBuildItems()->Count();
 		auto objectCount = model->GetObjects()->Count();
-		ASSERT_EQ(buildItemCount, static_cast<decltype(buildItemCount)>(27));
-		ASSERT_EQ(objectCount, static_cast<decltype(objectCount)>(28));
+		ASSERT_EQ(27u, buildItemCount);
+		ASSERT_EQ(28u, objectCount);
 	}
 
 	TEST_F(Reader, ThreeMFReadDegenerateTriangleWarnsAndSkips)
@@ -177,11 +177,11 @@ namespace Lib3MF
 
 		auto meshObjects = model->GetMeshObjects();
 		auto meshObjectCount = meshObjects->Count();
-		ASSERT_EQ(meshObjectCount, static_cast<decltype(meshObjectCount)>(1));
+		ASSERT_EQ(1u, meshObjectCount);
 		meshObjects->MoveNext();
 		auto meshObject = meshObjects->GetCurrentMeshObject();
 		auto triangleCount = meshObject->GetTriangleCount();
-		EXPECT_EQ(triangleCount, static_cast<decltype(triangleCount)>(1)); // degenerate face was dropped
+		EXPECT_EQ(1u, triangleCount); // degenerate face was dropped
 	}
 
 	TEST_F(Reader, DuplicateStartPart)
