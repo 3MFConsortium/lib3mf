@@ -1359,13 +1359,13 @@
 			<param name="Count" type="uint32" pass="return"
 				description="the number of material mappings." />
 		</method>
-		<method name="GetMaterialMapping" description="Returns MaterialMappting with given index">
+		<method name="GetMaterialMapping" description="Returns MaterialMapping with given index">
 			<param name="Index" type="uint32" pass="in"
 				description="Index of the MaterialMapping in question." />
 			<param name="TheMaterialMapping" type="class" class="MaterialMapping" pass="return"
 				description="MaterialMapping used in this element" />
 		</method>
-		<method name="AddMaterialMapping" description="Adds a the MaterialMapping">
+		<method name="AddMaterialMapping" description="Adds a MaterialMapping">
 			<param name="Transform" type="struct" class="Transform" pass="in"
 				description="new transformation matrix" />
 			<param name="TheMaterialMapping" type="class" class="MaterialMapping" pass="return"
@@ -1427,7 +1427,7 @@
 		</method>
 		<method name="GetPropertyCount" description="Returns the number of VolumeDataProperty">
 			<param name="Count" type="uint32" pass="return"
-				description="the number of VolumeDataProperty-elements within this VolumdeData" />
+				description="the number of VolumeDataProperty-elements within this VolumeData" />
 		</method>
 		<method name="GetProperty" description="Returns the VolumeDataProperty at a given Index">
 			<param name="Index" type="uint32" pass="in"
@@ -1858,10 +1858,10 @@
 		<method name="WriteToFile" description="Writes out the attachment as file.">
 			<param name="FileName" type="string" pass="in" description="file to write into." />
 		</method>
-		<method name="ReadFromFile" description="Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.">
+		<method name="ReadFromFile" description="Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.">
 			<param name="FileName" type="string" pass="in" description="file to read from." />
 		</method>
-		<method name="ReadFromCallback" description="Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.">
+		<method name="ReadFromCallback" description="Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.">
 			<param name="TheReadCallback" type="functiontype" class="ReadCallback" pass="in"
 				description="Callback to call for reading a data chunk" />
 			<param name="StreamSize" type="uint64" pass="in"
@@ -1878,7 +1878,7 @@
 			<param name="Buffer" type="basicarray" class="uint8" pass="out"
 				description="Buffer to write into" />
 		</method>
-		<method name="ReadFromBuffer" description="Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).">
+		<method name="ReadFromBuffer" description="Reads an attachment from a memory buffer. This buffer is immediately read (in contrast to the ReadFromCallback and ReadFromFile-methods).">
 			<param name="Buffer" type="basicarray" class="uint8" pass="in"
 				description="Buffer to read from" />
 		</method>
@@ -1966,11 +1966,11 @@
 			value="14" />
 		<option name="Transpose" description="Transposes a matrix" value="15" />
 		<option name="Inverse" description="Computes the inverse of a matrix" value="16" />
-		<option name="Sinus" description="Calculates the sinus" value="17" />
-		<option name="Cosinus" description="Calculates the cosinus" value="18" />
+		<option name="Sinus" description="Calculates the sine" value="17" />
+		<option name="Cosinus" description="Calculates the cosine" value="18" />
 		<option name="Tan" description="Calculates the tangent" value="19" />
-		<option name="ArcSin" description="Calculates the arcsinus" value="20" />
-		<option name="ArcCos" description="Calculates the arccosinus" value="21" />
+		<option name="ArcSin" description="Calculates the arcsine" value="20" />
+		<option name="ArcCos" description="Calculates the arccosine" value="21" />
 		<option name="ArcTan" description="Calculates the arctangent" value="22" />
 		<option name="ArcTan2" description="Calculates the arctangent" value="23" />
 		<option name="Min" description="Calculates the minimum of two values" value="24" />
@@ -1982,9 +1982,9 @@
 		<option name="Pow" description="Calculates the power A^B" value="28" />
 		<option name="Sqrt" description="Calculates the square root" value="29" />
 		<option name="Exp" description="Exponential function" value="30" />
-		<option name="Log" description="Natural logarithmus" value="31" />
-		<option name="Log2" description="Logarithmus to the base 2" value="32" />
-		<option name="Log10" description="Logarithmus to the base 10" value="33" />
+		<option name="Log" description="Natural logarithm" value="31" />
+		<option name="Log2" description="Logarithm to the base 2" value="32" />
+		<option name="Log10" description="Logarithm to the base 10" value="33" />
 		<option name="Select" description="If A is less than B returns C, else D" value="34" />
 		<option name="Clamp" description="Clamps the input value to min and max" value="35" />
 		<option name="Sinh" description="Calculates the hyperbolic sine" value="36" />
@@ -2001,7 +2001,7 @@
 		<option name="Length" description="Calculates the length of a vector" value="46" />
 		<option name="ConstResourceID" description="Selects a resource (function, mesh etc.)"
 			value="47" />
-		<option name="VectorFromScalar" description="Creates a vector from one scalar values"
+		<option name="VectorFromScalar" description="Creates a vector from one scalar value"
 			value="48" />
 		<option name="UnsignedMesh" description="Calculates the unsigned distance to a mesh"
 			value="49" />
@@ -2428,7 +2428,7 @@
 		</method>
 		<method name="GetInputM21" description="Retrieves the input for the element 2 1">
 			<param name="M21" type="class" class="ImplicitPort" pass="return"
-				decription="the input fr the m21 element" />
+				decription="the input for the m21 element" />
 		</method>
 		<method name="GetInputM22" description="Retrieves the input for the element 2 2">
 			<param name="M22" type="class" class="ImplicitPort" pass="return"
