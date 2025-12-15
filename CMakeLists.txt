@@ -31,7 +31,9 @@ endif()
 
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
-set(CMAKE_INSTALL_INCLUDEDIR include/lib3mf CACHE PATH "directory for installing header files")
+set(CMAKE_INSTALL_INCLUDEDIR include CACHE PATH "directory for installing header files")
+
+option(BUILD_SHARED_LIBS "Build lib3mf as shared library" ON)
 
 option(USE_INCLUDED_ZLIB "Use included zlib" ON)
 option(USE_INCLUDED_LIBZIP "Use included libzip" ON)
@@ -43,24 +45,28 @@ option(USE_PLATFORM_UUID "Use UUID geneator that is provided by the OS (always O
 add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
 set (CMAKE_CXX_STANDARD 17)
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  # using GCC
-  add_definitions(-DBUILD_DLL)
-  add_compile_options(-Wall)
-  if (CMAKE_BUILD_TYPE MATCHES DEBUG)
-    add_compile_options(-g)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Og")
-  else()
+	if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	  # using GCC
+	  if (BUILD_SHARED_LIBS)
+	    add_definitions(-DBUILD_DLL)
+	  endif()
+	  add_compile_options(-Wall)
+	  if (CMAKE_BUILD_TYPE MATCHES DEBUG)
+	    add_compile_options(-g)
+	    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Og")
+	  else()
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O2")
   endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
   
-elseif ("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
-  # using GCC
-  add_definitions(-DBUILD_DLL)
-  add_compile_options(-Wall) 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O2")
-  set(CMAKE_MACOSX_RPATH ON)
-endif()
+	elseif ("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
+	  # using GCC
+	  if (BUILD_SHARED_LIBS)
+	    add_definitions(-DBUILD_DLL)
+	  endif()
+	  add_compile_options(-Wall) 
+	  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O2")
+	  set(CMAKE_MACOSX_RPATH ON)
+	endif()
 
 if (${MSVC})
   # using Visual Studio C++
@@ -127,8 +133,7 @@ endif()
 
 
 #########################################################
-# Shared library
-add_library(${PROJECT_NAME} SHARED ${SRCS_COMMON} ${HDRS_COMMON}
+add_library(${PROJECT_NAME} ${SRCS_COMMON} ${HDRS_COMMON}
   ${ACT_GENERATED_SOURCE}
   ${VERSION_FILES_OUTPUTLOCATION}
 )
@@ -229,8 +234,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/s
 
 
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "" )
-# This makes sure symbols are exported
-target_compile_options(${PROJECT_NAME} PRIVATE "-D__LIB3MF_EXPORTS")
+# This makes sure symbols are exported (shared builds only)
+if (BUILD_SHARED_LIBS)
+  target_compile_options(${PROJECT_NAME} PRIVATE "-D__LIB3MF_EXPORTS")
+endif()
 # The following two properties are crucial to reduce the number of undesirably exported symbols
 set_target_properties(${PROJECT_NAME} PROPERTIES C_VISIBILITY_PRESET hidden)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_VISIBILITY_PRESET hidden)
@@ -239,7 +246,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES VISIBILITY_INLINES_HIDDEN ON)
 set(STARTUPPROJECT ${PROJECT_NAME})
 
 #########################################################
-if (UNIX OR MINGW)
+if ((UNIX OR MINGW) AND BUILD_SHARED_LIBS)
   # Uncomment the following to put the version info into the .so-file.
   set_target_properties(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
   set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
@@ -251,6 +258,11 @@ else()
   # wd4996 masks the deprecated-warning
   target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/sdl;/W3;/WX;/FC;/wd4996>")
   target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
+endif()
+
+# Static build usability (e.g. linking into shared libs)
+if (NOT BUILD_SHARED_LIBS)
+  set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 
 ## UUID
