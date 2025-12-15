@@ -592,24 +592,29 @@ jobs:
             echo "run_integration_tests=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: Cache 3MF test suite
+        if: steps.set-status.outputs.run_integration_tests == 'true'
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/3mf-test-suite
+          key: 3mf-test-suite-v2.0.0
+
       - name: Download integration test suite
         if: steps.set-status.outputs.run_integration_tests == 'true'
         run: |
           USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
           PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
+          CACHE_DIR="$HOME/.cache/3mf-test-suite"
           SUITE_ZIP="3MF_Conformance_Test_Suites_v2.0.0.zip"
+          CACHE_ZIP="$CACHE_DIR/$SUITE_ZIP"
 
-          wget --user "$USER" \
-               --password "$PASS" \
-               "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/$SUITE_ZIP" \
-               -O "$SUITE_ZIP"
-
-      - name: Upload integration test suite artifact
-        if: steps.set-status.outputs.run_integration_tests == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: 3mf-test-suite
-          path: 3MF_Conformance_Test_Suites_v2.0.0.zip
+          mkdir -p "$CACHE_DIR"
+          if [ ! -f "$CACHE_ZIP" ]; then
+            wget --user "$USER" \
+                 --password "$PASS" \
+                 "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/$SUITE_ZIP" \
+                 -O "$CACHE_ZIP"
+          fi
       
 
   integration-tests-latest-release:
@@ -653,16 +658,16 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-      - name: Download integration test suite
-        uses: actions/download-artifact@v4
+      - name: Restore 3MF test suite cache
+        uses: actions/cache@v5
         with:
-          name: 3mf-test-suite
-          path: test_suite_artifact
+          path: ~/.cache/3mf-test-suite
+          key: 3mf-test-suite-v2.0.0
 
       - name: Unzip integration test suite
         run: |
           rm -rf test_suites
-          unzip -o test_suite_artifact/3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+          unzip -o "$HOME/.cache/3mf-test-suite/3MF_Conformance_Test_Suites_v2.0.0.zip" -d test_suites
       
 
       - name: List files
@@ -759,16 +764,16 @@ jobs:
           mv second_latest_lib3mf_sdk/lib3mf_sdk/* second_latest_lib3mf_sdk
           rmdir second_latest_lib3mf_sdk/lib3mf_sdk
 
-      - name: Download integration test suite
-        uses: actions/download-artifact@v4
+      - name: Restore 3MF test suite cache
+        uses: actions/cache@v5
         with:
-          name: 3mf-test-suite
-          path: test_suite_artifact
+          path: ~/.cache/3mf-test-suite
+          key: 3mf-test-suite-v2.0.0
 
       - name: Unzip integration test suite
         run: |
           rm -rf test_suites
-          unzip -o test_suite_artifact/3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+          unzip -o "$HOME/.cache/3mf-test-suite/3MF_Conformance_Test_Suites_v2.0.0.zip" -d test_suites
       
 
       - name: Copy integration test script
@@ -915,16 +920,16 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-      - name: Download integration test suite
-        uses: actions/download-artifact@v4
+      - name: Restore 3MF test suite cache
+        uses: actions/cache@v5
         with:
-          name: 3mf-test-suite
-          path: test_suite_artifact
+          path: ~/.cache/3mf-test-suite
+          key: 3mf-test-suite-v2.0.0
 
       - name: Unzip integration test suite
         run: |
           rm -rf test_suites
-          unzip -o test_suite_artifact/3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+          unzip -o "$HOME/.cache/3mf-test-suite/3MF_Conformance_Test_Suites_v2.0.0.zip" -d test_suites
       
 
       - name: Copy integration test script
@@ -1009,16 +1014,16 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-      - name: Download integration test suite
-        uses: actions/download-artifact@v4
+      - name: Restore 3MF test suite cache
+        uses: actions/cache@v5
         with:
-          name: 3mf-test-suite
-          path: test_suite_artifact
+          path: ~/.cache/3mf-test-suite
+          key: 3mf-test-suite-v2.0.0
 
       - name: Unzip integration test suite
         run: |
           rm -rf test_suites
-          unzip -o test_suite_artifact/3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+          unzip -o "$HOME/.cache/3mf-test-suite/3MF_Conformance_Test_Suites_v2.0.0.zip" -d test_suites
       
 
       - name: Copy integration test script
