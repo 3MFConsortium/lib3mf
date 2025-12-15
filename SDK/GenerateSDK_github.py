@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import os
 import sys
 import shutil
 import subprocess
@@ -47,6 +46,25 @@ def copy_tree(src: Path, dst: Path) -> None:
         shutil.copy2(src, dst)
 
 
+def find_macos_dylib(location: Path) -> Path:
+    candidate = location / "lib3mf.dylib"
+    if candidate.exists():
+        if candidate.is_file():
+            return candidate
+        if candidate.is_dir():
+            libs = sorted(candidate.glob("lib3mf*.dylib"))
+            for lib in libs:
+                if lib.is_file():
+                    return lib
+    for lib in sorted(location.glob("lib3mf*.dylib")):
+        if lib.is_file():
+            return lib
+    for lib in sorted(location.rglob("lib3mf*.dylib")):
+        if lib.is_file():
+            return lib
+    failed("Unable to find a macOS lib3mf*.dylib binary in the build artifacts.")
+
+
 def zip_dir_contents(src_dir: Path, zip_path: Path) -> None:
     # Matches: cd $SDKARTIFACT && zip -r ../$OUTFILE ./*
     try:
@@ -67,11 +85,6 @@ def main() -> int:
     sdk_source = Path("SDK")
     location = Path("build")
     outfile = Path("lib3mf_sdk.zip")
-
-    lib3mf_version = os.environ.get("LIB3MF_VERSION", "")
-    if not lib3mf_version:
-        # bash would expand to empty; that would likely fail to find the dylib.
-        failed("LIB3MF_VERSION env var is not set (needed to locate the macOS dylib).")
 
     print(f"Clean artifacts-folder {sdk_artifact}")
     if sdk_artifact.exists():
@@ -109,9 +122,8 @@ def main() -> int:
               sdk_artifact / "Bin" / "lib3mf.so",
               "Error copying binary")
 
-    copy_file(location / "lib3mf.dylib" / f"lib3mf.{lib3mf_version}.0.dylib",
-              sdk_artifact / "Bin" / "lib3mf.dylib",
-              "Error copying binary")
+    mac_lib = find_macos_dylib(location)
+    copy_file(mac_lib, sdk_artifact / "Bin" / "lib3mf.dylib", "Error copying binary")
 
     copy_file(location / "lib3mf.lib" / "lib3mf.lib",
               sdk_artifact / "Lib" / "lib3mf.lib",
