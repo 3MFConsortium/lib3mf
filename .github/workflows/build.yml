@@ -408,7 +408,7 @@ jobs:
       - run: pwd
       - run: ls -Rl .
       - name: Install the debian package
-       run: |
+        run: |
           DEB_ARTIFACT="${{ needs.build-linux-ubi8-gcc12.outputs.linux_deb_artifact }}"
           sudo dpkg -i "$DEB_ARTIFACT/$DEB_ARTIFACT"
       - name: Build CppDynamic - CPack (Debian)
@@ -596,6 +596,11 @@ jobs:
     outputs:
       run_integration_tests: ${{ steps.set-status.outputs.run_integration_tests }}
     steps:
+      - name: Install prerequisites
+        if: env.RUN_INTEGRATION_TESTS == 'on'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip wget
       - name: Set status
         id: set-status
         run: |
@@ -617,17 +622,12 @@ jobs:
                "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/$SUITE_ZIP" \
                -O "$SUITE_ZIP"
 
-          rm -rf test_suites
-          mkdir -p test_suites
-          unzip -o "$SUITE_ZIP" -d test_suites
-          rm "$SUITE_ZIP"
-
       - name: Upload integration test suite artifact
         if: steps.set-status.outputs.run_integration_tests == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: 3mf-test-suite
-          path: test_suites
+          path: 3MF_Conformance_Test_Suites_v2.0.0.zip
       
 
   integration-tests-latest-release:
@@ -671,11 +671,16 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-      - name: Download and unzip test suite
+      - name: Download integration test suite
         uses: actions/download-artifact@v4
         with:
           name: 3mf-test-suite
-          path: test_suites
+          path: test_suite_artifact
+
+      - name: Unzip integration test suite
+        run: |
+          rm -rf test_suites
+          unzip -o test_suite_artifact/3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
       
 
       - name: List files
@@ -772,11 +777,16 @@ jobs:
           mv second_latest_lib3mf_sdk/lib3mf_sdk/* second_latest_lib3mf_sdk
           rmdir second_latest_lib3mf_sdk/lib3mf_sdk
 
-      - name: Download and unzip test suite
+      - name: Download integration test suite
         uses: actions/download-artifact@v4
         with:
           name: 3mf-test-suite
-          path: test_suites
+          path: test_suite_artifact
+
+      - name: Unzip integration test suite
+        run: |
+          rm -rf test_suites
+          unzip -o test_suite_artifact/3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
       
 
       - name: Copy integration test script
@@ -923,11 +933,16 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-      - name: Download integration test suite artifact
+      - name: Download integration test suite
         uses: actions/download-artifact@v4
         with:
           name: 3mf-test-suite
-          path: test_suites
+          path: test_suite_artifact
+
+      - name: Unzip integration test suite
+        run: |
+          rm -rf test_suites
+          unzip -o test_suite_artifact/3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
       
 
       - name: Copy integration test script
@@ -1012,11 +1027,16 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-      - name: Download integration test suite artifact
+      - name: Download integration test suite
         uses: actions/download-artifact@v4
         with:
           name: 3mf-test-suite
-          path: test_suites
+          path: test_suite_artifact
+
+      - name: Unzip integration test suite
+        run: |
+          rm -rf test_suites
+          unzip -o test_suite_artifact/3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
       
 
       - name: Copy integration test script
