@@ -628,9 +628,6 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_RemoveCustomContentType = NULL;
 	pWrapperTable->m_Model_SetRandomNumberCallback = NULL;
 	pWrapperTable->m_Model_GetKeyStore = NULL;
-<<<<<<< HEAD
-	pWrapperTable->m_Model_GetRequiredNameSpaces = NULL;
-=======
 	pWrapperTable->m_Model_GetFunctions = NULL;
 	pWrapperTable->m_Model_AddImplicitFunction = NULL;
 	pWrapperTable->m_Model_AddFunctionFromImage3D = NULL;
@@ -638,7 +635,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_AddLevelSet = NULL;
 	pWrapperTable->m_Model_GetLevelSets = NULL;
 	pWrapperTable->m_Model_RemoveResource = NULL;
->>>>>>> 3732957fa520612a7156de3e01d935ec2569de07
+	pWrapperTable->m_Model_GetRequiredNameSpaces = NULL;
 	pWrapperTable->m_GetLibraryVersion = NULL;
 	pWrapperTable->m_GetPrereleaseInformation = NULL;
 	pWrapperTable->m_GetBuildInformation = NULL;
@@ -5933,14 +5930,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-<<<<<<< HEAD
 	pWrapperTable->m_Model_GetRequiredNameSpaces = (PLib3MFModel_GetRequiredNameSpacesPtr) GetProcAddress(hLibrary, "lib3mf_model_getrequirednamespaces");
 	#else // _WIN32
 	pWrapperTable->m_Model_GetRequiredNameSpaces = (PLib3MFModel_GetRequiredNameSpacesPtr) dlsym(hLibrary, "lib3mf_model_getrequirednamespaces");
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_GetRequiredNameSpaces == NULL)
-=======
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_Model_GetFunctions = (PLib3MFModel_GetFunctionsPtr) GetProcAddress(hLibrary, "lib3mf_model_getfunctions");
 	#else // _WIN32
 	pWrapperTable->m_Model_GetFunctions = (PLib3MFModel_GetFunctionsPtr) dlsym(hLibrary, "lib3mf_model_getfunctions");
@@ -6001,7 +5999,6 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_RemoveResource == NULL)
->>>>>>> 3732957fa520612a7156de3e01d935ec2569de07
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
