@@ -55,7 +55,7 @@ CVolumeData
 
 		Returns the number of VolumeDataProperty
 
-		:returns: the number of VolumeDataProperty-elements within this VolumdeData
+		:returns: the number of VolumeDataProperty-elements within this VolumeData
 
 
 	.. cpp:function:: PVolumeDataProperty GetProperty(const Lib3MF_uint32 nIndex)

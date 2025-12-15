@@ -54,14 +54,14 @@ CAttachment
 
 	.. cpp:function:: void ReadFromFile(const std::string & sFileName)
 
-		Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
+		Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.
 
 		:param sFileName: file to read from. 
 
 
 	.. cpp:function:: void ReadFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
 
-		Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
+		Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.
 
 		:param pTheReadCallback: Callback to call for reading a data chunk 
 		:param nStreamSize: number of bytes the callback returns 
@@ -85,7 +85,7 @@ CAttachment
 
 	.. cpp:function:: void ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer)
 
-		Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
+		Reads an attachment from a memory buffer. This buffer is immediately read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 
 		:param BufferBuffer: Buffer to read from 
 

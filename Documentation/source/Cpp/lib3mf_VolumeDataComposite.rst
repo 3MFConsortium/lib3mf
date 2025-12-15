@@ -33,7 +33,7 @@ CVolumeDataComposite
 
 	.. cpp:function:: PMaterialMapping GetMaterialMapping(const Lib3MF_uint32 nIndex)
 
-		Returns MaterialMappting with given index
+		Returns MaterialMapping with given index
 
 		:param nIndex: Index of the MaterialMapping in question. 
 		:returns: MaterialMapping used in this element
@@ -41,7 +41,7 @@ CVolumeDataComposite
 
 	.. cpp:function:: PMaterialMapping AddMaterialMapping(const sTransform & Transform)
 
-		Adds a the MaterialMapping
+		Adds a MaterialMapping
 
 		:param Transform: new transformation matrix 
 		:returns: The new MaterialMapping
