@@ -131,11 +131,21 @@ jobs:
           echo "ARTIFACT_NAME=$(basename ${ZIP_FILE})" >> $GITHUB_ENV
         shell: bash
       - run: ls -al build/
+      - name: Determine macOS dylib
+        id: find-mac-lib
+        run: |
+          set -euo pipefail
+          MAC_LIB=$(ls build/lib3mf*.dylib | head -n 1)
+          if [ -z "$MAC_LIB" ]; then
+            echo "No macOS dylib found in build/" >&2
+            exit 1
+          fi
+          echo "MAC_LIB=${MAC_LIB}" >> $GITHUB_ENV
       - name: Archive Mac binary
         uses: actions/upload-artifact@v4
         with:
           name: lib3mf.dylib
-          path: build/lib3mf.${{ env.LIB3MF_VERSION }}.0.dylib
+          path: ${{ env.MAC_LIB }}
       - name: Upload Artifact (CPacked Archive)
         uses: actions/upload-artifact@v4
         with:
@@ -576,6 +586,30 @@ jobs:
           else
             echo "run_integration_tests=false" >> $GITHUB_OUTPUT
           fi
+
+      - name: Download integration test suite
+        if: steps.set-status.outputs.run_integration_tests == 'true'
+        run: |
+          USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
+          PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
+          SUITE_ZIP="3MF_Conformance_Test_Suites_v2.0.0.zip"
+
+          wget --user "$USER" \
+               --password "$PASS" \
+               "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/$SUITE_ZIP" \
+               -O "$SUITE_ZIP"
+
+          rm -rf test_suites
+          mkdir -p test_suites
+          unzip -o "$SUITE_ZIP" -d test_suites
+          rm "$SUITE_ZIP"
+
+      - name: Upload integration test suite artifact
+        if: steps.set-status.outputs.run_integration_tests == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: 3mf-test-suite
+          path: test_suites
       
 
   integration-tests-latest-release:
@@ -620,16 +654,10 @@ jobs:
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
       - name: Download and unzip test suite
-        run: |
-          USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
-          PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
-
-          wget --user "$USER" \
-               --password "$PASS" \
-               "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" \
-               -O 3MF_Conformance_Test_Suites_v2.0.0.zip
-
-          unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+        uses: actions/download-artifact@v4
+        with:
+          name: 3mf-test-suite
+          path: test_suites
       
 
       - name: List files
@@ -727,16 +755,10 @@ jobs:
           rmdir second_latest_lib3mf_sdk/lib3mf_sdk
 
       - name: Download and unzip test suite
-        run: |
-          USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
-          PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
-
-          wget --user "$USER" \
-               --password "$PASS" \
-               "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" \
-               -O 3MF_Conformance_Test_Suites_v2.0.0.zip
-
-          unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+        uses: actions/download-artifact@v4
+        with:
+          name: 3mf-test-suite
+          path: test_suites
       
 
       - name: Copy integration test script
@@ -883,17 +905,11 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-      - name: Download and unzip test suite
-        run: |
-          USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
-          PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
-
-          wget --user "$USER" \
-               --password "$PASS" \
-               "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" \
-               -O 3MF_Conformance_Test_Suites_v2.0.0.zip
-
-          unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+      - name: Download integration test suite artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: 3mf-test-suite
+          path: test_suites
       
 
       - name: Copy integration test script
@@ -978,17 +994,11 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-      - name: Download and unzip test suite
-        run: |
-          USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
-          PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
-
-          wget --user "$USER" \
-               --password "$PASS" \
-               "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" \
-               -O 3MF_Conformance_Test_Suites_v2.0.0.zip
-
-          unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+      - name: Download integration test suite artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: 3mf-test-suite
+          path: test_suites
       
 
       - name: Copy integration test script
