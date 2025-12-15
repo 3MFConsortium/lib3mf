@@ -64,6 +64,7 @@ Enumerations
 		.. cpp:enumerator:: Model = 1
 		.. cpp:enumerator:: Support = 2
 		.. cpp:enumerator:: SolidSupport = 3
+		.. cpp:enumerator:: Surface = 4
 	
 	.. cpp:enum-class:: eTextureType : Lib3MF_int32
 	
@@ -96,12 +97,12 @@ Enumerations
 		.. cpp:enumerator:: Inside = 1
 		.. cpp:enumerator:: Outside = 2
 	
-    .. cpp:enum-class:: eBeamLatticeBallMode : Lib3MF_int32
+	.. cpp:enum-class:: eBeamLatticeBallMode : Lib3MF_int32
 	
-		.. cpp:enumerator:: None = 0
+		.. cpp:enumerator:: BeamLatticeBallModeNone = 0
 		.. cpp:enumerator:: Mixed = 1
 		.. cpp:enumerator:: All = 2
-    
+	
 	.. cpp:enum-class:: eProgressIdentifier : Lib3MF_int32
 	
 		.. cpp:enumerator:: QUERYCANCELED = 0
@@ -134,6 +135,97 @@ Enumerations
 		.. cpp:enumerator:: NoBlendMethod = 0
 		.. cpp:enumerator:: Mix = 1
 		.. cpp:enumerator:: Multiply = 2
+	
+	.. cpp:enum-class:: eChannelName : Lib3MF_int32
+	
+		.. cpp:enumerator:: Red = 0
+		.. cpp:enumerator:: Green = 1
+		.. cpp:enumerator:: Blue = 2
+		.. cpp:enumerator:: Alpha = 3
+	
+	.. cpp:enum-class:: eCompositionMethod : Lib3MF_int32
+	
+		.. cpp:enumerator:: WeightedSum = 0
+		.. cpp:enumerator:: Multiply = 1
+		.. cpp:enumerator:: Min = 2
+		.. cpp:enumerator:: Max = 3
+		.. cpp:enumerator:: Mask = 4
+	
+	.. cpp:enum-class:: eCompositionSpace : Lib3MF_int32
+	
+		.. cpp:enumerator:: Raw = 0
+		.. cpp:enumerator:: LinearColor = 1
+	
+	.. cpp:enum-class:: eImplicitNodeType : Lib3MF_int32
+	
+		.. cpp:enumerator:: Addition = 0
+		.. cpp:enumerator:: Subtraction = 1
+		.. cpp:enumerator:: Multiplication = 2
+		.. cpp:enumerator:: Division = 3
+		.. cpp:enumerator:: Constant = 4
+		.. cpp:enumerator:: ConstVec = 5
+		.. cpp:enumerator:: ConstMat = 6
+		.. cpp:enumerator:: ComposeVector = 7
+		.. cpp:enumerator:: DecomposeVector = 8
+		.. cpp:enumerator:: ComposeMatrix = 9
+		.. cpp:enumerator:: MatrixFromColumns = 10
+		.. cpp:enumerator:: MatrixFromRows = 11
+		.. cpp:enumerator:: Dot = 12
+		.. cpp:enumerator:: Cross = 13
+		.. cpp:enumerator:: MatVecMultiplication = 14
+		.. cpp:enumerator:: Transpose = 15
+		.. cpp:enumerator:: Inverse = 16
+		.. cpp:enumerator:: Sinus = 17
+		.. cpp:enumerator:: Cosinus = 18
+		.. cpp:enumerator:: Tan = 19
+		.. cpp:enumerator:: ArcSin = 20
+		.. cpp:enumerator:: ArcCos = 21
+		.. cpp:enumerator:: ArcTan = 22
+		.. cpp:enumerator:: ArcTan2 = 23
+		.. cpp:enumerator:: Min = 24
+		.. cpp:enumerator:: Max = 25
+		.. cpp:enumerator:: Abs = 26
+		.. cpp:enumerator:: Fmod = 27
+		.. cpp:enumerator:: Pow = 28
+		.. cpp:enumerator:: Sqrt = 29
+		.. cpp:enumerator:: Exp = 30
+		.. cpp:enumerator:: Log = 31
+		.. cpp:enumerator:: Log2 = 32
+		.. cpp:enumerator:: Log10 = 33
+		.. cpp:enumerator:: Select = 34
+		.. cpp:enumerator:: Clamp = 35
+		.. cpp:enumerator:: Sinh = 36
+		.. cpp:enumerator:: Cosh = 37
+		.. cpp:enumerator:: Tanh = 38
+		.. cpp:enumerator:: Round = 39
+		.. cpp:enumerator:: Ceil = 40
+		.. cpp:enumerator:: Floor = 41
+		.. cpp:enumerator:: Sign = 42
+		.. cpp:enumerator:: Fract = 43
+		.. cpp:enumerator:: FunctionCall = 44
+		.. cpp:enumerator:: Mesh = 45
+		.. cpp:enumerator:: Length = 46
+		.. cpp:enumerator:: ConstResourceID = 47
+		.. cpp:enumerator:: VectorFromScalar = 48
+		.. cpp:enumerator:: UnsignedMesh = 49
+		.. cpp:enumerator:: Mod = 50
+		.. cpp:enumerator:: BeamLattice = 51
+		.. cpp:enumerator:: FunctionGradient = 52
+		.. cpp:enumerator:: NormalizeDistance = 53
+	
+	.. cpp:enum-class:: eImplicitPortType : Lib3MF_int32
+	
+		.. cpp:enumerator:: Scalar = 0
+		.. cpp:enumerator:: Vector = 1
+		.. cpp:enumerator:: Matrix = 2
+		.. cpp:enumerator:: ResourceID = 3
+	
+	.. cpp:enum-class:: eImplicitNodeConfiguration : Lib3MF_int32
+	
+		.. cpp:enumerator:: Default = 0
+		.. cpp:enumerator:: ScalarToScalar = 1
+		.. cpp:enumerator:: VectorToVector = 2
+		.. cpp:enumerator:: MatrixToMatrix = 3
 	
 	.. cpp:enum-class:: eEncryptionAlgorithm : Lib3MF_int32
 	
@@ -251,6 +343,17 @@ Structs
 		.. cpp:member:: Lib3MF_uint32 m_Index
 	
 		.. cpp:member:: Lib3MF_double m_Radius
+	
+
+	.. cpp:struct:: sVector
+	
+		.. cpp:member:: Lib3MF_double m_Coordinates[3]
+	
+
+	.. cpp:struct:: sMatrix4x4
+	
+		.. cpp:member:: Lib3MF_double m_Field[4][4]
+	
 
 
 Function types

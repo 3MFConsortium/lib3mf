@@ -31,7 +31,7 @@ CResource
 		:returns: the PackagePart within which this resource resides.
 
 
-	.. cpp:function:: void SetPackagePart(CPackagePart * pPackagePart)
+	.. cpp:function:: void SetPackagePart(classParam<CPackagePart> pPackagePart)
 
 		Sets the new PackagePart within which this resource resides
 

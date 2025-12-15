@@ -35,7 +35,7 @@ CKeyStore
 		:returns: The consumer instance
 
 
-	.. cpp:function:: void RemoveConsumer(CConsumer * pConsumer)
+	.. cpp:function:: void RemoveConsumer(classParam<CConsumer> pConsumer)
 
 		Removes a consumer from the keystore
 
@@ -72,14 +72,14 @@ CKeyStore
 		:returns: The resource data group instance
 
 
-	.. cpp:function:: void RemoveResourceDataGroup(CResourceDataGroup * pResourceDataGroup)
+	.. cpp:function:: void RemoveResourceDataGroup(classParam<CResourceDataGroup> pResourceDataGroup)
 
 		Removes a resource data group
 
 		:param pResourceDataGroup: The resource data group instance 
 
 
-	.. cpp:function:: PResourceDataGroup FindResourceDataGroup(CPackagePart * pPartPath)
+	.. cpp:function:: PResourceDataGroup FindResourceDataGroup(classParam<CPackagePart> pPartPath)
 
 		Finds a resource data group that contains a particular resourcedata
 
@@ -87,7 +87,7 @@ CKeyStore
 		:returns: The data resource instance
 
 
-	.. cpp:function:: PResourceData AddResourceData(CResourceDataGroup * pResourceDataGroup, CPackagePart * pPartPath, const eEncryptionAlgorithm eAlgorithm, const eCompression eCompression, const CInputVector<Lib3MF_uint8> & AdditionalAuthenticationDataBuffer)
+	.. cpp:function:: PResourceData AddResourceData(classParam<CResourceDataGroup> pResourceDataGroup, classParam<CPackagePart> pPartPath, const eEncryptionAlgorithm eAlgorithm, const eCompression eCompression, const CInputVector<Lib3MF_uint8> & AdditionalAuthenticationDataBuffer)
 
 		Add resourcedata to resourcedatagroup element
 
@@ -99,14 +99,14 @@ CKeyStore
 		:returns: The data resource instance
 
 
-	.. cpp:function:: void RemoveResourceData(CResourceData * pResourceData)
+	.. cpp:function:: void RemoveResourceData(classParam<CResourceData> pResourceData)
 
 		Removes a resource data
 
 		:param pResourceData: The resource data to be removed 
 
 
-	.. cpp:function:: PResourceData FindResourceData(CPackagePart * pResourcePath)
+	.. cpp:function:: PResourceData FindResourceData(classParam<CPackagePart> pResourcePath)
 
 		Finds a resource data on this resource group
 

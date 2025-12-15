@@ -10,7 +10,7 @@ CComponentsObject
 
 
 
-	.. cpp:function:: PComponent AddComponent(CObject * pObjectResource, const sTransform & Transform)
+	.. cpp:function:: PComponent AddComponent(classParam<CObject> pObjectResource, const sTransform & Transform)
 
 		Adds a new component to a components object.
 

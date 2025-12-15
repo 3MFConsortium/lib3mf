@@ -17,7 +17,7 @@ CTexture2D
 		:returns: attachment that holds the texture's image information.
 
 
-	.. cpp:function:: void SetAttachment(CAttachment * pAttachment)
+	.. cpp:function:: void SetAttachment(classParam<CAttachment> pAttachment)
 
 		Sets the texture's package path to the path of the attachment.
 

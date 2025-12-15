@@ -66,6 +66,13 @@ CObject
 		:returns: returns, whether the object is a components object
 
 
+	.. cpp:function:: bool IsLevelSetObject()
+
+		Retrieves, if an object is a level set object
+
+		:returns: returns, whether the object is a level set object
+
+
 	.. cpp:function:: bool IsValid()
 
 		Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.
@@ -73,7 +80,7 @@ CObject
 		:returns: returns whether the object is a valid object description
 
 
-	.. cpp:function:: void SetAttachmentAsThumbnail(CAttachment * pAttachment)
+	.. cpp:function:: void SetAttachmentAsThumbnail(classParam<CAttachment> pAttachment)
 
 		Use an existing attachment as thumbnail for this object
 
@@ -157,7 +164,7 @@ CObject
 		:returns: returns the slicestack instance
 
 
-	.. cpp:function:: void AssignSliceStack(CSliceStack * pSliceStackInstance)
+	.. cpp:function:: void AssignSliceStack(classParam<CSliceStack> pSliceStackInstance)
 
 		assigns a slicestack to the object
 
