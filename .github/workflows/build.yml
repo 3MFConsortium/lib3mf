@@ -305,7 +305,7 @@ jobs:
       - run: ls -Rlh ./build
       - run: unzip bindings.zip/bindings.zip
         working-directory: ./build
-      - run: bash SDK/GenerateSDK_github.sh
+      - run: python3 SDK/GenerateSDK_github.py
       - name: Archive SDK artifact (Comprehensive)
         uses: actions/upload-artifact@v4
         with:
