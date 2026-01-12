@@ -96,6 +96,8 @@ namespace NMR {
 
 	typedef std::map<NMR::UniqueResourceID, NMR::UniqueResourceID> UniqueResourceIDMapping;
 
+	using NameSpaces = std::vector<std::string>;
+
 	class CModelImage3D;
 	typedef std::shared_ptr <CModelImage3D> PModelImage3D;
 
@@ -178,6 +180,8 @@ namespace NMR {
 		PKeyStore m_pKeyStore;
 
 		CryptoRandGenDescriptor m_sRandDescriptor;
+
+		NameSpaces m_requiredNameSpaces;
 
 		// Add Resource to resource lookup tables
 		void addResourceToLookupTable(_In_ PModelResource pResource);
@@ -380,6 +384,10 @@ namespace NMR {
 
 		void removeResource(PModelResource pResource);
 
+		void registerRequiredNameSpace(std::string const& nameSpace);
+		/// @brief Determines the namespaces that are required by the model
+		/// @return The namespaces that are required by the model
+		NameSpaces getRequiredNameSpaces();
 	};
 
 	typedef std::shared_ptr <CModel> PModel;

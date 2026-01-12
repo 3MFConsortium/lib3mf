@@ -2631,6 +2631,27 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFNameSpaceIterator 
+**************************************************************************************************************************/
+class CLib3MFNameSpaceIterator : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void MoveNext(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void MovePrevious(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCurrent(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void Count(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFNameSpaceIterator();
+	~CLib3MFNameSpaceIterator();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
  Class CLib3MFModel 
 **************************************************************************************************************************/
 class CLib3MFModel : public CLib3MFBaseClass {
@@ -2709,6 +2730,7 @@ private:
 	static void AddLevelSet(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetLevelSets(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveResource(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetRequiredNameSpaces(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFModel();

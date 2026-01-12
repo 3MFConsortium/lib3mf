@@ -5995,6 +5995,48 @@ typedef Lib3MFResult (*PLib3MFKeyStore_GetUUIDPtr) (Lib3MF_KeyStore pKeyStore, b
 typedef Lib3MFResult (*PLib3MFKeyStore_SetUUIDPtr) (Lib3MF_KeyStore pKeyStore, const char * pUUID);
 
 /*************************************************************************************************************************
+ Class definition for NameSpaceIterator
+**************************************************************************************************************************/
+
+/**
+* Iterates to the next namespace in the list.
+*
+* @param[in] pNameSpaceIterator - NameSpaceIterator instance.
+* @param[out] pHasNext - Iterates to the namespace in the list.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFNameSpaceIterator_MoveNextPtr) (Lib3MF_NameSpaceIterator pNameSpaceIterator, bool * pHasNext);
+
+/**
+* Iterates to the previous namespace in the list.
+*
+* @param[in] pNameSpaceIterator - NameSpaceIterator instance.
+* @param[out] pHasPrevious - Iterates to the previous required namespace in the list.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFNameSpaceIterator_MovePreviousPtr) (Lib3MF_NameSpaceIterator pNameSpaceIterator, bool * pHasPrevious);
+
+/**
+* Returns the required namespace the iterator points at.
+*
+* @param[in] pNameSpaceIterator - NameSpaceIterator instance.
+* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameSpaceBuffer -  buffer of returns the namespace., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFNameSpaceIterator_GetCurrentPtr) (Lib3MF_NameSpaceIterator pNameSpaceIterator, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer);
+
+/**
+* Returns the number of namespaces the iterator captures.
+*
+* @param[in] pNameSpaceIterator - NameSpaceIterator instance.
+* @param[out] pCount - returns the number of namspaces the iterator captures.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFNameSpaceIterator_CountPtr) (Lib3MF_NameSpaceIterator pNameSpaceIterator, Lib3MF_uint64 * pCount);
+
+/*************************************************************************************************************************
  Class definition for Model
 **************************************************************************************************************************/
 
@@ -6681,6 +6723,15 @@ typedef Lib3MFResult (*PLib3MFModel_GetLevelSetsPtr) (Lib3MF_Model pModel, Lib3M
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFModel_RemoveResourcePtr) (Lib3MF_Model pModel, Lib3MF_Resource pResource);
+
+/**
+* Gets the list of required namespaces for the model
+*
+* @param[in] pModel - Model instance.
+* @param[out] pNameSpaceIterator - The required namespace iterator
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetRequiredNameSpacesPtr) (Lib3MF_Model pModel, Lib3MF_NameSpaceIterator * pNameSpaceIterator);
 
 /*************************************************************************************************************************
  Global functions
@@ -7441,6 +7492,10 @@ typedef struct {
 	PLib3MFKeyStore_GetResourceDataPtr m_KeyStore_GetResourceData;
 	PLib3MFKeyStore_GetUUIDPtr m_KeyStore_GetUUID;
 	PLib3MFKeyStore_SetUUIDPtr m_KeyStore_SetUUID;
+	PLib3MFNameSpaceIterator_MoveNextPtr m_NameSpaceIterator_MoveNext;
+	PLib3MFNameSpaceIterator_MovePreviousPtr m_NameSpaceIterator_MovePrevious;
+	PLib3MFNameSpaceIterator_GetCurrentPtr m_NameSpaceIterator_GetCurrent;
+	PLib3MFNameSpaceIterator_CountPtr m_NameSpaceIterator_Count;
 	PLib3MFModel_RootModelPartPtr m_Model_RootModelPart;
 	PLib3MFModel_FindOrCreatePackagePartPtr m_Model_FindOrCreatePackagePart;
 	PLib3MFModel_SetUnitPtr m_Model_SetUnit;
@@ -7513,6 +7568,7 @@ typedef struct {
 	PLib3MFModel_AddLevelSetPtr m_Model_AddLevelSet;
 	PLib3MFModel_GetLevelSetsPtr m_Model_GetLevelSets;
 	PLib3MFModel_RemoveResourcePtr m_Model_RemoveResource;
+	PLib3MFModel_GetRequiredNameSpacesPtr m_Model_GetRequiredNameSpaces;
 	PLib3MFGetLibraryVersionPtr m_GetLibraryVersion;
 	PLib3MFGetPrereleaseInformationPtr m_GetPrereleaseInformation;
 	PLib3MFGetBuildInformationPtr m_GetBuildInformation;
@@ -9212,6 +9268,18 @@ Lib3MFResult CCall_lib3mf_keystore_getuuid(Lib3MFHandle libraryHandle, Lib3MF_Ke
 Lib3MFResult CCall_lib3mf_keystore_setuuid(Lib3MFHandle libraryHandle, Lib3MF_KeyStore pKeyStore, const char * pUUID);
 
 
+Lib3MFResult CCall_lib3mf_namespaceiterator_movenext(Lib3MFHandle libraryHandle, Lib3MF_NameSpaceIterator pNameSpaceIterator, bool * pHasNext);
+
+
+Lib3MFResult CCall_lib3mf_namespaceiterator_moveprevious(Lib3MFHandle libraryHandle, Lib3MF_NameSpaceIterator pNameSpaceIterator, bool * pHasPrevious);
+
+
+Lib3MFResult CCall_lib3mf_namespaceiterator_getcurrent(Lib3MFHandle libraryHandle, Lib3MF_NameSpaceIterator pNameSpaceIterator, const Lib3MF_uint32 nNameSpaceBufferSize, Lib3MF_uint32* pNameSpaceNeededChars, char * pNameSpaceBuffer);
+
+
+Lib3MFResult CCall_lib3mf_namespaceiterator_count(Lib3MFHandle libraryHandle, Lib3MF_NameSpaceIterator pNameSpaceIterator, Lib3MF_uint64 * pCount);
+
+
 Lib3MFResult CCall_lib3mf_model_rootmodelpart(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_PackagePart * pRootModelPart);
 
 
@@ -9426,6 +9494,9 @@ Lib3MFResult CCall_lib3mf_model_getlevelsets(Lib3MFHandle libraryHandle, Lib3MF_
 
 
 Lib3MFResult CCall_lib3mf_model_removeresource(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Resource pResource);
+
+
+Lib3MFResult CCall_lib3mf_model_getrequirednamespaces(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_NameSpaceIterator * pNameSpaceIterator);
 
 
 Lib3MFResult CCall_lib3mf_getlibraryversion(Lib3MFHandle libraryHandle, Lib3MF_uint32 * pMajor, Lib3MF_uint32 * pMinor, Lib3MF_uint32 * pMicro);

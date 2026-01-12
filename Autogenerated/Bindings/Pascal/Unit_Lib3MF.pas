@@ -597,6 +597,7 @@ type
 	TLib3MFResourceData = class;
 	TLib3MFResourceDataGroup = class;
 	TLib3MFKeyStore = class;
+	TLib3MFNameSpaceIterator = class;
 	TLib3MFModel = class;
 
 
@@ -6673,6 +6674,49 @@ type
 	
 
 (*************************************************************************************************************************
+ Function type definitions for NameSpaceIterator
+**************************************************************************************************************************)
+
+	(**
+	* Iterates to the next namespace in the list.
+	*
+	* @param[in] pNameSpaceIterator - NameSpaceIterator instance.
+	* @param[out] pHasNext - Iterates to the namespace in the list.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNameSpaceIterator_MoveNextFunc = function(pNameSpaceIterator: TLib3MFHandle; out pHasNext: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Iterates to the previous namespace in the list.
+	*
+	* @param[in] pNameSpaceIterator - NameSpaceIterator instance.
+	* @param[out] pHasPrevious - Iterates to the previous required namespace in the list.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNameSpaceIterator_MovePreviousFunc = function(pNameSpaceIterator: TLib3MFHandle; out pHasPrevious: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the required namespace the iterator points at.
+	*
+	* @param[in] pNameSpaceIterator - NameSpaceIterator instance.
+	* @param[in] nNameSpaceBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameSpaceNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameSpaceBuffer -  buffer of returns the namespace., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNameSpaceIterator_GetCurrentFunc = function(pNameSpaceIterator: TLib3MFHandle; const nNameSpaceBufferSize: Cardinal; out pNameSpaceNeededChars: Cardinal; pNameSpaceBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the number of namespaces the iterator captures.
+	*
+	* @param[in] pNameSpaceIterator - NameSpaceIterator instance.
+	* @param[out] pCount - returns the number of namspaces the iterator captures.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNameSpaceIterator_CountFunc = function(pNameSpaceIterator: TLib3MFHandle; out pCount: QWord): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
  Function type definitions for Model
 **************************************************************************************************************************)
 
@@ -7359,6 +7403,15 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFModel_RemoveResourceFunc = function(pModel: TLib3MFHandle; const pResource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Gets the list of required namespaces for the model
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pNameSpaceIterator - The required namespace iterator
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetRequiredNameSpacesFunc = function(pModel: TLib3MFHandle; out pNameSpaceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 (*************************************************************************************************************************
  Global function definitions 
@@ -9438,6 +9491,21 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
+ Class definition for NameSpaceIterator
+**************************************************************************************************************************)
+
+	TLib3MFNameSpaceIterator = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function MoveNext(): Boolean;
+		function MovePrevious(): Boolean;
+		function GetCurrent(): String;
+		function Count(): QWord;
+	end;
+
+
+(*************************************************************************************************************************
  Class definition for Model
 **************************************************************************************************************************)
 
@@ -9517,6 +9585,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddLevelSet(): TLib3MFLevelSet;
 		function GetLevelSets(): TLib3MFLevelSetIterator;
 		procedure RemoveResource(const AResource: TLib3MFResource);
+		function GetRequiredNameSpaces(): TLib3MFNameSpaceIterator;
 	end;
 
 (*************************************************************************************************************************
@@ -10081,6 +10150,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFKeyStore_GetResourceDataFunc: TLib3MFKeyStore_GetResourceDataFunc;
 		FLib3MFKeyStore_GetUUIDFunc: TLib3MFKeyStore_GetUUIDFunc;
 		FLib3MFKeyStore_SetUUIDFunc: TLib3MFKeyStore_SetUUIDFunc;
+		FLib3MFNameSpaceIterator_MoveNextFunc: TLib3MFNameSpaceIterator_MoveNextFunc;
+		FLib3MFNameSpaceIterator_MovePreviousFunc: TLib3MFNameSpaceIterator_MovePreviousFunc;
+		FLib3MFNameSpaceIterator_GetCurrentFunc: TLib3MFNameSpaceIterator_GetCurrentFunc;
+		FLib3MFNameSpaceIterator_CountFunc: TLib3MFNameSpaceIterator_CountFunc;
 		FLib3MFModel_RootModelPartFunc: TLib3MFModel_RootModelPartFunc;
 		FLib3MFModel_FindOrCreatePackagePartFunc: TLib3MFModel_FindOrCreatePackagePartFunc;
 		FLib3MFModel_SetUnitFunc: TLib3MFModel_SetUnitFunc;
@@ -10153,6 +10226,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_AddLevelSetFunc: TLib3MFModel_AddLevelSetFunc;
 		FLib3MFModel_GetLevelSetsFunc: TLib3MFModel_GetLevelSetsFunc;
 		FLib3MFModel_RemoveResourceFunc: TLib3MFModel_RemoveResourceFunc;
+		FLib3MFModel_GetRequiredNameSpacesFunc: TLib3MFModel_GetRequiredNameSpacesFunc;
 		FLib3MFGetLibraryVersionFunc: TLib3MFGetLibraryVersionFunc;
 		FLib3MFGetPrereleaseInformationFunc: TLib3MFGetPrereleaseInformationFunc;
 		FLib3MFGetBuildInformationFunc: TLib3MFGetBuildInformationFunc;
@@ -10737,6 +10811,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFKeyStore_GetResourceDataFunc: TLib3MFKeyStore_GetResourceDataFunc read FLib3MFKeyStore_GetResourceDataFunc;
 		property Lib3MFKeyStore_GetUUIDFunc: TLib3MFKeyStore_GetUUIDFunc read FLib3MFKeyStore_GetUUIDFunc;
 		property Lib3MFKeyStore_SetUUIDFunc: TLib3MFKeyStore_SetUUIDFunc read FLib3MFKeyStore_SetUUIDFunc;
+		property Lib3MFNameSpaceIterator_MoveNextFunc: TLib3MFNameSpaceIterator_MoveNextFunc read FLib3MFNameSpaceIterator_MoveNextFunc;
+		property Lib3MFNameSpaceIterator_MovePreviousFunc: TLib3MFNameSpaceIterator_MovePreviousFunc read FLib3MFNameSpaceIterator_MovePreviousFunc;
+		property Lib3MFNameSpaceIterator_GetCurrentFunc: TLib3MFNameSpaceIterator_GetCurrentFunc read FLib3MFNameSpaceIterator_GetCurrentFunc;
+		property Lib3MFNameSpaceIterator_CountFunc: TLib3MFNameSpaceIterator_CountFunc read FLib3MFNameSpaceIterator_CountFunc;
 		property Lib3MFModel_RootModelPartFunc: TLib3MFModel_RootModelPartFunc read FLib3MFModel_RootModelPartFunc;
 		property Lib3MFModel_FindOrCreatePackagePartFunc: TLib3MFModel_FindOrCreatePackagePartFunc read FLib3MFModel_FindOrCreatePackagePartFunc;
 		property Lib3MFModel_SetUnitFunc: TLib3MFModel_SetUnitFunc read FLib3MFModel_SetUnitFunc;
@@ -10809,6 +10887,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_AddLevelSetFunc: TLib3MFModel_AddLevelSetFunc read FLib3MFModel_AddLevelSetFunc;
 		property Lib3MFModel_GetLevelSetsFunc: TLib3MFModel_GetLevelSetsFunc read FLib3MFModel_GetLevelSetsFunc;
 		property Lib3MFModel_RemoveResourceFunc: TLib3MFModel_RemoveResourceFunc read FLib3MFModel_RemoveResourceFunc;
+		property Lib3MFModel_GetRequiredNameSpacesFunc: TLib3MFModel_GetRequiredNameSpacesFunc read FLib3MFModel_GetRequiredNameSpacesFunc;
 		property Lib3MFGetLibraryVersionFunc: TLib3MFGetLibraryVersionFunc read FLib3MFGetLibraryVersionFunc;
 		property Lib3MFGetPrereleaseInformationFunc: TLib3MFGetPrereleaseInformationFunc read FLib3MFGetPrereleaseInformationFunc;
 		property Lib3MFGetBuildInformationFunc: TLib3MFGetBuildInformationFunc read FLib3MFGetBuildInformationFunc;
@@ -10975,6 +11054,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeResourceData(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFResourceData;
 	function TLib3MFPolymorphicFactoryMakeResourceDataGroup(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFResourceDataGroup;
 	function TLib3MFPolymorphicFactoryMakeKeyStore(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFKeyStore;
+	function TLib3MFPolymorphicFactoryMakeNameSpaceIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNameSpaceIterator;
 	function TLib3MFPolymorphicFactoryMakeModel(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFModel;
 (*************************************************************************************************************************
  Enum conversion
@@ -11862,6 +11942,7 @@ implementation
 			QWord($1A47A5E258E22EF9): begin Obj := TLIB3MFResourceData.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceData"
 			QWord($D59067227E428AA4): begin Obj := TLIB3MFResourceDataGroup.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ResourceDataGroup"
 			QWord($1CC9E0CC082253C6): begin Obj := TLIB3MFKeyStore.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::KeyStore"
+			QWord($8D1206A0FEEFCC31): begin Obj := TLIB3MFNameSpaceIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::NameSpaceIterator"
 			QWord($5A8164ECEDB03F09): begin Obj := TLIB3MFModel.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Model"
 		end;
 		if Result = nil then Result := _B.Create(Wrapper, Handle);
@@ -12337,6 +12418,10 @@ implementation
 	function TLib3MFPolymorphicFactoryMakeKeyStore(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFKeyStore;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFKeyStore, TLIB3MFKeyStore>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeNameSpaceIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNameSpaceIterator;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFNameSpaceIterator, TLIB3MFNameSpaceIterator>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeModel(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFModel;
 	begin
@@ -19291,6 +19376,57 @@ implementation
 	end;
 
 (*************************************************************************************************************************
+ Class implementation for NameSpaceIterator
+**************************************************************************************************************************)
+
+	constructor TLib3MFNameSpaceIterator.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFNameSpaceIterator.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFNameSpaceIterator.MoveNext(): Boolean;
+	var
+		ResultHasNext: Byte;
+	begin
+		ResultHasNext := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNameSpaceIterator_MoveNextFunc(FHandle, ResultHasNext));
+		Result := (ResultHasNext <> 0);
+	end;
+
+	function TLib3MFNameSpaceIterator.MovePrevious(): Boolean;
+	var
+		ResultHasPrevious: Byte;
+	begin
+		ResultHasPrevious := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNameSpaceIterator_MovePreviousFunc(FHandle, ResultHasPrevious));
+		Result := (ResultHasPrevious <> 0);
+	end;
+
+	function TLib3MFNameSpaceIterator.GetCurrent(): String;
+	var
+		bytesNeededNameSpace: Cardinal;
+		bytesWrittenNameSpace: Cardinal;
+		bufferNameSpace: array of Char;
+	begin
+		bytesNeededNameSpace:= 0;
+		bytesWrittenNameSpace:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNameSpaceIterator_GetCurrentFunc(FHandle, 0, bytesNeededNameSpace, nil));
+		SetLength(bufferNameSpace, bytesNeededNameSpace);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNameSpaceIterator_GetCurrentFunc(FHandle, bytesNeededNameSpace, bytesWrittenNameSpace, @bufferNameSpace[0]));
+		Result := StrPas(@bufferNameSpace[0]);
+	end;
+
+	function TLib3MFNameSpaceIterator.Count(): QWord;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNameSpaceIterator_CountFunc(FHandle, Result));
+	end;
+
+(*************************************************************************************************************************
  Class implementation for Model
 **************************************************************************************************************************)
 
@@ -20072,6 +20208,17 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_RemoveResourceFunc(FHandle, AResourceHandle));
 	end;
 
+	function TLib3MFModel.GetRequiredNameSpaces(): TLib3MFNameSpaceIterator;
+	var
+		HNameSpaceIterator: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNameSpaceIterator := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetRequiredNameSpacesFunc(FHandle, HNameSpaceIterator));
+		if Assigned(HNameSpaceIterator) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFNameSpaceIterator, TLib3MFNameSpaceIterator>.Make(FWrapper, HNameSpaceIterator);
+	end;
+
 (*************************************************************************************************************************
  Wrapper class implementation
 **************************************************************************************************************************)
@@ -20649,6 +20796,10 @@ implementation
 		FLib3MFKeyStore_GetResourceDataFunc := LoadFunction('lib3mf_keystore_getresourcedata');
 		FLib3MFKeyStore_GetUUIDFunc := LoadFunction('lib3mf_keystore_getuuid');
 		FLib3MFKeyStore_SetUUIDFunc := LoadFunction('lib3mf_keystore_setuuid');
+		FLib3MFNameSpaceIterator_MoveNextFunc := LoadFunction('lib3mf_namespaceiterator_movenext');
+		FLib3MFNameSpaceIterator_MovePreviousFunc := LoadFunction('lib3mf_namespaceiterator_moveprevious');
+		FLib3MFNameSpaceIterator_GetCurrentFunc := LoadFunction('lib3mf_namespaceiterator_getcurrent');
+		FLib3MFNameSpaceIterator_CountFunc := LoadFunction('lib3mf_namespaceiterator_count');
 		FLib3MFModel_RootModelPartFunc := LoadFunction('lib3mf_model_rootmodelpart');
 		FLib3MFModel_FindOrCreatePackagePartFunc := LoadFunction('lib3mf_model_findorcreatepackagepart');
 		FLib3MFModel_SetUnitFunc := LoadFunction('lib3mf_model_setunit');
@@ -20721,6 +20872,7 @@ implementation
 		FLib3MFModel_AddLevelSetFunc := LoadFunction('lib3mf_model_addlevelset');
 		FLib3MFModel_GetLevelSetsFunc := LoadFunction('lib3mf_model_getlevelsets');
 		FLib3MFModel_RemoveResourceFunc := LoadFunction('lib3mf_model_removeresource');
+		FLib3MFModel_GetRequiredNameSpacesFunc := LoadFunction('lib3mf_model_getrequirednamespaces');
 		FLib3MFGetLibraryVersionFunc := LoadFunction('lib3mf_getlibraryversion');
 		FLib3MFGetPrereleaseInformationFunc := LoadFunction('lib3mf_getprereleaseinformation');
 		FLib3MFGetBuildInformationFunc := LoadFunction('lib3mf_getbuildinformation');
@@ -22416,6 +22568,18 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_keystore_setuuid'), @FLib3MFKeyStore_SetUUIDFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_namespaceiterator_movenext'), @FLib3MFNameSpaceIterator_MoveNextFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_namespaceiterator_moveprevious'), @FLib3MFNameSpaceIterator_MovePreviousFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_namespaceiterator_getcurrent'), @FLib3MFNameSpaceIterator_GetCurrentFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_namespaceiterator_count'), @FLib3MFNameSpaceIterator_CountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_rootmodelpart'), @FLib3MFModel_RootModelPartFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -22630,6 +22794,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_removeresource'), @FLib3MFModel_RemoveResourceFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getrequirednamespaces'), @FLib3MFModel_GetRequiredNameSpacesFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_getlibraryversion'), @FLib3MFGetLibraryVersionFunc);

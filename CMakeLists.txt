@@ -39,6 +39,7 @@ option(USE_INCLUDED_SSL "Use included libressl" ON)
 option(BUILD_FOR_CODECOVERAGE "Build for code coverage analysis" OFF)
 option(STRIP_BINARIES "Strip binaries (on non-apple)" ON)
 option(USE_PLATFORM_UUID "Use UUID geneator that is provided by the OS (always ON for Windows)" OFF)
+option(BUILD_AS_STATIC_LIB "Build as static lib (default=OFF)" OFF)
 
 add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
 set (CMAKE_CXX_STANDARD 17)
@@ -128,10 +129,17 @@ endif()
 
 #########################################################
 # Shared library
-add_library(${PROJECT_NAME} SHARED ${SRCS_COMMON} ${HDRS_COMMON}
-  ${ACT_GENERATED_SOURCE}
-  ${VERSION_FILES_OUTPUTLOCATION}
+if (BUILD_AS_STATIC_LIB)
+    add_library(${PROJECT_NAME} STATIC ${SRCS_COMMON} ${HDRS_COMMON}
+    ${ACT_GENERATED_SOURCE}
+    ${VERSION_FILES_OUTPUTLOCATION}
 )
+else()
+    add_library(${PROJECT_NAME} SHARED ${SRCS_COMMON} ${HDRS_COMMON}
+    ${ACT_GENERATED_SOURCE}
+    ${VERSION_FILES_OUTPUTLOCATION}
+)
+endif()
 
 if (${MSVC})
   # using Visual Studio C++
@@ -206,7 +214,9 @@ if (USE_INCLUDED_LIBZIP)
 else()
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(LIBZIP REQUIRED libzip)
-    target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
+    target_include_directories(${PROJECT_NAME} PRIVATE ${LIBZIP_INCLUDE_DIRS})
+    target_link_directories(${PROJECT_NAME} PRIVATE ${LIBZIP_LIBRARY_DIRS})
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBZIP_LIBRARIES})
 endif()
 
 
@@ -221,7 +231,9 @@ if (USE_INCLUDED_ZLIB)
 else()
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(ZLIB REQUIRED zlib)
-    target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
+    target_include_directories(${PROJECT_NAME} PRIVATE ${ZLIB_INCLUDE_DIRS})
+    target_link_directories(${PROJECT_NAME} PRIVATE ${ZLIB_LIBRARY_DIRS})
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${ZLIB_LIBRARIES})
 endif()
 
 

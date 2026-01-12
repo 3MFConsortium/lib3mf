@@ -34,26 +34,33 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_reader.hpp"
 #include "lib3mf_writer.hpp"
 
+#include "lib3mf_attachment.hpp"
+#include "lib3mf_basematerialgroup.hpp"
+#include "lib3mf_basematerialgroupiterator.hpp"
 #include "lib3mf_builditem.hpp"
 #include "lib3mf_builditemiterator.hpp"
-#include "lib3mf_meshobject.hpp"
-#include "lib3mf_objectiterator.hpp"
-#include "lib3mf_meshobjectiterator.hpp"
-#include "lib3mf_resourceiterator.hpp"
+#include "lib3mf_colorgroup.hpp"
+#include "lib3mf_colorgroupiterator.hpp"
 #include "lib3mf_componentsobject.hpp"
 #include "lib3mf_componentsobjectiterator.hpp"
-#include "lib3mf_basematerialgroup.hpp"
+#include "lib3mf_compositematerials.hpp"
+#include "lib3mf_compositematerialsiterator.hpp"
+#include "lib3mf_keystore.hpp"
+#include "lib3mf_meshobject.hpp"
+#include "lib3mf_meshobjectiterator.hpp"
 #include "lib3mf_metadatagroup.hpp"
-#include "lib3mf_attachment.hpp"
+#include "lib3mf_multipropertygroup.hpp"
+#include "lib3mf_multipropertygroupiterator.hpp"
+#include "lib3mf_namespaceiterator.hpp"
+#include "lib3mf_objectiterator.hpp"
+#include "lib3mf_packagepart.hpp"
+#include "lib3mf_resourceiterator.hpp"
 #include "lib3mf_slicestack.hpp"
 #include "lib3mf_slicestackiterator.hpp"
 #include "lib3mf_texture2d.hpp"
-#include "lib3mf_texture2diterator.hpp"
-#include "lib3mf_basematerialgroupiterator.hpp"
-#include "lib3mf_colorgroup.hpp"
-#include "lib3mf_colorgroupiterator.hpp"
 #include "lib3mf_texture2dgroup.hpp"
 #include "lib3mf_texture2dgroupiterator.hpp"
+#include "lib3mf_texture2diterator.hpp"
 #include "lib3mf_compositematerials.hpp"
 #include "lib3mf_compositematerialsiterator.hpp"
 #include "lib3mf_multipropertygroup.hpp"
@@ -69,6 +76,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_volumedata.hpp"
 #include "lib3mf_levelset.hpp"
 #include "lib3mf_levelsetiterator.hpp"
+#include "lib3mf_namespaceiterator.hpp"
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -945,4 +953,13 @@ void CModel::RemoveResource(IResource* pResource)
 	if (!pLib3MFResource)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCE);
 	model().removeResource(pLib3MFResource->resource());
+}
+
+INameSpaceIterator * CModel::GetRequiredNameSpaces()
+{
+	auto pResult = std::unique_ptr<CNameSpaceIterator>(new CNameSpaceIterator());
+
+	pResult->setNameSpaces(std::move(m_model->getRequiredNameSpaces()));
+
+	return pResult.release();
 }
