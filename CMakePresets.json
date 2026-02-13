@@ -95,6 +95,19 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
+        },
+        {
+            "name": "linux-packagers",
+            "displayName": "Linux Packagers",
+            "description": "Release build on Linux with system dependencies and tests disabled.",
+            "inherits": "linux-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "LIB3MF_TESTS": "OFF",
+                "USE_INCLUDED_ZLIB": "OFF",
+                "USE_INCLUDED_LIBZIP": "OFF",
+                "USE_INCLUDED_SSL": "OFF"
+            }
         }
     ],
     "buildPresets": [
@@ -127,6 +140,11 @@
             "name": "linux-release",
             "displayName": "Build (Linux Release)",
             "configurePreset": "linux-release"
+        },
+        {
+            "name": "linux-packagers",
+            "displayName": "Build (Linux Packagers)",
+            "configurePreset": "linux-packagers"
         }
     ],
     "testPresets": [
