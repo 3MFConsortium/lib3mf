@@ -33,6 +33,17 @@ jobs:
       - run: cmake --build . --target lib3mf_memcheck
         working-directory: ./build
 
+  install-linux-packagers-smoke:
+    runs-on: ubuntu-24.04
+    needs: [set-lib3mf-version]
+    steps:
+      - run: sudo apt update
+      - run: sudo apt install -y ninja-build pkg-config uuid-dev zlib1g-dev libzip-dev libssl-dev
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - run: bash CI/install_smoke_test.sh
+
   build-linux-ubi8-gcc12:
     runs-on: ubuntu-24.04
     needs: [set-lib3mf-version]
