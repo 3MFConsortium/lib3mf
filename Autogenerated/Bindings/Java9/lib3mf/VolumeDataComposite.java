@@ -99,7 +99,7 @@ public class VolumeDataComposite extends Base {
 	}
 
 	/**
-	 * Returns MaterialMappting with given index
+	 * Returns MaterialMapping with given index
 	 *
 	 * @param index Index of the MaterialMapping in question.
 	 * @return MaterialMapping used in this element
@@ -118,7 +118,7 @@ public class VolumeDataComposite extends Base {
 	}
 
 	/**
-	 * Adds a the MaterialMapping
+	 * Adds a MaterialMapping
 	 *
 	 * @param transform new transformation matrix
 	 * @return The new MaterialMapping

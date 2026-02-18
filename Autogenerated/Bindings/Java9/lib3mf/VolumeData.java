@@ -150,7 +150,7 @@ public class VolumeData extends Resource {
 	/**
 	 * Returns the number of VolumeDataProperty
 	 *
-	 * @return the number of VolumeDataProperty-elements within this VolumdeData
+	 * @return the number of VolumeDataProperty-elements within this VolumeData
 	 * @throws Lib3MFException
 	 */
 	public int getPropertyCount() throws Lib3MFException {

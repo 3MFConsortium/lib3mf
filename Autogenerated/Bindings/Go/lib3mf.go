@@ -2964,7 +2964,7 @@ func (inst VolumeDataComposite) GetMaterialMappingCount() (uint32, error) {
 	return uint32(count), nil
 }
 
-// GetMaterialMapping returns MaterialMappting with given index.
+// GetMaterialMapping returns MaterialMapping with given index.
 func (inst VolumeDataComposite) GetMaterialMapping(index uint32) (MaterialMapping, error) {
 	var theMaterialMapping ref
 	ret := C.CCall_lib3mf_volumedatacomposite_getmaterialmapping(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &theMaterialMapping)
@@ -2974,7 +2974,7 @@ func (inst VolumeDataComposite) GetMaterialMapping(index uint32) (MaterialMappin
 	return inst.wrapperRef.NewMaterialMapping(theMaterialMapping), nil
 }
 
-// AddMaterialMapping adds a the MaterialMapping.
+// AddMaterialMapping adds a MaterialMapping.
 func (inst VolumeDataComposite) AddMaterialMapping(transform Transform) (MaterialMapping, error) {
 	var theMaterialMapping ref
 	ret := C.CCall_lib3mf_volumedatacomposite_addmaterialmapping(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.sLib3MFTransform)(unsafe.Pointer(&transform)), &theMaterialMapping)
@@ -4106,7 +4106,7 @@ func (inst Attachment) WriteToFile(fileName string) error {
 	return nil
 }
 
-// ReadFromFile reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
+// ReadFromFile reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.
 func (inst Attachment) ReadFromFile(fileName string) error {
 	ret := C.CCall_lib3mf_attachment_readfromfile(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(fileName)[0])))
 	if ret != 0 {
@@ -4115,7 +4115,7 @@ func (inst Attachment) ReadFromFile(fileName string) error {
 	return nil
 }
 
-// ReadFromCallback reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
+// ReadFromCallback reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.
 func (inst Attachment) ReadFromCallback(theReadCallback ReadCallbackFunc, streamSize uint64, theSeekCallback SeekCallbackFunc, userData uintptr) error {
 	ret := C.CCall_lib3mf_attachment_readfromcallback(inst.wrapperRef.LibraryHandle, inst.Ref, (C.Lib3MFReadCallback)(unsafe.Pointer(&theReadCallback)), C.uint64_t(streamSize), (C.Lib3MFSeekCallback)(unsafe.Pointer(&theSeekCallback)), (C.Lib3MF_pvoid)(userData))
 	if ret != 0 {
@@ -4153,7 +4153,7 @@ func (inst Attachment) WriteToBuffer(buffer []uint8) ([]uint8, error) {
 	return buffer[:int(neededforbuffer)], nil
 }
 
-// ReadFromBuffer reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
+// ReadFromBuffer reads an attachment from a memory buffer. This buffer is immediately read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 func (inst Attachment) ReadFromBuffer(buffer []uint8) error {
 	ret := C.CCall_lib3mf_attachment_readfrombuffer(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(len(buffer)), (*C.uint8_t)(unsafe.Pointer(&buffer[0])))
 	if ret != 0 {

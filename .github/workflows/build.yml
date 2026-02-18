@@ -131,11 +131,21 @@ jobs:
           echo "ARTIFACT_NAME=$(basename ${ZIP_FILE})" >> $GITHUB_ENV
         shell: bash
       - run: ls -al build/
+      - name: Determine macOS dylib
+        id: find-mac-lib
+        run: |
+          set -euo pipefail
+          MAC_LIB=$(ls build/lib3mf*.dylib | head -n 1)
+          if [ -z "$MAC_LIB" ]; then
+            echo "No macOS dylib found in build/" >&2
+            exit 1
+          fi
+          echo "MAC_LIB=${MAC_LIB}" >> $GITHUB_ENV
       - name: Archive Mac binary
         uses: actions/upload-artifact@v4
         with:
           name: lib3mf.dylib
-          path: build/lib3mf.${{ env.LIB3MF_VERSION }}.0.dylib
+          path: ${{ env.MAC_LIB }}
       - name: Upload Artifact (CPacked Archive)
         uses: actions/upload-artifact@v4
         with:
@@ -305,7 +315,7 @@ jobs:
       - run: ls -Rlh ./build
       - run: unzip bindings.zip/bindings.zip
         working-directory: ./build
-      - run: bash SDK/GenerateSDK_github.sh
+      - run: python3 SDK/GenerateSDK_github.py
       - name: Archive SDK artifact (Comprehensive)
         uses: actions/upload-artifact@v4
         with:
@@ -568,6 +578,11 @@ jobs:
     outputs:
       run_integration_tests: ${{ steps.set-status.outputs.run_integration_tests }}
     steps:
+      - name: Install prerequisites
+        if: env.RUN_INTEGRATION_TESTS == 'on'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip wget
       - name: Set status
         id: set-status
         run: |
@@ -575,6 +590,30 @@ jobs:
             echo "run_integration_tests=true" >> $GITHUB_OUTPUT
           else
             echo "run_integration_tests=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Cache 3MF test suite
+        if: steps.set-status.outputs.run_integration_tests == 'true'
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/3mf-test-suite
+          key: 3mf-test-suite-v2.0.0
+
+      - name: Download integration test suite
+        if: steps.set-status.outputs.run_integration_tests == 'true'
+        run: |
+          USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
+          PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
+          CACHE_DIR="$HOME/.cache/3mf-test-suite"
+          SUITE_ZIP="3MF_Conformance_Test_Suites_v2.0.0.zip"
+          CACHE_ZIP="$CACHE_DIR/$SUITE_ZIP"
+
+          mkdir -p "$CACHE_DIR"
+          if [ ! -f "$CACHE_ZIP" ]; then
+            wget --user "$USER" \
+                 --password "$PASS" \
+                 "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/$SUITE_ZIP" \
+                 -O "$CACHE_ZIP"
           fi
       
 
@@ -619,17 +658,16 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-      - name: Download and unzip test suite
+      - name: Restore 3MF test suite cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/3mf-test-suite
+          key: 3mf-test-suite-v2.0.0
+
+      - name: Unzip integration test suite
         run: |
-          USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
-          PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
-
-          wget --user "$USER" \
-               --password "$PASS" \
-               "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" \
-               -O 3MF_Conformance_Test_Suites_v2.0.0.zip
-
-          unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+          rm -rf test_suites
+          unzip -o "$HOME/.cache/3mf-test-suite/3MF_Conformance_Test_Suites_v2.0.0.zip" -d test_suites
       
 
       - name: List files
@@ -726,17 +764,16 @@ jobs:
           mv second_latest_lib3mf_sdk/lib3mf_sdk/* second_latest_lib3mf_sdk
           rmdir second_latest_lib3mf_sdk/lib3mf_sdk
 
-      - name: Download and unzip test suite
+      - name: Restore 3MF test suite cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/3mf-test-suite
+          key: 3mf-test-suite-v2.0.0
+
+      - name: Unzip integration test suite
         run: |
-          USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
-          PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
-
-          wget --user "$USER" \
-               --password "$PASS" \
-               "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" \
-               -O 3MF_Conformance_Test_Suites_v2.0.0.zip
-
-          unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+          rm -rf test_suites
+          unzip -o "$HOME/.cache/3mf-test-suite/3MF_Conformance_Test_Suites_v2.0.0.zip" -d test_suites
       
 
       - name: Copy integration test script
@@ -883,17 +920,16 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-      - name: Download and unzip test suite
+      - name: Restore 3MF test suite cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/3mf-test-suite
+          key: 3mf-test-suite-v2.0.0
+
+      - name: Unzip integration test suite
         run: |
-          USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
-          PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
-
-          wget --user "$USER" \
-               --password "$PASS" \
-               "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" \
-               -O 3MF_Conformance_Test_Suites_v2.0.0.zip
-
-          unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+          rm -rf test_suites
+          unzip -o "$HOME/.cache/3mf-test-suite/3MF_Conformance_Test_Suites_v2.0.0.zip" -d test_suites
       
 
       - name: Copy integration test script
@@ -978,17 +1014,16 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-      - name: Download and unzip test suite
+      - name: Restore 3MF test suite cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/3mf-test-suite
+          key: 3mf-test-suite-v2.0.0
+
+      - name: Unzip integration test suite
         run: |
-          USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
-          PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
-
-          wget --user "$USER" \
-               --password "$PASS" \
-               "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/3MF_Conformance_Test_Suites_v2.0.0.zip" \
-               -O 3MF_Conformance_Test_Suites_v2.0.0.zip
-
-          unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+          rm -rf test_suites
+          unzip -o "$HOME/.cache/3mf-test-suite/3MF_Conformance_Test_Suites_v2.0.0.zip" -d test_suites
       
 
       - name: Copy integration test script

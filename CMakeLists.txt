@@ -10,9 +10,9 @@ include(GNUInstallDirs)
 
 # Define Version
 set(LIB3MF_VERSION_MAJOR 2)        # increase on every backward-compatibility breaking change of the API
-set(LIB3MF_VERSION_MINOR 4)        # increase on every backward compatible change of the API
+set(LIB3MF_VERSION_MINOR 5)        # increase on every backward compatible change of the API
 set(LIB3MF_VERSION_MICRO 0)        # increase on on every change that does not alter the API
-set(LIB3MF_VERSION_PRERELEASE "")  # denotes pre-release information of a version of lib3mf
+set(LIB3MF_VERSION_PRERELEASE "alpha")  # denotes pre-release information of a version of lib3mf
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment version")
 project(lib3mf
   VERSION ${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}
@@ -31,7 +31,16 @@ endif()
 
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
-set(CMAKE_INSTALL_INCLUDEDIR include/lib3mf CACHE PATH "directory for installing header files")
+set(CMAKE_INSTALL_INCLUDEDIR include CACHE PATH "directory for installing header files")
+
+# Build lib3mf as shared by default, but do not implicitly switch third-party
+# dependencies (which often key off BUILD_SHARED_LIBS) to shared as well.
+set(_lib3mf_build_shared_default ON)
+if(DEFINED BUILD_SHARED_LIBS)
+  set(_lib3mf_build_shared_default "${BUILD_SHARED_LIBS}")
+endif()
+option(LIB3MF_BUILD_SHARED "Build lib3mf as shared library" ${_lib3mf_build_shared_default})
+unset(_lib3mf_build_shared_default)
 
 option(USE_INCLUDED_ZLIB "Use included zlib" ON)
 option(USE_INCLUDED_LIBZIP "Use included libzip" ON)
@@ -43,24 +52,28 @@ option(USE_PLATFORM_UUID "Use UUID geneator that is provided by the OS (always O
 add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
 set (CMAKE_CXX_STANDARD 17)
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  # using GCC
-  add_definitions(-DBUILD_DLL)
-  add_compile_options(-Wall)
-  if (CMAKE_BUILD_TYPE MATCHES DEBUG)
-    add_compile_options(-g)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Og")
-  else()
+		if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+		  # using GCC
+		  if (LIB3MF_BUILD_SHARED)
+		    add_definitions(-DBUILD_DLL)
+		  endif()
+		  add_compile_options(-Wall)
+		  if (CMAKE_BUILD_TYPE MATCHES DEBUG)
+		    add_compile_options(-g)
+	    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Og")
+	  else()
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O2")
   endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
   
-elseif ("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
-  # using GCC
-  add_definitions(-DBUILD_DLL)
-  add_compile_options(-Wall) 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O2")
-  set(CMAKE_MACOSX_RPATH ON)
-endif()
+		elseif ("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
+		  # using GCC
+		  if (LIB3MF_BUILD_SHARED)
+		    add_definitions(-DBUILD_DLL)
+		  endif()
+		  add_compile_options(-Wall) 
+		  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O2")
+		  set(CMAKE_MACOSX_RPATH ON)
+	endif()
 
 if (${MSVC})
   # using Visual Studio C++
@@ -127,11 +140,17 @@ endif()
 
 
 #########################################################
-# Shared library
-add_library(${PROJECT_NAME} SHARED ${SRCS_COMMON} ${HDRS_COMMON}
-  ${ACT_GENERATED_SOURCE}
-  ${VERSION_FILES_OUTPUTLOCATION}
-)
+if (LIB3MF_BUILD_SHARED)
+  add_library(${PROJECT_NAME} SHARED ${SRCS_COMMON} ${HDRS_COMMON}
+    ${ACT_GENERATED_SOURCE}
+    ${VERSION_FILES_OUTPUTLOCATION}
+  )
+else()
+  add_library(${PROJECT_NAME} STATIC ${SRCS_COMMON} ${HDRS_COMMON}
+    ${ACT_GENERATED_SOURCE}
+    ${VERSION_FILES_OUTPUTLOCATION}
+  )
+endif()
 
 if (${MSVC})
   # using Visual Studio C++
@@ -229,8 +248,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/s
 
 
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "" )
-# This makes sure symbols are exported
-target_compile_options(${PROJECT_NAME} PRIVATE "-D__LIB3MF_EXPORTS")
+# This makes sure symbols are exported (shared builds only)
+if (LIB3MF_BUILD_SHARED)
+  target_compile_options(${PROJECT_NAME} PRIVATE "-D__LIB3MF_EXPORTS")
+endif()
 # The following two properties are crucial to reduce the number of undesirably exported symbols
 set_target_properties(${PROJECT_NAME} PROPERTIES C_VISIBILITY_PRESET hidden)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_VISIBILITY_PRESET hidden)
@@ -239,7 +260,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES VISIBILITY_INLINES_HIDDEN ON)
 set(STARTUPPROJECT ${PROJECT_NAME})
 
 #########################################################
-if (UNIX OR MINGW)
+if ((UNIX OR MINGW) AND LIB3MF_BUILD_SHARED)
   # Uncomment the following to put the version info into the .so-file.
   set_target_properties(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
   set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
@@ -251,6 +272,11 @@ else()
   # wd4996 masks the deprecated-warning
   target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/sdl;/W3;/WX;/FC;/wd4996>")
   target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
+endif()
+
+# Static build usability (e.g. linking into shared libs)
+if (NOT LIB3MF_BUILD_SHARED)
+  set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 
 ## UUID
@@ -311,8 +337,12 @@ set(CPACK_PACKAGE_VERSION_PATCH "${LIB3MF_VERSION_MICRO}")
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
 set(CPACK_PACKAGE_CONTACT "lib3mf@3mf.io")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "3MF Consortium")
-set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_NAME}")
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Source")
+set(LIB3MF_VERSION_FULL "${CPACK_PACKAGE_VERSION}")
+if (DEFINED LIB3MF_VERSION_PRERELEASE AND NOT "${LIB3MF_VERSION_PRERELEASE}" STREQUAL "")
+  set(LIB3MF_VERSION_FULL "${LIB3MF_VERSION_FULL}-${LIB3MF_VERSION_PRERELEASE}")
+endif()
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${LIB3MF_VERSION_FULL}-${CMAKE_SYSTEM_NAME}")
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${LIB3MF_VERSION_FULL}-Source")
 
 #########################################################
 include(CPack)

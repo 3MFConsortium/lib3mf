@@ -2502,7 +2502,7 @@ type
 	TLib3MFVolumeDataComposite_GetMaterialMappingCountFunc = function(pVolumeDataComposite: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
 	
 	(**
-	* Returns MaterialMappting with given index
+	* Returns MaterialMapping with given index
 	*
 	* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
 	* @param[in] nIndex - Index of the MaterialMapping in question.
@@ -2512,7 +2512,7 @@ type
 	TLib3MFVolumeDataComposite_GetMaterialMappingFunc = function(pVolumeDataComposite: TLib3MFHandle; const nIndex: Cardinal; out pTheMaterialMapping: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Adds a the MaterialMapping
+	* Adds a MaterialMapping
 	*
 	* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
 	* @param[in] pTransform - new transformation matrix
@@ -2626,7 +2626,7 @@ type
 	* Returns the number of VolumeDataProperty
 	*
 	* @param[in] pVolumeData - VolumeData instance.
-	* @param[out] pCount - the number of VolumeDataProperty-elements within this VolumdeData
+	* @param[out] pCount - the number of VolumeDataProperty-elements within this VolumeData
 	* @return error code or 0 (success)
 	*)
 	TLib3MFVolumeData_GetPropertyCountFunc = function(pVolumeData: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
@@ -3462,7 +3462,7 @@ type
 	TLib3MFAttachment_WriteToFileFunc = function(pAttachment: TLib3MFHandle; const pFileName: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
+	* Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.
 	*
 	* @param[in] pAttachment - Attachment instance.
 	* @param[in] pFileName - file to read from.
@@ -3471,7 +3471,7 @@ type
 	TLib3MFAttachment_ReadFromFileFunc = function(pAttachment: TLib3MFHandle; const pFileName: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
+	* Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.
 	*
 	* @param[in] pAttachment - Attachment instance.
 	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
@@ -3503,7 +3503,7 @@ type
 	TLib3MFAttachment_WriteToBufferFunc = function(pAttachment: TLib3MFHandle; const nBufferCount: QWord; out pBufferNeededCount: QWord; pBufferBuffer: PByte): TLib3MFResult; cdecl;
 	
 	(**
-	* Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
+	* Reads an attachment from a memory buffer. This buffer is immediately read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 	*
 	* @param[in] pAttachment - Attachment instance.
 	* @param[in] nBufferCount - Number of elements in buffer

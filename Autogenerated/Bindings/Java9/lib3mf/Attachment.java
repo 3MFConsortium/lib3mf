@@ -143,7 +143,7 @@ public class Attachment extends Base {
 	}
 
 	/**
-	 * Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
+	 * Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.
 	 *
 	 * @param fileName file to read from.
 	 * @throws Lib3MFException
@@ -157,7 +157,7 @@ public class Attachment extends Base {
 	}
 
 	/**
-	 * Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
+	 * Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.
 	 *
 	 * @param theReadCallback Callback to call for reading a data chunk
 	 * @param streamSize number of bytes the callback returns
@@ -197,7 +197,7 @@ public class Attachment extends Base {
 	}
 
 	/**
-	 * Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
+	 * Reads an attachment from a memory buffer. This buffer is immediately read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 	 *
 	 * @param buffer Buffer to read from
 	 * @throws Lib3MFException

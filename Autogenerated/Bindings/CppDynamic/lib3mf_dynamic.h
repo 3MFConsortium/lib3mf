@@ -1913,7 +1913,7 @@ typedef Lib3MFResult (*PLib3MFVolumeDataComposite_SetBaseMaterialGroupPtr) (Lib3
 typedef Lib3MFResult (*PLib3MFVolumeDataComposite_GetMaterialMappingCountPtr) (Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 * pCount);
 
 /**
-* Returns MaterialMappting with given index
+* Returns MaterialMapping with given index
 *
 * @param[in] pVolumeDataComposite - VolumeDataComposite instance.
 * @param[in] nIndex - Index of the MaterialMapping in question.
@@ -1923,7 +1923,7 @@ typedef Lib3MFResult (*PLib3MFVolumeDataComposite_GetMaterialMappingCountPtr) (L
 typedef Lib3MFResult (*PLib3MFVolumeDataComposite_GetMaterialMappingPtr) (Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 nIndex, Lib3MF_MaterialMapping * pTheMaterialMapping);
 
 /**
-* Adds a the MaterialMapping
+* Adds a MaterialMapping
 *
 * @param[in] pVolumeDataComposite - VolumeDataComposite instance.
 * @param[in] pTransform - new transformation matrix
@@ -2035,7 +2035,7 @@ typedef Lib3MFResult (*PLib3MFVolumeData_RemoveColorPtr) (Lib3MF_VolumeData pVol
 * Returns the number of VolumeDataProperty
 *
 * @param[in] pVolumeData - VolumeData instance.
-* @param[out] pCount - the number of VolumeDataProperty-elements within this VolumdeData
+* @param[out] pCount - the number of VolumeDataProperty-elements within this VolumeData
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFVolumeData_GetPropertyCountPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_uint32 * pCount);
@@ -2860,7 +2860,7 @@ typedef Lib3MFResult (*PLib3MFAttachment_SetRelationShipTypePtr) (Lib3MF_Attachm
 typedef Lib3MFResult (*PLib3MFAttachment_WriteToFilePtr) (Lib3MF_Attachment pAttachment, const char * pFileName);
 
 /**
-* Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
+* Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.
 *
 * @param[in] pAttachment - Attachment instance.
 * @param[in] pFileName - file to read from.
@@ -2869,7 +2869,7 @@ typedef Lib3MFResult (*PLib3MFAttachment_WriteToFilePtr) (Lib3MF_Attachment pAtt
 typedef Lib3MFResult (*PLib3MFAttachment_ReadFromFilePtr) (Lib3MF_Attachment pAttachment, const char * pFileName);
 
 /**
-* Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.
+* Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.
 *
 * @param[in] pAttachment - Attachment instance.
 * @param[in] pTheReadCallback - Callback to call for reading a data chunk
@@ -2901,7 +2901,7 @@ typedef Lib3MFResult (*PLib3MFAttachment_GetStreamSizePtr) (Lib3MF_Attachment pA
 typedef Lib3MFResult (*PLib3MFAttachment_WriteToBufferPtr) (Lib3MF_Attachment pAttachment, const Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
 
 /**
-* Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).
+* Reads an attachment from a memory buffer. This buffer is immediately read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 *
 * @param[in] pAttachment - Attachment instance.
 * @param[in] nBufferBufferSize - Number of elements in buffer
