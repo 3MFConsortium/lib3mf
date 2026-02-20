@@ -165,6 +165,7 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFToolpathProfile::Init();
 	CLib3MFToolpathLayerReader::Init();
 	CLib3MFToolpathLayerData::Init();
+	CLib3MFToolpathViewable::Init();
 	CLib3MFToolpath::Init();
 	CLib3MFToolpathIterator::Init();
 	CLib3MFSliceStack::Init();

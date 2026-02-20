@@ -168,6 +168,7 @@ class ISlice;
 class IToolpathProfile;
 class IToolpathLayerReader;
 class IToolpathLayerData;
+class IToolpathViewable;
 class IToolpath;
 class IToolpathIterator;
 class ISliceStack;
@@ -7155,6 +7156,70 @@ typedef IBaseSharedPtr<IToolpathLayerData> PIToolpathLayerData;
 
 
 /*************************************************************************************************************************
+ Class interface for ToolpathViewable 
+**************************************************************************************************************************/
+
+class IToolpathViewable : public virtual IBase {
+public:
+	/**
+	* IToolpathViewable::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xDA8671731DE85377UL; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathViewable"
+	}
+
+	/**
+	* IToolpathViewable::GetLayerIndex - Returns the source layer index.
+	* @return Layer index.
+	*/
+	virtual Lib3MF_uint32 GetLayerIndex() = 0;
+
+	/**
+	* IToolpathViewable::GetLayerPath - Returns the source layer package path.
+	* @return Layer package path.
+	*/
+	virtual std::string GetLayerPath() = 0;
+
+	/**
+	* IToolpathViewable::GetLayerZMin - Returns the source layer minimum Z value in toolpath units.
+	* @return Layer minimum Z.
+	*/
+	virtual Lib3MF_uint32 GetLayerZMin() = 0;
+
+	/**
+	* IToolpathViewable::GetLayerZMax - Returns the source layer maximum Z value in toolpath units.
+	* @return Layer maximum Z.
+	*/
+	virtual Lib3MF_uint32 GetLayerZMax() = 0;
+
+	/**
+	* IToolpathViewable::GetLayerThickness - Returns the source layer thickness in toolpath units.
+	* @return Layer thickness.
+	*/
+	virtual Lib3MF_uint32 GetLayerThickness() = 0;
+
+	/**
+	* IToolpathViewable::GetJSONString - Returns the layer viewable JSON as UTF-8 string.
+	* @return Layer JSON string.
+	*/
+	virtual std::string GetJSONString() = 0;
+
+	/**
+	* IToolpathViewable::GetJSONBuffer - Returns the layer viewable JSON as UTF-8 byte buffer.
+	* @param[in] nJSONBufferBufferSize - Number of elements in buffer
+	* @param[out] pJSONBufferNeededCount - will be filled with the count of the written structs, or needed buffer size.
+	* @param[out] pJSONBufferBuffer - uint8 buffer of Layer JSON UTF-8 bytes.
+	*/
+	virtual void GetJSONBuffer(Lib3MF_uint64 nJSONBufferBufferSize, Lib3MF_uint64* pJSONBufferNeededCount, Lib3MF_uint8 * pJSONBufferBuffer) = 0;
+
+};
+
+typedef IBaseSharedPtr<IToolpathViewable> PIToolpathViewable;
+
+
+/*************************************************************************************************************************
  Class interface for Toolpath 
 **************************************************************************************************************************/
 
@@ -7233,6 +7298,13 @@ public:
 	* @return Toolpath Reader Instance
 	*/
 	virtual IToolpathLayerReader * ReadLayerData(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpath::GetLayerViewable - Creates a viewable JSON accessor for a layer.
+	* @param[in] nIndex - Layer Index
+	* @return Toolpath Viewable Instance
+	*/
+	virtual IToolpathViewable * GetLayerViewable(const Lib3MF_uint32 nIndex) = 0;
 
 	/**
 	* IToolpath::GetLayerPath - Retrieves the Path of a layer

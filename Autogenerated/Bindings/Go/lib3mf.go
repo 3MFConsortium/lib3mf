@@ -8880,6 +8880,107 @@ func (inst ToolpathLayerData) Finish() error {
 }
 
 
+// ToolpathViewable represents a Lib3MF class.
+type ToolpathViewable struct {
+	Base
+}
+
+func (wrapper Wrapper) NewToolpathViewable(r ref) ToolpathViewable {
+	return ToolpathViewable{wrapper.NewBase(r)}
+}
+
+// GetLayerIndex returns the source layer index.
+func (inst ToolpathViewable) GetLayerIndex() (uint32, error) {
+	var layerIndex C.uint32_t
+	ret := C.CCall_lib3mf_toolpathviewable_getlayerindex(inst.wrapperRef.LibraryHandle, inst.Ref, &layerIndex)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(layerIndex), nil
+}
+
+// GetLayerPath returns the source layer package path.
+func (inst ToolpathViewable) GetLayerPath() (string, error) {
+	var neededforlayerPath C.uint32_t
+	var filledinlayerPath C.uint32_t
+	ret := C.CCall_lib3mf_toolpathviewable_getlayerpath(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforlayerPath, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizelayerPath := neededforlayerPath
+	bufferlayerPath := make([]byte, bufferSizelayerPath)
+	ret = C.CCall_lib3mf_toolpathviewable_getlayerpath(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizelayerPath, &filledinlayerPath, (*C.char)(unsafe.Pointer(&bufferlayerPath[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferlayerPath[:(filledinlayerPath-1)]), nil
+}
+
+// GetLayerZMin returns the source layer minimum Z value in toolpath units.
+func (inst ToolpathViewable) GetLayerZMin() (uint32, error) {
+	var layerZMin C.uint32_t
+	ret := C.CCall_lib3mf_toolpathviewable_getlayerzmin(inst.wrapperRef.LibraryHandle, inst.Ref, &layerZMin)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(layerZMin), nil
+}
+
+// GetLayerZMax returns the source layer maximum Z value in toolpath units.
+func (inst ToolpathViewable) GetLayerZMax() (uint32, error) {
+	var layerZMax C.uint32_t
+	ret := C.CCall_lib3mf_toolpathviewable_getlayerzmax(inst.wrapperRef.LibraryHandle, inst.Ref, &layerZMax)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(layerZMax), nil
+}
+
+// GetLayerThickness returns the source layer thickness in toolpath units.
+func (inst ToolpathViewable) GetLayerThickness() (uint32, error) {
+	var layerThickness C.uint32_t
+	ret := C.CCall_lib3mf_toolpathviewable_getlayerthickness(inst.wrapperRef.LibraryHandle, inst.Ref, &layerThickness)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(layerThickness), nil
+}
+
+// GetJSONString returns the layer viewable JSON as UTF-8 string.
+func (inst ToolpathViewable) GetJSONString() (string, error) {
+	var neededforjSONString C.uint32_t
+	var filledinjSONString C.uint32_t
+	ret := C.CCall_lib3mf_toolpathviewable_getjsonstring(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforjSONString, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizejSONString := neededforjSONString
+	bufferjSONString := make([]byte, bufferSizejSONString)
+	ret = C.CCall_lib3mf_toolpathviewable_getjsonstring(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizejSONString, &filledinjSONString, (*C.char)(unsafe.Pointer(&bufferjSONString[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferjSONString[:(filledinjSONString-1)]), nil
+}
+
+// GetJSONBuffer returns the layer viewable JSON as UTF-8 byte buffer.
+func (inst ToolpathViewable) GetJSONBuffer(jSONBuffer []uint8) ([]uint8, error) {
+	var neededforjSONBuffer C.uint64_t
+	ret := C.CCall_lib3mf_toolpathviewable_getjsonbuffer(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforjSONBuffer, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(jSONBuffer) < int(neededforjSONBuffer) {
+	 jSONBuffer = append(jSONBuffer, make([]uint8, int(neededforjSONBuffer)-len(jSONBuffer))...)
+	}
+	ret = C.CCall_lib3mf_toolpathviewable_getjsonbuffer(inst.wrapperRef.LibraryHandle, inst.Ref, neededforjSONBuffer, nil, (*C.uint8_t)(unsafe.Pointer(&jSONBuffer[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return jSONBuffer[:int(neededforjSONBuffer)], nil
+}
+
+
 // Toolpath represents a Lib3MF class.
 type Toolpath struct {
 	Resource
@@ -9000,6 +9101,16 @@ func (inst Toolpath) ReadLayerData(index uint32) (ToolpathLayerReader, error) {
 		return ToolpathLayerReader{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewToolpathLayerReader(toolpathReader), nil
+}
+
+// GetLayerViewable creates a viewable JSON accessor for a layer.
+func (inst Toolpath) GetLayerViewable(index uint32) (ToolpathViewable, error) {
+	var toolpathViewable ref
+	ret := C.CCall_lib3mf_toolpath_getlayerviewable(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &toolpathViewable)
+	if ret != 0 {
+		return ToolpathViewable{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathViewable(toolpathViewable), nil
 }
 
 // GetLayerPath retrieves the Path of a layer.

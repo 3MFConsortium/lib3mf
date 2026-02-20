@@ -681,6 +681,13 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithFactors = NULL;
 	pWrapperTable->m_ToolpathLayerData_AddCustomData = NULL;
 	pWrapperTable->m_ToolpathLayerData_Finish = NULL;
+	pWrapperTable->m_ToolpathViewable_GetLayerIndex = NULL;
+	pWrapperTable->m_ToolpathViewable_GetLayerPath = NULL;
+	pWrapperTable->m_ToolpathViewable_GetLayerZMin = NULL;
+	pWrapperTable->m_ToolpathViewable_GetLayerZMax = NULL;
+	pWrapperTable->m_ToolpathViewable_GetLayerThickness = NULL;
+	pWrapperTable->m_ToolpathViewable_GetJSONString = NULL;
+	pWrapperTable->m_ToolpathViewable_GetJSONBuffer = NULL;
 	pWrapperTable->m_Toolpath_GetUUID = NULL;
 	pWrapperTable->m_Toolpath_ResetUUID = NULL;
 	pWrapperTable->m_Toolpath_GetUnits = NULL;
@@ -691,6 +698,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Toolpath_SetBottomZ = NULL;
 	pWrapperTable->m_Toolpath_GetLayerAttachment = NULL;
 	pWrapperTable->m_Toolpath_ReadLayerData = NULL;
+	pWrapperTable->m_Toolpath_GetLayerViewable = NULL;
 	pWrapperTable->m_Toolpath_GetLayerPath = NULL;
 	pWrapperTable->m_Toolpath_GetLayerZMax = NULL;
 	pWrapperTable->m_Toolpath_GetLayerZMin = NULL;
@@ -6610,6 +6618,69 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ToolpathViewable_GetLayerIndex = (PLib3MFToolpathViewable_GetLayerIndexPtr) GetProcAddress(hLibrary, "lib3mf_toolpathviewable_getlayerindex");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathViewable_GetLayerIndex = (PLib3MFToolpathViewable_GetLayerIndexPtr) dlsym(hLibrary, "lib3mf_toolpathviewable_getlayerindex");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathViewable_GetLayerIndex == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathViewable_GetLayerPath = (PLib3MFToolpathViewable_GetLayerPathPtr) GetProcAddress(hLibrary, "lib3mf_toolpathviewable_getlayerpath");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathViewable_GetLayerPath = (PLib3MFToolpathViewable_GetLayerPathPtr) dlsym(hLibrary, "lib3mf_toolpathviewable_getlayerpath");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathViewable_GetLayerPath == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathViewable_GetLayerZMin = (PLib3MFToolpathViewable_GetLayerZMinPtr) GetProcAddress(hLibrary, "lib3mf_toolpathviewable_getlayerzmin");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathViewable_GetLayerZMin = (PLib3MFToolpathViewable_GetLayerZMinPtr) dlsym(hLibrary, "lib3mf_toolpathviewable_getlayerzmin");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathViewable_GetLayerZMin == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathViewable_GetLayerZMax = (PLib3MFToolpathViewable_GetLayerZMaxPtr) GetProcAddress(hLibrary, "lib3mf_toolpathviewable_getlayerzmax");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathViewable_GetLayerZMax = (PLib3MFToolpathViewable_GetLayerZMaxPtr) dlsym(hLibrary, "lib3mf_toolpathviewable_getlayerzmax");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathViewable_GetLayerZMax == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathViewable_GetLayerThickness = (PLib3MFToolpathViewable_GetLayerThicknessPtr) GetProcAddress(hLibrary, "lib3mf_toolpathviewable_getlayerthickness");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathViewable_GetLayerThickness = (PLib3MFToolpathViewable_GetLayerThicknessPtr) dlsym(hLibrary, "lib3mf_toolpathviewable_getlayerthickness");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathViewable_GetLayerThickness == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathViewable_GetJSONString = (PLib3MFToolpathViewable_GetJSONStringPtr) GetProcAddress(hLibrary, "lib3mf_toolpathviewable_getjsonstring");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathViewable_GetJSONString = (PLib3MFToolpathViewable_GetJSONStringPtr) dlsym(hLibrary, "lib3mf_toolpathviewable_getjsonstring");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathViewable_GetJSONString == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathViewable_GetJSONBuffer = (PLib3MFToolpathViewable_GetJSONBufferPtr) GetProcAddress(hLibrary, "lib3mf_toolpathviewable_getjsonbuffer");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathViewable_GetJSONBuffer = (PLib3MFToolpathViewable_GetJSONBufferPtr) dlsym(hLibrary, "lib3mf_toolpathviewable_getjsonbuffer");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathViewable_GetJSONBuffer == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_Toolpath_GetUUID = (PLib3MFToolpath_GetUUIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getuuid");
 	#else // _WIN32
 	pWrapperTable->m_Toolpath_GetUUID = (PLib3MFToolpath_GetUUIDPtr) dlsym(hLibrary, "lib3mf_toolpath_getuuid");
@@ -6697,6 +6768,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Toolpath_ReadLayerData == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_GetLayerViewable = (PLib3MFToolpath_GetLayerViewablePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getlayerviewable");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_GetLayerViewable = (PLib3MFToolpath_GetLayerViewablePtr) dlsym(hLibrary, "lib3mf_toolpath_getlayerviewable");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_GetLayerViewable == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

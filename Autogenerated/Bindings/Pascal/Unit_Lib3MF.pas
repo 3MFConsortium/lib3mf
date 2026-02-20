@@ -692,6 +692,7 @@ type
 	TLib3MFToolpathProfile = class;
 	TLib3MFToolpathLayerReader = class;
 	TLib3MFToolpathLayerData = class;
+	TLib3MFToolpathViewable = class;
 	TLib3MFToolpath = class;
 	TLib3MFToolpathIterator = class;
 	TLib3MFSliceStack = class;
@@ -7719,6 +7720,80 @@ type
 	
 
 (*************************************************************************************************************************
+ Function type definitions for ToolpathViewable
+**************************************************************************************************************************)
+
+	(**
+	* Returns the source layer index.
+	*
+	* @param[in] pToolpathViewable - ToolpathViewable instance.
+	* @param[out] pLayerIndex - Layer index.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathViewable_GetLayerIndexFunc = function(pToolpathViewable: TLib3MFHandle; out pLayerIndex: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the source layer package path.
+	*
+	* @param[in] pToolpathViewable - ToolpathViewable instance.
+	* @param[in] nLayerPathBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pLayerPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pLayerPathBuffer -  buffer of Layer package path., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathViewable_GetLayerPathFunc = function(pToolpathViewable: TLib3MFHandle; const nLayerPathBufferSize: Cardinal; out pLayerPathNeededChars: Cardinal; pLayerPathBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the source layer minimum Z value in toolpath units.
+	*
+	* @param[in] pToolpathViewable - ToolpathViewable instance.
+	* @param[out] pLayerZMin - Layer minimum Z.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathViewable_GetLayerZMinFunc = function(pToolpathViewable: TLib3MFHandle; out pLayerZMin: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the source layer maximum Z value in toolpath units.
+	*
+	* @param[in] pToolpathViewable - ToolpathViewable instance.
+	* @param[out] pLayerZMax - Layer maximum Z.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathViewable_GetLayerZMaxFunc = function(pToolpathViewable: TLib3MFHandle; out pLayerZMax: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the source layer thickness in toolpath units.
+	*
+	* @param[in] pToolpathViewable - ToolpathViewable instance.
+	* @param[out] pLayerThickness - Layer thickness.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathViewable_GetLayerThicknessFunc = function(pToolpathViewable: TLib3MFHandle; out pLayerThickness: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the layer viewable JSON as UTF-8 string.
+	*
+	* @param[in] pToolpathViewable - ToolpathViewable instance.
+	* @param[in] nJSONStringBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pJSONStringNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pJSONStringBuffer -  buffer of Layer JSON string., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathViewable_GetJSONStringFunc = function(pToolpathViewable: TLib3MFHandle; const nJSONStringBufferSize: Cardinal; out pJSONStringNeededChars: Cardinal; pJSONStringBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the layer viewable JSON as UTF-8 byte buffer.
+	*
+	* @param[in] pToolpathViewable - ToolpathViewable instance.
+	* @param[in] nJSONBufferCount - Number of elements in buffer
+	* @param[out] pJSONBufferNeededCount - will be filled with the count of the written elements, or needed buffer size.
+	* @param[out] pJSONBufferBuffer - uint8 buffer of Layer JSON UTF-8 bytes.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathViewable_GetJSONBufferFunc = function(pToolpathViewable: TLib3MFHandle; const nJSONBufferCount: QWord; out pJSONBufferNeededCount: QWord; pJSONBufferBuffer: PByte): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
  Function type definitions for Toolpath
 **************************************************************************************************************************)
 
@@ -7820,6 +7895,16 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpath_ReadLayerDataFunc = function(pToolpath: TLib3MFHandle; const nIndex: Cardinal; out pToolpathReader: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Creates a viewable JSON accessor for a layer.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nIndex - Layer Index
+	* @param[out] pToolpathViewable - Toolpath Viewable Instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetLayerViewableFunc = function(pToolpath: TLib3MFHandle; const nIndex: Cardinal; out pToolpathViewable: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the Path of a layer
@@ -11463,6 +11548,24 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
+ Class definition for ToolpathViewable
+**************************************************************************************************************************)
+
+	TLib3MFToolpathViewable = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetLayerIndex(): Cardinal;
+		function GetLayerPath(): String;
+		function GetLayerZMin(): Cardinal;
+		function GetLayerZMax(): Cardinal;
+		function GetLayerThickness(): Cardinal;
+		function GetJSONString(): String;
+		procedure GetJSONBuffer(out AJSONBuffer: TByteDynArray);
+	end;
+
+
+(*************************************************************************************************************************
  Class definition for Toolpath
 **************************************************************************************************************************)
 
@@ -11480,6 +11583,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure SetBottomZ(const ABottomZ: Cardinal);
 		function GetLayerAttachment(const AIndex: Cardinal): TLib3MFAttachment;
 		function ReadLayerData(const AIndex: Cardinal): TLib3MFToolpathLayerReader;
+		function GetLayerViewable(const AIndex: Cardinal): TLib3MFToolpathViewable;
 		function GetLayerPath(const AIndex: Cardinal): String;
 		function GetLayerZMax(const AIndex: Cardinal): Cardinal;
 		function GetLayerZMin(const AIndex: Cardinal): Cardinal;
@@ -12369,6 +12473,13 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFToolpathLayerData_WritePolylineDiscreteWithFactorsFunc: TLib3MFToolpathLayerData_WritePolylineDiscreteWithFactorsFunc;
 		FLib3MFToolpathLayerData_AddCustomDataFunc: TLib3MFToolpathLayerData_AddCustomDataFunc;
 		FLib3MFToolpathLayerData_FinishFunc: TLib3MFToolpathLayerData_FinishFunc;
+		FLib3MFToolpathViewable_GetLayerIndexFunc: TLib3MFToolpathViewable_GetLayerIndexFunc;
+		FLib3MFToolpathViewable_GetLayerPathFunc: TLib3MFToolpathViewable_GetLayerPathFunc;
+		FLib3MFToolpathViewable_GetLayerZMinFunc: TLib3MFToolpathViewable_GetLayerZMinFunc;
+		FLib3MFToolpathViewable_GetLayerZMaxFunc: TLib3MFToolpathViewable_GetLayerZMaxFunc;
+		FLib3MFToolpathViewable_GetLayerThicknessFunc: TLib3MFToolpathViewable_GetLayerThicknessFunc;
+		FLib3MFToolpathViewable_GetJSONStringFunc: TLib3MFToolpathViewable_GetJSONStringFunc;
+		FLib3MFToolpathViewable_GetJSONBufferFunc: TLib3MFToolpathViewable_GetJSONBufferFunc;
 		FLib3MFToolpath_GetUUIDFunc: TLib3MFToolpath_GetUUIDFunc;
 		FLib3MFToolpath_ResetUUIDFunc: TLib3MFToolpath_ResetUUIDFunc;
 		FLib3MFToolpath_GetUnitsFunc: TLib3MFToolpath_GetUnitsFunc;
@@ -12379,6 +12490,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFToolpath_SetBottomZFunc: TLib3MFToolpath_SetBottomZFunc;
 		FLib3MFToolpath_GetLayerAttachmentFunc: TLib3MFToolpath_GetLayerAttachmentFunc;
 		FLib3MFToolpath_ReadLayerDataFunc: TLib3MFToolpath_ReadLayerDataFunc;
+		FLib3MFToolpath_GetLayerViewableFunc: TLib3MFToolpath_GetLayerViewableFunc;
 		FLib3MFToolpath_GetLayerPathFunc: TLib3MFToolpath_GetLayerPathFunc;
 		FLib3MFToolpath_GetLayerZMaxFunc: TLib3MFToolpath_GetLayerZMaxFunc;
 		FLib3MFToolpath_GetLayerZMinFunc: TLib3MFToolpath_GetLayerZMinFunc;
@@ -13189,6 +13301,13 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFToolpathLayerData_WritePolylineDiscreteWithFactorsFunc: TLib3MFToolpathLayerData_WritePolylineDiscreteWithFactorsFunc read FLib3MFToolpathLayerData_WritePolylineDiscreteWithFactorsFunc;
 		property Lib3MFToolpathLayerData_AddCustomDataFunc: TLib3MFToolpathLayerData_AddCustomDataFunc read FLib3MFToolpathLayerData_AddCustomDataFunc;
 		property Lib3MFToolpathLayerData_FinishFunc: TLib3MFToolpathLayerData_FinishFunc read FLib3MFToolpathLayerData_FinishFunc;
+		property Lib3MFToolpathViewable_GetLayerIndexFunc: TLib3MFToolpathViewable_GetLayerIndexFunc read FLib3MFToolpathViewable_GetLayerIndexFunc;
+		property Lib3MFToolpathViewable_GetLayerPathFunc: TLib3MFToolpathViewable_GetLayerPathFunc read FLib3MFToolpathViewable_GetLayerPathFunc;
+		property Lib3MFToolpathViewable_GetLayerZMinFunc: TLib3MFToolpathViewable_GetLayerZMinFunc read FLib3MFToolpathViewable_GetLayerZMinFunc;
+		property Lib3MFToolpathViewable_GetLayerZMaxFunc: TLib3MFToolpathViewable_GetLayerZMaxFunc read FLib3MFToolpathViewable_GetLayerZMaxFunc;
+		property Lib3MFToolpathViewable_GetLayerThicknessFunc: TLib3MFToolpathViewable_GetLayerThicknessFunc read FLib3MFToolpathViewable_GetLayerThicknessFunc;
+		property Lib3MFToolpathViewable_GetJSONStringFunc: TLib3MFToolpathViewable_GetJSONStringFunc read FLib3MFToolpathViewable_GetJSONStringFunc;
+		property Lib3MFToolpathViewable_GetJSONBufferFunc: TLib3MFToolpathViewable_GetJSONBufferFunc read FLib3MFToolpathViewable_GetJSONBufferFunc;
 		property Lib3MFToolpath_GetUUIDFunc: TLib3MFToolpath_GetUUIDFunc read FLib3MFToolpath_GetUUIDFunc;
 		property Lib3MFToolpath_ResetUUIDFunc: TLib3MFToolpath_ResetUUIDFunc read FLib3MFToolpath_ResetUUIDFunc;
 		property Lib3MFToolpath_GetUnitsFunc: TLib3MFToolpath_GetUnitsFunc read FLib3MFToolpath_GetUnitsFunc;
@@ -13199,6 +13318,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFToolpath_SetBottomZFunc: TLib3MFToolpath_SetBottomZFunc read FLib3MFToolpath_SetBottomZFunc;
 		property Lib3MFToolpath_GetLayerAttachmentFunc: TLib3MFToolpath_GetLayerAttachmentFunc read FLib3MFToolpath_GetLayerAttachmentFunc;
 		property Lib3MFToolpath_ReadLayerDataFunc: TLib3MFToolpath_ReadLayerDataFunc read FLib3MFToolpath_ReadLayerDataFunc;
+		property Lib3MFToolpath_GetLayerViewableFunc: TLib3MFToolpath_GetLayerViewableFunc read FLib3MFToolpath_GetLayerViewableFunc;
 		property Lib3MFToolpath_GetLayerPathFunc: TLib3MFToolpath_GetLayerPathFunc read FLib3MFToolpath_GetLayerPathFunc;
 		property Lib3MFToolpath_GetLayerZMaxFunc: TLib3MFToolpath_GetLayerZMaxFunc read FLib3MFToolpath_GetLayerZMaxFunc;
 		property Lib3MFToolpath_GetLayerZMinFunc: TLib3MFToolpath_GetLayerZMinFunc read FLib3MFToolpath_GetLayerZMinFunc;
@@ -13575,6 +13695,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeToolpathProfile(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathProfile;
 	function TLib3MFPolymorphicFactoryMakeToolpathLayerReader(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathLayerReader;
 	function TLib3MFPolymorphicFactoryMakeToolpathLayerData(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathLayerData;
+	function TLib3MFPolymorphicFactoryMakeToolpathViewable(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathViewable;
 	function TLib3MFPolymorphicFactoryMakeToolpath(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpath;
 	function TLib3MFPolymorphicFactoryMakeToolpathIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathIterator;
 	function TLib3MFPolymorphicFactoryMakeSliceStack(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFSliceStack;
@@ -14563,6 +14684,7 @@ implementation
 			QWord($C869620B90242CA7): begin Obj := TLIB3MFToolpathProfile.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathProfile"
 			QWord($28DD7D3718F0616E): begin Obj := TLIB3MFToolpathLayerReader.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerReader"
 			QWord($28C0E70CC44F931A): begin Obj := TLIB3MFToolpathLayerData.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerData"
+			QWord($DA8671731DE85377): begin Obj := TLIB3MFToolpathViewable.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathViewable"
 			QWord($F0AAB2C814D9FFB1): begin Obj := TLIB3MFToolpath.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Toolpath"
 			QWord($D0F24425A07F2A81): begin Obj := TLIB3MFToolpathIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathIterator"
 			QWord($6594B031B6096238): begin Obj := TLIB3MFSliceStack.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::SliceStack"
@@ -15043,6 +15165,10 @@ implementation
 	function TLib3MFPolymorphicFactoryMakeToolpathLayerData(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathLayerData;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFToolpathLayerData, TLIB3MFToolpathLayerData>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeToolpathViewable(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpathViewable;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFToolpathViewable, TLIB3MFToolpathViewable>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeToolpath(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFToolpath;
 	begin
@@ -22901,6 +23027,80 @@ implementation
 	end;
 
 (*************************************************************************************************************************
+ Class implementation for ToolpathViewable
+**************************************************************************************************************************)
+
+	constructor TLib3MFToolpathViewable.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFToolpathViewable.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFToolpathViewable.GetLayerIndex(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathViewable_GetLayerIndexFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpathViewable.GetLayerPath(): String;
+	var
+		bytesNeededLayerPath: Cardinal;
+		bytesWrittenLayerPath: Cardinal;
+		bufferLayerPath: array of Char;
+	begin
+		bytesNeededLayerPath:= 0;
+		bytesWrittenLayerPath:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathViewable_GetLayerPathFunc(FHandle, 0, bytesNeededLayerPath, nil));
+		SetLength(bufferLayerPath, bytesNeededLayerPath);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathViewable_GetLayerPathFunc(FHandle, bytesNeededLayerPath, bytesWrittenLayerPath, @bufferLayerPath[0]));
+		Result := StrPas(@bufferLayerPath[0]);
+	end;
+
+	function TLib3MFToolpathViewable.GetLayerZMin(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathViewable_GetLayerZMinFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpathViewable.GetLayerZMax(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathViewable_GetLayerZMaxFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpathViewable.GetLayerThickness(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathViewable_GetLayerThicknessFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpathViewable.GetJSONString(): String;
+	var
+		bytesNeededJSONString: Cardinal;
+		bytesWrittenJSONString: Cardinal;
+		bufferJSONString: array of Char;
+	begin
+		bytesNeededJSONString:= 0;
+		bytesWrittenJSONString:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathViewable_GetJSONStringFunc(FHandle, 0, bytesNeededJSONString, nil));
+		SetLength(bufferJSONString, bytesNeededJSONString);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathViewable_GetJSONStringFunc(FHandle, bytesNeededJSONString, bytesWrittenJSONString, @bufferJSONString[0]));
+		Result := StrPas(@bufferJSONString[0]);
+	end;
+
+	procedure TLib3MFToolpathViewable.GetJSONBuffer(out AJSONBuffer: TByteDynArray);
+	var
+		countNeededJSONBuffer: QWord;
+		countWrittenJSONBuffer: QWord;
+	begin
+		countNeededJSONBuffer:= 0;
+		countWrittenJSONBuffer:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathViewable_GetJSONBufferFunc(FHandle, 0, countNeededJSONBuffer, nil));
+		SetLength(AJSONBuffer, countNeededJSONBuffer);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathViewable_GetJSONBufferFunc(FHandle, countNeededJSONBuffer, countWrittenJSONBuffer, @AJSONBuffer[0]));
+	end;
+
+(*************************************************************************************************************************
  Class implementation for Toolpath
 **************************************************************************************************************************)
 
@@ -23003,6 +23203,17 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_ReadLayerDataFunc(FHandle, AIndex, HToolpathReader));
 		if Assigned(HToolpathReader) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathLayerReader, TLib3MFToolpathLayerReader>.Make(FWrapper, HToolpathReader);
+	end;
+
+	function TLib3MFToolpath.GetLayerViewable(const AIndex: Cardinal): TLib3MFToolpathViewable;
+	var
+		HToolpathViewable: TLib3MFHandle;
+	begin
+		Result := nil;
+		HToolpathViewable := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetLayerViewableFunc(FHandle, AIndex, HToolpathViewable));
+		if Assigned(HToolpathViewable) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpathViewable, TLib3MFToolpathViewable>.Make(FWrapper, HToolpathViewable);
 	end;
 
 	function TLib3MFToolpath.GetLayerPath(const AIndex: Cardinal): String;
@@ -25376,6 +25587,13 @@ implementation
 		FLib3MFToolpathLayerData_WritePolylineDiscreteWithFactorsFunc := LoadFunction('lib3mf_toolpathlayerdata_writepolylinediscretewithfactors');
 		FLib3MFToolpathLayerData_AddCustomDataFunc := LoadFunction('lib3mf_toolpathlayerdata_addcustomdata');
 		FLib3MFToolpathLayerData_FinishFunc := LoadFunction('lib3mf_toolpathlayerdata_finish');
+		FLib3MFToolpathViewable_GetLayerIndexFunc := LoadFunction('lib3mf_toolpathviewable_getlayerindex');
+		FLib3MFToolpathViewable_GetLayerPathFunc := LoadFunction('lib3mf_toolpathviewable_getlayerpath');
+		FLib3MFToolpathViewable_GetLayerZMinFunc := LoadFunction('lib3mf_toolpathviewable_getlayerzmin');
+		FLib3MFToolpathViewable_GetLayerZMaxFunc := LoadFunction('lib3mf_toolpathviewable_getlayerzmax');
+		FLib3MFToolpathViewable_GetLayerThicknessFunc := LoadFunction('lib3mf_toolpathviewable_getlayerthickness');
+		FLib3MFToolpathViewable_GetJSONStringFunc := LoadFunction('lib3mf_toolpathviewable_getjsonstring');
+		FLib3MFToolpathViewable_GetJSONBufferFunc := LoadFunction('lib3mf_toolpathviewable_getjsonbuffer');
 		FLib3MFToolpath_GetUUIDFunc := LoadFunction('lib3mf_toolpath_getuuid');
 		FLib3MFToolpath_ResetUUIDFunc := LoadFunction('lib3mf_toolpath_resetuuid');
 		FLib3MFToolpath_GetUnitsFunc := LoadFunction('lib3mf_toolpath_getunits');
@@ -25386,6 +25604,7 @@ implementation
 		FLib3MFToolpath_SetBottomZFunc := LoadFunction('lib3mf_toolpath_setbottomz');
 		FLib3MFToolpath_GetLayerAttachmentFunc := LoadFunction('lib3mf_toolpath_getlayerattachment');
 		FLib3MFToolpath_ReadLayerDataFunc := LoadFunction('lib3mf_toolpath_readlayerdata');
+		FLib3MFToolpath_GetLayerViewableFunc := LoadFunction('lib3mf_toolpath_getlayerviewable');
 		FLib3MFToolpath_GetLayerPathFunc := LoadFunction('lib3mf_toolpath_getlayerpath');
 		FLib3MFToolpath_GetLayerZMaxFunc := LoadFunction('lib3mf_toolpath_getlayerzmax');
 		FLib3MFToolpath_GetLayerZMinFunc := LoadFunction('lib3mf_toolpath_getlayerzmin');
@@ -27463,6 +27682,27 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_finish'), @FLib3MFToolpathLayerData_FinishFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathviewable_getlayerindex'), @FLib3MFToolpathViewable_GetLayerIndexFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathviewable_getlayerpath'), @FLib3MFToolpathViewable_GetLayerPathFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathviewable_getlayerzmin'), @FLib3MFToolpathViewable_GetLayerZMinFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathviewable_getlayerzmax'), @FLib3MFToolpathViewable_GetLayerZMaxFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathviewable_getlayerthickness'), @FLib3MFToolpathViewable_GetLayerThicknessFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathviewable_getjsonstring'), @FLib3MFToolpathViewable_GetJSONStringFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathviewable_getjsonbuffer'), @FLib3MFToolpathViewable_GetJSONBufferFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getuuid'), @FLib3MFToolpath_GetUUIDFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -27491,6 +27731,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_readlayerdata'), @FLib3MFToolpath_ReadLayerDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getlayerviewable'), @FLib3MFToolpath_GetLayerViewableFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getlayerpath'), @FLib3MFToolpath_GetLayerPathFunc);

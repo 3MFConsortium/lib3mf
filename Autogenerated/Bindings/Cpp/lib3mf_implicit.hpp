@@ -174,6 +174,7 @@ class CSlice;
 class CToolpathProfile;
 class CToolpathLayerReader;
 class CToolpathLayerData;
+class CToolpathViewable;
 class CToolpath;
 class CToolpathIterator;
 class CSliceStack;
@@ -306,6 +307,7 @@ typedef CSlice CLib3MFSlice;
 typedef CToolpathProfile CLib3MFToolpathProfile;
 typedef CToolpathLayerReader CLib3MFToolpathLayerReader;
 typedef CToolpathLayerData CLib3MFToolpathLayerData;
+typedef CToolpathViewable CLib3MFToolpathViewable;
 typedef CToolpath CLib3MFToolpath;
 typedef CToolpathIterator CLib3MFToolpathIterator;
 typedef CSliceStack CLib3MFSliceStack;
@@ -438,6 +440,7 @@ typedef std::shared_ptr<CSlice> PSlice;
 typedef std::shared_ptr<CToolpathProfile> PToolpathProfile;
 typedef std::shared_ptr<CToolpathLayerReader> PToolpathLayerReader;
 typedef std::shared_ptr<CToolpathLayerData> PToolpathLayerData;
+typedef std::shared_ptr<CToolpathViewable> PToolpathViewable;
 typedef std::shared_ptr<CToolpath> PToolpath;
 typedef std::shared_ptr<CToolpathIterator> PToolpathIterator;
 typedef std::shared_ptr<CSliceStack> PSliceStack;
@@ -570,6 +573,7 @@ typedef PSlice PLib3MFSlice;
 typedef PToolpathProfile PLib3MFToolpathProfile;
 typedef PToolpathLayerReader PLib3MFToolpathLayerReader;
 typedef PToolpathLayerData PLib3MFToolpathLayerData;
+typedef PToolpathViewable PLib3MFToolpathViewable;
 typedef PToolpath PLib3MFToolpath;
 typedef PToolpathIterator PLib3MFToolpathIterator;
 typedef PSliceStack PLib3MFSliceStack;
@@ -1036,6 +1040,7 @@ private:
 	friend class CToolpathProfile;
 	friend class CToolpathLayerReader;
 	friend class CToolpathLayerData;
+	friend class CToolpathViewable;
 	friend class CToolpath;
 	friend class CToolpathIterator;
 	friend class CSliceStack;
@@ -3596,6 +3601,29 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CToolpathViewable 
+**************************************************************************************************************************/
+class CToolpathViewable : public CBase {
+public:
+	
+	/**
+	* CToolpathViewable::CToolpathViewable - Constructor for ToolpathViewable class.
+	*/
+	CToolpathViewable(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_uint32 GetLayerIndex();
+	inline std::string GetLayerPath();
+	inline Lib3MF_uint32 GetLayerZMin();
+	inline Lib3MF_uint32 GetLayerZMax();
+	inline Lib3MF_uint32 GetLayerThickness();
+	inline std::string GetJSONString();
+	inline void GetJSONBuffer(std::vector<Lib3MF_uint8> & JSONBufferBuffer);
+};
+	
+/*************************************************************************************************************************
  Class CToolpath 
 **************************************************************************************************************************/
 class CToolpath : public CResource {
@@ -3619,6 +3647,7 @@ public:
 	inline void SetBottomZ(const Lib3MF_uint32 nBottomZ);
 	inline PAttachment GetLayerAttachment(const Lib3MF_uint32 nIndex);
 	inline PToolpathLayerReader ReadLayerData(const Lib3MF_uint32 nIndex);
+	inline PToolpathViewable GetLayerViewable(const Lib3MF_uint32 nIndex);
 	inline std::string GetLayerPath(const Lib3MF_uint32 nIndex);
 	inline Lib3MF_uint32 GetLayerZMax(const Lib3MF_uint32 nIndex);
 	inline Lib3MF_uint32 GetLayerZMin(const Lib3MF_uint32 nIndex);
@@ -4046,6 +4075,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0xC869620B90242CA7UL: return new CToolpathProfile(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathProfile"
 		case 0x28DD7D3718F0616EUL: return new CToolpathLayerReader(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerReader"
 		case 0x28C0E70CC44F931AUL: return new CToolpathLayerData(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerData"
+		case 0xDA8671731DE85377UL: return new CToolpathViewable(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathViewable"
 		case 0xF0AAB2C814D9FFB1UL: return new CToolpath(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Toolpath"
 		case 0xD0F24425A07F2A81UL: return new CToolpathIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathIterator"
 		case 0x6594B031B6096238UL: return new CSliceStack(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::SliceStack"
@@ -13193,6 +13223,101 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CToolpathViewable
+	 */
+	
+	/**
+	* CToolpathViewable::GetLayerIndex - Returns the source layer index.
+	* @return Layer index.
+	*/
+	Lib3MF_uint32 CToolpathViewable::GetLayerIndex()
+	{
+		Lib3MF_uint32 resultLayerIndex = 0;
+		CheckError(lib3mf_toolpathviewable_getlayerindex(m_pHandle, &resultLayerIndex));
+		
+		return resultLayerIndex;
+	}
+	
+	/**
+	* CToolpathViewable::GetLayerPath - Returns the source layer package path.
+	* @return Layer package path.
+	*/
+	std::string CToolpathViewable::GetLayerPath()
+	{
+		Lib3MF_uint32 bytesNeededLayerPath = 0;
+		Lib3MF_uint32 bytesWrittenLayerPath = 0;
+		CheckError(lib3mf_toolpathviewable_getlayerpath(m_pHandle, 0, &bytesNeededLayerPath, nullptr));
+		std::vector<char> bufferLayerPath(bytesNeededLayerPath);
+		CheckError(lib3mf_toolpathviewable_getlayerpath(m_pHandle, bytesNeededLayerPath, &bytesWrittenLayerPath, &bufferLayerPath[0]));
+		
+		return std::string(&bufferLayerPath[0]);
+	}
+	
+	/**
+	* CToolpathViewable::GetLayerZMin - Returns the source layer minimum Z value in toolpath units.
+	* @return Layer minimum Z.
+	*/
+	Lib3MF_uint32 CToolpathViewable::GetLayerZMin()
+	{
+		Lib3MF_uint32 resultLayerZMin = 0;
+		CheckError(lib3mf_toolpathviewable_getlayerzmin(m_pHandle, &resultLayerZMin));
+		
+		return resultLayerZMin;
+	}
+	
+	/**
+	* CToolpathViewable::GetLayerZMax - Returns the source layer maximum Z value in toolpath units.
+	* @return Layer maximum Z.
+	*/
+	Lib3MF_uint32 CToolpathViewable::GetLayerZMax()
+	{
+		Lib3MF_uint32 resultLayerZMax = 0;
+		CheckError(lib3mf_toolpathviewable_getlayerzmax(m_pHandle, &resultLayerZMax));
+		
+		return resultLayerZMax;
+	}
+	
+	/**
+	* CToolpathViewable::GetLayerThickness - Returns the source layer thickness in toolpath units.
+	* @return Layer thickness.
+	*/
+	Lib3MF_uint32 CToolpathViewable::GetLayerThickness()
+	{
+		Lib3MF_uint32 resultLayerThickness = 0;
+		CheckError(lib3mf_toolpathviewable_getlayerthickness(m_pHandle, &resultLayerThickness));
+		
+		return resultLayerThickness;
+	}
+	
+	/**
+	* CToolpathViewable::GetJSONString - Returns the layer viewable JSON as UTF-8 string.
+	* @return Layer JSON string.
+	*/
+	std::string CToolpathViewable::GetJSONString()
+	{
+		Lib3MF_uint32 bytesNeededJSONString = 0;
+		Lib3MF_uint32 bytesWrittenJSONString = 0;
+		CheckError(lib3mf_toolpathviewable_getjsonstring(m_pHandle, 0, &bytesNeededJSONString, nullptr));
+		std::vector<char> bufferJSONString(bytesNeededJSONString);
+		CheckError(lib3mf_toolpathviewable_getjsonstring(m_pHandle, bytesNeededJSONString, &bytesWrittenJSONString, &bufferJSONString[0]));
+		
+		return std::string(&bufferJSONString[0]);
+	}
+	
+	/**
+	* CToolpathViewable::GetJSONBuffer - Returns the layer viewable JSON as UTF-8 byte buffer.
+	* @param[out] JSONBufferBuffer - Layer JSON UTF-8 bytes.
+	*/
+	void CToolpathViewable::GetJSONBuffer(std::vector<Lib3MF_uint8> & JSONBufferBuffer)
+	{
+		Lib3MF_uint64 elementsNeededJSONBuffer = 0;
+		Lib3MF_uint64 elementsWrittenJSONBuffer = 0;
+		CheckError(lib3mf_toolpathviewable_getjsonbuffer(m_pHandle, 0, &elementsNeededJSONBuffer, nullptr));
+		JSONBufferBuffer.resize((size_t) elementsNeededJSONBuffer);
+		CheckError(lib3mf_toolpathviewable_getjsonbuffer(m_pHandle, elementsNeededJSONBuffer, &elementsWrittenJSONBuffer, JSONBufferBuffer.data()));
+	}
+	
+	/**
 	 * Method definitions for class CToolpath
 	 */
 	
@@ -13332,6 +13457,22 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CToolpathLayerReader>(dynamic_cast<CToolpathLayerReader*>(m_pWrapper->polymorphicFactory(hToolpathReader)));
+	}
+	
+	/**
+	* CToolpath::GetLayerViewable - Creates a viewable JSON accessor for a layer.
+	* @param[in] nIndex - Layer Index
+	* @return Toolpath Viewable Instance
+	*/
+	PToolpathViewable CToolpath::GetLayerViewable(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MFHandle hToolpathViewable = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_toolpath_getlayerviewable(m_pHandle, nIndex, &hToolpathViewable));
+		
+		if (!hToolpathViewable) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpathViewable>(dynamic_cast<CToolpathViewable*>(m_pWrapper->polymorphicFactory(hToolpathViewable)));
 	}
 	
 	/**

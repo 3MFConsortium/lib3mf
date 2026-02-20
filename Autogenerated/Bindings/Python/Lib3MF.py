@@ -791,6 +791,13 @@ class FunctionTable:
 	lib3mf_toolpathlayerdata_writepolylinediscretewithfactors = None
 	lib3mf_toolpathlayerdata_addcustomdata = None
 	lib3mf_toolpathlayerdata_finish = None
+	lib3mf_toolpathviewable_getlayerindex = None
+	lib3mf_toolpathviewable_getlayerpath = None
+	lib3mf_toolpathviewable_getlayerzmin = None
+	lib3mf_toolpathviewable_getlayerzmax = None
+	lib3mf_toolpathviewable_getlayerthickness = None
+	lib3mf_toolpathviewable_getjsonstring = None
+	lib3mf_toolpathviewable_getjsonbuffer = None
 	lib3mf_toolpath_getuuid = None
 	lib3mf_toolpath_resetuuid = None
 	lib3mf_toolpath_getunits = None
@@ -801,6 +808,7 @@ class FunctionTable:
 	lib3mf_toolpath_setbottomz = None
 	lib3mf_toolpath_getlayerattachment = None
 	lib3mf_toolpath_readlayerdata = None
+	lib3mf_toolpath_getlayerviewable = None
 	lib3mf_toolpath_getlayerpath = None
 	lib3mf_toolpath_getlayerzmax = None
 	lib3mf_toolpath_getlayerzmin = None
@@ -5355,6 +5363,48 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
 			self.lib.lib3mf_toolpathlayerdata_finish = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathviewable_getlayerindex")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathviewable_getlayerindex = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathviewable_getlayerpath")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathviewable_getlayerpath = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathviewable_getlayerzmin")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathviewable_getlayerzmin = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathviewable_getlayerzmax")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathviewable_getlayerzmax = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathviewable_getlayerthickness")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathviewable_getlayerthickness = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathviewable_getjsonstring")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathviewable_getjsonstring = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathviewable_getjsonbuffer")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_uint8))
+			self.lib.lib3mf_toolpathviewable_getjsonbuffer = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getuuid")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -5414,6 +5464,12 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_toolpath_readlayerdata = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getlayerviewable")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_getlayerviewable = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getlayerpath")), methodAddress)
 			if err != 0:
@@ -8264,6 +8320,27 @@ class Wrapper:
 			self.lib.lib3mf_toolpathlayerdata_finish.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerdata_finish.argtypes = [ctypes.c_void_p]
 			
+			self.lib.lib3mf_toolpathviewable_getlayerindex.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathviewable_getlayerindex.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathviewable_getlayerpath.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathviewable_getlayerpath.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathviewable_getlayerzmin.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathviewable_getlayerzmin.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathviewable_getlayerzmax.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathviewable_getlayerzmax.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathviewable_getlayerthickness.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathviewable_getlayerthickness.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathviewable_getjsonstring.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathviewable_getjsonstring.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathviewable_getjsonbuffer.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathviewable_getjsonbuffer.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_uint8)]
+			
 			self.lib.lib3mf_toolpath_getuuid.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_getuuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
@@ -8293,6 +8370,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_toolpath_readlayerdata.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_readlayerdata.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_getlayerviewable.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getlayerviewable.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_toolpath_getlayerpath.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_getlayerpath.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
@@ -9178,6 +9258,8 @@ class Wrapper:
 				return ToolpathLayerReader(handle, wrapper)
 			def getObjectById_28C0E70CC44F931A(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerData"
 				return ToolpathLayerData(handle, wrapper)
+			def getObjectById_DA8671731DE85377(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ToolpathViewable"
+				return ToolpathViewable(handle, wrapper)
 			def getObjectById_F0AAB2C814D9FFB1(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Toolpath"
 				return Toolpath(handle, wrapper)
 			def getObjectById_D0F24425A07F2A81(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ToolpathIterator"
@@ -15430,6 +15512,70 @@ class ToolpathLayerData(Base):
 	
 
 
+''' Class Implementation for ToolpathViewable
+'''
+class ToolpathViewable(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def GetLayerIndex(self):
+		pLayerIndex = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathviewable_getlayerindex(self._handle, pLayerIndex))
+		
+		return pLayerIndex.value
+	
+	def GetLayerPath(self):
+		nLayerPathBufferSize = ctypes.c_uint64(0)
+		nLayerPathNeededChars = ctypes.c_uint64(0)
+		pLayerPathBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathviewable_getlayerpath(self._handle, nLayerPathBufferSize, nLayerPathNeededChars, pLayerPathBuffer))
+		nLayerPathBufferSize = ctypes.c_uint64(nLayerPathNeededChars.value)
+		pLayerPathBuffer = (ctypes.c_char * (nLayerPathNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathviewable_getlayerpath(self._handle, nLayerPathBufferSize, nLayerPathNeededChars, pLayerPathBuffer))
+		
+		return pLayerPathBuffer.value.decode()
+	
+	def GetLayerZMin(self):
+		pLayerZMin = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathviewable_getlayerzmin(self._handle, pLayerZMin))
+		
+		return pLayerZMin.value
+	
+	def GetLayerZMax(self):
+		pLayerZMax = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathviewable_getlayerzmax(self._handle, pLayerZMax))
+		
+		return pLayerZMax.value
+	
+	def GetLayerThickness(self):
+		pLayerThickness = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathviewable_getlayerthickness(self._handle, pLayerThickness))
+		
+		return pLayerThickness.value
+	
+	def GetJSONString(self):
+		nJSONStringBufferSize = ctypes.c_uint64(0)
+		nJSONStringNeededChars = ctypes.c_uint64(0)
+		pJSONStringBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathviewable_getjsonstring(self._handle, nJSONStringBufferSize, nJSONStringNeededChars, pJSONStringBuffer))
+		nJSONStringBufferSize = ctypes.c_uint64(nJSONStringNeededChars.value)
+		pJSONStringBuffer = (ctypes.c_char * (nJSONStringNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathviewable_getjsonstring(self._handle, nJSONStringBufferSize, nJSONStringNeededChars, pJSONStringBuffer))
+		
+		return pJSONStringBuffer.value.decode()
+	
+	def GetJSONBuffer(self):
+		nJSONBufferCount = ctypes.c_uint64(0)
+		nJSONBufferNeededCount = ctypes.c_uint64(0)
+		pJSONBufferBuffer = (ctypes.c_uint8*0)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathviewable_getjsonbuffer(self._handle, nJSONBufferCount, nJSONBufferNeededCount, pJSONBufferBuffer))
+		nJSONBufferCount = ctypes.c_uint64(nJSONBufferNeededCount.value)
+		pJSONBufferBuffer = (ctypes.c_uint8 * nJSONBufferNeededCount.value)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathviewable_getjsonbuffer(self._handle, nJSONBufferCount, nJSONBufferNeededCount, pJSONBufferBuffer))
+		
+		return [pJSONBufferBuffer[i] for i in range(nJSONBufferNeededCount.value)]
+	
+
+
 ''' Class Implementation for Toolpath
 '''
 class Toolpath(Resource):
@@ -15524,6 +15670,17 @@ class Toolpath(Resource):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return ToolpathReaderObject
+	
+	def GetLayerViewable(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		ToolpathViewableHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getlayerviewable(self._handle, nIndex, ToolpathViewableHandle))
+		if ToolpathViewableHandle:
+			ToolpathViewableObject = self._wrapper._polymorphicFactory(ToolpathViewableHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ToolpathViewableObject
 	
 	def GetLayerPath(self, Index):
 		nIndex = ctypes.c_uint32(Index)

@@ -158,6 +158,7 @@ Persistent<Function> CLib3MFSlice::constructor;
 Persistent<Function> CLib3MFToolpathProfile::constructor;
 Persistent<Function> CLib3MFToolpathLayerReader::constructor;
 Persistent<Function> CLib3MFToolpathLayerData::constructor;
+Persistent<Function> CLib3MFToolpathViewable::constructor;
 Persistent<Function> CLib3MFToolpath::constructor;
 Persistent<Function> CLib3MFToolpathIterator::constructor;
 Persistent<Function> CLib3MFSliceStack::constructor;
@@ -25860,6 +25861,230 @@ void CLib3MFToolpathLayerData::Finish(const FunctionCallbackInfo<Value>& args)
 }
 
 /*************************************************************************************************************************
+ Class CLib3MFToolpathViewable Implementation
+**************************************************************************************************************************/
+
+CLib3MFToolpathViewable::CLib3MFToolpathViewable()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFToolpathViewable::~CLib3MFToolpathViewable()
+{
+}
+
+void CLib3MFToolpathViewable::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFToolpathViewable"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerIndex", GetLayerIndex);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerPath", GetLayerPath);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerZMin", GetLayerZMin);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerZMax", GetLayerZMax);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerThickness", GetLayerThickness);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetJSONString", GetJSONString);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetJSONBuffer", GetJSONBuffer);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFToolpathViewable::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFToolpathViewable * toolpathviewableInstance = new CLib3MFToolpathViewable();
+				toolpathviewableInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFToolpathViewable: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFToolpathViewable::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFToolpathViewable::GetLayerIndex(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnLayerIndex = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLayerIndex.");
+        if (wrapperTable->m_ToolpathViewable_GetLayerIndex == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathViewable::GetLayerIndex.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathViewable_GetLayerIndex(instanceHandle, &nReturnLayerIndex);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnLayerIndex));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathViewable::GetLayerPath(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededLayerPath = 0;
+        unsigned int bytesWrittenLayerPath = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLayerPath.");
+        if (wrapperTable->m_ToolpathViewable_GetLayerPath == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathViewable::GetLayerPath.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathViewable_GetLayerPath(instanceHandle, 0, &bytesNeededLayerPath, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferLayerPath;
+        bufferLayerPath.resize(bytesNeededLayerPath);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathViewable_GetLayerPath(instanceHandle, bytesNeededLayerPath, &bytesWrittenLayerPath, &bufferLayerPath[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferLayerPath[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathViewable::GetLayerZMin(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnLayerZMin = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLayerZMin.");
+        if (wrapperTable->m_ToolpathViewable_GetLayerZMin == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathViewable::GetLayerZMin.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathViewable_GetLayerZMin(instanceHandle, &nReturnLayerZMin);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnLayerZMin));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathViewable::GetLayerZMax(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnLayerZMax = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLayerZMax.");
+        if (wrapperTable->m_ToolpathViewable_GetLayerZMax == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathViewable::GetLayerZMax.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathViewable_GetLayerZMax(instanceHandle, &nReturnLayerZMax);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnLayerZMax));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathViewable::GetLayerThickness(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnLayerThickness = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLayerThickness.");
+        if (wrapperTable->m_ToolpathViewable_GetLayerThickness == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathViewable::GetLayerThickness.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathViewable_GetLayerThickness(instanceHandle, &nReturnLayerThickness);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnLayerThickness));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathViewable::GetJSONString(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededJSONString = 0;
+        unsigned int bytesWrittenJSONString = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetJSONString.");
+        if (wrapperTable->m_ToolpathViewable_GetJSONString == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathViewable::GetJSONString.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathViewable_GetJSONString(instanceHandle, 0, &bytesNeededJSONString, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferJSONString;
+        bufferJSONString.resize(bytesNeededJSONString);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathViewable_GetJSONString(instanceHandle, bytesNeededJSONString, &bytesWrittenJSONString, &bufferJSONString[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferJSONString[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathViewable::GetJSONBuffer(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetJSONBuffer.");
+        if (wrapperTable->m_ToolpathViewable_GetJSONBuffer == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathViewable::GetJSONBuffer.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathViewable_GetJSONBuffer(instanceHandle, 0, nullptr, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
  Class CLib3MFToolpath Implementation
 **************************************************************************************************************************/
 
@@ -25892,6 +26117,7 @@ void CLib3MFToolpath::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetBottomZ", SetBottomZ);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerAttachment", GetLayerAttachment);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "ReadLayerData", ReadLayerData);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerViewable", GetLayerViewable);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerPath", GetLayerPath);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerZMax", GetLayerZMax);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerZMin", GetLayerZMin);
@@ -26197,6 +26423,33 @@ void CLib3MFToolpath::ReadLayerData(const FunctionCallbackInfo<Value>& args)
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjToolpathReader = CLib3MFToolpathLayerReader::NewInstance(args.Holder(), hReturnToolpathReader);
         args.GetReturnValue().Set(instanceObjToolpathReader);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::GetLayerViewable(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnToolpathViewable = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLayerViewable.");
+        if (wrapperTable->m_Toolpath_GetLayerViewable == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetLayerViewable.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetLayerViewable(instanceHandle, nIndex, &hReturnToolpathViewable);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjToolpathViewable = CLib3MFToolpathViewable::NewInstance(args.Holder(), hReturnToolpathViewable);
+        args.GetReturnValue().Set(instanceObjToolpathViewable);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

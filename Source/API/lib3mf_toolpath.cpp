@@ -37,6 +37,7 @@ Abstract: This is a stub class definition of CToolpath
 
 #include "lib3mf_writer.hpp"
 #include "lib3mf_toolpathlayerreader.hpp"
+#include "lib3mf_toolpathviewable.hpp"
 
 #include "Common/NMR_Exception.h"
 
@@ -239,6 +240,40 @@ IToolpathLayerReader* CToolpath::ReadLayerData(const Lib3MF_uint32 nIndex)
 	pReader->readStream(pLayerDataStream);
 
 	return new CToolpathLayerReader(pReader->getReadData(), m_pToolpath);
+}
+
+IToolpathViewable* CToolpath::GetLayerViewable(const Lib3MF_uint32 nIndex)
+{
+	auto pLayer = m_pToolpath->getLayer(nIndex);
+	auto pModel = m_pToolpath->getModel();
+
+	NMR::PImportStream pLayerDataStream;
+
+	std::string sLayerPathData = pLayer->getLayerDataPath();
+	auto pAttachment = pModel->findModelAttachment(sLayerPathData);
+	if (pAttachment.get() != nullptr) {
+		pLayerDataStream = pAttachment->getStream();
+	}
+	else {
+		pLayerDataStream = pModel->readPathFromPersistentDataSource(sLayerPathData);
+		if (pLayerDataStream.get() == nullptr)
+			throw NMR::CNMRException(NMR_ERROR_INVALIDMODELATTACHMENT);
+	}
+
+	Lib3MF_uint32 nLayerZMax = pLayer->getMaxZ();
+	Lib3MF_uint32 nLayerZMin = (nIndex > 0) ? m_pToolpath->getLayer(nIndex - 1)->getMaxZ() : m_pToolpath->getBottomZ();
+	if (nLayerZMin >= nLayerZMax)
+		throw NMR::CNMRException(NMR_ERROR_LAYERHASNOTPOSITIVETHICKNESS);
+
+	Lib3MF_uint32 nLayerThickness = static_cast<Lib3MF_uint32>(nLayerZMax - nLayerZMin);
+
+	return new CToolpathViewable(
+		pLayerDataStream,
+		nIndex,
+		sLayerPathData,
+		nLayerZMin,
+		nLayerZMax,
+		nLayerThickness);
 }
 
 Lib3MF_uint32 CToolpath::GetCustomDataCount()

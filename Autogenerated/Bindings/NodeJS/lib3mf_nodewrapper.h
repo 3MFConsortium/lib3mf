@@ -2692,6 +2692,30 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFToolpathViewable 
+**************************************************************************************************************************/
+class CLib3MFToolpathViewable : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetLayerIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetLayerPath(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetLayerZMin(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetLayerZMax(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetLayerThickness(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetJSONString(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetJSONBuffer(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFToolpathViewable();
+	~CLib3MFToolpathViewable();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
  Class CLib3MFToolpath 
 **************************************************************************************************************************/
 class CLib3MFToolpath : public CLib3MFBaseClass {
@@ -2708,6 +2732,7 @@ private:
 	static void SetBottomZ(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetLayerAttachment(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void ReadLayerData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetLayerViewable(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetLayerPath(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetLayerZMax(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetLayerZMin(const v8::FunctionCallbackInfo<v8::Value>& args);

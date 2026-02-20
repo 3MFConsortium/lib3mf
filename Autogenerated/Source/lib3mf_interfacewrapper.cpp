@@ -24973,6 +24973,291 @@ Lib3MFResult lib3mf_toolpathlayerdata_finish(Lib3MF_ToolpathLayerData pToolpathL
 
 
 /*************************************************************************************************************************
+ Class implementation for ToolpathViewable
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_toolpathviewable_getlayerindex(Lib3MF_ToolpathViewable pToolpathViewable, Lib3MF_uint32 * pLayerIndex)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathViewable;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathViewable, "ToolpathViewable", "GetLayerIndex");
+		}
+		if (pLayerIndex == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathViewable* pIToolpathViewable = dynamic_cast<IToolpathViewable*>(pIBaseClass);
+		if (!pIToolpathViewable)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pLayerIndex = pIToolpathViewable->GetLayerIndex();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("LayerIndex", *pLayerIndex);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathviewable_getlayerpath(Lib3MF_ToolpathViewable pToolpathViewable, const Lib3MF_uint32 nLayerPathBufferSize, Lib3MF_uint32* pLayerPathNeededChars, char * pLayerPathBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathViewable;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathViewable, "ToolpathViewable", "GetLayerPath");
+		}
+		if ( (!pLayerPathBuffer) && !(pLayerPathNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sLayerPath("");
+		IToolpathViewable* pIToolpathViewable = dynamic_cast<IToolpathViewable*>(pIBaseClass);
+		if (!pIToolpathViewable)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pLayerPathBuffer == nullptr);
+		if (isCacheCall) {
+			sLayerPath = pIToolpathViewable->GetLayerPath();
+
+			pIToolpathViewable->_setCache (new ParameterCache_1<std::string> (sLayerPath));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIToolpathViewable->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sLayerPath);
+			pIToolpathViewable->_setCache (nullptr);
+		}
+		
+		if (pLayerPathNeededChars)
+			*pLayerPathNeededChars = (Lib3MF_uint32) (sLayerPath.size()+1);
+		if (pLayerPathBuffer) {
+			if (sLayerPath.size() >= nLayerPathBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iLayerPath = 0; iLayerPath < sLayerPath.size(); iLayerPath++)
+				pLayerPathBuffer[iLayerPath] = sLayerPath[iLayerPath];
+			pLayerPathBuffer[sLayerPath.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("LayerPath", sLayerPath.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathviewable_getlayerzmin(Lib3MF_ToolpathViewable pToolpathViewable, Lib3MF_uint32 * pLayerZMin)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathViewable;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathViewable, "ToolpathViewable", "GetLayerZMin");
+		}
+		if (pLayerZMin == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathViewable* pIToolpathViewable = dynamic_cast<IToolpathViewable*>(pIBaseClass);
+		if (!pIToolpathViewable)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pLayerZMin = pIToolpathViewable->GetLayerZMin();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("LayerZMin", *pLayerZMin);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathviewable_getlayerzmax(Lib3MF_ToolpathViewable pToolpathViewable, Lib3MF_uint32 * pLayerZMax)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathViewable;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathViewable, "ToolpathViewable", "GetLayerZMax");
+		}
+		if (pLayerZMax == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathViewable* pIToolpathViewable = dynamic_cast<IToolpathViewable*>(pIBaseClass);
+		if (!pIToolpathViewable)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pLayerZMax = pIToolpathViewable->GetLayerZMax();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("LayerZMax", *pLayerZMax);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathviewable_getlayerthickness(Lib3MF_ToolpathViewable pToolpathViewable, Lib3MF_uint32 * pLayerThickness)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathViewable;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathViewable, "ToolpathViewable", "GetLayerThickness");
+		}
+		if (pLayerThickness == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathViewable* pIToolpathViewable = dynamic_cast<IToolpathViewable*>(pIBaseClass);
+		if (!pIToolpathViewable)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pLayerThickness = pIToolpathViewable->GetLayerThickness();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("LayerThickness", *pLayerThickness);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathviewable_getjsonstring(Lib3MF_ToolpathViewable pToolpathViewable, const Lib3MF_uint32 nJSONStringBufferSize, Lib3MF_uint32* pJSONStringNeededChars, char * pJSONStringBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathViewable;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathViewable, "ToolpathViewable", "GetJSONString");
+		}
+		if ( (!pJSONStringBuffer) && !(pJSONStringNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sJSONString("");
+		IToolpathViewable* pIToolpathViewable = dynamic_cast<IToolpathViewable*>(pIBaseClass);
+		if (!pIToolpathViewable)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pJSONStringBuffer == nullptr);
+		if (isCacheCall) {
+			sJSONString = pIToolpathViewable->GetJSONString();
+
+			pIToolpathViewable->_setCache (new ParameterCache_1<std::string> (sJSONString));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIToolpathViewable->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sJSONString);
+			pIToolpathViewable->_setCache (nullptr);
+		}
+		
+		if (pJSONStringNeededChars)
+			*pJSONStringNeededChars = (Lib3MF_uint32) (sJSONString.size()+1);
+		if (pJSONStringBuffer) {
+			if (sJSONString.size() >= nJSONStringBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iJSONString = 0; iJSONString < sJSONString.size(); iJSONString++)
+				pJSONStringBuffer[iJSONString] = sJSONString[iJSONString];
+			pJSONStringBuffer[sJSONString.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("JSONString", sJSONString.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathviewable_getjsonbuffer(Lib3MF_ToolpathViewable pToolpathViewable, const Lib3MF_uint64 nJSONBufferBufferSize, Lib3MF_uint64* pJSONBufferNeededCount, Lib3MF_uint8 * pJSONBufferBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathViewable;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathViewable, "ToolpathViewable", "GetJSONBuffer");
+		}
+		if ((!pJSONBufferBuffer) && !(pJSONBufferNeededCount))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathViewable* pIToolpathViewable = dynamic_cast<IToolpathViewable*>(pIBaseClass);
+		if (!pIToolpathViewable)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathViewable->GetJSONBuffer(nJSONBufferBufferSize, pJSONBufferNeededCount, pJSONBufferBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
  Class implementation for Toolpath
 **************************************************************************************************************************/
 Lib3MFResult lib3mf_toolpath_getuuid(Lib3MF_Toolpath pToolpath, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer)
@@ -25361,6 +25646,43 @@ Lib3MFResult lib3mf_toolpath_readlayerdata(Lib3MF_Toolpath pToolpath, Lib3MF_uin
 		*pToolpathReader = (IBase*)(pBaseToolpathReader);
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addHandleResult("ToolpathReader", *pToolpathReader);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_getlayerviewable(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_ToolpathViewable * pToolpathViewable)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "GetLayerViewable");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if (pToolpathViewable == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseToolpathViewable(nullptr);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseToolpathViewable = pIToolpath->GetLayerViewable(nIndex);
+
+		*pToolpathViewable = (IBase*)(pBaseToolpathViewable);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ToolpathViewable", *pToolpathViewable);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -32381,6 +32703,20 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_addcustomdata;
 	if (sProcName == "lib3mf_toolpathlayerdata_finish") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_finish;
+	if (sProcName == "lib3mf_toolpathviewable_getlayerindex") 
+		*ppProcAddress = (void*) &lib3mf_toolpathviewable_getlayerindex;
+	if (sProcName == "lib3mf_toolpathviewable_getlayerpath") 
+		*ppProcAddress = (void*) &lib3mf_toolpathviewable_getlayerpath;
+	if (sProcName == "lib3mf_toolpathviewable_getlayerzmin") 
+		*ppProcAddress = (void*) &lib3mf_toolpathviewable_getlayerzmin;
+	if (sProcName == "lib3mf_toolpathviewable_getlayerzmax") 
+		*ppProcAddress = (void*) &lib3mf_toolpathviewable_getlayerzmax;
+	if (sProcName == "lib3mf_toolpathviewable_getlayerthickness") 
+		*ppProcAddress = (void*) &lib3mf_toolpathviewable_getlayerthickness;
+	if (sProcName == "lib3mf_toolpathviewable_getjsonstring") 
+		*ppProcAddress = (void*) &lib3mf_toolpathviewable_getjsonstring;
+	if (sProcName == "lib3mf_toolpathviewable_getjsonbuffer") 
+		*ppProcAddress = (void*) &lib3mf_toolpathviewable_getjsonbuffer;
 	if (sProcName == "lib3mf_toolpath_getuuid") 
 		*ppProcAddress = (void*) &lib3mf_toolpath_getuuid;
 	if (sProcName == "lib3mf_toolpath_resetuuid") 
@@ -32401,6 +32737,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpath_getlayerattachment;
 	if (sProcName == "lib3mf_toolpath_readlayerdata") 
 		*ppProcAddress = (void*) &lib3mf_toolpath_readlayerdata;
+	if (sProcName == "lib3mf_toolpath_getlayerviewable") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_getlayerviewable;
 	if (sProcName == "lib3mf_toolpath_getlayerpath") 
 		*ppProcAddress = (void*) &lib3mf_toolpath_getlayerpath;
 	if (sProcName == "lib3mf_toolpath_getlayerzmax") 

@@ -2444,6 +2444,27 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_finish", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerData_Finish (IntPtr Handle);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathviewable_getlayerindex", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathViewable_GetLayerIndex (IntPtr Handle, out UInt32 ALayerIndex);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathviewable_getlayerpath", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathViewable_GetLayerPath (IntPtr Handle, UInt32 sizeLayerPath, out UInt32 neededLayerPath, IntPtr dataLayerPath);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathviewable_getlayerzmin", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathViewable_GetLayerZMin (IntPtr Handle, out UInt32 ALayerZMin);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathviewable_getlayerzmax", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathViewable_GetLayerZMax (IntPtr Handle, out UInt32 ALayerZMax);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathviewable_getlayerthickness", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathViewable_GetLayerThickness (IntPtr Handle, out UInt32 ALayerThickness);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathviewable_getjsonstring", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathViewable_GetJSONString (IntPtr Handle, UInt32 sizeJSONString, out UInt32 neededJSONString, IntPtr dataJSONString);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathviewable_getjsonbuffer", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathViewable_GetJSONBuffer (IntPtr Handle, UInt64 sizeJSONBuffer, out UInt64 neededJSONBuffer, IntPtr dataJSONBuffer);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getuuid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_GetUUID (IntPtr Handle, UInt32 sizeUUID, out UInt32 neededUUID, IntPtr dataUUID);
 
@@ -2473,6 +2494,9 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_readlayerdata", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_ReadLayerData (IntPtr Handle, UInt32 AIndex, out IntPtr AToolpathReader);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getlayerviewable", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetLayerViewable (IntPtr Handle, UInt32 AIndex, out IntPtr AToolpathViewable);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getlayerpath", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_GetLayerPath (IntPtr Handle, UInt32 AIndex, UInt32 sizePath, out UInt32 neededPath, IntPtr dataPath);
@@ -3564,6 +3588,7 @@ namespace Lib3MF {
 					case 0xC869620B90242CA7: Object = new CToolpathProfile(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathProfile"
 					case 0x28DD7D3718F0616E: Object = new CToolpathLayerReader(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerReader"
 					case 0x28C0E70CC44F931A: Object = new CToolpathLayerData(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerData"
+					case 0xDA8671731DE85377: Object = new CToolpathViewable(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathViewable"
 					case 0xF0AAB2C814D9FFB1: Object = new CToolpath(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Toolpath"
 					case 0xD0F24425A07F2A81: Object = new CToolpathIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathIterator"
 					case 0x6594B031B6096238: Object = new CSliceStack(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::SliceStack"
@@ -10455,6 +10480,87 @@ namespace Lib3MF {
 
 	}
 
+	public class CToolpathViewable : CBase
+	{
+		public CToolpathViewable (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public UInt32 GetLayerIndex ()
+		{
+			UInt32 resultLayerIndex = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathViewable_GetLayerIndex (Handle, out resultLayerIndex));
+			return resultLayerIndex;
+		}
+
+		public String GetLayerPath ()
+		{
+			UInt32 sizeLayerPath = 0;
+			UInt32 neededLayerPath = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathViewable_GetLayerPath (Handle, sizeLayerPath, out neededLayerPath, IntPtr.Zero));
+			sizeLayerPath = neededLayerPath;
+			byte[] bytesLayerPath = new byte[sizeLayerPath];
+			GCHandle dataLayerPath = GCHandle.Alloc(bytesLayerPath, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathViewable_GetLayerPath (Handle, sizeLayerPath, out neededLayerPath, dataLayerPath.AddrOfPinnedObject()));
+			dataLayerPath.Free();
+			return Encoding.UTF8.GetString(bytesLayerPath).TrimEnd(char.MinValue);
+		}
+
+		public UInt32 GetLayerZMin ()
+		{
+			UInt32 resultLayerZMin = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathViewable_GetLayerZMin (Handle, out resultLayerZMin));
+			return resultLayerZMin;
+		}
+
+		public UInt32 GetLayerZMax ()
+		{
+			UInt32 resultLayerZMax = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathViewable_GetLayerZMax (Handle, out resultLayerZMax));
+			return resultLayerZMax;
+		}
+
+		public UInt32 GetLayerThickness ()
+		{
+			UInt32 resultLayerThickness = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathViewable_GetLayerThickness (Handle, out resultLayerThickness));
+			return resultLayerThickness;
+		}
+
+		public String GetJSONString ()
+		{
+			UInt32 sizeJSONString = 0;
+			UInt32 neededJSONString = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathViewable_GetJSONString (Handle, sizeJSONString, out neededJSONString, IntPtr.Zero));
+			sizeJSONString = neededJSONString;
+			byte[] bytesJSONString = new byte[sizeJSONString];
+			GCHandle dataJSONString = GCHandle.Alloc(bytesJSONString, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathViewable_GetJSONString (Handle, sizeJSONString, out neededJSONString, dataJSONString.AddrOfPinnedObject()));
+			dataJSONString.Free();
+			return Encoding.UTF8.GetString(bytesJSONString).TrimEnd(char.MinValue);
+		}
+
+		public void GetJSONBuffer (out Byte[] AJSONBuffer)
+		{
+			UInt64 sizeJSONBuffer = 0;
+			UInt64 neededJSONBuffer = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathViewable_GetJSONBuffer (Handle, sizeJSONBuffer, out neededJSONBuffer, IntPtr.Zero));
+			sizeJSONBuffer = neededJSONBuffer;
+			AJSONBuffer = new Byte[sizeJSONBuffer];
+			GCHandle dataJSONBuffer = GCHandle.Alloc(AJSONBuffer, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathViewable_GetJSONBuffer (Handle, sizeJSONBuffer, out neededJSONBuffer, dataJSONBuffer.AddrOfPinnedObject()));
+			dataJSONBuffer.Free();
+		}
+
+	}
+
 	public class CToolpath : CResource
 	{
 		public CToolpath (IntPtr NewHandle) : base (NewHandle)
@@ -10553,6 +10659,14 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Toolpath_ReadLayerData (Handle, AIndex, out newToolpathReader));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathLayerReader>(newToolpathReader);
+		}
+
+		public CToolpathViewable GetLayerViewable (UInt32 AIndex)
+		{
+			IntPtr newToolpathViewable = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetLayerViewable (Handle, AIndex, out newToolpathViewable));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathViewable>(newToolpathViewable);
 		}
 
 		public String GetLayerPath (UInt32 AIndex)

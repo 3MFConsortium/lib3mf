@@ -6951,6 +6951,79 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_addcustomdata(Lib3MF_Toolp
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_finish(Lib3MF_ToolpathLayerData pToolpathLayerData);
 
 /*************************************************************************************************************************
+ Class definition for ToolpathViewable
+**************************************************************************************************************************/
+
+/**
+* Returns the source layer index.
+*
+* @param[in] pToolpathViewable - ToolpathViewable instance.
+* @param[out] pLayerIndex - Layer index.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathviewable_getlayerindex(Lib3MF_ToolpathViewable pToolpathViewable, Lib3MF_uint32 * pLayerIndex);
+
+/**
+* Returns the source layer package path.
+*
+* @param[in] pToolpathViewable - ToolpathViewable instance.
+* @param[in] nLayerPathBufferSize - size of the buffer (including trailing 0)
+* @param[out] pLayerPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pLayerPathBuffer -  buffer of Layer package path., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathviewable_getlayerpath(Lib3MF_ToolpathViewable pToolpathViewable, const Lib3MF_uint32 nLayerPathBufferSize, Lib3MF_uint32* pLayerPathNeededChars, char * pLayerPathBuffer);
+
+/**
+* Returns the source layer minimum Z value in toolpath units.
+*
+* @param[in] pToolpathViewable - ToolpathViewable instance.
+* @param[out] pLayerZMin - Layer minimum Z.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathviewable_getlayerzmin(Lib3MF_ToolpathViewable pToolpathViewable, Lib3MF_uint32 * pLayerZMin);
+
+/**
+* Returns the source layer maximum Z value in toolpath units.
+*
+* @param[in] pToolpathViewable - ToolpathViewable instance.
+* @param[out] pLayerZMax - Layer maximum Z.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathviewable_getlayerzmax(Lib3MF_ToolpathViewable pToolpathViewable, Lib3MF_uint32 * pLayerZMax);
+
+/**
+* Returns the source layer thickness in toolpath units.
+*
+* @param[in] pToolpathViewable - ToolpathViewable instance.
+* @param[out] pLayerThickness - Layer thickness.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathviewable_getlayerthickness(Lib3MF_ToolpathViewable pToolpathViewable, Lib3MF_uint32 * pLayerThickness);
+
+/**
+* Returns the layer viewable JSON as UTF-8 string.
+*
+* @param[in] pToolpathViewable - ToolpathViewable instance.
+* @param[in] nJSONStringBufferSize - size of the buffer (including trailing 0)
+* @param[out] pJSONStringNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pJSONStringBuffer -  buffer of Layer JSON string., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathviewable_getjsonstring(Lib3MF_ToolpathViewable pToolpathViewable, const Lib3MF_uint32 nJSONStringBufferSize, Lib3MF_uint32* pJSONStringNeededChars, char * pJSONStringBuffer);
+
+/**
+* Returns the layer viewable JSON as UTF-8 byte buffer.
+*
+* @param[in] pToolpathViewable - ToolpathViewable instance.
+* @param[in] nJSONBufferBufferSize - Number of elements in buffer
+* @param[out] pJSONBufferNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pJSONBufferBuffer - uint8  buffer of Layer JSON UTF-8 bytes.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathviewable_getjsonbuffer(Lib3MF_ToolpathViewable pToolpathViewable, const Lib3MF_uint64 nJSONBufferBufferSize, Lib3MF_uint64* pJSONBufferNeededCount, Lib3MF_uint8 * pJSONBufferBuffer);
+
+/*************************************************************************************************************************
  Class definition for Toolpath
 **************************************************************************************************************************/
 
@@ -7052,6 +7125,16 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_getlayerattachment(Lib3MF_Toolpath 
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_readlayerdata(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_ToolpathLayerReader * pToolpathReader);
+
+/**
+* Creates a viewable JSON accessor for a layer.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nIndex - Layer Index
+* @param[out] pToolpathViewable - Toolpath Viewable Instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_getlayerviewable(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_ToolpathViewable * pToolpathViewable);
 
 /**
 * Retrieves the Path of a layer

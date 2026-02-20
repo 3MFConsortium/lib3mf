@@ -4490,6 +4490,37 @@
   </class>
 
 
+  <class name="ToolpathViewable" parent="Base">
+	<method name="GetLayerIndex" description="Returns the source layer index.">
+		<param name="LayerIndex" type="uint32" pass="return" description="Layer index." />
+	</method>
+
+	<method name="GetLayerPath" description="Returns the source layer package path.">
+		<param name="LayerPath" type="string" pass="return" description="Layer package path." />
+	</method>
+
+	<method name="GetLayerZMin" description="Returns the source layer minimum Z value in toolpath units.">
+		<param name="LayerZMin" type="uint32" pass="return" description="Layer minimum Z." />
+	</method>
+
+	<method name="GetLayerZMax" description="Returns the source layer maximum Z value in toolpath units.">
+		<param name="LayerZMax" type="uint32" pass="return" description="Layer maximum Z." />
+	</method>
+
+	<method name="GetLayerThickness" description="Returns the source layer thickness in toolpath units.">
+		<param name="LayerThickness" type="uint32" pass="return" description="Layer thickness." />
+	</method>
+
+	<method name="GetJSONString" description="Returns the layer viewable JSON as UTF-8 string.">
+		<param name="JSONString" type="string" pass="return" description="Layer JSON string." />
+	</method>
+
+	<method name="GetJSONBuffer" description="Returns the layer viewable JSON as UTF-8 byte buffer.">
+		<param name="JSONBuffer" type="basicarray" class="uint8" pass="out" description="Layer JSON UTF-8 bytes." />
+	</method>
+  </class>
+
+
   <class name="Toolpath" parent="Resource">
 
 		<method name="GetUUID" description="Retrieves the UUID of the toolpath">
@@ -4535,6 +4566,11 @@
 		<method name="ReadLayerData" description = "Reads the toolpath of a layer.">
 		  <param name="Index" type="uint32" pass="in" description="Layer Index" />
 		  <param name="ToolpathReader" type="class" class="ToolpathLayerReader" pass="return" description="Toolpath Reader Instance" />
+		</method>
+
+		<method name="GetLayerViewable" description = "Creates a viewable JSON accessor for a layer.">
+		  <param name="Index" type="uint32" pass="in" description="Layer Index" />
+		  <param name="ToolpathViewable" type="class" class="ToolpathViewable" pass="return" description="Toolpath Viewable Instance" />
 		</method>
 		
 

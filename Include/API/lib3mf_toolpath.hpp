@@ -82,6 +82,8 @@ public:
 
 	IToolpathLayerReader * ReadLayerData(const Lib3MF_uint32 nIndex) override;
 
+	IToolpathViewable * GetLayerViewable(const Lib3MF_uint32 nIndex) override;
+
 	std::string GetLayerPath(const Lib3MF_uint32 nIndex) override;
 
 	Lib3MF_uint32 GetLayerZMax(const Lib3MF_uint32 nIndex) override;

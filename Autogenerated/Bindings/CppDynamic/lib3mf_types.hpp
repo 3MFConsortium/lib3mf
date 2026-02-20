@@ -368,6 +368,7 @@ typedef Lib3MFHandle Lib3MF_Slice;
 typedef Lib3MFHandle Lib3MF_ToolpathProfile;
 typedef Lib3MFHandle Lib3MF_ToolpathLayerReader;
 typedef Lib3MFHandle Lib3MF_ToolpathLayerData;
+typedef Lib3MFHandle Lib3MF_ToolpathViewable;
 typedef Lib3MFHandle Lib3MF_Toolpath;
 typedef Lib3MFHandle Lib3MF_ToolpathIterator;
 typedef Lib3MFHandle Lib3MF_SliceStack;
