@@ -15,4 +15,6 @@ SetupWriteRead5.3mf
 v093reout.3mf
 .vs
 .idea
-cmake-build-*build_test
+cmake-build-*
+build_test
+
