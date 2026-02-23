@@ -292,7 +292,11 @@ set_target_properties(${PROJECT_NAME} PROPERTIES VISIBILITY_INLINES_HIDDEN ON)
 set(STARTUPPROJECT ${PROJECT_NAME})
 
 #########################################################
-if ((UNIX OR MINGW) AND LIB3MF_BUILD_SHARED)
+if (${MSVC})
+  # wd4996 masks the deprecated-warning
+  target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/sdl;/W3;/WX;/FC;/wd4996>")
+  target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
+elseif ((UNIX OR MINGW) AND LIB3MF_BUILD_SHARED)
   # Uncomment the following to put the version info into the .so-file.
   set_target_properties(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
   set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
@@ -300,10 +304,6 @@ if ((UNIX OR MINGW) AND LIB3MF_BUILD_SHARED)
   if (STRIP_BINARIES AND NOT APPLE)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS -s)
   endif()
-else()
-  # wd4996 masks the deprecated-warning
-  target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/sdl;/W3;/WX;/FC;/wd4996>")
-  target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
 endif()
 
 # Static build usability (e.g. linking into shared libs)
