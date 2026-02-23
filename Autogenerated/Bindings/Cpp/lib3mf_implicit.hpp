@@ -1958,6 +1958,7 @@ public:
 	inline Lib3MF_uint64 GetStreamSize();
 	inline void WriteToBuffer(std::vector<Lib3MF_uint8> & BufferBuffer);
 	inline void ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer);
+	inline std::string GetContentType();
 };
 	
 /*************************************************************************************************************************
@@ -7430,6 +7431,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	{
 		Lib3MF_uint64 nBufferSize = BufferBuffer.size();
 		CheckError(lib3mf_attachment_readfrombuffer(m_pHandle, nBufferSize, BufferBuffer.data()));
+	}
+	
+	/**
+	* CAttachment::GetContentType - Retrieves an attachment's content type
+	* @return returns the attachment's content type string
+	*/
+	std::string CAttachment::GetContentType()
+	{
+		Lib3MF_uint32 bytesNeededContentType = 0;
+		Lib3MF_uint32 bytesWrittenContentType = 0;
+		CheckError(lib3mf_attachment_getcontenttype(m_pHandle, 0, &bytesNeededContentType, nullptr));
+		std::vector<char> bufferContentType(bytesNeededContentType);
+		CheckError(lib3mf_attachment_getcontenttype(m_pHandle, bytesNeededContentType, &bytesWrittenContentType, &bufferContentType[0]));
+		
+		return std::string(&bufferContentType[0]);
 	}
 	
 	/**

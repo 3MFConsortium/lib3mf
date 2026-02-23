@@ -3017,6 +3017,12 @@ public:
 	*/
 	virtual void ReadFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer) = 0;
 
+	/**
+	* IAttachment::GetContentType - Retrieves an attachment's content type
+	* @return returns the attachment's content type string
+	*/
+	virtual std::string GetContentType() = 0;
+
 };
 
 typedef IBaseSharedPtr<IAttachment> PIAttachment;

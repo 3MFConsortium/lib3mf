@@ -10409,6 +10409,62 @@ Lib3MFResult lib3mf_attachment_readfrombuffer(Lib3MF_Attachment pAttachment, Lib
 	}
 }
 
+Lib3MFResult lib3mf_attachment_getcontenttype(Lib3MF_Attachment pAttachment, const Lib3MF_uint32 nContentTypeBufferSize, Lib3MF_uint32* pContentTypeNeededChars, char * pContentTypeBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pAttachment;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pAttachment, "Attachment", "GetContentType");
+		}
+		if ( (!pContentTypeBuffer) && !(pContentTypeNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sContentType("");
+		IAttachment* pIAttachment = dynamic_cast<IAttachment*>(pIBaseClass);
+		if (!pIAttachment)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pContentTypeBuffer == nullptr);
+		if (isCacheCall) {
+			sContentType = pIAttachment->GetContentType();
+
+			pIAttachment->_setCache (new ParameterCache_1<std::string> (sContentType));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIAttachment->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sContentType);
+			pIAttachment->_setCache (nullptr);
+		}
+		
+		if (pContentTypeNeededChars)
+			*pContentTypeNeededChars = (Lib3MF_uint32) (sContentType.size()+1);
+		if (pContentTypeBuffer) {
+			if (sContentType.size() >= nContentTypeBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iContentType = 0; iContentType < sContentType.size(); iContentType++)
+				pContentTypeBuffer[iContentType] = sContentType[iContentType];
+			pContentTypeBuffer[sContentType.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("ContentType", sContentType.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 /*************************************************************************************************************************
  Class implementation for Texture2D
@@ -23899,6 +23955,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_attachment_writetobuffer;
 	if (sProcName == "lib3mf_attachment_readfrombuffer") 
 		*ppProcAddress = (void*) &lib3mf_attachment_readfrombuffer;
+	if (sProcName == "lib3mf_attachment_getcontenttype") 
+		*ppProcAddress = (void*) &lib3mf_attachment_getcontenttype;
 	if (sProcName == "lib3mf_texture2d_getattachment") 
 		*ppProcAddress = (void*) &lib3mf_texture2d_getattachment;
 	if (sProcName == "lib3mf_texture2d_setattachment") 

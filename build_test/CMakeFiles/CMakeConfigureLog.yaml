@@ -1,0 +1,1746 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineSystem.cmake:205 (message)"
+      - "CMakeLists.txt:17 (project)"
+    message: |
+      The system is: Linux - 6.11.0-1018-azure - x86_64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:17 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: /usr/bin/cc 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+      
+      The C compiler identification is GNU, found in:
+        /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/3.31.6/CompilerIdC/a.out
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:17 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: /usr/bin/c++ 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+      
+      The CXX compiler identification is GNU, found in:
+        /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/3.31.6/CompilerIdCXX/a.out
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:17 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-DnqAaP"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-DnqAaP"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-DnqAaP'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_ad241/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_ad241.dir/build.make CMakeFiles/cmTC_ad241.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-DnqAaP'
+        Building C object CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o
+        /usr/bin/cc   -v -o CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o -c /usr/local/share/cmake-3.31/Modules/CMakeCCompilerABI.c
+        Using built-in specs.
+        COLLECT_GCC=/usr/bin/cc
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-linux-gnu
+        Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04) 
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_ad241.dir/'
+         /usr/libexec/gcc/x86_64-linux-gnu/13/cc1 -quiet -v -imultiarch x86_64-linux-gnu /usr/local/share/cmake-3.31/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_ad241.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccIvKEux.s
+        GNU C17 (Ubuntu 13.3.0-6ubuntu2~24.04) version 13.3.0 (x86_64-linux-gnu)
+        	compiled by GNU C version 13.3.0, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed/x86_64-linux-gnu"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/../../../../x86_64-linux-gnu/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /usr/lib/gcc/x86_64-linux-gnu/13/include
+         /usr/local/include
+         /usr/include/x86_64-linux-gnu
+         /usr/include
+        End of search list.
+        Compiler executable checksum: 38987c28e967c64056a6454abdef726e
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_ad241.dir/'
+         as -v --64 -o CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o /tmp/ccIvKEux.s
+        GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.42
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.'
+        Linking C executable cmTC_ad241
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ad241.dir/link.txt --verbose=1
+        Using built-in specs.
+        COLLECT_GCC=/usr/bin/cc
+        COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-linux-gnu
+        Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04) 
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-rdynamic' '-o' 'cmTC_ad241' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_ad241.'
+         /usr/libexec/gcc/x86_64-linux-gnu/13/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccczeZTX.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_ad241 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -v CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o
+        collect2 version 13.3.0
+        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccczeZTX.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_ad241 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -v CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o
+        GNU ld (GNU Binutils for Ubuntu) 2.42
+        COLLECT_GCC_OPTIONS='-v' '-rdynamic' '-o' 'cmTC_ad241' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_ad241.'
+        /usr/bin/cc  -v -Wl,-v -rdynamic CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o -o cmTC_ad241
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-DnqAaP'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:17 (project)"
+    message: |
+      Parsed C implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/usr/lib/gcc/x86_64-linux-gnu/13/include]
+          add: [/usr/local/include]
+          add: [/usr/include/x86_64-linux-gnu]
+          add: [/usr/include]
+        end of search list found
+        collapse include dir [/usr/lib/gcc/x86_64-linux-gnu/13/include] ==> [/usr/lib/gcc/x86_64-linux-gnu/13/include]
+        collapse include dir [/usr/local/include] ==> [/usr/local/include]
+        collapse include dir [/usr/include/x86_64-linux-gnu] ==> [/usr/include/x86_64-linux-gnu]
+        collapse include dir [/usr/include] ==> [/usr/include]
+        implicit include dirs: [/usr/lib/gcc/x86_64-linux-gnu/13/include;/usr/local/include;/usr/include/x86_64-linux-gnu;/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:17 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
+        ignore line: [Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-DnqAaP']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_ad241/fast]
+        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_ad241.dir/build.make CMakeFiles/cmTC_ad241.dir/build]
+        ignore line: [gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-DnqAaP']
+        ignore line: [Building C object CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o]
+        ignore line: [/usr/bin/cc   -v -o CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o -c /usr/local/share/cmake-3.31/Modules/CMakeCCompilerABI.c]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/usr/bin/cc]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-linux-gnu]
+        ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c ada c++ go d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_ad241.dir/']
+        ignore line: [ /usr/libexec/gcc/x86_64-linux-gnu/13/cc1 -quiet -v -imultiarch x86_64-linux-gnu /usr/local/share/cmake-3.31/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_ad241.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccIvKEux.s]
+        ignore line: [GNU C17 (Ubuntu 13.3.0-6ubuntu2~24.04) version 13.3.0 (x86_64-linux-gnu)]
+        ignore line: [	compiled by GNU C version 13.3.0  GMP version 6.3.0  MPFR version 4.2.1  MPC version 1.3.1  isl version isl-0.26-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed/x86_64-linux-gnu"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/../../../../x86_64-linux-gnu/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/13/include]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /usr/include/x86_64-linux-gnu]
+        ignore line: [ /usr/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: 38987c28e967c64056a6454abdef726e]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_ad241.dir/']
+        ignore line: [ as -v --64 -o CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o /tmp/ccIvKEux.s]
+        ignore line: [GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.42]
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.']
+        ignore line: [Linking C executable cmTC_ad241]
+        ignore line: [/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ad241.dir/link.txt --verbose=1]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/usr/bin/cc]
+        ignore line: [COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-linux-gnu]
+        ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c ada c++ go d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04) ]
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-rdynamic' '-o' 'cmTC_ad241' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_ad241.']
+        link line: [ /usr/libexec/gcc/x86_64-linux-gnu/13/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccczeZTX.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_ad241 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -v CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+          arg [/usr/libexec/gcc/x86_64-linux-gnu/13/collect2] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [/usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so] ==> ignore
+          arg [-plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccczeZTX.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [--build-id] ==> ignore
+          arg [--eh-frame-hdr] ==> ignore
+          arg [-m] ==> ignore
+          arg [elf_x86_64] ==> ignore
+          arg [--hash-style=gnu] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-export-dynamic] ==> ignore
+          arg [-dynamic-linker] ==> ignore
+          arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+          arg [-pie] ==> ignore
+          arg [-znow] ==> ignore
+          arg [-zrelro] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_ad241] ==> ignore
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib]
+          arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+          arg [-L/lib/../lib] ==> dir [/lib/../lib]
+          arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+          arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../..]
+          arg [-v] ==> ignore
+          arg [CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o] ==> ignore
+          arg [-lgcc] ==> lib [gcc]
+          arg [--push-state] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [--pop-state] ==> ignore
+          arg [-lc] ==> lib [c]
+          arg [-lgcc] ==> lib [gcc]
+          arg [--push-state] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [--pop-state] ==> ignore
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+        ignore line: [collect2 version 13.3.0]
+        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccczeZTX.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_ad241 /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -v CMakeFiles/cmTC_ad241.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+        linker tool for 'C': /usr/bin/ld
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o] ==> [/usr/lib/x86_64-linux-gnu/Scrt1.o]
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o] ==> [/usr/lib/x86_64-linux-gnu/crti.o]
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o] ==> [/usr/lib/x86_64-linux-gnu/crtn.o]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13] ==> [/usr/lib/gcc/x86_64-linux-gnu/13]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib] ==> [/usr/lib]
+        collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+        collapse library dir [/lib/../lib] ==> [/lib]
+        collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../..] ==> [/usr/lib]
+        implicit libs: [gcc;gcc_s;c;gcc;gcc_s]
+        implicit objs: [/usr/lib/x86_64-linux-gnu/Scrt1.o;/usr/lib/x86_64-linux-gnu/crti.o;/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o;/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o;/usr/lib/x86_64-linux-gnu/crtn.o]
+        implicit dirs: [/usr/lib/gcc/x86_64-linux-gnu/13;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:17 (project)"
+    message: |
+      Running the C compiler's linker: "/usr/bin/ld" "-v"
+      GNU ld (GNU Binutils for Ubuntu) 2.42
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:17 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-8IV5iJ"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-8IV5iJ"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-8IV5iJ'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_c64dd/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_c64dd.dir/build.make CMakeFiles/cmTC_c64dd.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-8IV5iJ'
+        Building CXX object CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o
+        /usr/bin/c++   -v -o CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp
+        Using built-in specs.
+        COLLECT_GCC=/usr/bin/c++
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-linux-gnu
+        Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04) 
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c64dd.dir/'
+         /usr/libexec/gcc/x86_64-linux-gnu/13/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/local/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_c64dd.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccKWN96p.s
+        GNU C++17 (Ubuntu 13.3.0-6ubuntu2~24.04) version 13.3.0 (x86_64-linux-gnu)
+        	compiled by GNU C version 13.3.0, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.26-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring duplicate directory "/usr/include/x86_64-linux-gnu/c++/13"
+        ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed/x86_64-linux-gnu"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/../../../../x86_64-linux-gnu/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /usr/include/c++/13
+         /usr/include/x86_64-linux-gnu/c++/13
+         /usr/include/c++/13/backward
+         /usr/lib/gcc/x86_64-linux-gnu/13/include
+         /usr/local/include
+         /usr/include/x86_64-linux-gnu
+         /usr/include
+        End of search list.
+        Compiler executable checksum: c81c05345ce537099dafd5580045814a
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c64dd.dir/'
+         as -v --64 -o CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccKWN96p.s
+        GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.42
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.'
+        Linking CXX executable cmTC_c64dd
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c64dd.dir/link.txt --verbose=1
+        Using built-in specs.
+        COLLECT_GCC=/usr/bin/c++
+        COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-linux-gnu
+        Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04) 
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-rdynamic' '-o' 'cmTC_c64dd' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_c64dd.'
+         /usr/libexec/gcc/x86_64-linux-gnu/13/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccbMiy89.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_c64dd /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -v CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o
+        collect2 version 13.3.0
+        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccbMiy89.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_c64dd /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -v CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o
+        GNU ld (GNU Binutils for Ubuntu) 2.42
+        COLLECT_GCC_OPTIONS='-v' '-rdynamic' '-o' 'cmTC_c64dd' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_c64dd.'
+        /usr/bin/c++  -v -Wl,-v -rdynamic CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_c64dd
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-8IV5iJ'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:17 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/usr/include/c++/13]
+          add: [/usr/include/x86_64-linux-gnu/c++/13]
+          add: [/usr/include/c++/13/backward]
+          add: [/usr/lib/gcc/x86_64-linux-gnu/13/include]
+          add: [/usr/local/include]
+          add: [/usr/include/x86_64-linux-gnu]
+          add: [/usr/include]
+        end of search list found
+        collapse include dir [/usr/include/c++/13] ==> [/usr/include/c++/13]
+        collapse include dir [/usr/include/x86_64-linux-gnu/c++/13] ==> [/usr/include/x86_64-linux-gnu/c++/13]
+        collapse include dir [/usr/include/c++/13/backward] ==> [/usr/include/c++/13/backward]
+        collapse include dir [/usr/lib/gcc/x86_64-linux-gnu/13/include] ==> [/usr/lib/gcc/x86_64-linux-gnu/13/include]
+        collapse include dir [/usr/local/include] ==> [/usr/local/include]
+        collapse include dir [/usr/include/x86_64-linux-gnu] ==> [/usr/include/x86_64-linux-gnu]
+        collapse include dir [/usr/include] ==> [/usr/include]
+        implicit include dirs: [/usr/include/c++/13;/usr/include/x86_64-linux-gnu/c++/13;/usr/include/c++/13/backward;/usr/lib/gcc/x86_64-linux-gnu/13/include;/usr/local/include;/usr/include/x86_64-linux-gnu;/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:17 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
+        ignore line: [Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-8IV5iJ']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_c64dd/fast]
+        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_c64dd.dir/build.make CMakeFiles/cmTC_c64dd.dir/build]
+        ignore line: [gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-8IV5iJ']
+        ignore line: [Building CXX object CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o]
+        ignore line: [/usr/bin/c++   -v -o CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/usr/bin/c++]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-linux-gnu]
+        ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c ada c++ go d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c64dd.dir/']
+        ignore line: [ /usr/libexec/gcc/x86_64-linux-gnu/13/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/local/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_c64dd.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/ccKWN96p.s]
+        ignore line: [GNU C++17 (Ubuntu 13.3.0-6ubuntu2~24.04) version 13.3.0 (x86_64-linux-gnu)]
+        ignore line: [	compiled by GNU C version 13.3.0  GMP version 6.3.0  MPFR version 4.2.1  MPC version 1.3.1  isl version isl-0.26-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring duplicate directory "/usr/include/x86_64-linux-gnu/c++/13"]
+        ignore line: [ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed/x86_64-linux-gnu"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/include-fixed"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/13/../../../../x86_64-linux-gnu/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/include/c++/13]
+        ignore line: [ /usr/include/x86_64-linux-gnu/c++/13]
+        ignore line: [ /usr/include/c++/13/backward]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/13/include]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /usr/include/x86_64-linux-gnu]
+        ignore line: [ /usr/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: c81c05345ce537099dafd5580045814a]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c64dd.dir/']
+        ignore line: [ as -v --64 -o CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccKWN96p.s]
+        ignore line: [GNU assembler version 2.42 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.42]
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.']
+        ignore line: [Linking CXX executable cmTC_c64dd]
+        ignore line: [/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c64dd.dir/link.txt --verbose=1]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/usr/bin/c++]
+        ignore line: [COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-linux-gnu]
+        ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 13.3.0-6ubuntu2~24.04' --with-bugurl=file:///usr/share/doc/gcc-13/README.Bugs --enable-languages=c ada c++ go d fortran objc obj-c++ m2 --prefix=/usr --with-gcc-major-version-only --program-suffix=-13 --program-prefix=x86_64-linux-gnu- --enable-shared --enable-linker-build-id --libexecdir=/usr/libexec --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --enable-bootstrap --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-libstdcxx-backtrace --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --enable-default-pie --with-system-zlib --enable-libphobos-checking=release --with-target-system-zlib=auto --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32 m64 mx32 --enable-multilib --with-tune=generic --enable-offload-targets=nvptx-none=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-nvptx/usr amdgcn-amdhsa=/build/gcc-13-fG75Ri/gcc-13-13.3.0/debian/tmp-gcn/usr --enable-offload-defaulted --without-cuda-driver --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --with-build-config=bootstrap-lto-lean --enable-link-serialization=2]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04) ]
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/13/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/13/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/13/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-rdynamic' '-o' 'cmTC_c64dd' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_c64dd.']
+        link line: [ /usr/libexec/gcc/x86_64-linux-gnu/13/collect2 -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccbMiy89.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_c64dd /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -v CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+          arg [/usr/libexec/gcc/x86_64-linux-gnu/13/collect2] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [/usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so] ==> ignore
+          arg [-plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccbMiy89.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [--build-id] ==> ignore
+          arg [--eh-frame-hdr] ==> ignore
+          arg [-m] ==> ignore
+          arg [elf_x86_64] ==> ignore
+          arg [--hash-style=gnu] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-export-dynamic] ==> ignore
+          arg [-dynamic-linker] ==> ignore
+          arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+          arg [-pie] ==> ignore
+          arg [-znow] ==> ignore
+          arg [-zrelro] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_c64dd] ==> ignore
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib]
+          arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+          arg [-L/lib/../lib] ==> dir [/lib/../lib]
+          arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+          arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/13/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../..]
+          arg [-v] ==> ignore
+          arg [CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [-lstdc++] ==> lib [stdc++]
+          arg [-lm] ==> lib [m]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [-lc] ==> lib [c]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+        ignore line: [collect2 version 13.3.0]
+        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-linux-gnu/13/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-linux-gnu/13/lto-wrapper -plugin-opt=-fresolution=/tmp/ccbMiy89.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_c64dd /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/13 -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/13/../../.. -v CMakeFiles/cmTC_c64dd.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o]
+        linker tool for 'CXX': /usr/bin/ld
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o] ==> [/usr/lib/x86_64-linux-gnu/Scrt1.o]
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o] ==> [/usr/lib/x86_64-linux-gnu/crti.o]
+        collapse obj [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crtn.o] ==> [/usr/lib/x86_64-linux-gnu/crtn.o]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13] ==> [/usr/lib/gcc/x86_64-linux-gnu/13]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../../../lib] ==> [/usr/lib]
+        collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+        collapse library dir [/lib/../lib] ==> [/lib]
+        collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/13/../../..] ==> [/usr/lib]
+        implicit libs: [stdc++;m;gcc_s;gcc;c;gcc_s;gcc]
+        implicit objs: [/usr/lib/x86_64-linux-gnu/Scrt1.o;/usr/lib/x86_64-linux-gnu/crti.o;/usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o;/usr/lib/gcc/x86_64-linux-gnu/13/crtendS.o;/usr/lib/x86_64-linux-gnu/crtn.o]
+        implicit dirs: [/usr/lib/gcc/x86_64-linux-gnu/13;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:17 (project)"
+    message: |
+      Running the CXX compiler's linker: "/usr/bin/ld" "-v"
+      GNU ld (GNU Binutils for Ubuntu) 2.42
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:1237 (message)"
+      - "/usr/local/share/cmake-3.31/Modules/CMakeDetermineASMCompiler.cmake:135 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "Libraries/libressl/CMakeLists.txt:6 (project)"
+    message: |
+      Checking whether the ASM compiler is GNU using "--version" matched "(GNU assembler)|(GCC)|(Free Software Foundation)":
+      cc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+      Copyright (C) 2023 Free Software Foundation, Inc.
+      This is free software; see the source for copying conditions.  There is NO
+      warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:187 (check_function_exists)"
+    checks:
+      - "Looking for asprintf"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-IGvCU9"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-IGvCU9"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_ASPRINTF"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-IGvCU9'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_044b8/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_044b8.dir/build.make CMakeFiles/cmTC_044b8.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-IGvCU9'
+        Building C object CMakeFiles/cmTC_044b8.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=asprintf -fPIE -o CMakeFiles/cmTC_044b8.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-IGvCU9/CheckFunctionExists.c
+        Linking C executable cmTC_044b8
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_044b8.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=asprintf CMakeFiles/cmTC_044b8.dir/CheckFunctionExists.c.o -o cmTC_044b8
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-IGvCU9'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:192 (check_function_exists)"
+    checks:
+      - "Looking for getopt"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-G8X2du"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-G8X2du"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_GETOPT"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-G8X2du'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_58976/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_58976.dir/build.make CMakeFiles/cmTC_58976.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-G8X2du'
+        Building C object CMakeFiles/cmTC_58976.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=getopt -fPIE -o CMakeFiles/cmTC_58976.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-G8X2du/CheckFunctionExists.c
+        Linking C executable cmTC_58976
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_58976.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=getopt CMakeFiles/cmTC_58976.dir/CheckFunctionExists.c.o -o cmTC_58976
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-G8X2du'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:197 (check_function_exists)"
+    checks:
+      - "Looking for reallocarray"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-vr9rPR"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-vr9rPR"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_REALLOCARRAY"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-vr9rPR'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_604c0/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_604c0.dir/build.make CMakeFiles/cmTC_604c0.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-vr9rPR'
+        Building C object CMakeFiles/cmTC_604c0.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=reallocarray -fPIE -o CMakeFiles/cmTC_604c0.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-vr9rPR/CheckFunctionExists.c
+        Linking C executable cmTC_604c0
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_604c0.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=reallocarray CMakeFiles/cmTC_604c0.dir/CheckFunctionExists.c.o -o cmTC_604c0
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-vr9rPR'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:202 (check_function_exists)"
+    checks:
+      - "Looking for strcasecmp"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-KjVJVn"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-KjVJVn"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_STRCASECMP"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-KjVJVn'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_5fba3/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_5fba3.dir/build.make CMakeFiles/cmTC_5fba3.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-KjVJVn'
+        Building C object CMakeFiles/cmTC_5fba3.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=strcasecmp -fPIE -o CMakeFiles/cmTC_5fba3.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-KjVJVn/CheckFunctionExists.c
+        <command-line>: warning: conflicting types for built-in function ‘strcasecmp’; expected ‘int(const char *, const char *)’ [-Wbuiltin-declaration-mismatch]
+        /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-KjVJVn/CheckFunctionExists.c:7:3: note: in expansion of macro ‘CHECK_FUNCTION_EXISTS’
+            7 |   CHECK_FUNCTION_EXISTS(void);
+              |   ^~~~~~~~~~~~~~~~~~~~~
+        Linking C executable cmTC_5fba3
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5fba3.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=strcasecmp CMakeFiles/cmTC_5fba3.dir/CheckFunctionExists.c.o -o cmTC_5fba3
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-KjVJVn'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:207 (check_function_exists)"
+    checks:
+      - "Looking for strlcat"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-uukwbm"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-uukwbm"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_STRLCAT"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-uukwbm'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_80210/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_80210.dir/build.make CMakeFiles/cmTC_80210.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-uukwbm'
+        Building C object CMakeFiles/cmTC_80210.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=strlcat -fPIE -o CMakeFiles/cmTC_80210.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-uukwbm/CheckFunctionExists.c
+        Linking C executable cmTC_80210
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_80210.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=strlcat CMakeFiles/cmTC_80210.dir/CheckFunctionExists.c.o -o cmTC_80210
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-uukwbm'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:212 (check_function_exists)"
+    checks:
+      - "Looking for strlcpy"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-20hOGq"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-20hOGq"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_STRLCPY"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-20hOGq'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_afb68/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_afb68.dir/build.make CMakeFiles/cmTC_afb68.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-20hOGq'
+        Building C object CMakeFiles/cmTC_afb68.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=strlcpy -fPIE -o CMakeFiles/cmTC_afb68.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-20hOGq/CheckFunctionExists.c
+        Linking C executable cmTC_afb68
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_afb68.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=strlcpy CMakeFiles/cmTC_afb68.dir/CheckFunctionExists.c.o -o cmTC_afb68
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-20hOGq'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:217 (check_function_exists)"
+    checks:
+      - "Looking for strndup"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-6ykSEZ"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-6ykSEZ"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_STRNDUP"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-6ykSEZ'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_0ccf8/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_0ccf8.dir/build.make CMakeFiles/cmTC_0ccf8.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-6ykSEZ'
+        Building C object CMakeFiles/cmTC_0ccf8.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=strndup -fPIE -o CMakeFiles/cmTC_0ccf8.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-6ykSEZ/CheckFunctionExists.c
+        <command-line>: warning: conflicting types for built-in function ‘strndup’; expected ‘char *(const char *, long unsigned int)’ [-Wbuiltin-declaration-mismatch]
+        /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-6ykSEZ/CheckFunctionExists.c:7:3: note: in expansion of macro ‘CHECK_FUNCTION_EXISTS’
+            7 |   CHECK_FUNCTION_EXISTS(void);
+              |   ^~~~~~~~~~~~~~~~~~~~~
+        Linking C executable cmTC_0ccf8
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0ccf8.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=strndup CMakeFiles/cmTC_0ccf8.dir/CheckFunctionExists.c.o -o cmTC_0ccf8
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-6ykSEZ'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:226 (check_function_exists)"
+    checks:
+      - "Looking for strnlen"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-P5kf99"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-P5kf99"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_STRNLEN"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-P5kf99'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_a514a/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_a514a.dir/build.make CMakeFiles/cmTC_a514a.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-P5kf99'
+        Building C object CMakeFiles/cmTC_a514a.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=strnlen -fPIE -o CMakeFiles/cmTC_a514a.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-P5kf99/CheckFunctionExists.c
+        <command-line>: warning: conflicting types for built-in function ‘strnlen’; expected ‘long unsigned int(const char *, long unsigned int)’ [-Wbuiltin-declaration-mismatch]
+        /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-P5kf99/CheckFunctionExists.c:7:3: note: in expansion of macro ‘CHECK_FUNCTION_EXISTS’
+            7 |   CHECK_FUNCTION_EXISTS(void);
+              |   ^~~~~~~~~~~~~~~~~~~~~
+        Linking C executable cmTC_a514a
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a514a.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=strnlen CMakeFiles/cmTC_a514a.dir/CheckFunctionExists.c.o -o cmTC_a514a
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-P5kf99'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:232 (check_function_exists)"
+    checks:
+      - "Looking for strsep"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-UBXBeD"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-UBXBeD"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_STRSEP"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-UBXBeD'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_35d50/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_35d50.dir/build.make CMakeFiles/cmTC_35d50.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-UBXBeD'
+        Building C object CMakeFiles/cmTC_35d50.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=strsep -fPIE -o CMakeFiles/cmTC_35d50.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-UBXBeD/CheckFunctionExists.c
+        Linking C executable cmTC_35d50
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_35d50.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=strsep CMakeFiles/cmTC_35d50.dir/CheckFunctionExists.c.o -o cmTC_35d50
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-UBXBeD'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:237 (check_function_exists)"
+    checks:
+      - "Looking for timegm"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-cd8Wzk"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-cd8Wzk"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_TIMEGM"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-cd8Wzk'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_070ec/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_070ec.dir/build.make CMakeFiles/cmTC_070ec.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-cd8Wzk'
+        Building C object CMakeFiles/cmTC_070ec.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=timegm -fPIE -o CMakeFiles/cmTC_070ec.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-cd8Wzk/CheckFunctionExists.c
+        Linking C executable cmTC_070ec
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_070ec.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=timegm CMakeFiles/cmTC_070ec.dir/CheckFunctionExists.c.o -o cmTC_070ec
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-cd8Wzk'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:242 (check_function_exists)"
+    checks:
+      - "Looking for arc4random_buf"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-eaJGHm"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-eaJGHm"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_ARC4RANDOM_BUF"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-eaJGHm'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_ae7e5/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_ae7e5.dir/build.make CMakeFiles/cmTC_ae7e5.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-eaJGHm'
+        Building C object CMakeFiles/cmTC_ae7e5.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=arc4random_buf -fPIE -o CMakeFiles/cmTC_ae7e5.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-eaJGHm/CheckFunctionExists.c
+        Linking C executable cmTC_ae7e5
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ae7e5.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=arc4random_buf CMakeFiles/cmTC_ae7e5.dir/CheckFunctionExists.c.o -o cmTC_ae7e5
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-eaJGHm'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:247 (check_function_exists)"
+    checks:
+      - "Looking for arc4random_uniform"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Mv5uyA"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Mv5uyA"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_ARC4RANDOM_UNIFORM"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Mv5uyA'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_6f6f7/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_6f6f7.dir/build.make CMakeFiles/cmTC_6f6f7.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Mv5uyA'
+        Building C object CMakeFiles/cmTC_6f6f7.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=arc4random_uniform -fPIE -o CMakeFiles/cmTC_6f6f7.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Mv5uyA/CheckFunctionExists.c
+        Linking C executable cmTC_6f6f7
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6f6f7.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=arc4random_uniform CMakeFiles/cmTC_6f6f7.dir/CheckFunctionExists.c.o -o cmTC_6f6f7
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Mv5uyA'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:252 (check_function_exists)"
+    checks:
+      - "Looking for explicit_bzero"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-G8sQby"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-G8sQby"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_EXPLICIT_BZERO"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-G8sQby'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_6e562/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_6e562.dir/build.make CMakeFiles/cmTC_6e562.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-G8sQby'
+        Building C object CMakeFiles/cmTC_6e562.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=explicit_bzero -fPIE -o CMakeFiles/cmTC_6e562.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-G8sQby/CheckFunctionExists.c
+        Linking C executable cmTC_6e562
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6e562.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=explicit_bzero CMakeFiles/cmTC_6e562.dir/CheckFunctionExists.c.o -o cmTC_6e562
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-G8sQby'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:257 (check_function_exists)"
+    checks:
+      - "Looking for getauxval"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-oNykBE"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-oNykBE"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_GETAUXVAL"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-oNykBE'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_6740a/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_6740a.dir/build.make CMakeFiles/cmTC_6740a.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-oNykBE'
+        Building C object CMakeFiles/cmTC_6740a.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=getauxval -fPIE -o CMakeFiles/cmTC_6740a.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-oNykBE/CheckFunctionExists.c
+        Linking C executable cmTC_6740a
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6740a.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=getauxval CMakeFiles/cmTC_6740a.dir/CheckFunctionExists.c.o -o cmTC_6740a
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-oNykBE'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:262 (check_function_exists)"
+    checks:
+      - "Looking for getentropy"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-VvPiAU"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-VvPiAU"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_GETENTROPY"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-VvPiAU'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_7826e/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_7826e.dir/build.make CMakeFiles/cmTC_7826e.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-VvPiAU'
+        Building C object CMakeFiles/cmTC_7826e.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=getentropy -fPIE -o CMakeFiles/cmTC_7826e.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-VvPiAU/CheckFunctionExists.c
+        Linking C executable cmTC_7826e
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7826e.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=getentropy CMakeFiles/cmTC_7826e.dir/CheckFunctionExists.c.o -o cmTC_7826e
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-VvPiAU'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckSymbolExists.cmake:163 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckSymbolExists.cmake:68 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "Libraries/libressl/CMakeLists.txt:267 (check_symbol_exists)"
+    checks:
+      - "Looking for getpagesize"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-KLgGsn"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-KLgGsn"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_GETPAGESIZE"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-KLgGsn'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_9becc/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_9becc.dir/build.make CMakeFiles/cmTC_9becc.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-KLgGsn'
+        Building C object CMakeFiles/cmTC_9becc.dir/CheckSymbolExists.c.o
+        /usr/bin/cc   -Wall  -fPIE -o CMakeFiles/cmTC_9becc.dir/CheckSymbolExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-KLgGsn/CheckSymbolExists.c
+        Linking C executable cmTC_9becc
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9becc.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall  CMakeFiles/cmTC_9becc.dir/CheckSymbolExists.c.o -o cmTC_9becc
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-KLgGsn'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:272 (check_function_exists)"
+    checks:
+      - "Looking for getprogname"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-l8k3ue"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-l8k3ue"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_GETPROGNAME"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-l8k3ue'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_f79d5/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_f79d5.dir/build.make CMakeFiles/cmTC_f79d5.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-l8k3ue'
+        Building C object CMakeFiles/cmTC_f79d5.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=getprogname -fPIE -o CMakeFiles/cmTC_f79d5.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-l8k3ue/CheckFunctionExists.c
+        Linking C executable cmTC_f79d5
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f79d5.dir/link.txt --verbose=1
+        /usr/bin/ld: CMakeFiles/cmTC_f79d5.dir/CheckFunctionExists.c.o: in function `main':
+        CheckFunctionExists.c:(.text+0x14): undefined reference to `getprogname'
+        collect2: error: ld returned 1 exit status
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=getprogname CMakeFiles/cmTC_f79d5.dir/CheckFunctionExists.c.o -o cmTC_f79d5
+        gmake[1]: *** [CMakeFiles/cmTC_f79d5.dir/build.make:102: cmTC_f79d5] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-l8k3ue'
+        gmake: *** [Makefile:134: cmTC_f79d5/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:277 (check_function_exists)"
+    checks:
+      - "Looking for syslog_r"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-I0eAuM"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-I0eAuM"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_SYSLOG_R"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-I0eAuM'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_88262/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_88262.dir/build.make CMakeFiles/cmTC_88262.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-I0eAuM'
+        Building C object CMakeFiles/cmTC_88262.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=syslog_r -fPIE -o CMakeFiles/cmTC_88262.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-I0eAuM/CheckFunctionExists.c
+        Linking C executable cmTC_88262
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_88262.dir/link.txt --verbose=1
+        /usr/bin/ld: CMakeFiles/cmTC_88262.dir/CheckFunctionExists.c.o: in function `main':
+        CheckFunctionExists.c:(.text+0x14): undefined reference to `syslog_r'
+        collect2: error: ld returned 1 exit status
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=syslog_r CMakeFiles/cmTC_88262.dir/CheckFunctionExists.c.o -o cmTC_88262
+        gmake[1]: *** [CMakeFiles/cmTC_88262.dir/build.make:102: cmTC_88262] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-I0eAuM'
+        gmake: *** [Makefile:134: cmTC_88262/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:282 (check_function_exists)"
+    checks:
+      - "Looking for syslog"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-qc2i0s"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-qc2i0s"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_SYSLOG"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-qc2i0s'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_721d5/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_721d5.dir/build.make CMakeFiles/cmTC_721d5.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-qc2i0s'
+        Building C object CMakeFiles/cmTC_721d5.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=syslog -fPIE -o CMakeFiles/cmTC_721d5.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-qc2i0s/CheckFunctionExists.c
+        Linking C executable cmTC_721d5
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_721d5.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=syslog CMakeFiles/cmTC_721d5.dir/CheckFunctionExists.c.o -o cmTC_721d5
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-qc2i0s'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckSymbolExists.cmake:163 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckSymbolExists.cmake:68 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "Libraries/libressl/CMakeLists.txt:287 (check_symbol_exists)"
+    checks:
+      - "Looking for timespecsub"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-MKxgJz"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-MKxgJz"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_TIMESPECSUB"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-MKxgJz'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_8a4c5/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_8a4c5.dir/build.make CMakeFiles/cmTC_8a4c5.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-MKxgJz'
+        Building C object CMakeFiles/cmTC_8a4c5.dir/CheckSymbolExists.c.o
+        /usr/bin/cc   -Wall  -fPIE -o CMakeFiles/cmTC_8a4c5.dir/CheckSymbolExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-MKxgJz/CheckSymbolExists.c
+        /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-MKxgJz/CheckSymbolExists.c: In function ‘main’:
+        /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-MKxgJz/CheckSymbolExists.c:8:19: error: ‘timespecsub’ undeclared (first use in this function); did you mean ‘timespec’?
+            8 |   return ((int*)(&timespecsub))[argc];
+              |                   ^~~~~~~~~~~
+              |                   timespec
+        /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-MKxgJz/CheckSymbolExists.c:8:19: note: each undeclared identifier is reported only once for each function it appears in
+        gmake[1]: *** [CMakeFiles/cmTC_8a4c5.dir/build.make:81: CMakeFiles/cmTC_8a4c5.dir/CheckSymbolExists.c.o] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-MKxgJz'
+        gmake: *** [Makefile:134: cmTC_8a4c5/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:292 (check_function_exists)"
+    checks:
+      - "Looking for timingsafe_bcmp"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-mBStzN"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-mBStzN"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_TIMINGSAFE_BCMP"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-mBStzN'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_cd1e5/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_cd1e5.dir/build.make CMakeFiles/cmTC_cd1e5.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-mBStzN'
+        Building C object CMakeFiles/cmTC_cd1e5.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=timingsafe_bcmp -fPIE -o CMakeFiles/cmTC_cd1e5.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-mBStzN/CheckFunctionExists.c
+        Linking C executable cmTC_cd1e5
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_cd1e5.dir/link.txt --verbose=1
+        /usr/bin/ld: CMakeFiles/cmTC_cd1e5.dir/CheckFunctionExists.c.o: in function `main':
+        CheckFunctionExists.c:(.text+0x14): undefined reference to `timingsafe_bcmp'
+        collect2: error: ld returned 1 exit status
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=timingsafe_bcmp CMakeFiles/cmTC_cd1e5.dir/CheckFunctionExists.c.o -o cmTC_cd1e5
+        gmake[1]: *** [CMakeFiles/cmTC_cd1e5.dir/build.make:102: cmTC_cd1e5] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-mBStzN'
+        gmake: *** [Makefile:134: cmTC_cd1e5/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:297 (check_function_exists)"
+    checks:
+      - "Looking for timingsafe_memcmp"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-OAPXqJ"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-OAPXqJ"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_TIMINGSAFE_MEMCMP"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-OAPXqJ'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_fd23f/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_fd23f.dir/build.make CMakeFiles/cmTC_fd23f.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-OAPXqJ'
+        Building C object CMakeFiles/cmTC_fd23f.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=timingsafe_memcmp -fPIE -o CMakeFiles/cmTC_fd23f.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-OAPXqJ/CheckFunctionExists.c
+        Linking C executable cmTC_fd23f
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fd23f.dir/link.txt --verbose=1
+        /usr/bin/ld: CMakeFiles/cmTC_fd23f.dir/CheckFunctionExists.c.o: in function `main':
+        CheckFunctionExists.c:(.text+0x14): undefined reference to `timingsafe_memcmp'
+        collect2: error: ld returned 1 exit status
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=timingsafe_memcmp CMakeFiles/cmTC_fd23f.dir/CheckFunctionExists.c.o -o cmTC_fd23f
+        gmake[1]: *** [CMakeFiles/cmTC_fd23f.dir/build.make:102: cmTC_fd23f] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-OAPXqJ'
+        gmake: *** [Makefile:134: cmTC_fd23f/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckFunctionExists.cmake:93 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:302 (check_function_exists)"
+    checks:
+      - "Looking for memmem"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Xp9Auq"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Xp9Auq"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_MEMMEM"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Xp9Auq'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_6a9e6/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_6a9e6.dir/build.make CMakeFiles/cmTC_6a9e6.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Xp9Auq'
+        Building C object CMakeFiles/cmTC_6a9e6.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=memmem -fPIE -o CMakeFiles/cmTC_6a9e6.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Xp9Auq/CheckFunctionExists.c
+        Linking C executable cmTC_6a9e6
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6a9e6.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=memmem CMakeFiles/cmTC_6a9e6.dir/CheckFunctionExists.c.o -o cmTC_6a9e6
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Xp9Auq'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckIncludeFiles.cmake:141 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:307 (check_include_files)"
+    checks:
+      - "Looking for include file endian.h"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-JK0p43"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-JK0p43"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_ENDIAN_H"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-JK0p43'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_73905/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_73905.dir/build.make CMakeFiles/cmTC_73905.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-JK0p43'
+        Building C object CMakeFiles/cmTC_73905.dir/HAVE_ENDIAN_H.c.o
+        /usr/bin/cc   -Wall  -fPIE -o CMakeFiles/cmTC_73905.dir/HAVE_ENDIAN_H.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-JK0p43/HAVE_ENDIAN_H.c
+        Linking C executable cmTC_73905
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_73905.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall  CMakeFiles/cmTC_73905.dir/HAVE_ENDIAN_H.c.o -o cmTC_73905
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-JK0p43'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckIncludeFiles.cmake:141 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:312 (check_include_files)"
+    checks:
+      - "Looking for include file machine/endian.h"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-O0mQQA"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-O0mQQA"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_MACHINE_ENDIAN_H"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-O0mQQA'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_ed369/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_ed369.dir/build.make CMakeFiles/cmTC_ed369.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-O0mQQA'
+        Building C object CMakeFiles/cmTC_ed369.dir/HAVE_MACHINE_ENDIAN_H.c.o
+        /usr/bin/cc   -Wall  -fPIE -o CMakeFiles/cmTC_ed369.dir/HAVE_MACHINE_ENDIAN_H.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-O0mQQA/HAVE_MACHINE_ENDIAN_H.c
+        /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-O0mQQA/HAVE_MACHINE_ENDIAN_H.c:2:10: fatal error: machine/endian.h: No such file or directory
+            2 | #include <machine/endian.h>
+              |          ^~~~~~~~~~~~~~~~~~
+        compilation terminated.
+        gmake[1]: *** [CMakeFiles/cmTC_ed369.dir/build.make:81: CMakeFiles/cmTC_ed369.dir/HAVE_MACHINE_ENDIAN_H.c.o] Error 1
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-O0mQQA'
+        gmake: *** [Makefile:134: cmTC_ed369/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckIncludeFiles.cmake:141 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:317 (check_include_files)"
+    checks:
+      - "Looking for include file err.h"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Qvs6Ce"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Qvs6Ce"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_ERR_H"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Qvs6Ce'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_a2f5f/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_a2f5f.dir/build.make CMakeFiles/cmTC_a2f5f.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Qvs6Ce'
+        Building C object CMakeFiles/cmTC_a2f5f.dir/HAVE_ERR_H.c.o
+        /usr/bin/cc   -Wall  -fPIE -o CMakeFiles/cmTC_a2f5f.dir/HAVE_ERR_H.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Qvs6Ce/HAVE_ERR_H.c
+        Linking C executable cmTC_a2f5f
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a2f5f.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall  CMakeFiles/cmTC_a2f5f.dir/HAVE_ERR_H.c.o -o cmTC_a2f5f
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-Qvs6Ce'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckIncludeFiles.cmake:141 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:322 (check_include_files)"
+    checks:
+      - "Looking for 3 include files sys/types.h, ..., netinet/ip.h"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-MHKEto"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-MHKEto"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_NETINET_IP_H"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-MHKEto'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_8f572/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_8f572.dir/build.make CMakeFiles/cmTC_8f572.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-MHKEto'
+        Building C object CMakeFiles/cmTC_8f572.dir/HAVE_NETINET_IP_H.c.o
+        /usr/bin/cc   -Wall  -fPIE -o CMakeFiles/cmTC_8f572.dir/HAVE_NETINET_IP_H.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-MHKEto/HAVE_NETINET_IP_H.c
+        Linking C executable cmTC_8f572
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8f572.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall  CMakeFiles/cmTC_8f572.dir/HAVE_NETINET_IP_H.c.o -o cmTC_8f572
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-MHKEto'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckLibraryExists.cmake:78 (try_compile)"
+      - "Libraries/libressl/CMakeLists.txt:385 (check_library_exists)"
+    checks:
+      - "Looking for clock_gettime in rt"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-VkolxX"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-VkolxX"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_CLOCK_GETTIME"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-VkolxX'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_8c509/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_8c509.dir/build.make CMakeFiles/cmTC_8c509.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-VkolxX'
+        Building C object CMakeFiles/cmTC_8c509.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -Wall -DCHECK_FUNCTION_EXISTS=clock_gettime -fPIE -o CMakeFiles/cmTC_8c509.dir/CheckFunctionExists.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-VkolxX/CheckFunctionExists.c
+        Linking C executable cmTC_8c509
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8c509.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -DCHECK_FUNCTION_EXISTS=clock_gettime CMakeFiles/cmTC_8c509.dir/CheckFunctionExists.c.o -o cmTC_8c509   -L/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-VkolxX/time.h  -Wl,-rpath,/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-VkolxX/time.h -lrt
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-VkolxX'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckIncludeFile.cmake:99 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckTypeSize.cmake:262 (check_include_file)"
+      - "Libraries/libressl/CMakeLists.txt:397 (check_type_size)"
+    checks:
+      - "Looking for sys/types.h"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-LAtdGD"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-LAtdGD"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_SYS_TYPES_H"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-LAtdGD'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_3a66b/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_3a66b.dir/build.make CMakeFiles/cmTC_3a66b.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-LAtdGD'
+        Building C object CMakeFiles/cmTC_3a66b.dir/CheckIncludeFile.c.o
+        /usr/bin/cc   -Wall  -fPIE -o CMakeFiles/cmTC_3a66b.dir/CheckIncludeFile.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-LAtdGD/CheckIncludeFile.c
+        Linking C executable cmTC_3a66b
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3a66b.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall  CMakeFiles/cmTC_3a66b.dir/CheckIncludeFile.c.o -o cmTC_3a66b
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-LAtdGD'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckIncludeFile.cmake:99 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckTypeSize.cmake:263 (check_include_file)"
+      - "Libraries/libressl/CMakeLists.txt:397 (check_type_size)"
+    checks:
+      - "Looking for stdint.h"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-4PKwXi"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-4PKwXi"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_STDINT_H"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-4PKwXi'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_f9801/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_f9801.dir/build.make CMakeFiles/cmTC_f9801.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-4PKwXi'
+        Building C object CMakeFiles/cmTC_f9801.dir/CheckIncludeFile.c.o
+        /usr/bin/cc   -Wall  -fPIE -o CMakeFiles/cmTC_f9801.dir/CheckIncludeFile.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-4PKwXi/CheckIncludeFile.c
+        Linking C executable cmTC_f9801
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f9801.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall  CMakeFiles/cmTC_f9801.dir/CheckIncludeFile.c.o -o cmTC_f9801
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-4PKwXi'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckIncludeFile.cmake:99 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckTypeSize.cmake:264 (check_include_file)"
+      - "Libraries/libressl/CMakeLists.txt:397 (check_type_size)"
+    checks:
+      - "Looking for stddef.h"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-HZb3fM"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-HZb3fM"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_STDDEF_H"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-HZb3fM'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_dcee3/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_dcee3.dir/build.make CMakeFiles/cmTC_dcee3.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-HZb3fM'
+        Building C object CMakeFiles/cmTC_dcee3.dir/CheckIncludeFile.c.o
+        /usr/bin/cc   -Wall  -fPIE -o CMakeFiles/cmTC_dcee3.dir/CheckIncludeFile.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-HZb3fM/CheckIncludeFile.c
+        Linking C executable cmTC_dcee3
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_dcee3.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall  CMakeFiles/cmTC_dcee3.dir/CheckIncludeFile.c.o -o cmTC_dcee3
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-HZb3fM'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/CheckTypeSize.cmake:156 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckTypeSize.cmake:283 (__check_type_size_impl)"
+      - "Libraries/libressl/CMakeLists.txt:397 (check_type_size)"
+    checks:
+      - "Check size of time_t"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-60UGhf"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-60UGhf"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -Wall"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/runner/work/lib3mf/lib3mf/Libraries/libressl"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+      CMAKE_POSITION_INDEPENDENT_CODE: "true"
+    buildResult:
+      variable: "HAVE_SIZEOF_TIME_T"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-60UGhf'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_96f27/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_96f27.dir/build.make CMakeFiles/cmTC_96f27.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-60UGhf'
+        Building C object CMakeFiles/cmTC_96f27.dir/SIZEOF_TIME_T.c.o
+        /usr/bin/cc   -Wall  -fPIE -o CMakeFiles/cmTC_96f27.dir/SIZEOF_TIME_T.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-60UGhf/SIZEOF_TIME_T.c
+        Linking C executable cmTC_96f27
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_96f27.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall  CMakeFiles/cmTC_96f27.dir/SIZEOF_TIME_T.c.o -o cmTC_96f27
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-60UGhf'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake-3.31/Modules/CheckCSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "/usr/local/share/cmake-3.31/Modules/FindThreads.cmake:97 (CHECK_C_SOURCE_COMPILES)"
+      - "/usr/local/share/cmake-3.31/Modules/FindThreads.cmake:163 (_threads_check_libc)"
+      - "Tests/CPP_Bindings/CMakeLists.txt:61 (find_package)"
+    checks:
+      - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
+    directories:
+      source: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-eXi8ks"
+      binary: "/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-eXi8ks"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.15"
+    buildResult:
+      variable: "CMAKE_HAVE_LIBC_PTHREAD"
+      cached: true
+      stdout: |
+        Change Dir: '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-eXi8ks'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_a8011/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_a8011.dir/build.make CMakeFiles/cmTC_a8011.dir/build
+        gmake[1]: Entering directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-eXi8ks'
+        Building C object CMakeFiles/cmTC_a8011.dir/src.c.o
+        /usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_a8011.dir/src.c.o -c /home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-eXi8ks/src.c
+        Linking C executable cmTC_a8011
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a8011.dir/link.txt --verbose=1
+        /usr/bin/cc -rdynamic CMakeFiles/cmTC_a8011.dir/src.c.o -o cmTC_a8011
+        gmake[1]: Leaving directory '/home/runner/work/lib3mf/lib3mf/build_test/CMakeFiles/CMakeScratch/TryCompile-eXi8ks'
+        
+      exitCode: 0
+...

@@ -63,6 +63,7 @@ namespace NMR {
 		std::string m_relationShipExtension;
 		
 		std::map<std::string, std::string> m_ContentTypes;
+		std::map<std::string, std::string> m_ContentTypesByExtension;
 		std::list<POpcPackageRelationship> m_RootRelationships;
 
 		void releaseZIP();
@@ -80,6 +81,7 @@ namespace NMR {
 		_Ret_maybenull_ COpcPackageRelationship * findRootRelation(_In_ std::string sRelationType, _In_ nfBool bMustBeUnique) override;
 		POpcPackagePart createPart(_In_ std::string sPath) override;
 		nfUint64 getPartSize(_In_ std::string sPath) override;
+		std::string getContentType(_In_ std::string sPath) override;
 	};
 
 	typedef std::shared_ptr<COpcPackageReader> POpcPackageReader;

@@ -3179,6 +3179,17 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_attachment_writetobuffer(Lib3MF_Attachment p
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_attachment_readfrombuffer(Lib3MF_Attachment pAttachment, Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);
 
+/**
+* Retrieves an attachment's content type
+*
+* @param[in] pAttachment - Attachment instance.
+* @param[in] nContentTypeBufferSize - size of the buffer (including trailing 0)
+* @param[out] pContentTypeNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pContentTypeBuffer -  buffer of returns the attachment's content type string, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_attachment_getcontenttype(Lib3MF_Attachment pAttachment, const Lib3MF_uint32 nContentTypeBufferSize, Lib3MF_uint32* pContentTypeNeededChars, char * pContentTypeBuffer);
+
 /*************************************************************************************************************************
  Class definition for Texture2D
 **************************************************************************************************************************/

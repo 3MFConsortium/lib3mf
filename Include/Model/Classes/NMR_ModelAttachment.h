@@ -50,6 +50,7 @@ namespace NMR {
 		PImportStream m_pStream;
 		std::string m_sPathURI;
 		std::string m_sRelationShipType;
+		std::string m_sContentType;
 
 	public:
 		CModelAttachment() = delete;
@@ -59,10 +60,12 @@ namespace NMR {
 		_Ret_notnull_ CModel * getModel();
 		std::string getPathURI();
 		std::string getRelationShipType();
+		std::string getContentType();
 		PImportStream getStream ();
 
 		void setStream(_In_ PImportStream pStream);
 		void setRelationShipType(_In_ const std::string sRelationShipType);
+		void setContentType(_In_ const std::string sContentType);
 
 		PModelAttachment cloneIntoNewModel (_In_ CModel * pModel, _In_ nfBool bCloneMemory);
 	};

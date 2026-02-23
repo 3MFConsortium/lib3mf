@@ -93,7 +93,9 @@ namespace NMR {
 			if (pThumbnailPart == nullptr)
 				throw CNMRException(NMR_ERROR_OPCCOULDNOTGETTHUMBNAILSTREAM);
 			PImportStream pThumbnailStream = pThumbnailPart->getImportStream()->copyToMemory();
-			model()->addPackageThumbnail()->setStream(pThumbnailStream);
+			PModelAttachment pThumbnailAttachment = model()->addPackageThumbnail();
+			pThumbnailAttachment->setStream(pThumbnailStream);
+			pThumbnailAttachment->setContentType(m_pPackageReader->getContentType(sTargetPartURI));
 			monitor()->IncrementProgress((double)pThumbnailStream->retrieveSize());
 			monitor()->ReportProgressAndQueryCancelled(true);
 		}
@@ -143,6 +145,10 @@ namespace NMR {
 
 					// Add Texture Attachment to Model
 					addTextureAttachment(sURI, pMemoryStream);
+					PModelAttachment pTextureAttachment = model()->findModelAttachment(sURI);
+					if (pTextureAttachment) {
+						pTextureAttachment->setContentType(m_pPackageReader->getContentType(sURI));
+					}
 
 					monitor()->IncrementProgress((double)pMemoryStream->retrieveSize());
 					monitor()->ReportProgressAndQueryCancelled(true);
@@ -181,7 +187,8 @@ namespace NMR {
 						warnings()->addException(CNMRException(NMR_ERROR_IMPORTSTREAMISEMPTY), mrwMissingMandatoryValue);
 
 					// Add Attachment Stream to Model
-					model()->addAttachment(sURI, sRelationShipType, pMemoryStream);
+					PModelAttachment pNewAttachment = model()->addAttachment(sURI, sRelationShipType, pMemoryStream);
+					pNewAttachment->setContentType(m_pPackageReader->getContentType(sURI));
 
 					monitor()->IncrementProgress((double)pMemoryStream->retrieveSize());
 					monitor()->ReportProgressAndQueryCancelled(true);
