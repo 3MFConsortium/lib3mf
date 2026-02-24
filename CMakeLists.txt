@@ -257,7 +257,9 @@ if (USE_INCLUDED_LIBZIP)
 else()
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(LIBZIP REQUIRED libzip)
-    target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
+    target_include_directories(${PROJECT_NAME} PRIVATE ${LIBZIP_INCLUDE_DIRS})
+    target_link_directories(${PROJECT_NAME} PRIVATE ${LIBZIP_LIBRARY_DIRS})
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBZIP_LIBRARIES})
 endif()
 
 
@@ -272,7 +274,9 @@ if (USE_INCLUDED_ZLIB)
 else()
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(ZLIB REQUIRED zlib)
-    target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
+    target_include_directories(${PROJECT_NAME} PRIVATE ${ZLIB_INCLUDE_DIRS})
+    target_link_directories(${PROJECT_NAME} PRIVATE ${ZLIB_LIBRARY_DIRS})
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${ZLIB_LIBRARIES})
 endif()
 
 
