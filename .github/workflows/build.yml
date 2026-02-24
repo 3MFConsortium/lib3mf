@@ -407,6 +407,12 @@ jobs:
           cd SDK/CPackExamples/CppDynamic/build
           cmake --build .
           ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Build CDynamic - CPack (Linux)
+        run: |
+          sh SDK/CPackExamples/CDynamic/GenerateMake.sh
+          cd SDK/CPackExamples/CDynamic/build
+          cmake --build .
+          ./Example_CDynamic
       - name: Build Cpp - CPack (Linux)
         run: |
           sh SDK/CPackExamples/Cpp/GenerateMake.sh
@@ -433,6 +439,12 @@ jobs:
           cd SDK/CPackExamples/CppDynamic/build
           cmake --build .
           ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Build CDynamic - CPack (Debian)
+        run: |
+          sh SDK/CPackExamples/CDynamic/GenerateMake.sh
+          cd SDK/CPackExamples/CDynamic/build
+          cmake --build .
+          ./Example_CDynamic
       - name: Build Cpp - CPack (Debian)
         run: |
           sh SDK/CPackExamples/Cpp/GenerateMake.sh
@@ -498,6 +510,12 @@ jobs:
           cd SDK/CPackExamples/CppDynamic/build
           cmake --build . --config Release
           ./Release/Example_ExtractInfo.exe ../../../Examples/Files/Helix.3mf
+      - name: Build CDynamic - CPack (Windows)
+        run: |
+          ./SDK/CPackExamples/CDynamic/GenerateVS2022.bat
+          cd SDK/CPackExamples/CDynamic/build
+          cmake --build . --config Release
+          ./Release/Example_CDynamic.exe
       - name: Build Cpp - CPack (Windows)
         run: |
           ./SDK/CPackExamples/Cpp/GenerateVS2022.bat
@@ -566,6 +584,12 @@ jobs:
           cd SDK/CPackExamples/CppDynamic/build
           cmake --build .
           ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Build CDynamic - CPack (Darwin)
+        run: |
+          sh SDK/CPackExamples/CDynamic/GenerateMake.sh
+          cd SDK/CPackExamples/CDynamic/build
+          cmake --build .
+          ./Example_CDynamic
       - name: Build Cpp - CPack (Darwin)
         run: |
           sh SDK/CPackExamples/Cpp/GenerateMake.sh

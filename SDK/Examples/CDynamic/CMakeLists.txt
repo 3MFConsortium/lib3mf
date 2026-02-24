@@ -53,7 +53,7 @@ endif()
 set(CMAKE_CURRENT_BINDING_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../Bindings/CDynamic)
 SET_SOURCE_FILES_PROPERTIES("${CMAKE_CURRENT_BINDING_DIR}/lib3mf_dynamic.cc" PROPERTIES LANGUAGE C)
 add_executable(Lib3MFExample_CDynamic
-  "${CMAKE_CURRENT_SOURCE_DIR}/source/Lib3MF_example.c"
+  "${CMAKE_CURRENT_SOURCE_DIR}/Source/Lib3MF_example.c"
   "${CMAKE_CURRENT_BINDING_DIR}/lib3mf_dynamic.cc"
 
 )
