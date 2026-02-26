@@ -78,6 +78,7 @@ namespace NMR {
 		m_bWriteMaterialExtension = true;
 		m_bWriteProductionExtension = true;
 		m_bWriteBeamLatticeExtension = true;
+		m_bWriteBeamLatticeBallsExtension = false;
 		m_bWriteSliceExtension = true;
 		m_bWriteSecureContentExtension = true;
 		m_bWriteTriangleSetExtension = true;
@@ -131,6 +132,9 @@ namespace NMR {
 	{
 		std::string sLanguage = m_pModel->getLanguage();
 
+		// Detect required extensions before writing namespace declarations
+		detectRequiredExtensions();
+
 		writeStartElementWithNamespace(XML_3MF_ELEMENT_MODEL, PACKAGE_XMLNS_100);
 
 		writeStringAttribute(XML_3MF_ATTRIBUTE_MODEL_UNIT, m_pModel->getUnitString());
@@ -155,6 +159,16 @@ namespace NMR {
 				if (sRequiredExtensions.size() > 0)
 					sRequiredExtensions = sRequiredExtensions + " ";
 				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_BEAMLATTICE;
+			}
+		}
+
+		if (m_bWriteBeamLatticeBallsExtension) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_BEAMLATTICEBALLS, XML_3MF_NAMESPACE_BEAMLATTICEBALLSSPEC);
+
+			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_BEAMLATTICEBALLSSPEC)) {
+				if (sRequiredExtensions.size() > 0)
+					sRequiredExtensions = sRequiredExtensions + " ";
+				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_BEAMLATTICEBALLS;
 			}
 		}
 
@@ -609,11 +623,13 @@ namespace NMR {
 
 		if(pMeshObject)
 		{
+			// Beam lattice balls namespace need already determined in detectRequiredExtensions()
+
 			CModelWriterNode100_Mesh ModelWriter_Mesh(
 				pMeshObject, m_pXMLWriter, m_pProgressMonitor,
 				m_pPropertyIndexMapping, m_nDecimalPrecision,
 				m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension,
-				m_bWriteVolumetricExtension, m_bWriteTriangleSetExtension);
+				m_bWriteBeamLatticeBallsExtension, m_bWriteVolumetricExtension, m_bWriteTriangleSetExtension);
 
 			ModelWriter_Mesh.writeToXML();
 		}
@@ -1227,6 +1243,37 @@ namespace NMR {
 		}
 
 		writeFullEndElement();
+	}
+
+	void CModelWriterNode100_Model::detectRequiredExtensions()
+	{
+		// Scan all mesh objects to detect if balls are present
+		std::list <CModelObject *> objectList = m_pModel->getSortedObjectList();
+
+		for(auto iIterator = objectList.begin(); iIterator != objectList.end(); iIterator++)
+		{
+			CModelObject *pObject = *iIterator;
+			if (!pObject)
+			{
+				continue;
+			}
+
+			// Check if object is a mesh Object with beam lattice
+			CModelMeshObject *pMeshObject = dynamic_cast<CModelMeshObject *>(pObject);
+			if(pMeshObject)
+			{
+				CMesh * pMesh = pMeshObject->getMesh();
+				if (pMesh) {
+					nfUint32 nBallCount = pMesh->getBallCount();
+					eModelBeamLatticeBallMode eBallMode = pMesh->getBeamLatticeBallMode();
+
+					if (nBallCount > 0 || eBallMode != eModelBeamLatticeBallMode::MODELBEAMLATTICEBALLMODE_NONE) {
+						m_bWriteBeamLatticeBallsExtension = true;
+						break; // Found balls, no need to continue scanning
+					}
+				}
+			}
+		}
 	}
 
 }

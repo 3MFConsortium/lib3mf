@@ -50,12 +50,12 @@ This is the class for exporting the 3mf mesh node.
 #define MODELWRITERMESH100_TRIANGLELINESTARTLENGTH 14
 #define MODELWRITERMESH100_BEAMLATTICE_BEAMLINESTART "<b:beam v1=\""
 #define MODELWRITERMESH100_BEAMLATTICE_BEAMSTARTLENGTH 12
-#define MODELWRITERMESH100_BEAMLATTICE_BALLLINESTART "<b:ball vindex=\""
-#define MODELWRITERMESH100_BEAMLATTICE_BALLSTARTLENGTH 16
+#define MODELWRITERMESH100_BEAMLATTICE_BALLLINESTART "<b2:ball vindex=\""
+#define MODELWRITERMESH100_BEAMLATTICE_BALLSTARTLENGTH 17
 #define MODELWRITERMESH100_BEAMLATTICE_REFLINESTART  "<b:ref index=\""
 #define MODELWRITERMESH100_BEAMLATTICE_REFSTARTLENGTH 14
-#define MODELWRITERMESH100_BEAMLATTICE_BALLREFLINESTART  "<b:ballref index=\""
-#define MODELWRITERMESH100_BEAMLATTICE_BALLREFSTARTLENGTH 18
+#define MODELWRITERMESH100_BEAMLATTICE_BALLREFLINESTART  "<b2:ballref index=\""
+#define MODELWRITERMESH100_BEAMLATTICE_BALLREFSTARTLENGTH 19
 #define MODELWRITERMESH100_TRIANGLESETS_REFLINESTART "<t:ref index=\""
 #define MODELWRITERMESH100_TRIANGLESETS_REFSTARTLENGTH 14
 
@@ -70,6 +70,7 @@ namespace NMR {
 
 		nfBool m_bWriteMaterialExtension;
 		nfBool m_bWriteBeamLatticeExtension;
+		nfBool m_bWriteBeamLatticeBallsExtension;
 		nfBool m_bWriteVolumetricExtension;
 		nfBool m_bWriteTriangleSetExtension;
 
@@ -130,8 +131,8 @@ namespace NMR {
 	public:
 		CModelWriterNode100_Mesh() = delete;
 		CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-			_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool m_bWriteBeamLatticeExtension,
-			_In_ nfBool bWriteVolumetricExtension, _In_ nfBool bWriteTriangleSetExtension);
+			_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension,
+			_In_ nfBool bWriteBeamLatticeBallsExtension, _In_ nfBool bWriteVolumetricExtension, _In_ nfBool bWriteTriangleSetExtension);
 		virtual void writeToXML();
 	};
 

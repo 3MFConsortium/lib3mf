@@ -5,7 +5,8 @@ env:
 name: Build
 jobs:
   set-lib3mf-version:
-    runs-on: ubuntu-20.04
+  set-lib3mf-version:
+    runs-on: ubuntu-24.04
     outputs:
       lib3mf-version: ${{ steps.set-version.outputs.LIB3MF_VERSION }}
     steps:
@@ -21,7 +22,7 @@ jobs:
         run: echo "LIB3MF_VERSION=${{ steps.set-version.outputs.LIB3MF_VERSION }}"
 
   build-linux-memtest:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-lib3mf-version]
     steps:
       - run: sudo apt update
@@ -34,7 +35,7 @@ jobs:
         working-directory: ./build
 
   build-linux-ubi8-gcc12:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-lib3mf-version]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
@@ -110,7 +111,7 @@ jobs:
           path: dist/${{ env.ARTIFACT_NAME_RPM }}
 
   build-macos:
-    runs-on: macos-latest
+    runs-on: macos-15
     needs: [set-lib3mf-version]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
@@ -131,19 +132,61 @@ jobs:
           echo "ARTIFACT_NAME=$(basename ${ZIP_FILE})" >> $GITHUB_ENV
         shell: bash
       - run: ls -al build/
+      - name: Determine macOS dylib
+        id: find-mac-lib
+        run: |
+          set -euo pipefail
+          MAC_LIB=$(ls build/lib3mf*.dylib | head -n 1)
+          if [ -z "$MAC_LIB" ]; then
+            echo "No macOS dylib found in build/" >&2
+            exit 1
+          fi
+          echo "MAC_LIB=${MAC_LIB}" >> $GITHUB_ENV
       - name: Archive Mac binary
         uses: actions/upload-artifact@v4
         with:
           name: lib3mf.dylib
-          path: build/lib3mf.${{ env.LIB3MF_VERSION }}.0.dylib
+          path: ${{ env.MAC_LIB }}
       - name: Upload Artifact (CPacked Archive)
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: build/${{ env.ARTIFACT_NAME }}
 
+  build-wasm:
+    runs-on: ubuntu-24.04
+    needs: [set-lib3mf-version]
+    env:
+      LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: latest
+      - name: Build lib3mf_wasm
+        run: |
+          emcmake cmake -S . -B build/wasm -DLIB3MF_BUILD_WASM=ON -DCMAKE_BUILD_TYPE=Release
+          cmake --build build/wasm --target lib3mf_wasm -j"$(nproc)"
+      - name: Package WASM artifact
+        run: |
+          mkdir -p build/wasm-artifact
+          cp build/wasm/lib3mf.js build/wasm-artifact/
+          cp build/wasm/lib3mf.wasm build/wasm-artifact/
+          (
+            cd build
+            zip -r "lib3mf-wasm-${LIB3MF_VERSION}.zip" wasm-artifact
+          )
+      - name: Upload WASM Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lib3mf-wasm-${{ env.LIB3MF_VERSION }}.zip
+          path: build/lib3mf-wasm-${{ env.LIB3MF_VERSION }}.zip
+
   build-macos-debug:
-    runs-on: macos-latest
+    runs-on: macos-15
     needs: [set-lib3mf-version]
     steps:
       - uses: actions/checkout@v4
@@ -161,7 +204,7 @@ jobs:
           path: build/lib3mf.dylib
 
   codecoverage-macos:
-    runs-on: macos-latest
+    runs-on: macos-15
     needs: [set-lib3mf-version]
     steps:
       - uses: actions/checkout@v4
@@ -189,7 +232,7 @@ jobs:
           verbose: true # optional (default = false)
           
   build-windows-release:
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: [set-lib3mf-version]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
@@ -197,7 +240,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - run: ./cmake/GenerateVS2019.bat
+      - run: ./cmake/GenerateVS2022.bat
       - run: cmake --build . --config Release
         working-directory: ./build
       - run: ctest -V
@@ -226,13 +269,13 @@ jobs:
           path: build/${{ env.ARTIFACT_NAME }}
 
   build-windows-debug:
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: [set-lib3mf-version]
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - run: ./cmake/GenerateVS2019.bat
+      - run: ./cmake/GenerateVS2022.bat
       - run: cmake --build . --config Debug
         working-directory: ./build
       - run: ctest -V
@@ -251,13 +294,13 @@ jobs:
           name: lib3mf.debug.lib
           path: build/Debug/lib3mf.lib
   build-windows-32bit:
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: [set-lib3mf-version]
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - run: ./cmake/GenerateVS2019_32bit.bat
+      - run: ./cmake/GenerateVS2022_32bit.bat
       - run: cmake --build . --config Release
         working-directory: ./build_32bit
       - run: ctest -V
@@ -273,7 +316,7 @@ jobs:
           name: lib3mf_32bit.lib
           path: build_32bit/Release/lib3mf.lib
   build-mingw-w64:
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: [set-lib3mf-version]
     steps:
       - run: choco install mingw -y
@@ -288,7 +331,7 @@ jobs:
 
 
   assemble-sdk:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-lib3mf-version, build-windows-release, build-macos, build-linux-ubi8-gcc12]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
@@ -305,7 +348,7 @@ jobs:
       - run: ls -Rlh ./build
       - run: unzip bindings.zip/bindings.zip
         working-directory: ./build
-      - run: bash SDK/GenerateSDK_github.sh
+      - run: python3 SDK/GenerateSDK_github.py
       - name: Archive SDK artifact (Comprehensive)
         uses: actions/upload-artifact@v4
         with:
@@ -314,7 +357,7 @@ jobs:
 
 
   deploy-linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-lib3mf-version, assemble-sdk]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
@@ -365,6 +408,12 @@ jobs:
           cd SDK/CPackExamples/CppDynamic/build
           cmake --build .
           ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Build CDynamic - CPack (Linux)
+        run: |
+          sh SDK/CPackExamples/CDynamic/GenerateMake.sh
+          cd SDK/CPackExamples/CDynamic/build
+          cmake --build .
+          ./Example_CDynamic
       - name: Build Cpp - CPack (Linux)
         run: |
           sh SDK/CPackExamples/Cpp/GenerateMake.sh
@@ -391,6 +440,12 @@ jobs:
           cd SDK/CPackExamples/CppDynamic/build
           cmake --build .
           ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Build CDynamic - CPack (Debian)
+        run: |
+          sh SDK/CPackExamples/CDynamic/GenerateMake.sh
+          cd SDK/CPackExamples/CDynamic/build
+          cmake --build .
+          ./Example_CDynamic
       - name: Build Cpp - CPack (Debian)
         run: |
           sh SDK/CPackExamples/Cpp/GenerateMake.sh
@@ -410,7 +465,7 @@ jobs:
           ./create_cube
 
   deploy-windows:
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: [set-lib3mf-version, assemble-sdk]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
@@ -425,13 +480,13 @@ jobs:
           unzip lib3mf_sdk.zip/lib3mf_sdk.zip
       - name: Build CppDynamic
         run: |
-          ./Examples/CppDynamic/GenerateVS2019.bat
+          ./Examples/CppDynamic/GenerateVS2022.bat
           cd Examples/CppDynamic/build
           cmake --build . --config Release
           ./Release/Example_ExtractInfo.exe ../../Files/Helix.3mf
       - name: Build Cpp
         run: |
-          ./Examples/Cpp/GenerateVS2019.bat
+          ./Examples/Cpp/GenerateVS2022.bat
           cd Examples/Cpp/build
           cmake --build . --config Release
           ./Release/Example_ExtractInfo.exe ../../Files/Helix.3mf
@@ -452,13 +507,19 @@ jobs:
           unzip lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip/lib3mf-${{ env.LIB3MF_VERSION }}-Windows.zip
       - name: Build CppDynamic - CPack (Windows)
         run: | 
-          ./SDK/CPackExamples/CppDynamic/GenerateVS2019.bat
+          ./SDK/CPackExamples/CppDynamic/GenerateVS2022.bat
           cd SDK/CPackExamples/CppDynamic/build
           cmake --build . --config Release
           ./Release/Example_ExtractInfo.exe ../../../Examples/Files/Helix.3mf
+      - name: Build CDynamic - CPack (Windows)
+        run: |
+          ./SDK/CPackExamples/CDynamic/GenerateVS2022.bat
+          cd SDK/CPackExamples/CDynamic/build
+          cmake --build . --config Release
+          ./Release/Example_CDynamic.exe
       - name: Build Cpp - CPack (Windows)
         run: |
-          ./SDK/CPackExamples/Cpp/GenerateVS2019.bat
+          ./SDK/CPackExamples/Cpp/GenerateVS2022.bat
           cd SDK/CPackExamples/Cpp/build
           cmake --build . --config Release
           ./Release/Example_ExtractInfo.exe ../../../Examples/Files/Helix.3mf
@@ -524,6 +585,12 @@ jobs:
           cd SDK/CPackExamples/CppDynamic/build
           cmake --build .
           ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Build CDynamic - CPack (Darwin)
+        run: |
+          sh SDK/CPackExamples/CDynamic/GenerateMake.sh
+          cd SDK/CPackExamples/CDynamic/build
+          cmake --build .
+          ./Example_CDynamic
       - name: Build Cpp - CPack (Darwin)
         run: |
           sh SDK/CPackExamples/Cpp/GenerateMake.sh
@@ -543,7 +610,7 @@ jobs:
           ./create_cube
 
   deploy-source-code-with-submodules:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [ set-lib3mf-version, assemble-sdk ]
     env:
       LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
@@ -563,11 +630,16 @@ jobs:
 
 
   set-integration-tests-status:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [ deploy-linux, deploy-windows, deploy-macos, deploy-source-code-with-submodules ]
     outputs:
       run_integration_tests: ${{ steps.set-status.outputs.run_integration_tests }}
     steps:
+      - name: Install prerequisites
+        if: env.RUN_INTEGRATION_TESTS == 'on'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip wget
       - name: Set status
         id: set-status
         run: |
@@ -576,10 +648,34 @@ jobs:
           else
             echo "run_integration_tests=false" >> $GITHUB_OUTPUT
           fi
+
+      - name: Cache 3MF test suite
+        if: steps.set-status.outputs.run_integration_tests == 'true'
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/3mf-test-suite
+          key: 3mf-test-suite-v2.0.0
+
+      - name: Download integration test suite
+        if: steps.set-status.outputs.run_integration_tests == 'true'
+        run: |
+          USER="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_USER }}"
+          PASS="${{ secrets.THREEMF_TEST_SUITE_DOWNLOAD_TOKEN }}"
+          CACHE_DIR="$HOME/.cache/3mf-test-suite"
+          SUITE_ZIP="3MF_Conformance_Test_Suites_v2.0.0.zip"
+          CACHE_ZIP="$CACHE_DIR/$SUITE_ZIP"
+
+          mkdir -p "$CACHE_DIR"
+          if [ ! -f "$CACHE_ZIP" ]; then
+            wget --user "$USER" \
+                 --password "$PASS" \
+                 "https://storage.3mf.dev/remote.php/dav/files/$USER/3MF_CONSORTIUM/GITHUB/$SUITE_ZIP" \
+                 -O "$CACHE_ZIP"
+          fi
       
 
   integration-tests-latest-release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-integration-tests-status]
     if: needs.set-integration-tests-status.outputs.run_integration_tests == 'true' # Single check before the job starts
     steps:
@@ -619,10 +715,17 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-      - name: Download and unzip test suite
+      - name: Restore 3MF test suite cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/3mf-test-suite
+          key: 3mf-test-suite-v2.0.0
+
+      - name: Unzip integration test suite
         run: |
-          wget https://github.com/3MFConsortium/test_suites/releases/download/v2.0.0/3MF_Conformance_Test_Suites_v2.0.0.zip
-          unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+          rm -rf test_suites
+          unzip -o "$HOME/.cache/3mf-test-suite/3MF_Conformance_Test_Suites_v2.0.0.zip" -d test_suites
+      
 
       - name: List files
         run: |
@@ -635,6 +738,23 @@ jobs:
       - name: Run integration tests
         run: |
           cd test_suites && /usr/bin/time -v python integration_test.py 2>&1 | tee latest_sdk_test.log
+
+      - name: List MUSTPASS failures and MUSTFAIL passes (latest release)
+        run: |
+          echo "MUSTPASS that failed (latest release):"
+          grep -E 'MUSTPASS file ".*" does not work' test_suites/latest_sdk_test.log | sed -n 's/.*MUSTPASS file "\([^"]*\)".*/\1/p' | sort -u > test_suites/latest_mp_failed.txt || true
+          cat test_suites/latest_mp_failed.txt || true
+          echo "\nMUSTFAIL that passed (latest release):"
+          grep -E 'MUSTFAIL file ".*" works' test_suites/latest_sdk_test.log | sed -n 's/.*MUSTFAIL file "\([^"]*\)".*/\1/p' | sort -u > test_suites/latest_mf_passed.txt || true
+          cat test_suites/latest_mf_passed.txt || true
+          {
+            echo "### Latest release detailed results";
+            echo "MUSTPASS failed: $(wc -l < test_suites/latest_mp_failed.txt 2>/dev/null || echo 0)";
+            sed 's/^/- /' test_suites/latest_mp_failed.txt 2>/dev/null || true;
+            echo;
+            echo "MUSTFAIL passed: $(wc -l < test_suites/latest_mf_passed.txt 2>/dev/null || echo 0)";
+            sed 's/^/- /' test_suites/latest_mf_passed.txt 2>/dev/null || true;
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Print results (Checks the total python script execution time)
         run: |
@@ -653,7 +773,7 @@ jobs:
           
 
   integration-tests-last-two-releases:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-integration-tests-status]
     if: needs.set-integration-tests-status.outputs.run_integration_tests == 'true' # Single check before the job starts
     steps:
@@ -701,10 +821,17 @@ jobs:
           mv second_latest_lib3mf_sdk/lib3mf_sdk/* second_latest_lib3mf_sdk
           rmdir second_latest_lib3mf_sdk/lib3mf_sdk
 
-      - name: Download and unzip test suite
+      - name: Restore 3MF test suite cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/3mf-test-suite
+          key: 3mf-test-suite-v2.0.0
+
+      - name: Unzip integration test suite
         run: |
-          wget https://github.com/3MFConsortium/test_suites/releases/download/v2.0.0/3MF_Conformance_Test_Suites_v2.0.0.zip
-          unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+          rm -rf test_suites
+          unzip -o "$HOME/.cache/3mf-test-suite/3MF_Conformance_Test_Suites_v2.0.0.zip" -d test_suites
+      
 
       - name: Copy integration test script
         run: |
@@ -728,8 +855,6 @@ jobs:
 
       - name: Build and run CppDynamic with second latest SDK
         run: |
-          ls -al
-          ls -al second_latest_lib3mf_sdk
           sh second_latest_lib3mf_sdk/Examples/CppDynamic/GenerateMake.sh
           cd second_latest_lib3mf_sdk/Examples/CppDynamic/build
           cmake --build .
@@ -745,6 +870,36 @@ jobs:
 
       - name: Compare results (Checks the total python script execution time and must pass/fail counts)
         run: |
+            # Extract detailed lists from logs for diffing
+            grep -E 'MUSTPASS file ".*" does not work' test_suites/latest_sdk_test.log | sed -n 's/.*MUSTPASS file "\([^"]*\)".*/\1/p' | sort -u > test_suites/latest_mp_failed.txt || true
+            grep -E 'MUSTFAIL file ".*" works' test_suites/latest_sdk_test.log | sed -n 's/.*MUSTFAIL file "\([^"]*\)".*/\1/p' | sort -u > test_suites/latest_mf_passed.txt || true
+            grep -E 'MUSTPASS file ".*" does not work' test_suites/second_latest_sdk_test.log | sed -n 's/.*MUSTPASS file "\([^"]*\)".*/\1/p' | sort -u > test_suites/second_latest_mp_failed.txt || true
+            grep -E 'MUSTFAIL file ".*" works' test_suites/second_latest_sdk_test.log | sed -n 's/.*MUSTFAIL file "\([^"]*\)".*/\1/p' | sort -u > test_suites/second_latest_mf_passed.txt || true
+
+            echo "=== Latest MUSTPASS failed:"; cat test_suites/latest_mp_failed.txt || true
+            echo "=== Second Latest MUSTPASS failed:"; cat test_suites/second_latest_mp_failed.txt || true
+            echo "=== Latest MUSTFAIL passed:"; cat test_suites/latest_mf_passed.txt || true
+            echo "=== Second Latest MUSTFAIL passed:"; cat test_suites/second_latest_mf_passed.txt || true
+
+            # Compute regressions and improvements
+            comm -23 test_suites/latest_mp_failed.txt test_suites/second_latest_mp_failed.txt > test_suites/regressions_mp_now_failing.txt || true
+            comm -23 test_suites/latest_mf_passed.txt test_suites/second_latest_mf_passed.txt > test_suites/regressions_mf_now_passing.txt || true
+            comm -13 test_suites/latest_mp_failed.txt test_suites/second_latest_mp_failed.txt > test_suites/improvements_mp_fixed.txt || true
+            comm -13 test_suites/latest_mf_passed.txt test_suites/second_latest_mf_passed.txt > test_suites/improvements_mf_fixed.txt || true
+
+            echo "=== Regressions - MUSTPASS now failing:"; cat test_suites/regressions_mp_now_failing.txt || true
+            echo "=== Regressions - MUSTFAIL now passing:"; cat test_suites/regressions_mf_now_passing.txt || true
+            echo "=== Improvements - MUSTPASS fixed:"; cat test_suites/improvements_mp_fixed.txt || true
+            echo "=== Improvements - MUSTFAIL fixed:"; cat test_suites/improvements_mf_fixed.txt || true
+
+            {
+              echo "### Last two releases - detailed diffs";
+              echo "#### Regressions - MUSTPASS now failing"; sed 's/^/- /' test_suites/regressions_mp_now_failing.txt 2>/dev/null || true; echo;
+              echo "#### Regressions - MUSTFAIL now passing"; sed 's/^/- /' test_suites/regressions_mf_now_passing.txt 2>/dev/null || true; echo;
+              echo "#### Improvements - MUSTPASS fixed"; sed 's/^/- /' test_suites/improvements_mp_fixed.txt 2>/dev/null || true; echo;
+              echo "#### Improvements - MUSTFAIL fixed"; sed 's/^/- /' test_suites/improvements_mf_fixed.txt 2>/dev/null || true; echo;
+            } >> "$GITHUB_STEP_SUMMARY"
+
             LATEST_TIME=$(grep "Elapsed (wall clock) time" test_suites/latest_sdk_test.log | awk '{print $8}')
             SECOND_LATEST_TIME=$(grep "Elapsed (wall clock) time" test_suites/second_latest_sdk_test.log | awk '{print $8}')
             LATEST_TOTAL_SECONDS=$(echo $LATEST_TIME | awk -F: '{ print ($1 * 60) + $2 }')
@@ -775,17 +930,19 @@ jobs:
             fi
         
             # Compare MUSTPASS and MUSTFAIL counts
-            if [ "$LATEST_MUSTPASS" != "$SECOND_LATEST_MUSTPASS" ] || [ "$LATEST_MUSTFAIL" != "$SECOND_LATEST_MUSTFAIL" ]; then
-              echo "MUSTPASS or MUSTFAIL counts have changed"
+            # Allow improvements: pass if latest >= second latest for both metrics; fail only on regression
+            if [ "$LATEST_MUSTPASS" -lt "$SECOND_LATEST_MUSTPASS" ] || [ "$LATEST_MUSTFAIL" -lt "$SECOND_LATEST_MUSTFAIL" ]; then
+              echo "MUSTPASS or MUSTFAIL counts have regressed"
+              echo "Regressions detected. See lists above and job summary for files."
               exit 1
             else
-              echo "MUSTPASS and MUSTFAIL counts are consistent"
+              echo "MUSTPASS and MUSTFAIL counts have improved or stayed the same"
             fi
         
 
 
   integration-tests-latest-commit:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-integration-tests-status]
     if: needs.set-integration-tests-status.outputs.run_integration_tests == 'true' # Single check before the job starts
     steps:
@@ -820,10 +977,17 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-      - name: Download and unzip test suite
+      - name: Restore 3MF test suite cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/3mf-test-suite
+          key: 3mf-test-suite-v2.0.0
+
+      - name: Unzip integration test suite
         run: |
-          wget https://github.com/3MFConsortium/test_suites/releases/download/v2.0.0/3MF_Conformance_Test_Suites_v2.0.0.zip
-          unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+          rm -rf test_suites
+          unzip -o "$HOME/.cache/3mf-test-suite/3MF_Conformance_Test_Suites_v2.0.0.zip" -d test_suites
+      
 
       - name: Copy integration test script
         run: |
@@ -832,6 +996,23 @@ jobs:
       - name: Run integration tests
         run: |
           cd test_suites && /usr/bin/time -v python integration_test.py 2>&1 | tee latest_sdk_test.log
+
+      - name: List MUSTPASS failures and MUSTFAIL passes (latest commit)
+        run: |
+          echo "MUSTPASS that failed (latest commit):"
+          grep -E 'MUSTPASS file ".*" does not work' test_suites/latest_sdk_test.log | sed -n 's/.*MUSTPASS file "\([^"]*\)".*/\1/p' | sort -u > test_suites/latest_commit_mp_failed.txt || true
+          cat test_suites/latest_commit_mp_failed.txt || true
+          echo "\nMUSTFAIL that passed (latest commit):"
+          grep -E 'MUSTFAIL file ".*" works' test_suites/latest_sdk_test.log | sed -n 's/.*MUSTFAIL file "\([^"]*\)".*/\1/p' | sort -u > test_suites/latest_commit_mf_passed.txt || true
+          cat test_suites/latest_commit_mf_passed.txt || true
+          {
+            echo "### Latest commit detailed results";
+            echo "MUSTPASS failed: $(wc -l < test_suites/latest_commit_mp_failed.txt 2>/dev/null || echo 0)";
+            sed 's/^/- /' test_suites/latest_commit_mp_failed.txt 2>/dev/null || true;
+            echo;
+            echo "MUSTFAIL passed: $(wc -l < test_suites/latest_commit_mf_passed.txt 2>/dev/null || echo 0)";
+            sed 's/^/- /' test_suites/latest_commit_mf_passed.txt 2>/dev/null || true;
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Print results (Checks the total python script execution time)
         run: |
@@ -854,7 +1035,7 @@ jobs:
           echo "LATEST_TOTAL_MUSTFAIL=${LATEST_TOTAL_MUSTFAIL}" >> $GITHUB_ENV
 
   integration-test-last-commit-and-last-release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [set-integration-tests-status]
     if: needs.set-integration-tests-status.outputs.run_integration_tests == 'true' # Single check before the job starts
     steps:
@@ -890,10 +1071,17 @@ jobs:
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
 
-      - name: Download and unzip test suite
+      - name: Restore 3MF test suite cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/3mf-test-suite
+          key: 3mf-test-suite-v2.0.0
+
+      - name: Unzip integration test suite
         run: |
-          wget https://github.com/3MFConsortium/test_suites/releases/download/v2.0.0/3MF_Conformance_Test_Suites_v2.0.0.zip
-          unzip 3MF_Conformance_Test_Suites_v2.0.0.zip -d test_suites
+          rm -rf test_suites
+          unzip -o "$HOME/.cache/3mf-test-suite/3MF_Conformance_Test_Suites_v2.0.0.zip" -d test_suites
+      
 
       - name: Copy integration test script
         run: |
@@ -946,6 +1134,17 @@ jobs:
       - name: Compare results (Checks the total python script execution time)
         id: compare_results
         run: |
+          # Extract detailed lists from logs for diffing
+          grep -E 'MUSTPASS file ".*" does not work' test_suites/latest_commit_sdk_test.log | sed -n 's/.*MUSTPASS file "\([^"]*\)".*/\1/p' | sort -u > test_suites/latest_commit_mp_failed.txt || true
+          grep -E 'MUSTFAIL file ".*" works' test_suites/latest_commit_sdk_test.log | sed -n 's/.*MUSTFAIL file "\([^"]*\)".*/\1/p' | sort -u > test_suites/latest_commit_mf_passed.txt || true
+          grep -E 'MUSTPASS file ".*" does not work' test_suites/latest_release_sdk_test.log | sed -n 's/.*MUSTPASS file "\([^"]*\)".*/\1/p' | sort -u > test_suites/latest_release_mp_failed.txt || true
+          grep -E 'MUSTFAIL file ".*" works' test_suites/latest_release_sdk_test.log | sed -n 's/.*MUSTFAIL file "\([^"]*\)".*/\1/p' | sort -u > test_suites/latest_release_mf_passed.txt || true
+
+          echo "=== Latest commit MUSTPASS failed:"; cat test_suites/latest_commit_mp_failed.txt || true
+          echo "=== Latest release MUSTPASS failed:"; cat test_suites/latest_release_mp_failed.txt || true
+          echo "=== Latest commit MUSTFAIL passed:"; cat test_suites/latest_commit_mf_passed.txt || true
+          echo "=== Latest release MUSTFAIL passed:"; cat test_suites/latest_release_mf_passed.txt || true
+
           LATEST_COMMIT_TIME=$(grep "Elapsed (wall clock) time" test_suites/latest_commit_sdk_test.log | awk '{print $8}')
           LATEST_RELEASE_TIME=$(grep "Elapsed (wall clock) time" test_suites/latest_release_sdk_test.log | awk '{print $8}')
           LATEST_COMMIT_TOTAL_SECONDS=$(echo $LATEST_COMMIT_TIME | awk -F: '{ print ($1 * 60) + $2 }')
@@ -969,11 +1168,22 @@ jobs:
           echo "Latest release MUSTFAIL: ${LATEST_RELEASE_MUSTFAIL} / ${LATEST_TOTAL_RELEASE_MUSTFAIL}"
 
           # Compare MUSTPASS and MUSTFAIL counts
-          if [ "$LATEST_COMMIT_MUSTPASS" != "$LATEST_RELEASE_MUSTPASS" ] || [ "$LATEST_COMMIT_MUSTFAIL" != "$LATEST_RELEASE_MUSTFAIL" ]; then
-            echo "MUSTPASS or MUSTFAIL counts have changed"
+          # Allow improvements: pass if latest commit >= latest release for both metrics; fail only on regression
+          if [ "$LATEST_COMMIT_MUSTPASS" -lt "$LATEST_RELEASE_MUSTPASS" ] || [ "$LATEST_COMMIT_MUSTFAIL" -lt "$LATEST_RELEASE_MUSTFAIL" ]; then
+            echo "MUSTPASS or MUSTFAIL counts have regressed"
+            # Highlight exactly which files changed outcome
+            comm -23 test_suites/latest_commit_mp_failed.txt test_suites/latest_release_mp_failed.txt > test_suites/regressions_commit_mp_now_failing.txt || true
+            comm -23 test_suites/latest_commit_mf_passed.txt test_suites/latest_release_mf_passed.txt > test_suites/regressions_commit_mf_now_passing.txt || true
+            echo "=== Regressions (commit vs release) - MUSTPASS now failing:"; cat test_suites/regressions_commit_mp_now_failing.txt || true
+            echo "=== Regressions (commit vs release) - MUSTFAIL now passing:"; cat test_suites/regressions_commit_mf_now_passing.txt || true
+            {
+              echo "### Latest commit vs latest release - regressions";
+              echo "#### MUSTPASS now failing"; sed 's/^/- /' test_suites/regressions_commit_mp_now_failing.txt 2>/dev/null || true; echo;
+              echo "#### MUSTFAIL now passing"; sed 's/^/- /' test_suites/regressions_commit_mf_now_passing.txt 2>/dev/null || true; echo;
+            } >> "$GITHUB_STEP_SUMMARY"
             exit 1
           else
-            echo "MUSTPASS and MUSTFAIL counts are consistent"
+            echo "MUSTPASS and MUSTFAIL counts have improved or stayed the same"
           fi
 
           # Compare the total seconds

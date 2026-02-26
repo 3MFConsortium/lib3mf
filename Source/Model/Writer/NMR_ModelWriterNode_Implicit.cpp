@@ -149,6 +149,22 @@ namespace NMR
 				}
 				
             }
+            else if (node.getNodeType() == Lib3MF::eImplicitNodeType::BeamLattice)
+            {
+                // Only write accuraterange if non-zero (default is 0.0)
+                double accurateRange = node.getAccurateRange();
+                if (accurateRange != 0.0)
+                {
+                    writeDoubleAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_ACCURATERANGE, accurateRange);
+                }
+            }
+            else if (node.getNodeType() == Lib3MF::eImplicitNodeType::FunctionGradient ||
+                     node.getNodeType() == Lib3MF::eImplicitNodeType::NormalizeDistance)
+            {
+                // These attributes are required per schema
+                writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_SCALAROUTPUT, node.getScalarOutputName());
+                writeStringAttribute(XML_3MF_ATTRIBUTE_IMPLICIT_NODE_VECTORINPUT, node.getVectorInputName());
+            }
 
             bool const isNodeWithoutInputs = node.getNodeType() == Lib3MF::eImplicitNodeType::Constant ||
                 node.getNodeType() == Lib3MF::eImplicitNodeType::ConstVec ||

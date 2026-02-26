@@ -21,20 +21,49 @@ foreach(comp ${lib3mf_FIND_COMPONENTS})
     endif()
 endforeach()
 
-# Configure paths based on the selected variant
-set(lib3mf_INCLUDE_DIR "${LIB3MF_ROOT_DIR}/include/Bindings/${lib3mf_selected_variant}")
+# Configure paths
 set(lib3mf_LIBRARY_DIR "${LIB3MF_ROOT_DIR}/lib")
 set(lib3mf_BINARY_DIR "${LIB3MF_ROOT_DIR}/bin")
 
-# Adjust library file name based on platform
+# Adjust library file name based on platform (prefer shared, fallback to static)
+set(_lib3mf_is_shared TRUE)
 if(WIN32)
-    set(lib3mf_LIBRARY "${lib3mf_BINARY_DIR}/lib3mf.dll")
-    set(lib3mf_LIBRARY_IMPORT "${lib3mf_LIBRARY_DIR}/lib3mf.lib") # For importing symbols
+    if(EXISTS "${lib3mf_BINARY_DIR}/lib3mf.dll")
+        set(lib3mf_LIBRARY "${lib3mf_BINARY_DIR}/lib3mf.dll")
+        set(lib3mf_LIBRARY_IMPORT "${lib3mf_LIBRARY_DIR}/lib3mf.lib") # For importing symbols
+    elseif(EXISTS "${lib3mf_LIBRARY_DIR}/lib3mf.lib")
+        set(_lib3mf_is_shared FALSE)
+        set(lib3mf_LIBRARY "${lib3mf_LIBRARY_DIR}/lib3mf.lib")
+    endif()
 elseif(APPLE)
-    set(lib3mf_LIBRARY "${lib3mf_LIBRARY_DIR}/lib3mf.dylib")
+    if(EXISTS "${lib3mf_LIBRARY_DIR}/lib3mf.dylib")
+        set(lib3mf_LIBRARY "${lib3mf_LIBRARY_DIR}/lib3mf.dylib")
+    elseif(EXISTS "${lib3mf_LIBRARY_DIR}/lib3mf.a")
+        set(_lib3mf_is_shared FALSE)
+        set(lib3mf_LIBRARY "${lib3mf_LIBRARY_DIR}/lib3mf.a")
+    endif()
 else() # Linux and others
-    set(lib3mf_LIBRARY "${lib3mf_LIBRARY_DIR}/lib3mf.so")
+    if(EXISTS "${lib3mf_LIBRARY_DIR}/lib3mf.so")
+        set(lib3mf_LIBRARY "${lib3mf_LIBRARY_DIR}/lib3mf.so")
+    elseif(EXISTS "${lib3mf_LIBRARY_DIR}/lib3mf.a")
+        set(_lib3mf_is_shared FALSE)
+        set(lib3mf_LIBRARY "${lib3mf_LIBRARY_DIR}/lib3mf.a")
+    endif()
 endif()
+
+# If the install is static-only, dynamic variants are not practical; fall back with a warning.
+if(NOT _lib3mf_is_shared)
+    if("${lib3mf_selected_variant}" STREQUAL "CDynamic")
+        message(WARNING "lib3mf: CDynamic requested, but only a static library is available; switching to C.")
+        set(lib3mf_selected_variant "C")
+    elseif("${lib3mf_selected_variant}" STREQUAL "CppDynamic")
+        message(WARNING "lib3mf: CppDynamic requested, but only a static library is available; switching to Cpp.")
+        set(lib3mf_selected_variant "Cpp")
+    endif()
+endif()
+
+# Configure include paths based on the (possibly adjusted) selected variant
+set(lib3mf_INCLUDE_DIR "${LIB3MF_ROOT_DIR}/include/Bindings/${lib3mf_selected_variant}")
 
 # Print the chosen variant
 message("***********************************")
@@ -63,19 +92,26 @@ if("${lib3mf_selected_variant}" STREQUAL "CppDynamic" OR "${lib3mf_selected_vari
     )
     target_include_directories(lib3mfdynamic INTERFACE "${lib3mf_INCLUDE_DIR}")
 else()
-    # Define the imported target for static linking
-    add_library(lib3mf::lib3mf SHARED IMPORTED)
+    if(_lib3mf_is_shared)
+        add_library(lib3mf::lib3mf SHARED IMPORTED)
+    else()
+        add_library(lib3mf::lib3mf STATIC IMPORTED)
+    endif()
     set_target_properties(lib3mf::lib3mf PROPERTIES
             INTERFACE_INCLUDE_DIRECTORIES "${lib3mf_INCLUDE_DIR}"
             IMPORTED_LOCATION "${lib3mf_LIBRARY}"
     )
-    if(WIN32)
+    if(WIN32 AND _lib3mf_is_shared)
         set_property(TARGET lib3mf::lib3mf PROPERTY IMPORTED_IMPLIB "${lib3mf_LIBRARY_IMPORT}")
     endif()
 
     # Define a custom function to handle library copying
     function(copy_lib3mf_libraries target)
         if(TARGET ${target})
+        if(NOT _lib3mf_is_shared)
+            # Static library: nothing to copy at runtime.
+            return()
+        endif()
         if(APPLE)
             # On macOS, copy .dylib files, preserving symlinks only if they don't already exist in the target directory
             file(GLOB LIB3MF_FILES "${lib3mf_LIBRARY_DIR}/lib3mf.dylib*")

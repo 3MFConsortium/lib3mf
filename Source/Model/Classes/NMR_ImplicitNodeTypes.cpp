@@ -363,6 +363,37 @@ namespace NMR
                              {"mesh", eImplicitPortType::ResourceID}},
                           Out{{"distance", eImplicitPortType::Scalar}}},
                   }}},
+                {eImplicitNodeType::BeamLattice,
+                 {"beamlattice",
+                  {
+                      InputOutputRule{
+                          Lib3MF::eImplicitNodeConfiguration::Default,
+                          In{{"pos", eImplicitPortType::Vector},
+                             {"beamlattice", eImplicitPortType::ResourceID}},
+                          Out{{"distance", eImplicitPortType::Scalar}}},
+                  }}},
+                {eImplicitNodeType::FunctionGradient,
+                 {"functiongradient",
+                  {
+                      InputOutputRule{
+                          Lib3MF::eImplicitNodeConfiguration::Default,
+                          In{{"functionID", eImplicitPortType::ResourceID},
+                             {"pos", eImplicitPortType::Vector},
+                             {"step", eImplicitPortType::Scalar}},
+                          Out{{"normalizedgradient", eImplicitPortType::Vector},
+                              {"gradient", eImplicitPortType::Vector},
+                              {"magnitude", eImplicitPortType::Scalar}}},
+                  }}},
+                {eImplicitNodeType::NormalizeDistance,
+                 {"normalizedistance",
+                  {
+                      InputOutputRule{
+                          Lib3MF::eImplicitNodeConfiguration::Default,
+                          In{{"functionID", eImplicitPortType::ResourceID},
+                             {"pos", eImplicitPortType::Vector},
+                             {"step", eImplicitPortType::Scalar}},
+                          Out{{"result", eImplicitPortType::Scalar}}},
+                  }}},
                 {eImplicitNodeType::FunctionCall,
                  {"functioncall",
                   {InputOutputRule{

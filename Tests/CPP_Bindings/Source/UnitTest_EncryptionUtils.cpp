@@ -128,9 +128,15 @@ namespace RsaMethods {
 }
 
 void EncryptionCallbacks::cleanup() {
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+	// OpenSSL < 1.1.0 requires explicit cleanup
 	RAND_cleanup();
 	EVP_cleanup();
 	CRYPTO_cleanup_all_ex_data();
+#else
+	// OpenSSL >= 1.1.0 performs automatic cleanup; these functions are removed
+	(void)0;
+#endif
 }
 
 void EncryptionCallbacks::dataEncryptClientCallback(

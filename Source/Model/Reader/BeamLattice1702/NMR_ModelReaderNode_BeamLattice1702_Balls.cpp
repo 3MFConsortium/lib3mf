@@ -76,7 +76,7 @@ namespace NMR {
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
-		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) {
+		if ((strcmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) || (strcmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICEBALLSSPEC) == 0)) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_BALL) == 0) {
 				// Parse XML
 				PModelReaderNode_BeamLattice1702_Ball pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_Ball>(m_pModel, m_pWarnings);

@@ -47,7 +47,10 @@ namespace NMR {
 			return eModelBeamLatticeBallMode::MODELBEAMLATTICEBALLMODE_MIXED;
 		if (strcmp(ballModeStr, XML_3MF_BEAMLATTICE_BALLMODE_ALL) == 0)
 			return eModelBeamLatticeBallMode::MODELBEAMLATTICEBALLMODE_ALL;
-		return eModelBeamLatticeBallMode::MODELBEAMLATTICEBALLMODE_NONE;
+		if (strcmp(ballModeStr, XML_3MF_BEAMLATTICE_BALLMODE_NONE) == 0)
+			return eModelBeamLatticeBallMode::MODELBEAMLATTICEBALLMODE_NONE;
+		// Invalid ballmode value
+		throw CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE);
 	}
 
 	CModelReaderNode_BeamLattice1702_Ball::CModelReaderNode_BeamLattice1702_Ball(_In_ CModel* pModel, _In_ PModelWarnings pWarnings)

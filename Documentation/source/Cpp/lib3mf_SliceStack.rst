@@ -47,7 +47,7 @@ CSliceStack
 		:returns: the number of slicereferences
 
 
-	.. cpp:function:: void AddSliceStackReference(CSliceStack * pTheSliceStack)
+	.. cpp:function:: void AddSliceStackReference(classParam<CSliceStack> pTheSliceStack)
 
 		Adds another existing slicestack as sliceref in this slicestack
 

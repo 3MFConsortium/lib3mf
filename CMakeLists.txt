@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required (VERSION 3.10)
 
 cmake_policy(SET CMP0054 NEW)
 cmake_policy(SET CMP0048 NEW)
@@ -7,17 +7,23 @@ cmake_policy(SET CMP0048 NEW)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
 
 # Define Version
 set(LIB3MF_VERSION_MAJOR 2)        # increase on every backward-compatibility breaking change of the API
-set(LIB3MF_VERSION_MINOR 4)        # increase on every backward compatible change of the API
-set(LIB3MF_VERSION_MICRO 1)        # increase on on every change that does not alter the API
+set(LIB3MF_VERSION_MINOR 5)        # increase on every backward compatible change of the API
+set(LIB3MF_VERSION_MICRO 0)        # increase on on every change that does not alter the API
 set(LIB3MF_VERSION_PRERELEASE "")  # denotes pre-release information of a version of lib3mf
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment version")
 project(lib3mf
   VERSION ${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}
   DESCRIPTION "An implementation of the 3D Manufacturing Format file standard"
 )
+
+# macOS: ensure zlib includes <unistd.h> (affects ALL targets incl. Tests)
+if(APPLE)
+  add_compile_definitions(Z_HAVE_UNISTD_H=1)
+endif()
 
 find_program(buildcache_program buildcache)
 if(buildcache_program)
@@ -26,36 +32,62 @@ endif()
 
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
-set(CMAKE_INSTALL_INCLUDEDIR include/lib3mf CACHE PATH "directory for installing header files")
+set(CMAKE_INSTALL_INCLUDEDIR include CACHE PATH "directory for installing header files")
+
+# Build lib3mf as shared by default, but do not implicitly switch third-party
+# dependencies (which often key off BUILD_SHARED_LIBS) to shared as well.
+set(_lib3mf_build_shared_default ON)
+if(DEFINED BUILD_SHARED_LIBS)
+  set(_lib3mf_build_shared_default "${BUILD_SHARED_LIBS}")
+endif()
+option(LIB3MF_BUILD_SHARED "Build lib3mf as shared library" ${_lib3mf_build_shared_default})
+unset(_lib3mf_build_shared_default)
+option(LIB3MF_BUILD_WASM "Build JavaScript/WebAssembly embind bindings from ACT generated sources" OFF)
 
 option(USE_INCLUDED_ZLIB "Use included zlib" ON)
 option(USE_INCLUDED_LIBZIP "Use included libzip" ON)
 option(USE_INCLUDED_SSL "Use included libressl" ON)
+option(USE_INCLUDED_CPPBASE64 "Use included cpp-base64 sources" ON)
+option(USE_INCLUDED_FASTFLOAT "Use included fast_float headers" ON)
 option(BUILD_FOR_CODECOVERAGE "Build for code coverage analysis" OFF)
 option(STRIP_BINARIES "Strip binaries (on non-apple)" ON)
 option(USE_PLATFORM_UUID "Use UUID geneator that is provided by the OS (always ON for Windows)" OFF)
 
+if (LIB3MF_BUILD_WASM)
+  if (NOT EMSCRIPTEN)
+    message(FATAL_ERROR "LIB3MF_BUILD_WASM requires the Emscripten toolchain. Configure with emcmake.")
+  endif()
+  if (LIB3MF_BUILD_SHARED)
+    message(STATUS "LIB3MF_BUILD_WASM forces LIB3MF_BUILD_SHARED=OFF for static linking into the WASM module.")
+    set(LIB3MF_BUILD_SHARED OFF CACHE BOOL "Build lib3mf as shared library" FORCE)
+  endif()
+endif()
+
 add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
 set (CMAKE_CXX_STANDARD 17)
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  # using GCC
-  add_definitions(-DBUILD_DLL)
-  add_compile_options(-Wall)
-  if (CMAKE_BUILD_TYPE MATCHES DEBUG)
-    add_compile_options(-g)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Og")
-  else()
+		if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+		  # using GCC
+		  if (LIB3MF_BUILD_SHARED)
+		    add_definitions(-DBUILD_DLL)
+		  endif()
+		  add_compile_options(-Wall)
+		  if (CMAKE_BUILD_TYPE MATCHES DEBUG)
+		    add_compile_options(-g)
+	    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Og")
+	  else()
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O2")
   endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
   
-elseif ("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
-  # using GCC
-  add_definitions(-DBUILD_DLL)
-  add_compile_options(-Wall) 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O2")
-  set(CMAKE_MACOSX_RPATH ON)
-endif()
+		elseif ("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
+		  # using GCC
+		  if (LIB3MF_BUILD_SHARED)
+		    add_definitions(-DBUILD_DLL)
+		  endif()
+		  add_compile_options(-Wall) 
+		  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O2")
+		  set(CMAKE_MACOSX_RPATH ON)
+	endif()
 
 if (${MSVC})
   # using Visual Studio C++
@@ -122,11 +154,17 @@ endif()
 
 
 #########################################################
-# Shared library
-add_library(${PROJECT_NAME} SHARED ${SRCS_COMMON} ${HDRS_COMMON}
-  ${ACT_GENERATED_SOURCE}
-  ${VERSION_FILES_OUTPUTLOCATION}
-)
+if (LIB3MF_BUILD_SHARED)
+  add_library(${PROJECT_NAME} SHARED ${SRCS_COMMON} ${HDRS_COMMON}
+    ${ACT_GENERATED_SOURCE}
+    ${VERSION_FILES_OUTPUTLOCATION}
+  )
+else()
+  add_library(${PROJECT_NAME} STATIC ${SRCS_COMMON} ${HDRS_COMMON}
+    ${ACT_GENERATED_SOURCE}
+    ${VERSION_FILES_OUTPUTLOCATION}
+  )
+endif()
 
 if (${MSVC})
   # using Visual Studio C++
@@ -159,6 +197,10 @@ add_definitions(-DFASTFLOAT_ALLOWS_LEADING_PLUS=1)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Source)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include/API)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+target_include_directories(${PROJECT_NAME} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Bindings/Cpp>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Bindings/Cpp>
+)
 
 if (USE_INCLUDED_LIBZIP)
     # Something goes here to check if submodules exist and initialize the submodules if it does not
@@ -177,49 +219,120 @@ if (USE_INCLUDED_LIBZIP)
 
     # create libzip autogenerated platform specific headers
     if(NOT EXISTS ${CMAKE_BINARY_DIR}/libzip)
+    set(LIBZIP_CONFIGURE_ARGS
+      "-DZLIB_INCLUDE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/submodules/zlib"
+      "-DZLIB_LIBRARY=zlibstatic"
+      "-DENABLE_COMMONCRYPTO=OFF"
+      "-DENABLE_GNUTLS=OFF"
+      "-DENABLE_MBEDTLS=OFF"
+      "-DENABLE_OPENSSL=OFF"
+      "-DENABLE_WINDOWS_CRYPTO=OFF"
+      "-DENABLE_BZIP2=OFF"
+      "-DENABLE_LZMA=OFF"
+      "-DENABLE_ZSTD=OFF"
+      "-DBUILD_TOOLS=OFF"
+      "-DBUILD_REGRESS=OFF"
+      "-DBUILD_EXAMPLES=OFF"
+      "-DBUILD_DOC=OFF"
+      "-DBUILD_SHARED_LIBS=OFF"
+      "-DLIBZIP_DO_INSTALL=OFF"
+    )
+    if(EMSCRIPTEN)
+      # Avoid libzip's legacy endian probe failing during cross-compilation.
+      list(APPEND LIBZIP_CONFIGURE_ARGS "-DCMAKE_C_BYTE_ORDER=LITTLE_ENDIAN")
+    endif()
     execute_process(
-      COMMAND ${CMAKE_COMMAND} "-DZLIB_INCLUDE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/submodules/zlib" 
-            "-DZLIB_LIBRARY=zlibstatic" "-DENABLE_COMMONCRYPTO=OFF" "-DENABLE_GNUTLS=OFF" "-DENABLE_MBEDTLS=OFF" 
-            "-DENABLE_OPENSSL=OFF" "-DENABLE_WINDOWS_CRYPTO=OFF" 
-            "-DENABLE_BZIP2=OFF" "-DENABLE_LZMA=OFF" "-DENABLE_ZSTD=OFF"
-            "-DBUILD_TOOLS=OFF" "-DBUILD_REGRESS=OFF"
-            "-DBUILD_EXAMPLES=OFF" "-DBUILD_DOC=OFF" "-DBUILD_SHARED_LIBS=OFF" "-DLIBZIP_DO_INSTALL=OFF"
+      COMMAND ${CMAKE_COMMAND} ${LIBZIP_CONFIGURE_ARGS}
             "-S" "${CMAKE_CURRENT_SOURCE_DIR}/submodules/libzip" "-B" "${CMAKE_CURRENT_BINARY_DIR}/libzip"   
       RESULT_VARIABLE CMD_ERROR
       OUTPUT_QUIET)
     MESSAGE( STATUS "CMD_ERROR:" ${CMD_ERROR})
+    unset(LIBZIP_CONFIGURE_ARGS)
     endif()
     target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/libzip)
 
-    if (UNIX OR MINGW)
+    if ((UNIX OR MINGW) AND NOT EMSCRIPTEN)
       target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_FSEEKO")
       target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_FTELLO")
       target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_STRCASECMP")
       target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_UNISTD_H")
     endif()
+    if (EMSCRIPTEN)
+      target_compile_definitions(${PROJECT_NAME} PRIVATE SIZEOF_OFF_T=8 SIZEOF_SIZE_T=4)
+    endif()
 
 else()
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(LIBZIP REQUIRED libzip)
-    target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
+    set(_lib3mf_external_link_visibility PRIVATE)
+    if (NOT LIB3MF_BUILD_SHARED)
+      set(_lib3mf_external_link_visibility PUBLIC)
+    endif()
+
+    find_package(libzip CONFIG QUIET)
+    if (TARGET libzip::zip)
+      target_link_libraries(${PROJECT_NAME} ${_lib3mf_external_link_visibility} libzip::zip)
+    else()
+      find_package(PkgConfig REQUIRED)
+      pkg_check_modules(LIBZIP REQUIRED libzip)
+      target_include_directories(${PROJECT_NAME} PRIVATE ${LIBZIP_INCLUDE_DIRS})
+      target_link_directories(${PROJECT_NAME} PRIVATE ${LIBZIP_LIBRARY_DIRS})
+      target_link_libraries(${PROJECT_NAME} ${_lib3mf_external_link_visibility} ${LIBZIP_LIBRARIES})
+    endif()
+
+    unset(_lib3mf_external_link_visibility)
 endif()
 
 
 if (USE_INCLUDED_ZLIB)
     target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zlib/Include)
+
+    if(APPLE OR EMSCRIPTEN)
+      # Ensure zlib includes unistd.h where needed (e.g. macOS, Emscripten).
+      target_compile_definitions(${PROJECT_NAME} PRIVATE Z_HAVE_UNISTD_H=1)
+    endif()
+
 else()
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(ZLIB REQUIRED zlib)
-    target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
+    set(_lib3mf_external_link_visibility PRIVATE)
+    if (NOT LIB3MF_BUILD_SHARED)
+      set(_lib3mf_external_link_visibility PUBLIC)
+    endif()
+
+    find_package(ZLIB QUIET)
+    if (TARGET ZLIB::ZLIB)
+      target_link_libraries(${PROJECT_NAME} ${_lib3mf_external_link_visibility} ZLIB::ZLIB)
+    else()
+      find_package(PkgConfig REQUIRED)
+      pkg_check_modules(ZLIB REQUIRED zlib)
+      target_include_directories(${PROJECT_NAME} PRIVATE ${ZLIB_INCLUDE_DIRS})
+      target_link_directories(${PROJECT_NAME} PRIVATE ${ZLIB_LIBRARY_DIRS})
+      target_link_libraries(${PROJECT_NAME} ${_lib3mf_external_link_visibility} ${ZLIB_LIBRARIES})
+    endif()
+
+    unset(_lib3mf_external_link_visibility)
 endif()
 
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/submodules/fast_float/include)
+if (USE_INCLUDED_CPPBASE64)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE LIB3MF_USE_INCLUDED_CPPBASE64=1)
+else()
+  find_path(CPPBASE64_INCLUDE_DIR NAMES base64.h PATH_SUFFIXES cpp-base64 REQUIRED)
+  find_file(CPPBASE64_SOURCE_FILE NAMES base64.cpp PATH_SUFFIXES cpp-base64 REQUIRED)
+  target_include_directories(${PROJECT_NAME} PRIVATE ${CPPBASE64_INCLUDE_DIR})
+  target_sources(${PROJECT_NAME} PRIVATE ${CPPBASE64_SOURCE_FILE})
+endif()
+
+if (USE_INCLUDED_FASTFLOAT)
+  target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/submodules/fast_float/include)
+else()
+  find_package(FastFloat CONFIG REQUIRED)
+  target_link_libraries(${PROJECT_NAME} PRIVATE FastFloat::fast_float)
+endif()
 
 
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "" )
-# This makes sure symbols are exported
-target_compile_options(${PROJECT_NAME} PRIVATE "-D__LIB3MF_EXPORTS")
+# This makes sure symbols are exported (shared builds only)
+if (LIB3MF_BUILD_SHARED)
+  target_compile_options(${PROJECT_NAME} PRIVATE "-D__LIB3MF_EXPORTS")
+endif()
 # The following two properties are crucial to reduce the number of undesirably exported symbols
 set_target_properties(${PROJECT_NAME} PROPERTIES C_VISIBILITY_PRESET hidden)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_VISIBILITY_PRESET hidden)
@@ -228,17 +341,23 @@ set_target_properties(${PROJECT_NAME} PROPERTIES VISIBILITY_INLINES_HIDDEN ON)
 set(STARTUPPROJECT ${PROJECT_NAME})
 
 #########################################################
-if (UNIX OR MINGW)
-  # Uncomment the following to put the version info into the .so-file.
-  set_target_properties(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
-  set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
-  if (STRIP_BINARIES AND NOT APPLE)
-    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS -s)
-  endif()
-else()
+if (${MSVC})
   # wd4996 masks the deprecated-warning
   target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/sdl;/W3;/WX;/FC;/wd4996>")
   target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
+elseif ((UNIX OR MINGW) AND LIB3MF_BUILD_SHARED)
+  # Uncomment the following to put the version info into the .so-file.
+  set_target_properties(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
+  set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wno-incompatible-pointer-types)
+  if (STRIP_BINARIES AND NOT APPLE)
+    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS -s)
+  endif()
+endif()
+
+# Static build usability (e.g. linking into shared libs)
+if (NOT LIB3MF_BUILD_SHARED)
+  set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 
 ## UUID
@@ -248,7 +367,7 @@ if(WIN32)
 else()
   if (USE_PLATFORM_UUID)
     if (APPLE)
-      target_compile_definitions(${PROJECT_NAME} PRIVATE GUID_CFUUID)
+      target_compile_definitions(${PROJECT_NAME} PRIVATE GUID_CFUUID HAVE_UNISTD_H=1)
       target_link_libraries(${PROJECT_NAME} "-framework Foundation")
     else()
       target_compile_definitions(${PROJECT_NAME} PRIVATE GUID_LIBUUID)
@@ -260,17 +379,70 @@ else()
 endif(WIN32)
 
 configure_file(lib3mf.pc.in lib3mf.pc @ONLY)
+set(LIB3MF_CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/lib3mf")
+configure_package_config_file(
+  cmake/lib3mfConfig.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/lib3mfConfig.cmake"
+  INSTALL_DESTINATION "${LIB3MF_CONFIG_INSTALL_DIR}"
+)
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/lib3mfConfigVersion.cmake"
+  VERSION "${PROJECT_VERSION}"
+  COMPATIBILITY SameMajorVersion
+)
 install(FILES ${CMAKE_BINARY_DIR}/lib3mf.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-install(FILES cmake/lib3mfConfig.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/lib3mf)
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/lib3mfConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/lib3mfConfigVersion.cmake"
+  DESTINATION "${LIB3MF_CONFIG_INSTALL_DIR}"
+)
 install(TARGETS ${PROJECT_NAME}
+  EXPORT lib3mfTargets
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+install(EXPORT lib3mfTargets
+  FILE lib3mfTargets.cmake
+  NAMESPACE lib3mf::
+  DESTINATION "${LIB3MF_CONFIG_INSTALL_DIR}"
+)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Bindings DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
+if (LIB3MF_BUILD_WASM)
+  set(LIB3MF_WASM_BINDINGS_SOURCE "${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Bindings/WASM/lib3mf_bindings.cpp")
+  if (NOT EXISTS "${LIB3MF_WASM_BINDINGS_SOURCE}")
+    message(FATAL_ERROR "Missing ACT-generated WASM bindings source: ${LIB3MF_WASM_BINDINGS_SOURCE}")
+  endif()
+
+  add_executable(lib3mf_wasm ${LIB3MF_WASM_BINDINGS_SOURCE})
+  target_include_directories(lib3mf_wasm PRIVATE ${CMAKE_CURRENT_SOURCE_DIR_AUTOGENERATED}/Bindings)
+  target_link_libraries(lib3mf_wasm PRIVATE ${PROJECT_NAME})
+  set_target_properties(lib3mf_wasm PROPERTIES OUTPUT_NAME "lib3mf" SUFFIX ".js")
+  target_link_options(lib3mf_wasm PRIVATE
+    "-sWASM=1"
+    "-sMODULARIZE=1"
+    "-sEXPORT_ES6=1"
+    "-sUSE_ES6_IMPORT_META=1"
+    "-sENVIRONMENT=web,worker,node"
+    "-sINITIAL_MEMORY=1073741824"
+    "-sALLOW_MEMORY_GROWTH=1"
+    "-sMAXIMUM_MEMORY=4294967296"
+    "-sFORCE_FILESYSTEM=1"
+    "-sEXPORTED_RUNTIME_METHODS=['FS','ccall','cwrap']"
+    "--bind"
+    "-sEXCEPTION_CATCHING_ALLOWED=['*']"
+    "-sASSERTIONS=1"
+    "--no-entry"
+  )
+endif()
+
 #########################################################
-option(LIB3MF_TESTS "Switch whether the tests of lib3mf should be build" ON)
+set(_lib3mf_tests_default ON)
+if(EMSCRIPTEN OR LIB3MF_BUILD_WASM)
+  set(_lib3mf_tests_default OFF)
+endif()
+option(LIB3MF_TESTS "Switch whether the tests of lib3mf should be build" ${_lib3mf_tests_default})
+unset(_lib3mf_tests_default)
 message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
 
 if(LIB3MF_TESTS)
@@ -299,8 +471,12 @@ set(CPACK_PACKAGE_VERSION_PATCH "${LIB3MF_VERSION_MICRO}")
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
 set(CPACK_PACKAGE_CONTACT "lib3mf@3mf.io")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "3MF Consortium")
-set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_NAME}")
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Source")
+set(LIB3MF_VERSION_FULL "${CPACK_PACKAGE_VERSION}")
+if (DEFINED LIB3MF_VERSION_PRERELEASE AND NOT "${LIB3MF_VERSION_PRERELEASE}" STREQUAL "")
+  set(LIB3MF_VERSION_FULL "${LIB3MF_VERSION_FULL}-${LIB3MF_VERSION_PRERELEASE}")
+endif()
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${LIB3MF_VERSION_FULL}-${CMAKE_SYSTEM_NAME}")
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${LIB3MF_VERSION_FULL}-Source")
 
 #########################################################
 include(CPack)

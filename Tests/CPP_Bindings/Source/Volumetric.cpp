@@ -32,11 +32,15 @@ Vulometric.cpp: Defines Unittests for the Volumetric extension
 
 #include "UnitTest_Utilities.h"
 #include "lib3mf_implicit.hpp"
+#include "ZipBuffer.h"
+
+#include <algorithm>
 
 namespace Lib3MF
 {
     namespace helper
     {
+
         PImplicitFunction createGyroidFunction(CModel& model)
         {
             PImplicitFunction gyroidFunction = model.AddImplicitFunction();
@@ -1066,6 +1070,60 @@ namespace Lib3MF
         EXPECT_EQ(property->GetName(), propertyFromFile->GetName());
     }
 
+    TEST_F(Volumetric, LevelSet_WritesVolumeDataBeforeLevelSet)
+    {
+        model = wrapper->CreateModel();
+        auto reader = model->QueryReader("3mf");
+        reader->ReadFromFile(InFolder + "Cube.3mf");
+
+        auto mesh = GetMesh();
+
+        auto implicitFunction = model->AddImplicitFunction();
+        implicitFunction->SetDisplayName("constant levelset");
+
+        implicitFunction->AddInput(
+            "pos", "position", Lib3MF::eImplicitPortType::Vector);
+
+        auto constScalarNode = implicitFunction->AddConstantNode(
+            "constant", "constant", "group_levelset");
+        constScalarNode->SetConstant(0.0);
+
+        auto output = implicitFunction->AddOutput(
+            "shape", "signed distance", Lib3MF::eImplicitPortType::Scalar);
+        implicitFunction->AddLink(constScalarNode->GetOutputValue(),
+                                  output);
+
+        auto levelSetFunction =
+            std::dynamic_pointer_cast<CFunction>(implicitFunction);
+        ASSERT_TRUE(levelSetFunction);
+
+        auto volumeData = model->AddVolumeData();
+
+        auto levelSet = model->AddLevelSet();
+        levelSet->SetMesh(mesh);
+        levelSet->SetFunction(levelSetFunction);
+        levelSet->SetVolumeData(volumeData);
+        levelSet->SetChannelName("shape");
+
+        auto writer = model->QueryWriter("3mf");
+        std::vector<Lib3MF_uint8> buffer;
+        writer->WriteToBuffer(buffer);
+
+        std::string const xml = helper::extractZipEntryFromBuffer(buffer, "3D/3dmodel.model");
+
+        auto volumeDataPos = xml.find("<v:volumedata");
+        if(volumeDataPos == std::string::npos)
+            volumeDataPos = xml.find("<volumedata");
+
+        auto levelSetPos = xml.find("<v:levelset");
+        if(levelSetPos == std::string::npos)
+            levelSetPos = xml.find("<levelset");
+
+        ASSERT_NE(volumeDataPos, std::string::npos);
+        ASSERT_NE(levelSetPos, std::string::npos);
+        EXPECT_LT(volumeDataPos, levelSetPos);
+    }
+
     /**
      * @brief Test case to verify that the MergeFromModel function merges a
      * function from a source model into an empty target model.
@@ -1339,13 +1397,11 @@ namespace Lib3MF
         reader->SetStrictModeActive(true);
         reader->ReadFromFile(InFolder + "template.3mf");
 
-        auto sourceModelFunctionCount = sourceModel->GetFunctions()->Count();
         auto const targetModel = wrapper->CreateModel();
         auto targetReader = targetModel->QueryReader("3mf");
         targetReader->SetStrictModeActive(true);
 
         targetReader->ReadFromFile(InFolder + "Cube.3mf");
-        auto previousTargetFunctionCount = targetModel->GetFunctions()->Count();
 
         EXPECT_NO_THROW(targetModel->MergeFromModel(sourceModel.get()));
 
