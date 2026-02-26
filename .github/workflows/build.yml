@@ -5,7 +5,6 @@ env:
 name: Build
 jobs:
   set-lib3mf-version:
-  set-lib3mf-version:
     runs-on: ubuntu-24.04
     outputs:
       lib3mf-version: ${{ steps.set-version.outputs.LIB3MF_VERSION }}
