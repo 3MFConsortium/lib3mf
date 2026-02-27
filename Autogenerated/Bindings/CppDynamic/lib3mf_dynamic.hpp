@@ -3050,7 +3050,7 @@ public:
 	inline std::string GetScalarOutputName();
 	inline void SetVectorInputName(const std::string & sVectorInputName);
 	inline std::string GetVectorInputName();
-	inline PImplicitPort GetOutputNormalizedGradient();
+	inline PImplicitPort GetOutputVector();
 	inline PImplicitPort GetOutputGradient();
 	inline PImplicitPort GetOutputMagnitude();
 };
@@ -4372,7 +4372,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_FunctionGradientNode_GetScalarOutputName = nullptr;
 		pWrapperTable->m_FunctionGradientNode_SetVectorInputName = nullptr;
 		pWrapperTable->m_FunctionGradientNode_GetVectorInputName = nullptr;
-		pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient = nullptr;
+		pWrapperTable->m_FunctionGradientNode_GetOutputVector = nullptr;
 		pWrapperTable->m_FunctionGradientNode_GetOutputGradient = nullptr;
 		pWrapperTable->m_FunctionGradientNode_GetOutputMagnitude = nullptr;
 		pWrapperTable->m_NormalizeDistanceNode_GetInputFunctionID = nullptr;
@@ -8157,12 +8157,12 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient = (PLib3MFFunctionGradientNode_GetOutputNormalizedGradientPtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getoutputnormalizedgradient");
+		pWrapperTable->m_FunctionGradientNode_GetOutputVector = (PLib3MFFunctionGradientNode_GetOutputVectorPtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getoutputvector");
 		#else // _WIN32
-		pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient = (PLib3MFFunctionGradientNode_GetOutputNormalizedGradientPtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getoutputnormalizedgradient");
+		pWrapperTable->m_FunctionGradientNode_GetOutputVector = (PLib3MFFunctionGradientNode_GetOutputVectorPtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getoutputvector");
 		dlerror();
 		#endif // _WIN32
-		if (pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient == nullptr)
+		if (pWrapperTable->m_FunctionGradientNode_GetOutputVector == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -12056,8 +12056,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionGradientNode_GetVectorInputName == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_functiongradientnode_getoutputnormalizedgradient", (void**)&(pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient));
-		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient == nullptr) )
+		eLookupError = (*pLookup)("lib3mf_functiongradientnode_getoutputvector", (void**)&(pWrapperTable->m_FunctionGradientNode_GetOutputVector));
+		if ( (eLookupError != 0) || (pWrapperTable->m_FunctionGradientNode_GetOutputVector == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_functiongradientnode_getoutputgradient", (void**)&(pWrapperTable->m_FunctionGradientNode_GetOutputGradient));
@@ -18373,18 +18373,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CFunctionGradientNode::GetOutputNormalizedGradient - Retrieves the normalized gradient output
+	* CFunctionGradientNode::GetOutputVector - Retrieves the normalized gradient output
 	* @return the output port for the normalized gradient
 	*/
-	PImplicitPort CFunctionGradientNode::GetOutputNormalizedGradient()
+	PImplicitPort CFunctionGradientNode::GetOutputVector()
 	{
-		Lib3MFHandle hNormalizedGradient = (Lib3MFHandle)nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_FunctionGradientNode_GetOutputNormalizedGradient(m_pHandle, &hNormalizedGradient));
+		Lib3MFHandle hVector = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_FunctionGradientNode_GetOutputVector(m_pHandle, &hVector));
 		
-		if (!hNormalizedGradient) {
+		if (!hVector) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hNormalizedGradient)));
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hVector)));
 	}
 	
 	/**

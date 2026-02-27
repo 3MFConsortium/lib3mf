@@ -4851,10 +4851,10 @@ public:
 	virtual std::string GetVectorInputName() = 0;
 
 	/**
-	* IFunctionGradientNode::GetOutputNormalizedGradient - Retrieves the normalized gradient output
+	* IFunctionGradientNode::GetOutputVector - Retrieves the normalized gradient output
 	* @return the output port for the normalized gradient
 	*/
-	virtual IImplicitPort * GetOutputNormalizedGradient() = 0;
+	virtual IImplicitPort * GetOutputVector() = 0;
 
 	/**
 	* IFunctionGradientNode::GetOutputGradient - Retrieves the raw gradient output

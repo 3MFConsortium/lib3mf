@@ -82,9 +82,9 @@ std::string CFunctionGradientNode::GetVectorInputName()
 	return m_pImplicitNode->getVectorInputName();
 }
 
-IImplicitPort * CFunctionGradientNode::GetOutputNormalizedGradient()
+IImplicitPort * CFunctionGradientNode::GetOutputVector()
 {
-	return FindOutputOrThrow("normalizedgradient");
+	return FindOutputOrThrow("vector");
 }
 
 IImplicitPort * CFunctionGradientNode::GetOutputGradient()

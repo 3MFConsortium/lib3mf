@@ -4137,10 +4137,10 @@ typedef Lib3MFResult (*PLib3MFFunctionGradientNode_GetVectorInputNamePtr) (Lib3M
 * Retrieves the normalized gradient output
 *
 * @param[in] pFunctionGradientNode - FunctionGradientNode instance.
-* @param[out] pNormalizedGradient - the output port for the normalized gradient
+* @param[out] pVector - the output port for the normalized gradient
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFFunctionGradientNode_GetOutputNormalizedGradientPtr) (Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pNormalizedGradient);
+typedef Lib3MFResult (*PLib3MFFunctionGradientNode_GetOutputVectorPtr) (Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pVector);
 
 /**
 * Retrieves the raw gradient output
@@ -7272,7 +7272,7 @@ typedef struct {
 	PLib3MFFunctionGradientNode_GetScalarOutputNamePtr m_FunctionGradientNode_GetScalarOutputName;
 	PLib3MFFunctionGradientNode_SetVectorInputNamePtr m_FunctionGradientNode_SetVectorInputName;
 	PLib3MFFunctionGradientNode_GetVectorInputNamePtr m_FunctionGradientNode_GetVectorInputName;
-	PLib3MFFunctionGradientNode_GetOutputNormalizedGradientPtr m_FunctionGradientNode_GetOutputNormalizedGradient;
+	PLib3MFFunctionGradientNode_GetOutputVectorPtr m_FunctionGradientNode_GetOutputVector;
 	PLib3MFFunctionGradientNode_GetOutputGradientPtr m_FunctionGradientNode_GetOutputGradient;
 	PLib3MFFunctionGradientNode_GetOutputMagnitudePtr m_FunctionGradientNode_GetOutputMagnitude;
 	PLib3MFNormalizeDistanceNode_GetInputFunctionIDPtr m_NormalizeDistanceNode_GetInputFunctionID;
@@ -8705,7 +8705,7 @@ Lib3MFResult CCall_lib3mf_functiongradientnode_setvectorinputname(Lib3MFHandle l
 Lib3MFResult CCall_lib3mf_functiongradientnode_getvectorinputname(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, const Lib3MF_uint32 nVectorInputNameBufferSize, Lib3MF_uint32* pVectorInputNameNeededChars, char * pVectorInputNameBuffer);
 
 
-Lib3MFResult CCall_lib3mf_functiongradientnode_getoutputnormalizedgradient(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pNormalizedGradient);
+Lib3MFResult CCall_lib3mf_functiongradientnode_getoutputvector(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pVector);
 
 
 Lib3MFResult CCall_lib3mf_functiongradientnode_getoutputgradient(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pGradient);

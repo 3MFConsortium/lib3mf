@@ -2653,8 +2653,8 @@
 				description="the name of the vector input (float3) of the referenced function" />
 		</method>
 
-		<method name="GetOutputNormalizedGradient" description="Retrieves the normalized gradient output">
-			<param name="NormalizedGradient" type="class" class="ImplicitPort" pass="return"
+		<method name="GetOutputVector" description="Retrieves the normalized gradient (vector) output">
+			<param name="Vector" type="class" class="ImplicitPort" pass="return"
 				description="the output port for the normalized gradient" />
 		</method>
 

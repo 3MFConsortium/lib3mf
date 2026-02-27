@@ -14617,27 +14617,27 @@ Lib3MFResult lib3mf_functiongradientnode_getvectorinputname(Lib3MF_FunctionGradi
 	}
 }
 
-Lib3MFResult lib3mf_functiongradientnode_getoutputnormalizedgradient(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pNormalizedGradient)
+Lib3MFResult lib3mf_functiongradientnode_getoutputvector(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pVector)
 {
 	IBase* pIBaseClass = (IBase *)pFunctionGradientNode;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionGradientNode, "FunctionGradientNode", "GetOutputNormalizedGradient");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFunctionGradientNode, "FunctionGradientNode", "GetOutputVector");
 		}
-		if (pNormalizedGradient == nullptr)
+		if (pVector == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseNormalizedGradient(nullptr);
+		IBase* pBaseVector(nullptr);
 		IFunctionGradientNode* pIFunctionGradientNode = dynamic_cast<IFunctionGradientNode*>(pIBaseClass);
 		if (!pIFunctionGradientNode)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseNormalizedGradient = pIFunctionGradientNode->GetOutputNormalizedGradient();
+		pBaseVector = pIFunctionGradientNode->GetOutputVector();
 
-		*pNormalizedGradient = (IBase*)(pBaseNormalizedGradient);
+		*pVector = (IBase*)(pBaseVector);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("NormalizedGradient", *pNormalizedGradient);
+			pJournalEntry->addHandleResult("Vector", *pVector);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -25167,8 +25167,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_functiongradientnode_setvectorinputname;
 	if (sProcName == "lib3mf_functiongradientnode_getvectorinputname") 
 		*ppProcAddress = (void*) &lib3mf_functiongradientnode_getvectorinputname;
-	if (sProcName == "lib3mf_functiongradientnode_getoutputnormalizedgradient") 
-		*ppProcAddress = (void*) &lib3mf_functiongradientnode_getoutputnormalizedgradient;
+	if (sProcName == "lib3mf_functiongradientnode_getoutputvector") 
+		*ppProcAddress = (void*) &lib3mf_functiongradientnode_getoutputvector;
 	if (sProcName == "lib3mf_functiongradientnode_getoutputgradient") 
 		*ppProcAddress = (void*) &lib3mf_functiongradientnode_getoutputgradient;
 	if (sProcName == "lib3mf_functiongradientnode_getoutputmagnitude") 

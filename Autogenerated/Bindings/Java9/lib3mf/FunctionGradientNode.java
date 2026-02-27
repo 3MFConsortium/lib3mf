@@ -170,16 +170,16 @@ public class FunctionGradientNode extends ImplicitNode {
 	 * @return the output port for the normalized gradient
 	 * @throws Lib3MFException
 	 */
-	public ImplicitPort getOutputNormalizedGradient() throws Lib3MFException {
-		Pointer bufferNormalizedGradient = new Memory(8);
-		mWrapper.checkError(this, mWrapper.lib3mf_functiongradientnode_getoutputnormalizedgradient.invokeInt(new java.lang.Object[]{mHandle, bufferNormalizedGradient}));
-		Pointer valueNormalizedGradient = bufferNormalizedGradient.getPointer(0);
-		ImplicitPort normalizedGradient = null;
-		if (valueNormalizedGradient == Pointer.NULL) {
-		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "NormalizedGradient was a null pointer");
+	public ImplicitPort getOutputVector() throws Lib3MFException {
+		Pointer bufferVector = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_functiongradientnode_getoutputvector.invokeInt(new java.lang.Object[]{mHandle, bufferVector}));
+		Pointer valueVector = bufferVector.getPointer(0);
+		ImplicitPort vector = null;
+		if (valueVector == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "Vector was a null pointer");
 		}
-		normalizedGradient = mWrapper.PolymorphicFactory(valueNormalizedGradient, ImplicitPort.class);
-		return normalizedGradient;
+		vector = mWrapper.PolymorphicFactory(valueVector, ImplicitPort.class);
+		return vector;
 	}
 
 	/**

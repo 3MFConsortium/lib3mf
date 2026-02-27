@@ -4150,10 +4150,10 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_functiongradientnode_getvectorinputname(Lib3
 * Retrieves the normalized gradient output
 *
 * @param[in] pFunctionGradientNode - FunctionGradientNode instance.
-* @param[out] pNormalizedGradient - the output port for the normalized gradient
+* @param[out] pVector - the output port for the normalized gradient
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_functiongradientnode_getoutputnormalizedgradient(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pNormalizedGradient);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_functiongradientnode_getoutputvector(Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pVector);
 
 /**
 * Retrieves the raw gradient output

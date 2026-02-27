@@ -91,7 +91,7 @@ public:
 
 	std::string GetVectorInputName() override;
 
-	IImplicitPort * GetOutputNormalizedGradient() override;
+	IImplicitPort * GetOutputVector() override;
 
 	IImplicitPort * GetOutputGradient() override;
 

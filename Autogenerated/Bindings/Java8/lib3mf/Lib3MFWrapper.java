@@ -1456,7 +1456,7 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_functiongradientnode_getscalaroutputname;
 	protected com.sun.jna.Function lib3mf_functiongradientnode_setvectorinputname;
 	protected com.sun.jna.Function lib3mf_functiongradientnode_getvectorinputname;
-	protected com.sun.jna.Function lib3mf_functiongradientnode_getoutputnormalizedgradient;
+	protected com.sun.jna.Function lib3mf_functiongradientnode_getoutputvector;
 	protected com.sun.jna.Function lib3mf_functiongradientnode_getoutputgradient;
 	protected com.sun.jna.Function lib3mf_functiongradientnode_getoutputmagnitude;
 	protected com.sun.jna.Function lib3mf_normalizedistancenode_getinputfunctionid;
@@ -2107,7 +2107,7 @@ public class Lib3MFWrapper {
 		lib3mf_functiongradientnode_getscalaroutputname = mLibrary.getFunction("lib3mf_functiongradientnode_getscalaroutputname");
 		lib3mf_functiongradientnode_setvectorinputname = mLibrary.getFunction("lib3mf_functiongradientnode_setvectorinputname");
 		lib3mf_functiongradientnode_getvectorinputname = mLibrary.getFunction("lib3mf_functiongradientnode_getvectorinputname");
-		lib3mf_functiongradientnode_getoutputnormalizedgradient = mLibrary.getFunction("lib3mf_functiongradientnode_getoutputnormalizedgradient");
+		lib3mf_functiongradientnode_getoutputvector = mLibrary.getFunction("lib3mf_functiongradientnode_getoutputvector");
 		lib3mf_functiongradientnode_getoutputgradient = mLibrary.getFunction("lib3mf_functiongradientnode_getoutputgradient");
 		lib3mf_functiongradientnode_getoutputmagnitude = mLibrary.getFunction("lib3mf_functiongradientnode_getoutputmagnitude");
 		lib3mf_normalizedistancenode_getinputfunctionid = mLibrary.getFunction("lib3mf_normalizedistancenode_getinputfunctionid");
@@ -2757,7 +2757,7 @@ public class Lib3MFWrapper {
 		lib3mf_functiongradientnode_getscalaroutputname = loadFunctionByLookup(lookupMethod, "lib3mf_functiongradientnode_getscalaroutputname");
 		lib3mf_functiongradientnode_setvectorinputname = loadFunctionByLookup(lookupMethod, "lib3mf_functiongradientnode_setvectorinputname");
 		lib3mf_functiongradientnode_getvectorinputname = loadFunctionByLookup(lookupMethod, "lib3mf_functiongradientnode_getvectorinputname");
-		lib3mf_functiongradientnode_getoutputnormalizedgradient = loadFunctionByLookup(lookupMethod, "lib3mf_functiongradientnode_getoutputnormalizedgradient");
+		lib3mf_functiongradientnode_getoutputvector = loadFunctionByLookup(lookupMethod, "lib3mf_functiongradientnode_getoutputvector");
 		lib3mf_functiongradientnode_getoutputgradient = loadFunctionByLookup(lookupMethod, "lib3mf_functiongradientnode_getoutputgradient");
 		lib3mf_functiongradientnode_getoutputmagnitude = loadFunctionByLookup(lookupMethod, "lib3mf_functiongradientnode_getoutputmagnitude");
 		lib3mf_normalizedistancenode_getinputfunctionid = loadFunctionByLookup(lookupMethod, "lib3mf_normalizedistancenode_getinputfunctionid");
