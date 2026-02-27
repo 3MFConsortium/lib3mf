@@ -4798,10 +4798,10 @@ type
 	* Retrieves the normalized gradient output
 	*
 	* @param[in] pFunctionGradientNode - FunctionGradientNode instance.
-	* @param[out] pNormalizedGradient - the output port for the normalized gradient
+	* @param[out] pVector - the output port for the normalized gradient
 	* @return error code or 0 (success)
 	*)
-	TLib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc = function(pFunctionGradientNode: TLib3MFHandle; out pNormalizedGradient: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFFunctionGradientNode_GetOutputVectorFunc = function(pFunctionGradientNode: TLib3MFHandle; out pVector: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the raw gradient output
@@ -9089,7 +9089,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetScalarOutputName(): String;
 		procedure SetVectorInputName(const AVectorInputName: String);
 		function GetVectorInputName(): String;
-		function GetOutputNormalizedGradient(): TLib3MFImplicitPort;
+		function GetOutputVector(): TLib3MFImplicitPort;
 		function GetOutputGradient(): TLib3MFImplicitPort;
 		function GetOutputMagnitude(): TLib3MFImplicitPort;
 	end;
@@ -9912,7 +9912,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFFunctionGradientNode_GetScalarOutputNameFunc: TLib3MFFunctionGradientNode_GetScalarOutputNameFunc;
 		FLib3MFFunctionGradientNode_SetVectorInputNameFunc: TLib3MFFunctionGradientNode_SetVectorInputNameFunc;
 		FLib3MFFunctionGradientNode_GetVectorInputNameFunc: TLib3MFFunctionGradientNode_GetVectorInputNameFunc;
-		FLib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc: TLib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc;
+		FLib3MFFunctionGradientNode_GetOutputVectorFunc: TLib3MFFunctionGradientNode_GetOutputVectorFunc;
 		FLib3MFFunctionGradientNode_GetOutputGradientFunc: TLib3MFFunctionGradientNode_GetOutputGradientFunc;
 		FLib3MFFunctionGradientNode_GetOutputMagnitudeFunc: TLib3MFFunctionGradientNode_GetOutputMagnitudeFunc;
 		FLib3MFNormalizeDistanceNode_GetInputFunctionIDFunc: TLib3MFNormalizeDistanceNode_GetInputFunctionIDFunc;
@@ -10568,7 +10568,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFFunctionGradientNode_GetScalarOutputNameFunc: TLib3MFFunctionGradientNode_GetScalarOutputNameFunc read FLib3MFFunctionGradientNode_GetScalarOutputNameFunc;
 		property Lib3MFFunctionGradientNode_SetVectorInputNameFunc: TLib3MFFunctionGradientNode_SetVectorInputNameFunc read FLib3MFFunctionGradientNode_SetVectorInputNameFunc;
 		property Lib3MFFunctionGradientNode_GetVectorInputNameFunc: TLib3MFFunctionGradientNode_GetVectorInputNameFunc read FLib3MFFunctionGradientNode_GetVectorInputNameFunc;
-		property Lib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc: TLib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc read FLib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc;
+		property Lib3MFFunctionGradientNode_GetOutputVectorFunc: TLib3MFFunctionGradientNode_GetOutputVectorFunc read FLib3MFFunctionGradientNode_GetOutputVectorFunc;
 		property Lib3MFFunctionGradientNode_GetOutputGradientFunc: TLib3MFFunctionGradientNode_GetOutputGradientFunc read FLib3MFFunctionGradientNode_GetOutputGradientFunc;
 		property Lib3MFFunctionGradientNode_GetOutputMagnitudeFunc: TLib3MFFunctionGradientNode_GetOutputMagnitudeFunc read FLib3MFFunctionGradientNode_GetOutputMagnitudeFunc;
 		property Lib3MFNormalizeDistanceNode_GetInputFunctionIDFunc: TLib3MFNormalizeDistanceNode_GetInputFunctionIDFunc read FLib3MFNormalizeDistanceNode_GetInputFunctionIDFunc;
@@ -17310,15 +17310,15 @@ implementation
 		Result := StrPas(@bufferVectorInputName[0]);
 	end;
 
-	function TLib3MFFunctionGradientNode.GetOutputNormalizedGradient(): TLib3MFImplicitPort;
+	function TLib3MFFunctionGradientNode.GetOutputVector(): TLib3MFImplicitPort;
 	var
-		HNormalizedGradient: TLib3MFHandle;
+		HVector: TLib3MFHandle;
 	begin
 		Result := nil;
-		HNormalizedGradient := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc(FHandle, HNormalizedGradient));
-		if Assigned(HNormalizedGradient) then
-			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HNormalizedGradient);
+		HVector := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFunctionGradientNode_GetOutputVectorFunc(FHandle, HVector));
+		if Assigned(HVector) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFImplicitPort, TLib3MFImplicitPort>.Make(FWrapper, HVector);
 	end;
 
 	function TLib3MFFunctionGradientNode.GetOutputGradient(): TLib3MFImplicitPort;
@@ -20480,7 +20480,7 @@ implementation
 		FLib3MFFunctionGradientNode_GetScalarOutputNameFunc := LoadFunction('lib3mf_functiongradientnode_getscalaroutputname');
 		FLib3MFFunctionGradientNode_SetVectorInputNameFunc := LoadFunction('lib3mf_functiongradientnode_setvectorinputname');
 		FLib3MFFunctionGradientNode_GetVectorInputNameFunc := LoadFunction('lib3mf_functiongradientnode_getvectorinputname');
-		FLib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc := LoadFunction('lib3mf_functiongradientnode_getoutputnormalizedgradient');
+		FLib3MFFunctionGradientNode_GetOutputVectorFunc := LoadFunction('lib3mf_functiongradientnode_getoutputvector');
 		FLib3MFFunctionGradientNode_GetOutputGradientFunc := LoadFunction('lib3mf_functiongradientnode_getoutputgradient');
 		FLib3MFFunctionGradientNode_GetOutputMagnitudeFunc := LoadFunction('lib3mf_functiongradientnode_getoutputmagnitude');
 		FLib3MFNormalizeDistanceNode_GetInputFunctionIDFunc := LoadFunction('lib3mf_normalizedistancenode_getinputfunctionid');
@@ -21909,7 +21909,7 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_functiongradientnode_getvectorinputname'), @FLib3MFFunctionGradientNode_GetVectorInputNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_functiongradientnode_getoutputnormalizedgradient'), @FLib3MFFunctionGradientNode_GetOutputNormalizedGradientFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_functiongradientnode_getoutputvector'), @FLib3MFFunctionGradientNode_GetOutputVectorFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_functiongradientnode_getoutputgradient'), @FLib3MFFunctionGradientNode_GetOutputGradientFunc);
