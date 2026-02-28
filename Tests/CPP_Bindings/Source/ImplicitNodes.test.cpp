@@ -319,7 +319,7 @@ namespace Lib3MF
         EXPECT_EQ(inputStep->GetType(), Lib3MF::eImplicitPortType::Scalar);
 
         // Check outputs
-auto outputVector = fgNode->GetOutputVector();
+        auto outputVector = fgNode->GetOutputVector();
         ASSERT_TRUE(outputVector);
         EXPECT_EQ(outputVector->GetType(),
                   Lib3MF::eImplicitPortType::Vector);
