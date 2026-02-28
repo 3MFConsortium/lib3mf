@@ -319,9 +319,9 @@ namespace Lib3MF
         EXPECT_EQ(inputStep->GetType(), Lib3MF::eImplicitPortType::Scalar);
 
         // Check outputs
-        auto outputNormalizedGradient = fgNode->GetOutputNormalizedGradient();
-        ASSERT_TRUE(outputNormalizedGradient);
-        EXPECT_EQ(outputNormalizedGradient->GetType(), 
+        auto outputVector = fgNode->GetOutputVector();
+        ASSERT_TRUE(outputVector);
+        EXPECT_EQ(outputVector->GetType(),
                   Lib3MF::eImplicitPortType::Vector);
 
         auto outputGradient = fgNode->GetOutputGradient();
@@ -464,7 +464,7 @@ namespace Lib3MF
         // Use all three outputs
         auto outputNormalizedGrad = function->AddOutput(
             "normgrad", "normalized gradient", Lib3MF::eImplicitPortType::Vector);
-        function->AddLink(fgNode->GetOutputNormalizedGradient(), outputNormalizedGrad);
+        function->AddLink(fgNode->GetOutputVector(), outputNormalizedGrad);
 
         auto outputGrad = function->AddOutput(
             "grad", "gradient", Lib3MF::eImplicitPortType::Vector);

@@ -5871,14 +5871,14 @@ func (inst FunctionGradientNode) GetVectorInputName() (string, error) {
 	return string(buffervectorInputName[:(filledinvectorInputName-1)]), nil
 }
 
-// GetOutputNormalizedGradient retrieves the normalized gradient output.
-func (inst FunctionGradientNode) GetOutputNormalizedGradient() (ImplicitPort, error) {
-	var normalizedGradient ref
-	ret := C.CCall_lib3mf_functiongradientnode_getoutputnormalizedgradient(inst.wrapperRef.LibraryHandle, inst.Ref, &normalizedGradient)
+// GetOutputVector retrieves the normalized gradient output.
+func (inst FunctionGradientNode) GetOutputVector() (ImplicitPort, error) {
+	var vector ref
+	ret := C.CCall_lib3mf_functiongradientnode_getoutputvector(inst.wrapperRef.LibraryHandle, inst.Ref, &vector)
 	if ret != 0 {
 		return ImplicitPort{}, makeError(uint32(ret))
 	}
-	return inst.wrapperRef.NewImplicitPort(normalizedGradient), nil
+	return inst.wrapperRef.NewImplicitPort(vector), nil
 }
 
 // GetOutputGradient retrieves the raw gradient output.

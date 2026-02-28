@@ -16588,7 +16588,7 @@ void CLib3MFFunctionGradientNode::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetScalarOutputName", GetScalarOutputName);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetVectorInputName", SetVectorInputName);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetVectorInputName", GetVectorInputName);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputNormalizedGradient", GetOutputNormalizedGradient);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputVector", GetOutputVector);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputGradient", GetOutputGradient);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOutputMagnitude", GetOutputMagnitude);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
@@ -16797,22 +16797,22 @@ void CLib3MFFunctionGradientNode::GetVectorInputName(const FunctionCallbackInfo<
 }
 
 
-void CLib3MFFunctionGradientNode::GetOutputNormalizedGradient(const FunctionCallbackInfo<Value>& args) 
+void CLib3MFFunctionGradientNode::GetOutputVector(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		try {
-        Lib3MFHandle hReturnNormalizedGradient = nullptr;
+        Lib3MFHandle hReturnVector = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetOutputNormalizedGradient.");
-        if (wrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient == nullptr)
-            throw std::runtime_error("Could not call Lib3MF method FunctionGradientNode::GetOutputNormalizedGradient.");
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetOutputVector.");
+        if (wrapperTable->m_FunctionGradientNode_GetOutputVector == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method FunctionGradientNode::GetOutputVector.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient(instanceHandle, &hReturnNormalizedGradient);
+        Lib3MFResult errorCode = wrapperTable->m_FunctionGradientNode_GetOutputVector(instanceHandle, &hReturnVector);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjNormalizedGradient = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnNormalizedGradient);
-        args.GetReturnValue().Set(instanceObjNormalizedGradient);
+        Local<Object> instanceObjVector = CLib3MFImplicitPort::NewInstance(args.Holder(), hReturnVector);
+        args.GetReturnValue().Set(instanceObjVector);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

@@ -1885,8 +1885,8 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functiongradientnode_getvectorinputname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FunctionGradientNode_GetVectorInputName (IntPtr Handle, UInt32 sizeVectorInputName, out UInt32 neededVectorInputName, IntPtr dataVectorInputName);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functiongradientnode_getoutputnormalizedgradient", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 FunctionGradientNode_GetOutputNormalizedGradient (IntPtr Handle, out IntPtr ANormalizedGradient);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functiongradientnode_getoutputvector", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FunctionGradientNode_GetOutputVector (IntPtr Handle, out IntPtr AVector);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_functiongradientnode_getoutputgradient", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FunctionGradientNode_GetOutputGradient (IntPtr Handle, out IntPtr AGradient);
@@ -7323,12 +7323,12 @@ namespace Lib3MF {
 			return Encoding.UTF8.GetString(bytesVectorInputName).TrimEnd(char.MinValue);
 		}
 
-		public CImplicitPort GetOutputNormalizedGradient ()
+		public CImplicitPort GetOutputVector ()
 		{
-			IntPtr newNormalizedGradient = IntPtr.Zero;
+			IntPtr newVector = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.FunctionGradientNode_GetOutputNormalizedGradient (Handle, out newNormalizedGradient));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newNormalizedGradient);
+			CheckError(Internal.Lib3MFWrapper.FunctionGradientNode_GetOutputVector (Handle, out newVector));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CImplicitPort>(newVector);
 		}
 
 		public CImplicitPort GetOutputGradient ()

@@ -765,7 +765,7 @@ class FunctionTable:
 	lib3mf_functiongradientnode_getscalaroutputname = None
 	lib3mf_functiongradientnode_setvectorinputname = None
 	lib3mf_functiongradientnode_getvectorinputname = None
-	lib3mf_functiongradientnode_getoutputnormalizedgradient = None
+	lib3mf_functiongradientnode_getoutputvector = None
 	lib3mf_functiongradientnode_getoutputgradient = None
 	lib3mf_functiongradientnode_getoutputmagnitude = None
 	lib3mf_normalizedistancenode_getinputfunctionid = None
@@ -3850,11 +3850,11 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
 			self.lib.lib3mf_functiongradientnode_getvectorinputname = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functiongradientnode_getoutputnormalizedgradient")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functiongradientnode_getoutputvector")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_functiongradientnode_getoutputnormalizedgradient = methodType(int(methodAddress.value))
+			self.lib.lib3mf_functiongradientnode_getoutputvector = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_functiongradientnode_getoutputgradient")), methodAddress)
 			if err != 0:
@@ -6516,8 +6516,8 @@ class Wrapper:
 			self.lib.lib3mf_functiongradientnode_getvectorinputname.restype = ctypes.c_int32
 			self.lib.lib3mf_functiongradientnode_getvectorinputname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
-			self.lib.lib3mf_functiongradientnode_getoutputnormalizedgradient.restype = ctypes.c_int32
-			self.lib.lib3mf_functiongradientnode_getoutputnormalizedgradient.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_functiongradientnode_getoutputvector.restype = ctypes.c_int32
+			self.lib.lib3mf_functiongradientnode_getoutputvector.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_functiongradientnode_getoutputgradient.restype = ctypes.c_int32
 			self.lib.lib3mf_functiongradientnode_getoutputgradient.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -11465,15 +11465,15 @@ class FunctionGradientNode(ImplicitNode):
 		
 		return pVectorInputNameBuffer.value.decode()
 	
-	def GetOutputNormalizedGradient(self):
-		NormalizedGradientHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functiongradientnode_getoutputnormalizedgradient(self._handle, NormalizedGradientHandle))
-		if NormalizedGradientHandle:
-			NormalizedGradientObject = self._wrapper._polymorphicFactory(NormalizedGradientHandle)
+	def GetOutputVector(self):
+		VectorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_functiongradientnode_getoutputvector(self._handle, VectorHandle))
+		if VectorHandle:
+			VectorObject = self._wrapper._polymorphicFactory(VectorHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
-		return NormalizedGradientObject
+		return VectorObject
 	
 	def GetOutputGradient(self):
 		GradientHandle = ctypes.c_void_p()

@@ -2395,7 +2395,7 @@ EMSCRIPTEN_BINDINGS(Lib3MF) {
         .function("GetScalarOutputName", &CFunctionGradientNode::GetScalarOutputName)
         .function("SetVectorInputName", &CFunctionGradientNode::SetVectorInputName)
         .function("GetVectorInputName", &CFunctionGradientNode::GetVectorInputName)
-        .function("GetOutputNormalizedGradient", &CFunctionGradientNode::GetOutputNormalizedGradient)
+        .function("GetOutputVector", &CFunctionGradientNode::GetOutputVector)
         .function("GetOutputGradient", &CFunctionGradientNode::GetOutputGradient)
         .function("GetOutputMagnitude", &CFunctionGradientNode::GetOutputMagnitude)
     ;

@@ -2179,7 +2179,7 @@ private:
 	static void GetScalarOutputName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetVectorInputName(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetVectorInputName(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetOutputNormalizedGradient(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOutputVector(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetOutputGradient(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetOutputMagnitude(const v8::FunctionCallbackInfo<v8::Value>& args);
 

@@ -434,7 +434,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_FunctionGradientNode_GetScalarOutputName = NULL;
 	pWrapperTable->m_FunctionGradientNode_SetVectorInputName = NULL;
 	pWrapperTable->m_FunctionGradientNode_GetVectorInputName = NULL;
-	pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient = NULL;
+	pWrapperTable->m_FunctionGradientNode_GetOutputVector = NULL;
 	pWrapperTable->m_FunctionGradientNode_GetOutputGradient = NULL;
 	pWrapperTable->m_FunctionGradientNode_GetOutputMagnitude = NULL;
 	pWrapperTable->m_NormalizeDistanceNode_GetInputFunctionID = NULL;
@@ -4223,12 +4223,12 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient = (PLib3MFFunctionGradientNode_GetOutputNormalizedGradientPtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getoutputnormalizedgradient");
+	pWrapperTable->m_FunctionGradientNode_GetOutputVector = (PLib3MFFunctionGradientNode_GetOutputVectorPtr) GetProcAddress(hLibrary, "lib3mf_functiongradientnode_getoutputvector");
 	#else // _WIN32
-	pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient = (PLib3MFFunctionGradientNode_GetOutputNormalizedGradientPtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getoutputnormalizedgradient");
+	pWrapperTable->m_FunctionGradientNode_GetOutputVector = (PLib3MFFunctionGradientNode_GetOutputVectorPtr) dlsym(hLibrary, "lib3mf_functiongradientnode_getoutputvector");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient == NULL)
+	if (pWrapperTable->m_FunctionGradientNode_GetOutputVector == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -10071,12 +10071,12 @@ Lib3MFResult CCall_lib3mf_functiongradientnode_getvectorinputname(Lib3MFHandle l
 }
 
 
-Lib3MFResult CCall_lib3mf_functiongradientnode_getoutputnormalizedgradient(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pNormalizedGradient)
+Lib3MFResult CCall_lib3mf_functiongradientnode_getoutputvector(Lib3MFHandle libraryHandle, Lib3MF_FunctionGradientNode pFunctionGradientNode, Lib3MF_ImplicitPort * pVector)
 {
 	if (libraryHandle == 0) 
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
-	return wrapperTable->m_FunctionGradientNode_GetOutputNormalizedGradient (pFunctionGradientNode, pNormalizedGradient);
+	return wrapperTable->m_FunctionGradientNode_GetOutputVector (pFunctionGradientNode, pVector);
 }
 
 

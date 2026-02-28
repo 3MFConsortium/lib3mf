@@ -380,7 +380,7 @@ namespace NMR
                           In{{"functionID", eImplicitPortType::ResourceID},
                              {"pos", eImplicitPortType::Vector},
                              {"step", eImplicitPortType::Scalar}},
-                          Out{{"normalizedgradient", eImplicitPortType::Vector},
+                          Out{{"vector", eImplicitPortType::Vector},
                               {"gradient", eImplicitPortType::Vector},
                               {"magnitude", eImplicitPortType::Scalar}}},
                   }}},

@@ -3026,7 +3026,7 @@ public:
 	inline std::string GetScalarOutputName();
 	inline void SetVectorInputName(const std::string & sVectorInputName);
 	inline std::string GetVectorInputName();
-	inline PImplicitPort GetOutputNormalizedGradient();
+	inline PImplicitPort GetOutputVector();
 	inline PImplicitPort GetOutputGradient();
 	inline PImplicitPort GetOutputMagnitude();
 };
@@ -9230,18 +9230,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CFunctionGradientNode::GetOutputNormalizedGradient - Retrieves the normalized gradient output
+	* CFunctionGradientNode::GetOutputVector - Retrieves the normalized gradient output
 	* @return the output port for the normalized gradient
 	*/
-	PImplicitPort CFunctionGradientNode::GetOutputNormalizedGradient()
+	PImplicitPort CFunctionGradientNode::GetOutputVector()
 	{
-		Lib3MFHandle hNormalizedGradient = (Lib3MFHandle)nullptr;
-		CheckError(lib3mf_functiongradientnode_getoutputnormalizedgradient(m_pHandle, &hNormalizedGradient));
+		Lib3MFHandle hVector = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_functiongradientnode_getoutputvector(m_pHandle, &hVector));
 		
-		if (!hNormalizedGradient) {
+		if (!hVector) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hNormalizedGradient)));
+		return std::shared_ptr<CImplicitPort>(dynamic_cast<CImplicitPort*>(m_pWrapper->polymorphicFactory(hVector)));
 	}
 	
 	/**
