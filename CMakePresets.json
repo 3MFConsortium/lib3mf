@@ -1,4 +1,5 @@
 {
+    "version": 3,
     "configurePresets": [
         {
             "name": "windows-base",
@@ -47,7 +48,135 @@
                 "CMAKE_BUILD_TYPE": "RelWithDebInfo",
                 "CMAKE_CXX_FLAGS_DEBUG": "/Z7"
             }
+        },
+        {
+            "name": "linux-base",
+            "displayName": "Linux Base (Ninja)",
+            "description": "Base preset for Linux using Ninja.",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INSTALL_PREFIX": "/usr/local",
+                "LIB3MF_TESTS": "ON",
+                "USE_INCLUDED_ZLIB": "OFF",
+                "USE_INCLUDED_LIBZIP": "OFF",
+                "USE_INCLUDED_SSL": "OFF"
+            }
+        },
+        {
+            "name": "linux-debug",
+            "displayName": "Linux Debug",
+            "description": "Debug build on Linux with tests enabled.",
+            "inherits": "linux-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "linux-relwithdebinfo",
+            "displayName": "Linux RelWithDebInfo",
+            "description": "RelWithDebInfo build on Linux with tests enabled.",
+            "inherits": "linux-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "linux-release",
+            "displayName": "Linux Release",
+            "description": "Release build on Linux with tests enabled.",
+            "inherits": "linux-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
         }
     ],
-    "version": 3
+    "buildPresets": [
+        {
+            "name": "x64-debug",
+            "displayName": "Build (Windows x64 Debug)",
+            "configurePreset": "x64-debug"
+        },
+        {
+            "name": "x64-release",
+            "displayName": "Build (Windows x64 Release)",
+            "configurePreset": "x64-release"
+        },
+        {
+            "name": "x64-release-debug",
+            "displayName": "Build (Windows x64 Release with Debug)",
+            "configurePreset": "x64-release-debug"
+        },
+        {
+            "name": "linux-debug",
+            "displayName": "Build (Linux Debug)",
+            "configurePreset": "linux-debug"
+        },
+        {
+            "name": "linux-relwithdebinfo",
+            "displayName": "Build (Linux RelWithDebInfo)",
+            "configurePreset": "linux-relwithdebinfo"
+        },
+        {
+            "name": "linux-release",
+            "displayName": "Build (Linux Release)",
+            "configurePreset": "linux-release"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "x64-debug",
+            "displayName": "Test (Windows x64 Debug)",
+            "configurePreset": "x64-debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "x64-release",
+            "displayName": "Test (Windows x64 Release)",
+            "configurePreset": "x64-release",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "x64-release-debug",
+            "displayName": "Test (Windows x64 Release with Debug)",
+            "configurePreset": "x64-release-debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "linux-debug",
+            "displayName": "Test (Linux Debug)",
+            "configurePreset": "linux-debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "linux-relwithdebinfo",
+            "displayName": "Test (Linux RelWithDebInfo)",
+            "configurePreset": "linux-relwithdebinfo",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "linux-release",
+            "displayName": "Test (Linux Release)",
+            "configurePreset": "linux-release",
+            "output": {
+                "outputOnFailure": true
+            }
+        }
+    ]
 }

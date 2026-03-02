@@ -665,4 +665,36 @@ namespace Lib3MF
 		Read_Attributes_Negative(GetParam());
 	}
 
+	TEST_F(BeamLattice, Read_BallExtension_TestSuite_P_BXX_2021_06)
+	{
+		std::string fName("testsuite_P_BXX_2021_06.3mf");
+		auto model = wrapper->CreateModel();
+		{
+			auto reader = model->QueryReader("3mf");
+			reader->SetStrictModeActive(true);
+			reader->ReadFromFile(sTestFilesPath + "/" + "BeamLattice" + "/" + fName);
+			ASSERT_EQ(reader->GetWarningCount(), 0) << "Warnings encountered while reading test suite file.";
+		}
+
+		Lib3MF_uint64 totalBalls = 0;
+		Lib3MF_uint64 checkedBallModeMeshes = 0;
+		auto meshObjects = model->GetMeshObjects();
+		while (meshObjects->MoveNext()) {
+			auto meshObject = meshObjects->GetCurrentMeshObject();
+			auto bl = meshObject->BeamLattice();
+			if (bl->GetBeamCount() > 0 || bl->GetBallCount() > 0) {
+				eBeamLatticeBallMode ballMode; double defaultRadius;
+				bl->GetBallOptions(ballMode, defaultRadius);
+				if (bl->GetBallCount() > 0) {
+					checkedBallModeMeshes++;
+					ASSERT_EQ(ballMode, eBeamLatticeBallMode::All);
+					ASSERT_NEAR(defaultRadius, 3.0, 1e-7);
+				}
+				totalBalls += bl->GetBallCount();
+			}
+		}
+		ASSERT_EQ(checkedBallModeMeshes, 1u) << "Expected exactly one mesh with ball mode All.";
+		ASSERT_EQ(totalBalls, 8u) << "Unexpected total ball count.";
+	}
+
 }

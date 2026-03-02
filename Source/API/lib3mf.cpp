@@ -102,6 +102,24 @@ void CWrapper::GetSpecificationVersion (const std::string & sSpecificationURL, b
 		nMicro = NMR_SPECVERSION_SECURECONTENT_MICRO;
 		bIsSupported = true;
 	}
+	else if (!sSpecificationURL.compare(std::string(XML_3MF_NAMESPACE_TRIANGLESETS))) {
+		nMajor = NMR_SPECVERSION_TRIANGLESETS_MAJOR;
+		nMinor = NMR_SPECVERSION_TRIANGLESETS_MINOR;
+		nMicro = NMR_SPECVERSION_TRIANGLESETS_MICRO;
+		bIsSupported = true;
+	}
+	else if (!sSpecificationURL.compare(std::string(XML_3MF_NAMESPACE_VOLUMETRICSPEC))) {
+		nMajor = NMR_SPECVERSION_VOLUMETRIC_MAJOR;
+		nMinor = NMR_SPECVERSION_VOLUMETRIC_MINOR;
+		nMicro = NMR_SPECVERSION_VOLUMETRIC_MICRO;
+		bIsSupported = true;
+	}
+	else if (!sSpecificationURL.compare(std::string(XML_3MF_NAMESPACE_IMPLICITSPEC))) {
+		nMajor = NMR_SPECVERSION_IMPLICIT_MAJOR;
+		nMinor = NMR_SPECVERSION_IMPLICIT_MINOR;
+		nMicro = NMR_SPECVERSION_IMPLICIT_MICRO;
+		bIsSupported = true;
+	}
 	else {
 		bIsSupported = false;
 	}

@@ -32,6 +32,8 @@ ExtractInfo.cpp : 3MF Read Example
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <cstdlib>
+#include <cctype>
 
 #include "lib3mf_implicit.hpp"
 
@@ -180,7 +182,7 @@ void ShowComponentsObjectInformation(PComponentsObject componentsObject)
 }
 
 
-void ExtractInfoExample(std::string sFileName) {
+void ExtractInfoExample(const std::string& sFileName, bool strictMode) {
 	PWrapper wrapper = CWrapper::loadLibrary();
 	
 	std::cout << "------------------------------------------------------------------" << std::endl;
@@ -193,8 +195,9 @@ void ExtractInfoExample(std::string sFileName) {
 	// Import Model from 3MF File
 	{
 		PReader reader = model->QueryReader("3mf");
-		// And deactivate the strict mode (default is "false", anyway. This just demonstrates where/how to use it).
-		reader->SetStrictModeActive(false);
+		reader->SetStrictModeActive(strictMode);
+		if (strictMode)
+			std::cout << "Strict reader mode enabled" << std::endl;
 		reader->ReadFromFile(sFileName);
 
 		for (Lib3MF_uint32 iWarning = 0; iWarning < reader->GetWarningCount(); iWarning++) {
@@ -251,15 +254,48 @@ void ExtractInfoExample(std::string sFileName) {
 
 
 int main(int argc, char** argv) {
-	// Parse Arguments
-	if (argc != 2) {
-		std::cout << "Usage: " << std::endl;
-		std::cout << "ExtractInfo.exe model.3mf" << std::endl;
-		return 0;
-	}
-	
-	try {
-		ExtractInfoExample(argv[1]);
+    bool strictMode = false;
+    if(const char* envStrict = std::getenv("LIB3MF_STRICT_READER"))
+    {
+        std::string value(envStrict);
+        value.erase(
+            std::remove_if(value.begin(), value.end(),
+                           [](unsigned char c) { return std::isspace(c); }),
+            value.end());
+        std::transform(value.begin(), value.end(), value.begin(),
+                       [](unsigned char c)
+                       { return static_cast<char>(std::tolower(c)); });
+        if(!value.empty() && value != "0" && value != "false" && value != "off")
+            strictMode = true;
+    }
+
+    int fileArgIndex = -1;
+    for(int i = 1; i < argc; ++i)
+    {
+        std::string arg = argv[i];
+        if(arg == "--strict")
+        {
+            strictMode = true;
+            continue;
+        }
+        if(!arg.empty() && arg[0] == '-')
+        {
+            std::cout << "Unknown option: " << arg << std::endl;
+            return 1;
+        }
+        fileArgIndex = i;
+        break;
+    }
+
+    if(fileArgIndex < 0 || fileArgIndex != argc - 1)
+    {
+        std::cout << "Usage: " << std::endl;
+        std::cout << "ExtractInfo.exe [--strict] model.3mf" << std::endl;
+        return 0;
+    }
+
+        try {
+		ExtractInfoExample(argv[fileArgIndex], strictMode);
 	}
 	catch (ELib3MFException &e) {
 		std::cout << e.what() << std::endl;

@@ -63,6 +63,9 @@ if __name__ == "__main__":
 
     root = os.path.dirname(os.path.realpath(__file__))
 
+    if "LIB3MF_STRICT_READER" not in os.environ:
+        os.environ["LIB3MF_STRICT_READER"] = "1"
+
     execCommand = os.path.join(root, "Example_ExtractInfo")
 
     print("Execute once for testing")

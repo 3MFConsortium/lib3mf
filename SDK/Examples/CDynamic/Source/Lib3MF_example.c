@@ -37,6 +37,19 @@ Interface version: 2.2.0
 #include <stdio.h>
 #include "lib3mf_dynamic.h"
 
+#ifndef _WIN32
+#define printf_s printf
+#endif
+
+#ifndef LSUFFIXOUT
+#ifdef _WIN32
+#define LSUFFIXOUT ".dll"
+#elif defined(__APPLE__)
+#define LSUFFIXOUT ".2.dylib"
+#else
+#define LSUFFIXOUT ".so.2"
+#endif
+#endif
 
 void releaseWrapper(sLib3MFDynamicWrapperTable* pWrapperTable) {
 	Lib3MFResult eResult = ReleaseLib3MFWrapperTable(pWrapperTable);
@@ -47,8 +60,11 @@ void releaseWrapper(sLib3MFDynamicWrapperTable* pWrapperTable) {
 
 int main()
 {
-	// TODO: put the path and ending of the Lib3MF library file here:
-	const char* libpath = "lib3mf.dll";
+#ifdef _WIN32
+	const char* libpath = "lib3mf" LSUFFIXOUT;
+#else
+	const char* libpath = "./lib3mf" LSUFFIXOUT;
+#endif
 	sLib3MFDynamicWrapperTable sWrapperTable;
 	Lib3MFResult eResult = LIB3MF_SUCCESS;
 	
@@ -100,7 +116,7 @@ int main()
 		return eResult;
 	}
 	if (bHasInfo && (nBufferRequired > 0)) {
-		theString = malloc(sizeof(Lib3MF_uint8)*(nBufferRequired));
+		theString = malloc(sizeof(Lib3MF_uint8) * (nBufferRequired + 1));
 		theString[nBufferRequired] = 0;
 		eResult = sWrapperTable.m_GetBuildInformation(&bHasInfo, nBufferRequired, &nBufferRequired, theString);
 		if (LIB3MF_SUCCESS != eResult) {
@@ -124,4 +140,3 @@ int main()
 	
 	return 0;
 } 
-

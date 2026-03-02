@@ -53,11 +53,11 @@ CBeamLattice
 		Sets the representation-mesh for the beamlattice of this mesh.
 
 		:param nUniqueResourceID: the UniqueResourceID of the representation mesh-object. This mesh-object has to be defined before setting the representation. 
-    
-    
-  .. cpp:function:: void GetBallOptions(eBeamLatticeBallMode & eBallMode, Lib3MF_double & dBallRadius)
 
-		Returns the ball mode and the default ball radius for the beamlattice of this mesh.Returns the ball mode and the default ball radius for the beamlattice of this mesh.
+
+	.. cpp:function:: void GetBallOptions(eBeamLatticeBallMode & eBallMode, Lib3MF_double & dBallRadius)
+
+		Returns the ball mode and the default ball radius for the beamlattice of this mesh.
 
 		:param eBallMode: contains the ball mode of this mesh 
 		:param dBallRadius: default ball radius of balls for the beamlattice 
@@ -69,6 +69,7 @@ CBeamLattice
 
 		:param eBallMode: contains the ball mode of this mesh 
 		:param dBallRadius: default ball radius of balls for the beamlattice 
+
 
 	.. cpp:function:: Lib3MF_uint32 GetBeamCount()
 
@@ -115,7 +116,7 @@ CBeamLattice
 		:param BeamInfoBuffer: contains information of all beams 
 
 
-    .. cpp:function:: Lib3MF_uint32 GetBallCount()
+	.. cpp:function:: Lib3MF_uint32 GetBallCount()
 
 		Returns the ball count of a mesh object.
 
@@ -150,7 +151,7 @@ CBeamLattice
 
 		Sets all ball indices and radii of a mesh object.
 
-		:param BallInfoBuffer: contains information of a number of  balls
+		:param BallInfoBuffer: contains information of a number of  balls 
 
 
 	.. cpp:function:: void GetBalls(std::vector<sBall> & BallInfoBuffer)

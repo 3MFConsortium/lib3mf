@@ -155,13 +155,15 @@ namespace NMR
     void NMR::CModelImplicitNode::setConstant(double value)
     {
         if (m_type != Lib3MF::eImplicitNodeType::Constant)
-            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "setConstant can only be called on Constant nodes");
         m_constant = value;
     }
     double CModelImplicitNode::getConstant() const
     {
         if (m_type != Lib3MF::eImplicitNodeType::Constant)
-            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "getConstant can only be called on Constant nodes");
 
         return m_constant;
     }
@@ -169,48 +171,56 @@ namespace NMR
     void NMR::CModelImplicitNode::setVector(const Lib3MF::sVector & value)
     {
         if (m_type != Lib3MF::eImplicitNodeType::ConstVec)
-            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "setVector can only be called on ConstVec nodes");
         m_vector = std::unique_ptr<Lib3MF::sVector>(new Lib3MF::sVector(value));
     }
 
     Lib3MF::sVector CModelImplicitNode::getVector() const
     {
         if (m_type != Lib3MF::eImplicitNodeType::ConstVec)
-            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "getVector can only be called on ConstVec nodes");
 
         if (!m_vector)
-            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "getVector: vector value not initialized");
         return *m_vector;
     }
 
     void CModelImplicitNode::setMatrix(const Lib3MF::sMatrix4x4 & value)
     {
         if (m_type != Lib3MF::eImplicitNodeType::ConstMat)
-            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "setMatrix can only be called on ConstMat nodes");
         m_matrix = std::unique_ptr<Lib3MF::sMatrix4x4>(new Lib3MF::sMatrix4x4(value));
     }
 
     Lib3MF::sMatrix4x4 CModelImplicitNode::getMatrix() const
     {
         if (m_type != Lib3MF::eImplicitNodeType::ConstMat)
-            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "getMatrix can only be called on ConstMat nodes");
 
         if (!m_matrix)
-            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "getMatrix: matrix value not initialized");
         return *m_matrix;
     }
 
     void CModelImplicitNode::setModelResourceID(ModelResourceID resourceID)
     {
         if (m_type != Lib3MF::eImplicitNodeType::ConstResourceID)
-            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "setModelResourceID can only be called on ConstResourceID nodes");
         m_modelResourceID = resourceID;
     }
 
     ModelResourceID CModelImplicitNode::getModelResourceID() const
     {
         if (m_type != Lib3MF::eImplicitNodeType::ConstResourceID)
-            throw CNMRException(NMR_ERROR_INVALIDPARAM);
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "getModelResourceID can only be called on ConstResourceID nodes");
 
         return m_modelResourceID;
     }
@@ -230,6 +240,58 @@ namespace NMR
         }
 
         return model->findResource(model->currentPath(), m_modelResourceID);
+    }
+
+    void CModelImplicitNode::setAccurateRange(double accurateRange)
+    {
+        if (m_type != Lib3MF::eImplicitNodeType::BeamLattice)
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "setAccurateRange can only be called on BeamLattice nodes");
+        m_accurateRange = std::max(0.0, accurateRange);  // Clamp to >= 0.0 per schema
+    }
+
+    double CModelImplicitNode::getAccurateRange() const
+    {
+        if (m_type != Lib3MF::eImplicitNodeType::BeamLattice)
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "getAccurateRange can only be called on BeamLattice nodes");
+        return m_accurateRange;
+    }
+
+    void CModelImplicitNode::setScalarOutputName(const std::string& name)
+    {
+        if (m_type != Lib3MF::eImplicitNodeType::FunctionGradient &&
+            m_type != Lib3MF::eImplicitNodeType::NormalizeDistance)
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "setScalarOutputName can only be called on FunctionGradient or NormalizeDistance nodes");
+        m_scalarOutputName = name;
+    }
+
+    std::string CModelImplicitNode::getScalarOutputName() const
+    {
+        if (m_type != Lib3MF::eImplicitNodeType::FunctionGradient &&
+            m_type != Lib3MF::eImplicitNodeType::NormalizeDistance)
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "getScalarOutputName can only be called on FunctionGradient or NormalizeDistance nodes");
+        return m_scalarOutputName;
+    }
+
+    void CModelImplicitNode::setVectorInputName(const std::string& name)
+    {
+        if (m_type != Lib3MF::eImplicitNodeType::FunctionGradient &&
+            m_type != Lib3MF::eImplicitNodeType::NormalizeDistance)
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "setVectorInputName can only be called on FunctionGradient or NormalizeDistance nodes");
+        m_vectorInputName = name;
+    }
+
+    std::string CModelImplicitNode::getVectorInputName() const
+    {
+        if (m_type != Lib3MF::eImplicitNodeType::FunctionGradient &&
+            m_type != Lib3MF::eImplicitNodeType::NormalizeDistance)
+            throw CNMRException(NMR_ERROR_INVALIDPARAM, 
+                "getVectorInputName can only be called on FunctionGradient or NormalizeDistance nodes");
+        return m_vectorInputName;
     }
 
     bool CModelImplicitNode::arePortsValid() const

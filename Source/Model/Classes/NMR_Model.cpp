@@ -403,8 +403,6 @@ namespace NMR {
 	// Retrieve a unique Resource ID
 	ModelResourceID CModel::generateResourceID()
 	{
-		ModelResourceID highestID = 0;
-
 		if(m_ResourceMap.empty())
 		{
 			return 1;

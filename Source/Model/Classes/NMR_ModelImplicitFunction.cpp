@@ -360,7 +360,6 @@ namespace NMR
                     if (sourceNode)
                     {
                         auto const& sourceNodeIdentifier = sourceNode->getIdentifier();
-                        auto const& sourcePortIdentifier = sourcePort->getIdentifier();
                         graph::Identifier const sourceIndex = identifierToIndex[sourceNodeIdentifier];
                         graph::Identifier const targetIndex = identifierToIndex[node->getIdentifier()];
                         if (sourceIndex >= graph.getSize())

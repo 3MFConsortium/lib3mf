@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2024" basename="lib3mf" version="2.4.1">
+<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2024" basename="lib3mf" version="2.5.0">
 
 
 	<license>
@@ -33,12 +33,15 @@
 		<binding language="C" indentation="tabs" />
 		<binding language="CDynamic" indentation="tabs" />
 		<binding language="Cpp" indentation="tabs" />
-		<binding language="CppDynamic" indentation="tabs" />
+		<binding language="CppDynamic" indentation="tabs" documentation="sphinx" />
 		<binding language="Pascal" indentation="tabs" />
 		<binding language="Python" indentation="tabs" />
 		<binding language="Node" indentation="tabs" />
 		<binding language="Go" indentation="tabs" />
 		<binding language="CSharp" indentation="tabs" />
+		<binding language="Java" indentation="tabs" version="8"/>
+		<binding language="Java" indentation="tabs" version="9"/>
+		<binding language="WASM" indentation="tabs" />
 	</bindings>
 	<implementations>
 		<implementation language="Cpp" indentation="tabs" />
@@ -149,6 +152,7 @@
 		<option name="Model" value="1" />
 		<option name="Support" value="2" />
 		<option name="SolidSupport" value="3" />
+		<option name="Surface" value="4" />
 	</enum>
 
 	<enum name="TextureType">
@@ -1355,13 +1359,13 @@
 			<param name="Count" type="uint32" pass="return"
 				description="the number of material mappings." />
 		</method>
-		<method name="GetMaterialMapping" description="Returns MaterialMappting with given index">
+		<method name="GetMaterialMapping" description="Returns MaterialMapping with given index">
 			<param name="Index" type="uint32" pass="in"
 				description="Index of the MaterialMapping in question." />
 			<param name="TheMaterialMapping" type="class" class="MaterialMapping" pass="return"
 				description="MaterialMapping used in this element" />
 		</method>
-		<method name="AddMaterialMapping" description="Adds a the MaterialMapping">
+		<method name="AddMaterialMapping" description="Adds a MaterialMapping">
 			<param name="Transform" type="struct" class="Transform" pass="in"
 				description="new transformation matrix" />
 			<param name="TheMaterialMapping" type="class" class="MaterialMapping" pass="return"
@@ -1423,7 +1427,7 @@
 		</method>
 		<method name="GetPropertyCount" description="Returns the number of VolumeDataProperty">
 			<param name="Count" type="uint32" pass="return"
-				description="the number of VolumeDataProperty-elements within this VolumdeData" />
+				description="the number of VolumeDataProperty-elements within this VolumeData" />
 		</method>
 		<method name="GetProperty" description="Returns the VolumeDataProperty at a given Index">
 			<param name="Index" type="uint32" pass="in"
@@ -1854,10 +1858,10 @@
 		<method name="WriteToFile" description="Writes out the attachment as file.">
 			<param name="FileName" type="string" pass="in" description="file to write into." />
 		</method>
-		<method name="ReadFromFile" description="Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.">
+		<method name="ReadFromFile" description="Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.">
 			<param name="FileName" type="string" pass="in" description="file to read from." />
 		</method>
-		<method name="ReadFromCallback" description="Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.">
+		<method name="ReadFromCallback" description="Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer methods.">
 			<param name="TheReadCallback" type="functiontype" class="ReadCallback" pass="in"
 				description="Callback to call for reading a data chunk" />
 			<param name="StreamSize" type="uint64" pass="in"
@@ -1874,7 +1878,7 @@
 			<param name="Buffer" type="basicarray" class="uint8" pass="out"
 				description="Buffer to write into" />
 		</method>
-		<method name="ReadFromBuffer" description="Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).">
+		<method name="ReadFromBuffer" description="Reads an attachment from a memory buffer. This buffer is immediately read (in contrast to the ReadFromCallback and ReadFromFile-methods).">
 			<param name="Buffer" type="basicarray" class="uint8" pass="in"
 				description="Buffer to read from" />
 		</method>
@@ -1962,11 +1966,11 @@
 			value="14" />
 		<option name="Transpose" description="Transposes a matrix" value="15" />
 		<option name="Inverse" description="Computes the inverse of a matrix" value="16" />
-		<option name="Sinus" description="Calculates the sinus" value="17" />
-		<option name="Cosinus" description="Calculates the cosinus" value="18" />
+		<option name="Sinus" description="Calculates the sine" value="17" />
+		<option name="Cosinus" description="Calculates the cosine" value="18" />
 		<option name="Tan" description="Calculates the tangent" value="19" />
-		<option name="ArcSin" description="Calculates the arcsinus" value="20" />
-		<option name="ArcCos" description="Calculates the arccosinus" value="21" />
+		<option name="ArcSin" description="Calculates the arcsine" value="20" />
+		<option name="ArcCos" description="Calculates the arccosine" value="21" />
 		<option name="ArcTan" description="Calculates the arctangent" value="22" />
 		<option name="ArcTan2" description="Calculates the arctangent" value="23" />
 		<option name="Min" description="Calculates the minimum of two values" value="24" />
@@ -1978,9 +1982,9 @@
 		<option name="Pow" description="Calculates the power A^B" value="28" />
 		<option name="Sqrt" description="Calculates the square root" value="29" />
 		<option name="Exp" description="Exponential function" value="30" />
-		<option name="Log" description="Natural logarithmus" value="31" />
-		<option name="Log2" description="Logarithmus to the base 2" value="32" />
-		<option name="Log10" description="Logarithmus to the base 10" value="33" />
+		<option name="Log" description="Natural logarithm" value="31" />
+		<option name="Log2" description="Logarithm to the base 2" value="32" />
+		<option name="Log10" description="Logarithm to the base 10" value="33" />
 		<option name="Select" description="If A is less than B returns C, else D" value="34" />
 		<option name="Clamp" description="Clamps the input value to min and max" value="35" />
 		<option name="Sinh" description="Calculates the hyperbolic sine" value="36" />
@@ -1997,13 +2001,19 @@
 		<option name="Length" description="Calculates the length of a vector" value="46" />
 		<option name="ConstResourceID" description="Selects a resource (function, mesh etc.)"
 			value="47" />
-		<option name="VectorFromScalar" description="Creates a vector from one scalar values"
+		<option name="VectorFromScalar" description="Creates a vector from one scalar value"
 			value="48" />
 		<option name="UnsignedMesh" description="Calculates the unsigned distance to a mesh"
 			value="49" />
 		<option name="Mod"
 			description="Calculates the modulo of two values (same behaviour as glsl mod)"
 			value="50" />
+		<option name="BeamLattice" description="Calculates the signed distance to a beam lattice"
+			value="51" />
+		<option name="FunctionGradient" description="Calculates the gradient of a function"
+			value="52" />
+		<option name="NormalizeDistance" description="Normalizes a distance field"
+			value="53" />
 	</enum>
 
 	<enum name="ImplicitPortType" description="The type of the port">
@@ -2418,7 +2428,7 @@
 		</method>
 		<method name="GetInputM21" description="Retrieves the input for the element 2 1">
 			<param name="M21" type="class" class="ImplicitPort" pass="return"
-				decription="the input fr the m21 element" />
+				decription="the input for the m21 element" />
 		</method>
 		<method name="GetInputM22" description="Retrieves the input for the element 2 2">
 			<param name="M22" type="class" class="ImplicitPort" pass="return"
@@ -2575,6 +2585,130 @@
 		<method name="GetOutputDistance" description="Retrieves the output">
 			<param name="Distance" type="class" class="ImplicitPort" pass="return"
 				description="the output port for the unsigned distance to the mesh" />
+		</method>
+	</class>
+
+	<class name="BeamLatticeNode" parent="ImplicitNode" description="Signed distance to beam lattice">
+		<method name="GetInputBeamLattice"
+			description="Retrieves the input for the model resource id of the beam lattice">
+			<param name="BeamLattice" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the model resource id of the beam lattice (mesh with beamlattice extension)" />
+		</method>
+
+		<method name="GetInputPos" description="Retrieves the input for the position">
+			<param name="Pos" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the position" />
+		</method>
+
+		<method name="GetOutputDistance" description="Retrieves the output">
+			<param name="Distance" type="class" class="ImplicitPort" pass="return"
+				description="the output port for the signed distance to the beam lattice" />
+		</method>
+
+		<method name="SetAccurateRange" description="Sets the accurate range for distance computation">
+			<param name="AccurateRange" type="double" pass="in"
+				description="the accurate range in model units" />
+		</method>
+
+		<method name="GetAccurateRange" description="Retrieves the accurate range for distance computation">
+			<param name="AccurateRange" type="double" pass="return"
+				description="the accurate range in model units" />
+		</method>
+	</class>
+
+	<class name="FunctionGradientNode" parent="ImplicitNode" description="Gradient of a function">
+		<method name="GetInputFunctionID" description="Retrieves the input for the function id">
+			<param name="Function" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the function" />
+		</method>
+
+		<method name="GetInputPos" description="Retrieves the input for the position">
+			<param name="Pos" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the position" />
+		</method>
+
+		<method name="GetInputStep" description="Retrieves the input for the finite difference step">
+			<param name="Step" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the finite difference step" />
+		</method>
+
+		<!-- Attributes required by schema: scalaroutput (selects referenced scalar output) and vectorinput (selects referenced vector input) -->
+		<method name="SetScalarOutputName" description="Sets the name of the referenced scalar output">
+			<param name="ScalarOutputName" type="string" pass="in"
+				description="the name of the scalar output of the referenced function" />
+		</method>
+
+		<method name="GetScalarOutputName" description="Retrieves the name of the referenced scalar output">
+			<param name="ScalarOutputName" type="string" pass="return"
+				description="the name of the scalar output of the referenced function" />
+		</method>
+
+		<method name="SetVectorInputName" description="Sets the name of the referenced vector input">
+			<param name="VectorInputName" type="string" pass="in"
+				description="the name of the vector input (float3) of the referenced function" />
+		</method>
+
+		<method name="GetVectorInputName" description="Retrieves the name of the referenced vector input">
+			<param name="VectorInputName" type="string" pass="return"
+				description="the name of the vector input (float3) of the referenced function" />
+		</method>
+
+		<method name="GetOutputVector" description="Retrieves the normalized gradient (vector) output">
+			<param name="Vector" type="class" class="ImplicitPort" pass="return"
+				description="the output port for the normalized gradient" />
+		</method>
+
+		<method name="GetOutputGradient" description="Retrieves the raw gradient output">
+			<param name="Gradient" type="class" class="ImplicitPort" pass="return"
+				description="the output port for the raw gradient" />
+		</method>
+
+		<method name="GetOutputMagnitude" description="Retrieves the gradient magnitude output">
+			<param name="Magnitude" type="class" class="ImplicitPort" pass="return"
+				description="the output port for the gradient magnitude" />
+		</method>
+	</class>
+
+	<class name="NormalizeDistanceNode" parent="ImplicitNode" description="Normalized signed distance from referenced function">
+		<method name="GetInputFunctionID" description="Retrieves the input for the function id">
+			<param name="Function" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the function" />
+		</method>
+
+		<method name="GetInputPos" description="Retrieves the input for the position">
+			<param name="Pos" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the position (vector)" />
+		</method>
+
+		<method name="GetInputStep" description="Retrieves the input for the finite difference step">
+			<param name="Step" type="class" class="ImplicitPort" pass="return"
+				description="the input port for the finite difference step" />
+		</method>
+
+		<!-- Attributes required by schema: scalaroutput (selects referenced scalar output) and vectorinput (selects referenced vector input) -->
+		<method name="SetScalarOutputName" description="Sets the name of the referenced scalar output">
+			<param name="ScalarOutputName" type="string" pass="in"
+				description="the name of the scalar output of the referenced function" />
+		</method>
+
+		<method name="GetScalarOutputName" description="Retrieves the name of the referenced scalar output">
+			<param name="ScalarOutputName" type="string" pass="return"
+				description="the name of the scalar output of the referenced function" />
+		</method>
+
+		<method name="SetVectorInputName" description="Sets the name of the referenced vector input">
+			<param name="VectorInputName" type="string" pass="in"
+				description="the name of the vector input (float3) of the referenced function" />
+		</method>
+
+		<method name="GetVectorInputName" description="Retrieves the name of the referenced vector input">
+			<param name="VectorInputName" type="string" pass="return"
+				description="the name of the vector input (float3) of the referenced function" />
+		</method>
+
+		<method name="GetOutputResult" description="Retrieves the normalized result output">
+			<param name="Result" type="class" class="ImplicitPort" pass="return"
+				description="the output port for the normalized distance" />
 		</method>
 	</class>
 
@@ -3270,6 +3404,39 @@
 			<param name="Tag" pass="in" type="string"
 				description="the tag of the node" />
 			<param name="Node" pass="return" type="class" class="UnsignedMeshNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddBeamLatticeNode" description="Add a BeamLatticeNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="BeamLatticeNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddFunctionGradientNode" description="Add a FunctionGradientNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="FunctionGradientNode"
+				description="the added node" />
+		</method>
+
+		<method name="AddNormalizeDistanceNode" description="Add a NormalizeDistanceNode">
+			<param name="Identifier" pass="in" type="string"
+				description="the identifier of the node" />
+			<param name="DisplayName" pass="in" type="string"
+				description="the display name of the node" />
+			<param name="Tag" pass="in" type="string"
+				description="the tag of the node" />
+			<param name="Node" pass="return" type="class" class="NormalizeDistanceNode"
 				description="the added node" />
 		</method>
 

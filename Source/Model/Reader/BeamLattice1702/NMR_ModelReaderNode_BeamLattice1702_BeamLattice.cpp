@@ -93,7 +93,7 @@ namespace NMR {
 	void CModelReaderNode_BeamLattice1702_BeamLattice::validateBallOptions(_In_ PModelWarnings pWarnings)
 	{
 		if (m_pMesh->getBeamLatticeBallMode() != eModelBeamLatticeBallMode::MODELBEAMLATTICEBALLMODE_NONE) {
-			if (m_pMesh->getDefaultBallRadius() <= 0 && m_pMesh->getDefaultBallRadius() >= XML_3MF_MAXIMUMCOORDINATEVALUE) {
+			if (m_pMesh->getDefaultBallRadius() <= 0 || m_pMesh->getDefaultBallRadius() >= XML_3MF_MAXIMUMCOORDINATEVALUE) {
 				pWarnings->addException(CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE), mrwInvalidOptionalValue);
 			}
 		}
@@ -161,8 +161,27 @@ namespace NMR {
 
 	void CModelReaderNode_BeamLattice1702_BeamLattice::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
 	{
-		
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pNameSpace);
 
+		// Accept namespaced ball attributes (balls extension namespace)
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICEBALLSSPEC) == 0) {
+			if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_BALLMODE) == 0) {
+				m_pMesh->setBeamLatticeBallMode(stringToBallMode(pAttributeValue));
+			}
+			else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_BALLRADIUS) == 0) {
+				nfDouble dValue = fnStringToDouble(pAttributeValue);
+				if (std::isnan(dValue) || (dValue <= 0) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
+					throw CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE);
+				m_dDefaultBallRadius = dValue;
+				m_pMesh->setDefaultBallRadius(dValue);
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+		}
+		else
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 	
 	void CModelReaderNode_BeamLattice1702_BeamLattice::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -171,7 +190,7 @@ namespace NMR {
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
-		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) {
+		if ((strcmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) || (strcmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICEBALLSSPEC) == 0)) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMS) == 0)
 			{
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_Beams>(m_pModel, m_pMesh, m_dDefaultRadius, m_eDefaultCapMode, m_pWarnings);
