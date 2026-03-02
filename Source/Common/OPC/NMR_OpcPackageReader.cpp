@@ -271,6 +271,7 @@ namespace NMR {
 			if (pContentType->m_contentType == PACKAGE_3D_MODEL_CONTENT_TYPE) {
 				modelExtension = pContentType->m_extension;
 			}
+			m_ContentTypesByExtension[pContentType->m_extension] = pContentType->m_contentType;
 		}
 		if (m_relationShipExtension.empty())
 			throw CNMRException(NMR_ERROR_OPC_MISSING_EXTENSION_FOR_RELATIONSHIP);
@@ -281,10 +282,40 @@ namespace NMR {
 			if (pOverrideContentType->m_contentType == PACKAGE_3D_MODEL_CONTENT_TYPE) {
 				modelPart = pOverrideContentType->m_partName;
 			}
+			m_ContentTypes[pOverrideContentType->m_partName] = pOverrideContentType->m_contentType;
 		}
 
 		if (modelExtension.empty() && modelPart.empty())
 			throw CNMRException(NMR_ERROR_OPC_MISSING_EXTENSION_FOR_MODEL);
+	}
+
+	std::string COpcPackageReader::getContentType(_In_ std::string sPath)
+	{
+		// Normalize path: remove leading slash
+		std::string sNormalizedPath = fnRemoveLeadingPathDelimiter(sPath);
+
+		// First check override entries by exact part name (with leading slash as stored in [Content_Types].xml)
+		auto iIterator = m_ContentTypes.find("/" + sNormalizedPath);
+		if (iIterator != m_ContentTypes.end()) {
+			return iIterator->second;
+		}
+		// Also check without leading slash
+		iIterator = m_ContentTypes.find(sNormalizedPath);
+		if (iIterator != m_ContentTypes.end()) {
+			return iIterator->second;
+		}
+
+		// Fall back to extension-based lookup
+		size_t nDotPos = sNormalizedPath.rfind('.');
+		if (nDotPos != std::string::npos) {
+			std::string sExtension = sNormalizedPath.substr(nDotPos + 1);
+			auto iExtIterator = m_ContentTypesByExtension.find(sExtension);
+			if (iExtIterator != m_ContentTypesByExtension.end()) {
+				return iExtIterator->second;
+			}
+		}
+
+		return "";
 	}
 
 	void COpcPackageReader::readRootRelationships()

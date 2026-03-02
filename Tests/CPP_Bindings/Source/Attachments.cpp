@@ -267,6 +267,47 @@ namespace Lib3MF
 		ASSERT_TRUE(bAreEqual);
 	}
 
+	TEST_F(AttachmentsT, GetContentTypeFromNewAttachment)
+	{
+		// A newly created attachment should have an empty content type
+		auto attachment = model->AddAttachment(m_sRelationShipPath + ".xml", m_sAttachmetType);
+		EXPECT_EQ(attachment->GetContentType(), "");
+	}
+
+	TEST_F(AttachmentsT, GetContentTypeOfPackageThumbnail)
+	{
+		// Reading a 3MF file should populate the content type from [Content_Types].xml
+		auto reader = model->QueryReader("3mf");
+		reader->ReadFromFile(std::string(TESTFILESPATH) + "/Attachments/withPackageThumbnail.3mf");
+
+		ASSERT_TRUE(model->HasPackageThumbnailAttachment());
+		auto attachment = model->GetPackageThumbnailAttachment();
+
+		// The thumbnail is a PNG file, so its content type should be image/png
+		EXPECT_EQ(attachment->GetContentType(), "image/png");
+	}
+
+	TEST_F(AttachmentsT, WriteReadAttachmentContentType)
+	{
+		// Write a 3MF with a PNG attachment and read it back, verifying content type is preserved
+		{
+			auto attachment = model->CreatePackageThumbnailAttachment();
+			attachment->ReadFromFile(m_sThumbnailPath);
+
+			auto writer = model->QueryWriter("3mf");
+			ASSERT_TRUE(CreateDir(m_sFolderName.c_str())) << L"Could not create folder.";
+			writer->WriteToFile(m_sFolderName + "/" + m_sFilenameReadWrite);
+		}
+
+		auto readModel = wrapper->CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->ReadFromFile(m_sFolderName + "/" + m_sFilenameReadWrite);
+
+		ASSERT_TRUE(readModel->HasPackageThumbnailAttachment());
+		auto readAttachment = readModel->GetPackageThumbnailAttachment();
+		EXPECT_EQ(readAttachment->GetContentType(), "image/png");
+	}
+
 }
 
 

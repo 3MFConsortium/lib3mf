@@ -2910,6 +2910,17 @@ typedef Lib3MFResult (*PLib3MFAttachment_WriteToBufferPtr) (Lib3MF_Attachment pA
 */
 typedef Lib3MFResult (*PLib3MFAttachment_ReadFromBufferPtr) (Lib3MF_Attachment pAttachment, Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);
 
+/**
+* Retrieves an attachment's content type
+*
+* @param[in] pAttachment - Attachment instance.
+* @param[in] nContentTypeBufferSize - size of the buffer (including trailing 0)
+* @param[out] pContentTypeNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pContentTypeBuffer -  buffer of returns the attachment's content type string, may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFAttachment_GetContentTypePtr) (Lib3MF_Attachment pAttachment, const Lib3MF_uint32 nContentTypeBufferSize, Lib3MF_uint32* pContentTypeNeededChars, char * pContentTypeBuffer);
+
 /*************************************************************************************************************************
  Class definition for Texture2D
 **************************************************************************************************************************/
@@ -7165,6 +7176,7 @@ typedef struct {
 	PLib3MFAttachment_GetStreamSizePtr m_Attachment_GetStreamSize;
 	PLib3MFAttachment_WriteToBufferPtr m_Attachment_WriteToBuffer;
 	PLib3MFAttachment_ReadFromBufferPtr m_Attachment_ReadFromBuffer;
+	PLib3MFAttachment_GetContentTypePtr m_Attachment_GetContentType;
 	PLib3MFTexture2D_GetAttachmentPtr m_Texture2D_GetAttachment;
 	PLib3MFTexture2D_SetAttachmentPtr m_Texture2D_SetAttachment;
 	PLib3MFTexture2D_GetContentTypePtr m_Texture2D_GetContentType;

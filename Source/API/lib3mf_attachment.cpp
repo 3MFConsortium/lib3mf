@@ -166,3 +166,8 @@ NMR::PModelAttachment CAttachment::getModelAttachment()
 {
 	return m_pModelAttachment;
 }
+
+std::string CAttachment::GetContentType()
+{
+	return m_pModelAttachment->getContentType();
+}

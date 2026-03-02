@@ -67,6 +67,11 @@ namespace NMR {
 		return m_sRelationShipType;
 	}
 
+	std::string CModelAttachment::getContentType()
+	{
+		return m_sContentType;
+	}
+
 	PImportStream CModelAttachment::getStream()
 	{
 		return m_pStream;
@@ -80,6 +85,11 @@ namespace NMR {
 	void CModelAttachment::setRelationShipType(_In_ const std::string sRelationShipType)
 	{
 		m_sRelationShipType = sRelationShipType;
+	}
+
+	void CModelAttachment::setContentType(_In_ const std::string sContentType)
+	{
+		m_sContentType = sContentType;
 	}
 
 	PModelAttachment CModelAttachment::cloneIntoNewModel(_In_ CModel * pModel, _In_ nfBool bCloneMemory)

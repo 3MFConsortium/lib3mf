@@ -65,6 +65,7 @@ namespace NMR {
 		virtual COpcPackageRelationship * findRootRelation(std::string sRelationType, nfBool bMustBeUnique) override;
 		virtual POpcPackagePart createPart(std::string sPath) override;
 		virtual nfUint64 getPartSize(std::string sPath) override;
+		virtual std::string getContentType(std::string sPath) override;
 
 		void close() override;
 	};

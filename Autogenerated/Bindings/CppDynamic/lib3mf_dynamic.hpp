@@ -1999,6 +1999,7 @@ public:
 	inline Lib3MF_uint64 GetStreamSize();
 	inline void WriteToBuffer(std::vector<Lib3MF_uint8> & BufferBuffer);
 	inline void ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer);
+	inline std::string GetContentType();
 };
 	
 /*************************************************************************************************************************
@@ -4265,6 +4266,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Attachment_GetStreamSize = nullptr;
 		pWrapperTable->m_Attachment_WriteToBuffer = nullptr;
 		pWrapperTable->m_Attachment_ReadFromBuffer = nullptr;
+		pWrapperTable->m_Attachment_GetContentType = nullptr;
 		pWrapperTable->m_Texture2D_GetAttachment = nullptr;
 		pWrapperTable->m_Texture2D_SetAttachment = nullptr;
 		pWrapperTable->m_Texture2D_GetContentType = nullptr;
@@ -7191,6 +7193,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Attachment_ReadFromBuffer == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Attachment_GetContentType = (PLib3MFAttachment_GetContentTypePtr) GetProcAddress(hLibrary, "lib3mf_attachment_getcontenttype");
+		#else // _WIN32
+		pWrapperTable->m_Attachment_GetContentType = (PLib3MFAttachment_GetContentTypePtr) dlsym(hLibrary, "lib3mf_attachment_getcontenttype");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Attachment_GetContentType == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -11626,6 +11637,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_attachment_readfrombuffer", (void**)&(pWrapperTable->m_Attachment_ReadFromBuffer));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Attachment_ReadFromBuffer == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_attachment_getcontenttype", (void**)&(pWrapperTable->m_Attachment_GetContentType));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Attachment_GetContentType == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_texture2d_getattachment", (void**)&(pWrapperTable->m_Texture2D_GetAttachment));
@@ -16670,8 +16685,20 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	 * Method definitions for class CTexture2D
-	 */
+	* CAttachment::GetContentType - Retrieves an attachment's content type
+	* @return returns the attachment's content type string
+	*/
+	std::string CAttachment::GetContentType()
+	{
+		Lib3MF_uint32 bytesNeededContentType = 0;
+		Lib3MF_uint32 bytesWrittenContentType = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Attachment_GetContentType(m_pHandle, 0, &bytesNeededContentType, nullptr));
+		std::vector<char> bufferContentType(bytesNeededContentType);
+		CheckError(m_pWrapper->m_WrapperTable.m_Attachment_GetContentType(m_pHandle, bytesNeededContentType, &bytesWrittenContentType, &bufferContentType[0]));
+		
+		return std::string(&bufferContentType[0]);
+	}
+	
 	
 	/**
 	* CTexture2D::GetAttachment - Retrieves the attachment located at the path of the texture.

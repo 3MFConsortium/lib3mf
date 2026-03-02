@@ -112,6 +112,10 @@ namespace NMR {
 		return m_pPackageReader->getPartSize(sPath);
 	}
 
+	std::string CKeyStoreOpcPackageReader::getContentType(std::string sPath) {
+		return m_pPackageReader->getContentType(sPath);
+	}
+
 	void CKeyStoreOpcPackageReader::close() {
 		checkAuthenticatedTags();
 	}
