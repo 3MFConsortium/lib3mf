@@ -152,6 +152,38 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}
           path: build/${{ env.ARTIFACT_NAME }}
 
+  build-wasm:
+    runs-on: ubuntu-24.04
+    needs: [set-lib3mf-version]
+    env:
+      LIB3MF_VERSION: ${{ needs.set-lib3mf-version.outputs.lib3mf-version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: latest
+      - name: Build lib3mf_wasm
+        run: |
+          emcmake cmake -S . -B build/wasm -DLIB3MF_BUILD_WASM=ON -DCMAKE_BUILD_TYPE=Release
+          cmake --build build/wasm --target lib3mf_wasm -j"$(nproc)"
+      - name: Package WASM artifact
+        run: |
+          mkdir -p build/wasm-artifact
+          cp build/wasm/lib3mf.js build/wasm-artifact/
+          cp build/wasm/lib3mf.wasm build/wasm-artifact/
+          (
+            cd build
+            zip -r "lib3mf-wasm-${LIB3MF_VERSION}.zip" wasm-artifact
+          )
+      - name: Upload WASM Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lib3mf-wasm-${{ env.LIB3MF_VERSION }}.zip
+          path: build/lib3mf-wasm-${{ env.LIB3MF_VERSION }}.zip
+
   build-macos-debug:
     runs-on: macos-15
     needs: [set-lib3mf-version]
@@ -375,6 +407,12 @@ jobs:
           cd SDK/CPackExamples/CppDynamic/build
           cmake --build .
           ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Build CDynamic - CPack (Linux)
+        run: |
+          sh SDK/CPackExamples/CDynamic/GenerateMake.sh
+          cd SDK/CPackExamples/CDynamic/build
+          cmake --build .
+          ./Example_CDynamic
       - name: Build Cpp - CPack (Linux)
         run: |
           sh SDK/CPackExamples/Cpp/GenerateMake.sh
@@ -401,6 +439,12 @@ jobs:
           cd SDK/CPackExamples/CppDynamic/build
           cmake --build .
           ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Build CDynamic - CPack (Debian)
+        run: |
+          sh SDK/CPackExamples/CDynamic/GenerateMake.sh
+          cd SDK/CPackExamples/CDynamic/build
+          cmake --build .
+          ./Example_CDynamic
       - name: Build Cpp - CPack (Debian)
         run: |
           sh SDK/CPackExamples/Cpp/GenerateMake.sh
@@ -466,6 +510,12 @@ jobs:
           cd SDK/CPackExamples/CppDynamic/build
           cmake --build . --config Release
           ./Release/Example_ExtractInfo.exe ../../../Examples/Files/Helix.3mf
+      - name: Build CDynamic - CPack (Windows)
+        run: |
+          ./SDK/CPackExamples/CDynamic/GenerateVS2022.bat
+          cd SDK/CPackExamples/CDynamic/build
+          cmake --build . --config Release
+          ./Release/Example_CDynamic.exe
       - name: Build Cpp - CPack (Windows)
         run: |
           ./SDK/CPackExamples/Cpp/GenerateVS2022.bat
@@ -534,6 +584,12 @@ jobs:
           cd SDK/CPackExamples/CppDynamic/build
           cmake --build .
           ./Example_ExtractInfo ../../../Examples/Files/Helix.3mf
+      - name: Build CDynamic - CPack (Darwin)
+        run: |
+          sh SDK/CPackExamples/CDynamic/GenerateMake.sh
+          cd SDK/CPackExamples/CDynamic/build
+          cmake --build .
+          ./Example_CDynamic
       - name: Build Cpp - CPack (Darwin)
         run: |
           sh SDK/CPackExamples/Cpp/GenerateMake.sh

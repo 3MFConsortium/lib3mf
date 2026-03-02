@@ -37,6 +37,10 @@ ExtractInfo.cpp : 3MF Read Example
 
 #include "lib3mf_dynamic.hpp"
 
+#ifndef LIB3MF_LIBRARY_LOCATION
+#error "LIB3MF_LIBRARY_LOCATION is expected from lib3mf CppDynamic package config"
+#endif
+
 using namespace Lib3MF;
 
 
@@ -185,9 +189,8 @@ void ShowComponentsObjectInformation(PComponentsObject componentsObject)
 void ExtractInfoExample(const std::string& sFileName, bool strictMode) {
 	std::cout << "------------------------------------------------------------------" << std::endl;
 	std::cout << "3MF Read example" << std::endl;
-	
-	std::string libpath = ("."); // TODO: put the location of the Lib3MF-library file here.
-	auto wrapper = Lib3MF::CWrapper::loadLibrary(LIB3MF_LIBRARY_LOCATION); // TODO: add correct suffix of the library
+
+	auto wrapper = Lib3MF::CWrapper::loadLibrary(LIB3MF_LIBRARY_LOCATION);
 
 	printVersion(wrapper);
 	std::cout << "------------------------------------------------------------------" << std::endl;

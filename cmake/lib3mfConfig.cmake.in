@@ -1,3 +1,135 @@
 @PACKAGE_INIT@
 
+include(CMakeFindDependencyMacro)
+
+if(NOT @USE_INCLUDED_LIBZIP@)
+  find_dependency(libzip CONFIG)
+endif()
+
+if(NOT @USE_INCLUDED_ZLIB@)
+  find_dependency(ZLIB)
+endif()
+
+if(NOT @USE_INCLUDED_FASTFLOAT@)
+  find_dependency(FastFloat CONFIG)
+endif()
+
 include("${CMAKE_CURRENT_LIST_DIR}/lib3mfTargets.cmake")
+
+if(NOT TARGET lib3mf::lib3mf)
+  set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
+  set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE
+      "Expected imported target lib3mf::lib3mf was not found in lib3mfTargets.cmake.")
+  return()
+endif()
+
+get_filename_component(_lib3mf_package_dir "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
+get_filename_component(LIB3MF_ROOT_DIR "${_lib3mf_package_dir}/../../.." ABSOLUTE)
+set(LIB3MF_CDYNAMIC_ADDITIONAL_SOURCE "${LIB3MF_ROOT_DIR}/include/Bindings/CDynamic/lib3mf_dynamic.cc")
+
+set(_lib3mf_library_location_definition "LIB3MF_LIBRARY_LOCATION=\"$<TARGET_FILE:lib3mf::lib3mf>\"")
+
+if(NOT TARGET lib3mf::Cpp)
+  add_library(lib3mf::Cpp INTERFACE IMPORTED)
+  set_target_properties(lib3mf::Cpp PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${LIB3MF_ROOT_DIR}/include/Bindings/Cpp"
+  )
+  target_link_libraries(lib3mf::Cpp INTERFACE lib3mf::lib3mf)
+endif()
+
+if(NOT TARGET lib3mf::C)
+  add_library(lib3mf::C INTERFACE IMPORTED)
+  set_target_properties(lib3mf::C PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${LIB3MF_ROOT_DIR}/include/Bindings/C"
+  )
+  target_link_libraries(lib3mf::C INTERFACE lib3mf::lib3mf)
+endif()
+
+if(NOT TARGET lib3mf::CppDynamic)
+  add_library(lib3mf::CppDynamic INTERFACE IMPORTED)
+  set_target_properties(lib3mf::CppDynamic PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${LIB3MF_ROOT_DIR}/include/Bindings/CppDynamic"
+    INTERFACE_COMPILE_DEFINITIONS "${_lib3mf_library_location_definition}"
+  )
+endif()
+
+if(NOT TARGET lib3mf::CDynamic)
+  add_library(lib3mf::CDynamic INTERFACE IMPORTED)
+  set_target_properties(lib3mf::CDynamic PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${LIB3MF_ROOT_DIR}/include/Bindings/CDynamic"
+    INTERFACE_COMPILE_DEFINITIONS "${_lib3mf_library_location_definition}"
+    INTERFACE_SOURCES "${LIB3MF_CDYNAMIC_ADDITIONAL_SOURCE}"
+  )
+endif()
+
+set(lib3mf_known_components C CDynamic Cpp CppDynamic)
+foreach(_lib3mf_component IN LISTS lib3mf_known_components)
+  set(lib3mf_${_lib3mf_component}_FOUND TRUE)
+endforeach()
+
+set(_lib3mf_selected_component Cpp)
+foreach(_lib3mf_component IN LISTS lib3mf_FIND_COMPONENTS)
+  if(_lib3mf_component IN_LIST lib3mf_known_components)
+    set(_lib3mf_selected_component "${_lib3mf_component}")
+    break()
+  endif()
+endforeach()
+
+set(lib3mf_BINDING_COMPONENT "${_lib3mf_selected_component}")
+set(lib3mf_LIBRARIES "lib3mf::${_lib3mf_selected_component}")
+set(lib3mf_INCLUDE_DIRS "${LIB3MF_ROOT_DIR}/include/Bindings/${_lib3mf_selected_component}")
+
+foreach(_lib3mf_component IN LISTS lib3mf_FIND_COMPONENTS)
+  if(NOT _lib3mf_component IN_LIST lib3mf_known_components)
+    set(lib3mf_${_lib3mf_component}_FOUND FALSE)
+  endif()
+endforeach()
+
+if(TARGET lib3mf::lib3mf)
+  set_property(TARGET lib3mf::lib3mf APPEND PROPERTY
+    INTERFACE_INCLUDE_DIRECTORIES "${LIB3MF_ROOT_DIR}/include/Bindings/${_lib3mf_selected_component}"
+  )
+  if(_lib3mf_selected_component STREQUAL "CppDynamic" OR _lib3mf_selected_component STREQUAL "CDynamic")
+    set_property(TARGET lib3mf::lib3mf APPEND PROPERTY
+      INTERFACE_COMPILE_DEFINITIONS "${_lib3mf_library_location_definition}"
+    )
+  endif()
+  if(_lib3mf_selected_component STREQUAL "CDynamic")
+    set_property(TARGET lib3mf::lib3mf APPEND PROPERTY
+      INTERFACE_SOURCES "${LIB3MF_CDYNAMIC_ADDITIONAL_SOURCE}"
+    )
+  endif()
+endif()
+
+if(NOT COMMAND copy_lib3mf_libraries)
+  function(copy_lib3mf_libraries target)
+    if(NOT TARGET "${target}")
+      message(WARNING "copy_lib3mf_libraries: target '${target}' not found.")
+      return()
+    endif()
+
+    if(NOT TARGET lib3mf::lib3mf)
+      message(WARNING "copy_lib3mf_libraries: lib3mf::lib3mf not found.")
+      return()
+    endif()
+
+    get_target_property(_lib3mf_imported_type lib3mf::lib3mf TYPE)
+    if(NOT _lib3mf_imported_type STREQUAL "SHARED_LIBRARY")
+      return()
+    endif()
+
+    add_custom_command(TARGET "${target}" POST_BUILD
+      COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+      "$<TARGET_FILE:lib3mf::lib3mf>"
+      "$<TARGET_FILE_DIR:${target}>"
+      COMMENT "Copying lib3mf runtime to output directory"
+    )
+  endfunction()
+endif()
+
+check_required_components(lib3mf)
+
+unset(_lib3mf_component)
+unset(_lib3mf_package_dir)
+unset(_lib3mf_selected_component)
+unset(_lib3mf_library_location_definition)
