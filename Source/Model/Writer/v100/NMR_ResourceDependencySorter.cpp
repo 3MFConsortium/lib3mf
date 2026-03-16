@@ -39,6 +39,8 @@ sorting them topologically.
 #include "Model/Classes/NMR_Model.h"
 #include "Model/Classes/NMR_ModelResource.h"
 
+#include <algorithm>
+
 namespace NMR
 {
 
