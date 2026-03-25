@@ -88,7 +88,8 @@ namespace NMR {
 				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_BEAMLATTICEBALLSSPEC) != 0 &&
 				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_SECURECONTENTSPEC) != 0 &&
 				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_VOLUMETRICSPEC) != 0 &&
-				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_IMPLICITSPEC) != 0			
+				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_IMPLICITSPEC) != 0 &&
+				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_BOOLEANSPEC) != 0
 				 )
 			{
 				m_pWarnings->addWarning(NMR_ERROR_REQUIREDEXTENSIONNOTSUPPORTED, mrwInvalidMandatoryValue);

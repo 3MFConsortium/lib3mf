@@ -88,6 +88,7 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_CIPHERVALUESPEC "http://www.w3.org/2001/04/xmlenc#"
 #define XML_3MF_NAMESPACE_VOLUMETRICSPEC "http://schemas.3mf.io/3dmanufacturing/volumetric/2022/01"
 #define XML_3MF_NAMESPACE_IMPLICITSPEC "http://schemas.3mf.io/3dmanufacturing/implicit/2023/12"
+#define XML_3MF_NAMESPACE_BOOLEANSPEC "http://schemas.3mf.io/3dmanufacturing/booleanoperations/2023/07"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
@@ -98,6 +99,7 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACEPREFIX_VOLUMETRIC "v"
 #define XML_3MF_NAMESPACEPREFIX_IMPLICIT "i"
 #define XML_3MF_NAMESPACEPREFIX_TRIANGLESETS "t"
+#define XML_3MF_NAMESPACEPREFIX_BOOLEAN "bo"
 
 #define XML_3MF_ATTRIBUTE_XMLNS                     "xmlns"
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                "xml"
@@ -315,6 +317,8 @@ These are given by the 3MF Standard
 
 
 #define XML_3MF_ELEMENT_BOUNDARY_SHAPE "levelset"
+#define XML_3MF_ELEMENT_BOOLEANSHAPE "booleanshape"
+#define XML_3MF_ELEMENT_BOOLEAN "boolean"
 #define XML_3MF_ATTRIBUTE_LEVELSET_VOLUMEDATA "volumeid"
 #define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_ID "id"
 #define XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_FUNCTION_ID "functionid"
@@ -354,6 +358,15 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_COMPONENT                   "component"
 #define XML_3MF_ATTRIBUTE_COMPONENT_OBJECTID        "objectid"
 #define XML_3MF_ATTRIBUTE_COMPONENT_TRANSFORM       "transform"
+
+#define XML_3MF_ATTRIBUTE_BOOLEAN_OBJECTID          "objectid"
+#define XML_3MF_ATTRIBUTE_BOOLEAN_OPERATION         "operation"
+#define XML_3MF_ATTRIBUTE_BOOLEAN_TRANSFORM         "transform"
+#define XML_3MF_ATTRIBUTE_BOOLEAN_PATH              "path"
+
+#define XML_3MF_VALUE_BOOLEAN_OPERATION_UNION       "union"
+#define XML_3MF_VALUE_BOOLEAN_OPERATION_DIFFERENCE  "difference"
+#define XML_3MF_VALUE_BOOLEAN_OPERATION_INTERSECTION "intersection"
 
 // Color resource group
 #define XML_3MF_ELEMENT_COLORGROUP                  "colorgroup"

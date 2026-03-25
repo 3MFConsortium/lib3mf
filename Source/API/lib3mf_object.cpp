@@ -33,6 +33,7 @@ Abstract: This is a stub class definition of CObject
 
 #include "lib3mf_meshobject.hpp"
 #include "lib3mf_levelset.hpp"
+#include "lib3mf_booleanobject.hpp"
 #include "lib3mf_componentsobject.hpp"
 #include "lib3mf_metadatagroup.hpp"
 #include "lib3mf_slicestack.hpp"
@@ -41,6 +42,7 @@ Abstract: This is a stub class definition of CObject
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Model/Classes/NMR_ModelLevelSetObject.h"
+#include "Model/Classes/NMR_ModelBooleanObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h" 
 
 using namespace Lib3MF::Impl;
@@ -70,6 +72,11 @@ IObject* CObject::fnCreateObjectFromModelResource(NMR::PModelResource pResource,
 	NMR::CModelLevelSetObject * PILevelSet = dynamic_cast<NMR::CModelLevelSetObject *> (pResource.get());
 	if (PILevelSet) {
 		return new CLevelSet(pResource);
+	}
+
+	NMR::CModelBooleanObject * pBooleanObject = dynamic_cast<NMR::CModelBooleanObject *> (pResource.get());
+	if (pBooleanObject) {
+		return new CBooleanObject(pResource);
 	}
 
 	NMR::CModelComponentsObject * pComponentsResource = dynamic_cast<NMR::CModelComponentsObject *> (pResource.get());
@@ -132,6 +139,12 @@ bool CObject::IsComponentsObject ()
 }
 
 bool CObject::IsLevelSetObject()
+{
+	// overwritten by child class
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_SHOULDNOTBECALLED);
+}
+
+bool CObject::IsBooleanObject()
 {
 	// overwritten by child class
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_SHOULDNOTBECALLED);
@@ -267,4 +280,3 @@ Lib3MF::sBox CObject::GetOutbox()
 	
 	return s;
 }
-

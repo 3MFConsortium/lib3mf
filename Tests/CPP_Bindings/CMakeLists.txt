@@ -11,6 +11,7 @@ set(SRCS_UNITTEST
 	./Source/BaseMaterialGroup.cpp
 	./Source/BeamLattice.cpp
 	./Source/BeamSets.cpp
+	./Source/Boolean.cpp
 	./Source/BuildItems.cpp
 	./Source/ColorGroup.cpp
 	./Source/CompositeMaterials.cpp
