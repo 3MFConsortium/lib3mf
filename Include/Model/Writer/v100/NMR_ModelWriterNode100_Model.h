@@ -37,6 +37,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_Model.h" 
 #include "Model/Writer/NMR_ModelWriterNode_ModelBase.h" 
 #include "Model/Classes/NMR_ModelComponentsObject.h" 
+#include "Model/Classes/NMR_ModelBooleanObject.h"
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Common/Platform/NMR_XmlWriter.h"
 
@@ -65,6 +66,7 @@ namespace NMR {
 		nfBool m_bWriteCustomNamespaces;
 		nfBool m_bWriteVolumetricExtension;
         nfBool m_bWriteImplicitExtension;        
+		nfBool m_bWriteBooleanExtension;
 
         void writeModelMetaData();
 		void writeMetaData(_In_ PModelMetaData pMetaData);
@@ -103,6 +105,7 @@ namespace NMR {
 
 		void writeObjects();
 		void writeObject(CModelObject & pObject);
+		void writeBooleanObject(_In_ CModelBooleanObject * pBooleanObject);
 		void writeBuild();
 
 		void writeSliceStacks();

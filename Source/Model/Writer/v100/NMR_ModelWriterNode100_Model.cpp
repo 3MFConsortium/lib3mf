@@ -49,6 +49,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
+#include "Model/Classes/NMR_ModelBooleanObject.h"
 #include "Model/Classes/NMR_Model.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
@@ -86,6 +87,7 @@ namespace NMR {
 		m_bWriteObjects = true;
 		m_bWriteVolumetricExtension = true;
 		m_bWriteImplicitExtension = true;
+		m_bWriteBooleanExtension = false;
 
 		m_bWriteCustomNamespaces = true;
 
@@ -214,6 +216,15 @@ namespace NMR {
 				if (sRequiredExtensions.size() > 0)
 					sRequiredExtensions = sRequiredExtensions + " ";
 				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_IMPLICIT;
+			}
+		}
+
+		if (m_bWriteBooleanExtension) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_BOOLEAN, XML_3MF_NAMESPACE_BOOLEANSPEC);
+			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_BOOLEANSPEC)) {
+				if (sRequiredExtensions.size() > 0)
+					sRequiredExtensions = sRequiredExtensions + " ";
+				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_BOOLEAN;
 			}
 		}
 
@@ -649,6 +660,64 @@ namespace NMR {
 			CModelWriterNode_LevelSet ModelWriter_LevelSet(
 				m_pModel, pLevelSet, m_pXMLWriter, m_pProgressMonitor);
 			ModelWriter_LevelSet.writeToXML();
+		}
+
+		CModelBooleanObject * pBooleanObject =
+			dynamic_cast<CModelBooleanObject *>(&object);
+		if (pBooleanObject)
+		{
+			writeBooleanObject(pBooleanObject);
+		}
+
+		writeFullEndElement();
+	}
+
+	void CModelWriterNode100_Model::writeBooleanObject(_In_ CModelBooleanObject * pBooleanObject)
+	{
+		__NMRASSERT(pBooleanObject);
+
+		CModelObject * pBaseObject = pBooleanObject->getBaseObject();
+		if (!pBaseObject)
+			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
+
+		PPackageResourceID pBaseObjectID = pBaseObject->getPackageResourceID();
+		nfUint32 nOperandCount = pBooleanObject->getOperandCount();
+		if (nOperandCount == 0)
+			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
+
+		writeStartElementWithPrefix(XML_3MF_ELEMENT_BOOLEANSHAPE, XML_3MF_NAMESPACEPREFIX_BOOLEAN);
+		writeIntAttribute(XML_3MF_ATTRIBUTE_BOOLEAN_OBJECTID, pBaseObjectID->getModelResourceID());
+		writeStringAttribute(XML_3MF_ATTRIBUTE_BOOLEAN_OPERATION, pBooleanObject->getOperationString());
+		if (!fnMATRIX3_isIdentity(pBooleanObject->getBaseTransform()))
+			writeStringAttribute(XML_3MF_ATTRIBUTE_BOOLEAN_TRANSFORM, fnMATRIX3_toString(pBooleanObject->getBaseTransform()));
+
+		if (pBaseObjectID->getPath() != m_pModel->currentPath()) {
+			if (m_pModel->currentPath() != m_pModel->rootPath()) {
+				throw CNMRException(NMR_ERROR_REFERENCESTOODEEP);
+			}
+
+			writeStringAttribute(XML_3MF_ATTRIBUTE_BOOLEAN_PATH, pBaseObjectID->getPath());
+		}
+
+		for (nfUint32 nIndex = 0; nIndex < nOperandCount; nIndex++) {
+			PModelComponent pOperand = pBooleanObject->getOperand(nIndex);
+			CModelObject * pOperandObject = pOperand ? pOperand->getObject() : nullptr;
+			if (!pOperandObject)
+				throw CNMRException(NMR_ERROR_INVALIDOBJECT);
+
+			PPackageResourceID pOperandObjectID = pOperandObject->getPackageResourceID();
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_BOOLEAN, XML_3MF_NAMESPACEPREFIX_BOOLEAN);
+			writeIntAttribute(XML_3MF_ATTRIBUTE_BOOLEAN_OBJECTID, pOperandObjectID->getModelResourceID());
+			if (pOperandObjectID->getPath() != m_pModel->currentPath()) {
+				if (m_pModel->currentPath() != m_pModel->rootPath()) {
+					throw CNMRException(NMR_ERROR_REFERENCESTOODEEP);
+				}
+
+				writeStringAttribute(XML_3MF_ATTRIBUTE_BOOLEAN_PATH, pOperandObjectID->getPath());
+			}
+			if (pOperand->hasTransform())
+				writeStringAttribute(XML_3MF_ATTRIBUTE_BOOLEAN_TRANSFORM, pOperand->getTransformString());
+			writeEndElement();
 		}
 
 		writeFullEndElement();
@@ -1247,7 +1316,6 @@ namespace NMR {
 
 	void CModelWriterNode100_Model::detectRequiredExtensions()
 	{
-		// Scan all mesh objects to detect if balls are present
 		std::list <CModelObject *> objectList = m_pModel->getSortedObjectList();
 
 		for(auto iIterator = objectList.begin(); iIterator != objectList.end(); iIterator++)
@@ -1256,6 +1324,10 @@ namespace NMR {
 			if (!pObject)
 			{
 				continue;
+			}
+
+			if (dynamic_cast<CModelBooleanObject *>(pObject) != nullptr) {
+				m_bWriteBooleanExtension = true;
 			}
 
 			// Check if object is a mesh Object with beam lattice
@@ -1269,7 +1341,6 @@ namespace NMR {
 
 					if (nBallCount > 0 || eBallMode != eModelBeamLatticeBallMode::MODELBEAMLATTICEBALLMODE_NONE) {
 						m_bWriteBeamLatticeBallsExtension = true;
-						break; // Found balls, no need to continue scanning
 					}
 				}
 			}

@@ -50,6 +50,8 @@ namespace NMR {
 	{
 		if (pObject == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (dynamic_cast<CModelComponentsObject *>(pObject) != nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
 
 		m_pBaseObject = std::make_shared<CModelComponent>(pObject, mTransform);
 	}
@@ -121,6 +123,8 @@ namespace NMR {
 	{
 		if (pObject == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (dynamic_cast<CModelMeshObject *>(pObject) == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
 
 		m_Operands.push_back(std::make_shared<CModelComponent>(pObject, mTransform));
 	}

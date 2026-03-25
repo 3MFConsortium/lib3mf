@@ -34,6 +34,7 @@ Abstract: This is a stub class definition of CBooleanObject
 // Include custom headers here.
 #include "lib3mf_meshobject.hpp"
 #include "Model/Classes/NMR_ModelBooleanObject.h"
+#include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "lib3mf_utils.hpp"
 
@@ -72,6 +73,8 @@ void CBooleanObject::SetBaseObject(IObject* pBaseObject, const Lib3MF::sTransfor
 	auto pBaseModelObject = std::dynamic_pointer_cast<NMR::CModelObject>(pBaseResource);
 	if (!pBaseModelObject)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	if (dynamic_cast<NMR::CModelComponentsObject *>(pBaseModelObject.get()) != nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPONENTSOBJECT);
 
 	booleanObject()->setBaseObject(pBaseModelObject.get(), Lib3MF::TransformToMatrix(Transform));
 }

@@ -34,6 +34,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_Model.h"
 #include "Model/Classes/NMR_ModelObject.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Model/Classes/NMR_ModelBooleanObject.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelTypes.h"
 #include "Model/Classes/NMR_ModelAttachment.h"
@@ -1514,6 +1515,13 @@ namespace NMR {
 			if (m_FunctionLookup.size() > 0)
 				return true;
 		}
+
+		if (sExtension == XML_3MF_NAMESPACE_BOOLEANSPEC) {
+			for (size_t i = 0; i < m_ObjectLookup.size(); i++) {
+				if (dynamic_cast<CModelBooleanObject*>(m_ObjectLookup[i].get()) != nullptr)
+					return true;
+			}
+		}
         return false;	
 	}
 
@@ -1816,4 +1824,3 @@ namespace NMR {
 		throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 	}
 }  // namespace NMR
-

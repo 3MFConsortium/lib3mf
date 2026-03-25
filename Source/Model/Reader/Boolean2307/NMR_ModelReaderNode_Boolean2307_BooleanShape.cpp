@@ -38,6 +38,8 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_COULDNOTFINDCOMPONENTOBJECT);
 
 		m_pBooleanObject->setBaseObject(pObject, m_mTransform);
+		if (m_pBooleanObject->getOperandCount() == 0)
+			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
 	}
 
 	void CModelReaderNode_Boolean2307_BooleanShape::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
