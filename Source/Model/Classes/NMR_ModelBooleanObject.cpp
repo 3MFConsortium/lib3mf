@@ -35,12 +35,62 @@ Minimal in-memory representation of a boolean object.
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
+#include "Model/Classes/NMR_ModelLevelSetObject.h"
+#include "Common/Boolean/NMR_BooleanEngine.h"
 #include "Common/NMR_Exception.h"
+#include <unordered_set>
 
 namespace NMR {
 
+	namespace {
+		nfBool referencesObjectRecursive(_In_ CModelObject * pCandidate, _In_ CModelObject * pTarget, _Inout_ std::unordered_set<CModelObject *> & visited)
+		{
+			if (pCandidate == nullptr || pTarget == nullptr)
+				return false;
+			if (pCandidate == pTarget)
+				return true;
+			if (!visited.insert(pCandidate).second)
+				return false;
+
+			auto pBooleanCandidate = dynamic_cast<CModelBooleanObject *>(pCandidate);
+			if (pBooleanCandidate == nullptr)
+				return false;
+
+			if (referencesObjectRecursive(pBooleanCandidate->getBaseObject(), pTarget, visited))
+				return true;
+
+			for (nfUint32 nOperandIndex = 0; nOperandIndex < pBooleanCandidate->getOperandCount(); ++nOperandIndex) {
+				auto pOperand = pBooleanCandidate->getOperand(nOperandIndex);
+				if (pOperand && referencesObjectRecursive(pOperand->getObject(), pTarget, visited))
+					return true;
+			}
+
+			return false;
+		}
+
+		nfBool createsBooleanReferenceCycle(_In_ CModelObject * pProposedBase, _In_ CModelBooleanObject * pBooleanObject)
+		{
+			std::unordered_set<CModelObject *> visited;
+			return referencesObjectRecursive(pProposedBase, pBooleanObject, visited);
+		}
+
+		nfBool isBeamLatticeMeshObject(_In_ CModelObject * pObject)
+		{
+			auto pMeshObject = dynamic_cast<CModelMeshObject *>(pObject);
+			if (pMeshObject == nullptr)
+				return false;
+
+			auto pMesh = pMeshObject->getMesh();
+			return (pMesh != nullptr) && (pMesh->getBeamCount() > 0);
+		}
+
+	}
+
 	CModelBooleanObject::CModelBooleanObject(_In_ const ModelResourceID sID, _In_ CModel * pModel)
-		: CModelObject(sID, pModel), m_eOperation(eModelBooleanOperation::Union)
+		: CModelObject(sID, pModel),
+		m_eOperation(eModelBooleanOperation::Union),
+		m_bCSGModeEnabled(false),
+		m_nExtractionGridResolution(160)
 	{
 	}
 
@@ -51,6 +101,14 @@ namespace NMR {
 		if (pObject == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if (dynamic_cast<CModelComponentsObject *>(pObject) != nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
+		if (dynamic_cast<CModelLevelSetObject *>(pObject) != nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
+		if (pObject->getObjectType() != MODELOBJECTTYPE_MODEL)
+			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
+		if (isBeamLatticeMeshObject(pObject))
+			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
+		if (createsBooleanReferenceCycle(pObject, this))
 			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
 
 		m_pBaseObject = std::make_shared<CModelComponent>(pObject, mTransform);
@@ -119,11 +177,37 @@ namespace NMR {
 		return false;
 	}
 
+	void CModelBooleanObject::setCSGModeEnabled(_In_ nfBool bEnabled)
+	{
+		m_bCSGModeEnabled = bEnabled;
+	}
+
+	nfBool CModelBooleanObject::getCSGModeEnabled() const
+	{
+		return m_bCSGModeEnabled;
+	}
+
+	void CModelBooleanObject::setExtractionGridResolution(_In_ nfUint32 nGridResolution)
+	{
+		if (nGridResolution == 0)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_nExtractionGridResolution = nGridResolution;
+	}
+
+	nfUint32 CModelBooleanObject::getExtractionGridResolution() const
+	{
+		return m_nExtractionGridResolution;
+	}
+
 	void CModelBooleanObject::addOperand(_In_ CModelObject * pObject, _In_ const NMATRIX3 & mTransform)
 	{
 		if (pObject == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if (dynamic_cast<CModelMeshObject *>(pObject) == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
+		if (pObject->getObjectType() != MODELOBJECTTYPE_MODEL)
+			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
+		if (isBeamLatticeMeshObject(pObject))
 			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
 
 		m_Operands.push_back(std::make_shared<CModelComponent>(pObject, mTransform));
@@ -144,7 +228,37 @@ namespace NMR {
 
 	void CModelBooleanObject::mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix)
 	{
-		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+		if (pMesh == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (!m_pBaseObject)
+			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
+
+		PMesh pWorkingMesh = std::make_shared<CMesh>();
+		m_pBaseObject->mergeToMesh(pWorkingMesh.get(), mMatrix);
+		std::vector<PMesh> operandMeshes;
+		operandMeshes.reserve(m_Operands.size());
+
+		for (const auto & operand : m_Operands) {
+			if (!operand)
+				throw CNMRException(NMR_ERROR_INVALIDOBJECT);
+			auto pOperandMesh = std::make_shared<CMesh>();
+			operand->mergeToMesh(pOperandMesh.get(), mMatrix);
+			operandMeshes.push_back(pOperandMesh);
+		}
+
+		if (m_bCSGModeEnabled) {
+			PMesh pCsgMesh = std::make_shared<CMesh>();
+			CBooleanEngine::evaluate(pWorkingMesh.get(), operandMeshes, m_eOperation, pCsgMesh.get(), m_nExtractionGridResolution);
+			pMesh->mergeMesh(pCsgMesh.get(), fnMATRIX3_identity());
+			return;
+		}
+
+		// Temporary realization path: flatten referenced meshes with transforms.
+		// This preserves object traversal/export behavior until true CSG evaluation is added.
+		for (const auto & operandMesh : operandMeshes)
+			pWorkingMesh->mergeMesh(operandMesh.get(), fnMATRIX3_identity());
+
+		pMesh->mergeMesh(pWorkingMesh.get(), fnMATRIX3_identity());
 	}
 
 	nfBool CModelBooleanObject::isValid()
@@ -158,13 +272,36 @@ namespace NMR {
 
 		if (dynamic_cast<CModelComponentsObject *>(pBase) != nullptr)
 			return false;
+		if (dynamic_cast<CModelLevelSetObject *>(pBase) != nullptr)
+			return false;
+		if (pBase->getObjectType() != MODELOBJECTTYPE_MODEL)
+			return false;
+		if (isBeamLatticeMeshObject(pBase))
+			return false;
 
 		for (const auto & operand : m_Operands) {
 			if (dynamic_cast<CModelMeshObject *>(operand->getObject()) == nullptr)
 				return false;
+			if (operand->getObject()->getObjectType() != MODELOBJECTTYPE_MODEL)
+				return false;
+			if (isBeamLatticeMeshObject(operand->getObject()))
+				return false;
 		}
 
 		return true;
+	}
+
+	void CModelBooleanObject::calculateComponentDepthLevel(nfUint32 nLevel)
+	{
+		CModelObject::calculateComponentDepthLevel(nLevel);
+
+		if (m_pBaseObject && m_pBaseObject->getObject())
+			m_pBaseObject->getObject()->calculateComponentDepthLevel(nLevel + 1);
+
+		for (const auto & operand : m_Operands) {
+			if (operand && operand->getObject())
+				operand->getObject()->calculateComponentDepthLevel(nLevel + 1);
+		}
 	}
 
 	nfBool CModelBooleanObject::hasSlices(nfBool bRecursive)

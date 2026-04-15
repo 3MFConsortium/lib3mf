@@ -695,6 +695,9 @@ namespace NMR {
 			if (m_pModel->currentPath() != m_pModel->rootPath()) {
 				throw CNMRException(NMR_ERROR_REFERENCESTOODEEP);
 			}
+			if (!m_bWriteProductionExtension) {
+				throw CNMRException(NMR_ERROR_PRODUCTIONEXTENSION_REQUIRED);
+			}
 
 			writeStringAttribute(XML_3MF_ATTRIBUTE_BOOLEAN_PATH, pBaseObjectID->getPath());
 		}
@@ -711,6 +714,9 @@ namespace NMR {
 			if (pOperandObjectID->getPath() != m_pModel->currentPath()) {
 				if (m_pModel->currentPath() != m_pModel->rootPath()) {
 					throw CNMRException(NMR_ERROR_REFERENCESTOODEEP);
+				}
+				if (!m_bWriteProductionExtension) {
+					throw CNMRException(NMR_ERROR_PRODUCTIONEXTENSION_REQUIRED);
 				}
 
 				writeStringAttribute(XML_3MF_ATTRIBUTE_BOOLEAN_PATH, pOperandObjectID->getPath());

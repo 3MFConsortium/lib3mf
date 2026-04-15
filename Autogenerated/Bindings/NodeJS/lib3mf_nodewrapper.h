@@ -673,6 +673,10 @@ private:
 	static void GetBaseTransform(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetOperation(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetOperation(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetCSGModeEnabled(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCSGModeEnabled(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetExtractionGridResolution(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetExtractionGridResolution(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetOperandCount(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddOperand(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetOperand(const v8::FunctionCallbackInfo<v8::Value>& args);

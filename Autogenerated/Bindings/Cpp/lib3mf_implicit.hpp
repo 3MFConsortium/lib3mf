@@ -1605,6 +1605,10 @@ public:
 	inline sTransform GetBaseTransform();
 	inline void SetOperation(const eBooleanOperation eOperation);
 	inline eBooleanOperation GetOperation();
+	inline void SetCSGModeEnabled(const bool bCSGModeEnabled);
+	inline bool GetCSGModeEnabled();
+	inline void SetExtractionGridResolution(const Lib3MF_uint32 nGridResolution);
+	inline Lib3MF_uint32 GetExtractionGridResolution();
 	inline Lib3MF_uint32 GetOperandCount();
 	inline void AddOperand(classParam<CMeshObject> pOperandObject, const sTransform & Transform);
 	inline sTransform GetOperand(const Lib3MF_uint32 nIndex, PMeshObject & pOperandObject);
@@ -6001,6 +6005,48 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(lib3mf_booleanobject_getoperation(m_pHandle, &resultOperation));
 		
 		return resultOperation;
+	}
+	
+	/**
+	* CBooleanObject::SetCSGModeEnabled - Enables or disables CSG field evaluation for boolean-to-mesh materialization.
+	* @param[in] bCSGModeEnabled - if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback
+	*/
+	void CBooleanObject::SetCSGModeEnabled(const bool bCSGModeEnabled)
+	{
+		CheckError(lib3mf_booleanobject_setcsgmodeenabled(m_pHandle, bCSGModeEnabled));
+	}
+	
+	/**
+	* CBooleanObject::GetCSGModeEnabled - Returns whether CSG field evaluation is enabled for boolean-to-mesh materialization.
+	* @return if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback
+	*/
+	bool CBooleanObject::GetCSGModeEnabled()
+	{
+		bool resultCSGModeEnabled = 0;
+		CheckError(lib3mf_booleanobject_getcsgmodeenabled(m_pHandle, &resultCSGModeEnabled));
+		
+		return resultCSGModeEnabled;
+	}
+	
+	/**
+	* CBooleanObject::SetExtractionGridResolution - Sets the extraction grid resolution used for boolean-to-mesh materialization.
+	* @param[in] nGridResolution - extraction grid resolution for boolean surface extraction
+	*/
+	void CBooleanObject::SetExtractionGridResolution(const Lib3MF_uint32 nGridResolution)
+	{
+		CheckError(lib3mf_booleanobject_setextractiongridresolution(m_pHandle, nGridResolution));
+	}
+	
+	/**
+	* CBooleanObject::GetExtractionGridResolution - Returns the extraction grid resolution used for boolean-to-mesh materialization.
+	* @return extraction grid resolution for boolean surface extraction
+	*/
+	Lib3MF_uint32 CBooleanObject::GetExtractionGridResolution()
+	{
+		Lib3MF_uint32 resultGridResolution = 0;
+		CheckError(lib3mf_booleanobject_getextractiongridresolution(m_pHandle, &resultGridResolution));
+		
+		return resultGridResolution;
 	}
 	
 	/**

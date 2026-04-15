@@ -2650,6 +2650,44 @@ func (inst BooleanObject) GetOperation() (BooleanOperation, error) {
 	return BooleanOperation(operation), nil
 }
 
+// SetCSGModeEnabled enables or disables CSG field evaluation for boolean-to-mesh materialization.
+func (inst BooleanObject) SetCSGModeEnabled(cSGModeEnabled bool) error {
+	ret := C.CCall_lib3mf_booleanobject_setcsgmodeenabled(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(cSGModeEnabled))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetCSGModeEnabled returns whether CSG field evaluation is enabled for boolean-to-mesh materialization.
+func (inst BooleanObject) GetCSGModeEnabled() (bool, error) {
+	var cSGModeEnabled C.bool
+	ret := C.CCall_lib3mf_booleanobject_getcsgmodeenabled(inst.wrapperRef.LibraryHandle, inst.Ref, &cSGModeEnabled)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(cSGModeEnabled), nil
+}
+
+// SetExtractionGridResolution sets the extraction grid resolution used for boolean-to-mesh materialization.
+func (inst BooleanObject) SetExtractionGridResolution(gridResolution uint32) error {
+	ret := C.CCall_lib3mf_booleanobject_setextractiongridresolution(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(gridResolution))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetExtractionGridResolution returns the extraction grid resolution used for boolean-to-mesh materialization.
+func (inst BooleanObject) GetExtractionGridResolution() (uint32, error) {
+	var gridResolution C.uint32_t
+	ret := C.CCall_lib3mf_booleanobject_getextractiongridresolution(inst.wrapperRef.LibraryHandle, inst.Ref, &gridResolution)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(gridResolution), nil
+}
+
 // GetOperandCount returns the number of operands in the boolean sequence.
 func (inst BooleanObject) GetOperandCount() (uint32, error) {
 	var count C.uint32_t

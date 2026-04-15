@@ -203,6 +203,10 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_BooleanObject_GetBaseTransform = NULL;
 	pWrapperTable->m_BooleanObject_SetOperation = NULL;
 	pWrapperTable->m_BooleanObject_GetOperation = NULL;
+	pWrapperTable->m_BooleanObject_SetCSGModeEnabled = NULL;
+	pWrapperTable->m_BooleanObject_GetCSGModeEnabled = NULL;
+	pWrapperTable->m_BooleanObject_SetExtractionGridResolution = NULL;
+	pWrapperTable->m_BooleanObject_GetExtractionGridResolution = NULL;
 	pWrapperTable->m_BooleanObject_GetOperandCount = NULL;
 	pWrapperTable->m_BooleanObject_AddOperand = NULL;
 	pWrapperTable->m_BooleanObject_GetOperand = NULL;
@@ -2155,6 +2159,42 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_BooleanObject_GetOperation == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_BooleanObject_SetCSGModeEnabled = (PLib3MFBooleanObject_SetCSGModeEnabledPtr) GetProcAddress(hLibrary, "lib3mf_booleanobject_setcsgmodeenabled");
+	#else // _WIN32
+	pWrapperTable->m_BooleanObject_SetCSGModeEnabled = (PLib3MFBooleanObject_SetCSGModeEnabledPtr) dlsym(hLibrary, "lib3mf_booleanobject_setcsgmodeenabled");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_BooleanObject_SetCSGModeEnabled == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_BooleanObject_GetCSGModeEnabled = (PLib3MFBooleanObject_GetCSGModeEnabledPtr) GetProcAddress(hLibrary, "lib3mf_booleanobject_getcsgmodeenabled");
+	#else // _WIN32
+	pWrapperTable->m_BooleanObject_GetCSGModeEnabled = (PLib3MFBooleanObject_GetCSGModeEnabledPtr) dlsym(hLibrary, "lib3mf_booleanobject_getcsgmodeenabled");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_BooleanObject_GetCSGModeEnabled == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_BooleanObject_SetExtractionGridResolution = (PLib3MFBooleanObject_SetExtractionGridResolutionPtr) GetProcAddress(hLibrary, "lib3mf_booleanobject_setextractiongridresolution");
+	#else // _WIN32
+	pWrapperTable->m_BooleanObject_SetExtractionGridResolution = (PLib3MFBooleanObject_SetExtractionGridResolutionPtr) dlsym(hLibrary, "lib3mf_booleanobject_setextractiongridresolution");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_BooleanObject_SetExtractionGridResolution == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_BooleanObject_GetExtractionGridResolution = (PLib3MFBooleanObject_GetExtractionGridResolutionPtr) GetProcAddress(hLibrary, "lib3mf_booleanobject_getextractiongridresolution");
+	#else // _WIN32
+	pWrapperTable->m_BooleanObject_GetExtractionGridResolution = (PLib3MFBooleanObject_GetExtractionGridResolutionPtr) dlsym(hLibrary, "lib3mf_booleanobject_getextractiongridresolution");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_BooleanObject_GetExtractionGridResolution == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -8129,6 +8169,42 @@ Lib3MFResult CCall_lib3mf_booleanobject_getoperation(Lib3MFHandle libraryHandle,
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_BooleanObject_GetOperation (pBooleanObject, pOperation);
+}
+
+
+Lib3MFResult CCall_lib3mf_booleanobject_setcsgmodeenabled(Lib3MFHandle libraryHandle, Lib3MF_BooleanObject pBooleanObject, bool bCSGModeEnabled)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BooleanObject_SetCSGModeEnabled (pBooleanObject, bCSGModeEnabled);
+}
+
+
+Lib3MFResult CCall_lib3mf_booleanobject_getcsgmodeenabled(Lib3MFHandle libraryHandle, Lib3MF_BooleanObject pBooleanObject, bool * pCSGModeEnabled)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BooleanObject_GetCSGModeEnabled (pBooleanObject, pCSGModeEnabled);
+}
+
+
+Lib3MFResult CCall_lib3mf_booleanobject_setextractiongridresolution(Lib3MFHandle libraryHandle, Lib3MF_BooleanObject pBooleanObject, Lib3MF_uint32 nGridResolution)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BooleanObject_SetExtractionGridResolution (pBooleanObject, nGridResolution);
+}
+
+
+Lib3MFResult CCall_lib3mf_booleanobject_getextractiongridresolution(Lib3MFHandle libraryHandle, Lib3MF_BooleanObject pBooleanObject, Lib3MF_uint32 * pGridResolution)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_BooleanObject_GetExtractionGridResolution (pBooleanObject, pGridResolution);
 }
 
 

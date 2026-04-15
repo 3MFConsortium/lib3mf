@@ -1200,6 +1200,26 @@
 			<param name="Operation" type="enum" class="BooleanOperation" pass="return"
 				description="boolean operation used for the shape" />
 		</method>
+		<method name="SetCSGModeEnabled"
+			description="Enables or disables CSG field evaluation for boolean-to-mesh materialization.">
+			<param name="CSGModeEnabled" type="bool" pass="in"
+				description="if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback" />
+		</method>
+		<method name="GetCSGModeEnabled"
+			description="Returns whether CSG field evaluation is enabled for boolean-to-mesh materialization.">
+			<param name="CSGModeEnabled" type="bool" pass="return"
+				description="if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback" />
+		</method>
+		<method name="SetExtractionGridResolution"
+			description="Sets the extraction grid resolution used for boolean-to-mesh materialization.">
+			<param name="GridResolution" type="uint32" pass="in"
+				description="extraction grid resolution for boolean surface extraction" />
+		</method>
+		<method name="GetExtractionGridResolution"
+			description="Returns the extraction grid resolution used for boolean-to-mesh materialization.">
+			<param name="GridResolution" type="uint32" pass="return"
+				description="extraction grid resolution for boolean surface extraction" />
+		</method>
 		<method name="GetOperandCount"
 			description="Returns the number of operands in the boolean sequence.">
 			<param name="Count" type="uint32" pass="return"

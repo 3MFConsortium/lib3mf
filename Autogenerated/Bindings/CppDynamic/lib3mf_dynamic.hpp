@@ -1629,6 +1629,10 @@ public:
 	inline sTransform GetBaseTransform();
 	inline void SetOperation(const eBooleanOperation eOperation);
 	inline eBooleanOperation GetOperation();
+	inline void SetCSGModeEnabled(const bool bCSGModeEnabled);
+	inline bool GetCSGModeEnabled();
+	inline void SetExtractionGridResolution(const Lib3MF_uint32 nGridResolution);
+	inline Lib3MF_uint32 GetExtractionGridResolution();
 	inline Lib3MF_uint32 GetOperandCount();
 	inline void AddOperand(classParam<CMeshObject> pOperandObject, const sTransform & Transform);
 	inline sTransform GetOperand(const Lib3MF_uint32 nIndex, PMeshObject & pOperandObject);
@@ -4199,6 +4203,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_BooleanObject_GetBaseTransform = nullptr;
 		pWrapperTable->m_BooleanObject_SetOperation = nullptr;
 		pWrapperTable->m_BooleanObject_GetOperation = nullptr;
+		pWrapperTable->m_BooleanObject_SetCSGModeEnabled = nullptr;
+		pWrapperTable->m_BooleanObject_GetCSGModeEnabled = nullptr;
+		pWrapperTable->m_BooleanObject_SetExtractionGridResolution = nullptr;
+		pWrapperTable->m_BooleanObject_GetExtractionGridResolution = nullptr;
 		pWrapperTable->m_BooleanObject_GetOperandCount = nullptr;
 		pWrapperTable->m_BooleanObject_AddOperand = nullptr;
 		pWrapperTable->m_BooleanObject_GetOperand = nullptr;
@@ -6147,6 +6155,42 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_BooleanObject_GetOperation == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BooleanObject_SetCSGModeEnabled = (PLib3MFBooleanObject_SetCSGModeEnabledPtr) GetProcAddress(hLibrary, "lib3mf_booleanobject_setcsgmodeenabled");
+		#else // _WIN32
+		pWrapperTable->m_BooleanObject_SetCSGModeEnabled = (PLib3MFBooleanObject_SetCSGModeEnabledPtr) dlsym(hLibrary, "lib3mf_booleanobject_setcsgmodeenabled");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BooleanObject_SetCSGModeEnabled == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BooleanObject_GetCSGModeEnabled = (PLib3MFBooleanObject_GetCSGModeEnabledPtr) GetProcAddress(hLibrary, "lib3mf_booleanobject_getcsgmodeenabled");
+		#else // _WIN32
+		pWrapperTable->m_BooleanObject_GetCSGModeEnabled = (PLib3MFBooleanObject_GetCSGModeEnabledPtr) dlsym(hLibrary, "lib3mf_booleanobject_getcsgmodeenabled");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BooleanObject_GetCSGModeEnabled == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BooleanObject_SetExtractionGridResolution = (PLib3MFBooleanObject_SetExtractionGridResolutionPtr) GetProcAddress(hLibrary, "lib3mf_booleanobject_setextractiongridresolution");
+		#else // _WIN32
+		pWrapperTable->m_BooleanObject_SetExtractionGridResolution = (PLib3MFBooleanObject_SetExtractionGridResolutionPtr) dlsym(hLibrary, "lib3mf_booleanobject_setextractiongridresolution");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BooleanObject_SetExtractionGridResolution == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_BooleanObject_GetExtractionGridResolution = (PLib3MFBooleanObject_GetExtractionGridResolutionPtr) GetProcAddress(hLibrary, "lib3mf_booleanobject_getextractiongridresolution");
+		#else // _WIN32
+		pWrapperTable->m_BooleanObject_GetExtractionGridResolution = (PLib3MFBooleanObject_GetExtractionGridResolutionPtr) dlsym(hLibrary, "lib3mf_booleanobject_getextractiongridresolution");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BooleanObject_GetExtractionGridResolution == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -11330,6 +11374,22 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_BooleanObject_GetOperation == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_booleanobject_setcsgmodeenabled", (void**)&(pWrapperTable->m_BooleanObject_SetCSGModeEnabled));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BooleanObject_SetCSGModeEnabled == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_booleanobject_getcsgmodeenabled", (void**)&(pWrapperTable->m_BooleanObject_GetCSGModeEnabled));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BooleanObject_GetCSGModeEnabled == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_booleanobject_setextractiongridresolution", (void**)&(pWrapperTable->m_BooleanObject_SetExtractionGridResolution));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BooleanObject_SetExtractionGridResolution == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_booleanobject_getextractiongridresolution", (void**)&(pWrapperTable->m_BooleanObject_GetExtractionGridResolution));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BooleanObject_GetExtractionGridResolution == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_booleanobject_getoperandcount", (void**)&(pWrapperTable->m_BooleanObject_GetOperandCount));
 		if ( (eLookupError != 0) || (pWrapperTable->m_BooleanObject_GetOperandCount == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -15340,6 +15400,48 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		CheckError(m_pWrapper->m_WrapperTable.m_BooleanObject_GetOperation(m_pHandle, &resultOperation));
 		
 		return resultOperation;
+	}
+	
+	/**
+	* CBooleanObject::SetCSGModeEnabled - Enables or disables CSG field evaluation for boolean-to-mesh materialization.
+	* @param[in] bCSGModeEnabled - if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback
+	*/
+	void CBooleanObject::SetCSGModeEnabled(const bool bCSGModeEnabled)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_BooleanObject_SetCSGModeEnabled(m_pHandle, bCSGModeEnabled));
+	}
+	
+	/**
+	* CBooleanObject::GetCSGModeEnabled - Returns whether CSG field evaluation is enabled for boolean-to-mesh materialization.
+	* @return if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback
+	*/
+	bool CBooleanObject::GetCSGModeEnabled()
+	{
+		bool resultCSGModeEnabled = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_BooleanObject_GetCSGModeEnabled(m_pHandle, &resultCSGModeEnabled));
+		
+		return resultCSGModeEnabled;
+	}
+	
+	/**
+	* CBooleanObject::SetExtractionGridResolution - Sets the extraction grid resolution used for boolean-to-mesh materialization.
+	* @param[in] nGridResolution - extraction grid resolution for boolean surface extraction
+	*/
+	void CBooleanObject::SetExtractionGridResolution(const Lib3MF_uint32 nGridResolution)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_BooleanObject_SetExtractionGridResolution(m_pHandle, nGridResolution));
+	}
+	
+	/**
+	* CBooleanObject::GetExtractionGridResolution - Returns the extraction grid resolution used for boolean-to-mesh materialization.
+	* @return extraction grid resolution for boolean surface extraction
+	*/
+	Lib3MF_uint32 CBooleanObject::GetExtractionGridResolution()
+	{
+		Lib3MF_uint32 resultGridResolution = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_BooleanObject_GetExtractionGridResolution(m_pHandle, &resultGridResolution));
+		
+		return resultGridResolution;
 	}
 	
 	/**

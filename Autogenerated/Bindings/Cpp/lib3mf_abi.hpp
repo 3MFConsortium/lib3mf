@@ -1643,6 +1643,42 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_booleanobject_setoperation(Lib3MF_BooleanObj
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_booleanobject_getoperation(Lib3MF_BooleanObject pBooleanObject, Lib3MF::eBooleanOperation * pOperation);
 
 /**
+* Enables or disables CSG field evaluation for boolean-to-mesh materialization.
+*
+* @param[in] pBooleanObject - BooleanObject instance.
+* @param[in] bCSGModeEnabled - if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_booleanobject_setcsgmodeenabled(Lib3MF_BooleanObject pBooleanObject, bool bCSGModeEnabled);
+
+/**
+* Returns whether CSG field evaluation is enabled for boolean-to-mesh materialization.
+*
+* @param[in] pBooleanObject - BooleanObject instance.
+* @param[out] pCSGModeEnabled - if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_booleanobject_getcsgmodeenabled(Lib3MF_BooleanObject pBooleanObject, bool * pCSGModeEnabled);
+
+/**
+* Sets the extraction grid resolution used for boolean-to-mesh materialization.
+*
+* @param[in] pBooleanObject - BooleanObject instance.
+* @param[in] nGridResolution - extraction grid resolution for boolean surface extraction
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_booleanobject_setextractiongridresolution(Lib3MF_BooleanObject pBooleanObject, Lib3MF_uint32 nGridResolution);
+
+/**
+* Returns the extraction grid resolution used for boolean-to-mesh materialization.
+*
+* @param[in] pBooleanObject - BooleanObject instance.
+* @param[out] pGridResolution - extraction grid resolution for boolean surface extraction
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_booleanobject_getextractiongridresolution(Lib3MF_BooleanObject pBooleanObject, Lib3MF_uint32 * pGridResolution);
+
+/**
 * Returns the number of operands in the boolean sequence.
 *
 * @param[in] pBooleanObject - BooleanObject instance.

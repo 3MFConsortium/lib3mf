@@ -534,6 +534,10 @@ class FunctionTable:
 	lib3mf_booleanobject_getbasetransform = None
 	lib3mf_booleanobject_setoperation = None
 	lib3mf_booleanobject_getoperation = None
+	lib3mf_booleanobject_setcsgmodeenabled = None
+	lib3mf_booleanobject_getcsgmodeenabled = None
+	lib3mf_booleanobject_setextractiongridresolution = None
+	lib3mf_booleanobject_getextractiongridresolution = None
 	lib3mf_booleanobject_getoperandcount = None
 	lib3mf_booleanobject_addoperand = None
 	lib3mf_booleanobject_getoperand = None
@@ -2483,6 +2487,30 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32))
 			self.lib.lib3mf_booleanobject_getoperation = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_booleanobject_setcsgmodeenabled")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_bool)
+			self.lib.lib3mf_booleanobject_setcsgmodeenabled = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_booleanobject_getcsgmodeenabled")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_booleanobject_getcsgmodeenabled = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_booleanobject_setextractiongridresolution")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_booleanobject_setextractiongridresolution = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_booleanobject_getextractiongridresolution")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_booleanobject_getextractiongridresolution = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_booleanobject_getoperandcount")), methodAddress)
 			if err != 0:
@@ -5927,6 +5955,18 @@ class Wrapper:
 			self.lib.lib3mf_booleanobject_getoperation.restype = ctypes.c_int32
 			self.lib.lib3mf_booleanobject_getoperation.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
 			
+			self.lib.lib3mf_booleanobject_setcsgmodeenabled.restype = ctypes.c_int32
+			self.lib.lib3mf_booleanobject_setcsgmodeenabled.argtypes = [ctypes.c_void_p, ctypes.c_bool]
+			
+			self.lib.lib3mf_booleanobject_getcsgmodeenabled.restype = ctypes.c_int32
+			self.lib.lib3mf_booleanobject_getcsgmodeenabled.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_booleanobject_setextractiongridresolution.restype = ctypes.c_int32
+			self.lib.lib3mf_booleanobject_setextractiongridresolution.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_booleanobject_getextractiongridresolution.restype = ctypes.c_int32
+			self.lib.lib3mf_booleanobject_getextractiongridresolution.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
 			self.lib.lib3mf_booleanobject_getoperandcount.restype = ctypes.c_int32
 			self.lib.lib3mf_booleanobject_getoperandcount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
 			
@@ -9201,6 +9241,28 @@ class BooleanObject(Object):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_booleanobject_getoperation(self._handle, pOperation))
 		
 		return BooleanOperation(pOperation.value)
+	
+	def SetCSGModeEnabled(self, CSGModeEnabled):
+		bCSGModeEnabled = ctypes.c_bool(CSGModeEnabled)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_booleanobject_setcsgmodeenabled(self._handle, bCSGModeEnabled))
+		
+	
+	def GetCSGModeEnabled(self):
+		pCSGModeEnabled = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_booleanobject_getcsgmodeenabled(self._handle, pCSGModeEnabled))
+		
+		return pCSGModeEnabled.value
+	
+	def SetExtractionGridResolution(self, GridResolution):
+		nGridResolution = ctypes.c_uint32(GridResolution)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_booleanobject_setextractiongridresolution(self._handle, nGridResolution))
+		
+	
+	def GetExtractionGridResolution(self):
+		pGridResolution = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_booleanobject_getextractiongridresolution(self._handle, pGridResolution))
+		
+		return pGridResolution.value
 	
 	def GetOperandCount(self):
 		pCount = ctypes.c_uint32()

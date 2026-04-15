@@ -17,6 +17,16 @@ Lib3MF::PMeshObject addBoxMesh(const Lib3MF::PModel & model)
 	return mesh;
 }
 
+void addSingleBeam(const Lib3MF::PMeshObject & mesh)
+{
+	Lib3MF::sBeam beam;
+	beam.m_Indices[0] = 0;
+	beam.m_Indices[1] = 1;
+	beam.m_Radii[0] = 0.5;
+	beam.m_Radii[1] = 0.5;
+	mesh->BeamLattice()->AddBeam(beam);
+}
+
 Lib3MF::sTransform translatedIdentity(Lib3MF::PWrapper wrapper, float x, float y, float z)
 {
 	auto transform = wrapper->GetIdentityTransform();
@@ -149,23 +159,85 @@ TEST_F(BooleanRead, ApiRejectsInvalidStateAndAccess)
 	auto model = wrapper->CreateModel();
 	auto baseMesh = addBoxMesh(model);
 	auto operandMesh = addBoxMesh(model);
+	auto supportMesh = addBoxMesh(model);
 	auto booleanObject = model->AddBooleanObject();
 	auto componentsObject = model->AddComponentsObject();
+	supportMesh->SetType(Lib3MF::eObjectType::Support);
 
 	ASSERT_SPECIFIC_THROW(booleanObject->GetBaseObject(), Lib3MF::ELib3MFException);
 	ASSERT_SPECIFIC_THROW(booleanObject->SetBaseTransform(wrapper->GetIdentityTransform()), Lib3MF::ELib3MFException);
 	ASSERT_SPECIFIC_THROW(booleanObject->SetBaseObject(nullptr, wrapper->GetIdentityTransform()), Lib3MF::ELib3MFException);
 	ASSERT_SPECIFIC_THROW(booleanObject->SetBaseObject(componentsObject.get(), wrapper->GetIdentityTransform()), Lib3MF::ELib3MFException);
+	ASSERT_SPECIFIC_THROW(booleanObject->SetBaseObject(supportMesh.get(), wrapper->GetIdentityTransform()), Lib3MF::ELib3MFException);
 
 	booleanObject->SetBaseObject(baseMesh.get(), wrapper->GetIdentityTransform());
 	booleanObject->AddOperand(operandMesh.get(), wrapper->GetIdentityTransform());
 
 	ASSERT_SPECIFIC_THROW(booleanObject->AddOperand(nullptr, wrapper->GetIdentityTransform()), Lib3MF::ELib3MFException);
+	ASSERT_SPECIFIC_THROW(booleanObject->AddOperand(supportMesh.get(), wrapper->GetIdentityTransform()), Lib3MF::ELib3MFException);
 	ASSERT_SPECIFIC_THROW({
 		Lib3MF::PMeshObject invalidOperand;
 		booleanObject->GetOperand(1, invalidOperand);
 	}, Lib3MF::ELib3MFException);
 	ASSERT_SPECIFIC_THROW(model->GetBooleanObjectByID(baseMesh->GetResourceID()), Lib3MF::ELib3MFException);
+}
+
+TEST_F(BooleanRead, ApiRejectsBeamLatticeMeshes)
+{
+	auto model = wrapper->CreateModel();
+	auto regularMesh = addBoxMesh(model);
+	auto beamMesh = addBoxMesh(model);
+	auto booleanObject = model->AddBooleanObject();
+	addSingleBeam(beamMesh);
+
+	ASSERT_SPECIFIC_THROW(booleanObject->SetBaseObject(beamMesh.get(), wrapper->GetIdentityTransform()), Lib3MF::ELib3MFException);
+
+	booleanObject->SetBaseObject(regularMesh.get(), wrapper->GetIdentityTransform());
+	ASSERT_SPECIFIC_THROW(booleanObject->AddOperand(beamMesh.get(), wrapper->GetIdentityTransform()), Lib3MF::ELib3MFException);
+}
+
+TEST_F(BooleanRead, ApiRejectsLevelSetAsBaseObject)
+{
+	auto model = wrapper->CreateModel();
+	auto levelSet = model->AddLevelSet();
+	auto booleanObject = model->AddBooleanObject();
+
+	ASSERT_SPECIFIC_THROW(booleanObject->SetBaseObject(levelSet.get(), wrapper->GetIdentityTransform()), Lib3MF::ELib3MFException);
+}
+
+TEST_F(BooleanRead, ApiRejectsBooleanBaseReferenceCycles)
+{
+	auto model = wrapper->CreateModel();
+	auto mesh = addBoxMesh(model);
+	auto booleanA = model->AddBooleanObject();
+	auto booleanB = model->AddBooleanObject();
+
+	booleanA->SetBaseObject(booleanB.get(), wrapper->GetIdentityTransform());
+	ASSERT_SPECIFIC_THROW(booleanB->SetBaseObject(booleanA.get(), wrapper->GetIdentityTransform()), Lib3MF::ELib3MFException);
+
+	// Keep both objects otherwise structurally valid to ensure failure is from cycle rejection.
+	booleanA->AddOperand(mesh.get(), wrapper->GetIdentityTransform());
+	booleanB->AddOperand(mesh.get(), wrapper->GetIdentityTransform());
+}
+
+TEST_F(BooleanRead, ApiControlsCSGModeAndExtractionResolution)
+{
+	auto model = wrapper->CreateModel();
+	auto baseMesh = addBoxMesh(model);
+	auto operandMesh = addBoxMesh(model);
+	auto booleanObject = model->AddBooleanObject();
+
+	booleanObject->SetBaseObject(baseMesh.get(), wrapper->GetIdentityTransform());
+	booleanObject->SetOperation(Lib3MF::eBooleanOperation::Difference);
+	booleanObject->AddOperand(operandMesh.get(), wrapper->GetIdentityTransform());
+
+	ASSERT_FALSE(booleanObject->GetCSGModeEnabled());
+	booleanObject->SetCSGModeEnabled(true);
+	ASSERT_TRUE(booleanObject->GetCSGModeEnabled());
+
+	booleanObject->SetExtractionGridResolution(144);
+	ASSERT_EQ(booleanObject->GetExtractionGridResolution(), 144u);
+	ASSERT_SPECIFIC_THROW(booleanObject->SetExtractionGridResolution(0), Lib3MF::ELib3MFException);
 }
 
 TEST_F(BooleanRead, CreateAndRoundTripBooleanObjectWithExternalReferences)
@@ -280,6 +352,13 @@ TEST_F(BooleanRead, MissingPathTargetThrows)
 	ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/" + "Boolean" + "/" + "missing_path_target.3mf"), Lib3MF::ELib3MFException);
 }
 
+TEST_F(BooleanRead, PathWithoutProductionExtensionThrows)
+{
+	auto model = wrapper->CreateModel();
+	auto reader = model->QueryReader("3mf");
+	ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/" + "Boolean" + "/" + "path_without_production_extension.3mf"), Lib3MF::ELib3MFException);
+}
+
 TEST_F(BooleanRead, ComponentsBaseObjectThrows)
 {
 	auto model = wrapper->CreateModel();
@@ -305,4 +384,127 @@ TEST_F(BooleanRead, UnknownBooleanAttributeYieldsWarning)
 	ASSERT_EQ(booleanObjects->Count(), 1);
 	ASSERT_TRUE(booleanObjects->MoveNext());
 	ASSERT_EQ(booleanObjects->GetCurrentBooleanObject()->GetOperandCount(), 1u);
+}
+
+TEST_F(BooleanRead, STLWriterMaterializesBooleanObject)
+{
+	auto model = wrapper->CreateModel();
+	auto baseMesh = addBoxMesh(model);
+	auto operandMesh = addBoxMesh(model);
+	auto booleanObject = model->AddBooleanObject();
+
+	booleanObject->SetBaseObject(baseMesh.get(), wrapper->GetIdentityTransform());
+	booleanObject->SetOperation(Lib3MF::eBooleanOperation::Intersection);
+	booleanObject->AddOperand(operandMesh.get(), wrapper->GetTranslationTransform(1.0, 0.0, 0.0));
+	model->AddBuildItem(booleanObject.get(), wrapper->GetIdentityTransform());
+
+	std::vector<Lib3MF_uint8> buffer;
+	model->QueryWriter("stl")->WriteToBuffer(buffer);
+	ASSERT_FALSE(buffer.empty());
+}
+
+TEST_F(BooleanRead, STLWriterMaterializesBooleanOperations)
+{
+	auto testOperation = [&](Lib3MF::eBooleanOperation operation) {
+		auto model = wrapper->CreateModel();
+		auto baseMesh = addBoxMesh(model);
+		auto operandMesh = addBoxMesh(model);
+		auto booleanObject = model->AddBooleanObject();
+
+		booleanObject->SetBaseObject(baseMesh.get(), wrapper->GetIdentityTransform());
+		booleanObject->SetOperation(operation);
+		booleanObject->AddOperand(operandMesh.get(), wrapper->GetTranslationTransform(2.0, 0.0, 0.0));
+		model->AddBuildItem(booleanObject.get(), wrapper->GetIdentityTransform());
+
+		std::vector<Lib3MF_uint8> buffer;
+		model->QueryWriter("stl")->WriteToBuffer(buffer);
+		ASSERT_FALSE(buffer.empty());
+	};
+
+	testOperation(Lib3MF::eBooleanOperation::Union);
+	testOperation(Lib3MF::eBooleanOperation::Difference);
+	testOperation(Lib3MF::eBooleanOperation::Intersection);
+}
+
+TEST_F(BooleanRead, ObjectTypeIntrospectionIsConsistent)
+{
+	auto model = wrapper->CreateModel();
+	auto mesh = addBoxMesh(model);
+	auto components = model->AddComponentsObject();
+	auto booleanObject = model->AddBooleanObject();
+	auto levelSet = model->AddLevelSet();
+
+	booleanObject->SetBaseObject(mesh.get(), wrapper->GetIdentityTransform());
+	booleanObject->AddOperand(mesh.get(), wrapper->GetIdentityTransform());
+
+	ASSERT_TRUE(booleanObject->IsBooleanObject());
+	ASSERT_FALSE(booleanObject->IsMeshObject());
+	ASSERT_FALSE(booleanObject->IsComponentsObject());
+	ASSERT_FALSE(booleanObject->IsLevelSetObject());
+
+	ASSERT_TRUE(mesh->IsMeshObject());
+	ASSERT_FALSE(mesh->IsBooleanObject());
+
+	ASSERT_TRUE(components->IsComponentsObject());
+	ASSERT_FALSE(components->IsBooleanObject());
+
+	ASSERT_TRUE(levelSet->IsLevelSetObject());
+	ASSERT_FALSE(levelSet->IsBooleanObject());
+}
+
+TEST_F(BooleanRead, WriteBooleanWithHigherResourceDependencies)
+{
+	auto model = wrapper->CreateModel();
+	auto booleanObject = model->AddBooleanObject();
+	auto baseMesh = addBoxMesh(model);
+	auto operandMesh = addBoxMesh(model);
+
+	booleanObject->SetBaseObject(baseMesh.get(), wrapper->GetIdentityTransform());
+	booleanObject->SetOperation(Lib3MF::eBooleanOperation::Union);
+	booleanObject->AddOperand(operandMesh.get(), wrapper->GetIdentityTransform());
+	model->AddBuildItem(booleanObject.get(), wrapper->GetIdentityTransform());
+
+	std::vector<Lib3MF_uint8> buffer;
+	model->QueryWriter("3mf")->WriteToBuffer(buffer);
+	ASSERT_FALSE(buffer.empty());
+}
+
+TEST_F(BooleanRead, ExperimentalCSGPathMaterializesSurface)
+{
+	auto model = wrapper->CreateModel();
+	auto baseMesh = addBoxMesh(model);
+	auto operandMesh = addBoxMesh(model);
+	auto booleanObject = model->AddBooleanObject();
+
+	booleanObject->SetBaseObject(baseMesh.get(), wrapper->GetIdentityTransform());
+	booleanObject->SetOperation(Lib3MF::eBooleanOperation::Difference);
+	booleanObject->AddOperand(operandMesh.get(), wrapper->GetTranslationTransform(0.25, 0.0, 0.0));
+	booleanObject->SetCSGModeEnabled(true);
+	booleanObject->SetExtractionGridResolution(160);
+	model->AddBuildItem(booleanObject.get(), wrapper->GetIdentityTransform());
+
+	std::vector<Lib3MF_uint8> buffer;
+	model->QueryWriter("stl")->WriteToBuffer(buffer);
+	ASSERT_FALSE(buffer.empty());
+}
+
+TEST_F(BooleanRead, ReadBooleanFileAndExtractSTLToDisk)
+{
+	auto model = wrapper->CreateModel();
+	auto reader = model->QueryReader("3mf");
+	reader->ReadFromFile(sTestFilesPath + "/" + "Boolean" + "/" + "booleans_operations.3mf");
+	auto booleanObjects = model->GetBooleanObjects();
+	while (booleanObjects->MoveNext()) {
+		auto booleanObject = booleanObjects->GetCurrentBooleanObject();
+		booleanObject->SetCSGModeEnabled(true);
+		booleanObject->SetExtractionGridResolution(160);
+	}
+
+	const std::string outputPath = "boolean_from_file_extracted.stl";
+	auto stlWriter = model->QueryWriter("stl");
+	stlWriter->WriteToFile(outputPath);
+
+	std::ifstream file(outputPath, std::ios::binary | std::ios::ate);
+	ASSERT_TRUE(file.good());
+	ASSERT_GT(file.tellg(), 0);
 }

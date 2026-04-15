@@ -138,6 +138,50 @@ public class BooleanObject extends Object {
 	}
 
 	/**
+	 * Enables or disables CSG field evaluation for boolean-to-mesh materialization.
+	 *
+	 * @param cSGModeEnabled if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback
+	 * @throws Lib3MFException
+	 */
+	public void setCSGModeEnabled(boolean cSGModeEnabled) throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_booleanobject_setcsgmodeenabled.invokeInt(new java.lang.Object[]{mHandle, cSGModeEnabled}));
+	}
+
+	/**
+	 * Returns whether CSG field evaluation is enabled for boolean-to-mesh materialization.
+	 *
+	 * @return if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback
+	 * @throws Lib3MFException
+	 */
+	public boolean getCSGModeEnabled() throws Lib3MFException {
+		Pointer bufferCSGModeEnabled = new Memory(1);
+		mWrapper.checkError(this, mWrapper.lib3mf_booleanobject_getcsgmodeenabled.invokeInt(new java.lang.Object[]{mHandle, bufferCSGModeEnabled}));
+		return bufferCSGModeEnabled.getByte(0) != 0;
+	}
+
+	/**
+	 * Sets the extraction grid resolution used for boolean-to-mesh materialization.
+	 *
+	 * @param gridResolution extraction grid resolution for boolean surface extraction
+	 * @throws Lib3MFException
+	 */
+	public void setExtractionGridResolution(int gridResolution) throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_booleanobject_setextractiongridresolution.invokeInt(new java.lang.Object[]{mHandle, gridResolution}));
+	}
+
+	/**
+	 * Returns the extraction grid resolution used for boolean-to-mesh materialization.
+	 *
+	 * @return extraction grid resolution for boolean surface extraction
+	 * @throws Lib3MFException
+	 */
+	public int getExtractionGridResolution() throws Lib3MFException {
+		Pointer bufferGridResolution = new Memory(4);
+		mWrapper.checkError(this, mWrapper.lib3mf_booleanobject_getextractiongridresolution.invokeInt(new java.lang.Object[]{mHandle, bufferGridResolution}));
+		return bufferGridResolution.getInt(0);
+	}
+
+	/**
 	 * Returns the number of operands in the boolean sequence.
 	 *
 	 * @return number of operands in the boolean sequence

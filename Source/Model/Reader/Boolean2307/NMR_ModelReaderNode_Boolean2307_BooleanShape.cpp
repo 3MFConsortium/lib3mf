@@ -18,6 +18,8 @@ namespace NMR {
 	{
 		parseName(pXMLReader);
 		parseAttributes(pXMLReader);
+		if (m_bHasPath && !pXMLReader->NamespaceRegistered(XML_3MF_NAMESPACE_PRODUCTIONSPEC))
+			throw CNMRException(NMR_ERROR_PRODUCTIONEXTENSION_REQUIRED);
 		parseContent(pXMLReader);
 
 		if (!m_bHasObjectID)

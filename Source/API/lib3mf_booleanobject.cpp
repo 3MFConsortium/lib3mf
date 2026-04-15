@@ -62,6 +62,21 @@ bool CBooleanObject::IsBooleanObject()
 	return true;
 }
 
+bool CBooleanObject::IsMeshObject()
+{
+	return false;
+}
+
+bool CBooleanObject::IsComponentsObject()
+{
+	return false;
+}
+
+bool CBooleanObject::IsLevelSetObject()
+{
+	return false;
+}
+
 void CBooleanObject::SetBaseObject(IObject* pBaseObject, const Lib3MF::sTransform Transform)
 {
 	if (!pBaseObject)
@@ -107,6 +122,26 @@ void CBooleanObject::SetOperation(const Lib3MF::eBooleanOperation eOperation)
 Lib3MF::eBooleanOperation CBooleanObject::GetOperation()
 {
 	return (Lib3MF::eBooleanOperation)booleanObject()->getOperation();
+}
+
+void CBooleanObject::SetCSGModeEnabled(const bool bCSGModeEnabled)
+{
+	booleanObject()->setCSGModeEnabled(bCSGModeEnabled);
+}
+
+bool CBooleanObject::GetCSGModeEnabled()
+{
+	return booleanObject()->getCSGModeEnabled();
+}
+
+void CBooleanObject::SetExtractionGridResolution(const Lib3MF_uint32 nGridResolution)
+{
+	booleanObject()->setExtractionGridResolution(nGridResolution);
+}
+
+Lib3MF_uint32 CBooleanObject::GetExtractionGridResolution()
+{
+	return booleanObject()->getExtractionGridResolution();
 }
 
 Lib3MF_uint32 CBooleanObject::GetOperandCount()

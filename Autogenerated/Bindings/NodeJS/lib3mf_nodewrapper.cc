@@ -6664,6 +6664,10 @@ void CLib3MFBooleanObject::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetBaseTransform", GetBaseTransform);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetOperation", SetOperation);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOperation", GetOperation);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetCSGModeEnabled", SetCSGModeEnabled);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCSGModeEnabled", GetCSGModeEnabled);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetExtractionGridResolution", SetExtractionGridResolution);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetExtractionGridResolution", GetExtractionGridResolution);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOperandCount", GetOperandCount);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddOperand", AddOperand);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOperand", GetOperand);
@@ -6840,6 +6844,98 @@ void CLib3MFBooleanObject::GetOperation(const FunctionCallbackInfo<Value>& args)
         Lib3MFResult errorCode = wrapperTable->m_BooleanObject_GetOperation(instanceHandle, &eReturnOperation);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(Integer::New(isolate, (int)eReturnOperation));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBooleanObject::SetCSGModeEnabled(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsBoolean()) {
+            throw std::runtime_error("Expected bool parameter 0 (CSGModeEnabled)");
+        }
+        bool bCSGModeEnabled = args[0]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetCSGModeEnabled.");
+        if (wrapperTable->m_BooleanObject_SetCSGModeEnabled == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BooleanObject::SetCSGModeEnabled.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BooleanObject_SetCSGModeEnabled(instanceHandle, bCSGModeEnabled);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBooleanObject::GetCSGModeEnabled(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        bool bReturnCSGModeEnabled = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCSGModeEnabled.");
+        if (wrapperTable->m_BooleanObject_GetCSGModeEnabled == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BooleanObject::GetCSGModeEnabled.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BooleanObject_GetCSGModeEnabled(instanceHandle, &bReturnCSGModeEnabled);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnCSGModeEnabled));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBooleanObject::SetExtractionGridResolution(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (GridResolution)");
+        }
+        unsigned int nGridResolution = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetExtractionGridResolution.");
+        if (wrapperTable->m_BooleanObject_SetExtractionGridResolution == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BooleanObject::SetExtractionGridResolution.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BooleanObject_SetExtractionGridResolution(instanceHandle, nGridResolution);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBooleanObject::GetExtractionGridResolution(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnGridResolution = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetExtractionGridResolution.");
+        if (wrapperTable->m_BooleanObject_GetExtractionGridResolution == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BooleanObject::GetExtractionGridResolution.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BooleanObject_GetExtractionGridResolution(instanceHandle, &nReturnGridResolution);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnGridResolution));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

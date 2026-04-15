@@ -1253,6 +1253,10 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_booleanobject_getbasetransform;
 	protected com.sun.jna.Function lib3mf_booleanobject_setoperation;
 	protected com.sun.jna.Function lib3mf_booleanobject_getoperation;
+	protected com.sun.jna.Function lib3mf_booleanobject_setcsgmodeenabled;
+	protected com.sun.jna.Function lib3mf_booleanobject_getcsgmodeenabled;
+	protected com.sun.jna.Function lib3mf_booleanobject_setextractiongridresolution;
+	protected com.sun.jna.Function lib3mf_booleanobject_getextractiongridresolution;
 	protected com.sun.jna.Function lib3mf_booleanobject_getoperandcount;
 	protected com.sun.jna.Function lib3mf_booleanobject_addoperand;
 	protected com.sun.jna.Function lib3mf_booleanobject_getoperand;
@@ -1918,6 +1922,10 @@ public class Lib3MFWrapper {
 		lib3mf_booleanobject_getbasetransform = mLibrary.getFunction("lib3mf_booleanobject_getbasetransform");
 		lib3mf_booleanobject_setoperation = mLibrary.getFunction("lib3mf_booleanobject_setoperation");
 		lib3mf_booleanobject_getoperation = mLibrary.getFunction("lib3mf_booleanobject_getoperation");
+		lib3mf_booleanobject_setcsgmodeenabled = mLibrary.getFunction("lib3mf_booleanobject_setcsgmodeenabled");
+		lib3mf_booleanobject_getcsgmodeenabled = mLibrary.getFunction("lib3mf_booleanobject_getcsgmodeenabled");
+		lib3mf_booleanobject_setextractiongridresolution = mLibrary.getFunction("lib3mf_booleanobject_setextractiongridresolution");
+		lib3mf_booleanobject_getextractiongridresolution = mLibrary.getFunction("lib3mf_booleanobject_getextractiongridresolution");
 		lib3mf_booleanobject_getoperandcount = mLibrary.getFunction("lib3mf_booleanobject_getoperandcount");
 		lib3mf_booleanobject_addoperand = mLibrary.getFunction("lib3mf_booleanobject_addoperand");
 		lib3mf_booleanobject_getoperand = mLibrary.getFunction("lib3mf_booleanobject_getoperand");
@@ -2582,6 +2590,10 @@ public class Lib3MFWrapper {
 		lib3mf_booleanobject_getbasetransform = loadFunctionByLookup(lookupMethod, "lib3mf_booleanobject_getbasetransform");
 		lib3mf_booleanobject_setoperation = loadFunctionByLookup(lookupMethod, "lib3mf_booleanobject_setoperation");
 		lib3mf_booleanobject_getoperation = loadFunctionByLookup(lookupMethod, "lib3mf_booleanobject_getoperation");
+		lib3mf_booleanobject_setcsgmodeenabled = loadFunctionByLookup(lookupMethod, "lib3mf_booleanobject_setcsgmodeenabled");
+		lib3mf_booleanobject_getcsgmodeenabled = loadFunctionByLookup(lookupMethod, "lib3mf_booleanobject_getcsgmodeenabled");
+		lib3mf_booleanobject_setextractiongridresolution = loadFunctionByLookup(lookupMethod, "lib3mf_booleanobject_setextractiongridresolution");
+		lib3mf_booleanobject_getextractiongridresolution = loadFunctionByLookup(lookupMethod, "lib3mf_booleanobject_getextractiongridresolution");
 		lib3mf_booleanobject_getoperandcount = loadFunctionByLookup(lookupMethod, "lib3mf_booleanobject_getoperandcount");
 		lib3mf_booleanobject_addoperand = loadFunctionByLookup(lookupMethod, "lib3mf_booleanobject_addoperand");
 		lib3mf_booleanobject_getoperand = loadFunctionByLookup(lookupMethod, "lib3mf_booleanobject_getoperand");

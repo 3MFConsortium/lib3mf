@@ -5875,6 +5875,138 @@ Lib3MFResult lib3mf_booleanobject_getoperation(Lib3MF_BooleanObject pBooleanObje
 	}
 }
 
+Lib3MFResult lib3mf_booleanobject_setcsgmodeenabled(Lib3MF_BooleanObject pBooleanObject, bool bCSGModeEnabled)
+{
+	IBase* pIBaseClass = (IBase *)pBooleanObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBooleanObject, "BooleanObject", "SetCSGModeEnabled");
+			pJournalEntry->addBooleanParameter("CSGModeEnabled", bCSGModeEnabled);
+		}
+		IBooleanObject* pIBooleanObject = dynamic_cast<IBooleanObject*>(pIBaseClass);
+		if (!pIBooleanObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIBooleanObject->SetCSGModeEnabled(bCSGModeEnabled);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_booleanobject_getcsgmodeenabled(Lib3MF_BooleanObject pBooleanObject, bool * pCSGModeEnabled)
+{
+	IBase* pIBaseClass = (IBase *)pBooleanObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBooleanObject, "BooleanObject", "GetCSGModeEnabled");
+		}
+		if (pCSGModeEnabled == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBooleanObject* pIBooleanObject = dynamic_cast<IBooleanObject*>(pIBaseClass);
+		if (!pIBooleanObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCSGModeEnabled = pIBooleanObject->GetCSGModeEnabled();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("CSGModeEnabled", *pCSGModeEnabled);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_booleanobject_setextractiongridresolution(Lib3MF_BooleanObject pBooleanObject, Lib3MF_uint32 nGridResolution)
+{
+	IBase* pIBaseClass = (IBase *)pBooleanObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBooleanObject, "BooleanObject", "SetExtractionGridResolution");
+			pJournalEntry->addUInt32Parameter("GridResolution", nGridResolution);
+		}
+		IBooleanObject* pIBooleanObject = dynamic_cast<IBooleanObject*>(pIBaseClass);
+		if (!pIBooleanObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIBooleanObject->SetExtractionGridResolution(nGridResolution);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_booleanobject_getextractiongridresolution(Lib3MF_BooleanObject pBooleanObject, Lib3MF_uint32 * pGridResolution)
+{
+	IBase* pIBaseClass = (IBase *)pBooleanObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBooleanObject, "BooleanObject", "GetExtractionGridResolution");
+		}
+		if (pGridResolution == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBooleanObject* pIBooleanObject = dynamic_cast<IBooleanObject*>(pIBaseClass);
+		if (!pIBooleanObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pGridResolution = pIBooleanObject->GetExtractionGridResolution();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("GridResolution", *pGridResolution);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_booleanobject_getoperandcount(Lib3MF_BooleanObject pBooleanObject, Lib3MF_uint32 * pCount)
 {
 	IBase* pIBaseClass = (IBase *)pBooleanObject;
@@ -25205,6 +25337,14 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_booleanobject_setoperation;
 	if (sProcName == "lib3mf_booleanobject_getoperation") 
 		*ppProcAddress = (void*) &lib3mf_booleanobject_getoperation;
+	if (sProcName == "lib3mf_booleanobject_setcsgmodeenabled") 
+		*ppProcAddress = (void*) &lib3mf_booleanobject_setcsgmodeenabled;
+	if (sProcName == "lib3mf_booleanobject_getcsgmodeenabled") 
+		*ppProcAddress = (void*) &lib3mf_booleanobject_getcsgmodeenabled;
+	if (sProcName == "lib3mf_booleanobject_setextractiongridresolution") 
+		*ppProcAddress = (void*) &lib3mf_booleanobject_setextractiongridresolution;
+	if (sProcName == "lib3mf_booleanobject_getextractiongridresolution") 
+		*ppProcAddress = (void*) &lib3mf_booleanobject_getextractiongridresolution;
 	if (sProcName == "lib3mf_booleanobject_getoperandcount") 
 		*ppProcAddress = (void*) &lib3mf_booleanobject_getoperandcount;
 	if (sProcName == "lib3mf_booleanobject_addoperand") 

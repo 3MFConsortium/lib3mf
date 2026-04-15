@@ -1876,6 +1876,30 @@ public:
 	virtual Lib3MF::eBooleanOperation GetOperation() = 0;
 
 	/**
+	* IBooleanObject::SetCSGModeEnabled - Enables or disables CSG field evaluation for boolean-to-mesh materialization.
+	* @param[in] bCSGModeEnabled - if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback
+	*/
+	virtual void SetCSGModeEnabled(const bool bCSGModeEnabled) = 0;
+
+	/**
+	* IBooleanObject::GetCSGModeEnabled - Returns whether CSG field evaluation is enabled for boolean-to-mesh materialization.
+	* @return if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback
+	*/
+	virtual bool GetCSGModeEnabled() = 0;
+
+	/**
+	* IBooleanObject::SetExtractionGridResolution - Sets the extraction grid resolution used for boolean-to-mesh materialization.
+	* @param[in] nGridResolution - extraction grid resolution for boolean surface extraction
+	*/
+	virtual void SetExtractionGridResolution(const Lib3MF_uint32 nGridResolution) = 0;
+
+	/**
+	* IBooleanObject::GetExtractionGridResolution - Returns the extraction grid resolution used for boolean-to-mesh materialization.
+	* @return extraction grid resolution for boolean surface extraction
+	*/
+	virtual Lib3MF_uint32 GetExtractionGridResolution() = 0;
+
+	/**
 	* IBooleanObject::GetOperandCount - Returns the number of operands in the boolean sequence.
 	* @return number of operands in the boolean sequence
 	*/

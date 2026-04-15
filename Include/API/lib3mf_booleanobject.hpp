@@ -82,6 +82,9 @@ public:
 	*/
 
 	bool IsBooleanObject() override;
+	bool IsMeshObject() override;
+	bool IsComponentsObject() override;
+	bool IsLevelSetObject() override;
 
 	void SetBaseObject(IObject* pBaseObject, const Lib3MF::sTransform Transform) override;
 
@@ -94,6 +97,14 @@ public:
 	void SetOperation(const Lib3MF::eBooleanOperation eOperation) override;
 
 	Lib3MF::eBooleanOperation GetOperation() override;
+
+	void SetCSGModeEnabled(const bool bCSGModeEnabled) override;
+
+	bool GetCSGModeEnabled() override;
+
+	void SetExtractionGridResolution(const Lib3MF_uint32 nGridResolution) override;
+
+	Lib3MF_uint32 GetExtractionGridResolution() override;
 
 	Lib3MF_uint32 GetOperandCount() override;
 

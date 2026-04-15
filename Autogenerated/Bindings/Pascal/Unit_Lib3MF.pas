@@ -2224,6 +2224,42 @@ type
 	TLib3MFBooleanObject_GetOperationFunc = function(pBooleanObject: TLib3MFHandle; out pOperation: Integer): TLib3MFResult; cdecl;
 	
 	(**
+	* Enables or disables CSG field evaluation for boolean-to-mesh materialization.
+	*
+	* @param[in] pBooleanObject - BooleanObject instance.
+	* @param[in] bCSGModeEnabled - if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBooleanObject_SetCSGModeEnabledFunc = function(pBooleanObject: TLib3MFHandle; const bCSGModeEnabled: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns whether CSG field evaluation is enabled for boolean-to-mesh materialization.
+	*
+	* @param[in] pBooleanObject - BooleanObject instance.
+	* @param[out] pCSGModeEnabled - if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBooleanObject_GetCSGModeEnabledFunc = function(pBooleanObject: TLib3MFHandle; out pCSGModeEnabled: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the extraction grid resolution used for boolean-to-mesh materialization.
+	*
+	* @param[in] pBooleanObject - BooleanObject instance.
+	* @param[in] nGridResolution - extraction grid resolution for boolean surface extraction
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBooleanObject_SetExtractionGridResolutionFunc = function(pBooleanObject: TLib3MFHandle; const nGridResolution: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the extraction grid resolution used for boolean-to-mesh materialization.
+	*
+	* @param[in] pBooleanObject - BooleanObject instance.
+	* @param[out] pGridResolution - extraction grid resolution for boolean surface extraction
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBooleanObject_GetExtractionGridResolutionFunc = function(pBooleanObject: TLib3MFHandle; out pGridResolution: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
 	* Returns the number of operands in the boolean sequence.
 	*
 	* @param[in] pBooleanObject - BooleanObject instance.
@@ -8182,6 +8218,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetBaseTransform(): TLib3MFTransform;
 		procedure SetOperation(const AOperation: TLib3MFBooleanOperation);
 		function GetOperation(): TLib3MFBooleanOperation;
+		procedure SetCSGModeEnabled(const ACSGModeEnabled: Boolean);
+		function GetCSGModeEnabled(): Boolean;
+		procedure SetExtractionGridResolution(const AGridResolution: Cardinal);
+		function GetExtractionGridResolution(): Cardinal;
 		function GetOperandCount(): Cardinal;
 		procedure AddOperand(const AOperandObject: TLib3MFMeshObject; const ATransform: TLib3MFTransform);
 		function GetOperand(const AIndex: Cardinal; out AOperandObject: TLib3MFMeshObject): TLib3MFTransform;
@@ -9866,6 +9906,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFBooleanObject_GetBaseTransformFunc: TLib3MFBooleanObject_GetBaseTransformFunc;
 		FLib3MFBooleanObject_SetOperationFunc: TLib3MFBooleanObject_SetOperationFunc;
 		FLib3MFBooleanObject_GetOperationFunc: TLib3MFBooleanObject_GetOperationFunc;
+		FLib3MFBooleanObject_SetCSGModeEnabledFunc: TLib3MFBooleanObject_SetCSGModeEnabledFunc;
+		FLib3MFBooleanObject_GetCSGModeEnabledFunc: TLib3MFBooleanObject_GetCSGModeEnabledFunc;
+		FLib3MFBooleanObject_SetExtractionGridResolutionFunc: TLib3MFBooleanObject_SetExtractionGridResolutionFunc;
+		FLib3MFBooleanObject_GetExtractionGridResolutionFunc: TLib3MFBooleanObject_GetExtractionGridResolutionFunc;
 		FLib3MFBooleanObject_GetOperandCountFunc: TLib3MFBooleanObject_GetOperandCountFunc;
 		FLib3MFBooleanObject_AddOperandFunc: TLib3MFBooleanObject_AddOperandFunc;
 		FLib3MFBooleanObject_GetOperandFunc: TLib3MFBooleanObject_GetOperandFunc;
@@ -10536,6 +10580,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFBooleanObject_GetBaseTransformFunc: TLib3MFBooleanObject_GetBaseTransformFunc read FLib3MFBooleanObject_GetBaseTransformFunc;
 		property Lib3MFBooleanObject_SetOperationFunc: TLib3MFBooleanObject_SetOperationFunc read FLib3MFBooleanObject_SetOperationFunc;
 		property Lib3MFBooleanObject_GetOperationFunc: TLib3MFBooleanObject_GetOperationFunc read FLib3MFBooleanObject_GetOperationFunc;
+		property Lib3MFBooleanObject_SetCSGModeEnabledFunc: TLib3MFBooleanObject_SetCSGModeEnabledFunc read FLib3MFBooleanObject_SetCSGModeEnabledFunc;
+		property Lib3MFBooleanObject_GetCSGModeEnabledFunc: TLib3MFBooleanObject_GetCSGModeEnabledFunc read FLib3MFBooleanObject_GetCSGModeEnabledFunc;
+		property Lib3MFBooleanObject_SetExtractionGridResolutionFunc: TLib3MFBooleanObject_SetExtractionGridResolutionFunc read FLib3MFBooleanObject_SetExtractionGridResolutionFunc;
+		property Lib3MFBooleanObject_GetExtractionGridResolutionFunc: TLib3MFBooleanObject_GetExtractionGridResolutionFunc read FLib3MFBooleanObject_GetExtractionGridResolutionFunc;
 		property Lib3MFBooleanObject_GetOperandCountFunc: TLib3MFBooleanObject_GetOperandCountFunc read FLib3MFBooleanObject_GetOperandCountFunc;
 		property Lib3MFBooleanObject_AddOperandFunc: TLib3MFBooleanObject_AddOperandFunc read FLib3MFBooleanObject_AddOperandFunc;
 		property Lib3MFBooleanObject_GetOperandFunc: TLib3MFBooleanObject_GetOperandFunc read FLib3MFBooleanObject_GetOperandFunc;
@@ -14405,6 +14453,30 @@ implementation
 		ResultOperation := 0;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFBooleanObject_GetOperationFunc(FHandle, ResultOperation));
 		Result := convertConstToBooleanOperation(ResultOperation);
+	end;
+
+	procedure TLib3MFBooleanObject.SetCSGModeEnabled(const ACSGModeEnabled: Boolean);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBooleanObject_SetCSGModeEnabledFunc(FHandle, Ord(ACSGModeEnabled)));
+	end;
+
+	function TLib3MFBooleanObject.GetCSGModeEnabled(): Boolean;
+	var
+		ResultCSGModeEnabled: Byte;
+	begin
+		ResultCSGModeEnabled := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBooleanObject_GetCSGModeEnabledFunc(FHandle, ResultCSGModeEnabled));
+		Result := (ResultCSGModeEnabled <> 0);
+	end;
+
+	procedure TLib3MFBooleanObject.SetExtractionGridResolution(const AGridResolution: Cardinal);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBooleanObject_SetExtractionGridResolutionFunc(FHandle, AGridResolution));
+	end;
+
+	function TLib3MFBooleanObject.GetExtractionGridResolution(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBooleanObject_GetExtractionGridResolutionFunc(FHandle, Result));
 	end;
 
 	function TLib3MFBooleanObject.GetOperandCount(): Cardinal;
@@ -20653,6 +20725,10 @@ implementation
 		FLib3MFBooleanObject_GetBaseTransformFunc := LoadFunction('lib3mf_booleanobject_getbasetransform');
 		FLib3MFBooleanObject_SetOperationFunc := LoadFunction('lib3mf_booleanobject_setoperation');
 		FLib3MFBooleanObject_GetOperationFunc := LoadFunction('lib3mf_booleanobject_getoperation');
+		FLib3MFBooleanObject_SetCSGModeEnabledFunc := LoadFunction('lib3mf_booleanobject_setcsgmodeenabled');
+		FLib3MFBooleanObject_GetCSGModeEnabledFunc := LoadFunction('lib3mf_booleanobject_getcsgmodeenabled');
+		FLib3MFBooleanObject_SetExtractionGridResolutionFunc := LoadFunction('lib3mf_booleanobject_setextractiongridresolution');
+		FLib3MFBooleanObject_GetExtractionGridResolutionFunc := LoadFunction('lib3mf_booleanobject_getextractiongridresolution');
 		FLib3MFBooleanObject_GetOperandCountFunc := LoadFunction('lib3mf_booleanobject_getoperandcount');
 		FLib3MFBooleanObject_AddOperandFunc := LoadFunction('lib3mf_booleanobject_addoperand');
 		FLib3MFBooleanObject_GetOperandFunc := LoadFunction('lib3mf_booleanobject_getoperand');
@@ -21632,6 +21708,18 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_booleanobject_getoperation'), @FLib3MFBooleanObject_GetOperationFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_booleanobject_setcsgmodeenabled'), @FLib3MFBooleanObject_SetCSGModeEnabledFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_booleanobject_getcsgmodeenabled'), @FLib3MFBooleanObject_GetCSGModeEnabledFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_booleanobject_setextractiongridresolution'), @FLib3MFBooleanObject_SetExtractionGridResolutionFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_booleanobject_getextractiongridresolution'), @FLib3MFBooleanObject_GetExtractionGridResolutionFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_booleanobject_getoperandcount'), @FLib3MFBooleanObject_GetOperandCountFunc);

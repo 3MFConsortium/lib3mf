@@ -49,6 +49,8 @@ namespace NMR {
 		PModelComponent m_pBaseObject;
 		std::vector<PModelComponent> m_Operands;
 		eModelBooleanOperation m_eOperation;
+		nfBool m_bCSGModeEnabled;
+		nfUint32 m_nExtractionGridResolution;
 
 	public:
 		CModelBooleanObject() = delete;
@@ -64,6 +66,10 @@ namespace NMR {
 		eModelBooleanOperation getOperation() const;
 		std::string getOperationString() const;
 		nfBool setOperationString(_In_ const std::string & sOperation, _In_ nfBool bRaiseException);
+		void setCSGModeEnabled(_In_ nfBool bEnabled);
+		nfBool getCSGModeEnabled() const;
+		void setExtractionGridResolution(_In_ nfUint32 nGridResolution);
+		nfUint32 getExtractionGridResolution() const;
 
 		void addOperand(_In_ CModelObject * pObject, _In_ const NMATRIX3 & mTransform);
 		nfUint32 getOperandCount() const;
@@ -71,6 +77,7 @@ namespace NMR {
 
 		void mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix) override;
 		nfBool isValid() override;
+		void calculateComponentDepthLevel(nfUint32 nLevel) override;
 		nfBool hasSlices(nfBool bRecursive) override;
 		nfBool isValidForSlices(const NMATRIX3& totalParentMatrix) override;
 		void extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix) override;

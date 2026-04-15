@@ -1198,6 +1198,18 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_booleanobject_getoperation", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BooleanObject_GetOperation (IntPtr Handle, out Int32 AOperation);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_booleanobject_setcsgmodeenabled", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BooleanObject_SetCSGModeEnabled (IntPtr Handle, Byte ACSGModeEnabled);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_booleanobject_getcsgmodeenabled", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BooleanObject_GetCSGModeEnabled (IntPtr Handle, out Byte ACSGModeEnabled);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_booleanobject_setextractiongridresolution", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BooleanObject_SetExtractionGridResolution (IntPtr Handle, UInt32 AGridResolution);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_booleanobject_getextractiongridresolution", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BooleanObject_GetExtractionGridResolution (IntPtr Handle, out UInt32 AGridResolution);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_booleanobject_getoperandcount", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BooleanObject_GetOperandCount (IntPtr Handle, out UInt32 ACount);
 
@@ -4773,6 +4785,34 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.BooleanObject_GetOperation (Handle, out resultOperation));
 			return (eBooleanOperation) (resultOperation);
+		}
+
+		public void SetCSGModeEnabled (bool ACSGModeEnabled)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.BooleanObject_SetCSGModeEnabled (Handle, (Byte)( ACSGModeEnabled ? 1 : 0 )));
+		}
+
+		public bool GetCSGModeEnabled ()
+		{
+			Byte resultCSGModeEnabled = 0;
+
+			CheckError(Internal.Lib3MFWrapper.BooleanObject_GetCSGModeEnabled (Handle, out resultCSGModeEnabled));
+			return (resultCSGModeEnabled != 0);
+		}
+
+		public void SetExtractionGridResolution (UInt32 AGridResolution)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.BooleanObject_SetExtractionGridResolution (Handle, AGridResolution));
+		}
+
+		public UInt32 GetExtractionGridResolution ()
+		{
+			UInt32 resultGridResolution = 0;
+
+			CheckError(Internal.Lib3MFWrapper.BooleanObject_GetExtractionGridResolution (Handle, out resultGridResolution));
+			return resultGridResolution;
 		}
 
 		public UInt32 GetOperandCount ()

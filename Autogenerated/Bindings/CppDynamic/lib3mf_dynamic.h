@@ -1630,6 +1630,42 @@ typedef Lib3MFResult (*PLib3MFBooleanObject_SetOperationPtr) (Lib3MF_BooleanObje
 typedef Lib3MFResult (*PLib3MFBooleanObject_GetOperationPtr) (Lib3MF_BooleanObject pBooleanObject, Lib3MF::eBooleanOperation * pOperation);
 
 /**
+* Enables or disables CSG field evaluation for boolean-to-mesh materialization.
+*
+* @param[in] pBooleanObject - BooleanObject instance.
+* @param[in] bCSGModeEnabled - if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBooleanObject_SetCSGModeEnabledPtr) (Lib3MF_BooleanObject pBooleanObject, bool bCSGModeEnabled);
+
+/**
+* Returns whether CSG field evaluation is enabled for boolean-to-mesh materialization.
+*
+* @param[in] pBooleanObject - BooleanObject instance.
+* @param[out] pCSGModeEnabled - if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBooleanObject_GetCSGModeEnabledPtr) (Lib3MF_BooleanObject pBooleanObject, bool * pCSGModeEnabled);
+
+/**
+* Sets the extraction grid resolution used for boolean-to-mesh materialization.
+*
+* @param[in] pBooleanObject - BooleanObject instance.
+* @param[in] nGridResolution - extraction grid resolution for boolean surface extraction
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBooleanObject_SetExtractionGridResolutionPtr) (Lib3MF_BooleanObject pBooleanObject, Lib3MF_uint32 nGridResolution);
+
+/**
+* Returns the extraction grid resolution used for boolean-to-mesh materialization.
+*
+* @param[in] pBooleanObject - BooleanObject instance.
+* @param[out] pGridResolution - extraction grid resolution for boolean surface extraction
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFBooleanObject_GetExtractionGridResolutionPtr) (Lib3MF_BooleanObject pBooleanObject, Lib3MF_uint32 * pGridResolution);
+
+/**
 * Returns the number of operands in the boolean sequence.
 *
 * @param[in] pBooleanObject - BooleanObject instance.
@@ -7180,6 +7216,10 @@ typedef struct {
 	PLib3MFBooleanObject_GetBaseTransformPtr m_BooleanObject_GetBaseTransform;
 	PLib3MFBooleanObject_SetOperationPtr m_BooleanObject_SetOperation;
 	PLib3MFBooleanObject_GetOperationPtr m_BooleanObject_GetOperation;
+	PLib3MFBooleanObject_SetCSGModeEnabledPtr m_BooleanObject_SetCSGModeEnabled;
+	PLib3MFBooleanObject_GetCSGModeEnabledPtr m_BooleanObject_GetCSGModeEnabled;
+	PLib3MFBooleanObject_SetExtractionGridResolutionPtr m_BooleanObject_SetExtractionGridResolution;
+	PLib3MFBooleanObject_GetExtractionGridResolutionPtr m_BooleanObject_GetExtractionGridResolution;
 	PLib3MFBooleanObject_GetOperandCountPtr m_BooleanObject_GetOperandCount;
 	PLib3MFBooleanObject_AddOperandPtr m_BooleanObject_AddOperand;
 	PLib3MFBooleanObject_GetOperandPtr m_BooleanObject_GetOperand;

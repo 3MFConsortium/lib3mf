@@ -388,6 +388,11 @@ bool CMeshObject::IsLevelSetObject()
 	return false;
 }
 
+bool CMeshObject::IsBooleanObject()
+{
+	return false;
+}
+
 bool CMeshObject::IsValid()
 {
 	return meshObject()->isValid();
@@ -465,4 +470,3 @@ ITriangleSet* CMeshObject::GetTriangleSet(const Lib3MF_uint32 nIndex)
 
 	return new CTriangleSet(pTriangleSet, pMeshObject);
 }
-
