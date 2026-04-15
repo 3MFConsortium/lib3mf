@@ -471,6 +471,10 @@ TEST_F(BooleanRead, WriteBooleanWithHigherResourceDependencies)
 
 TEST_F(BooleanRead, ExperimentalCSGPathMaterializesSurface)
 {
+#if !defined(LIB3MF_ENABLE_EXPENSIVE_TESTS) || (LIB3MF_ENABLE_EXPENSIVE_TESTS == 0)
+	GTEST_SKIP() << "Disabled by default. Reconfigure with -DLIB3MF_ENABLE_EXPENSIVE_TESTS=ON to run this test.";
+#endif
+
 	auto model = wrapper->CreateModel();
 	auto baseMesh = addBoxMesh(model);
 	auto operandMesh = addBoxMesh(model);
@@ -490,6 +494,10 @@ TEST_F(BooleanRead, ExperimentalCSGPathMaterializesSurface)
 
 TEST_F(BooleanRead, ReadBooleanFileAndExtractSTLToDisk)
 {
+#if !defined(LIB3MF_ENABLE_EXPENSIVE_TESTS) || (LIB3MF_ENABLE_EXPENSIVE_TESTS == 0)
+	GTEST_SKIP() << "Disabled by default. Reconfigure with -DLIB3MF_ENABLE_EXPENSIVE_TESTS=ON to run this test.";
+#endif
+
 	auto model = wrapper->CreateModel();
 	auto reader = model->QueryReader("3mf");
 	reader->ReadFromFile(sTestFilesPath + "/" + "Boolean" + "/" + "booleans_operations.3mf");

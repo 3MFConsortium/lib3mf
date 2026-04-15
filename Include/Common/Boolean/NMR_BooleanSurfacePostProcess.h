@@ -26,37 +26,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-Winding-number based boolean field construction and CSG composition.
+Surface smoothing and zero-level-set projection for extracted boolean meshes.
 
 --*/
 
-#include "Common/Boolean/NMR_BooleanEngine.h"
+#ifndef __NMR_BOOLEANSURFACEPOSTPROCESS
+#define __NMR_BOOLEANSURFACEPOSTPROCESS
 
 #include "Common/Boolean/NMR_BooleanDistanceField.h"
-#include "Common/Boolean/NMR_BooleanSurfacePostProcess.h"
-#include "Common/Boolean/NMR_MarchingCubes.h"
-#include "Common/NMR_Exception.h"
 
-namespace NMR {
+namespace NMR::Boolean {
 
-	void CBooleanEngine::evaluate(
-		_In_ CMesh * pBaseMesh,
-		_In_ const std::vector<PMesh> & operandMeshes,
-		_In_ eModelBooleanOperation operation,
-		_In_ CMesh * pResultMesh,
-		_In_ nfUint32 nGridResolution)
-	{
-		if (!pResultMesh)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		const auto fieldData = Boolean::buildCSGField(pBaseMesh, operandMeshes, operation, nGridResolution);
-		Boolean::extractIsoSurfaceMarchingCubes(
-			pResultMesh,
-			fieldData.values,
-			fieldData.resolution,
-			{ fieldData.minCorner.x, fieldData.minCorner.y, fieldData.minCorner.z },
-			{ fieldData.maxCorner.x, fieldData.maxCorner.y, fieldData.maxCorner.z });
-		Boolean::smoothAndProjectExtractedSurface(pResultMesh, fieldData);
-	}
+	void smoothAndProjectExtractedSurface(
+		_In_ CMesh * pMesh,
+		_In_ const sBooleanFieldData & fieldData);
 
 }
+
+#endif // __NMR_BOOLEANSURFACEPOSTPROCESS

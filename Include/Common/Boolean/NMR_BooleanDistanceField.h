@@ -26,37 +26,39 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-Winding-number based boolean field construction and CSG composition.
+Signed-distance field generation for boolean CSG evaluation.
 
 --*/
 
-#include "Common/Boolean/NMR_BooleanEngine.h"
+#ifndef __NMR_BOOLEANDISTANCEFIELD
+#define __NMR_BOOLEANDISTANCEFIELD
 
-#include "Common/Boolean/NMR_BooleanDistanceField.h"
-#include "Common/Boolean/NMR_BooleanSurfacePostProcess.h"
-#include "Common/Boolean/NMR_MarchingCubes.h"
-#include "Common/NMR_Exception.h"
+#include "Common/Mesh/NMR_Mesh.h"
+#include "Model/Classes/NMR_ModelBooleanObject.h"
 
-namespace NMR {
+#include <vector>
 
-	void CBooleanEngine::evaluate(
+namespace NMR::Boolean {
+
+	struct sBooleanVec3d {
+		double x = 0.0;
+		double y = 0.0;
+		double z = 0.0;
+	};
+
+	struct sBooleanFieldData {
+		std::vector<double> values;
+		int resolution = 0;
+		sBooleanVec3d minCorner;
+		sBooleanVec3d maxCorner;
+	};
+
+	sBooleanFieldData buildCSGField(
 		_In_ CMesh * pBaseMesh,
 		_In_ const std::vector<PMesh> & operandMeshes,
 		_In_ eModelBooleanOperation operation,
-		_In_ CMesh * pResultMesh,
-		_In_ nfUint32 nGridResolution)
-	{
-		if (!pResultMesh)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		const auto fieldData = Boolean::buildCSGField(pBaseMesh, operandMeshes, operation, nGridResolution);
-		Boolean::extractIsoSurfaceMarchingCubes(
-			pResultMesh,
-			fieldData.values,
-			fieldData.resolution,
-			{ fieldData.minCorner.x, fieldData.minCorner.y, fieldData.minCorner.z },
-			{ fieldData.maxCorner.x, fieldData.maxCorner.y, fieldData.maxCorner.z });
-		Boolean::smoothAndProjectExtractedSurface(pResultMesh, fieldData);
-	}
+		_In_ nfUint32 nGridResolution);
 
 }
+
+#endif // __NMR_BOOLEANDISTANCEFIELD
