@@ -48,6 +48,22 @@ namespace NMR {
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
+	void CModelReaderNode_Boolean2307_Boolean::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
+	{
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_PRODUCTIONSPEC) == 0) {
+			if (strcmp(pAttributeName, XML_3MF_PRODUCTION_PATH) == 0) {
+				if (m_bHasPath)
+					throw CNMRException(NMR_ERROR_DUPLICATEPATH);
+				m_sPath = pAttributeValue;
+				if (!fnStartsWithPathDelimiter(m_sPath))
+					m_pWarnings->addException(CNMRException(NMR_ERROR_PATH_NOT_ABSOLUTE), mrwInvalidOptionalValue);
+				m_bHasPath = true;
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+		}
+	}
+
 	CModelObject * CModelReaderNode_Boolean2307_Boolean::getObject()
 	{
 		if (!m_bHasObjectID)

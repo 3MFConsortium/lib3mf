@@ -444,7 +444,9 @@ namespace NMR::Boolean {
 
 		sBooleanFieldData fieldData;
 		computeBounds(allMeshes, fieldData.minCorner, fieldData.maxCorner);
-		fieldData.resolution = std::clamp(static_cast<int>(nGridResolution), 24, 256);
+		if (nGridResolution < 2 || nGridResolution > static_cast<nfUint32>(std::numeric_limits<int>::max()))
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		fieldData.resolution = static_cast<int>(nGridResolution);
 		fieldData.values.resize(static_cast<size_t>(fieldData.resolution) * fieldData.resolution * fieldData.resolution);
 
 		const auto idx = [resolution = fieldData.resolution](int x, int y, int z) -> size_t {

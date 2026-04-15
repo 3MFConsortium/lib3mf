@@ -189,7 +189,7 @@ namespace NMR {
 
 	void CModelBooleanObject::setExtractionGridResolution(_In_ nfUint32 nGridResolution)
 	{
-		if (nGridResolution == 0)
+		if (nGridResolution < 2)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		m_nExtractionGridResolution = nGridResolution;
 	}

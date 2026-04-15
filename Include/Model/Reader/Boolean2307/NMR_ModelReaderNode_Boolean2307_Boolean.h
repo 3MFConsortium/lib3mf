@@ -25,8 +25,9 @@ namespace NMR {
 		CModelObject * getObject();
 		NMATRIX3 getTransform() const;
 
-	protected:
+protected:
 		void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue) override;
+		void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace) override;
 	};
 }
 

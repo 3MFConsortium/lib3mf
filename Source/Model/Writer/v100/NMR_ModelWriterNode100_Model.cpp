@@ -699,7 +699,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_PRODUCTIONEXTENSION_REQUIRED);
 			}
 
-			writeStringAttribute(XML_3MF_ATTRIBUTE_BOOLEAN_PATH, pBaseObjectID->getPath());
+			writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_PATH, pBaseObjectID->getPath());
 		}
 
 		for (nfUint32 nIndex = 0; nIndex < nOperandCount; nIndex++) {
@@ -719,7 +719,7 @@ namespace NMR {
 					throw CNMRException(NMR_ERROR_PRODUCTIONEXTENSION_REQUIRED);
 				}
 
-				writeStringAttribute(XML_3MF_ATTRIBUTE_BOOLEAN_PATH, pOperandObjectID->getPath());
+				writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_PATH, pOperandObjectID->getPath());
 			}
 			if (pOperand->hasTransform())
 				writeStringAttribute(XML_3MF_ATTRIBUTE_BOOLEAN_TRANSFORM, pOperand->getTransformString());
