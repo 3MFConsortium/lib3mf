@@ -102,8 +102,6 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if (dynamic_cast<CModelComponentsObject *>(pObject) != nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
-		if (dynamic_cast<CModelLevelSetObject *>(pObject) != nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
 		if (pObject->getObjectType() != MODELOBJECTTYPE_MODEL)
 			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
 		if (isBeamLatticeMeshObject(pObject))
@@ -232,6 +230,8 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if (!m_pBaseObject)
 			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
+		if (!m_bCSGModeEnabled && m_eOperation != eModelBooleanOperation::Union)
+			throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 
 		PMesh pWorkingMesh = std::make_shared<CMesh>();
 		m_pBaseObject->mergeToMesh(pWorkingMesh.get(), mMatrix);
@@ -254,7 +254,7 @@ namespace NMR {
 		}
 
 		// Temporary realization path: flatten referenced meshes with transforms.
-		// This preserves object traversal/export behavior until true CSG evaluation is added.
+		// This is exact for union; difference and intersection require the CSG path.
 		for (const auto & operandMesh : operandMeshes)
 			pWorkingMesh->mergeMesh(operandMesh.get(), fnMATRIX3_identity());
 
@@ -271,8 +271,6 @@ namespace NMR {
 			return false;
 
 		if (dynamic_cast<CModelComponentsObject *>(pBase) != nullptr)
-			return false;
-		if (dynamic_cast<CModelLevelSetObject *>(pBase) != nullptr)
 			return false;
 		if (pBase->getObjectType() != MODELOBJECTTYPE_MODEL)
 			return false;

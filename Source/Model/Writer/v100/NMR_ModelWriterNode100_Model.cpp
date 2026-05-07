@@ -681,6 +681,9 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
 
 		PPackageResourceID pBaseObjectID = pBaseObject->getPackageResourceID();
+		if (!pBaseObjectID)
+			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
+
 		nfUint32 nOperandCount = pBooleanObject->getOperandCount();
 		if (nOperandCount == 0)
 			throw CNMRException(NMR_ERROR_INVALIDOBJECT);
@@ -709,6 +712,9 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDOBJECT);
 
 			PPackageResourceID pOperandObjectID = pOperandObject->getPackageResourceID();
+			if (!pOperandObjectID)
+				throw CNMRException(NMR_ERROR_INVALIDOBJECT);
+
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_BOOLEAN, XML_3MF_NAMESPACEPREFIX_BOOLEAN);
 			writeIntAttribute(XML_3MF_ATTRIBUTE_BOOLEAN_OBJECTID, pOperandObjectID->getModelResourceID());
 			if (pOperandObjectID->getPath() != m_pModel->currentPath()) {
@@ -1349,6 +1355,11 @@ namespace NMR {
 						m_bWriteBeamLatticeBallsExtension = true;
 					}
 				}
+			}
+
+			// The old beam-lattice-balls early exit moved here so the same scan can also find boolean objects.
+			if (m_bWriteBooleanExtension && m_bWriteBeamLatticeBallsExtension) {
+				break;
 			}
 		}
 	}

@@ -948,7 +948,10 @@ static emscripten::val wrap_MeshObject_GetVertices(CMeshObject &self) {
     emscripten::val output = emscripten::val::object();
     std::vector<sPosition> Vertices;
     self.GetVertices(Vertices);
-    output.set("Vertices", Vertices);
+    std::vector<sPositionWrapper> wrapped_Vertices;
+    wrapped_Vertices.reserve(Vertices.size());
+    for (const auto& v : Vertices) wrapped_Vertices.push_back(sPositionWrapper{v});
+    output.set("Vertices", wrapped_Vertices);
     return output;
 }
 
@@ -956,7 +959,10 @@ static emscripten::val wrap_MeshObject_GetTriangleIndices(CMeshObject &self) {
     emscripten::val output = emscripten::val::object();
     std::vector<sTriangle> Indices;
     self.GetTriangleIndices(Indices);
-    output.set("Indices", Indices);
+    std::vector<sTriangleWrapper> wrapped_Indices;
+    wrapped_Indices.reserve(Indices.size());
+    for (const auto& v : Indices) wrapped_Indices.push_back(sTriangleWrapper{v});
+    output.set("Indices", wrapped_Indices);
     return output;
 }
 
@@ -983,14 +989,18 @@ static emscripten::val wrap_MeshObject_GetAllTriangleProperties(CMeshObject &sel
     emscripten::val output = emscripten::val::object();
     std::vector<sTriangleProperties> PropertiesArray;
     self.GetAllTriangleProperties(PropertiesArray);
-    output.set("PropertiesArray", PropertiesArray);
+    std::vector<sTrianglePropertiesWrapper> wrapped_PropertiesArray;
+    wrapped_PropertiesArray.reserve(PropertiesArray.size());
+    for (const auto& v : PropertiesArray) wrapped_PropertiesArray.push_back(sTrianglePropertiesWrapper{v});
+    output.set("PropertiesArray", wrapped_PropertiesArray);
     return output;
 }
 
 static emscripten::val wrap_BooleanObject_GetOperand(CBooleanObject &self, const Lib3MF_uint32& Index) {
     emscripten::val output = emscripten::val::object();
     PMeshObject OperandObject;
-    Lib3MF_struct return_value = self.GetOperand(Index, OperandObject);
+    sTransformWrapper return_value;
+    return_value.value = self.GetOperand(Index, OperandObject);
     output.set("return", return_value);
     output.set("OperandObject", OperandObject);
     return output;
@@ -1029,7 +1039,10 @@ static emscripten::val wrap_BeamLattice_GetBeams(CBeamLattice &self) {
     emscripten::val output = emscripten::val::object();
     std::vector<sBeam> BeamInfo;
     self.GetBeams(BeamInfo);
-    output.set("BeamInfo", BeamInfo);
+    std::vector<sBeamWrapper> wrapped_BeamInfo;
+    wrapped_BeamInfo.reserve(BeamInfo.size());
+    for (const auto& v : BeamInfo) wrapped_BeamInfo.push_back(sBeamWrapper{v});
+    output.set("BeamInfo", wrapped_BeamInfo);
     return output;
 }
 
@@ -1037,7 +1050,10 @@ static emscripten::val wrap_BeamLattice_GetBalls(CBeamLattice &self) {
     emscripten::val output = emscripten::val::object();
     std::vector<sBall> BallInfo;
     self.GetBalls(BallInfo);
-    output.set("BallInfo", BallInfo);
+    std::vector<sBallWrapper> wrapped_BallInfo;
+    wrapped_BallInfo.reserve(BallInfo.size());
+    for (const auto& v : BallInfo) wrapped_BallInfo.push_back(sBallWrapper{v});
+    output.set("BallInfo", wrapped_BallInfo);
     return output;
 }
 
@@ -1102,7 +1118,10 @@ static emscripten::val wrap_CompositeMaterials_GetComposite(CCompositeMaterials 
     emscripten::val output = emscripten::val::object();
     std::vector<sCompositeConstituent> Composite;
     self.GetComposite(PropertyID, Composite);
-    output.set("Composite", Composite);
+    std::vector<sCompositeConstituentWrapper> wrapped_Composite;
+    wrapped_Composite.reserve(Composite.size());
+    for (const auto& v : Composite) wrapped_Composite.push_back(sCompositeConstituentWrapper{v});
+    output.set("Composite", wrapped_Composite);
     return output;
 }
 
@@ -1165,7 +1184,10 @@ static emscripten::val wrap_Slice_GetVertices(CSlice &self) {
     emscripten::val output = emscripten::val::object();
     std::vector<sPosition2D> Vertices;
     self.GetVertices(Vertices);
-    output.set("Vertices", Vertices);
+    std::vector<sPosition2DWrapper> wrapped_Vertices;
+    wrapped_Vertices.reserve(Vertices.size());
+    for (const auto& v : Vertices) wrapped_Vertices.push_back(sPosition2DWrapper{v});
+    output.set("Vertices", wrapped_Vertices);
     return output;
 }
 

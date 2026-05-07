@@ -365,7 +365,7 @@ namespace NMR {
 				m_pModel->addResource(m_pObject);
 
 				if (m_bHasDefaultPropertyIndex || m_bHasDefaultPropertyID)
-					m_pWarnings->addException(CNMRException(NMR_ERROR_OBJECTLEVELPID_ON_COMPONENTSOBJECT), mrwInvalidOptionalValue);
+					m_pWarnings->addException(CNMRException(NMR_ERROR_OBJECTLEVELPID_ON_BOOLEANOBJECT), mrwInvalidOptionalValue);
 			}
 			else
 			{

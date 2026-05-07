@@ -196,13 +196,17 @@ TEST_F(BooleanRead, ApiRejectsBeamLatticeMeshes)
 	ASSERT_SPECIFIC_THROW(booleanObject->AddOperand(beamMesh.get(), wrapper->GetIdentityTransform()), Lib3MF::ELib3MFException);
 }
 
-TEST_F(BooleanRead, ApiRejectsLevelSetAsBaseObject)
+TEST_F(BooleanRead, ApiAcceptsLevelSetAsBaseObject)
 {
 	auto model = wrapper->CreateModel();
 	auto levelSet = model->AddLevelSet();
+	auto operandMesh = addBoxMesh(model);
 	auto booleanObject = model->AddBooleanObject();
 
-	ASSERT_SPECIFIC_THROW(booleanObject->SetBaseObject(levelSet.get(), wrapper->GetIdentityTransform()), Lib3MF::ELib3MFException);
+	booleanObject->SetBaseObject(levelSet.get(), wrapper->GetIdentityTransform());
+	booleanObject->AddOperand(operandMesh.get(), wrapper->GetIdentityTransform());
+
+	ASSERT_EQ(booleanObject->GetBaseObject()->GetResourceID(), levelSet->GetResourceID());
 }
 
 TEST_F(BooleanRead, ApiRejectsBooleanBaseReferenceCycles)
@@ -386,7 +390,7 @@ TEST_F(BooleanRead, UnknownBooleanAttributeYieldsWarning)
 	ASSERT_EQ(booleanObjects->GetCurrentBooleanObject()->GetOperandCount(), 1u);
 }
 
-TEST_F(BooleanRead, STLWriterMaterializesBooleanObject)
+TEST_F(BooleanRead, STLWriterMaterializesUnionBooleanObject)
 {
 	auto model = wrapper->CreateModel();
 	auto baseMesh = addBoxMesh(model);
@@ -394,7 +398,7 @@ TEST_F(BooleanRead, STLWriterMaterializesBooleanObject)
 	auto booleanObject = model->AddBooleanObject();
 
 	booleanObject->SetBaseObject(baseMesh.get(), wrapper->GetIdentityTransform());
-	booleanObject->SetOperation(Lib3MF::eBooleanOperation::Intersection);
+	booleanObject->SetOperation(Lib3MF::eBooleanOperation::Union);
 	booleanObject->AddOperand(operandMesh.get(), wrapper->GetTranslationTransform(1.0, 0.0, 0.0));
 	model->AddBuildItem(booleanObject.get(), wrapper->GetIdentityTransform());
 
@@ -403,7 +407,7 @@ TEST_F(BooleanRead, STLWriterMaterializesBooleanObject)
 	ASSERT_FALSE(buffer.empty());
 }
 
-TEST_F(BooleanRead, STLWriterMaterializesBooleanOperations)
+TEST_F(BooleanRead, STLWriterRejectsNonUnionBooleanWithoutCSG)
 {
 	auto testOperation = [&](Lib3MF::eBooleanOperation operation) {
 		auto model = wrapper->CreateModel();
@@ -417,11 +421,9 @@ TEST_F(BooleanRead, STLWriterMaterializesBooleanOperations)
 		model->AddBuildItem(booleanObject.get(), wrapper->GetIdentityTransform());
 
 		std::vector<Lib3MF_uint8> buffer;
-		model->QueryWriter("stl")->WriteToBuffer(buffer);
-		ASSERT_FALSE(buffer.empty());
+		ASSERT_SPECIFIC_THROW(model->QueryWriter("stl")->WriteToBuffer(buffer), Lib3MF::ELib3MFException);
 	};
 
-	testOperation(Lib3MF::eBooleanOperation::Union);
 	testOperation(Lib3MF::eBooleanOperation::Difference);
 	testOperation(Lib3MF::eBooleanOperation::Intersection);
 }

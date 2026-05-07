@@ -323,8 +323,8 @@ IComponentsObject * CModel::GetComponentsObjectByID(const Lib3MF_uint32 nUniqueR
 IBooleanObject * CModel::GetBooleanObjectByID(const Lib3MF_uint32 nUniqueResourceID)
 {
 	NMR::PModelResource pObjectResource = model().findResource(nUniqueResourceID);
-	if (dynamic_cast<NMR::CModelBooleanObject*>(pObjectResource.get())) {
-		return new CBooleanObject(pObjectResource);
+	if (auto pBooleanObject = std::dynamic_pointer_cast<NMR::CModelBooleanObject>(pObjectResource)) {
+		return new CBooleanObject(pBooleanObject);
 	}
 	else
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);

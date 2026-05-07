@@ -172,6 +172,12 @@ Lib3MF::sTransform CBooleanObject::GetOperand(const Lib3MF_uint32 nIndex, IMeshO
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMESHOBJECT);
 
 	auto pResource = booleanObject()->getModel()->findResource(pMeshObject->getPackageResourceID());
-	pOperandObject = new CMeshObject(pResource);
+	std::unique_ptr<IObject> pObject(CObject::fnCreateObjectFromModelResource(pResource, true));
+	auto pMeshObjectInterface = dynamic_cast<IMeshObject *>(pObject.get());
+	if (!pMeshObjectInterface)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMESHOBJECT);
+
+	pOperandObject = pMeshObjectInterface;
+	pObject.release();
 	return Lib3MF::MatrixToTransform(operand->getTransform());
 }
