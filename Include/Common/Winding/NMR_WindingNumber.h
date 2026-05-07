@@ -2,7 +2,7 @@
 
 /*++
 
-Copyright (C) 2026 tensorGrad Consulting LLP
+Copyright (C) 2026 3MF Consortium
 
 All rights reserved.
 
@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Abstract:
 
 Internal generalized winding number helper used by boolean processing.
-Copyright remains with tensorGrad Consulting LLP; this file is licensed under
+Copyright remains with 3MF Consortium; this file is licensed under
 the BSD terms above for inclusion in lib3mf.
 
 --*/

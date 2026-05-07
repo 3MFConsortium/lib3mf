@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2026 tensorGrad Consulting LLP
+Copyright (C) 2026 3MF Consortium
 
 All rights reserved.
 
