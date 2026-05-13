@@ -112,6 +112,8 @@ public:
 
     bool IsLevelSetObject() override;
 
+	bool IsBooleanObject() override;
+
     bool IsValid();
 
 	virtual IBeamLattice * BeamLattice() override;

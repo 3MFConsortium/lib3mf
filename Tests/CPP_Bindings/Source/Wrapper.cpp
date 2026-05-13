@@ -124,6 +124,12 @@ namespace Lib3MF
 		ASSERT_EQ(nMajor, 0);
 		ASSERT_EQ(nMinor, 8);
 		ASSERT_EQ(nMicro, 0);
+
+		Lib3MFTest::wrapper->GetSpecificationVersion("http://schemas.3mf.io/3dmanufacturing/booleanoperations/2023/07", bIsSupported, nMajor, nMinor, nMicro);
+		ASSERT_TRUE(bIsSupported);
+		ASSERT_EQ(nMajor, 1);
+		ASSERT_EQ(nMinor, 1);
+		ASSERT_EQ(nMicro, 1);
 	}
 
 	TEST(Wrapper, CreateModel)

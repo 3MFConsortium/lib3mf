@@ -267,6 +267,11 @@ bool CLevelSet::IsLevelSetObject()
     return true;
 }
 
+bool CLevelSet::IsBooleanObject()
+{
+	return false;
+}
+
 IVolumeData * CLevelSet::GetVolumeData()
 {
 	NMR::PModelVolumeData pVolumeData = levelSetObject()->getVolumeData();

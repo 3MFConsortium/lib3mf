@@ -1250,6 +1250,9 @@ Model error codes (0x8XXX)
 // A keystore element is not base64 encoded
 #define NMR_ERROR_KEYSTOREINVALIDENCODING 0x810E
 
+// Boolean-object must not have an Object-Level PID
+#define NMR_ERROR_OBJECTLEVELPID_ON_BOOLEANOBJECT 0x810F
+
 // errors for the volumetric extension 0x88xx
 
 // Invalid Image3D Size

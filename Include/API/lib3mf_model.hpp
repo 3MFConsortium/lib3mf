@@ -44,6 +44,8 @@ Abstract: This is the class declaration of CModel
 // Include custom headers here.
 #include "Model/Classes/NMR_Model.h" 
 #include "Model/Classes/NMR_KeyStore.h"
+#include "lib3mf_booleanobject.hpp"
+#include "lib3mf_booleanobjectiterator.hpp"
 
 namespace Lib3MF {
 namespace Impl {
@@ -109,6 +111,8 @@ public:
 
 	IComponentsObject * GetComponentsObjectByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
+	IBooleanObject * GetBooleanObjectByID(const Lib3MF_uint32 nUniqueResourceID) override;
+
 	IColorGroup * GetColorGroupByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
 	ITexture2DGroup * GetTexture2DGroupByID(const Lib3MF_uint32 nUniqueResourceID) override;
@@ -135,6 +139,8 @@ public:
 
 	IComponentsObjectIterator * GetComponentsObjects() override;
 
+	IBooleanObjectIterator * GetBooleanObjects() override;
+
 	ITexture2DIterator * GetTexture2Ds() override;
 
 	IBaseMaterialGroupIterator * GetBaseMaterialGroups() override;
@@ -156,6 +162,8 @@ public:
 	IMeshObject * AddMeshObject() override;
 
 	IComponentsObject * AddComponentsObject() override;
+
+	IBooleanObject * AddBooleanObject() override;
 
 	ISliceStack * AddSliceStack(const Lib3MF_double dZBottom) override;
 

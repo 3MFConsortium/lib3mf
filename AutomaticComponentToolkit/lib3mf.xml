@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2024" basename="lib3mf" version="2.5.0">
+<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2024" basename="lib3mf" version="2.6.0">
 
 
 	<license>
@@ -153,6 +153,12 @@
 		<option name="Support" value="2" />
 		<option name="SolidSupport" value="3" />
 		<option name="Surface" value="4" />
+	</enum>
+
+	<enum name="BooleanOperation">
+		<option name="Union" value="0" />
+		<option name="Difference" value="1" />
+		<option name="Intersection" value="2" />
 	</enum>
 
 	<enum name="TextureType">
@@ -609,6 +615,14 @@
 		</method>
 	</class>
 
+	<class name="BooleanObjectIterator" parent="ResourceIterator">
+		<method name="GetCurrentBooleanObject"
+			description="Returns the BooleanObject the iterator points at.">
+			<param name="Resource" type="handle" class="BooleanObject" pass="return"
+				description="returns the BooleanObject instance." />
+		</method>
+	</class>
+
 	<class name="Texture2DIterator" parent="ResourceIterator">
 		<method name="GetCurrentTexture2D"
 			description="Returns the Texture2D the iterator points at.">
@@ -851,6 +865,11 @@
 			description="Retrieves, if an object is a level set object">
 			<param name="IsLevelSetObject" type="bool" pass="return"
 				description="returns, whether the object is a level set object" />
+		</method>
+		<method name="IsBooleanObject"
+			description="Retrieves, if an object is a boolean object">
+			<param name="IsBooleanObject" type="bool" pass="return"
+				description="returns, whether the object is a boolean object" />
 		</method>
 
 		<method name="IsValid"
@@ -1145,6 +1164,82 @@
 		<method name="SetVolumeData" description="Sets the VolumeData of this LevelSet.">
 			<param name="TheVolumeData" type="handle" class="VolumeData" pass="in"
 				description="the VolumeData of this MeshObject" />
+		</method>
+	</class>
+
+	<class name="BooleanObject" parent="Object">
+		<method name="SetBaseObject"
+			description="Sets the base object and transform for the boolean shape.">
+			<param name="BaseObject" type="handle" class="Object" pass="in"
+				description="base object of the boolean shape" />
+			<param name="Transform" type="struct" class="Transform" pass="in"
+				description="transform applied to the base object" />
+		</method>
+		<method name="GetBaseObject"
+			description="Returns the base object of the boolean shape.">
+			<param name="BaseObject" type="class" class="Object" pass="return"
+				description="base object of the boolean shape" />
+		</method>
+		<method name="SetBaseTransform"
+			description="Sets the base transform of the boolean shape.">
+			<param name="Transform" type="struct" class="Transform" pass="in"
+				description="transform applied to the base object" />
+		</method>
+		<method name="GetBaseTransform"
+			description="Returns the base transform of the boolean shape.">
+			<param name="Transform" type="struct" class="Transform" pass="return"
+				description="transform applied to the base object" />
+		</method>
+		<method name="SetOperation"
+			description="Sets the boolean operation used for the boolean shape.">
+			<param name="Operation" type="enum" class="BooleanOperation" pass="in"
+				description="boolean operation used for the shape" />
+		</method>
+		<method name="GetOperation"
+			description="Returns the boolean operation used for the boolean shape.">
+			<param name="Operation" type="enum" class="BooleanOperation" pass="return"
+				description="boolean operation used for the shape" />
+		</method>
+		<method name="SetCSGModeEnabled"
+			description="Enables or disables CSG field evaluation for boolean-to-mesh materialization.">
+			<param name="CSGModeEnabled" type="bool" pass="in"
+				description="if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback" />
+		</method>
+		<method name="GetCSGModeEnabled"
+			description="Returns whether CSG field evaluation is enabled for boolean-to-mesh materialization.">
+			<param name="CSGModeEnabled" type="bool" pass="return"
+				description="if true, boolean materialization uses CSG field evaluation; otherwise, uses flattening fallback" />
+		</method>
+		<method name="SetExtractionGridResolution"
+			description="Sets the extraction grid resolution used for boolean-to-mesh materialization.">
+			<param name="GridResolution" type="uint32" pass="in"
+				description="extraction grid resolution for boolean surface extraction" />
+		</method>
+		<method name="GetExtractionGridResolution"
+			description="Returns the extraction grid resolution used for boolean-to-mesh materialization.">
+			<param name="GridResolution" type="uint32" pass="return"
+				description="extraction grid resolution for boolean surface extraction" />
+		</method>
+		<method name="GetOperandCount"
+			description="Returns the number of operands in the boolean sequence.">
+			<param name="Count" type="uint32" pass="return"
+				description="number of operands in the boolean sequence" />
+		</method>
+		<method name="AddOperand"
+			description="Adds an operand object to the boolean sequence.">
+			<param name="OperandObject" type="handle" class="MeshObject" pass="in"
+				description="mesh object used as operand" />
+			<param name="Transform" type="struct" class="Transform" pass="in"
+				description="transform applied to the operand object" />
+		</method>
+		<method name="GetOperand"
+			description="Returns one operand object and transform from the boolean sequence.">
+			<param name="Index" type="uint32" pass="in"
+				description="index of the operand in the boolean sequence" />
+			<param name="OperandObject" type="class" class="MeshObject" pass="out"
+				description="mesh object used as operand" />
+			<param name="Transform" type="struct" class="Transform" pass="return"
+				description="transform applied to the operand object" />
 		</method>
 	</class>
 
@@ -4090,6 +4185,12 @@
 			<param name="ComponentsObjectInstance" type="handle" class="ComponentsObject"
 				pass="return" description="returns the components object instance" />
 		</method>
+		<method name="GetBooleanObjectByID"
+			description="finds a boolean object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
+			<param name="BooleanObjectInstance" type="handle" class="BooleanObject"
+				pass="return" description="returns the boolean object instance" />
+		</method>
 		<method name="GetColorGroupByID"
 			description="finds a model color group by its UniqueResourceID">
 			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
@@ -4145,6 +4246,11 @@
 		<method name="GetComponentsObjects"
 			description="creates a resource iterator instance with all components object resources.">
 			<param name="ResourceIterator" type="handle" class="ComponentsObjectIterator"
+				pass="return" description="returns the iterator instance." />
+		</method>
+		<method name="GetBooleanObjects"
+			description="creates a resource iterator instance with all boolean object resources.">
+			<param name="ResourceIterator" type="handle" class="BooleanObjectIterator"
 				pass="return" description="returns the iterator instance." />
 		</method>
 		<method name="GetTexture2Ds"
@@ -4205,6 +4311,11 @@
 			description="adds an empty component object to the model.">
 			<param name="ComponentsObjectInstance" type="handle" class="ComponentsObject"
 				pass="return" description=" returns the components object instance" />
+		</method>
+		<method name="AddBooleanObject"
+			description="adds an empty boolean object to the model.">
+			<param name="BooleanObjectInstance" type="handle" class="BooleanObject"
+				pass="return" description="returns the boolean object instance" />
 		</method>
 		<method name="AddSliceStack" description="creates a new model slicestack by its id">
 			<param name="ZBottom" type="double" pass="in"

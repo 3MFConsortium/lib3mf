@@ -36,10 +36,12 @@ Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Mesh.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_MetaDataGroup.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Components.h"
+#include "Model/Reader/Boolean2307/NMR_ModelReaderNode_Boolean2307_BooleanShape.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_LevelSet.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Model/Classes/NMR_ModelBooleanObject.h"
 #include "Model/Classes/NMR_ModelAttachment.h"
 
 #include "Common/NMR_StringUtils.h"
@@ -342,6 +344,32 @@ namespace NMR {
 				m_pWarnings->addException(
 					CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT),
 					mrwInvalidOptionalValue);
+			}
+		}
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_BOOLEANSPEC) == 0)
+		{
+			if (strcmp(pChildName, XML_3MF_ELEMENT_BOOLEANSHAPE) == 0)
+			{
+				if (m_pObject.get())
+					throw CNMRException(NMR_ERROR_AMBIGUOUSOBJECTDEFINITON);
+
+				auto booleanObject = std::make_shared<CModelBooleanObject>(m_nID, m_pModel);
+				m_pObject = booleanObject;
+				if (m_bHasType) {
+					if (!m_pObject->setObjectTypeString(m_sType, false))
+						m_pWarnings->addWarning(NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
+				}
+
+				auto pXMLNode = std::make_shared<CModelReaderNode_Boolean2307_BooleanShape>(m_pModel, booleanObject, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+				m_pModel->addResource(m_pObject);
+
+				if (m_bHasDefaultPropertyIndex || m_bHasDefaultPropertyID)
+					m_pWarnings->addException(CNMRException(NMR_ERROR_OBJECTLEVELPID_ON_BOOLEANOBJECT), mrwInvalidOptionalValue);
+			}
+			else
+			{
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 			}
 		}
     }

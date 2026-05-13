@@ -183,6 +183,8 @@ public:
 	bool IsComponentsObject() override;
 
 	bool IsLevelSetObject() override;
+
+	bool IsBooleanObject() override;
 };
 
 } // namespace Impl

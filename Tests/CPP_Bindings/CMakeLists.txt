@@ -11,6 +11,7 @@ set(SRCS_UNITTEST
 	./Source/BaseMaterialGroup.cpp
 	./Source/BeamLattice.cpp
 	./Source/BeamSets.cpp
+	./Source/Boolean.cpp
 	./Source/BuildItems.cpp
 	./Source/ColorGroup.cpp
 	./Source/CompositeMaterials.cpp
@@ -47,6 +48,12 @@ set(SRCS_UNITTEST
 
 set(CMAKE_CURRENT_BINARY_DIR ${CMAKE_BINARY_DIR})
 add_executable(${TESTNAME} ${SRCS_UNITTEST} ${GTEST_SRC_FILES})
+
+if (LIB3MF_ENABLE_EXPENSIVE_TESTS)
+	target_compile_definitions(${TESTNAME} PRIVATE LIB3MF_ENABLE_EXPENSIVE_TESTS=1)
+else()
+	target_compile_definitions(${TESTNAME} PRIVATE LIB3MF_ENABLE_EXPENSIVE_TESTS=0)
+endif()
 
 set(STARTUPPROJECT ${TESTNAME})
 

@@ -42,6 +42,8 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_resourceiterator.hpp"
 #include "lib3mf_componentsobject.hpp"
 #include "lib3mf_componentsobjectiterator.hpp"
+#include "lib3mf_booleanobject.hpp"
+#include "lib3mf_booleanobjectiterator.hpp"
 #include "lib3mf_basematerialgroup.hpp"
 #include "lib3mf_metadatagroup.hpp"
 #include "lib3mf_attachment.hpp"
@@ -82,6 +84,7 @@ Abstract: This is a stub class definition of CModel
 #include "Model/Classes/NMR_ModelFunctionFromImage3D.h"
 #include "Model/Classes/NMR_ModelVolumeData.h"
 #include "Model/Classes/NMR_ModelLevelSetObject.h"
+#include "Model/Classes/NMR_ModelBooleanObject.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include "lib3mf_utils.hpp"
 
@@ -139,6 +142,9 @@ IResource* CModel::createIResourceFromModelResource(NMR::PModelResource pResourc
 	}
 	if (auto p = std::dynamic_pointer_cast<NMR::CModelComponentsObject>(pResource)) {
 		return new CComponentsObject(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelBooleanObject>(pResource)) {
+		return new CBooleanObject(p);
 	}
 
 	if (auto p = std::dynamic_pointer_cast<NMR::CModelCompositeMaterialsResource>(pResource)) {
@@ -314,6 +320,16 @@ IComponentsObject * CModel::GetComponentsObjectByID(const Lib3MF_uint32 nUniqueR
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPONENTSOBJECT);
 }
 
+IBooleanObject * CModel::GetBooleanObjectByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	NMR::PModelResource pObjectResource = model().findResource(nUniqueResourceID);
+	if (auto pBooleanObject = std::dynamic_pointer_cast<NMR::CModelBooleanObject>(pObjectResource)) {
+		return new CBooleanObject(pBooleanObject);
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+}
+
 IColorGroup * CModel::GetColorGroupByID(const Lib3MF_uint32 nUniqueResourceID)
 {
 	NMR::PModelResource pResource = model().findResource(nUniqueResourceID);
@@ -447,6 +463,19 @@ IComponentsObjectIterator * CModel::GetComponentsObjects()
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nObjectsCount; nIdx++) {
 		auto resource = model().getObjectResource(nIdx);
 		if (dynamic_cast<NMR::CModelComponentsObject *>(resource.get()))
+			pResult->addResource(resource);
+	}
+	return pResult.release();
+}
+
+IBooleanObjectIterator * CModel::GetBooleanObjects()
+{
+	auto pResult = std::unique_ptr<CBooleanObjectIterator>(new CBooleanObjectIterator());
+	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nObjectsCount; nIdx++) {
+		auto resource = model().getObjectResource(nIdx);
+		if (dynamic_cast<NMR::CModelBooleanObject *>(resource.get()))
 			pResult->addResource(resource);
 	}
 	return pResult.release();
@@ -609,6 +638,15 @@ IComponentsObject * CModel::AddComponentsObject ()
 
 	model().addResource(pNewResource);
 	return new CComponentsObject(pNewResource);
+}
+
+IBooleanObject * CModel::AddBooleanObject()
+{
+	NMR::ModelResourceID NewResourceID = model().generateResourceID();
+	NMR::PModelBooleanObject pNewResource = std::make_shared<NMR::CModelBooleanObject>(NewResourceID, &model());
+
+	model().addResource(pNewResource);
+	return new CBooleanObject(pNewResource);
 }
 
 ISliceStack * CModel::AddSliceStack(const Lib3MF_double dZBottom)
