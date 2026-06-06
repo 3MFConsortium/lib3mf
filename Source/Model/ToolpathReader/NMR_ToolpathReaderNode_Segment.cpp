@@ -167,8 +167,8 @@ namespace NMR {
 
 				uint32_t nOverrideInterpolationCount = nOverrideInterpolationEnd - nOverrideInterpolationStart;
 
-				m_pReadData->addDiscretePoint(xmlNode.getX1(), xmlNode.getY1(), xmlNode.getTag(), xmlNode.hasFactorF1(), xmlNode.getFactorF1(), xmlNode.hasFactorG1(), xmlNode.getFactorG1(), xmlNode.hasFactorH1(), xmlNode.getFactorH1(), nOverrideInterpolationStart, nOverrideInterpolationCount);
-				m_pReadData->addDiscretePoint(xmlNode.getX2(), xmlNode.getY2(), xmlNode.getTag(), xmlNode.hasFactorF2(), xmlNode.getFactorF2(), xmlNode.hasFactorG2(), xmlNode.getFactorG2(), xmlNode.hasFactorH1(), xmlNode.getFactorH2(), nOverrideInterpolationStart, nOverrideInterpolationCount);
+				m_pReadData->addDiscretePoint(xmlNode.getX1(), xmlNode.getY1(), xmlNode.getTag(), xmlNode.hasFactorF1(), xmlNode.getFactorF1(), xmlNode.hasFactorG1(), xmlNode.getFactorG1(), xmlNode.hasFactorH1(), xmlNode.getFactorH1(), xmlNode.hasFactorE1(), xmlNode.getFactorE1(), nOverrideInterpolationStart, nOverrideInterpolationCount);
+				m_pReadData->addDiscretePoint(xmlNode.getX2(), xmlNode.getY2(), xmlNode.getTag(), xmlNode.hasFactorF2(), xmlNode.getFactorF2(), xmlNode.hasFactorG2(), xmlNode.getFactorG2(), xmlNode.hasFactorH2(), xmlNode.getFactorH2(), xmlNode.hasFactorE2(), xmlNode.getFactorE2(), nOverrideInterpolationStart, nOverrideInterpolationCount);
 
 			}
 			else if (strcmp(pChildName, XML_3MF_TOOLPATHELEMENT_POINT) == 0) {
@@ -187,7 +187,7 @@ namespace NMR {
 
 				uint32_t nOverrideInterpolationCount = nOverrideInterpolationEnd - nOverrideInterpolationStart;
 
-				m_pReadData->addDiscretePoint(xmlNode.getX(), xmlNode.getY(), xmlNode.getTag(), xmlNode.hasFactorF (), xmlNode.getFactorF (), xmlNode.hasFactorG(), xmlNode.getFactorG (), xmlNode.hasFactorH(), xmlNode.getFactorH (), nOverrideInterpolationStart, nOverrideInterpolationCount);
+				m_pReadData->addDiscretePoint(xmlNode.getX(), xmlNode.getY(), xmlNode.getTag(), xmlNode.hasFactorF (), xmlNode.getFactorF (), xmlNode.hasFactorG(), xmlNode.getFactorG (), xmlNode.hasFactorH(), xmlNode.getFactorH (), xmlNode.hasFactorE(), xmlNode.getFactorE (), nOverrideInterpolationStart, nOverrideInterpolationCount);
 
 			}
 			else

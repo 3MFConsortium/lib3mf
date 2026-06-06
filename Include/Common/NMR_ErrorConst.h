@@ -2054,4 +2054,25 @@ Toolpath errors (0xBXXX)
 // Missing profile scale factor h
 #define NMR_ERROR_MISSINGSCALEFACTORH 0xB054
 
+// Duplicate profile scale factor e
+#define NMR_ERROR_DUPLICATESCALEFACTORE 0xB055
+
+// Duplicate profile scale factor e1
+#define NMR_ERROR_DUPLICATESCALEFACTORE1 0xB056
+
+// Duplicate profile scale factor e2
+#define NMR_ERROR_DUPLICATESCALEFACTORE2 0xB057
+
+// Missing profile scale factor e1
+#define NMR_ERROR_MISSINGSCALEFACTORE1 0xB058
+
+// Missing profile scale factor e2
+#define NMR_ERROR_MISSINGSCALEFACTORE2 0xB059
+
+// Duplicate profile override factor e
+#define NMR_ERROR_DUPLICATEOVERRIDEFACTORE 0xB05A
+
+// Missing profile override factor e
+#define NMR_ERROR_MISSINGOVERRIDEFACTORE 0xB05B
+
 #endif // __NMR_ERRORCONST

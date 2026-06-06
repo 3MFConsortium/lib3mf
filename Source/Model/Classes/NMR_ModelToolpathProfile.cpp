@@ -158,8 +158,6 @@ namespace NMR {
 	std::string CModelToolpathProfileModifier::getModificationTypeString()
 	{
 		switch (m_eModificationType) {
-            case Lib3MF::eToolpathProfileModificationType::NoModification:
-                return XML_3MF_ATTRIBUTE_TOOLPATHMODIFIER_TYPE_NONE;
 			case Lib3MF::eToolpathProfileModificationType::ConstantModification:
 				return XML_3MF_ATTRIBUTE_TOOLPATHMODIFIER_TYPE_CONSTANT;
 			case Lib3MF::eToolpathProfileModificationType::LinearModification:

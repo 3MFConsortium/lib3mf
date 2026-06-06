@@ -1436,6 +1436,7 @@ class ToolpathProfileModificationFactor(CTypesEnum):
 	FactorF = 1
 	FactorG = 2
 	FactorH = 3
+	FactorE = 4
 '''Definition of ToolpathProfileModificationType
 '''
 class ToolpathProfileModificationType(CTypesEnum):
@@ -15889,16 +15890,16 @@ class ToolpathViewable(Base):
 		
 		return pJSONStringBuffer.value.decode()
 	
-	def GetJSONBuffer(self):
-		nJSONBufferCount = ctypes.c_uint64(0)
+	def GetJSONBuffer(self, JSONBuffer = None):
+		nJSONBufferCount = ctypes.c_uint64(len(JSONBuffer) if JSONBuffer else 0)
 		nJSONBufferNeededCount = ctypes.c_uint64(0)
-		pJSONBufferBuffer = (ctypes.c_uint8*0)()
+		pJSONBufferBuffer = (ctypes.c_uint8*(len(JSONBuffer) if JSONBuffer else 0))(*JSONBuffer if JSONBuffer else [])
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathviewable_getjsonbuffer(self._handle, nJSONBufferCount, nJSONBufferNeededCount, pJSONBufferBuffer))
 		nJSONBufferCount = ctypes.c_uint64(nJSONBufferNeededCount.value)
 		pJSONBufferBuffer = (ctypes.c_uint8 * nJSONBufferNeededCount.value)()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathviewable_getjsonbuffer(self._handle, nJSONBufferCount, nJSONBufferNeededCount, pJSONBufferBuffer))
 		
-		return [pJSONBufferBuffer[i] for i in range(nJSONBufferNeededCount.value)]
+		return list(pJSONBufferBuffer)
 	
 
 

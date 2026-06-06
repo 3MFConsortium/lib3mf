@@ -31111,6 +31111,7 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathProfileModificationFactor_FactorF"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathProfileModificationFactor_FactorG"), Integer::New(isolate, 2));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathProfileModificationFactor_FactorH"), Integer::New(isolate, 3));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathProfileModificationFactor_FactorE"), Integer::New(isolate, 4));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathProfileModificationType_NoModification"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathProfileModificationType_ConstantModification"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathProfileModificationType_LinearModification"), Integer::New(isolate, 2));

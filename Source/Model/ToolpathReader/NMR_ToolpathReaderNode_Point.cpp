@@ -52,9 +52,11 @@ namespace NMR {
 		m_dFactorF (0),
 		m_dFactorG (0),
 		m_dFactorH (0),
+		m_dFactorE (0),
 		m_bHasFactorF (false),
 		m_bHasFactorG (false),
-		m_bHasFactorH (false)
+		m_bHasFactorH (false),
+		m_bHasFactorE (false)
 	{
 		if (pReadData == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -116,6 +118,13 @@ namespace NMR {
 			m_dFactorH = fnStringToDouble(pAttributeValue);
 			m_bHasFactorH = true;
 		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORE) == 0) {
+			if (m_bHasFactorE)
+				throw CNMRException(NMR_ERROR_DUPLICATESCALEFACTORE);
+
+			m_dFactorE = fnStringToDouble(pAttributeValue);
+			m_bHasFactorE = true;
+		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 
@@ -165,6 +174,11 @@ namespace NMR {
 		return m_dFactorH;
 	}
 
+	nfDouble CToolpathReaderNode_Point::getFactorE() const
+	{
+		return m_dFactorE;
+	}
+
 	bool CToolpathReaderNode_Point::hasFactorF() const
 	{
 		return m_bHasFactorF;
@@ -178,6 +192,11 @@ namespace NMR {
 	bool CToolpathReaderNode_Point::hasFactorH() const
 	{
 		return m_bHasFactorH;
+	}
+
+	bool CToolpathReaderNode_Point::hasFactorE() const
+	{
+		return m_bHasFactorE;
 	}
 
 }

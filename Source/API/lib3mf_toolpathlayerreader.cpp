@@ -314,6 +314,25 @@ void CToolpathLayerReader::GetSegmentPointModificationFactors(const Lib3MF_uint3
 					}
 					break;
 
+				case Lib3MF::eToolpathProfileModificationFactor::FactorE:
+					for (uint32_t nPointIndex = 0; nPointIndex < nPointCount; nPointIndex++) {
+
+						NMR::TOOLPATHREADPOINT& point = m_pReadData->getSegmentPoint(nSegmentIndex, nPointIndex);
+						if (point.m_nFactorE < 0.0) {
+							*pTarget = 0.0;
+						}
+						else if (point.m_nFactorE >= 1.0) {
+							*pTarget = 1.0;
+						}
+						else {
+							*pTarget = (double)point.m_nFactorE;
+						}
+
+						pTarget++;
+
+					}
+					break;
+
 				default:
 					bFillWithZeros = true;
 
@@ -546,6 +565,36 @@ void CToolpathLayerReader::GetLinearSegmentHatchModificationFactors(const Lib3MF
 					}
 					break;
 
+				case Lib3MF::eToolpathProfileModificationFactor::FactorE:
+					for (uint32_t nHatchIndex = 0; nHatchIndex < nHatchCount; nHatchIndex++) {
+
+						NMR::TOOLPATHREADPOINT& point1 = m_pReadData->getSegmentPoint(nSegmentIndex, nHatchIndex * 2);
+						if (point1.m_nFactorE < 0) {
+							pTarget->m_Point1Factor = 0.0;
+						}
+						else if (point1.m_nFactorE >= 1.0) {
+							pTarget->m_Point1Factor = 1.0;
+						}
+						else {
+							pTarget->m_Point1Factor = (double)point1.m_nFactorE;
+						}
+
+						NMR::TOOLPATHREADPOINT& point2 = m_pReadData->getSegmentPoint(nSegmentIndex, nHatchIndex * 2 + 1);
+						if (point2.m_nFactorE < 0) {
+							pTarget->m_Point2Factor = 0.0;
+						}
+						else if (point2.m_nFactorE >= 1.0) {
+							pTarget->m_Point2Factor = 1.0;
+						}
+						else {
+							pTarget->m_Point2Factor = (double)point2.m_nFactorE;
+						}
+
+						pTarget++;
+
+					}
+					break;
+
 				default:
 					bFillWithZeros = true;
 
@@ -634,6 +683,15 @@ void CToolpathLayerReader::GetSegmentNonlinearHatchModificationInterpolation(con
 					auto& dataRef = m_pReadData->getOverrideInterpolationData(nOverrideStartIndex + nIndex);
 					pFactorValuesBuffer->m_Parameter = dataRef.m_dParameter;
 					pFactorValuesBuffer->m_Factor = dataRef.m_dFactorH;
+					pFactorValuesBuffer++;
+				}
+				break;
+
+			case Lib3MF::eToolpathProfileModificationFactor::FactorE:
+				for (uint32_t nIndex = 0; nIndex < nOverrideCount; nIndex++) {
+					auto& dataRef = m_pReadData->getOverrideInterpolationData(nOverrideStartIndex + nIndex);
+					pFactorValuesBuffer->m_Parameter = dataRef.m_dParameter;
+					pFactorValuesBuffer->m_Factor = dataRef.m_dFactorE;
 					pFactorValuesBuffer++;
 				}
 				break;
@@ -739,6 +797,25 @@ void CToolpathLayerReader::GetSegmentAllNonlinearHatchesModificationInterpolatio
 					auto& dataRef = m_pReadData->getOverrideInterpolationData(nOverrideStartIndex + nIndex);
 					pFactorValuesBuffer->m_Parameter = dataRef.m_dParameter;
 					pFactorValuesBuffer->m_Factor = dataRef.m_dFactorH;
+					pFactorValuesBuffer++;
+				}
+
+
+			}
+			break;
+
+		case Lib3MF::eToolpathProfileModificationFactor::FactorE:
+			for (uint32_t nHatchIndex = 0; nHatchIndex < nHatchCount; nHatchIndex++) {
+
+				uint32_t nOverrideStartIndex = 0;
+				uint32_t nOverrideCount = 0;
+
+				m_pReadData->getSegmentHatchOverrideInterpolationIndices(nSegmentIndex, nHatchIndex, nOverrideStartIndex, nOverrideCount);
+
+				for (uint32_t nIndex = 0; nIndex < nOverrideCount; nIndex++) {
+					auto& dataRef = m_pReadData->getOverrideInterpolationData(nOverrideStartIndex + nIndex);
+					pFactorValuesBuffer->m_Parameter = dataRef.m_dParameter;
+					pFactorValuesBuffer->m_Factor = dataRef.m_dFactorE;
 					pFactorValuesBuffer++;
 				}
 

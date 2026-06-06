@@ -42,11 +42,13 @@ namespace NMR {
 		nfBool m_bHasValueF;
 		nfBool m_bHasValueG;
 		nfBool m_bHasValueH;
+		nfBool m_bHasValueE;
 
 		nfDouble m_dParameter;
 		nfDouble m_dValueF;
 		nfDouble m_dValueG;
 		nfDouble m_dValueH;
+		nfDouble m_dValueE;
 
 		CModelToolpathLayerReadData * m_pReadData;
 
@@ -64,6 +66,7 @@ namespace NMR {
 		nfDouble getValueF(bool bMustExist);
 		nfDouble getValueG(bool bMustExist);
 		nfDouble getValueH(bool bMustExist);
+		nfDouble getValueE(bool bMustExist);
 	};
 
 	typedef std::shared_ptr <CToolpathReaderNode_Override> PToolpathReaderNode_Override;

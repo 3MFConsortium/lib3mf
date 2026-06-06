@@ -209,6 +209,25 @@ public class Toolpath extends Resource {
 	}
 
 	/**
+	 * Creates a viewable JSON accessor for a layer.
+	 *
+	 * @param index Layer Index
+	 * @return Toolpath Viewable Instance
+	 * @throws Lib3MFException
+	 */
+	public ToolpathViewable getLayerViewable(int index) throws Lib3MFException {
+		Pointer bufferToolpathViewable = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_getlayerviewable.invokeInt(new java.lang.Object[]{mHandle, index, bufferToolpathViewable}));
+		Pointer valueToolpathViewable = bufferToolpathViewable.getPointer(0);
+		ToolpathViewable toolpathViewable = null;
+		if (valueToolpathViewable == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "ToolpathViewable was a null pointer");
+		}
+		toolpathViewable = mWrapper.PolymorphicFactory(valueToolpathViewable, ToolpathViewable.class);
+		return toolpathViewable;
+	}
+
+	/**
 	 * Retrieves the Path of a layer
 	 *
 	 * @param index Layer Index

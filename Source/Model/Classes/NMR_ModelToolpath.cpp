@@ -43,7 +43,7 @@ namespace NMR {
 
 
 	CModelToolpath::CModelToolpath(_In_ const ModelResourceID sID, _In_ CModel * pModel, double dUnitFactor, CUUID uuid, nfUint32 nBottomZ)
-		: CModelResource(sID, pModel), m_dUnitFactor (dUnitFactor), m_UUID (uuid), m_nBottomZ (nBottomZ)
+		: CModelResource(sID, pModel), m_dUnitFactor (dUnitFactor), m_UUID (uuid), m_nBottomZ (nBottomZ), m_sToolpathType (XML_3MF_TOOLPATHRESOURCETYPE_PLANAR)
 	{
 	}
 
@@ -63,6 +63,16 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_CANNOTSETBOTTOMZIFLAYERSEXIST);
 
 		m_nBottomZ = nBottomZ;
+	}
+
+	std::string CModelToolpath::getToolpathType()
+	{
+		return m_sToolpathType;
+	}
+
+	void CModelToolpath::setToolpathType(const std::string & sToolpathType)
+	{
+		m_sToolpathType = sToolpathType;
 	}
 
 	bool CModelToolpath::layersAreEmpty()

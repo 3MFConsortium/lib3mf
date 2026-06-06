@@ -46,7 +46,7 @@ NMR_ModelReaderNode_Toolpath1905_ToolpathResource.h covers the official 3MF Tool
 namespace NMR {
 
 	CModelReaderNode_Toolpath1905_ToolpathResource::CModelReaderNode_Toolpath1905_ToolpathResource (_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
-		: CModelReaderNode(pWarnings), m_nID (0), m_bHasID (false), m_dUnitFactor(1.0), m_bHasUnitFactor (false), m_pModel (pModel)
+		: CModelReaderNode(pWarnings), m_nID (0), m_bHasID (false), m_dUnitFactor(1.0), m_bHasUnitFactor (false), m_sToolpathType (XML_3MF_TOOLPATHRESOURCETYPE_PLANAR), m_pModel (pModel)
 	{
 	}
 	
@@ -69,6 +69,7 @@ namespace NMR {
 
 		// BottomZ will be parsed in the layers subnode...
 		m_pToolpath = std::make_shared<CModelToolpath> (m_nID, m_pModel, m_dUnitFactor, uuid, 0);
+		m_pToolpath->setToolpathType(m_sToolpathType);
 		m_pModel->addResource(m_pToolpath);
 
 		// Parse Content
@@ -111,6 +112,10 @@ namespace NMR {
 			if (fabs(m_dUnitFactor) > XML_3MF_MAXIMUMCOORDINATEVALUE)
 				throw CNMRException(NMR_ERROR_INVALIDUNITS);
 			m_bHasUnitFactor = true;
+		}
+
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TOOLPATH_TOOLPATHTYPE) == 0) {
+			m_sToolpathType = std::string(pAttributeValue);
 		}
 
 	}

@@ -52,15 +52,19 @@ namespace NMR {
 		nfDouble m_dFactorF1;
 		nfDouble m_dFactorG1;
 		nfDouble m_dFactorH1;
+		nfDouble m_dFactorE1;
 		nfDouble m_dFactorF2;
 		nfDouble m_dFactorG2;
 		nfDouble m_dFactorH2;
+		nfDouble m_dFactorE2;
 		bool m_bHasFactorF1;
 		bool m_bHasFactorF2;
 		bool m_bHasFactorG1;
 		bool m_bHasFactorG2;
 		bool m_bHasFactorH1;
 		bool m_bHasFactorH2;
+		bool m_bHasFactorE1;
+		bool m_bHasFactorE2;
 
 		CModelToolpathLayerReadData * m_pReadData;
 
@@ -83,9 +87,11 @@ namespace NMR {
 		nfDouble getFactorF1() const;
 		nfDouble getFactorG1() const;
 		nfDouble getFactorH1() const;
+		nfDouble getFactorE1() const;
 		nfDouble getFactorF2() const;
 		nfDouble getFactorG2() const;
 		nfDouble getFactorH2() const;
+		nfDouble getFactorE2() const;
 
 		bool hasFactorF1() const;
 		bool hasFactorF2() const;
@@ -93,6 +99,8 @@ namespace NMR {
 		bool hasFactorG2() const;
 		bool hasFactorH1() const;
 		bool hasFactorH2() const;
+		bool hasFactorE1() const;
+		bool hasFactorE2() const;
 
 	};
 

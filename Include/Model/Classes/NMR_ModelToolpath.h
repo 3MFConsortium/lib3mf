@@ -61,6 +61,7 @@ namespace NMR {
 
 		nfUint32 m_nBottomZ;
 		double m_dUnitFactor;
+		std::string m_sToolpathType;
 		std::vector<PModelToolpathLayer> m_Layers;
 		std::vector<PModelToolpathProfile> m_Profiles;
 		std::map<std::string, PModelToolpathProfile> m_ProfileMap;
@@ -75,6 +76,9 @@ namespace NMR {
 
 		nfUint32 getBottomZ();
 		void setBottomZ(nfUint32 nBottomZ);
+
+		std::string getToolpathType();
+		void setToolpathType(const std::string & sToolpathType);
 
 		bool layersAreEmpty();
 

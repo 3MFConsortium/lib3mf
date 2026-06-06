@@ -248,6 +248,7 @@ const (
 	ToolpathProfileModificationFactor_FactorF = 1
 	ToolpathProfileModificationFactor_FactorG = 2
 	ToolpathProfileModificationFactor_FactorH = 3
+	ToolpathProfileModificationFactor_FactorE = 4
 )
 
 // ToolpathProfileModificationType represents a Lib3MF enum.

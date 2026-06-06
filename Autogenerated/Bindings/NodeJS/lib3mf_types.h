@@ -525,7 +525,8 @@ typedef enum eLib3MFToolpathProfileModificationFactor {
   eToolpathProfileModificationFactorUnknown = 0,
   eToolpathProfileModificationFactorFactorF = 1,
   eToolpathProfileModificationFactorFactorG = 2,
-  eToolpathProfileModificationFactorFactorH = 3
+  eToolpathProfileModificationFactorFactorH = 3,
+  eToolpathProfileModificationFactorFactorE = 4
 } eLib3MFToolpathProfileModificationFactor;
 
 typedef enum eLib3MFToolpathProfileModificationType {

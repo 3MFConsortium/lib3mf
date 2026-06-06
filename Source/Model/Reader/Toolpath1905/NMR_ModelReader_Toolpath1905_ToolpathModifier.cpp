@@ -126,7 +126,9 @@ namespace NMR {
 			if (m_ModificationFactor != Lib3MF::eToolpathProfileModificationFactor::Unknown)
 				throw CNMRException(NMR_ERROR_DUPLICATEMODIFIERFACTOR);
 
-			if (strcmp(pAttributeValue, "f") == 0) {
+			if (strcmp(pAttributeValue, "e") == 0) {
+				m_ModificationFactor = Lib3MF::eToolpathProfileModificationFactor::FactorE;
+			} else if (strcmp(pAttributeValue, "f") == 0) {
 				m_ModificationFactor = Lib3MF::eToolpathProfileModificationFactor::FactorF;
 			} else if (strcmp(pAttributeValue, "g") == 0) {
 				m_ModificationFactor = Lib3MF::eToolpathProfileModificationFactor::FactorG;

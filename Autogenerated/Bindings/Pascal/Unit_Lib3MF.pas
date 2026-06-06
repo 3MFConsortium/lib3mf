@@ -295,7 +295,8 @@ type
 		eToolpathProfileModificationFactorUnknown,
 		eToolpathProfileModificationFactorFactorF,
 		eToolpathProfileModificationFactorFactorG,
-		eToolpathProfileModificationFactorFactorH
+		eToolpathProfileModificationFactorFactorH,
+		eToolpathProfileModificationFactorFactorE
 	);
 
 	TLib3MFToolpathProfileModificationType = (
@@ -14179,6 +14180,7 @@ implementation
 			eToolpathProfileModificationFactorFactorF: Result := 1;
 			eToolpathProfileModificationFactorFactorG: Result := 2;
 			eToolpathProfileModificationFactorFactorH: Result := 3;
+			eToolpathProfileModificationFactorFactorE: Result := 4;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
 		end;
@@ -14191,6 +14193,7 @@ implementation
 			1: Result := eToolpathProfileModificationFactorFactorF;
 			2: Result := eToolpathProfileModificationFactorFactorG;
 			3: Result := eToolpathProfileModificationFactorFactorH;
+			4: Result := eToolpathProfileModificationFactorFactorE;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;

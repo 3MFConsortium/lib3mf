@@ -701,6 +701,13 @@ namespace NMR {
 		case NMR_ERROR_MISSINGSCALEFACTORG2: return "Missing profile scale factor g2";
 		case NMR_ERROR_MISSINGSCALEFACTORH1: return "Missing profile scale factor h1";
 		case NMR_ERROR_MISSINGSCALEFACTORH2: return "Missing profile scale factor h2";
+		case NMR_ERROR_DUPLICATESCALEFACTORE: return "Duplicate profile scale factor e";
+		case NMR_ERROR_DUPLICATESCALEFACTORE1: return "Duplicate profile scale factor e1";
+		case NMR_ERROR_DUPLICATESCALEFACTORE2: return "Duplicate profile scale factor e2";
+		case NMR_ERROR_MISSINGSCALEFACTORE1: return "Missing profile scale factor e1";
+		case NMR_ERROR_MISSINGSCALEFACTORE2: return "Missing profile scale factor e2";
+		case NMR_ERROR_DUPLICATEOVERRIDEFACTORE: return "Duplicate profile override factor e";
+		case NMR_ERROR_MISSINGOVERRIDEFACTORE: return "Missing profile override factor e";
 
 		default:
 			return "unknown error";

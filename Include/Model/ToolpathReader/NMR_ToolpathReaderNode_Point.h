@@ -45,9 +45,11 @@ namespace NMR {
 		nfDouble m_dFactorF;
 		nfDouble m_dFactorG;
 		nfDouble m_dFactorH;
+		nfDouble m_dFactorE;
 		bool m_bHasFactorF;
 		bool m_bHasFactorG;
 		bool m_bHasFactorH;
+		bool m_bHasFactorE;
 
 		nfBool m_bHasX;
 		nfBool m_bHasY;
@@ -69,10 +71,12 @@ namespace NMR {
 		nfDouble getFactorF() const;
 		nfDouble getFactorG() const;
 		nfDouble getFactorH() const;
+		nfDouble getFactorE() const;
 
 		bool hasFactorF() const;
 		bool hasFactorG() const;
 		bool hasFactorH() const;
+		bool hasFactorE() const;
 
 
 	};

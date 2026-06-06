@@ -99,7 +99,7 @@ namespace NMR {
 		m_pCurrentSegment = nullptr;
 	}
 
-	void CModelToolpathLayerReadData::addDiscretePoint(nfInt32 nX, nfInt32 nY, nfInt32 nTag, bool bHasFactorF, nfDouble nFactorF, bool bHasFactorG, nfDouble nFactorG, bool bHasFactorH, nfDouble nFactorH, uint32_t nOverrideStart, uint32_t nOverrideCount)
+	void CModelToolpathLayerReadData::addDiscretePoint(nfInt32 nX, nfInt32 nY, nfInt32 nTag, bool bHasFactorF, nfDouble nFactorF, bool bHasFactorG, nfDouble nFactorG, bool bHasFactorH, nfDouble nFactorH, bool bHasFactorE, nfDouble nFactorE, uint32_t nOverrideStart, uint32_t nOverrideCount)
 	{
 		if (m_pCurrentSegment == nullptr)
 			throw CNMRException(NMR_ERROR_LAYERSEGMENTNOTOPEN);
@@ -112,6 +112,7 @@ namespace NMR {
 		pVec->m_nFactorF = nFactorF;
 		pVec->m_nFactorG = nFactorG;
 		pVec->m_nFactorH = nFactorH;
+		pVec->m_nFactorE = nFactorE;
 		pVec->m_nOverrideStart = nOverrideStart;
 		pVec->m_nOverrideCount = nOverrideCount;
 
@@ -130,6 +131,11 @@ namespace NMR {
 			m_pCurrentSegment->m_nFlags |= TOOLPATHREADSEGMENTFLAG_HASFACTORH;
 		}
 
+		if (bHasFactorE) {
+			pVec->m_nFlags |= TOOLPATHREADSEGMENTFLAG_HASFACTORE;
+			m_pCurrentSegment->m_nFlags |= TOOLPATHREADSEGMENTFLAG_HASFACTORE;
+		}
+
 	}
 
 	uint32_t CModelToolpathLayerReadData::getGlobalOverrideInterpolationCount()
@@ -142,7 +148,7 @@ namespace NMR {
 		return m_OverrideInterpolations.getDataRef(nGlobalIndex);
 	}
 
-	void CModelToolpathLayerReadData::addOverrideInterpolation(double dParameter, double dFactorF, double dFactorG, double dFactorH)
+	void CModelToolpathLayerReadData::addOverrideInterpolation(double dParameter, double dFactorF, double dFactorG, double dFactorH, double dFactorE)
 	{
 		if (m_pCurrentSegment == nullptr)
 			throw CNMRException(NMR_ERROR_LAYERSEGMENTNOTOPEN);
@@ -152,6 +158,7 @@ namespace NMR {
 		pOverride->m_dFactorF = dFactorF;
 		pOverride->m_dFactorG = dFactorG;
 		pOverride->m_dFactorH = dFactorH;
+		pOverride->m_dFactorE = dFactorE;
 
 		m_pCurrentSegment->m_nOverrideInterpolationCount++;
 	}
@@ -219,6 +226,9 @@ namespace NMR {
 
 		case Lib3MF::eToolpathProfileModificationFactor::FactorH:
 			return ((pSegment->m_nFlags & TOOLPATHREADSEGMENTFLAG_HASFACTORH) != 0); 
+
+		case Lib3MF::eToolpathProfileModificationFactor::FactorE:
+			return ((pSegment->m_nFlags & TOOLPATHREADSEGMENTFLAG_HASFACTORE) != 0); 
 
 		default:
 			return false;

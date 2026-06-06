@@ -57,15 +57,19 @@ namespace NMR {
 		m_dFactorF1(0.0),
 		m_dFactorG1(0.0),
 		m_dFactorH1(0.0),
+		m_dFactorE1(0.0),
 		m_dFactorF2(0.0),
 		m_dFactorG2(0.0),
 		m_dFactorH2(0.0),
+		m_dFactorE2(0.0),
 		m_bHasFactorF1(false),
 		m_bHasFactorF2(false),
 		m_bHasFactorG1(false),
 		m_bHasFactorG2(false),
 		m_bHasFactorH1(false),
-		m_bHasFactorH2(false)
+		m_bHasFactorH2(false),
+		m_bHasFactorE1(false),
+		m_bHasFactorE2(false)
 
 
 	{
@@ -196,6 +200,31 @@ namespace NMR {
 			m_dFactorH2 = fnStringToDouble(pAttributeValue);
 			m_bHasFactorH2 = true;
 		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORE) == 0) {
+			if (m_bHasFactorE1)
+				throw CNMRException(NMR_ERROR_DUPLICATESCALEFACTORE1);
+			if (m_bHasFactorE2)
+				throw CNMRException(NMR_ERROR_DUPLICATESCALEFACTORE2);
+
+			m_dFactorE1 = fnStringToDouble(pAttributeValue);
+			m_dFactorE2 = m_dFactorE1;
+			m_bHasFactorE1 = true;
+			m_bHasFactorE2 = true;
+		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORE1) == 0) {
+			if (m_bHasFactorE1)
+				throw CNMRException(NMR_ERROR_DUPLICATESCALEFACTORE1);
+
+			m_dFactorE1 = fnStringToDouble(pAttributeValue);
+			m_bHasFactorE1 = true;
+		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORE2) == 0) {
+			if (m_bHasFactorE2)
+				throw CNMRException(NMR_ERROR_DUPLICATESCALEFACTORE2);
+
+			m_dFactorE2 = fnStringToDouble(pAttributeValue);
+			m_bHasFactorE2 = true;
+		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 
@@ -213,7 +242,7 @@ namespace NMR {
 
 				xmlNode.parseXML(pXMLReader);
 
-				m_pReadData->addOverrideInterpolation(xmlNode.getParameter (), xmlNode.getValueF (false), xmlNode.getValueG(false), xmlNode.getValueH(false));
+				m_pReadData->addOverrideInterpolation(xmlNode.getParameter (), xmlNode.getValueF (false), xmlNode.getValueG(false), xmlNode.getValueH(false), xmlNode.getValueE(false));
 
 			}
 		}
@@ -269,6 +298,11 @@ namespace NMR {
 		return m_dFactorH1;
 	}
 
+	nfDouble CToolpathReaderNode_Hatch::getFactorE1() const
+	{
+		return m_dFactorE1;
+	}
+
 	nfDouble CToolpathReaderNode_Hatch::getFactorF2() const
 	{
 		return m_dFactorF2;
@@ -282,6 +316,11 @@ namespace NMR {
 	nfDouble CToolpathReaderNode_Hatch::getFactorH2() const
 	{
 		return m_dFactorH2;
+	}
+
+	nfDouble CToolpathReaderNode_Hatch::getFactorE2() const
+	{
+		return m_dFactorE2;
 	}
 
 	bool CToolpathReaderNode_Hatch::hasFactorF1() const
@@ -312,6 +351,16 @@ namespace NMR {
 	bool CToolpathReaderNode_Hatch::hasFactorH2() const
 	{
 		return m_bHasFactorH2;
+	}
+
+	bool CToolpathReaderNode_Hatch::hasFactorE1() const
+	{
+		return m_bHasFactorE1;
+	}
+
+	bool CToolpathReaderNode_Hatch::hasFactorE2() const
+	{
+		return m_bHasFactorE2;
 	}
 
 

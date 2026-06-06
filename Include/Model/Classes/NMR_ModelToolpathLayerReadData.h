@@ -52,6 +52,7 @@ NMR_ModelToolpath.h defines the Model Toolpath Layer Data.
 #define TOOLPATHREADSEGMENTFLAG_HASFACTORF 0x01
 #define TOOLPATHREADSEGMENTFLAG_HASFACTORG 0x02
 #define TOOLPATHREADSEGMENTFLAG_HASFACTORH 0x04
+#define TOOLPATHREADSEGMENTFLAG_HASFACTORE 0x08
 
 namespace NMR {
 
@@ -92,6 +93,7 @@ namespace NMR {
 		nfDouble m_nFactorF;
 		nfDouble m_nFactorG;
 		nfDouble m_nFactorH;
+		nfDouble m_nFactorE;
 		uint32_t m_nOverrideStart;
 		uint32_t m_nOverrideCount;
 	} TOOLPATHREADPOINT;
@@ -101,6 +103,7 @@ namespace NMR {
 		nfDouble m_dFactorF;
 		nfDouble m_dFactorG;
 		nfDouble m_dFactorH;
+		nfDouble m_dFactorE;
 	} TOOLPATHREADOVERRIDE;
 
 
@@ -145,11 +148,11 @@ namespace NMR {
 
 		void beginSegment(eModelToolpathSegmentType eType, nfUint32 nProfileID, nfUint32 nPartID);
 		void endSegment();
-		void addDiscretePoint (nfInt32 nX, nfInt32 nY, nfInt32 nTag, bool bHasFactorF, nfDouble nFactorF, bool bHasFactorG, nfDouble nFactorG, bool bHasFactorH, nfDouble nFactorH, uint32_t nOverrideStart, uint32_t nOverrideCount);
+		void addDiscretePoint (nfInt32 nX, nfInt32 nY, nfInt32 nTag, bool bHasFactorF, nfDouble nFactorF, bool bHasFactorG, nfDouble nFactorG, bool bHasFactorH, nfDouble nFactorH, bool bHasFactorE, nfDouble nFactorE, uint32_t nOverrideStart, uint32_t nOverrideCount);
 
 		TOOLPATHREADOVERRIDE& getOverrideInterpolationData(uint32_t nGlobalIndex);
 		uint32_t getGlobalOverrideInterpolationCount();
-		void addOverrideInterpolation (double dParameter, double dFactorF, double dFactorG, double dFactorH);
+		void addOverrideInterpolation (double dParameter, double dFactorF, double dFactorG, double dFactorH, double dFactorE);
 
 		nfUint32 getSegmentCount();
 		void getSegmentInfo (nfUint32 nSegmentIndex, eModelToolpathSegmentType & eType, nfUint32 & nProfileID, nfUint32 & nPartID, nfUint32 & nPointCount);

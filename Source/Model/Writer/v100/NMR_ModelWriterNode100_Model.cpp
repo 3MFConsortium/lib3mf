@@ -1327,6 +1327,10 @@ namespace NMR {
 				writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_UUID, sToolpathUUID.c_str());
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_UNITFACTOR, (nfFloat)pToolpathResource->getUnitFactor());
 
+				std::string sToolpathType = pToolpathResource->getToolpathType();
+				if (!sToolpathType.empty() && (sToolpathType != XML_3MF_TOOLPATHRESOURCETYPE_PLANAR))
+					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_TOOLPATHTYPE, sToolpathType.c_str());
+
 				uint32_t nXMLDataCount = pToolpathResource->getCustomXMLDataCount();
 				if (nXMLDataCount > 0) {
 					writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHDATA, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
@@ -1388,6 +1392,9 @@ namespace NMR {
 						writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATHMODIFIER_MINIMUM, (float) modifier->getMinimumValue ());
 						writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATHMODIFIER_MAXIMUM, (float)modifier->getMaximumValue());
 						switch (modifier->getModificationFactor()) {
+							case Lib3MF::eToolpathProfileModificationFactor::FactorE:
+								writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHMODIFIER_FACTOR, "e");
+								break;
 							case Lib3MF::eToolpathProfileModificationFactor::FactorF:
 								writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHMODIFIER_FACTOR, "f");
 								break;

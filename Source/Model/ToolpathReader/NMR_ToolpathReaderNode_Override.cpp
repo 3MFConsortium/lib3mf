@@ -48,10 +48,12 @@ namespace NMR {
 			m_dValueF(0),
 			m_dValueG(0),
 			m_dValueH(0),
+			m_dValueE(0),
 			m_bHasParameter (false),
 			m_bHasValueF (false),
 			m_bHasValueG (false),
-			m_bHasValueH (false)
+			m_bHasValueH (false),
+			m_bHasValueE (false)
 
 	{
 		if (pReadData == nullptr)
@@ -102,6 +104,12 @@ namespace NMR {
 			m_dValueH = fnStringToDouble(pAttributeValue);
 			m_bHasValueH = true;
 		}
+		else if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORE) == 0) {
+			if (m_bHasValueE)
+				throw CNMRException(NMR_ERROR_DUPLICATEOVERRIDEFACTORE);
+			m_dValueE = fnStringToDouble(pAttributeValue);
+			m_bHasValueE = true;
+		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 
@@ -150,6 +158,16 @@ namespace NMR {
 			return 0.0;
 		}
 		return m_dValueH;
+	}
+
+	nfDouble CToolpathReaderNode_Override::getValueE(bool bMustExist)
+	{
+		if (!m_bHasValueE) {
+			if (bMustExist)
+				throw CNMRException(NMR_ERROR_MISSINGOVERRIDEFACTORE);
+			return 0.0;
+		}
+		return m_dValueE;
 	}
 
 }

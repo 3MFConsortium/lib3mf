@@ -284,12 +284,14 @@ public class Lib3MFWrapper {
 	public static final int TOOLPATHPROFILEMODIFICATIONFACTOR_FACTORF = 1;
 	public static final int TOOLPATHPROFILEMODIFICATIONFACTOR_FACTORG = 2;
 	public static final int TOOLPATHPROFILEMODIFICATIONFACTOR_FACTORH = 3;
+	public static final int TOOLPATHPROFILEMODIFICATIONFACTOR_FACTORE = 4;
 
 	public enum ToolpathProfileModificationFactor {
 		eUnknown,
 		eFactorF,
 		eFactorG,
-		eFactorH
+		eFactorH,
+		eFactorE
 	}
 
 	public static final int TOOLPATHPROFILEMODIFICATIONTYPE_NOMODIFICATION = 0;
@@ -879,6 +881,7 @@ public class Lib3MFWrapper {
 				case eFactorF: return TOOLPATHPROFILEMODIFICATIONFACTOR_FACTORF;
 				case eFactorG: return TOOLPATHPROFILEMODIFICATIONFACTOR_FACTORG;
 				case eFactorH: return TOOLPATHPROFILEMODIFICATIONFACTOR_FACTORH;
+				case eFactorE: return TOOLPATHPROFILEMODIFICATIONFACTOR_FACTORE;
 				default: throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "Unknown enum value : " + value);
 			}
 		}
@@ -889,6 +892,7 @@ public class Lib3MFWrapper {
 				case TOOLPATHPROFILEMODIFICATIONFACTOR_FACTORF: return ToolpathProfileModificationFactor.eFactorF;
 				case TOOLPATHPROFILEMODIFICATIONFACTOR_FACTORG: return ToolpathProfileModificationFactor.eFactorG;
 				case TOOLPATHPROFILEMODIFICATIONFACTOR_FACTORH: return ToolpathProfileModificationFactor.eFactorH;
+				case TOOLPATHPROFILEMODIFICATIONFACTOR_FACTORE: return ToolpathProfileModificationFactor.eFactorE;
 				default: throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "Unknown enum const : " + value);
 			}
 		}
@@ -1883,6 +1887,13 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_toolpathlayerdata_writepolylinediscretewithfactors;
 	protected com.sun.jna.Function lib3mf_toolpathlayerdata_addcustomdata;
 	protected com.sun.jna.Function lib3mf_toolpathlayerdata_finish;
+	protected com.sun.jna.Function lib3mf_toolpathviewable_getlayerindex;
+	protected com.sun.jna.Function lib3mf_toolpathviewable_getlayerpath;
+	protected com.sun.jna.Function lib3mf_toolpathviewable_getlayerzmin;
+	protected com.sun.jna.Function lib3mf_toolpathviewable_getlayerzmax;
+	protected com.sun.jna.Function lib3mf_toolpathviewable_getlayerthickness;
+	protected com.sun.jna.Function lib3mf_toolpathviewable_getjsonstring;
+	protected com.sun.jna.Function lib3mf_toolpathviewable_getjsonbuffer;
 	protected com.sun.jna.Function lib3mf_toolpath_getuuid;
 	protected com.sun.jna.Function lib3mf_toolpath_resetuuid;
 	protected com.sun.jna.Function lib3mf_toolpath_getunits;
@@ -1893,6 +1904,7 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_toolpath_setbottomz;
 	protected com.sun.jna.Function lib3mf_toolpath_getlayerattachment;
 	protected com.sun.jna.Function lib3mf_toolpath_readlayerdata;
+	protected com.sun.jna.Function lib3mf_toolpath_getlayerviewable;
 	protected com.sun.jna.Function lib3mf_toolpath_getlayerpath;
 	protected com.sun.jna.Function lib3mf_toolpath_getlayerzmax;
 	protected com.sun.jna.Function lib3mf_toolpath_getlayerzmin;
@@ -2698,6 +2710,13 @@ public class Lib3MFWrapper {
 		lib3mf_toolpathlayerdata_writepolylinediscretewithfactors = mLibrary.getFunction("lib3mf_toolpathlayerdata_writepolylinediscretewithfactors");
 		lib3mf_toolpathlayerdata_addcustomdata = mLibrary.getFunction("lib3mf_toolpathlayerdata_addcustomdata");
 		lib3mf_toolpathlayerdata_finish = mLibrary.getFunction("lib3mf_toolpathlayerdata_finish");
+		lib3mf_toolpathviewable_getlayerindex = mLibrary.getFunction("lib3mf_toolpathviewable_getlayerindex");
+		lib3mf_toolpathviewable_getlayerpath = mLibrary.getFunction("lib3mf_toolpathviewable_getlayerpath");
+		lib3mf_toolpathviewable_getlayerzmin = mLibrary.getFunction("lib3mf_toolpathviewable_getlayerzmin");
+		lib3mf_toolpathviewable_getlayerzmax = mLibrary.getFunction("lib3mf_toolpathviewable_getlayerzmax");
+		lib3mf_toolpathviewable_getlayerthickness = mLibrary.getFunction("lib3mf_toolpathviewable_getlayerthickness");
+		lib3mf_toolpathviewable_getjsonstring = mLibrary.getFunction("lib3mf_toolpathviewable_getjsonstring");
+		lib3mf_toolpathviewable_getjsonbuffer = mLibrary.getFunction("lib3mf_toolpathviewable_getjsonbuffer");
 		lib3mf_toolpath_getuuid = mLibrary.getFunction("lib3mf_toolpath_getuuid");
 		lib3mf_toolpath_resetuuid = mLibrary.getFunction("lib3mf_toolpath_resetuuid");
 		lib3mf_toolpath_getunits = mLibrary.getFunction("lib3mf_toolpath_getunits");
@@ -2708,6 +2727,7 @@ public class Lib3MFWrapper {
 		lib3mf_toolpath_setbottomz = mLibrary.getFunction("lib3mf_toolpath_setbottomz");
 		lib3mf_toolpath_getlayerattachment = mLibrary.getFunction("lib3mf_toolpath_getlayerattachment");
 		lib3mf_toolpath_readlayerdata = mLibrary.getFunction("lib3mf_toolpath_readlayerdata");
+		lib3mf_toolpath_getlayerviewable = mLibrary.getFunction("lib3mf_toolpath_getlayerviewable");
 		lib3mf_toolpath_getlayerpath = mLibrary.getFunction("lib3mf_toolpath_getlayerpath");
 		lib3mf_toolpath_getlayerzmax = mLibrary.getFunction("lib3mf_toolpath_getlayerzmax");
 		lib3mf_toolpath_getlayerzmin = mLibrary.getFunction("lib3mf_toolpath_getlayerzmin");
@@ -3512,6 +3532,13 @@ public class Lib3MFWrapper {
 		lib3mf_toolpathlayerdata_writepolylinediscretewithfactors = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlayerdata_writepolylinediscretewithfactors");
 		lib3mf_toolpathlayerdata_addcustomdata = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlayerdata_addcustomdata");
 		lib3mf_toolpathlayerdata_finish = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlayerdata_finish");
+		lib3mf_toolpathviewable_getlayerindex = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathviewable_getlayerindex");
+		lib3mf_toolpathviewable_getlayerpath = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathviewable_getlayerpath");
+		lib3mf_toolpathviewable_getlayerzmin = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathviewable_getlayerzmin");
+		lib3mf_toolpathviewable_getlayerzmax = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathviewable_getlayerzmax");
+		lib3mf_toolpathviewable_getlayerthickness = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathviewable_getlayerthickness");
+		lib3mf_toolpathviewable_getjsonstring = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathviewable_getjsonstring");
+		lib3mf_toolpathviewable_getjsonbuffer = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathviewable_getjsonbuffer");
 		lib3mf_toolpath_getuuid = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getuuid");
 		lib3mf_toolpath_resetuuid = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_resetuuid");
 		lib3mf_toolpath_getunits = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getunits");
@@ -3522,6 +3549,7 @@ public class Lib3MFWrapper {
 		lib3mf_toolpath_setbottomz = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_setbottomz");
 		lib3mf_toolpath_getlayerattachment = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getlayerattachment");
 		lib3mf_toolpath_readlayerdata = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_readlayerdata");
+		lib3mf_toolpath_getlayerviewable = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getlayerviewable");
 		lib3mf_toolpath_getlayerpath = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getlayerpath");
 		lib3mf_toolpath_getlayerzmax = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getlayerzmax");
 		lib3mf_toolpath_getlayerzmin = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getlayerzmin");
@@ -4726,6 +4754,11 @@ public class Lib3MFWrapper {
 				case 0xD9F5A53C: 
 					switch(lsbId) {
 						case 0x657765AE: obj = (T)(new RoundNode(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::RoundNode"
+					}
+				break;
+				case 0xDA867173: 
+					switch(lsbId) {
+						case 0x1DE85377: obj = (T)(new ToolpathViewable(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathViewable"
 					}
 				break;
 				case 0xDE92510B: 

@@ -293,6 +293,7 @@
 		<option name="FactorF" value="1" />
 		<option name="FactorG" value="2" />
 		<option name="FactorH" value="3" />
+		<option name="FactorE" value="4" />
 	</enum>
 	
 	<enum name="ToolpathProfileModificationType">
