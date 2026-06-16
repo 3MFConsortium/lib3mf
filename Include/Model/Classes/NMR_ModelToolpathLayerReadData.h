@@ -132,7 +132,8 @@ namespace NMR {
 		CPagedVector<TOOLPATHREADOVERRIDE> m_OverrideInterpolations;
 		TOOLPATHREADSEGMENT * m_pCurrentSegment;
 
-		std::map<uint32_t, std::string> m_UUIDMap;
+		std::map<uint32_t, std::string> m_PartUUIDMap;
+		std::map<uint32_t, std::string> m_ProfileUUIDMap;
 		std::vector<uint32_t> m_PartIDs;
 		std::vector<uint32_t> m_ProfileIDs;
 
@@ -168,7 +169,8 @@ namespace NMR {
 
 		void registerPartUUID (nfUint32 nID, std::string sUUID);
 		void registerProfileUUID(nfUint32 nID, std::string sUUID);
-		std::string mapIDtoUUID(nfUint32 nID);
+		std::string mapPartIDtoUUID(nfUint32 nID);
+		std::string mapProfileIDtoUUID(nfUint32 nID);
 
 		uint32_t getCustomXMLDataCount();
 		PCustomXMLTree getCustomXMLData(uint32_t nIndex);

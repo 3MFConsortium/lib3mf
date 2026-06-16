@@ -90,7 +90,7 @@ IToolpathProfile* CToolpathLayerReader::GetSegmentDefaultProfile(const Lib3MF_ui
 	uint32_t nPartID = 0;
 	m_pReadData->getSegmentInfo(nIndex, eNMRType, nProfileID, nPartID, nPointCount);
 
-	auto pProfile = m_pModelToolpath->getProfileByUUID(m_pReadData->mapIDtoUUID(nProfileID));
+	auto pProfile = m_pModelToolpath->getProfileByUUID(m_pReadData->mapProfileIDtoUUID(nProfileID));
 	return new CToolpathProfile (pProfile);
 }
 
@@ -102,7 +102,7 @@ std::string CToolpathLayerReader::GetSegmentDefaultProfileUUID(const Lib3MF_uint
 	uint32_t nPointCount = 0;
 	m_pReadData->getSegmentInfo(nIndex, eNMRType, nProfileID, nPartID, nPointCount);
 
-	return m_pReadData->mapIDtoUUID(nProfileID);
+	return m_pReadData->mapProfileIDtoUUID(nProfileID);
 }
 
 Lib3MF_uint32 CToolpathLayerReader::GetSegmentDefaultProfileID(const Lib3MF_uint32 nSegmentIndex)
@@ -118,7 +118,7 @@ Lib3MF_uint32 CToolpathLayerReader::GetSegmentDefaultProfileID(const Lib3MF_uint
 
 std::string CToolpathLayerReader::GetProfileUUIDByLocalProfileID(const Lib3MF_uint32 nLocalProfileID)
 {
-	return m_pReadData->mapIDtoUUID(nLocalProfileID);
+	return m_pReadData->mapProfileIDtoUUID(nLocalProfileID);
 }
 
 
@@ -136,7 +136,7 @@ IBuildItem* CToolpathLayerReader::GetSegmentBuildItem(const Lib3MF_uint32 nIndex
 	uint32_t nPartID;
 	uint32_t nPointCount;
 	m_pReadData->getSegmentInfo(nIndex, eNMRType, nProfileID, nPartID, nPointCount);
-	std::string sUUID = m_pReadData->mapIDtoUUID(nPartID);
+	std::string sUUID = m_pReadData->mapPartIDtoUUID(nPartID);
 
 	auto pModel = m_pModelToolpath->getModel();
 	auto pBuildItemInstance = pModel->findBuildItemByUUID(sUUID, true);
@@ -154,7 +154,7 @@ std::string CToolpathLayerReader::GetSegmentBuildItemUUID(const Lib3MF_uint32 nI
 	uint32_t nPointCount;
 	m_pReadData->getSegmentInfo(nIndex, eNMRType, nProfileID, nPartID, nPointCount);
 
-	return m_pReadData->mapIDtoUUID(nPartID);
+	return m_pReadData->mapPartIDtoUUID(nPartID);
 }
 
 Lib3MF_uint32 CToolpathLayerReader::GetSegmentPartID(const Lib3MF_uint32 nIndex)
@@ -170,7 +170,7 @@ Lib3MF_uint32 CToolpathLayerReader::GetSegmentPartID(const Lib3MF_uint32 nIndex)
 
 std::string CToolpathLayerReader::GetBuildItemUUIDByLocalPartID(const Lib3MF_uint32 nLocalPartID)
 {
-	return m_pReadData->mapIDtoUUID(nLocalPartID);
+	return m_pReadData->mapPartIDtoUUID(nLocalPartID);
 }
 
 

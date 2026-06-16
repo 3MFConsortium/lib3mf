@@ -253,35 +253,47 @@ namespace NMR {
 
 	void CModelToolpathLayerReadData::registerPartUUID(nfUint32 nID, std::string sUUID)
 	{
-		auto iIter = m_UUIDMap.find(nID);
-		if (iIter != m_UUIDMap.end())
+		// Part IDs and profile IDs are independent local ID spaces (each unique
+		// within the layer, but unrelated to each other), so they are tracked in
+		// separate maps. A part and a profile MAY share the same numeric ID.
+		auto iIter = m_PartUUIDMap.find(nID);
+		if (iIter != m_PartUUIDMap.end())
 			throw CNMRException(NMR_ERROR_DUPLICATEPARTID);
 
 		if (nID == 0)
 			throw CNMRException(NMR_ERROR_INVALIDPARTID);
 
-		m_UUIDMap.insert(std::make_pair (nID, sUUID));
+		m_PartUUIDMap.insert(std::make_pair (nID, sUUID));
 		m_PartIDs.push_back(nID);
 
 	}
 
 	void CModelToolpathLayerReadData::registerProfileUUID(nfUint32 nID, std::string sUUID)
 	{
-		auto iIter = m_UUIDMap.find(nID);
-		if (iIter != m_UUIDMap.end())
+		auto iIter = m_ProfileUUIDMap.find(nID);
+		if (iIter != m_ProfileUUIDMap.end())
 			throw CNMRException(NMR_ERROR_DUPLICATEPROFILEID);
 
 		if (nID == 0)
 			throw CNMRException(NMR_ERROR_INVALIDPROFILEID);
 
-		m_UUIDMap.insert(std::make_pair(nID, sUUID));
+		m_ProfileUUIDMap.insert(std::make_pair(nID, sUUID));
 		m_ProfileIDs.push_back(nID);
 	}
 
-	std::string CModelToolpathLayerReadData::mapIDtoUUID(nfUint32 nID)
+	std::string CModelToolpathLayerReadData::mapPartIDtoUUID(nfUint32 nID)
 	{
-		auto iIter = m_UUIDMap.find(nID);
-		if (iIter == m_UUIDMap.end())
+		auto iIter = m_PartUUIDMap.find(nID);
+		if (iIter == m_PartUUIDMap.end())
+			throw CNMRException(NMR_ERROR_MISSINGID);
+
+		return iIter->second;
+	}
+
+	std::string CModelToolpathLayerReadData::mapProfileIDtoUUID(nfUint32 nID)
+	{
+		auto iIter = m_ProfileUUIDMap.find(nID);
+		if (iIter == m_ProfileUUIDMap.end())
 			throw CNMRException(NMR_ERROR_MISSINGID);
 
 		return iIter->second;
@@ -467,6 +479,9 @@ namespace NMR {
 	{
 		if (nPartIndex >= m_PartIDs.size ())
 			throw CNMRException(NMR_ERROR_INVALIDPARTINDEX);
+
+		nPartID = m_PartIDs[nPartIndex];
+		sPartUUID = mapPartIDtoUUID(nPartID);
 	}
 
 }
