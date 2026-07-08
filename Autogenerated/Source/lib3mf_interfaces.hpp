@@ -1920,6 +1920,12 @@ public:
 	*/
 	virtual Lib3MF::sTransform GetOperand(const Lib3MF_uint32 nIndex, IMeshObject*& pOperandObject) = 0;
 
+	/**
+	* IBooleanObject::MergeToMeshObject - Materializes the boolean shape into a newly created mesh object.
+	* @return new mesh object containing the tessellated boolean shape
+	*/
+	virtual IMeshObject * MergeToMeshObject() = 0;
+
 };
 
 typedef IBaseSharedPtr<IBooleanObject> PIBooleanObject;

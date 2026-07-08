@@ -1219,6 +1219,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_booleanobject_getoperand", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BooleanObject_GetOperand (IntPtr Handle, UInt32 AIndex, out IntPtr AOperandObject, out InternalTransform ATransform);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_booleanobject_mergetomeshobject", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 BooleanObject_MergeToMeshObject (IntPtr Handle, out IntPtr AMeshObject);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlattice_getminlength", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BeamLattice_GetMinLength (IntPtr Handle, out Double AMinLength);
 
@@ -4841,6 +4844,14 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.BooleanObject_GetOperand (Handle, AIndex, out newOperandObject, out intresultTransform));
 			AOperandObject = Internal.Lib3MFWrapper.PolymorphicFactory<CMeshObject>(newOperandObject);
 			return Internal.Lib3MFWrapper.convertInternalToStruct_Transform (intresultTransform);
+		}
+
+		public CMeshObject MergeToMeshObject ()
+		{
+			IntPtr newMeshObject = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.BooleanObject_MergeToMeshObject (Handle, out newMeshObject));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CMeshObject>(newMeshObject);
 		}
 
 	}

@@ -2001,6 +2001,7 @@ EMSCRIPTEN_BINDINGS(Lib3MF) {
         .function("GetOperandCount", &CBooleanObject::GetOperandCount)
         .function("AddOperand", &wrap_BooleanObject_AddOperand)
         .function("GetOperand", &wrap_BooleanObject_GetOperand)
+        .function("MergeToMeshObject", &CBooleanObject::MergeToMeshObject)
     ;
     class_<CBeamLattice, base<CBase>>("CBeamLattice")
         .smart_ptr<std::shared_ptr<CBeamLattice>>("shared_ptr<CBeamLattice>")

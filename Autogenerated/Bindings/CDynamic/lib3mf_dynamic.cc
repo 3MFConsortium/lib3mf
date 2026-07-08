@@ -210,6 +210,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_BooleanObject_GetOperandCount = NULL;
 	pWrapperTable->m_BooleanObject_AddOperand = NULL;
 	pWrapperTable->m_BooleanObject_GetOperand = NULL;
+	pWrapperTable->m_BooleanObject_MergeToMeshObject = NULL;
 	pWrapperTable->m_BeamLattice_GetMinLength = NULL;
 	pWrapperTable->m_BeamLattice_SetMinLength = NULL;
 	pWrapperTable->m_BeamLattice_GetClipping = NULL;
@@ -2224,6 +2225,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	if (pWrapperTable->m_BooleanObject_GetOperand == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
+	#ifdef _WIN32
+	pWrapperTable->m_BooleanObject_MergeToMeshObject = (PLib3MFBooleanObject_MergeToMeshObjectPtr) GetProcAddress(hLibrary, "lib3mf_booleanobject_mergetomeshobject");
+	#else // _WIN32
+	pWrapperTable->m_BooleanObject_MergeToMeshObject = (PLib3MFBooleanObject_MergeToMeshObjectPtr) dlsym(hLibrary, "lib3mf_booleanobject_mergetomeshobject");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_BooleanObject_MergeToMeshObject == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+
 	#ifdef _WIN32
 	pWrapperTable->m_BeamLattice_GetMinLength = (PLib3MFBeamLattice_GetMinLengthPtr) GetProcAddress(hLibrary, "lib3mf_beamlattice_getminlength");
 	#else // _WIN32

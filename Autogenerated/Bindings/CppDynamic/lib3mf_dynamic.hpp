@@ -1636,6 +1636,7 @@ public:
 	inline Lib3MF_uint32 GetOperandCount();
 	inline void AddOperand(classParam<CMeshObject> pOperandObject, const sTransform & Transform);
 	inline sTransform GetOperand(const Lib3MF_uint32 nIndex, PMeshObject & pOperandObject);
+	inline PMeshObject MergeToMeshObject();
 };
 	
 /*************************************************************************************************************************
@@ -4210,6 +4211,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_BooleanObject_GetOperandCount = nullptr;
 		pWrapperTable->m_BooleanObject_AddOperand = nullptr;
 		pWrapperTable->m_BooleanObject_GetOperand = nullptr;
+		pWrapperTable->m_BooleanObject_MergeToMeshObject = nullptr;
 		pWrapperTable->m_BeamLattice_GetMinLength = nullptr;
 		pWrapperTable->m_BeamLattice_SetMinLength = nullptr;
 		pWrapperTable->m_BeamLattice_GetClipping = nullptr;
@@ -6220,6 +6222,15 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if (pWrapperTable->m_BooleanObject_GetOperand == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		#ifdef _WIN32
+		pWrapperTable->m_BooleanObject_MergeToMeshObject = (PLib3MFBooleanObject_MergeToMeshObjectPtr) GetProcAddress(hLibrary, "lib3mf_booleanobject_mergetomeshobject");
+		#else // _WIN32
+		pWrapperTable->m_BooleanObject_MergeToMeshObject = (PLib3MFBooleanObject_MergeToMeshObjectPtr) dlsym(hLibrary, "lib3mf_booleanobject_mergetomeshobject");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_BooleanObject_MergeToMeshObject == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+
 		#ifdef _WIN32
 		pWrapperTable->m_BeamLattice_GetMinLength = (PLib3MFBeamLattice_GetMinLengthPtr) GetProcAddress(hLibrary, "lib3mf_beamlattice_getminlength");
 		#else // _WIN32
@@ -11402,6 +11413,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_BooleanObject_GetOperand == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_booleanobject_mergetomeshobject", (void**)&(pWrapperTable->m_BooleanObject_MergeToMeshObject));
+		if ( (eLookupError != 0) || (pWrapperTable->m_BooleanObject_MergeToMeshObject == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+
 		eLookupError = (*pLookup)("lib3mf_beamlattice_getminlength", (void**)&(pWrapperTable->m_BeamLattice_GetMinLength));
 		if ( (eLookupError != 0) || (pWrapperTable->m_BeamLattice_GetMinLength == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -15487,6 +15502,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		return resultTransform;
 	}
 	
+	/**
+	* CBooleanObject::MergeToMeshObject - Materializes the boolean shape into a newly created mesh object.
+	* @return new mesh object containing the tessellated boolean shape
+	*/
+	PMeshObject CBooleanObject::MergeToMeshObject()
+	{
+		Lib3MFHandle hMeshObject = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_BooleanObject_MergeToMeshObject(m_pHandle, &hMeshObject));
+
+		if (!hMeshObject) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CMeshObject>(dynamic_cast<CMeshObject*>(m_pWrapper->polymorphicFactory(hMeshObject)));
+	}
+
 	/**
 	 * Method definitions for class CBeamLattice
 	 */

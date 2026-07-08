@@ -1241,6 +1241,11 @@
 			<param name="Transform" type="struct" class="Transform" pass="return"
 				description="transform applied to the operand object" />
 		</method>
+		<method name="MergeToMeshObject"
+			description="Materializes the boolean shape into a newly created mesh object.">
+			<param name="MeshObject" type="class" class="MeshObject" pass="return"
+				description="new mesh object containing the tessellated boolean shape" />
+		</method>
 	</class>
 
 	<class name="BeamLattice" parent="Base">

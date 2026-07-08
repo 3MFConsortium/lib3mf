@@ -407,6 +407,25 @@ TEST_F(BooleanRead, STLWriterMaterializesUnionBooleanObject)
 	ASSERT_FALSE(buffer.empty());
 }
 
+TEST_F(BooleanRead, MergeToMeshObjectMaterializesUnionBooleanObject)
+{
+	auto model = wrapper->CreateModel();
+	auto baseMesh = addBoxMesh(model);
+	auto operandMesh = addBoxMesh(model);
+	auto booleanObject = model->AddBooleanObject();
+
+	booleanObject->SetBaseObject(baseMesh.get(), wrapper->GetIdentityTransform());
+	booleanObject->SetOperation(Lib3MF::eBooleanOperation::Union);
+	booleanObject->AddOperand(operandMesh.get(), wrapper->GetTranslationTransform(1.0, 0.0, 0.0));
+
+	auto mergedMesh = booleanObject->MergeToMeshObject();
+	ASSERT_TRUE(mergedMesh->IsMeshObject());
+	ASSERT_NE(mergedMesh->GetResourceID(), booleanObject->GetResourceID());
+	ASSERT_GT(mergedMesh->GetVertexCount(), 0u);
+	ASSERT_GT(mergedMesh->GetTriangleCount(), 0u);
+	ASSERT_EQ(model->GetMeshObjects()->Count(), 3u);
+}
+
 TEST_F(BooleanRead, STLWriterRejectsNonUnionBooleanWithoutCSG)
 {
 	auto testOperation = [&](Lib3MF::eBooleanOperation operation) {

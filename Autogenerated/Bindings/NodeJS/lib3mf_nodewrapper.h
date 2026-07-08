@@ -680,6 +680,7 @@ private:
 	static void GetOperandCount(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddOperand(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetOperand(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void MergeToMeshObject(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFBooleanObject();

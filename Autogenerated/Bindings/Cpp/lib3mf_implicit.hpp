@@ -1612,6 +1612,7 @@ public:
 	inline Lib3MF_uint32 GetOperandCount();
 	inline void AddOperand(classParam<CMeshObject> pOperandObject, const sTransform & Transform);
 	inline sTransform GetOperand(const Lib3MF_uint32 nIndex, PMeshObject & pOperandObject);
+	inline PMeshObject MergeToMeshObject();
 };
 	
 /*************************************************************************************************************************
@@ -6092,6 +6093,21 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		return resultTransform;
 	}
 	
+	/**
+	* CBooleanObject::MergeToMeshObject - Materializes the boolean shape into a newly created mesh object.
+	* @return new mesh object containing the tessellated boolean shape
+	*/
+	PMeshObject CBooleanObject::MergeToMeshObject()
+	{
+		Lib3MFHandle hMeshObject = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_booleanobject_mergetomeshobject(m_pHandle, &hMeshObject));
+
+		if (!hMeshObject) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CMeshObject>(dynamic_cast<CMeshObject*>(m_pWrapper->polymorphicFactory(hMeshObject)));
+	}
+
 	/**
 	 * Method definitions for class CBeamLattice
 	 */

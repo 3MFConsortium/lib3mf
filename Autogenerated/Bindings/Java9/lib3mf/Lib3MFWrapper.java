@@ -1260,6 +1260,7 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_booleanobject_getoperandcount;
 	protected com.sun.jna.Function lib3mf_booleanobject_addoperand;
 	protected com.sun.jna.Function lib3mf_booleanobject_getoperand;
+	protected com.sun.jna.Function lib3mf_booleanobject_mergetomeshobject;
 	protected com.sun.jna.Function lib3mf_beamlattice_getminlength;
 	protected com.sun.jna.Function lib3mf_beamlattice_setminlength;
 	protected com.sun.jna.Function lib3mf_beamlattice_getclipping;
@@ -1929,6 +1930,7 @@ public class Lib3MFWrapper {
 		lib3mf_booleanobject_getoperandcount = mLibrary.getFunction("lib3mf_booleanobject_getoperandcount");
 		lib3mf_booleanobject_addoperand = mLibrary.getFunction("lib3mf_booleanobject_addoperand");
 		lib3mf_booleanobject_getoperand = mLibrary.getFunction("lib3mf_booleanobject_getoperand");
+		lib3mf_booleanobject_mergetomeshobject = mLibrary.getFunction("lib3mf_booleanobject_mergetomeshobject");
 		lib3mf_beamlattice_getminlength = mLibrary.getFunction("lib3mf_beamlattice_getminlength");
 		lib3mf_beamlattice_setminlength = mLibrary.getFunction("lib3mf_beamlattice_setminlength");
 		lib3mf_beamlattice_getclipping = mLibrary.getFunction("lib3mf_beamlattice_getclipping");
@@ -2597,6 +2599,7 @@ public class Lib3MFWrapper {
 		lib3mf_booleanobject_getoperandcount = loadFunctionByLookup(lookupMethod, "lib3mf_booleanobject_getoperandcount");
 		lib3mf_booleanobject_addoperand = loadFunctionByLookup(lookupMethod, "lib3mf_booleanobject_addoperand");
 		lib3mf_booleanobject_getoperand = loadFunctionByLookup(lookupMethod, "lib3mf_booleanobject_getoperand");
+		lib3mf_booleanobject_mergetomeshobject = loadFunctionByLookup(lookupMethod, "lib3mf_booleanobject_mergetomeshobject");
 		lib3mf_beamlattice_getminlength = loadFunctionByLookup(lookupMethod, "lib3mf_beamlattice_getminlength");
 		lib3mf_beamlattice_setminlength = loadFunctionByLookup(lookupMethod, "lib3mf_beamlattice_setminlength");
 		lib3mf_beamlattice_getclipping = loadFunctionByLookup(lookupMethod, "lib3mf_beamlattice_getclipping");

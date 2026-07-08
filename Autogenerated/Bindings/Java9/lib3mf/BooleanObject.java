@@ -249,6 +249,24 @@ public class BooleanObject extends Object {
 		public Transform Transform;
 
 	}
+	/**
+	 * Materializes the boolean shape into a newly created mesh object.
+	 *
+	 * @return new mesh object containing the tessellated boolean shape
+	 * @throws Lib3MFException
+	 */
+	public MeshObject mergeToMeshObject() throws Lib3MFException {
+		Pointer bufferMeshObject = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_booleanobject_mergetomeshobject.invokeInt(new java.lang.Object[]{mHandle, bufferMeshObject}));
+		Pointer valueMeshObject = bufferMeshObject.getPointer(0);
+		MeshObject meshObject = null;
+		if (valueMeshObject == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "MeshObject was a null pointer");
+		}
+		meshObject = mWrapper.PolymorphicFactory(valueMeshObject, MeshObject.class);
+		return meshObject;
+	}
+
 
 }
 

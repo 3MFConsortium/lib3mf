@@ -36,6 +36,7 @@ Abstract: This is a stub class definition of CBooleanObject
 #include "Model/Classes/NMR_ModelBooleanObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Model/Classes/NMR_Model.h"
 #include "lib3mf_utils.hpp"
 
 using namespace Lib3MF::Impl;
@@ -180,4 +181,20 @@ Lib3MF::sTransform CBooleanObject::GetOperand(const Lib3MF_uint32 nIndex, IMeshO
 	pOperandObject = pMeshObjectInterface;
 	pObject.release();
 	return Lib3MF::MatrixToTransform(operand->getTransform());
+}
+
+IMeshObject * CBooleanObject::MergeToMeshObject()
+{
+	auto pBooleanObject = booleanObject();
+	auto pModel = pBooleanObject->getModel();
+	if (!pModel)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+
+	NMR::PMesh pMesh = std::make_shared<NMR::CMesh>();
+	pBooleanObject->mergeToMesh(pMesh.get(), NMR::fnMATRIX3_identity());
+
+	NMR::PModelMeshObject pMeshObject = std::make_shared<NMR::CModelMeshObject>(pModel->generateResourceID(), pModel, pMesh);
+	pModel->addResource(pMeshObject);
+
+	return new CMeshObject(pMeshObject);
 }
