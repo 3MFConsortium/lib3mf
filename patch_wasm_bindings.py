@@ -166,6 +166,24 @@ VECTOR_STRUCT_PATCHES = [
 ]
 
 
+SLICE_GET_VERTEX_ANCHOR = """static emscripten::val wrap_Slice_GetPolygonIndices(CSlice &self, const Lib3MF_uint64& Index) {"""
+
+SLICE_GET_VERTEX_WRAPPER = """static sPosition2DWrapper wrap_Slice_GetVertex(CSlice &self, const Lib3MF_uint64& Index) {
+    std::vector<sPosition2D> vertices;
+    self.GetVertices(vertices);
+    return sPosition2DWrapper{vertices.at(static_cast<size_t>(Index))};
+}
+
+static emscripten::val wrap_Slice_GetPolygonIndices(CSlice &self, const Lib3MF_uint64& Index) {"""
+
+SLICE_GET_VERTEX_BINDING_ANCHOR = """        .function("GetVertexCount", &CSlice::GetVertexCount)
+        .function("AddPolygon", &CSlice::AddPolygon)"""
+
+SLICE_GET_VERTEX_BINDING = """        .function("GetVertexCount", &CSlice::GetVertexCount)
+        .function("GetVertex", &wrap_Slice_GetVertex)
+        .function("AddPolygon", &CSlice::AddPolygon)"""
+
+
 def apply_literal_patch(contents: str, old: str, new: str, description: str) -> tuple[str, bool]:
     if new in contents:
         return contents, False
@@ -195,6 +213,22 @@ def main() -> int:
             old.split("{", 1)[0].strip(),
         )
         changed = changed or local_changed
+
+    contents, local_changed = apply_literal_patch(
+        contents,
+        SLICE_GET_VERTEX_ANCHOR,
+        SLICE_GET_VERTEX_WRAPPER,
+        "Slice_GetVertex wrapper",
+    )
+    changed = changed or local_changed
+
+    contents, local_changed = apply_literal_patch(
+        contents,
+        SLICE_GET_VERTEX_BINDING_ANCHOR,
+        SLICE_GET_VERTEX_BINDING,
+        "Slice.GetVertex binding",
+    )
+    changed = changed or local_changed
 
     if changed:
         target.write_text(contents, encoding="utf-8")
