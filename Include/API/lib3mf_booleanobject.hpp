@@ -112,6 +112,8 @@ public:
 
 	Lib3MF::sTransform GetOperand(const Lib3MF_uint32 nIndex, IMeshObject*& pOperandObject) override;
 
+	IMeshObject * MergeToMeshObject() override;
+
 };
 
 } // namespace Impl

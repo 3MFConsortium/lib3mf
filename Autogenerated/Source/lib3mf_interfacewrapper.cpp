@@ -6117,6 +6117,42 @@ Lib3MFResult lib3mf_booleanobject_getoperand(Lib3MF_BooleanObject pBooleanObject
 	}
 }
 
+Lib3MFResult lib3mf_booleanobject_mergetomeshobject(Lib3MF_BooleanObject pBooleanObject, Lib3MF_MeshObject * pMeshObject)
+{
+	IBase* pIBaseClass = (IBase *)pBooleanObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pBooleanObject, "BooleanObject", "MergeToMeshObject");
+		}
+		if (pMeshObject == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseMeshObject(nullptr);
+		IBooleanObject* pIBooleanObject = dynamic_cast<IBooleanObject*>(pIBaseClass);
+		if (!pIBooleanObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+
+		pBaseMeshObject = pIBooleanObject->MergeToMeshObject();
+
+		*pMeshObject = (IBase*)(pBaseMeshObject);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("MeshObject", *pMeshObject);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 /*************************************************************************************************************************
  Class implementation for BeamLattice
@@ -25351,6 +25387,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_booleanobject_addoperand;
 	if (sProcName == "lib3mf_booleanobject_getoperand") 
 		*ppProcAddress = (void*) &lib3mf_booleanobject_getoperand;
+	if (sProcName == "lib3mf_booleanobject_mergetomeshobject")
+		*ppProcAddress = (void*) &lib3mf_booleanobject_mergetomeshobject;
 	if (sProcName == "lib3mf_beamlattice_getminlength") 
 		*ppProcAddress = (void*) &lib3mf_beamlattice_getminlength;
 	if (sProcName == "lib3mf_beamlattice_setminlength") 

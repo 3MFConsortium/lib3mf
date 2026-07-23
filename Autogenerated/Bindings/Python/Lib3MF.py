@@ -541,6 +541,7 @@ class FunctionTable:
 	lib3mf_booleanobject_getoperandcount = None
 	lib3mf_booleanobject_addoperand = None
 	lib3mf_booleanobject_getoperand = None
+	lib3mf_booleanobject_mergetomeshobject = None
 	lib3mf_beamlattice_getminlength = None
 	lib3mf_beamlattice_setminlength = None
 	lib3mf_beamlattice_getclipping = None
@@ -2530,6 +2531,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p), ctypes.POINTER(Transform))
 			self.lib.lib3mf_booleanobject_getoperand = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_booleanobject_mergetomeshobject")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_booleanobject_mergetomeshobject = methodType(int(methodAddress.value))
+
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_beamlattice_getminlength")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -5976,6 +5983,9 @@ class Wrapper:
 			self.lib.lib3mf_booleanobject_getoperand.restype = ctypes.c_int32
 			self.lib.lib3mf_booleanobject_getoperand.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p), ctypes.POINTER(Transform)]
 			
+			self.lib.lib3mf_booleanobject_mergetomeshobject.restype = ctypes.c_int32
+			self.lib.lib3mf_booleanobject_mergetomeshobject.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+
 			self.lib.lib3mf_beamlattice_getminlength.restype = ctypes.c_int32
 			self.lib.lib3mf_beamlattice_getminlength.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
 			
@@ -9295,6 +9305,16 @@ class BooleanObject(Object):
 		
 		return OperandObjectObject, pTransform
 	
+	def MergeToMeshObject(self):
+		MeshObjectHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_booleanobject_mergetomeshobject(self._handle, MeshObjectHandle))
+		if MeshObjectHandle:
+			MeshObjectObject = self._wrapper._polymorphicFactory(MeshObjectHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+
+		return MeshObjectObject
+
 
 
 ''' Class Implementation for BeamLattice

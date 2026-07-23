@@ -1191,6 +1191,12 @@ static emscripten::val wrap_Slice_GetVertices(CSlice &self) {
     return output;
 }
 
+static sPosition2DWrapper wrap_Slice_GetVertex(CSlice &self, const Lib3MF_uint64& Index) {
+    std::vector<sPosition2D> vertices;
+    self.GetVertices(vertices);
+    return sPosition2DWrapper{vertices.at(static_cast<size_t>(Index))};
+}
+
 static emscripten::val wrap_Slice_GetPolygonIndices(CSlice &self, const Lib3MF_uint64& Index) {
     emscripten::val output = emscripten::val::object();
     std::vector<Lib3MF_uint32> Indices;
@@ -2001,6 +2007,7 @@ EMSCRIPTEN_BINDINGS(Lib3MF) {
         .function("GetOperandCount", &CBooleanObject::GetOperandCount)
         .function("AddOperand", &wrap_BooleanObject_AddOperand)
         .function("GetOperand", &wrap_BooleanObject_GetOperand)
+        .function("MergeToMeshObject", &CBooleanObject::MergeToMeshObject)
     ;
     class_<CBeamLattice, base<CBase>>("CBeamLattice")
         .smart_ptr<std::shared_ptr<CBeamLattice>>("shared_ptr<CBeamLattice>")
@@ -2611,6 +2618,7 @@ EMSCRIPTEN_BINDINGS(Lib3MF) {
         .function("SetVertices", &wrap_Slice_SetVertices)
         .function("GetVertices", &wrap_Slice_GetVertices)
         .function("GetVertexCount", &CSlice::GetVertexCount)
+        .function("GetVertex", &wrap_Slice_GetVertex)
         .function("AddPolygon", &CSlice::AddPolygon)
         .function("GetPolygonCount", &CSlice::GetPolygonCount)
         .function("SetPolygonIndices", &CSlice::SetPolygonIndices)

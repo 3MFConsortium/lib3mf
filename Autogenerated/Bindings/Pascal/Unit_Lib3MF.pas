@@ -2289,6 +2289,15 @@ type
 	*)
 	TLib3MFBooleanObject_GetOperandFunc = function(pBooleanObject: TLib3MFHandle; const nIndex: Cardinal; out pOperandObject: TLib3MFHandle; pTransform: PLib3MFTransform): TLib3MFResult; cdecl;
 	
+	(**
+	* Materializes the boolean shape into a newly created mesh object.
+	*
+	* @param[in] pBooleanObject - BooleanObject instance.
+	* @param[out] pMeshObject - new mesh object containing the tessellated boolean shape
+	* @return error code or 0 (success)
+	*)
+	TLib3MFBooleanObject_MergeToMeshObjectFunc = function(pBooleanObject: TLib3MFHandle; out pMeshObject: TLib3MFHandle): TLib3MFResult; cdecl;
+
 
 (*************************************************************************************************************************
  Function type definitions for BeamLattice
@@ -8225,6 +8234,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetOperandCount(): Cardinal;
 		procedure AddOperand(const AOperandObject: TLib3MFMeshObject; const ATransform: TLib3MFTransform);
 		function GetOperand(const AIndex: Cardinal; out AOperandObject: TLib3MFMeshObject): TLib3MFTransform;
+		function MergeToMeshObject(): TLib3MFMeshObject;
 	end;
 
 
@@ -9913,6 +9923,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFBooleanObject_GetOperandCountFunc: TLib3MFBooleanObject_GetOperandCountFunc;
 		FLib3MFBooleanObject_AddOperandFunc: TLib3MFBooleanObject_AddOperandFunc;
 		FLib3MFBooleanObject_GetOperandFunc: TLib3MFBooleanObject_GetOperandFunc;
+		FLib3MFBooleanObject_MergeToMeshObjectFunc: TLib3MFBooleanObject_MergeToMeshObjectFunc;
 		FLib3MFBeamLattice_GetMinLengthFunc: TLib3MFBeamLattice_GetMinLengthFunc;
 		FLib3MFBeamLattice_SetMinLengthFunc: TLib3MFBeamLattice_SetMinLengthFunc;
 		FLib3MFBeamLattice_GetClippingFunc: TLib3MFBeamLattice_GetClippingFunc;
@@ -10587,6 +10598,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFBooleanObject_GetOperandCountFunc: TLib3MFBooleanObject_GetOperandCountFunc read FLib3MFBooleanObject_GetOperandCountFunc;
 		property Lib3MFBooleanObject_AddOperandFunc: TLib3MFBooleanObject_AddOperandFunc read FLib3MFBooleanObject_AddOperandFunc;
 		property Lib3MFBooleanObject_GetOperandFunc: TLib3MFBooleanObject_GetOperandFunc read FLib3MFBooleanObject_GetOperandFunc;
+		property Lib3MFBooleanObject_MergeToMeshObjectFunc: TLib3MFBooleanObject_MergeToMeshObjectFunc read FLib3MFBooleanObject_MergeToMeshObjectFunc;
 		property Lib3MFBeamLattice_GetMinLengthFunc: TLib3MFBeamLattice_GetMinLengthFunc read FLib3MFBeamLattice_GetMinLengthFunc;
 		property Lib3MFBeamLattice_SetMinLengthFunc: TLib3MFBeamLattice_SetMinLengthFunc read FLib3MFBeamLattice_SetMinLengthFunc;
 		property Lib3MFBeamLattice_GetClippingFunc: TLib3MFBeamLattice_GetClippingFunc read FLib3MFBeamLattice_GetClippingFunc;
@@ -14504,6 +14516,17 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFBooleanObject_GetOperandFunc(FHandle, AIndex, HOperandObject, @Result));
 		if Assigned(HOperandObject) then
 			AOperandObject := TLib3MFMeshObject.Create(FWrapper, HOperandObject);
+	end;
+
+	function TLib3MFBooleanObject.MergeToMeshObject(): TLib3MFMeshObject;
+	var
+		HMeshObject: TLib3MFHandle;
+	begin
+		Result := nil;
+		HMeshObject := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFBooleanObject_MergeToMeshObjectFunc(FHandle, HMeshObject));
+		if Assigned(HMeshObject) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFMeshObject, TLib3MFMeshObject>.Make(FWrapper, HMeshObject);
 	end;
 
 (*************************************************************************************************************************
@@ -20732,6 +20755,7 @@ implementation
 		FLib3MFBooleanObject_GetOperandCountFunc := LoadFunction('lib3mf_booleanobject_getoperandcount');
 		FLib3MFBooleanObject_AddOperandFunc := LoadFunction('lib3mf_booleanobject_addoperand');
 		FLib3MFBooleanObject_GetOperandFunc := LoadFunction('lib3mf_booleanobject_getoperand');
+		FLib3MFBooleanObject_MergeToMeshObjectFunc := LoadFunction('lib3mf_booleanobject_mergetomeshobject');
 		FLib3MFBeamLattice_GetMinLengthFunc := LoadFunction('lib3mf_beamlattice_getminlength');
 		FLib3MFBeamLattice_SetMinLengthFunc := LoadFunction('lib3mf_beamlattice_setminlength');
 		FLib3MFBeamLattice_GetClippingFunc := LoadFunction('lib3mf_beamlattice_getclipping');
@@ -21729,6 +21753,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_booleanobject_getoperand'), @FLib3MFBooleanObject_GetOperandFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_booleanobject_mergetomeshobject'), @FLib3MFBooleanObject_MergeToMeshObjectFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_beamlattice_getminlength'), @FLib3MFBeamLattice_GetMinLengthFunc);

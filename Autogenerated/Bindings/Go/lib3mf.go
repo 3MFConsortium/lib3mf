@@ -2718,6 +2718,16 @@ func (inst BooleanObject) GetOperand(index uint32) (MeshObject, Transform, error
 	return inst.wrapperRef.NewMeshObject(operandObject), *(*Transform)(unsafe.Pointer(&transform)), nil
 }
 
+// MergeToMeshObject materializes the boolean shape into a newly created mesh object.
+func (inst BooleanObject) MergeToMeshObject() (MeshObject, error) {
+	var meshObject ref
+	ret := C.CCall_lib3mf_booleanobject_mergetomeshobject(inst.wrapperRef.LibraryHandle, inst.Ref, &meshObject)
+	if ret != 0 {
+		return MeshObject{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewMeshObject(meshObject), nil
+}
+
 
 // BeamLattice represents a Lib3MF class.
 type BeamLattice struct {

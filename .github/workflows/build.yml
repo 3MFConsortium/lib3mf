@@ -169,6 +169,8 @@ jobs:
         run: |
           emcmake cmake -S . -B build/wasm -DLIB3MF_BUILD_WASM=ON -DCMAKE_BUILD_TYPE=Release
           cmake --build build/wasm --target lib3mf_wasm -j"$(nproc)"
+      - name: Test indexed WASM slice vertices
+        run: node Tests/SliceVertex.mjs Tests/TestFiles/Slice/MultiSliceStack_TwoFiles.3mf
       - name: Package WASM artifact
         run: |
           mkdir -p build/wasm-artifact

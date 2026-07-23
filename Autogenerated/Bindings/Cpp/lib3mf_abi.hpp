@@ -1708,6 +1708,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_booleanobject_addoperand(Lib3MF_BooleanObjec
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_booleanobject_getoperand(Lib3MF_BooleanObject pBooleanObject, Lib3MF_uint32 nIndex, Lib3MF_MeshObject * pOperandObject, Lib3MF::sTransform * pTransform);
 
+/**
+* Materializes the boolean shape into a newly created mesh object.
+*
+* @param[in] pBooleanObject - BooleanObject instance.
+* @param[out] pMeshObject - new mesh object containing the tessellated boolean shape
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_booleanobject_mergetomeshobject(Lib3MF_BooleanObject pBooleanObject, Lib3MF_MeshObject * pMeshObject);
+
 /*************************************************************************************************************************
  Class definition for BeamLattice
 **************************************************************************************************************************/

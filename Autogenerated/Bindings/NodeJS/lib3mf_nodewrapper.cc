@@ -6671,6 +6671,7 @@ void CLib3MFBooleanObject::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOperandCount", GetOperandCount);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddOperand", AddOperand);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOperand", GetOperand);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "MergeToMeshObject", MergeToMeshObject);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -7021,6 +7022,29 @@ void CLib3MFBooleanObject::GetOperand(const FunctionCallbackInfo<Value>& args)
         outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "OperandObject"), instanceObjOperandObject);
         outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Transform"), convertLib3MFTransformToObject(isolate, sReturnTransform));
         args.GetReturnValue().Set(outObject);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFBooleanObject::MergeToMeshObject(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnMeshObject = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method MergeToMeshObject.");
+        if (wrapperTable->m_BooleanObject_MergeToMeshObject == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method BooleanObject::MergeToMeshObject.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_BooleanObject_MergeToMeshObject(instanceHandle, &hReturnMeshObject);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjMeshObject = CLib3MFMeshObject::NewInstance(args.Holder(), hReturnMeshObject);
+        args.GetReturnValue().Set(instanceObjMeshObject);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
