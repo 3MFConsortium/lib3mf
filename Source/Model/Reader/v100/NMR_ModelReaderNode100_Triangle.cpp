@@ -43,7 +43,7 @@ XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Triangle::CModelReaderNode100_Triangle(_In_ PModelWarnings pWarnings)
+	CModelReaderNode100_Triangle::CModelReaderNode100_Triangle(_In_ PModelWarnings pWarnings, _In_ nfBool bDisplacement)
 		: CModelReaderNode(pWarnings)
 	{
 		// Initialise default values
@@ -54,6 +54,11 @@ namespace NMR {
 		m_nIndex1 = -1;
 		m_nIndex2 = -1;
 		m_nIndex3 = -1;
+		m_bDisplacement = bDisplacement;
+		m_nDisplacementID = -1;
+		m_nDisplacementIndex1 = -1;
+		m_nDisplacementIndex2 = -1;
+		m_nDisplacementIndex3 = -1;
 	}
 
 	void CModelReaderNode100_Triangle::parseXML(_In_ CXmlReader * pXMLReader)
@@ -83,14 +88,17 @@ namespace NMR {
 
 	nfBool CModelReaderNode100_Triangle::retrieveProperties(_Inout_ ModelResourceID & nPropertyID, _Inout_ ModelResourceIndex & nPropertyIndex1, _Inout_ ModelResourceIndex & nPropertyIndex2, _Inout_ ModelResourceIndex & nPropertyIndex3)
 	{
-
-		if (m_nPropertyID == 0)
+		if (m_nPropertyIndex1 < 0) {
+			if (m_nPropertyIndex2 >= 0 || m_nPropertyIndex3 >= 0)
+				throw CNMRException(NMR_ERROR_INVALIDMESHINFORMATIONINDEX);
 			return false;
-		if (m_nPropertyIndex1 < 0)
-			return false;
+		}
+		if (m_nPropertyID == 0 && nPropertyID == 0)
+			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 
 		// See Core Spec 4.1.3.1 (Triangle)
-		nPropertyID = m_nPropertyID;
+		if (m_nPropertyID != 0)
+			nPropertyID = m_nPropertyID;
 		nPropertyIndex1 = m_nPropertyIndex1;
 
 		if (m_nPropertyIndex2 >= 0) {
@@ -109,6 +117,22 @@ namespace NMR {
 
 		return true;
 
+	}
+
+	nfBool CModelReaderNode100_Triangle::retrieveDisplacement(nfInt32 & nDisplacementID, nfInt32 & nIndex1, nfInt32 & nIndex2, nfInt32 & nIndex3) const
+	{
+		if (!m_bDisplacement)
+			return false;
+		if (m_nDisplacementIndex1 < 0) {
+			if (m_nDisplacementIndex2 >= 0 || m_nDisplacementIndex3 >= 0)
+				throw CNMRException(NMR_ERROR_INVALIDMESHINFORMATIONINDEX);
+			return false;
+		}
+		nDisplacementID = m_nDisplacementID;
+		nIndex1 = m_nDisplacementIndex1;
+		nIndex2 = m_nDisplacementIndex2 >= 0 ? m_nDisplacementIndex2 : m_nDisplacementIndex1;
+		nIndex3 = m_nDisplacementIndex3 >= 0 ? m_nDisplacementIndex3 : m_nDisplacementIndex1;
+		return true;
 	}
 
 	void CModelReaderNode100_Triangle::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -152,6 +176,14 @@ namespace NMR {
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nPropertyIndex3 = nValue;
 		}
+		else if (m_bDisplacement && strcmp(pAttributeName, XML_3MF_ATTRIBUTE_DISPLACEMENT_DID) == 0)
+			m_nDisplacementID = fnStringToInt32(pAttributeValue);
+		else if (m_bDisplacement && strcmp(pAttributeName, XML_3MF_ATTRIBUTE_DISPLACEMENT_D1) == 0)
+			m_nDisplacementIndex1 = fnStringToInt32(pAttributeValue);
+		else if (m_bDisplacement && strcmp(pAttributeName, XML_3MF_ATTRIBUTE_DISPLACEMENT_D2) == 0)
+			m_nDisplacementIndex2 = fnStringToInt32(pAttributeValue);
+		else if (m_bDisplacement && strcmp(pAttributeName, XML_3MF_ATTRIBUTE_DISPLACEMENT_D3) == 0)
+			m_nDisplacementIndex3 = fnStringToInt32(pAttributeValue);
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}

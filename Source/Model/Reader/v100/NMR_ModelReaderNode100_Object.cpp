@@ -38,10 +38,12 @@ Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Components.h"
 #include "Model/Reader/Boolean2307/NMR_ModelReaderNode_Boolean2307_BooleanShape.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_LevelSet.h"
+#include "Model/Reader/Displacement2310/NMR_ModelReaderNode_Displacement2310.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelBooleanObject.h"
+#include "Model/Classes/NMR_ModelDisplacementMeshObject.h"
 #include "Model/Classes/NMR_ModelAttachment.h"
 
 #include "Common/NMR_StringUtils.h"
@@ -371,6 +373,25 @@ namespace NMR {
 			{
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 			}
+		}
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_DISPLACEMENTSPEC) == 0)
+		{
+			if (strcmp(pChildName, XML_3MF_ELEMENT_DISPLACEMENTMESH) != 0)
+			{
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+				return;
+			}
+			if (m_pObject) throw CNMRException(NMR_ERROR_AMBIGUOUSOBJECTDEFINITON);
+			auto object = std::make_shared<CModelDisplacementMeshObject>(m_nID, m_pModel);
+			m_pObject = object;
+			if (m_bHasType && !m_pObject->setObjectTypeString(m_sType, false))
+				m_pWarnings->addWarning(NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
+			auto node = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, object, m_pWarnings, m_pProgressMonitor, m_pObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
+			node->parseXML(pXMLReader);
+			if (!object->isValid())
+				throw CNMRException(NMR_ERROR_INVALIDMESHTOPOLOGY);
+			m_pModel->addResource(m_pObject);
+			createDefaultProperties();
 		}
     }
 

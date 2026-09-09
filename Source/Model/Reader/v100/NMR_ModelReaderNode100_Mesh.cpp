@@ -40,6 +40,7 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelVolumeData.h"
+#include "Model/Classes/NMR_ModelDisplacementMeshObject.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
@@ -144,7 +145,9 @@ namespace NMR {
 
 		NMR::CMesh *mesh = m_pMesh->getMesh();	
 
-		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
+		auto pDisplacementObject = std::dynamic_pointer_cast<CModelDisplacementMeshObject>(m_pMesh);
+		const nfChar * pMeshNamespace = pDisplacementObject ? XML_3MF_NAMESPACE_DISPLACEMENTSPEC : XML_3MF_NAMESPACE_CORESPEC100;
+		if (strcmp(pNameSpace, pMeshNamespace) == 0) {
 
 
 			if (strcmp(pChildName, XML_3MF_ELEMENT_VERTICES) == 0)
@@ -153,7 +156,7 @@ namespace NMR {
 					m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READMESH);
 					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 				}
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Vertices>(mesh, m_pWarnings);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Vertices>(mesh, m_pWarnings, pDisplacementObject != nullptr);
 				pXMLNode->parseXML(pXMLReader);
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_TRIANGLES) == 0)
@@ -163,7 +166,7 @@ namespace NMR {
 					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 				}
 				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, mesh, m_pWarnings,
-					m_pObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
+					m_pObjectLevelPropertyID, m_nObjectLevelPropertyIndex, pDisplacementObject);
 				pXMLNode->parseXML(pXMLReader);
 				if (m_pObjectLevelPropertyID && m_pObjectLevelPropertyID->getPackageModelPath() == 0) {
 					// warn, if object does not have an object-level property, but a triangle has one
@@ -178,6 +181,8 @@ namespace NMR {
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		} else if (pDisplacementObject && strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
+			throw CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT);
 		}
 
 

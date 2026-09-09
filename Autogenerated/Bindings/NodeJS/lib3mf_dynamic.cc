@@ -91,6 +91,10 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_MeshObjectIterator_GetCurrentMeshObject = NULL;
 	pWrapperTable->m_ComponentsObjectIterator_GetCurrentComponentsObject = NULL;
 	pWrapperTable->m_BooleanObjectIterator_GetCurrentBooleanObject = NULL;
+	pWrapperTable->m_DisplacementMeshObjectIterator_GetCurrentDisplacementMeshObject = NULL;
+	pWrapperTable->m_Displacement2DIterator_GetCurrentDisplacement2D = NULL;
+	pWrapperTable->m_NormVectorGroupIterator_GetCurrentNormVectorGroup = NULL;
+	pWrapperTable->m_Disp2DGroupIterator_GetCurrentDisp2DGroup = NULL;
 	pWrapperTable->m_Texture2DIterator_GetCurrentTexture2D = NULL;
 	pWrapperTable->m_BaseMaterialGroupIterator_GetCurrentBaseMaterialGroup = NULL;
 	pWrapperTable->m_ColorGroupIterator_GetCurrentColorGroup = NULL;
@@ -140,6 +144,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Object_IsComponentsObject = NULL;
 	pWrapperTable->m_Object_IsLevelSetObject = NULL;
 	pWrapperTable->m_Object_IsBooleanObject = NULL;
+	pWrapperTable->m_Object_IsDisplacementMeshObject = NULL;
 	pWrapperTable->m_Object_IsValid = NULL;
 	pWrapperTable->m_Object_SetAttachmentAsThumbnail = NULL;
 	pWrapperTable->m_Object_GetThumbnailAttachment = NULL;
@@ -181,6 +186,10 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_MeshObject_FindTriangleSet = NULL;
 	pWrapperTable->m_MeshObject_GetTriangleSetCount = NULL;
 	pWrapperTable->m_MeshObject_GetTriangleSet = NULL;
+	pWrapperTable->m_DisplacementMeshObject_HasTriangleDisplacement = NULL;
+	pWrapperTable->m_DisplacementMeshObject_SetTriangleDisplacement = NULL;
+	pWrapperTable->m_DisplacementMeshObject_GetTriangleDisplacement = NULL;
+	pWrapperTable->m_DisplacementMeshObject_ClearTriangleDisplacement = NULL;
 	pWrapperTable->m_LevelSet_GetFunction = NULL;
 	pWrapperTable->m_LevelSet_SetFunction = NULL;
 	pWrapperTable->m_LevelSet_GetTransform = NULL;
@@ -343,6 +352,28 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Attachment_GetStreamSize = NULL;
 	pWrapperTable->m_Attachment_WriteToBuffer = NULL;
 	pWrapperTable->m_Attachment_ReadFromBuffer = NULL;
+	pWrapperTable->m_Displacement2D_GetAttachment = NULL;
+	pWrapperTable->m_Displacement2D_SetAttachment = NULL;
+	pWrapperTable->m_Displacement2D_GetChannel = NULL;
+	pWrapperTable->m_Displacement2D_SetChannel = NULL;
+	pWrapperTable->m_Displacement2D_GetTileStyleUV = NULL;
+	pWrapperTable->m_Displacement2D_SetTileStyleUV = NULL;
+	pWrapperTable->m_Displacement2D_GetFilter = NULL;
+	pWrapperTable->m_Displacement2D_SetFilter = NULL;
+	pWrapperTable->m_NormVectorGroup_GetCount = NULL;
+	pWrapperTable->m_NormVectorGroup_AddVector = NULL;
+	pWrapperTable->m_NormVectorGroup_GetVector = NULL;
+	pWrapperTable->m_NormVectorGroup_SetVector = NULL;
+	pWrapperTable->m_Disp2DGroup_GetDisplacement2D = NULL;
+	pWrapperTable->m_Disp2DGroup_GetNormalVectorGroup = NULL;
+	pWrapperTable->m_Disp2DGroup_GetHeight = NULL;
+	pWrapperTable->m_Disp2DGroup_SetHeight = NULL;
+	pWrapperTable->m_Disp2DGroup_GetOffset = NULL;
+	pWrapperTable->m_Disp2DGroup_SetOffset = NULL;
+	pWrapperTable->m_Disp2DGroup_GetCount = NULL;
+	pWrapperTable->m_Disp2DGroup_AddCoordinate = NULL;
+	pWrapperTable->m_Disp2DGroup_GetCoordinate = NULL;
+	pWrapperTable->m_Disp2DGroup_SetCoordinate = NULL;
 	pWrapperTable->m_Texture2D_GetAttachment = NULL;
 	pWrapperTable->m_Texture2D_SetAttachment = NULL;
 	pWrapperTable->m_Texture2D_GetContentType = NULL;
@@ -637,6 +668,10 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_GetMeshObjectByID = NULL;
 	pWrapperTable->m_Model_GetComponentsObjectByID = NULL;
 	pWrapperTable->m_Model_GetBooleanObjectByID = NULL;
+	pWrapperTable->m_Model_GetDisplacementMeshObjectByID = NULL;
+	pWrapperTable->m_Model_GetDisplacement2DByID = NULL;
+	pWrapperTable->m_Model_GetNormVectorGroupByID = NULL;
+	pWrapperTable->m_Model_GetDisp2DGroupByID = NULL;
 	pWrapperTable->m_Model_GetColorGroupByID = NULL;
 	pWrapperTable->m_Model_GetSliceStackByID = NULL;
 	pWrapperTable->m_Model_GetLevelSetByID = NULL;
@@ -649,6 +684,10 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_GetMeshObjects = NULL;
 	pWrapperTable->m_Model_GetComponentsObjects = NULL;
 	pWrapperTable->m_Model_GetBooleanObjects = NULL;
+	pWrapperTable->m_Model_GetDisplacementMeshObjects = NULL;
+	pWrapperTable->m_Model_GetDisplacement2Ds = NULL;
+	pWrapperTable->m_Model_GetNormVectorGroups = NULL;
+	pWrapperTable->m_Model_GetDisp2DGroups = NULL;
 	pWrapperTable->m_Model_GetTexture2Ds = NULL;
 	pWrapperTable->m_Model_GetBaseMaterialGroups = NULL;
 	pWrapperTable->m_Model_GetColorGroups = NULL;
@@ -662,6 +701,10 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_AddMeshObject = NULL;
 	pWrapperTable->m_Model_AddComponentsObject = NULL;
 	pWrapperTable->m_Model_AddBooleanObject = NULL;
+	pWrapperTable->m_Model_AddDisplacementMeshObject = NULL;
+	pWrapperTable->m_Model_AddDisplacement2D = NULL;
+	pWrapperTable->m_Model_AddNormVectorGroup = NULL;
+	pWrapperTable->m_Model_AddDisp2DGroup = NULL;
 	pWrapperTable->m_Model_AddSliceStack = NULL;
 	pWrapperTable->m_Model_AddTexture2DFromAttachment = NULL;
 	pWrapperTable->m_Model_AddBaseMaterialGroup = NULL;
@@ -1155,6 +1198,42 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_DisplacementMeshObjectIterator_GetCurrentDisplacementMeshObject = (PLib3MFDisplacementMeshObjectIterator_GetCurrentDisplacementMeshObjectPtr) GetProcAddress(hLibrary, "lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject");
+	#else // _WIN32
+	pWrapperTable->m_DisplacementMeshObjectIterator_GetCurrentDisplacementMeshObject = (PLib3MFDisplacementMeshObjectIterator_GetCurrentDisplacementMeshObjectPtr) dlsym(hLibrary, "lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_DisplacementMeshObjectIterator_GetCurrentDisplacementMeshObject == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Displacement2DIterator_GetCurrentDisplacement2D = (PLib3MFDisplacement2DIterator_GetCurrentDisplacement2DPtr) GetProcAddress(hLibrary, "lib3mf_displacement2diterator_getcurrentdisplacement2d");
+	#else // _WIN32
+	pWrapperTable->m_Displacement2DIterator_GetCurrentDisplacement2D = (PLib3MFDisplacement2DIterator_GetCurrentDisplacement2DPtr) dlsym(hLibrary, "lib3mf_displacement2diterator_getcurrentdisplacement2d");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Displacement2DIterator_GetCurrentDisplacement2D == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NormVectorGroupIterator_GetCurrentNormVectorGroup = (PLib3MFNormVectorGroupIterator_GetCurrentNormVectorGroupPtr) GetProcAddress(hLibrary, "lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup");
+	#else // _WIN32
+	pWrapperTable->m_NormVectorGroupIterator_GetCurrentNormVectorGroup = (PLib3MFNormVectorGroupIterator_GetCurrentNormVectorGroupPtr) dlsym(hLibrary, "lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NormVectorGroupIterator_GetCurrentNormVectorGroup == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Disp2DGroupIterator_GetCurrentDisp2DGroup = (PLib3MFDisp2DGroupIterator_GetCurrentDisp2DGroupPtr) GetProcAddress(hLibrary, "lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup");
+	#else // _WIN32
+	pWrapperTable->m_Disp2DGroupIterator_GetCurrentDisp2DGroup = (PLib3MFDisp2DGroupIterator_GetCurrentDisp2DGroupPtr) dlsym(hLibrary, "lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Disp2DGroupIterator_GetCurrentDisp2DGroup == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_Texture2DIterator_GetCurrentTexture2D = (PLib3MFTexture2DIterator_GetCurrentTexture2DPtr) GetProcAddress(hLibrary, "lib3mf_texture2diterator_getcurrenttexture2d");
 	#else // _WIN32
 	pWrapperTable->m_Texture2DIterator_GetCurrentTexture2D = (PLib3MFTexture2DIterator_GetCurrentTexture2DPtr) dlsym(hLibrary, "lib3mf_texture2diterator_getcurrenttexture2d");
@@ -1596,6 +1675,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_Object_IsDisplacementMeshObject = (PLib3MFObject_IsDisplacementMeshObjectPtr) GetProcAddress(hLibrary, "lib3mf_object_isdisplacementmeshobject");
+	#else // _WIN32
+	pWrapperTable->m_Object_IsDisplacementMeshObject = (PLib3MFObject_IsDisplacementMeshObjectPtr) dlsym(hLibrary, "lib3mf_object_isdisplacementmeshobject");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Object_IsDisplacementMeshObject == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_Object_IsValid = (PLib3MFObject_IsValidPtr) GetProcAddress(hLibrary, "lib3mf_object_isvalid");
 	#else // _WIN32
 	pWrapperTable->m_Object_IsValid = (PLib3MFObject_IsValidPtr) dlsym(hLibrary, "lib3mf_object_isvalid");
@@ -1965,6 +2053,42 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_DisplacementMeshObject_HasTriangleDisplacement = (PLib3MFDisplacementMeshObject_HasTriangleDisplacementPtr) GetProcAddress(hLibrary, "lib3mf_displacementmeshobject_hastriangledisplacement");
+	#else // _WIN32
+	pWrapperTable->m_DisplacementMeshObject_HasTriangleDisplacement = (PLib3MFDisplacementMeshObject_HasTriangleDisplacementPtr) dlsym(hLibrary, "lib3mf_displacementmeshobject_hastriangledisplacement");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_DisplacementMeshObject_HasTriangleDisplacement == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_DisplacementMeshObject_SetTriangleDisplacement = (PLib3MFDisplacementMeshObject_SetTriangleDisplacementPtr) GetProcAddress(hLibrary, "lib3mf_displacementmeshobject_settriangledisplacement");
+	#else // _WIN32
+	pWrapperTable->m_DisplacementMeshObject_SetTriangleDisplacement = (PLib3MFDisplacementMeshObject_SetTriangleDisplacementPtr) dlsym(hLibrary, "lib3mf_displacementmeshobject_settriangledisplacement");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_DisplacementMeshObject_SetTriangleDisplacement == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_DisplacementMeshObject_GetTriangleDisplacement = (PLib3MFDisplacementMeshObject_GetTriangleDisplacementPtr) GetProcAddress(hLibrary, "lib3mf_displacementmeshobject_gettriangledisplacement");
+	#else // _WIN32
+	pWrapperTable->m_DisplacementMeshObject_GetTriangleDisplacement = (PLib3MFDisplacementMeshObject_GetTriangleDisplacementPtr) dlsym(hLibrary, "lib3mf_displacementmeshobject_gettriangledisplacement");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_DisplacementMeshObject_GetTriangleDisplacement == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_DisplacementMeshObject_ClearTriangleDisplacement = (PLib3MFDisplacementMeshObject_ClearTriangleDisplacementPtr) GetProcAddress(hLibrary, "lib3mf_displacementmeshobject_cleartriangledisplacement");
+	#else // _WIN32
+	pWrapperTable->m_DisplacementMeshObject_ClearTriangleDisplacement = (PLib3MFDisplacementMeshObject_ClearTriangleDisplacementPtr) dlsym(hLibrary, "lib3mf_displacementmeshobject_cleartriangledisplacement");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_DisplacementMeshObject_ClearTriangleDisplacement == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_LevelSet_GetFunction = (PLib3MFLevelSet_GetFunctionPtr) GetProcAddress(hLibrary, "lib3mf_levelset_getfunction");
 	#else // _WIN32
 	pWrapperTable->m_LevelSet_GetFunction = (PLib3MFLevelSet_GetFunctionPtr) dlsym(hLibrary, "lib3mf_levelset_getfunction");
@@ -2233,7 +2357,7 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	#endif // _WIN32
 	if (pWrapperTable->m_BooleanObject_MergeToMeshObject == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-
+	
 	#ifdef _WIN32
 	pWrapperTable->m_BeamLattice_GetMinLength = (PLib3MFBeamLattice_GetMinLengthPtr) GetProcAddress(hLibrary, "lib3mf_beamlattice_getminlength");
 	#else // _WIN32
@@ -3420,6 +3544,204 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Attachment_ReadFromBuffer == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Displacement2D_GetAttachment = (PLib3MFDisplacement2D_GetAttachmentPtr) GetProcAddress(hLibrary, "lib3mf_displacement2d_getattachment");
+	#else // _WIN32
+	pWrapperTable->m_Displacement2D_GetAttachment = (PLib3MFDisplacement2D_GetAttachmentPtr) dlsym(hLibrary, "lib3mf_displacement2d_getattachment");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Displacement2D_GetAttachment == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Displacement2D_SetAttachment = (PLib3MFDisplacement2D_SetAttachmentPtr) GetProcAddress(hLibrary, "lib3mf_displacement2d_setattachment");
+	#else // _WIN32
+	pWrapperTable->m_Displacement2D_SetAttachment = (PLib3MFDisplacement2D_SetAttachmentPtr) dlsym(hLibrary, "lib3mf_displacement2d_setattachment");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Displacement2D_SetAttachment == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Displacement2D_GetChannel = (PLib3MFDisplacement2D_GetChannelPtr) GetProcAddress(hLibrary, "lib3mf_displacement2d_getchannel");
+	#else // _WIN32
+	pWrapperTable->m_Displacement2D_GetChannel = (PLib3MFDisplacement2D_GetChannelPtr) dlsym(hLibrary, "lib3mf_displacement2d_getchannel");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Displacement2D_GetChannel == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Displacement2D_SetChannel = (PLib3MFDisplacement2D_SetChannelPtr) GetProcAddress(hLibrary, "lib3mf_displacement2d_setchannel");
+	#else // _WIN32
+	pWrapperTable->m_Displacement2D_SetChannel = (PLib3MFDisplacement2D_SetChannelPtr) dlsym(hLibrary, "lib3mf_displacement2d_setchannel");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Displacement2D_SetChannel == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Displacement2D_GetTileStyleUV = (PLib3MFDisplacement2D_GetTileStyleUVPtr) GetProcAddress(hLibrary, "lib3mf_displacement2d_gettilestyleuv");
+	#else // _WIN32
+	pWrapperTable->m_Displacement2D_GetTileStyleUV = (PLib3MFDisplacement2D_GetTileStyleUVPtr) dlsym(hLibrary, "lib3mf_displacement2d_gettilestyleuv");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Displacement2D_GetTileStyleUV == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Displacement2D_SetTileStyleUV = (PLib3MFDisplacement2D_SetTileStyleUVPtr) GetProcAddress(hLibrary, "lib3mf_displacement2d_settilestyleuv");
+	#else // _WIN32
+	pWrapperTable->m_Displacement2D_SetTileStyleUV = (PLib3MFDisplacement2D_SetTileStyleUVPtr) dlsym(hLibrary, "lib3mf_displacement2d_settilestyleuv");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Displacement2D_SetTileStyleUV == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Displacement2D_GetFilter = (PLib3MFDisplacement2D_GetFilterPtr) GetProcAddress(hLibrary, "lib3mf_displacement2d_getfilter");
+	#else // _WIN32
+	pWrapperTable->m_Displacement2D_GetFilter = (PLib3MFDisplacement2D_GetFilterPtr) dlsym(hLibrary, "lib3mf_displacement2d_getfilter");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Displacement2D_GetFilter == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Displacement2D_SetFilter = (PLib3MFDisplacement2D_SetFilterPtr) GetProcAddress(hLibrary, "lib3mf_displacement2d_setfilter");
+	#else // _WIN32
+	pWrapperTable->m_Displacement2D_SetFilter = (PLib3MFDisplacement2D_SetFilterPtr) dlsym(hLibrary, "lib3mf_displacement2d_setfilter");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Displacement2D_SetFilter == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NormVectorGroup_GetCount = (PLib3MFNormVectorGroup_GetCountPtr) GetProcAddress(hLibrary, "lib3mf_normvectorgroup_getcount");
+	#else // _WIN32
+	pWrapperTable->m_NormVectorGroup_GetCount = (PLib3MFNormVectorGroup_GetCountPtr) dlsym(hLibrary, "lib3mf_normvectorgroup_getcount");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NormVectorGroup_GetCount == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NormVectorGroup_AddVector = (PLib3MFNormVectorGroup_AddVectorPtr) GetProcAddress(hLibrary, "lib3mf_normvectorgroup_addvector");
+	#else // _WIN32
+	pWrapperTable->m_NormVectorGroup_AddVector = (PLib3MFNormVectorGroup_AddVectorPtr) dlsym(hLibrary, "lib3mf_normvectorgroup_addvector");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NormVectorGroup_AddVector == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NormVectorGroup_GetVector = (PLib3MFNormVectorGroup_GetVectorPtr) GetProcAddress(hLibrary, "lib3mf_normvectorgroup_getvector");
+	#else // _WIN32
+	pWrapperTable->m_NormVectorGroup_GetVector = (PLib3MFNormVectorGroup_GetVectorPtr) dlsym(hLibrary, "lib3mf_normvectorgroup_getvector");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NormVectorGroup_GetVector == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_NormVectorGroup_SetVector = (PLib3MFNormVectorGroup_SetVectorPtr) GetProcAddress(hLibrary, "lib3mf_normvectorgroup_setvector");
+	#else // _WIN32
+	pWrapperTable->m_NormVectorGroup_SetVector = (PLib3MFNormVectorGroup_SetVectorPtr) dlsym(hLibrary, "lib3mf_normvectorgroup_setvector");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_NormVectorGroup_SetVector == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Disp2DGroup_GetDisplacement2D = (PLib3MFDisp2DGroup_GetDisplacement2DPtr) GetProcAddress(hLibrary, "lib3mf_disp2dgroup_getdisplacement2d");
+	#else // _WIN32
+	pWrapperTable->m_Disp2DGroup_GetDisplacement2D = (PLib3MFDisp2DGroup_GetDisplacement2DPtr) dlsym(hLibrary, "lib3mf_disp2dgroup_getdisplacement2d");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Disp2DGroup_GetDisplacement2D == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Disp2DGroup_GetNormalVectorGroup = (PLib3MFDisp2DGroup_GetNormalVectorGroupPtr) GetProcAddress(hLibrary, "lib3mf_disp2dgroup_getnormalvectorgroup");
+	#else // _WIN32
+	pWrapperTable->m_Disp2DGroup_GetNormalVectorGroup = (PLib3MFDisp2DGroup_GetNormalVectorGroupPtr) dlsym(hLibrary, "lib3mf_disp2dgroup_getnormalvectorgroup");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Disp2DGroup_GetNormalVectorGroup == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Disp2DGroup_GetHeight = (PLib3MFDisp2DGroup_GetHeightPtr) GetProcAddress(hLibrary, "lib3mf_disp2dgroup_getheight");
+	#else // _WIN32
+	pWrapperTable->m_Disp2DGroup_GetHeight = (PLib3MFDisp2DGroup_GetHeightPtr) dlsym(hLibrary, "lib3mf_disp2dgroup_getheight");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Disp2DGroup_GetHeight == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Disp2DGroup_SetHeight = (PLib3MFDisp2DGroup_SetHeightPtr) GetProcAddress(hLibrary, "lib3mf_disp2dgroup_setheight");
+	#else // _WIN32
+	pWrapperTable->m_Disp2DGroup_SetHeight = (PLib3MFDisp2DGroup_SetHeightPtr) dlsym(hLibrary, "lib3mf_disp2dgroup_setheight");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Disp2DGroup_SetHeight == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Disp2DGroup_GetOffset = (PLib3MFDisp2DGroup_GetOffsetPtr) GetProcAddress(hLibrary, "lib3mf_disp2dgroup_getoffset");
+	#else // _WIN32
+	pWrapperTable->m_Disp2DGroup_GetOffset = (PLib3MFDisp2DGroup_GetOffsetPtr) dlsym(hLibrary, "lib3mf_disp2dgroup_getoffset");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Disp2DGroup_GetOffset == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Disp2DGroup_SetOffset = (PLib3MFDisp2DGroup_SetOffsetPtr) GetProcAddress(hLibrary, "lib3mf_disp2dgroup_setoffset");
+	#else // _WIN32
+	pWrapperTable->m_Disp2DGroup_SetOffset = (PLib3MFDisp2DGroup_SetOffsetPtr) dlsym(hLibrary, "lib3mf_disp2dgroup_setoffset");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Disp2DGroup_SetOffset == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Disp2DGroup_GetCount = (PLib3MFDisp2DGroup_GetCountPtr) GetProcAddress(hLibrary, "lib3mf_disp2dgroup_getcount");
+	#else // _WIN32
+	pWrapperTable->m_Disp2DGroup_GetCount = (PLib3MFDisp2DGroup_GetCountPtr) dlsym(hLibrary, "lib3mf_disp2dgroup_getcount");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Disp2DGroup_GetCount == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Disp2DGroup_AddCoordinate = (PLib3MFDisp2DGroup_AddCoordinatePtr) GetProcAddress(hLibrary, "lib3mf_disp2dgroup_addcoordinate");
+	#else // _WIN32
+	pWrapperTable->m_Disp2DGroup_AddCoordinate = (PLib3MFDisp2DGroup_AddCoordinatePtr) dlsym(hLibrary, "lib3mf_disp2dgroup_addcoordinate");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Disp2DGroup_AddCoordinate == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Disp2DGroup_GetCoordinate = (PLib3MFDisp2DGroup_GetCoordinatePtr) GetProcAddress(hLibrary, "lib3mf_disp2dgroup_getcoordinate");
+	#else // _WIN32
+	pWrapperTable->m_Disp2DGroup_GetCoordinate = (PLib3MFDisp2DGroup_GetCoordinatePtr) dlsym(hLibrary, "lib3mf_disp2dgroup_getcoordinate");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Disp2DGroup_GetCoordinate == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Disp2DGroup_SetCoordinate = (PLib3MFDisp2DGroup_SetCoordinatePtr) GetProcAddress(hLibrary, "lib3mf_disp2dgroup_setcoordinate");
+	#else // _WIN32
+	pWrapperTable->m_Disp2DGroup_SetCoordinate = (PLib3MFDisp2DGroup_SetCoordinatePtr) dlsym(hLibrary, "lib3mf_disp2dgroup_setcoordinate");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Disp2DGroup_SetCoordinate == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -6069,6 +6391,42 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_Model_GetDisplacementMeshObjectByID = (PLib3MFModel_GetDisplacementMeshObjectByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getdisplacementmeshobjectbyid");
+	#else // _WIN32
+	pWrapperTable->m_Model_GetDisplacementMeshObjectByID = (PLib3MFModel_GetDisplacementMeshObjectByIDPtr) dlsym(hLibrary, "lib3mf_model_getdisplacementmeshobjectbyid");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_GetDisplacementMeshObjectByID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_GetDisplacement2DByID = (PLib3MFModel_GetDisplacement2DByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getdisplacement2dbyid");
+	#else // _WIN32
+	pWrapperTable->m_Model_GetDisplacement2DByID = (PLib3MFModel_GetDisplacement2DByIDPtr) dlsym(hLibrary, "lib3mf_model_getdisplacement2dbyid");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_GetDisplacement2DByID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_GetNormVectorGroupByID = (PLib3MFModel_GetNormVectorGroupByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getnormvectorgroupbyid");
+	#else // _WIN32
+	pWrapperTable->m_Model_GetNormVectorGroupByID = (PLib3MFModel_GetNormVectorGroupByIDPtr) dlsym(hLibrary, "lib3mf_model_getnormvectorgroupbyid");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_GetNormVectorGroupByID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_GetDisp2DGroupByID = (PLib3MFModel_GetDisp2DGroupByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getdisp2dgroupbyid");
+	#else // _WIN32
+	pWrapperTable->m_Model_GetDisp2DGroupByID = (PLib3MFModel_GetDisp2DGroupByIDPtr) dlsym(hLibrary, "lib3mf_model_getdisp2dgroupbyid");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_GetDisp2DGroupByID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_Model_GetColorGroupByID = (PLib3MFModel_GetColorGroupByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getcolorgroupbyid");
 	#else // _WIN32
 	pWrapperTable->m_Model_GetColorGroupByID = (PLib3MFModel_GetColorGroupByIDPtr) dlsym(hLibrary, "lib3mf_model_getcolorgroupbyid");
@@ -6174,6 +6532,42 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_GetBooleanObjects == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_GetDisplacementMeshObjects = (PLib3MFModel_GetDisplacementMeshObjectsPtr) GetProcAddress(hLibrary, "lib3mf_model_getdisplacementmeshobjects");
+	#else // _WIN32
+	pWrapperTable->m_Model_GetDisplacementMeshObjects = (PLib3MFModel_GetDisplacementMeshObjectsPtr) dlsym(hLibrary, "lib3mf_model_getdisplacementmeshobjects");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_GetDisplacementMeshObjects == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_GetDisplacement2Ds = (PLib3MFModel_GetDisplacement2DsPtr) GetProcAddress(hLibrary, "lib3mf_model_getdisplacement2ds");
+	#else // _WIN32
+	pWrapperTable->m_Model_GetDisplacement2Ds = (PLib3MFModel_GetDisplacement2DsPtr) dlsym(hLibrary, "lib3mf_model_getdisplacement2ds");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_GetDisplacement2Ds == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_GetNormVectorGroups = (PLib3MFModel_GetNormVectorGroupsPtr) GetProcAddress(hLibrary, "lib3mf_model_getnormvectorgroups");
+	#else // _WIN32
+	pWrapperTable->m_Model_GetNormVectorGroups = (PLib3MFModel_GetNormVectorGroupsPtr) dlsym(hLibrary, "lib3mf_model_getnormvectorgroups");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_GetNormVectorGroups == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_GetDisp2DGroups = (PLib3MFModel_GetDisp2DGroupsPtr) GetProcAddress(hLibrary, "lib3mf_model_getdisp2dgroups");
+	#else // _WIN32
+	pWrapperTable->m_Model_GetDisp2DGroups = (PLib3MFModel_GetDisp2DGroupsPtr) dlsym(hLibrary, "lib3mf_model_getdisp2dgroups");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_GetDisp2DGroups == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -6291,6 +6685,42 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_AddBooleanObject == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_AddDisplacementMeshObject = (PLib3MFModel_AddDisplacementMeshObjectPtr) GetProcAddress(hLibrary, "lib3mf_model_adddisplacementmeshobject");
+	#else // _WIN32
+	pWrapperTable->m_Model_AddDisplacementMeshObject = (PLib3MFModel_AddDisplacementMeshObjectPtr) dlsym(hLibrary, "lib3mf_model_adddisplacementmeshobject");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_AddDisplacementMeshObject == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_AddDisplacement2D = (PLib3MFModel_AddDisplacement2DPtr) GetProcAddress(hLibrary, "lib3mf_model_adddisplacement2d");
+	#else // _WIN32
+	pWrapperTable->m_Model_AddDisplacement2D = (PLib3MFModel_AddDisplacement2DPtr) dlsym(hLibrary, "lib3mf_model_adddisplacement2d");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_AddDisplacement2D == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_AddNormVectorGroup = (PLib3MFModel_AddNormVectorGroupPtr) GetProcAddress(hLibrary, "lib3mf_model_addnormvectorgroup");
+	#else // _WIN32
+	pWrapperTable->m_Model_AddNormVectorGroup = (PLib3MFModel_AddNormVectorGroupPtr) dlsym(hLibrary, "lib3mf_model_addnormvectorgroup");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_AddNormVectorGroup == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_AddDisp2DGroup = (PLib3MFModel_AddDisp2DGroupPtr) GetProcAddress(hLibrary, "lib3mf_model_adddisp2dgroup");
+	#else // _WIN32
+	pWrapperTable->m_Model_AddDisp2DGroup = (PLib3MFModel_AddDisp2DGroupPtr) dlsym(hLibrary, "lib3mf_model_adddisp2dgroup");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_AddDisp2DGroup == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

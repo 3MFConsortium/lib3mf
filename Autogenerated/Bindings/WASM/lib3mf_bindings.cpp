@@ -173,6 +173,49 @@ struct sTex2CoordWrapper {
     }
 };
 
+struct sDisplacement2DCoordinateWrapper {
+    sDisplacement2DCoordinate value;
+    Lib3MF_double get_U() const { return value.m_U; }
+    void set_U(Lib3MF_double v) { value.m_U = v; }
+    Lib3MF_double get_V() const { return value.m_V; }
+    void set_V(Lib3MF_double v) { value.m_V = v; }
+    Lib3MF_uint32 get_NormalVectorIndex() const { return value.m_NormalVectorIndex; }
+    void set_NormalVectorIndex(Lib3MF_uint32 v) { value.m_NormalVectorIndex = v; }
+    Lib3MF_double get_DisplacementFactor() const { return value.m_DisplacementFactor; }
+    void set_DisplacementFactor(Lib3MF_double v) { value.m_DisplacementFactor = v; }
+
+    sDisplacement2DCoordinate toStruct() const { return value; }
+
+    static sDisplacement2DCoordinateWrapper fromStruct(const emscripten::val &js) {
+        sDisplacement2DCoordinateWrapper wrapper;
+        wrapper.value.m_U = js["U"].as<Lib3MF_double>();
+        wrapper.value.m_V = js["V"].as<Lib3MF_double>();
+        wrapper.value.m_NormalVectorIndex = js["NormalVectorIndex"].as<Lib3MF_uint32>();
+        wrapper.value.m_DisplacementFactor = js["DisplacementFactor"].as<Lib3MF_double>();
+        return wrapper;
+    }
+};
+
+struct sTriangleDisplacementWrapper {
+    sTriangleDisplacement value;
+    Lib3MF_uint32 get_DisplacementIndices0() const { return value.m_DisplacementIndices[0]; }
+    void set_DisplacementIndices0(Lib3MF_uint32 v) { value.m_DisplacementIndices[0] = v; }
+    Lib3MF_uint32 get_DisplacementIndices1() const { return value.m_DisplacementIndices[1]; }
+    void set_DisplacementIndices1(Lib3MF_uint32 v) { value.m_DisplacementIndices[1] = v; }
+    Lib3MF_uint32 get_DisplacementIndices2() const { return value.m_DisplacementIndices[2]; }
+    void set_DisplacementIndices2(Lib3MF_uint32 v) { value.m_DisplacementIndices[2] = v; }
+
+    sTriangleDisplacement toStruct() const { return value; }
+
+    static sTriangleDisplacementWrapper fromStruct(const emscripten::val &js) {
+        sTriangleDisplacementWrapper wrapper;
+        wrapper.value.m_DisplacementIndices[0] = js["DisplacementIndices0"].as<Lib3MF_uint32>();
+        wrapper.value.m_DisplacementIndices[1] = js["DisplacementIndices1"].as<Lib3MF_uint32>();
+        wrapper.value.m_DisplacementIndices[2] = js["DisplacementIndices2"].as<Lib3MF_uint32>();
+        return wrapper;
+    }
+};
+
 struct sTransformWrapper {
     sTransform value;
     Lib3MF_single get_Fields_0_0() const { return value.m_Fields[0][0]; }
@@ -481,6 +524,10 @@ static void wrap_MeshObject_SetVolumeData(CMeshObject &self, PVolumeData& TheVol
     self.SetVolumeData(classParam(TheVolumeData));
 }
 
+static void wrap_DisplacementMeshObject_SetTriangleDisplacement(CDisplacementMeshObject &self, const Lib3MF_uint32& Index, PDisp2DGroup& Disp2DGroup, const sTriangleDisplacementWrapper& Displacement) {
+    self.SetTriangleDisplacement(Index, classParam(Disp2DGroup), Displacement.toStruct());
+}
+
 static void wrap_LevelSet_SetFunction(CLevelSet &self, PFunction& TheFunction) {
     self.SetFunction(classParam(TheFunction));
 }
@@ -683,6 +730,42 @@ static void wrap_ImageStack_SetSheet(CImageStack &self, const Lib3MF_uint32& Ind
     self.SetSheet(Index, classParam(Sheet));
 }
 
+static void wrap_Displacement2D_SetAttachment(CDisplacement2D &self, PAttachment& Attachment) {
+    self.SetAttachment(classParam(Attachment));
+}
+
+static Lib3MF_uint32 wrap_NormVectorGroup_AddVector(CNormVectorGroup &self, const sVectorWrapper& Vector) {
+    auto result = self.AddVector(Vector.toStruct());
+    return result;
+}
+
+static sVectorWrapper wrap_NormVectorGroup_GetVector(CNormVectorGroup &self, const Lib3MF_uint32& Index) {
+    auto result = self.GetVector(Index);
+    sVectorWrapper wrapper;
+    wrapper.value = result;
+    return wrapper;
+}
+
+static void wrap_NormVectorGroup_SetVector(CNormVectorGroup &self, const Lib3MF_uint32& Index, const sVectorWrapper& Vector) {
+    self.SetVector(Index, Vector.toStruct());
+}
+
+static Lib3MF_uint32 wrap_Disp2DGroup_AddCoordinate(CDisp2DGroup &self, const sDisplacement2DCoordinateWrapper& Coordinate) {
+    auto result = self.AddCoordinate(Coordinate.toStruct());
+    return result;
+}
+
+static sDisplacement2DCoordinateWrapper wrap_Disp2DGroup_GetCoordinate(CDisp2DGroup &self, const Lib3MF_uint32& Index) {
+    auto result = self.GetCoordinate(Index);
+    sDisplacement2DCoordinateWrapper wrapper;
+    wrapper.value = result;
+    return wrapper;
+}
+
+static void wrap_Disp2DGroup_SetCoordinate(CDisp2DGroup &self, const Lib3MF_uint32& Index, const sDisplacement2DCoordinateWrapper& Coordinate) {
+    self.SetCoordinate(Index, Coordinate.toStruct());
+}
+
 static void wrap_Texture2D_SetAttachment(CTexture2D &self, PAttachment& Attachment) {
     self.SetAttachment(classParam(Attachment));
 }
@@ -812,6 +895,16 @@ static sBoxWrapper wrap_Model_GetOutbox(CModel &self) {
 
 static void wrap_Model_MergeFromModel(CModel &self, PModel& ModelInstance) {
     self.MergeFromModel(classParam(ModelInstance));
+}
+
+static PDisplacement2D wrap_Model_AddDisplacement2D(CModel &self, PAttachment& TextureAttachment) {
+    auto result = self.AddDisplacement2D(classParam(TextureAttachment));
+    return result;
+}
+
+static PDisp2DGroup wrap_Model_AddDisp2DGroup(CModel &self, PDisplacement2D& Displacement2D, PNormVectorGroup& NormalVectorGroup, const Lib3MF_double& Height, const Lib3MF_double& Offset) {
+    auto result = self.AddDisp2DGroup(classParam(Displacement2D), classParam(NormalVectorGroup), Height, Offset);
+    return result;
 }
 
 static PTexture2D wrap_Model_AddTexture2DFromAttachment(CModel &self, PAttachment& TextureAttachment) {
@@ -996,6 +1089,15 @@ static emscripten::val wrap_MeshObject_GetAllTriangleProperties(CMeshObject &sel
     return output;
 }
 
+static emscripten::val wrap_DisplacementMeshObject_GetTriangleDisplacement(CDisplacementMeshObject &self, const Lib3MF_uint32& Index) {
+    emscripten::val output = emscripten::val::object();
+    PDisp2DGroup Disp2DGroup;
+    Lib3MF_struct return_value = self.GetTriangleDisplacement(Index, Disp2DGroup);
+    output.set("return", return_value);
+    output.set("Disp2DGroup", Disp2DGroup);
+    return output;
+}
+
 static emscripten::val wrap_BooleanObject_GetOperand(CBooleanObject &self, const Lib3MF_uint32& Index) {
     emscripten::val output = emscripten::val::object();
     PMeshObject OperandObject;
@@ -1146,6 +1248,16 @@ static emscripten::val wrap_Attachment_WriteToBuffer(CAttachment &self) {
     std::vector<Lib3MF_uint8> Buffer;
     self.WriteToBuffer(Buffer);
     output.set("Buffer", Buffer);
+    return output;
+}
+
+static emscripten::val wrap_Displacement2D_GetTileStyleUV(CDisplacement2D &self) {
+    emscripten::val output = emscripten::val::object();
+    eTextureTileStyle TileStyleU;
+    eTextureTileStyle TileStyleV;
+    self.GetTileStyleUV(TileStyleU, TileStyleV);
+    output.set("TileStyleU", TileStyleU);
+    output.set("TileStyleV", TileStyleV);
     return output;
 }
 
@@ -1564,6 +1676,8 @@ EMSCRIPTEN_BINDINGS(Lib3MF) {
     register_vector<sCompositeConstituentWrapper>("std::vector<sCompositeConstituent>");
     register_vector<sMultiPropertyLayerWrapper>("std::vector<sMultiPropertyLayer>");
     register_vector<sTex2CoordWrapper>("std::vector<sTex2Coord>");
+    register_vector<sDisplacement2DCoordinateWrapper>("std::vector<sDisplacement2DCoordinate>");
+    register_vector<sTriangleDisplacementWrapper>("std::vector<sTriangleDisplacement>");
     register_vector<sTransformWrapper>("std::vector<sTransform>");
     register_vector<sBoxWrapper>("std::vector<sBox>");
     register_vector<sColorWrapper>("std::vector<sColor>");
@@ -1636,6 +1750,28 @@ EMSCRIPTEN_BINDINGS(Lib3MF) {
         .function("set_U", &sTex2CoordWrapper::set_U)
         .function("get_V", &sTex2CoordWrapper::get_V)
         .function("set_V", &sTex2CoordWrapper::set_V)
+    ;
+    class_<sDisplacement2DCoordinateWrapper>("sDisplacement2DCoordinate")
+        .constructor<>()
+        .class_function("fromStruct", &sDisplacement2DCoordinateWrapper::fromStruct)
+        .function("get_U", &sDisplacement2DCoordinateWrapper::get_U)
+        .function("set_U", &sDisplacement2DCoordinateWrapper::set_U)
+        .function("get_V", &sDisplacement2DCoordinateWrapper::get_V)
+        .function("set_V", &sDisplacement2DCoordinateWrapper::set_V)
+        .function("get_NormalVectorIndex", &sDisplacement2DCoordinateWrapper::get_NormalVectorIndex)
+        .function("set_NormalVectorIndex", &sDisplacement2DCoordinateWrapper::set_NormalVectorIndex)
+        .function("get_DisplacementFactor", &sDisplacement2DCoordinateWrapper::get_DisplacementFactor)
+        .function("set_DisplacementFactor", &sDisplacement2DCoordinateWrapper::set_DisplacementFactor)
+    ;
+    class_<sTriangleDisplacementWrapper>("sTriangleDisplacement")
+        .constructor<>()
+        .class_function("fromStruct", &sTriangleDisplacementWrapper::fromStruct)
+        .function("get_DisplacementIndices0", &sTriangleDisplacementWrapper::get_DisplacementIndices0)
+        .function("set_DisplacementIndices0", &sTriangleDisplacementWrapper::set_DisplacementIndices0)
+        .function("get_DisplacementIndices1", &sTriangleDisplacementWrapper::get_DisplacementIndices1)
+        .function("set_DisplacementIndices1", &sTriangleDisplacementWrapper::set_DisplacementIndices1)
+        .function("get_DisplacementIndices2", &sTriangleDisplacementWrapper::get_DisplacementIndices2)
+        .function("set_DisplacementIndices2", &sTriangleDisplacementWrapper::set_DisplacementIndices2)
     ;
     class_<sTransformWrapper>("sTransform")
         .constructor<>()
@@ -1841,6 +1977,22 @@ EMSCRIPTEN_BINDINGS(Lib3MF) {
         .smart_ptr<std::shared_ptr<CBooleanObjectIterator>>("shared_ptr<CBooleanObjectIterator>")
         .function("GetCurrentBooleanObject", &CBooleanObjectIterator::GetCurrentBooleanObject)
     ;
+    class_<CDisplacementMeshObjectIterator, base<CResourceIterator>>("CDisplacementMeshObjectIterator")
+        .smart_ptr<std::shared_ptr<CDisplacementMeshObjectIterator>>("shared_ptr<CDisplacementMeshObjectIterator>")
+        .function("GetCurrentDisplacementMeshObject", &CDisplacementMeshObjectIterator::GetCurrentDisplacementMeshObject)
+    ;
+    class_<CDisplacement2DIterator, base<CResourceIterator>>("CDisplacement2DIterator")
+        .smart_ptr<std::shared_ptr<CDisplacement2DIterator>>("shared_ptr<CDisplacement2DIterator>")
+        .function("GetCurrentDisplacement2D", &CDisplacement2DIterator::GetCurrentDisplacement2D)
+    ;
+    class_<CNormVectorGroupIterator, base<CResourceIterator>>("CNormVectorGroupIterator")
+        .smart_ptr<std::shared_ptr<CNormVectorGroupIterator>>("shared_ptr<CNormVectorGroupIterator>")
+        .function("GetCurrentNormVectorGroup", &CNormVectorGroupIterator::GetCurrentNormVectorGroup)
+    ;
+    class_<CDisp2DGroupIterator, base<CResourceIterator>>("CDisp2DGroupIterator")
+        .smart_ptr<std::shared_ptr<CDisp2DGroupIterator>>("shared_ptr<CDisp2DGroupIterator>")
+        .function("GetCurrentDisp2DGroup", &CDisp2DGroupIterator::GetCurrentDisp2DGroup)
+    ;
     class_<CTexture2DIterator, base<CResourceIterator>>("CTexture2DIterator")
         .smart_ptr<std::shared_ptr<CTexture2DIterator>>("shared_ptr<CTexture2DIterator>")
         .function("GetCurrentTexture2D", &CTexture2DIterator::GetCurrentTexture2D)
@@ -1928,6 +2080,7 @@ EMSCRIPTEN_BINDINGS(Lib3MF) {
         .function("IsComponentsObject", &CObject::IsComponentsObject)
         .function("IsLevelSetObject", &CObject::IsLevelSetObject)
         .function("IsBooleanObject", &CObject::IsBooleanObject)
+        .function("IsDisplacementMeshObject", &CObject::IsDisplacementMeshObject)
         .function("IsValid", &CObject::IsValid)
         .function("SetAttachmentAsThumbnail", &wrap_Object_SetAttachmentAsThumbnail)
         .function("GetThumbnailAttachment", &CObject::GetThumbnailAttachment)
@@ -1972,6 +2125,13 @@ EMSCRIPTEN_BINDINGS(Lib3MF) {
         .function("FindTriangleSet", &CMeshObject::FindTriangleSet)
         .function("GetTriangleSetCount", &CMeshObject::GetTriangleSetCount)
         .function("GetTriangleSet", &CMeshObject::GetTriangleSet)
+    ;
+    class_<CDisplacementMeshObject, base<CMeshObject>>("CDisplacementMeshObject")
+        .smart_ptr<std::shared_ptr<CDisplacementMeshObject>>("shared_ptr<CDisplacementMeshObject>")
+        .function("HasTriangleDisplacement", &CDisplacementMeshObject::HasTriangleDisplacement)
+        .function("SetTriangleDisplacement", &wrap_DisplacementMeshObject_SetTriangleDisplacement)
+        .function("GetTriangleDisplacement", &wrap_DisplacementMeshObject_GetTriangleDisplacement)
+        .function("ClearTriangleDisplacement", &CDisplacementMeshObject::ClearTriangleDisplacement)
     ;
     class_<CLevelSet, base<CObject>>("CLevelSet")
         .smart_ptr<std::shared_ptr<CLevelSet>>("shared_ptr<CLevelSet>")
@@ -2194,6 +2354,37 @@ EMSCRIPTEN_BINDINGS(Lib3MF) {
         .function("GetStreamSize", &CAttachment::GetStreamSize)
         .function("WriteToBuffer", &wrap_Attachment_WriteToBuffer)
         .function("ReadFromBuffer", &CAttachment::ReadFromBuffer)
+    ;
+    class_<CDisplacement2D, base<CResource>>("CDisplacement2D")
+        .smart_ptr<std::shared_ptr<CDisplacement2D>>("shared_ptr<CDisplacement2D>")
+        .function("GetAttachment", &CDisplacement2D::GetAttachment)
+        .function("SetAttachment", &wrap_Displacement2D_SetAttachment)
+        .function("GetChannel", &CDisplacement2D::GetChannel)
+        .function("SetChannel", &CDisplacement2D::SetChannel)
+        .function("GetTileStyleUV", &wrap_Displacement2D_GetTileStyleUV)
+        .function("SetTileStyleUV", &CDisplacement2D::SetTileStyleUV)
+        .function("GetFilter", &CDisplacement2D::GetFilter)
+        .function("SetFilter", &CDisplacement2D::SetFilter)
+    ;
+    class_<CNormVectorGroup, base<CResource>>("CNormVectorGroup")
+        .smart_ptr<std::shared_ptr<CNormVectorGroup>>("shared_ptr<CNormVectorGroup>")
+        .function("GetCount", &CNormVectorGroup::GetCount)
+        .function("AddVector", &wrap_NormVectorGroup_AddVector)
+        .function("GetVector", &wrap_NormVectorGroup_GetVector)
+        .function("SetVector", &wrap_NormVectorGroup_SetVector)
+    ;
+    class_<CDisp2DGroup, base<CResource>>("CDisp2DGroup")
+        .smart_ptr<std::shared_ptr<CDisp2DGroup>>("shared_ptr<CDisp2DGroup>")
+        .function("GetDisplacement2D", &CDisp2DGroup::GetDisplacement2D)
+        .function("GetNormalVectorGroup", &CDisp2DGroup::GetNormalVectorGroup)
+        .function("GetHeight", &CDisp2DGroup::GetHeight)
+        .function("SetHeight", &CDisp2DGroup::SetHeight)
+        .function("GetOffset", &CDisp2DGroup::GetOffset)
+        .function("SetOffset", &CDisp2DGroup::SetOffset)
+        .function("GetCount", &CDisp2DGroup::GetCount)
+        .function("AddCoordinate", &wrap_Disp2DGroup_AddCoordinate)
+        .function("GetCoordinate", &wrap_Disp2DGroup_GetCoordinate)
+        .function("SetCoordinate", &wrap_Disp2DGroup_SetCoordinate)
     ;
     class_<CTexture2D, base<CResource>>("CTexture2D")
         .smart_ptr<std::shared_ptr<CTexture2D>>("shared_ptr<CTexture2D>")
@@ -2717,6 +2908,10 @@ EMSCRIPTEN_BINDINGS(Lib3MF) {
         .function("GetMeshObjectByID", &CModel::GetMeshObjectByID)
         .function("GetComponentsObjectByID", &CModel::GetComponentsObjectByID)
         .function("GetBooleanObjectByID", &CModel::GetBooleanObjectByID)
+        .function("GetDisplacementMeshObjectByID", &CModel::GetDisplacementMeshObjectByID)
+        .function("GetDisplacement2DByID", &CModel::GetDisplacement2DByID)
+        .function("GetNormVectorGroupByID", &CModel::GetNormVectorGroupByID)
+        .function("GetDisp2DGroupByID", &CModel::GetDisp2DGroupByID)
         .function("GetColorGroupByID", &CModel::GetColorGroupByID)
         .function("GetSliceStackByID", &CModel::GetSliceStackByID)
         .function("GetLevelSetByID", &CModel::GetLevelSetByID)
@@ -2729,6 +2924,10 @@ EMSCRIPTEN_BINDINGS(Lib3MF) {
         .function("GetMeshObjects", &CModel::GetMeshObjects)
         .function("GetComponentsObjects", &CModel::GetComponentsObjects)
         .function("GetBooleanObjects", &CModel::GetBooleanObjects)
+        .function("GetDisplacementMeshObjects", &CModel::GetDisplacementMeshObjects)
+        .function("GetDisplacement2Ds", &CModel::GetDisplacement2Ds)
+        .function("GetNormVectorGroups", &CModel::GetNormVectorGroups)
+        .function("GetDisp2DGroups", &CModel::GetDisp2DGroups)
         .function("GetTexture2Ds", &CModel::GetTexture2Ds)
         .function("GetBaseMaterialGroups", &CModel::GetBaseMaterialGroups)
         .function("GetColorGroups", &CModel::GetColorGroups)
@@ -2742,6 +2941,10 @@ EMSCRIPTEN_BINDINGS(Lib3MF) {
         .function("AddMeshObject", &CModel::AddMeshObject)
         .function("AddComponentsObject", &CModel::AddComponentsObject)
         .function("AddBooleanObject", &CModel::AddBooleanObject)
+        .function("AddDisplacementMeshObject", &CModel::AddDisplacementMeshObject)
+        .function("AddDisplacement2D", &wrap_Model_AddDisplacement2D)
+        .function("AddNormVectorGroup", &CModel::AddNormVectorGroup)
+        .function("AddDisp2DGroup", &wrap_Model_AddDisp2DGroup)
         .function("AddSliceStack", &CModel::AddSliceStack)
         .function("AddTexture2DFromAttachment", &wrap_Model_AddTexture2DFromAttachment)
         .function("AddBaseMaterialGroup", &CModel::AddBaseMaterialGroup)

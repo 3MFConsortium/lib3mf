@@ -44,6 +44,14 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_componentsobjectiterator.hpp"
 #include "lib3mf_booleanobject.hpp"
 #include "lib3mf_booleanobjectiterator.hpp"
+#include "lib3mf_displacementmeshobject.hpp"
+#include "lib3mf_displacementmeshobjectiterator.hpp"
+#include "lib3mf_displacement2d.hpp"
+#include "lib3mf_displacement2diterator.hpp"
+#include "lib3mf_normvectorgroup.hpp"
+#include "lib3mf_normvectorgroupiterator.hpp"
+#include "lib3mf_disp2dgroup.hpp"
+#include "lib3mf_disp2dgroupiterator.hpp"
 #include "lib3mf_basematerialgroup.hpp"
 #include "lib3mf_metadatagroup.hpp"
 #include "lib3mf_attachment.hpp"
@@ -85,8 +93,13 @@ Abstract: This is a stub class definition of CModel
 #include "Model/Classes/NMR_ModelVolumeData.h"
 #include "Model/Classes/NMR_ModelLevelSetObject.h"
 #include "Model/Classes/NMR_ModelBooleanObject.h"
+#include "Model/Classes/NMR_ModelDisplacementMeshObject.h"
+#include "Model/Classes/NMR_ModelDisplacement2D.h"
+#include "Model/Classes/NMR_ModelNormVectorGroup.h"
+#include "Model/Classes/NMR_ModelDisp2DGroup.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include "lib3mf_utils.hpp"
+#include <cmath>
 
 using namespace Lib3MF::Impl;
 
@@ -113,6 +126,49 @@ void CModel::mergeModel(NMR::CModel& sourceModel,
 	targetModel.mergeMultiPropertyGroups(&sourceModel, oldToNewUniqueResourceIDs);
 	targetModel.mergeImage3Ds(&sourceModel, oldToNewUniqueResourceIDs);
 	targetModel.mergeFunctions(&sourceModel, oldToNewUniqueResourceIDs);
+
+	for (NMR::nfUint32 nIndex = 0; nIndex < sourceModel.getResourceCount(); ++nIndex) {
+		auto pOld = std::dynamic_pointer_cast<NMR::CModelDisplacement2DResource>(sourceModel.getResource(nIndex));
+		if (!pOld)
+			continue;
+		auto pAttachment = targetModel.findModelAttachment(pOld->getAttachment()->getPathURI());
+		if (!pAttachment)
+			throw NMR::CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
+		auto pNew = std::make_shared<NMR::CModelDisplacement2DResource>(targetModel.generateResourceID(), &targetModel, pAttachment);
+		pNew->setChannel(pOld->getChannel());
+		pNew->setTileStyleU(pOld->getTileStyleU());
+		pNew->setTileStyleV(pOld->getTileStyleV());
+		pNew->setFilter(pOld->getFilter());
+		targetModel.addResource(pNew);
+		oldToNewUniqueResourceIDs[pOld->getPackageResourceID()->getUniqueID()] = pNew->getPackageResourceID()->getUniqueID();
+	}
+
+	for (NMR::nfUint32 nIndex = 0; nIndex < sourceModel.getResourceCount(); ++nIndex) {
+		auto pOld = std::dynamic_pointer_cast<NMR::CModelNormVectorGroupResource>(sourceModel.getResource(nIndex));
+		if (!pOld)
+			continue;
+		auto pNew = std::make_shared<NMR::CModelNormVectorGroupResource>(targetModel.generateResourceID(), &targetModel);
+		for (NMR::nfUint32 nVector = 0; nVector < pOld->getCount(); ++nVector)
+			pNew->addVector(pOld->getVector(nVector));
+		targetModel.addResource(pNew);
+		oldToNewUniqueResourceIDs[pOld->getPackageResourceID()->getUniqueID()] = pNew->getPackageResourceID()->getUniqueID();
+	}
+
+	for (NMR::nfUint32 nIndex = 0; nIndex < sourceModel.getResourceCount(); ++nIndex) {
+		auto pOld = std::dynamic_pointer_cast<NMR::CModelDisp2DGroupResource>(sourceModel.getResource(nIndex));
+		if (!pOld)
+			continue;
+		auto pDisplacement = std::dynamic_pointer_cast<NMR::CModelDisplacement2DResource>(
+			targetModel.findResource(oldToNewUniqueResourceIDs.at(pOld->getDisplacement2D()->getPackageResourceID()->getUniqueID())));
+		auto pNormals = std::dynamic_pointer_cast<NMR::CModelNormVectorGroupResource>(
+			targetModel.findResource(oldToNewUniqueResourceIDs.at(pOld->getNormVectorGroup()->getPackageResourceID()->getUniqueID())));
+		auto pNew = std::make_shared<NMR::CModelDisp2DGroupResource>(targetModel.generateResourceID(), &targetModel,
+			pDisplacement, pNormals, pOld->getHeight(), pOld->getOffset());
+		for (NMR::nfUint32 nCoordinate = 0; nCoordinate < pOld->getCount(); ++nCoordinate)
+			pNew->addCoordinate(pOld->getCoordinate(nCoordinate));
+		targetModel.addResource(pNew);
+		oldToNewUniqueResourceIDs[pOld->getPackageResourceID()->getUniqueID()] = pNew->getPackageResourceID()->getUniqueID();
+	}
 	targetModel.mergeMetaData(&sourceModel);
 }
 
@@ -135,6 +191,18 @@ IResource* CModel::createIResourceFromModelResource(NMR::PModelResource pResourc
 	}
 	if (auto p = std::dynamic_pointer_cast<NMR::CModelColorGroupResource>(pResource)) {
 		return new CColorGroup(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelDisplacementMeshObject>(pResource)) {
+		return new CDisplacementMeshObject(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelDisplacement2DResource>(pResource)) {
+		return new CDisplacement2D(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelNormVectorGroupResource>(pResource)) {
+		return new CNormVectorGroup(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelDisp2DGroupResource>(pResource)) {
+		return new CDisp2DGroup(p);
 	}
 
 	if (auto p = std::dynamic_pointer_cast<NMR::CModelMeshObject>(pResource)) {
@@ -304,7 +372,7 @@ IMeshObject * CModel::GetMeshObjectByID(const Lib3MF_uint32 nUniqueResourceID)
 {
 	NMR::PModelResource pObjectResource = model().findResource(nUniqueResourceID);
 	if (dynamic_cast<NMR::CModelMeshObject*>(pObjectResource.get())) {
-		return new CMeshObject(pObjectResource);
+		return CMeshObject::fnCreateMeshObjectFromModelResource(pObjectResource, true);
 	}
 	else 
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMESHOBJECT);
@@ -328,6 +396,34 @@ IBooleanObject * CModel::GetBooleanObjectByID(const Lib3MF_uint32 nUniqueResourc
 	}
 	else
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+}
+
+IDisplacementMeshObject * CModel::GetDisplacementMeshObjectByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	auto p = std::dynamic_pointer_cast<NMR::CModelDisplacementMeshObject>(model().findResource(nUniqueResourceID));
+	if (!p) throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	return new CDisplacementMeshObject(p);
+}
+
+IDisplacement2D * CModel::GetDisplacement2DByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	auto p = std::dynamic_pointer_cast<NMR::CModelDisplacement2DResource>(model().findResource(nUniqueResourceID));
+	if (!p) throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCE);
+	return new CDisplacement2D(p);
+}
+
+INormVectorGroup * CModel::GetNormVectorGroupByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	auto p = std::dynamic_pointer_cast<NMR::CModelNormVectorGroupResource>(model().findResource(nUniqueResourceID));
+	if (!p) throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCE);
+	return new CNormVectorGroup(p);
+}
+
+IDisp2DGroup * CModel::GetDisp2DGroupByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	auto p = std::dynamic_pointer_cast<NMR::CModelDisp2DGroupResource>(model().findResource(nUniqueResourceID));
+	if (!p) throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCE);
+	return new CDisp2DGroup(p);
 }
 
 IColorGroup * CModel::GetColorGroupByID(const Lib3MF_uint32 nUniqueResourceID)
@@ -479,6 +575,46 @@ IBooleanObjectIterator * CModel::GetBooleanObjects()
 			pResult->addResource(resource);
 	}
 	return pResult.release();
+}
+
+IDisplacementMeshObjectIterator * CModel::GetDisplacementMeshObjects()
+{
+	auto result = std::unique_ptr<CDisplacementMeshObjectIterator>(new CDisplacementMeshObjectIterator());
+	for (Lib3MF_uint32 i = 0; i < model().getObjectCount(); ++i) {
+		auto resource = model().getObjectResource(i);
+		if (std::dynamic_pointer_cast<NMR::CModelDisplacementMeshObject>(resource)) result->addResource(resource);
+	}
+	return result.release();
+}
+
+IDisplacement2DIterator * CModel::GetDisplacement2Ds()
+{
+	auto result = std::unique_ptr<CDisplacement2DIterator>(new CDisplacement2DIterator());
+	for (Lib3MF_uint32 i = 0; i < model().getResourceCount(); ++i) {
+		auto resource = model().getResource(i);
+		if (std::dynamic_pointer_cast<NMR::CModelDisplacement2DResource>(resource)) result->addResource(resource);
+	}
+	return result.release();
+}
+
+INormVectorGroupIterator * CModel::GetNormVectorGroups()
+{
+	auto result = std::unique_ptr<CNormVectorGroupIterator>(new CNormVectorGroupIterator());
+	for (Lib3MF_uint32 i = 0; i < model().getResourceCount(); ++i) {
+		auto resource = model().getResource(i);
+		if (std::dynamic_pointer_cast<NMR::CModelNormVectorGroupResource>(resource)) result->addResource(resource);
+	}
+	return result.release();
+}
+
+IDisp2DGroupIterator * CModel::GetDisp2DGroups()
+{
+	auto result = std::unique_ptr<CDisp2DGroupIterator>(new CDisp2DGroupIterator());
+	for (Lib3MF_uint32 i = 0; i < model().getResourceCount(); ++i) {
+		auto resource = model().getResource(i);
+		if (std::dynamic_pointer_cast<NMR::CModelDisp2DGroupResource>(resource)) result->addResource(resource);
+	}
+	return result.release();
 }
 
 ITexture2DIterator * CModel::GetTexture2Ds()
@@ -647,6 +783,43 @@ IBooleanObject * CModel::AddBooleanObject()
 
 	model().addResource(pNewResource);
 	return new CBooleanObject(pNewResource);
+}
+
+IDisplacementMeshObject * CModel::AddDisplacementMeshObject()
+{
+	auto p = std::make_shared<NMR::CModelDisplacementMeshObject>(model().generateResourceID(), &model());
+	model().addResource(p);
+	return new CDisplacementMeshObject(p);
+}
+
+IDisplacement2D * CModel::AddDisplacement2D(IAttachment* pTextureAttachment)
+{
+	if (!pTextureAttachment) throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	auto attachment = model().findModelAttachment(pTextureAttachment->GetPath());
+	NMR::CModelDisplacement2DResource::validateAttachment(attachment, &model());
+	auto p = std::make_shared<NMR::CModelDisplacement2DResource>(model().generateResourceID(), &model(), attachment);
+	model().addResource(p);
+	return new CDisplacement2D(p);
+}
+
+INormVectorGroup * CModel::AddNormVectorGroup()
+{
+	auto p = std::make_shared<NMR::CModelNormVectorGroupResource>(model().generateResourceID(), &model());
+	model().addResource(p);
+	return new CNormVectorGroup(p);
+}
+
+IDisp2DGroup * CModel::AddDisp2DGroup(IDisplacement2D* pDisplacement2D, INormVectorGroup* pNormalVectorGroup,
+	const Lib3MF_double dHeight, const Lib3MF_double dOffset)
+{
+	if (!pDisplacement2D || !pNormalVectorGroup) throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	if (!std::isfinite(dHeight) || !std::isfinite(dOffset)) throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	auto displacement = std::dynamic_pointer_cast<NMR::CModelDisplacement2DResource>(model().findResource(pDisplacement2D->GetResourceID()));
+	auto normals = std::dynamic_pointer_cast<NMR::CModelNormVectorGroupResource>(model().findResource(pNormalVectorGroup->GetResourceID()));
+	if (!displacement || !normals) throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCE);
+	auto p = std::make_shared<NMR::CModelDisp2DGroupResource>(model().generateResourceID(), &model(), displacement, normals, dHeight, dOffset);
+	model().addResource(p);
+	return new CDisp2DGroup(p);
 }
 
 ISliceStack * CModel::AddSliceStack(const Lib3MF_double dZBottom)

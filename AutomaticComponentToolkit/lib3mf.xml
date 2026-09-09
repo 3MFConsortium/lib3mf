@@ -270,6 +270,17 @@
 		<member name="V" type="double" />
 	</struct>
 
+	<struct name="Displacement2DCoordinate">
+		<member name="U" type="double" />
+		<member name="V" type="double" />
+		<member name="NormalVectorIndex" type="uint32" />
+		<member name="DisplacementFactor" type="double" />
+	</struct>
+
+	<struct name="TriangleDisplacement">
+		<member name="DisplacementIndices" type="uint32" rows="3" />
+	</struct>
+
 	<struct name="Transform">
 		<member name="Fields" type="single" columns="4" rows="3" />
 	</struct>
@@ -623,6 +634,38 @@
 		</method>
 	</class>
 
+	<class name="DisplacementMeshObjectIterator" parent="ResourceIterator">
+		<method name="GetCurrentDisplacementMeshObject"
+			description="Returns the DisplacementMeshObject the iterator points at.">
+			<param name="Resource" type="handle" class="DisplacementMeshObject" pass="return"
+				description="returns the DisplacementMeshObject instance." />
+		</method>
+	</class>
+
+	<class name="Displacement2DIterator" parent="ResourceIterator">
+		<method name="GetCurrentDisplacement2D"
+			description="Returns the Displacement2D resource the iterator points at.">
+			<param name="Resource" type="handle" class="Displacement2D" pass="return"
+				description="returns the Displacement2D instance." />
+		</method>
+	</class>
+
+	<class name="NormVectorGroupIterator" parent="ResourceIterator">
+		<method name="GetCurrentNormVectorGroup"
+			description="Returns the NormVectorGroup resource the iterator points at.">
+			<param name="Resource" type="handle" class="NormVectorGroup" pass="return"
+				description="returns the NormVectorGroup instance." />
+		</method>
+	</class>
+
+	<class name="Disp2DGroupIterator" parent="ResourceIterator">
+		<method name="GetCurrentDisp2DGroup"
+			description="Returns the Disp2DGroup resource the iterator points at.">
+			<param name="Resource" type="handle" class="Disp2DGroup" pass="return"
+				description="returns the Disp2DGroup instance." />
+		</method>
+	</class>
+
 	<class name="Texture2DIterator" parent="ResourceIterator">
 		<method name="GetCurrentTexture2D"
 			description="Returns the Texture2D the iterator points at.">
@@ -871,6 +914,11 @@
 			<param name="IsBooleanObject" type="bool" pass="return"
 				description="returns, whether the object is a boolean object" />
 		</method>
+		<method name="IsDisplacementMeshObject"
+			description="Retrieves whether an object is a displacement mesh object.">
+			<param name="IsDisplacementMeshObject" type="bool" pass="return"
+				description="returns whether the object is a displacement mesh object" />
+		</method>
 
 		<method name="IsValid"
 			description="Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.">
@@ -1078,6 +1126,39 @@
 		<method name="GetTriangleSet" description="Returns a specific triangle set by index.">
 			<param name="Index" type="uint32" pass="in" description="the index of the triangle set."/>
 			<param name="TheTriangleSet" type="class" class="TriangleSet" pass="return" description="the triangle Set Instance."/>
+		</method>
+	</class>
+
+	<class name="DisplacementMeshObject" parent="MeshObject">
+		<method name="HasTriangleDisplacement"
+			description="Returns whether a triangle has displacement information assigned.">
+			<param name="Index" type="uint32" pass="in"
+				description="index of the triangle" />
+			<param name="HasDisplacement" type="bool" pass="return"
+				description="returns whether displacement information is assigned" />
+		</method>
+		<method name="SetTriangleDisplacement"
+			description="Assigns a displacement group and coordinate indices to a triangle.">
+			<param name="Index" type="uint32" pass="in"
+				description="index of the triangle" />
+			<param name="Disp2DGroup" type="handle" class="Disp2DGroup" pass="in"
+				description="displacement coordinate group used by the triangle" />
+			<param name="Displacement" type="struct" class="TriangleDisplacement" pass="in"
+				description="coordinate indices for the triangle vertices" />
+		</method>
+		<method name="GetTriangleDisplacement"
+			description="Returns the displacement group and coordinate indices assigned to a triangle.">
+			<param name="Index" type="uint32" pass="in"
+				description="index of the triangle" />
+			<param name="Disp2DGroup" type="class" class="Disp2DGroup" pass="out"
+				description="displacement coordinate group used by the triangle" />
+			<param name="Displacement" type="struct" class="TriangleDisplacement" pass="return"
+				description="coordinate indices for the triangle vertices" />
+		</method>
+		<method name="ClearTriangleDisplacement"
+			description="Removes displacement information from a triangle.">
+			<param name="Index" type="uint32" pass="in"
+				description="index of the triangle" />
 		</method>
 	</class>
 
@@ -1992,6 +2073,114 @@
 		callback function" />
 		</method>
 		-->
+	</class>
+
+	<class name="Displacement2D" parent="Resource">
+		<method name="GetAttachment"
+			description="Retrieves the PNG attachment used as displacement texture.">
+			<param name="Attachment" type="handle" class="Attachment" pass="return"
+				description="attachment containing the displacement image" />
+		</method>
+		<method name="SetAttachment"
+			description="Sets the PNG attachment used as displacement texture.">
+			<param name="Attachment" type="handle" class="Attachment" pass="in"
+				description="attachment containing the displacement image" />
+		</method>
+		<method name="GetChannel"
+			description="Returns the image channel used for displacement values.">
+			<param name="Channel" type="enum" class="ChannelName" pass="return"
+				description="selected image channel" />
+		</method>
+		<method name="SetChannel"
+			description="Sets the image channel used for displacement values.">
+			<param name="Channel" type="enum" class="ChannelName" pass="in"
+				description="selected image channel" />
+		</method>
+		<method name="GetTileStyleUV"
+			description="Returns the displacement texture tile styles.">
+			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="out"
+				description="tile style in the u direction" />
+			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="out"
+				description="tile style in the v direction" />
+		</method>
+		<method name="SetTileStyleUV"
+			description="Sets the displacement texture tile styles.">
+			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="in"
+				description="tile style in the u direction" />
+			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="in"
+				description="tile style in the v direction" />
+		</method>
+		<method name="GetFilter"
+			description="Returns the displacement texture filter.">
+			<param name="Filter" type="enum" class="TextureFilter" pass="return"
+				description="selected texture filter" />
+		</method>
+		<method name="SetFilter"
+			description="Sets the displacement texture filter.">
+			<param name="Filter" type="enum" class="TextureFilter" pass="in"
+				description="selected texture filter" />
+		</method>
+	</class>
+
+	<class name="NormVectorGroup" parent="Resource">
+		<method name="GetCount" description="Returns the number of normalized vectors.">
+			<param name="Count" type="uint32" pass="return" description="number of vectors" />
+		</method>
+		<method name="AddVector" description="Adds a normalized displacement vector.">
+			<param name="Vector" type="struct" class="Vector" pass="in"
+				description="vector to add; non-unit vectors are normalized" />
+			<param name="Index" type="uint32" pass="return" description="zero-based vector index" />
+		</method>
+		<method name="GetVector" description="Returns a normalized displacement vector.">
+			<param name="Index" type="uint32" pass="in" description="zero-based vector index" />
+			<param name="Vector" type="struct" class="Vector" pass="return" description="normalized vector" />
+		</method>
+		<method name="SetVector" description="Updates a normalized displacement vector.">
+			<param name="Index" type="uint32" pass="in" description="zero-based vector index" />
+			<param name="Vector" type="struct" class="Vector" pass="in"
+				description="new vector; non-unit vectors are normalized" />
+		</method>
+	</class>
+
+	<class name="Disp2DGroup" parent="Resource">
+		<method name="GetDisplacement2D" description="Returns the displacement texture used by this group.">
+			<param name="Displacement2D" type="handle" class="Displacement2D" pass="return"
+				description="displacement texture resource" />
+		</method>
+		<method name="GetNormalVectorGroup" description="Returns the normalized vector group used by this group.">
+			<param name="NormVectorGroup" type="handle" class="NormVectorGroup" pass="return"
+				description="normalized vector group" />
+		</method>
+		<method name="GetHeight" description="Returns the displacement amplitude in model units.">
+			<param name="Height" type="double" pass="return" description="displacement amplitude" />
+		</method>
+		<method name="SetHeight" description="Sets the displacement amplitude in model units.">
+			<param name="Height" type="double" pass="in" description="displacement amplitude" />
+		</method>
+		<method name="GetOffset" description="Returns the displacement offset in model units.">
+			<param name="Offset" type="double" pass="return" description="displacement offset" />
+		</method>
+		<method name="SetOffset" description="Sets the displacement offset in model units.">
+			<param name="Offset" type="double" pass="in" description="displacement offset" />
+		</method>
+		<method name="GetCount" description="Returns the number of displacement coordinates.">
+			<param name="Count" type="uint32" pass="return" description="number of coordinates" />
+		</method>
+		<method name="AddCoordinate" description="Adds a displacement coordinate.">
+			<param name="Coordinate" type="struct" class="Displacement2DCoordinate" pass="in"
+				description="coordinate to add" />
+			<param name="Index" type="uint32" pass="return" description="zero-based coordinate index" />
+		</method>
+		<method name="GetCoordinate" description="Returns a displacement coordinate.">
+			<param name="Index" type="uint32" pass="in" description="zero-based coordinate index" />
+			<param name="Coordinate" type="struct" class="Displacement2DCoordinate" pass="return"
+				description="displacement coordinate" />
+		</method>
+		<method name="SetCoordinate" description="Updates a displacement coordinate.">
+			<param name="Index" type="uint32" pass="in" description="zero-based coordinate index" />
+			<param name="Coordinate" type="struct" class="Displacement2DCoordinate" pass="in"
+				description="new displacement coordinate" />
+		</method>
 	</class>
 
 	<class name="Texture2D" parent="Resource">
@@ -4196,6 +4385,30 @@
 			<param name="BooleanObjectInstance" type="handle" class="BooleanObject"
 				pass="return" description="returns the boolean object instance" />
 		</method>
+		<method name="GetDisplacementMeshObjectByID"
+			description="finds a displacement mesh object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
+			<param name="DisplacementMeshObjectInstance" type="handle" class="DisplacementMeshObject"
+				pass="return" description="returns the displacement mesh object instance" />
+		</method>
+		<method name="GetDisplacement2DByID"
+			description="finds a displacement texture resource by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
+			<param name="Displacement2DInstance" type="handle" class="Displacement2D"
+				pass="return" description="returns the displacement texture instance" />
+		</method>
+		<method name="GetNormVectorGroupByID"
+			description="finds a normalized vector group by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
+			<param name="NormVectorGroupInstance" type="handle" class="NormVectorGroup"
+				pass="return" description="returns the normalized vector group instance" />
+		</method>
+		<method name="GetDisp2DGroupByID"
+			description="finds a displacement coordinate group by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
+			<param name="Disp2DGroupInstance" type="handle" class="Disp2DGroup"
+				pass="return" description="returns the displacement coordinate group instance" />
+		</method>
 		<method name="GetColorGroupByID"
 			description="finds a model color group by its UniqueResourceID">
 			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID" />
@@ -4257,6 +4470,26 @@
 			description="creates a resource iterator instance with all boolean object resources.">
 			<param name="ResourceIterator" type="handle" class="BooleanObjectIterator"
 				pass="return" description="returns the iterator instance." />
+		</method>
+		<method name="GetDisplacementMeshObjects"
+			description="creates an iterator over all displacement mesh objects.">
+			<param name="ResourceIterator" type="handle" class="DisplacementMeshObjectIterator"
+				pass="return" description="returns the iterator instance" />
+		</method>
+		<method name="GetDisplacement2Ds"
+			description="creates an iterator over all displacement texture resources.">
+			<param name="ResourceIterator" type="handle" class="Displacement2DIterator"
+				pass="return" description="returns the iterator instance" />
+		</method>
+		<method name="GetNormVectorGroups"
+			description="creates an iterator over all normalized vector groups.">
+			<param name="ResourceIterator" type="handle" class="NormVectorGroupIterator"
+				pass="return" description="returns the iterator instance" />
+		</method>
+		<method name="GetDisp2DGroups"
+			description="creates an iterator over all displacement coordinate groups.">
+			<param name="ResourceIterator" type="handle" class="Disp2DGroupIterator"
+				pass="return" description="returns the iterator instance" />
 		</method>
 		<method name="GetTexture2Ds"
 			description="creates a Texture2DIterator instance with all texture2d resources.">
@@ -4321,6 +4554,34 @@
 			description="adds an empty boolean object to the model.">
 			<param name="BooleanObjectInstance" type="handle" class="BooleanObject"
 				pass="return" description="returns the boolean object instance" />
+		</method>
+		<method name="AddDisplacementMeshObject"
+			description="adds an empty displacement mesh object to the model.">
+			<param name="DisplacementMeshObjectInstance" type="handle" class="DisplacementMeshObject"
+				pass="return" description="returns the displacement mesh object instance" />
+		</method>
+		<method name="AddDisplacement2D"
+			description="adds a displacement texture resource using a PNG attachment.">
+			<param name="TextureAttachment" type="handle" class="Attachment" pass="in"
+				description="PNG attachment containing the displacement image" />
+			<param name="Displacement2DInstance" type="handle" class="Displacement2D"
+				pass="return" description="returns the displacement texture instance" />
+		</method>
+		<method name="AddNormVectorGroup"
+			description="adds an empty normalized vector group to the model.">
+			<param name="NormVectorGroupInstance" type="handle" class="NormVectorGroup"
+				pass="return" description="returns the normalized vector group instance" />
+		</method>
+		<method name="AddDisp2DGroup"
+			description="adds an empty displacement coordinate group to the model.">
+			<param name="Displacement2D" type="handle" class="Displacement2D" pass="in"
+				description="displacement texture used by the group" />
+			<param name="NormalVectorGroup" type="handle" class="NormVectorGroup" pass="in"
+				description="normalized vectors used by the group" />
+			<param name="Height" type="double" pass="in" description="displacement amplitude in model units" />
+			<param name="Offset" type="double" pass="in" description="displacement offset in model units" />
+			<param name="Disp2DGroupInstance" type="handle" class="Disp2DGroup"
+				pass="return" description="returns the displacement coordinate group instance" />
 		</method>
 		<method name="AddSliceStack" description="creates a new model slicestack by its id">
 			<param name="ZBottom" type="double" pass="in"

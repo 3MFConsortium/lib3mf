@@ -44,7 +44,8 @@ XML Model Stream.
 namespace NMR {
 
 	CModelReaderNode100_Triangles::CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh,
-		_In_ PModelWarnings pWarnings, _In_ PPackageResourceID pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
+		_In_ PModelWarnings pWarnings, _In_ PPackageResourceID pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex,
+		_In_opt_ PModelDisplacementMeshObject pDisplacementObject)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pMesh);
@@ -57,6 +58,8 @@ namespace NMR {
 
 		m_pModel = pModel;
 		m_pMesh = pMesh;
+		m_pDisplacementObject = pDisplacementObject;
+		m_nDefaultDisplacementID = -1;
 	}
 
 	void CModelReaderNode100_Triangles::parseXML(_In_ CXmlReader * pXMLReader)
@@ -69,12 +72,18 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
+		if (m_pDisplacementObject && m_pMesh->getFaceCount() < 4)
+			throw CNMRException(NMR_ERROR_INVALIDMESHTOPOLOGY);
 	}
 
 	void CModelReaderNode100_Triangles::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
+		if (m_pDisplacementObject && strcmp(pAttributeName, XML_3MF_ATTRIBUTE_DISPLACEMENT_DID) == 0)
+			m_nDefaultDisplacementID = fnStringToInt32(pAttributeValue);
+		else
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 
@@ -105,10 +114,12 @@ namespace NMR {
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
-		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
+		nfBool bDisplacement = m_pDisplacementObject != nullptr;
+		const nfChar * pExpectedNamespace = bDisplacement ? XML_3MF_NAMESPACE_DISPLACEMENTSPEC : XML_3MF_NAMESPACE_CORESPEC100;
+		if (strcmp(pNameSpace, pExpectedNamespace) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_TRIANGLE) == 0) {
 				// Parse XML
-				PModelReaderNode100_Triangle pXMLNode = std::make_shared<CModelReaderNode100_Triangle>(m_pWarnings);
+				PModelReaderNode100_Triangle pXMLNode = std::make_shared<CModelReaderNode100_Triangle>(m_pWarnings, bDisplacement);
 				pXMLNode->parseXML(pXMLReader);
 
 				// Retrieve node indices
@@ -157,14 +168,29 @@ namespace NMR {
 										pFaceData->m_nPropertyIDs[2] = pPropertyID3;
 									}
 								} else {
+									if (m_pDisplacementObject)
+										throw CNMRException(NMR_ERROR_INVALIDMESHINFORMATIONINDEX);
 									m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDMESHINFORMATIONINDEX), mrwInvalidOptionalValue);
 								}
 							}
 						}
 						else {
+							if (m_pDisplacementObject)
+								throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 							m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDMODELRESOURCE), mrwInvalidOptionalValue);
 						}
 
+					}
+
+					if (m_pDisplacementObject) {
+						nfInt32 nDisplacementID, nD1, nD2, nD3;
+						if (pXMLNode->retrieveDisplacement(nDisplacementID, nD1, nD2, nD3)) {
+							if (nDisplacementID < 0) nDisplacementID = m_nDefaultDisplacementID;
+							if (nDisplacementID <= 0) throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+							auto pGroup = std::dynamic_pointer_cast<CModelDisp2DGroupResource>(m_pModel->findResource(m_pModel->currentPath(), (ModelResourceID)nDisplacementID));
+							if (!pGroup) throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+							m_pDisplacementObject->setTriangleDisplacement(pFace->m_index, pGroup, (nfUint32)nD1, (nfUint32)nD2, (nfUint32)nD3);
+						}
 					}
 				}
 				else

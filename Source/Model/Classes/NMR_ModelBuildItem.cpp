@@ -33,17 +33,25 @@ build item.
 --*/
 
 #include "Model/Classes/NMR_ModelBuildItem.h"
+#include "Model/Classes/NMR_ModelDisplacementMeshObject.h"
 #include "Common/NMR_Exception.h"
 #include <sstream>
 
 namespace NMR {
+
+	static nfDouble linearDeterminant(const NMATRIX3 & matrix)
+	{
+		return static_cast<nfDouble>(matrix.m_fields[0][0]) * (matrix.m_fields[1][1] * matrix.m_fields[2][2] - matrix.m_fields[1][2] * matrix.m_fields[2][1])
+			- static_cast<nfDouble>(matrix.m_fields[0][1]) * (matrix.m_fields[1][0] * matrix.m_fields[2][2] - matrix.m_fields[1][2] * matrix.m_fields[2][0])
+			+ static_cast<nfDouble>(matrix.m_fields[0][2]) * (matrix.m_fields[1][0] * matrix.m_fields[2][1] - matrix.m_fields[1][1] * matrix.m_fields[2][0]);
+	}
 
 	CModelBuildItem::CModelBuildItem(_In_ CModelObject * pObject, _In_ nfUint32 nHandle)
 	{
 		if (!pObject)
 			throw CNMRException (NMR_ERROR_INVALIDPARAM);
 		m_pObject = pObject;
-		m_mTransform = fnMATRIX3_identity ();
+		setTransform(fnMATRIX3_identity());
 		m_nHandle = nHandle;
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
 
@@ -55,7 +63,7 @@ namespace NMR {
 		if (!pObject)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		m_pObject = pObject;
-		m_mTransform = mTransform;
+		setTransform(mTransform);
 		m_nHandle = nHandle;
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
 
@@ -79,6 +87,8 @@ namespace NMR {
 
 	void CModelBuildItem::setTransform(_In_ const NMATRIX3 mTransform)
 	{
+		if (dynamic_cast<CModelDisplacementMeshObject *>(m_pObject) && linearDeterminant(mTransform) <= 0.0)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		m_mTransform = mTransform;
 	}
 

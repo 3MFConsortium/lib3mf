@@ -113,6 +113,14 @@ public:
 
 	IBooleanObject * GetBooleanObjectByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
+	IDisplacementMeshObject * GetDisplacementMeshObjectByID(const Lib3MF_uint32 nUniqueResourceID) override;
+
+	IDisplacement2D * GetDisplacement2DByID(const Lib3MF_uint32 nUniqueResourceID) override;
+
+	INormVectorGroup * GetNormVectorGroupByID(const Lib3MF_uint32 nUniqueResourceID) override;
+
+	IDisp2DGroup * GetDisp2DGroupByID(const Lib3MF_uint32 nUniqueResourceID) override;
+
 	IColorGroup * GetColorGroupByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
 	ITexture2DGroup * GetTexture2DGroupByID(const Lib3MF_uint32 nUniqueResourceID) override;
@@ -141,6 +149,14 @@ public:
 
 	IBooleanObjectIterator * GetBooleanObjects() override;
 
+	IDisplacementMeshObjectIterator * GetDisplacementMeshObjects() override;
+
+	IDisplacement2DIterator * GetDisplacement2Ds() override;
+
+	INormVectorGroupIterator * GetNormVectorGroups() override;
+
+	IDisp2DGroupIterator * GetDisp2DGroups() override;
+
 	ITexture2DIterator * GetTexture2Ds() override;
 
 	IBaseMaterialGroupIterator * GetBaseMaterialGroups() override;
@@ -164,6 +180,14 @@ public:
 	IComponentsObject * AddComponentsObject() override;
 
 	IBooleanObject * AddBooleanObject() override;
+
+	IDisplacementMeshObject * AddDisplacementMeshObject() override;
+
+	IDisplacement2D * AddDisplacement2D(IAttachment* pTextureAttachment) override;
+
+	INormVectorGroup * AddNormVectorGroup() override;
+
+	IDisp2DGroup * AddDisp2DGroup(IDisplacement2D* pDisplacement2D, INormVectorGroup* pNormalVectorGroup, const Lib3MF_double dHeight, const Lib3MF_double dOffset) override;
 
 	ISliceStack * AddSliceStack(const Lib3MF_double dZBottom) override;
 
