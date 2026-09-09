@@ -68,6 +68,10 @@ class CObjectIterator;
 class CMeshObjectIterator;
 class CComponentsObjectIterator;
 class CBooleanObjectIterator;
+class CDisplacementMeshObjectIterator;
+class CDisplacement2DIterator;
+class CNormVectorGroupIterator;
+class CDisp2DGroupIterator;
 class CTexture2DIterator;
 class CBaseMaterialGroupIterator;
 class CColorGroupIterator;
@@ -82,6 +86,7 @@ class CMetaDataGroup;
 class CTriangleSet;
 class CObject;
 class CMeshObject;
+class CDisplacementMeshObject;
 class CLevelSet;
 class CBooleanObject;
 class CBeamLattice;
@@ -102,6 +107,9 @@ class CMultiPropertyGroup;
 class CImage3D;
 class CImageStack;
 class CAttachment;
+class CDisplacement2D;
+class CNormVectorGroup;
+class CDisp2DGroup;
 class CTexture2D;
 class CImplicitPort;
 class CIterator;
@@ -194,6 +202,10 @@ typedef CObjectIterator CLib3MFObjectIterator;
 typedef CMeshObjectIterator CLib3MFMeshObjectIterator;
 typedef CComponentsObjectIterator CLib3MFComponentsObjectIterator;
 typedef CBooleanObjectIterator CLib3MFBooleanObjectIterator;
+typedef CDisplacementMeshObjectIterator CLib3MFDisplacementMeshObjectIterator;
+typedef CDisplacement2DIterator CLib3MFDisplacement2DIterator;
+typedef CNormVectorGroupIterator CLib3MFNormVectorGroupIterator;
+typedef CDisp2DGroupIterator CLib3MFDisp2DGroupIterator;
 typedef CTexture2DIterator CLib3MFTexture2DIterator;
 typedef CBaseMaterialGroupIterator CLib3MFBaseMaterialGroupIterator;
 typedef CColorGroupIterator CLib3MFColorGroupIterator;
@@ -208,6 +220,7 @@ typedef CMetaDataGroup CLib3MFMetaDataGroup;
 typedef CTriangleSet CLib3MFTriangleSet;
 typedef CObject CLib3MFObject;
 typedef CMeshObject CLib3MFMeshObject;
+typedef CDisplacementMeshObject CLib3MFDisplacementMeshObject;
 typedef CLevelSet CLib3MFLevelSet;
 typedef CBooleanObject CLib3MFBooleanObject;
 typedef CBeamLattice CLib3MFBeamLattice;
@@ -228,6 +241,9 @@ typedef CMultiPropertyGroup CLib3MFMultiPropertyGroup;
 typedef CImage3D CLib3MFImage3D;
 typedef CImageStack CLib3MFImageStack;
 typedef CAttachment CLib3MFAttachment;
+typedef CDisplacement2D CLib3MFDisplacement2D;
+typedef CNormVectorGroup CLib3MFNormVectorGroup;
+typedef CDisp2DGroup CLib3MFDisp2DGroup;
 typedef CTexture2D CLib3MFTexture2D;
 typedef CImplicitPort CLib3MFImplicitPort;
 typedef CIterator CLib3MFIterator;
@@ -320,6 +336,10 @@ typedef std::shared_ptr<CObjectIterator> PObjectIterator;
 typedef std::shared_ptr<CMeshObjectIterator> PMeshObjectIterator;
 typedef std::shared_ptr<CComponentsObjectIterator> PComponentsObjectIterator;
 typedef std::shared_ptr<CBooleanObjectIterator> PBooleanObjectIterator;
+typedef std::shared_ptr<CDisplacementMeshObjectIterator> PDisplacementMeshObjectIterator;
+typedef std::shared_ptr<CDisplacement2DIterator> PDisplacement2DIterator;
+typedef std::shared_ptr<CNormVectorGroupIterator> PNormVectorGroupIterator;
+typedef std::shared_ptr<CDisp2DGroupIterator> PDisp2DGroupIterator;
 typedef std::shared_ptr<CTexture2DIterator> PTexture2DIterator;
 typedef std::shared_ptr<CBaseMaterialGroupIterator> PBaseMaterialGroupIterator;
 typedef std::shared_ptr<CColorGroupIterator> PColorGroupIterator;
@@ -334,6 +354,7 @@ typedef std::shared_ptr<CMetaDataGroup> PMetaDataGroup;
 typedef std::shared_ptr<CTriangleSet> PTriangleSet;
 typedef std::shared_ptr<CObject> PObject;
 typedef std::shared_ptr<CMeshObject> PMeshObject;
+typedef std::shared_ptr<CDisplacementMeshObject> PDisplacementMeshObject;
 typedef std::shared_ptr<CLevelSet> PLevelSet;
 typedef std::shared_ptr<CBooleanObject> PBooleanObject;
 typedef std::shared_ptr<CBeamLattice> PBeamLattice;
@@ -354,6 +375,9 @@ typedef std::shared_ptr<CMultiPropertyGroup> PMultiPropertyGroup;
 typedef std::shared_ptr<CImage3D> PImage3D;
 typedef std::shared_ptr<CImageStack> PImageStack;
 typedef std::shared_ptr<CAttachment> PAttachment;
+typedef std::shared_ptr<CDisplacement2D> PDisplacement2D;
+typedef std::shared_ptr<CNormVectorGroup> PNormVectorGroup;
+typedef std::shared_ptr<CDisp2DGroup> PDisp2DGroup;
 typedef std::shared_ptr<CTexture2D> PTexture2D;
 typedef std::shared_ptr<CImplicitPort> PImplicitPort;
 typedef std::shared_ptr<CIterator> PIterator;
@@ -446,6 +470,10 @@ typedef PObjectIterator PLib3MFObjectIterator;
 typedef PMeshObjectIterator PLib3MFMeshObjectIterator;
 typedef PComponentsObjectIterator PLib3MFComponentsObjectIterator;
 typedef PBooleanObjectIterator PLib3MFBooleanObjectIterator;
+typedef PDisplacementMeshObjectIterator PLib3MFDisplacementMeshObjectIterator;
+typedef PDisplacement2DIterator PLib3MFDisplacement2DIterator;
+typedef PNormVectorGroupIterator PLib3MFNormVectorGroupIterator;
+typedef PDisp2DGroupIterator PLib3MFDisp2DGroupIterator;
 typedef PTexture2DIterator PLib3MFTexture2DIterator;
 typedef PBaseMaterialGroupIterator PLib3MFBaseMaterialGroupIterator;
 typedef PColorGroupIterator PLib3MFColorGroupIterator;
@@ -460,6 +488,7 @@ typedef PMetaDataGroup PLib3MFMetaDataGroup;
 typedef PTriangleSet PLib3MFTriangleSet;
 typedef PObject PLib3MFObject;
 typedef PMeshObject PLib3MFMeshObject;
+typedef PDisplacementMeshObject PLib3MFDisplacementMeshObject;
 typedef PLevelSet PLib3MFLevelSet;
 typedef PBooleanObject PLib3MFBooleanObject;
 typedef PBeamLattice PLib3MFBeamLattice;
@@ -480,6 +509,9 @@ typedef PMultiPropertyGroup PLib3MFMultiPropertyGroup;
 typedef PImage3D PLib3MFImage3D;
 typedef PImageStack PLib3MFImageStack;
 typedef PAttachment PLib3MFAttachment;
+typedef PDisplacement2D PLib3MFDisplacement2D;
+typedef PNormVectorGroup PLib3MFNormVectorGroup;
+typedef PDisp2DGroup PLib3MFDisp2DGroup;
 typedef PTexture2D PLib3MFTexture2D;
 typedef PImplicitPort PLib3MFImplicitPort;
 typedef PIterator PLib3MFIterator;
@@ -864,6 +896,10 @@ private:
 	friend class CMeshObjectIterator;
 	friend class CComponentsObjectIterator;
 	friend class CBooleanObjectIterator;
+	friend class CDisplacementMeshObjectIterator;
+	friend class CDisplacement2DIterator;
+	friend class CNormVectorGroupIterator;
+	friend class CDisp2DGroupIterator;
 	friend class CTexture2DIterator;
 	friend class CBaseMaterialGroupIterator;
 	friend class CColorGroupIterator;
@@ -878,6 +914,7 @@ private:
 	friend class CTriangleSet;
 	friend class CObject;
 	friend class CMeshObject;
+	friend class CDisplacementMeshObject;
 	friend class CLevelSet;
 	friend class CBooleanObject;
 	friend class CBeamLattice;
@@ -898,6 +935,9 @@ private:
 	friend class CImage3D;
 	friend class CImageStack;
 	friend class CAttachment;
+	friend class CDisplacement2D;
+	friend class CNormVectorGroup;
+	friend class CDisp2DGroup;
 	friend class CTexture2D;
 	friend class CImplicitPort;
 	friend class CIterator;
@@ -1240,6 +1280,74 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CDisplacementMeshObjectIterator 
+**************************************************************************************************************************/
+class CDisplacementMeshObjectIterator : public CResourceIterator {
+public:
+	
+	/**
+	* CDisplacementMeshObjectIterator::CDisplacementMeshObjectIterator - Constructor for DisplacementMeshObjectIterator class.
+	*/
+	CDisplacementMeshObjectIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResourceIterator(pWrapper, pHandle)
+	{
+	}
+	
+	inline PDisplacementMeshObject GetCurrentDisplacementMeshObject();
+};
+	
+/*************************************************************************************************************************
+ Class CDisplacement2DIterator 
+**************************************************************************************************************************/
+class CDisplacement2DIterator : public CResourceIterator {
+public:
+	
+	/**
+	* CDisplacement2DIterator::CDisplacement2DIterator - Constructor for Displacement2DIterator class.
+	*/
+	CDisplacement2DIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResourceIterator(pWrapper, pHandle)
+	{
+	}
+	
+	inline PDisplacement2D GetCurrentDisplacement2D();
+};
+	
+/*************************************************************************************************************************
+ Class CNormVectorGroupIterator 
+**************************************************************************************************************************/
+class CNormVectorGroupIterator : public CResourceIterator {
+public:
+	
+	/**
+	* CNormVectorGroupIterator::CNormVectorGroupIterator - Constructor for NormVectorGroupIterator class.
+	*/
+	CNormVectorGroupIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResourceIterator(pWrapper, pHandle)
+	{
+	}
+	
+	inline PNormVectorGroup GetCurrentNormVectorGroup();
+};
+	
+/*************************************************************************************************************************
+ Class CDisp2DGroupIterator 
+**************************************************************************************************************************/
+class CDisp2DGroupIterator : public CResourceIterator {
+public:
+	
+	/**
+	* CDisp2DGroupIterator::CDisp2DGroupIterator - Constructor for Disp2DGroupIterator class.
+	*/
+	CDisp2DGroupIterator(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResourceIterator(pWrapper, pHandle)
+	{
+	}
+	
+	inline PDisp2DGroup GetCurrentDisp2DGroup();
+};
+	
+/*************************************************************************************************************************
  Class CTexture2DIterator 
 **************************************************************************************************************************/
 class CTexture2DIterator : public CResourceIterator {
@@ -1494,6 +1602,7 @@ public:
 	inline bool IsComponentsObject();
 	inline bool IsLevelSetObject();
 	inline bool IsBooleanObject();
+	inline bool IsDisplacementMeshObject();
 	inline bool IsValid();
 	inline void SetAttachmentAsThumbnail(classParam<CAttachment> pAttachment);
 	inline PAttachment GetThumbnailAttachment();
@@ -1551,6 +1660,26 @@ public:
 	inline PTriangleSet FindTriangleSet(const std::string & sIdentifier);
 	inline Lib3MF_uint32 GetTriangleSetCount();
 	inline PTriangleSet GetTriangleSet(const Lib3MF_uint32 nIndex);
+};
+	
+/*************************************************************************************************************************
+ Class CDisplacementMeshObject 
+**************************************************************************************************************************/
+class CDisplacementMeshObject : public CMeshObject {
+public:
+	
+	/**
+	* CDisplacementMeshObject::CDisplacementMeshObject - Constructor for DisplacementMeshObject class.
+	*/
+	CDisplacementMeshObject(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CMeshObject(pWrapper, pHandle)
+	{
+	}
+	
+	inline bool HasTriangleDisplacement(const Lib3MF_uint32 nIndex);
+	inline void SetTriangleDisplacement(const Lib3MF_uint32 nIndex, classParam<CDisp2DGroup> pDisp2DGroup, const sTriangleDisplacement & Displacement);
+	inline sTriangleDisplacement GetTriangleDisplacement(const Lib3MF_uint32 nIndex, PDisp2DGroup & pDisp2DGroup);
+	inline void ClearTriangleDisplacement(const Lib3MF_uint32 nIndex);
 };
 	
 /*************************************************************************************************************************
@@ -2033,6 +2162,76 @@ public:
 	inline Lib3MF_uint64 GetStreamSize();
 	inline void WriteToBuffer(std::vector<Lib3MF_uint8> & BufferBuffer);
 	inline void ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer);
+};
+	
+/*************************************************************************************************************************
+ Class CDisplacement2D 
+**************************************************************************************************************************/
+class CDisplacement2D : public CResource {
+public:
+	
+	/**
+	* CDisplacement2D::CDisplacement2D - Constructor for Displacement2D class.
+	*/
+	CDisplacement2D(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResource(pWrapper, pHandle)
+	{
+	}
+	
+	inline PAttachment GetAttachment();
+	inline void SetAttachment(classParam<CAttachment> pAttachment);
+	inline eChannelName GetChannel();
+	inline void SetChannel(const eChannelName eChannel);
+	inline void GetTileStyleUV(eTextureTileStyle & eTileStyleU, eTextureTileStyle & eTileStyleV);
+	inline void SetTileStyleUV(const eTextureTileStyle eTileStyleU, const eTextureTileStyle eTileStyleV);
+	inline eTextureFilter GetFilter();
+	inline void SetFilter(const eTextureFilter eFilter);
+};
+	
+/*************************************************************************************************************************
+ Class CNormVectorGroup 
+**************************************************************************************************************************/
+class CNormVectorGroup : public CResource {
+public:
+	
+	/**
+	* CNormVectorGroup::CNormVectorGroup - Constructor for NormVectorGroup class.
+	*/
+	CNormVectorGroup(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResource(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_uint32 GetCount();
+	inline Lib3MF_uint32 AddVector(const sVector & Vector);
+	inline sVector GetVector(const Lib3MF_uint32 nIndex);
+	inline void SetVector(const Lib3MF_uint32 nIndex, const sVector & Vector);
+};
+	
+/*************************************************************************************************************************
+ Class CDisp2DGroup 
+**************************************************************************************************************************/
+class CDisp2DGroup : public CResource {
+public:
+	
+	/**
+	* CDisp2DGroup::CDisp2DGroup - Constructor for Disp2DGroup class.
+	*/
+	CDisp2DGroup(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CResource(pWrapper, pHandle)
+	{
+	}
+	
+	inline PDisplacement2D GetDisplacement2D();
+	inline PNormVectorGroup GetNormalVectorGroup();
+	inline Lib3MF_double GetHeight();
+	inline void SetHeight(const Lib3MF_double dHeight);
+	inline Lib3MF_double GetOffset();
+	inline void SetOffset(const Lib3MF_double dOffset);
+	inline Lib3MF_uint32 GetCount();
+	inline Lib3MF_uint32 AddCoordinate(const sDisplacement2DCoordinate & Coordinate);
+	inline sDisplacement2DCoordinate GetCoordinate(const Lib3MF_uint32 nIndex);
+	inline void SetCoordinate(const Lib3MF_uint32 nIndex, const sDisplacement2DCoordinate & Coordinate);
 };
 	
 /*************************************************************************************************************************
@@ -3543,6 +3742,10 @@ public:
 	inline PMeshObject GetMeshObjectByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PComponentsObject GetComponentsObjectByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PBooleanObject GetBooleanObjectByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PDisplacementMeshObject GetDisplacementMeshObjectByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PDisplacement2D GetDisplacement2DByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PNormVectorGroup GetNormVectorGroupByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PDisp2DGroup GetDisp2DGroupByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PColorGroup GetColorGroupByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PSliceStack GetSliceStackByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PLevelSet GetLevelSetByID(const Lib3MF_uint32 nUniqueResourceID);
@@ -3555,6 +3758,10 @@ public:
 	inline PMeshObjectIterator GetMeshObjects();
 	inline PComponentsObjectIterator GetComponentsObjects();
 	inline PBooleanObjectIterator GetBooleanObjects();
+	inline PDisplacementMeshObjectIterator GetDisplacementMeshObjects();
+	inline PDisplacement2DIterator GetDisplacement2Ds();
+	inline PNormVectorGroupIterator GetNormVectorGroups();
+	inline PDisp2DGroupIterator GetDisp2DGroups();
 	inline PTexture2DIterator GetTexture2Ds();
 	inline PBaseMaterialGroupIterator GetBaseMaterialGroups();
 	inline PColorGroupIterator GetColorGroups();
@@ -3568,6 +3775,10 @@ public:
 	inline PMeshObject AddMeshObject();
 	inline PComponentsObject AddComponentsObject();
 	inline PBooleanObject AddBooleanObject();
+	inline PDisplacementMeshObject AddDisplacementMeshObject();
+	inline PDisplacement2D AddDisplacement2D(classParam<CAttachment> pTextureAttachment);
+	inline PNormVectorGroup AddNormVectorGroup();
+	inline PDisp2DGroup AddDisp2DGroup(classParam<CDisplacement2D> pDisplacement2D, classParam<CNormVectorGroup> pNormalVectorGroup, const Lib3MF_double dHeight, const Lib3MF_double dOffset);
 	inline PSliceStack AddSliceStack(const Lib3MF_double dZBottom);
 	inline PTexture2D AddTexture2DFromAttachment(classParam<CAttachment> pTextureAttachment);
 	inline PBaseMaterialGroup AddBaseMaterialGroup();
@@ -3629,6 +3840,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0xF4196034E2B9FDE6UL: return new CMeshObjectIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObjectIterator"
 		case 0x564DE4217ED7614AUL: return new CComponentsObjectIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ComponentsObjectIterator"
 		case 0xAFF01F512E1FF6AEUL: return new CBooleanObjectIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BooleanObjectIterator"
+		case 0x6985D4BCC417D63AUL: return new CDisplacementMeshObjectIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::DisplacementMeshObjectIterator"
+		case 0xBBE0E57916ABA639UL: return new CDisplacement2DIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Displacement2DIterator"
+		case 0x94F41D650A9D1201UL: return new CNormVectorGroupIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::NormVectorGroupIterator"
+		case 0x4F6F025BFF1BC77DUL: return new CDisp2DGroupIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Disp2DGroupIterator"
 		case 0x4BD32B4870FFC03BUL: return new CTexture2DIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2DIterator"
 		case 0x65E6EDD9362C79CBUL: return new CBaseMaterialGroupIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BaseMaterialGroupIterator"
 		case 0x10274A1757C729C0UL: return new CColorGroupIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ColorGroupIterator"
@@ -3643,6 +3858,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0x5950BB3EE8A82090UL: return new CTriangleSet(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::TriangleSet"
 		case 0x2DA2136F577A779CUL: return new CObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
 		case 0x3B3A6DC6EC610497UL: return new CMeshObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
+		case 0x062EC1EFBBB2C007UL: return new CDisplacementMeshObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::DisplacementMeshObject"
 		case 0xE8A7D9C192EFD0E2UL: return new CLevelSet(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
 		case 0x85FA0E8806B6C357UL: return new CBooleanObject(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BooleanObject"
 		case 0x63B3B461B30B4BA5UL: return new CBeamLattice(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BeamLattice"
@@ -3663,6 +3879,9 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		case 0xBD938FF2D2663D61UL: return new CImage3D(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Image3D"
 		case 0x13A2561F0CFB712AUL: return new CImageStack(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImageStack"
 		case 0x8CE7A1191A63A35DUL: return new CAttachment(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Attachment"
+		case 0xD4FBF6402F29131FUL: return new CDisplacement2D(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Displacement2D"
+		case 0xA04BF4AC86AB47C3UL: return new CNormVectorGroup(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::NormVectorGroup"
+		case 0x823F487B8BB83E5BUL: return new CDisp2DGroup(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Disp2DGroup"
 		case 0xE0441CF976B36319UL: return new CTexture2D(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2D"
 		case 0xD5C49B04AF1963CDUL: return new CImplicitPort(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPort"
 		case 0x52F06268CD098EFEUL: return new CIterator(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Iterator"
@@ -4580,6 +4799,82 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CDisplacementMeshObjectIterator
+	 */
+	
+	/**
+	* CDisplacementMeshObjectIterator::GetCurrentDisplacementMeshObject - Returns the DisplacementMeshObject the iterator points at.
+	* @return returns the DisplacementMeshObject instance.
+	*/
+	PDisplacementMeshObject CDisplacementMeshObjectIterator::GetCurrentDisplacementMeshObject()
+	{
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject(m_pHandle, &hResource));
+		
+		if (!hResource) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CDisplacementMeshObject>(dynamic_cast<CDisplacementMeshObject*>(m_pWrapper->polymorphicFactory(hResource)));
+	}
+	
+	/**
+	 * Method definitions for class CDisplacement2DIterator
+	 */
+	
+	/**
+	* CDisplacement2DIterator::GetCurrentDisplacement2D - Returns the Displacement2D resource the iterator points at.
+	* @return returns the Displacement2D instance.
+	*/
+	PDisplacement2D CDisplacement2DIterator::GetCurrentDisplacement2D()
+	{
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_displacement2diterator_getcurrentdisplacement2d(m_pHandle, &hResource));
+		
+		if (!hResource) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CDisplacement2D>(dynamic_cast<CDisplacement2D*>(m_pWrapper->polymorphicFactory(hResource)));
+	}
+	
+	/**
+	 * Method definitions for class CNormVectorGroupIterator
+	 */
+	
+	/**
+	* CNormVectorGroupIterator::GetCurrentNormVectorGroup - Returns the NormVectorGroup resource the iterator points at.
+	* @return returns the NormVectorGroup instance.
+	*/
+	PNormVectorGroup CNormVectorGroupIterator::GetCurrentNormVectorGroup()
+	{
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup(m_pHandle, &hResource));
+		
+		if (!hResource) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CNormVectorGroup>(dynamic_cast<CNormVectorGroup*>(m_pWrapper->polymorphicFactory(hResource)));
+	}
+	
+	/**
+	 * Method definitions for class CDisp2DGroupIterator
+	 */
+	
+	/**
+	* CDisp2DGroupIterator::GetCurrentDisp2DGroup - Returns the Disp2DGroup resource the iterator points at.
+	* @return returns the Disp2DGroup instance.
+	*/
+	PDisp2DGroup CDisp2DGroupIterator::GetCurrentDisp2DGroup()
+	{
+		Lib3MFHandle hResource = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup(m_pHandle, &hResource));
+		
+		if (!hResource) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CDisp2DGroup>(dynamic_cast<CDisp2DGroup*>(m_pWrapper->polymorphicFactory(hResource)));
+	}
+	
+	/**
 	 * Method definitions for class CTexture2DIterator
 	 */
 	
@@ -5242,6 +5537,18 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CObject::IsDisplacementMeshObject - Retrieves whether an object is a displacement mesh object.
+	* @return returns whether the object is a displacement mesh object
+	*/
+	bool CObject::IsDisplacementMeshObject()
+	{
+		bool resultIsDisplacementMeshObject = 0;
+		CheckError(lib3mf_object_isdisplacementmeshobject(m_pHandle, &resultIsDisplacementMeshObject));
+		
+		return resultIsDisplacementMeshObject;
+	}
+	
+	/**
 	* CObject::IsValid - Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.
 	* @return returns whether the object is a valid object description
 	*/
@@ -5747,6 +6054,64 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	 * Method definitions for class CDisplacementMeshObject
+	 */
+	
+	/**
+	* CDisplacementMeshObject::HasTriangleDisplacement - Returns whether a triangle has displacement information assigned.
+	* @param[in] nIndex - index of the triangle
+	* @return returns whether displacement information is assigned
+	*/
+	bool CDisplacementMeshObject::HasTriangleDisplacement(const Lib3MF_uint32 nIndex)
+	{
+		bool resultHasDisplacement = 0;
+		CheckError(lib3mf_displacementmeshobject_hastriangledisplacement(m_pHandle, nIndex, &resultHasDisplacement));
+		
+		return resultHasDisplacement;
+	}
+	
+	/**
+	* CDisplacementMeshObject::SetTriangleDisplacement - Assigns a displacement group and coordinate indices to a triangle.
+	* @param[in] nIndex - index of the triangle
+	* @param[in] pDisp2DGroup - displacement coordinate group used by the triangle
+	* @param[in] Displacement - coordinate indices for the triangle vertices
+	*/
+	void CDisplacementMeshObject::SetTriangleDisplacement(const Lib3MF_uint32 nIndex, classParam<CDisp2DGroup> pDisp2DGroup, const sTriangleDisplacement & Displacement)
+	{
+		Lib3MFHandle hDisp2DGroup = pDisp2DGroup.GetHandle();
+		CheckError(lib3mf_displacementmeshobject_settriangledisplacement(m_pHandle, nIndex, hDisp2DGroup, &Displacement));
+	}
+	
+	/**
+	* CDisplacementMeshObject::GetTriangleDisplacement - Returns the displacement group and coordinate indices assigned to a triangle.
+	* @param[in] nIndex - index of the triangle
+	* @param[out] pDisp2DGroup - displacement coordinate group used by the triangle
+	* @return coordinate indices for the triangle vertices
+	*/
+	sTriangleDisplacement CDisplacementMeshObject::GetTriangleDisplacement(const Lib3MF_uint32 nIndex, PDisp2DGroup & pDisp2DGroup)
+	{
+		Lib3MFHandle hDisp2DGroup = (Lib3MFHandle)nullptr;
+		sTriangleDisplacement resultDisplacement;
+		CheckError(lib3mf_displacementmeshobject_gettriangledisplacement(m_pHandle, nIndex, &hDisp2DGroup, &resultDisplacement));
+		if (!hDisp2DGroup) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		} else {
+			pDisp2DGroup = std::shared_ptr<CDisp2DGroup>(dynamic_cast<CDisp2DGroup*>(m_pWrapper->polymorphicFactory(hDisp2DGroup)));
+		}
+		
+		return resultDisplacement;
+	}
+	
+	/**
+	* CDisplacementMeshObject::ClearTriangleDisplacement - Removes displacement information from a triangle.
+	* @param[in] nIndex - index of the triangle
+	*/
+	void CDisplacementMeshObject::ClearTriangleDisplacement(const Lib3MF_uint32 nIndex)
+	{
+		CheckError(lib3mf_displacementmeshobject_cleartriangledisplacement(m_pHandle, nIndex));
+	}
+	
+	/**
 	 * Method definitions for class CLevelSet
 	 */
 	
@@ -6101,13 +6466,13 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	{
 		Lib3MFHandle hMeshObject = (Lib3MFHandle)nullptr;
 		CheckError(lib3mf_booleanobject_mergetomeshobject(m_pHandle, &hMeshObject));
-
+		
 		if (!hMeshObject) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CMeshObject>(dynamic_cast<CMeshObject*>(m_pWrapper->polymorphicFactory(hMeshObject)));
 	}
-
+	
 	/**
 	 * Method definitions for class CBeamLattice
 	 */
@@ -7790,6 +8155,273 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	{
 		Lib3MF_uint64 nBufferSize = BufferBuffer.size();
 		CheckError(lib3mf_attachment_readfrombuffer(m_pHandle, nBufferSize, BufferBuffer.data()));
+	}
+	
+	/**
+	 * Method definitions for class CDisplacement2D
+	 */
+	
+	/**
+	* CDisplacement2D::GetAttachment - Retrieves the PNG attachment used as displacement texture.
+	* @return attachment containing the displacement image
+	*/
+	PAttachment CDisplacement2D::GetAttachment()
+	{
+		Lib3MFHandle hAttachment = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_displacement2d_getattachment(m_pHandle, &hAttachment));
+		
+		if (!hAttachment) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CAttachment>(dynamic_cast<CAttachment*>(m_pWrapper->polymorphicFactory(hAttachment)));
+	}
+	
+	/**
+	* CDisplacement2D::SetAttachment - Sets the PNG attachment used as displacement texture.
+	* @param[in] pAttachment - attachment containing the displacement image
+	*/
+	void CDisplacement2D::SetAttachment(classParam<CAttachment> pAttachment)
+	{
+		Lib3MFHandle hAttachment = pAttachment.GetHandle();
+		CheckError(lib3mf_displacement2d_setattachment(m_pHandle, hAttachment));
+	}
+	
+	/**
+	* CDisplacement2D::GetChannel - Returns the image channel used for displacement values.
+	* @return selected image channel
+	*/
+	eChannelName CDisplacement2D::GetChannel()
+	{
+		eChannelName resultChannel = (eChannelName) 0;
+		CheckError(lib3mf_displacement2d_getchannel(m_pHandle, &resultChannel));
+		
+		return resultChannel;
+	}
+	
+	/**
+	* CDisplacement2D::SetChannel - Sets the image channel used for displacement values.
+	* @param[in] eChannel - selected image channel
+	*/
+	void CDisplacement2D::SetChannel(const eChannelName eChannel)
+	{
+		CheckError(lib3mf_displacement2d_setchannel(m_pHandle, eChannel));
+	}
+	
+	/**
+	* CDisplacement2D::GetTileStyleUV - Returns the displacement texture tile styles.
+	* @param[out] eTileStyleU - tile style in the u direction
+	* @param[out] eTileStyleV - tile style in the v direction
+	*/
+	void CDisplacement2D::GetTileStyleUV(eTextureTileStyle & eTileStyleU, eTextureTileStyle & eTileStyleV)
+	{
+		CheckError(lib3mf_displacement2d_gettilestyleuv(m_pHandle, &eTileStyleU, &eTileStyleV));
+	}
+	
+	/**
+	* CDisplacement2D::SetTileStyleUV - Sets the displacement texture tile styles.
+	* @param[in] eTileStyleU - tile style in the u direction
+	* @param[in] eTileStyleV - tile style in the v direction
+	*/
+	void CDisplacement2D::SetTileStyleUV(const eTextureTileStyle eTileStyleU, const eTextureTileStyle eTileStyleV)
+	{
+		CheckError(lib3mf_displacement2d_settilestyleuv(m_pHandle, eTileStyleU, eTileStyleV));
+	}
+	
+	/**
+	* CDisplacement2D::GetFilter - Returns the displacement texture filter.
+	* @return selected texture filter
+	*/
+	eTextureFilter CDisplacement2D::GetFilter()
+	{
+		eTextureFilter resultFilter = (eTextureFilter) 0;
+		CheckError(lib3mf_displacement2d_getfilter(m_pHandle, &resultFilter));
+		
+		return resultFilter;
+	}
+	
+	/**
+	* CDisplacement2D::SetFilter - Sets the displacement texture filter.
+	* @param[in] eFilter - selected texture filter
+	*/
+	void CDisplacement2D::SetFilter(const eTextureFilter eFilter)
+	{
+		CheckError(lib3mf_displacement2d_setfilter(m_pHandle, eFilter));
+	}
+	
+	/**
+	 * Method definitions for class CNormVectorGroup
+	 */
+	
+	/**
+	* CNormVectorGroup::GetCount - Returns the number of normalized vectors.
+	* @return number of vectors
+	*/
+	Lib3MF_uint32 CNormVectorGroup::GetCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(lib3mf_normvectorgroup_getcount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CNormVectorGroup::AddVector - Adds a normalized displacement vector.
+	* @param[in] Vector - vector to add; non-unit vectors are normalized
+	* @return zero-based vector index
+	*/
+	Lib3MF_uint32 CNormVectorGroup::AddVector(const sVector & Vector)
+	{
+		Lib3MF_uint32 resultIndex = 0;
+		CheckError(lib3mf_normvectorgroup_addvector(m_pHandle, &Vector, &resultIndex));
+		
+		return resultIndex;
+	}
+	
+	/**
+	* CNormVectorGroup::GetVector - Returns a normalized displacement vector.
+	* @param[in] nIndex - zero-based vector index
+	* @return normalized vector
+	*/
+	sVector CNormVectorGroup::GetVector(const Lib3MF_uint32 nIndex)
+	{
+		sVector resultVector;
+		CheckError(lib3mf_normvectorgroup_getvector(m_pHandle, nIndex, &resultVector));
+		
+		return resultVector;
+	}
+	
+	/**
+	* CNormVectorGroup::SetVector - Updates a normalized displacement vector.
+	* @param[in] nIndex - zero-based vector index
+	* @param[in] Vector - new vector; non-unit vectors are normalized
+	*/
+	void CNormVectorGroup::SetVector(const Lib3MF_uint32 nIndex, const sVector & Vector)
+	{
+		CheckError(lib3mf_normvectorgroup_setvector(m_pHandle, nIndex, &Vector));
+	}
+	
+	/**
+	 * Method definitions for class CDisp2DGroup
+	 */
+	
+	/**
+	* CDisp2DGroup::GetDisplacement2D - Returns the displacement texture used by this group.
+	* @return displacement texture resource
+	*/
+	PDisplacement2D CDisp2DGroup::GetDisplacement2D()
+	{
+		Lib3MFHandle hDisplacement2D = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_disp2dgroup_getdisplacement2d(m_pHandle, &hDisplacement2D));
+		
+		if (!hDisplacement2D) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CDisplacement2D>(dynamic_cast<CDisplacement2D*>(m_pWrapper->polymorphicFactory(hDisplacement2D)));
+	}
+	
+	/**
+	* CDisp2DGroup::GetNormalVectorGroup - Returns the normalized vector group used by this group.
+	* @return normalized vector group
+	*/
+	PNormVectorGroup CDisp2DGroup::GetNormalVectorGroup()
+	{
+		Lib3MFHandle hNormVectorGroup = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_disp2dgroup_getnormalvectorgroup(m_pHandle, &hNormVectorGroup));
+		
+		if (!hNormVectorGroup) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CNormVectorGroup>(dynamic_cast<CNormVectorGroup*>(m_pWrapper->polymorphicFactory(hNormVectorGroup)));
+	}
+	
+	/**
+	* CDisp2DGroup::GetHeight - Returns the displacement amplitude in model units.
+	* @return displacement amplitude
+	*/
+	Lib3MF_double CDisp2DGroup::GetHeight()
+	{
+		Lib3MF_double resultHeight = 0;
+		CheckError(lib3mf_disp2dgroup_getheight(m_pHandle, &resultHeight));
+		
+		return resultHeight;
+	}
+	
+	/**
+	* CDisp2DGroup::SetHeight - Sets the displacement amplitude in model units.
+	* @param[in] dHeight - displacement amplitude
+	*/
+	void CDisp2DGroup::SetHeight(const Lib3MF_double dHeight)
+	{
+		CheckError(lib3mf_disp2dgroup_setheight(m_pHandle, dHeight));
+	}
+	
+	/**
+	* CDisp2DGroup::GetOffset - Returns the displacement offset in model units.
+	* @return displacement offset
+	*/
+	Lib3MF_double CDisp2DGroup::GetOffset()
+	{
+		Lib3MF_double resultOffset = 0;
+		CheckError(lib3mf_disp2dgroup_getoffset(m_pHandle, &resultOffset));
+		
+		return resultOffset;
+	}
+	
+	/**
+	* CDisp2DGroup::SetOffset - Sets the displacement offset in model units.
+	* @param[in] dOffset - displacement offset
+	*/
+	void CDisp2DGroup::SetOffset(const Lib3MF_double dOffset)
+	{
+		CheckError(lib3mf_disp2dgroup_setoffset(m_pHandle, dOffset));
+	}
+	
+	/**
+	* CDisp2DGroup::GetCount - Returns the number of displacement coordinates.
+	* @return number of coordinates
+	*/
+	Lib3MF_uint32 CDisp2DGroup::GetCount()
+	{
+		Lib3MF_uint32 resultCount = 0;
+		CheckError(lib3mf_disp2dgroup_getcount(m_pHandle, &resultCount));
+		
+		return resultCount;
+	}
+	
+	/**
+	* CDisp2DGroup::AddCoordinate - Adds a displacement coordinate.
+	* @param[in] Coordinate - coordinate to add
+	* @return zero-based coordinate index
+	*/
+	Lib3MF_uint32 CDisp2DGroup::AddCoordinate(const sDisplacement2DCoordinate & Coordinate)
+	{
+		Lib3MF_uint32 resultIndex = 0;
+		CheckError(lib3mf_disp2dgroup_addcoordinate(m_pHandle, &Coordinate, &resultIndex));
+		
+		return resultIndex;
+	}
+	
+	/**
+	* CDisp2DGroup::GetCoordinate - Returns a displacement coordinate.
+	* @param[in] nIndex - zero-based coordinate index
+	* @return displacement coordinate
+	*/
+	sDisplacement2DCoordinate CDisp2DGroup::GetCoordinate(const Lib3MF_uint32 nIndex)
+	{
+		sDisplacement2DCoordinate resultCoordinate;
+		CheckError(lib3mf_disp2dgroup_getcoordinate(m_pHandle, nIndex, &resultCoordinate));
+		
+		return resultCoordinate;
+	}
+	
+	/**
+	* CDisp2DGroup::SetCoordinate - Updates a displacement coordinate.
+	* @param[in] nIndex - zero-based coordinate index
+	* @param[in] Coordinate - new displacement coordinate
+	*/
+	void CDisp2DGroup::SetCoordinate(const Lib3MF_uint32 nIndex, const sDisplacement2DCoordinate & Coordinate)
+	{
+		CheckError(lib3mf_disp2dgroup_setcoordinate(m_pHandle, nIndex, &Coordinate));
 	}
 	
 	/**
@@ -12337,6 +12969,70 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CModel::GetDisplacementMeshObjectByID - finds a displacement mesh object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the displacement mesh object instance
+	*/
+	PDisplacementMeshObject CModel::GetDisplacementMeshObjectByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hDisplacementMeshObjectInstance = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_model_getdisplacementmeshobjectbyid(m_pHandle, nUniqueResourceID, &hDisplacementMeshObjectInstance));
+		
+		if (!hDisplacementMeshObjectInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CDisplacementMeshObject>(dynamic_cast<CDisplacementMeshObject*>(m_pWrapper->polymorphicFactory(hDisplacementMeshObjectInstance)));
+	}
+	
+	/**
+	* CModel::GetDisplacement2DByID - finds a displacement texture resource by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the displacement texture instance
+	*/
+	PDisplacement2D CModel::GetDisplacement2DByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hDisplacement2DInstance = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_model_getdisplacement2dbyid(m_pHandle, nUniqueResourceID, &hDisplacement2DInstance));
+		
+		if (!hDisplacement2DInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CDisplacement2D>(dynamic_cast<CDisplacement2D*>(m_pWrapper->polymorphicFactory(hDisplacement2DInstance)));
+	}
+	
+	/**
+	* CModel::GetNormVectorGroupByID - finds a normalized vector group by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the normalized vector group instance
+	*/
+	PNormVectorGroup CModel::GetNormVectorGroupByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hNormVectorGroupInstance = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_model_getnormvectorgroupbyid(m_pHandle, nUniqueResourceID, &hNormVectorGroupInstance));
+		
+		if (!hNormVectorGroupInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CNormVectorGroup>(dynamic_cast<CNormVectorGroup*>(m_pWrapper->polymorphicFactory(hNormVectorGroupInstance)));
+	}
+	
+	/**
+	* CModel::GetDisp2DGroupByID - finds a displacement coordinate group by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the displacement coordinate group instance
+	*/
+	PDisp2DGroup CModel::GetDisp2DGroupByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hDisp2DGroupInstance = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_model_getdisp2dgroupbyid(m_pHandle, nUniqueResourceID, &hDisp2DGroupInstance));
+		
+		if (!hDisp2DGroupInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CDisp2DGroup>(dynamic_cast<CDisp2DGroup*>(m_pWrapper->polymorphicFactory(hDisp2DGroupInstance)));
+	}
+	
+	/**
 	* CModel::GetColorGroupByID - finds a model color group by its UniqueResourceID
 	* @param[in] nUniqueResourceID - UniqueResourceID
 	* @return returns the ColorGroup instance
@@ -12509,6 +13205,66 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CBooleanObjectIterator>(dynamic_cast<CBooleanObjectIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
+	}
+	
+	/**
+	* CModel::GetDisplacementMeshObjects - creates an iterator over all displacement mesh objects.
+	* @return returns the iterator instance
+	*/
+	PDisplacementMeshObjectIterator CModel::GetDisplacementMeshObjects()
+	{
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_model_getdisplacementmeshobjects(m_pHandle, &hResourceIterator));
+		
+		if (!hResourceIterator) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CDisplacementMeshObjectIterator>(dynamic_cast<CDisplacementMeshObjectIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
+	}
+	
+	/**
+	* CModel::GetDisplacement2Ds - creates an iterator over all displacement texture resources.
+	* @return returns the iterator instance
+	*/
+	PDisplacement2DIterator CModel::GetDisplacement2Ds()
+	{
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_model_getdisplacement2ds(m_pHandle, &hResourceIterator));
+		
+		if (!hResourceIterator) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CDisplacement2DIterator>(dynamic_cast<CDisplacement2DIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
+	}
+	
+	/**
+	* CModel::GetNormVectorGroups - creates an iterator over all normalized vector groups.
+	* @return returns the iterator instance
+	*/
+	PNormVectorGroupIterator CModel::GetNormVectorGroups()
+	{
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_model_getnormvectorgroups(m_pHandle, &hResourceIterator));
+		
+		if (!hResourceIterator) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CNormVectorGroupIterator>(dynamic_cast<CNormVectorGroupIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
+	}
+	
+	/**
+	* CModel::GetDisp2DGroups - creates an iterator over all displacement coordinate groups.
+	* @return returns the iterator instance
+	*/
+	PDisp2DGroupIterator CModel::GetDisp2DGroups()
+	{
+		Lib3MFHandle hResourceIterator = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_model_getdisp2dgroups(m_pHandle, &hResourceIterator));
+		
+		if (!hResourceIterator) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CDisp2DGroupIterator>(dynamic_cast<CDisp2DGroupIterator*>(m_pWrapper->polymorphicFactory(hResourceIterator)));
 	}
 	
 	/**
@@ -12699,6 +13455,74 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CBooleanObject>(dynamic_cast<CBooleanObject*>(m_pWrapper->polymorphicFactory(hBooleanObjectInstance)));
+	}
+	
+	/**
+	* CModel::AddDisplacementMeshObject - adds an empty displacement mesh object to the model.
+	* @return returns the displacement mesh object instance
+	*/
+	PDisplacementMeshObject CModel::AddDisplacementMeshObject()
+	{
+		Lib3MFHandle hDisplacementMeshObjectInstance = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_model_adddisplacementmeshobject(m_pHandle, &hDisplacementMeshObjectInstance));
+		
+		if (!hDisplacementMeshObjectInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CDisplacementMeshObject>(dynamic_cast<CDisplacementMeshObject*>(m_pWrapper->polymorphicFactory(hDisplacementMeshObjectInstance)));
+	}
+	
+	/**
+	* CModel::AddDisplacement2D - adds a displacement texture resource using a PNG attachment.
+	* @param[in] pTextureAttachment - PNG attachment containing the displacement image
+	* @return returns the displacement texture instance
+	*/
+	PDisplacement2D CModel::AddDisplacement2D(classParam<CAttachment> pTextureAttachment)
+	{
+		Lib3MFHandle hTextureAttachment = pTextureAttachment.GetHandle();
+		Lib3MFHandle hDisplacement2DInstance = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_model_adddisplacement2d(m_pHandle, hTextureAttachment, &hDisplacement2DInstance));
+		
+		if (!hDisplacement2DInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CDisplacement2D>(dynamic_cast<CDisplacement2D*>(m_pWrapper->polymorphicFactory(hDisplacement2DInstance)));
+	}
+	
+	/**
+	* CModel::AddNormVectorGroup - adds an empty normalized vector group to the model.
+	* @return returns the normalized vector group instance
+	*/
+	PNormVectorGroup CModel::AddNormVectorGroup()
+	{
+		Lib3MFHandle hNormVectorGroupInstance = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_model_addnormvectorgroup(m_pHandle, &hNormVectorGroupInstance));
+		
+		if (!hNormVectorGroupInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CNormVectorGroup>(dynamic_cast<CNormVectorGroup*>(m_pWrapper->polymorphicFactory(hNormVectorGroupInstance)));
+	}
+	
+	/**
+	* CModel::AddDisp2DGroup - adds an empty displacement coordinate group to the model.
+	* @param[in] pDisplacement2D - displacement texture used by the group
+	* @param[in] pNormalVectorGroup - normalized vectors used by the group
+	* @param[in] dHeight - displacement amplitude in model units
+	* @param[in] dOffset - displacement offset in model units
+	* @return returns the displacement coordinate group instance
+	*/
+	PDisp2DGroup CModel::AddDisp2DGroup(classParam<CDisplacement2D> pDisplacement2D, classParam<CNormVectorGroup> pNormalVectorGroup, const Lib3MF_double dHeight, const Lib3MF_double dOffset)
+	{
+		Lib3MFHandle hDisplacement2D = pDisplacement2D.GetHandle();
+		Lib3MFHandle hNormalVectorGroup = pNormalVectorGroup.GetHandle();
+		Lib3MFHandle hDisp2DGroupInstance = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_model_adddisp2dgroup(m_pHandle, hDisplacement2D, hNormalVectorGroup, dHeight, dOffset, &hDisp2DGroupInstance));
+		
+		if (!hDisp2DGroupInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CDisp2DGroup>(dynamic_cast<CDisp2DGroup*>(m_pWrapper->polymorphicFactory(hDisp2DGroupInstance)));
 	}
 	
 	/**

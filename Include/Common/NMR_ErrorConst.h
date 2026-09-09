@@ -1560,7 +1560,8 @@ XML Parser Error Constants (0x9XXX)
 // A matindices attribute is duplicated
 #define NMR_ERROR_DUPLICATE_MATINDICES_ATTRIBUTE 0x9019
 
-//
+// Displacement content is present without listing its namespace as required
+#define NMR_ERROR_DISPLACEMENTEXTENSION_NOT_REQUIRED 0x901A
 
 
 /*-------------------------------------------------------------------

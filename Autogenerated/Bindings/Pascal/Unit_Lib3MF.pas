@@ -403,6 +403,19 @@ type
 		FV: Double;
 	end;
 
+	PLib3MFDisplacement2DCoordinate = ^TLib3MFDisplacement2DCoordinate;
+	TLib3MFDisplacement2DCoordinate = packed record
+		FU: Double;
+		FV: Double;
+		FNormalVectorIndex: Cardinal;
+		FDisplacementFactor: Double;
+	end;
+
+	PLib3MFTriangleDisplacement = ^TLib3MFTriangleDisplacement;
+	TLib3MFTriangleDisplacement = packed record
+		FDisplacementIndices: array [0..2] of Cardinal;
+	end;
+
 	PLib3MFTransform = ^TLib3MFTransform;
 	TLib3MFTransform = packed record
 		FFields: array [0..3, 0..2] of Single;
@@ -457,6 +470,8 @@ type
 	ArrayOfLib3MFCompositeConstituent = array of TLib3MFCompositeConstituent;
 	ArrayOfLib3MFMultiPropertyLayer = array of TLib3MFMultiPropertyLayer;
 	ArrayOfLib3MFTex2Coord = array of TLib3MFTex2Coord;
+	ArrayOfLib3MFDisplacement2DCoordinate = array of TLib3MFDisplacement2DCoordinate;
+	ArrayOfLib3MFTriangleDisplacement = array of TLib3MFTriangleDisplacement;
 	ArrayOfLib3MFTransform = array of TLib3MFTransform;
 	ArrayOfLib3MFBox = array of TLib3MFBox;
 	ArrayOfLib3MFColor = array of TLib3MFColor;
@@ -496,6 +511,10 @@ type
 	TLib3MFMeshObjectIterator = class;
 	TLib3MFComponentsObjectIterator = class;
 	TLib3MFBooleanObjectIterator = class;
+	TLib3MFDisplacementMeshObjectIterator = class;
+	TLib3MFDisplacement2DIterator = class;
+	TLib3MFNormVectorGroupIterator = class;
+	TLib3MFDisp2DGroupIterator = class;
 	TLib3MFTexture2DIterator = class;
 	TLib3MFBaseMaterialGroupIterator = class;
 	TLib3MFColorGroupIterator = class;
@@ -510,6 +529,7 @@ type
 	TLib3MFTriangleSet = class;
 	TLib3MFObject = class;
 	TLib3MFMeshObject = class;
+	TLib3MFDisplacementMeshObject = class;
 	TLib3MFLevelSet = class;
 	TLib3MFBooleanObject = class;
 	TLib3MFBeamLattice = class;
@@ -530,6 +550,9 @@ type
 	TLib3MFImage3D = class;
 	TLib3MFImageStack = class;
 	TLib3MFAttachment = class;
+	TLib3MFDisplacement2D = class;
+	TLib3MFNormVectorGroup = class;
+	TLib3MFDisp2DGroup = class;
 	TLib3MFTexture2D = class;
 	TLib3MFImplicitPort = class;
 	TLib3MFIterator = class;
@@ -1077,6 +1100,62 @@ type
 	
 
 (*************************************************************************************************************************
+ Function type definitions for DisplacementMeshObjectIterator
+**************************************************************************************************************************)
+
+	(**
+	* Returns the DisplacementMeshObject the iterator points at.
+	*
+	* @param[in] pDisplacementMeshObjectIterator - DisplacementMeshObjectIterator instance.
+	* @param[out] pResource - returns the DisplacementMeshObject instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisplacementMeshObjectIterator_GetCurrentDisplacementMeshObjectFunc = function(pDisplacementMeshObjectIterator: TLib3MFHandle; out pResource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for Displacement2DIterator
+**************************************************************************************************************************)
+
+	(**
+	* Returns the Displacement2D resource the iterator points at.
+	*
+	* @param[in] pDisplacement2DIterator - Displacement2DIterator instance.
+	* @param[out] pResource - returns the Displacement2D instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisplacement2DIterator_GetCurrentDisplacement2DFunc = function(pDisplacement2DIterator: TLib3MFHandle; out pResource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for NormVectorGroupIterator
+**************************************************************************************************************************)
+
+	(**
+	* Returns the NormVectorGroup resource the iterator points at.
+	*
+	* @param[in] pNormVectorGroupIterator - NormVectorGroupIterator instance.
+	* @param[out] pResource - returns the NormVectorGroup instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNormVectorGroupIterator_GetCurrentNormVectorGroupFunc = function(pNormVectorGroupIterator: TLib3MFHandle; out pResource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for Disp2DGroupIterator
+**************************************************************************************************************************)
+
+	(**
+	* Returns the Disp2DGroup resource the iterator points at.
+	*
+	* @param[in] pDisp2DGroupIterator - Disp2DGroupIterator instance.
+	* @param[out] pResource - returns the Disp2DGroup instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisp2DGroupIterator_GetCurrentDisp2DGroupFunc = function(pDisp2DGroupIterator: TLib3MFHandle; out pResource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
  Function type definitions for Texture2DIterator
 **************************************************************************************************************************)
 
@@ -1612,6 +1691,15 @@ type
 	TLib3MFObject_IsBooleanObjectFunc = function(pObject: TLib3MFHandle; out pIsBooleanObject: Byte): TLib3MFResult; cdecl;
 	
 	(**
+	* Retrieves whether an object is a displacement mesh object.
+	*
+	* @param[in] pObject - Object instance.
+	* @param[out] pIsDisplacementMeshObject - returns whether the object is a displacement mesh object
+	* @return error code or 0 (success)
+	*)
+	TLib3MFObject_IsDisplacementMeshObjectFunc = function(pObject: TLib3MFHandle; out pIsDisplacementMeshObject: Byte): TLib3MFResult; cdecl;
+	
+	(**
 	* Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.
 	*
 	* @param[in] pObject - Object instance.
@@ -2014,6 +2102,52 @@ type
 	
 
 (*************************************************************************************************************************
+ Function type definitions for DisplacementMeshObject
+**************************************************************************************************************************)
+
+	(**
+	* Returns whether a triangle has displacement information assigned.
+	*
+	* @param[in] pDisplacementMeshObject - DisplacementMeshObject instance.
+	* @param[in] nIndex - index of the triangle
+	* @param[out] pHasDisplacement - returns whether displacement information is assigned
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisplacementMeshObject_HasTriangleDisplacementFunc = function(pDisplacementMeshObject: TLib3MFHandle; const nIndex: Cardinal; out pHasDisplacement: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Assigns a displacement group and coordinate indices to a triangle.
+	*
+	* @param[in] pDisplacementMeshObject - DisplacementMeshObject instance.
+	* @param[in] nIndex - index of the triangle
+	* @param[in] pDisp2DGroup - displacement coordinate group used by the triangle
+	* @param[in] pDisplacement - coordinate indices for the triangle vertices
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisplacementMeshObject_SetTriangleDisplacementFunc = function(pDisplacementMeshObject: TLib3MFHandle; const nIndex: Cardinal; const pDisp2DGroup: TLib3MFHandle; const pDisplacement: PLib3MFTriangleDisplacement): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the displacement group and coordinate indices assigned to a triangle.
+	*
+	* @param[in] pDisplacementMeshObject - DisplacementMeshObject instance.
+	* @param[in] nIndex - index of the triangle
+	* @param[out] pDisp2DGroup - displacement coordinate group used by the triangle
+	* @param[out] pDisplacement - coordinate indices for the triangle vertices
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisplacementMeshObject_GetTriangleDisplacementFunc = function(pDisplacementMeshObject: TLib3MFHandle; const nIndex: Cardinal; out pDisp2DGroup: TLib3MFHandle; pDisplacement: PLib3MFTriangleDisplacement): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes displacement information from a triangle.
+	*
+	* @param[in] pDisplacementMeshObject - DisplacementMeshObject instance.
+	* @param[in] nIndex - index of the triangle
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisplacementMeshObject_ClearTriangleDisplacementFunc = function(pDisplacementMeshObject: TLib3MFHandle; const nIndex: Cardinal): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
  Function type definitions for LevelSet
 **************************************************************************************************************************)
 
@@ -2297,7 +2431,7 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFBooleanObject_MergeToMeshObjectFunc = function(pBooleanObject: TLib3MFHandle; out pMeshObject: TLib3MFHandle): TLib3MFResult; cdecl;
-
+	
 
 (*************************************************************************************************************************
  Function type definitions for BeamLattice
@@ -3677,6 +3811,227 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFAttachment_ReadFromBufferFunc = function(pAttachment: TLib3MFHandle; const nBufferCount: QWord; const pBufferBuffer: PByte): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for Displacement2D
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the PNG attachment used as displacement texture.
+	*
+	* @param[in] pDisplacement2D - Displacement2D instance.
+	* @param[out] pAttachment - attachment containing the displacement image
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisplacement2D_GetAttachmentFunc = function(pDisplacement2D: TLib3MFHandle; out pAttachment: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the PNG attachment used as displacement texture.
+	*
+	* @param[in] pDisplacement2D - Displacement2D instance.
+	* @param[in] pAttachment - attachment containing the displacement image
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisplacement2D_SetAttachmentFunc = function(pDisplacement2D: TLib3MFHandle; const pAttachment: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the image channel used for displacement values.
+	*
+	* @param[in] pDisplacement2D - Displacement2D instance.
+	* @param[out] pChannel - selected image channel
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisplacement2D_GetChannelFunc = function(pDisplacement2D: TLib3MFHandle; out pChannel: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the image channel used for displacement values.
+	*
+	* @param[in] pDisplacement2D - Displacement2D instance.
+	* @param[in] eChannel - selected image channel
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisplacement2D_SetChannelFunc = function(pDisplacement2D: TLib3MFHandle; const eChannel: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the displacement texture tile styles.
+	*
+	* @param[in] pDisplacement2D - Displacement2D instance.
+	* @param[out] pTileStyleU - tile style in the u direction
+	* @param[out] pTileStyleV - tile style in the v direction
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisplacement2D_GetTileStyleUVFunc = function(pDisplacement2D: TLib3MFHandle; out pTileStyleU: Integer; out pTileStyleV: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the displacement texture tile styles.
+	*
+	* @param[in] pDisplacement2D - Displacement2D instance.
+	* @param[in] eTileStyleU - tile style in the u direction
+	* @param[in] eTileStyleV - tile style in the v direction
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisplacement2D_SetTileStyleUVFunc = function(pDisplacement2D: TLib3MFHandle; const eTileStyleU: Integer; const eTileStyleV: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the displacement texture filter.
+	*
+	* @param[in] pDisplacement2D - Displacement2D instance.
+	* @param[out] pFilter - selected texture filter
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisplacement2D_GetFilterFunc = function(pDisplacement2D: TLib3MFHandle; out pFilter: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the displacement texture filter.
+	*
+	* @param[in] pDisplacement2D - Displacement2D instance.
+	* @param[in] eFilter - selected texture filter
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisplacement2D_SetFilterFunc = function(pDisplacement2D: TLib3MFHandle; const eFilter: Integer): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for NormVectorGroup
+**************************************************************************************************************************)
+
+	(**
+	* Returns the number of normalized vectors.
+	*
+	* @param[in] pNormVectorGroup - NormVectorGroup instance.
+	* @param[out] pCount - number of vectors
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNormVectorGroup_GetCountFunc = function(pNormVectorGroup: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds a normalized displacement vector.
+	*
+	* @param[in] pNormVectorGroup - NormVectorGroup instance.
+	* @param[in] pVector - vector to add; non-unit vectors are normalized
+	* @param[out] pIndex - zero-based vector index
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNormVectorGroup_AddVectorFunc = function(pNormVectorGroup: TLib3MFHandle; const pVector: PLib3MFVector; out pIndex: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns a normalized displacement vector.
+	*
+	* @param[in] pNormVectorGroup - NormVectorGroup instance.
+	* @param[in] nIndex - zero-based vector index
+	* @param[out] pVector - normalized vector
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNormVectorGroup_GetVectorFunc = function(pNormVectorGroup: TLib3MFHandle; const nIndex: Cardinal; pVector: PLib3MFVector): TLib3MFResult; cdecl;
+	
+	(**
+	* Updates a normalized displacement vector.
+	*
+	* @param[in] pNormVectorGroup - NormVectorGroup instance.
+	* @param[in] nIndex - zero-based vector index
+	* @param[in] pVector - new vector; non-unit vectors are normalized
+	* @return error code or 0 (success)
+	*)
+	TLib3MFNormVectorGroup_SetVectorFunc = function(pNormVectorGroup: TLib3MFHandle; const nIndex: Cardinal; const pVector: PLib3MFVector): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for Disp2DGroup
+**************************************************************************************************************************)
+
+	(**
+	* Returns the displacement texture used by this group.
+	*
+	* @param[in] pDisp2DGroup - Disp2DGroup instance.
+	* @param[out] pDisplacement2D - displacement texture resource
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisp2DGroup_GetDisplacement2DFunc = function(pDisp2DGroup: TLib3MFHandle; out pDisplacement2D: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the normalized vector group used by this group.
+	*
+	* @param[in] pDisp2DGroup - Disp2DGroup instance.
+	* @param[out] pNormVectorGroup - normalized vector group
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisp2DGroup_GetNormalVectorGroupFunc = function(pDisp2DGroup: TLib3MFHandle; out pNormVectorGroup: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the displacement amplitude in model units.
+	*
+	* @param[in] pDisp2DGroup - Disp2DGroup instance.
+	* @param[out] pHeight - displacement amplitude
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisp2DGroup_GetHeightFunc = function(pDisp2DGroup: TLib3MFHandle; out pHeight: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the displacement amplitude in model units.
+	*
+	* @param[in] pDisp2DGroup - Disp2DGroup instance.
+	* @param[in] dHeight - displacement amplitude
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisp2DGroup_SetHeightFunc = function(pDisp2DGroup: TLib3MFHandle; const dHeight: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the displacement offset in model units.
+	*
+	* @param[in] pDisp2DGroup - Disp2DGroup instance.
+	* @param[out] pOffset - displacement offset
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisp2DGroup_GetOffsetFunc = function(pDisp2DGroup: TLib3MFHandle; out pOffset: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the displacement offset in model units.
+	*
+	* @param[in] pDisp2DGroup - Disp2DGroup instance.
+	* @param[in] dOffset - displacement offset
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisp2DGroup_SetOffsetFunc = function(pDisp2DGroup: TLib3MFHandle; const dOffset: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the number of displacement coordinates.
+	*
+	* @param[in] pDisp2DGroup - Disp2DGroup instance.
+	* @param[out] pCount - number of coordinates
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisp2DGroup_GetCountFunc = function(pDisp2DGroup: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds a displacement coordinate.
+	*
+	* @param[in] pDisp2DGroup - Disp2DGroup instance.
+	* @param[in] pCoordinate - coordinate to add
+	* @param[out] pIndex - zero-based coordinate index
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisp2DGroup_AddCoordinateFunc = function(pDisp2DGroup: TLib3MFHandle; const pCoordinate: PLib3MFDisplacement2DCoordinate; out pIndex: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns a displacement coordinate.
+	*
+	* @param[in] pDisp2DGroup - Disp2DGroup instance.
+	* @param[in] nIndex - zero-based coordinate index
+	* @param[out] pCoordinate - displacement coordinate
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisp2DGroup_GetCoordinateFunc = function(pDisp2DGroup: TLib3MFHandle; const nIndex: Cardinal; pCoordinate: PLib3MFDisplacement2DCoordinate): TLib3MFResult; cdecl;
+	
+	(**
+	* Updates a displacement coordinate.
+	*
+	* @param[in] pDisp2DGroup - Disp2DGroup instance.
+	* @param[in] nIndex - zero-based coordinate index
+	* @param[in] pCoordinate - new displacement coordinate
+	* @return error code or 0 (success)
+	*)
+	TLib3MFDisp2DGroup_SetCoordinateFunc = function(pDisp2DGroup: TLib3MFHandle; const nIndex: Cardinal; const pCoordinate: PLib3MFDisplacement2DCoordinate): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -7020,6 +7375,46 @@ type
 	TLib3MFModel_GetBooleanObjectByIDFunc = function(pModel: TLib3MFHandle; const nUniqueResourceID: Cardinal; out pBooleanObjectInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
+	* finds a displacement mesh object by its UniqueResourceID
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @param[out] pDisplacementMeshObjectInstance - returns the displacement mesh object instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetDisplacementMeshObjectByIDFunc = function(pModel: TLib3MFHandle; const nUniqueResourceID: Cardinal; out pDisplacementMeshObjectInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* finds a displacement texture resource by its UniqueResourceID
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @param[out] pDisplacement2DInstance - returns the displacement texture instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetDisplacement2DByIDFunc = function(pModel: TLib3MFHandle; const nUniqueResourceID: Cardinal; out pDisplacement2DInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* finds a normalized vector group by its UniqueResourceID
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @param[out] pNormVectorGroupInstance - returns the normalized vector group instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetNormVectorGroupByIDFunc = function(pModel: TLib3MFHandle; const nUniqueResourceID: Cardinal; out pNormVectorGroupInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* finds a displacement coordinate group by its UniqueResourceID
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @param[out] pDisp2DGroupInstance - returns the displacement coordinate group instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetDisp2DGroupByIDFunc = function(pModel: TLib3MFHandle; const nUniqueResourceID: Cardinal; out pDisp2DGroupInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
 	* finds a model color group by its UniqueResourceID
 	*
 	* @param[in] pModel - Model instance.
@@ -7132,6 +7527,42 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFModel_GetBooleanObjectsFunc = function(pModel: TLib3MFHandle; out pResourceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* creates an iterator over all displacement mesh objects.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pResourceIterator - returns the iterator instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetDisplacementMeshObjectsFunc = function(pModel: TLib3MFHandle; out pResourceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* creates an iterator over all displacement texture resources.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pResourceIterator - returns the iterator instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetDisplacement2DsFunc = function(pModel: TLib3MFHandle; out pResourceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* creates an iterator over all normalized vector groups.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pResourceIterator - returns the iterator instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetNormVectorGroupsFunc = function(pModel: TLib3MFHandle; out pResourceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* creates an iterator over all displacement coordinate groups.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pResourceIterator - returns the iterator instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetDisp2DGroupsFunc = function(pModel: TLib3MFHandle; out pResourceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* creates a Texture2DIterator instance with all texture2d resources.
@@ -7249,6 +7680,47 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFModel_AddBooleanObjectFunc = function(pModel: TLib3MFHandle; out pBooleanObjectInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* adds an empty displacement mesh object to the model.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pDisplacementMeshObjectInstance - returns the displacement mesh object instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_AddDisplacementMeshObjectFunc = function(pModel: TLib3MFHandle; out pDisplacementMeshObjectInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* adds a displacement texture resource using a PNG attachment.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] pTextureAttachment - PNG attachment containing the displacement image
+	* @param[out] pDisplacement2DInstance - returns the displacement texture instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_AddDisplacement2DFunc = function(pModel: TLib3MFHandle; const pTextureAttachment: TLib3MFHandle; out pDisplacement2DInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* adds an empty normalized vector group to the model.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pNormVectorGroupInstance - returns the normalized vector group instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_AddNormVectorGroupFunc = function(pModel: TLib3MFHandle; out pNormVectorGroupInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* adds an empty displacement coordinate group to the model.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] pDisplacement2D - displacement texture used by the group
+	* @param[in] pNormalVectorGroup - normalized vectors used by the group
+	* @param[in] dHeight - displacement amplitude in model units
+	* @param[in] dOffset - displacement offset in model units
+	* @param[out] pDisp2DGroupInstance - returns the displacement coordinate group instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_AddDisp2DGroupFunc = function(pModel: TLib3MFHandle; const pDisplacement2D: TLib3MFHandle; const pNormalVectorGroup: TLib3MFHandle; const dHeight: Double; const dOffset: Double; out pDisp2DGroupInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* creates a new model slicestack by its id
@@ -7943,6 +8415,54 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
+ Class definition for DisplacementMeshObjectIterator
+**************************************************************************************************************************)
+
+	TLib3MFDisplacementMeshObjectIterator = class(TLib3MFResourceIterator)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetCurrentDisplacementMeshObject(): TLib3MFDisplacementMeshObject;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for Displacement2DIterator
+**************************************************************************************************************************)
+
+	TLib3MFDisplacement2DIterator = class(TLib3MFResourceIterator)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetCurrentDisplacement2D(): TLib3MFDisplacement2D;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for NormVectorGroupIterator
+**************************************************************************************************************************)
+
+	TLib3MFNormVectorGroupIterator = class(TLib3MFResourceIterator)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetCurrentNormVectorGroup(): TLib3MFNormVectorGroup;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for Disp2DGroupIterator
+**************************************************************************************************************************)
+
+	TLib3MFDisp2DGroupIterator = class(TLib3MFResourceIterator)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetCurrentDisp2DGroup(): TLib3MFDisp2DGroup;
+	end;
+
+
+(*************************************************************************************************************************
  Class definition for Texture2DIterator
 **************************************************************************************************************************)
 
@@ -8131,6 +8651,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function IsComponentsObject(): Boolean;
 		function IsLevelSetObject(): Boolean;
 		function IsBooleanObject(): Boolean;
+		function IsDisplacementMeshObject(): Boolean;
 		function IsValid(): Boolean;
 		procedure SetAttachmentAsThumbnail(const AAttachment: TLib3MFAttachment);
 		function GetThumbnailAttachment(): TLib3MFAttachment;
@@ -8183,6 +8704,21 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function FindTriangleSet(const AIdentifier: String): TLib3MFTriangleSet;
 		function GetTriangleSetCount(): Cardinal;
 		function GetTriangleSet(const AIndex: Cardinal): TLib3MFTriangleSet;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for DisplacementMeshObject
+**************************************************************************************************************************)
+
+	TLib3MFDisplacementMeshObject = class(TLib3MFMeshObject)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function HasTriangleDisplacement(const AIndex: Cardinal): Boolean;
+		procedure SetTriangleDisplacement(const AIndex: Cardinal; const ADisp2DGroup: TLib3MFDisp2DGroup; const ADisplacement: TLib3MFTriangleDisplacement);
+		function GetTriangleDisplacement(const AIndex: Cardinal; out ADisp2DGroup: TLib3MFDisp2DGroup): TLib3MFTriangleDisplacement;
+		procedure ClearTriangleDisplacement(const AIndex: Cardinal);
 	end;
 
 
@@ -8565,6 +9101,61 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetStreamSize(): QWord;
 		procedure WriteToBuffer(out ABuffer: TByteDynArray);
 		procedure ReadFromBuffer(const ABuffer: TByteDynArray);
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for Displacement2D
+**************************************************************************************************************************)
+
+	TLib3MFDisplacement2D = class(TLib3MFResource)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetAttachment(): TLib3MFAttachment;
+		procedure SetAttachment(const AAttachment: TLib3MFAttachment);
+		function GetChannel(): TLib3MFChannelName;
+		procedure SetChannel(const AChannel: TLib3MFChannelName);
+		procedure GetTileStyleUV(out ATileStyleU: TLib3MFTextureTileStyle; out ATileStyleV: TLib3MFTextureTileStyle);
+		procedure SetTileStyleUV(const ATileStyleU: TLib3MFTextureTileStyle; const ATileStyleV: TLib3MFTextureTileStyle);
+		function GetFilter(): TLib3MFTextureFilter;
+		procedure SetFilter(const AFilter: TLib3MFTextureFilter);
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for NormVectorGroup
+**************************************************************************************************************************)
+
+	TLib3MFNormVectorGroup = class(TLib3MFResource)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetCount(): Cardinal;
+		function AddVector(const AVector: TLib3MFVector): Cardinal;
+		function GetVector(const AIndex: Cardinal): TLib3MFVector;
+		procedure SetVector(const AIndex: Cardinal; const AVector: TLib3MFVector);
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for Disp2DGroup
+**************************************************************************************************************************)
+
+	TLib3MFDisp2DGroup = class(TLib3MFResource)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetDisplacement2D(): TLib3MFDisplacement2D;
+		function GetNormalVectorGroup(): TLib3MFNormVectorGroup;
+		function GetHeight(): Double;
+		procedure SetHeight(const AHeight: Double);
+		function GetOffset(): Double;
+		procedure SetOffset(const AOffset: Double);
+		function GetCount(): Cardinal;
+		function AddCoordinate(const ACoordinate: TLib3MFDisplacement2DCoordinate): Cardinal;
+		function GetCoordinate(const AIndex: Cardinal): TLib3MFDisplacement2DCoordinate;
+		procedure SetCoordinate(const AIndex: Cardinal; const ACoordinate: TLib3MFDisplacement2DCoordinate);
 	end;
 
 
@@ -9695,6 +10286,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetMeshObjectByID(const AUniqueResourceID: Cardinal): TLib3MFMeshObject;
 		function GetComponentsObjectByID(const AUniqueResourceID: Cardinal): TLib3MFComponentsObject;
 		function GetBooleanObjectByID(const AUniqueResourceID: Cardinal): TLib3MFBooleanObject;
+		function GetDisplacementMeshObjectByID(const AUniqueResourceID: Cardinal): TLib3MFDisplacementMeshObject;
+		function GetDisplacement2DByID(const AUniqueResourceID: Cardinal): TLib3MFDisplacement2D;
+		function GetNormVectorGroupByID(const AUniqueResourceID: Cardinal): TLib3MFNormVectorGroup;
+		function GetDisp2DGroupByID(const AUniqueResourceID: Cardinal): TLib3MFDisp2DGroup;
 		function GetColorGroupByID(const AUniqueResourceID: Cardinal): TLib3MFColorGroup;
 		function GetSliceStackByID(const AUniqueResourceID: Cardinal): TLib3MFSliceStack;
 		function GetLevelSetByID(const AUniqueResourceID: Cardinal): TLib3MFLevelSet;
@@ -9707,6 +10302,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetMeshObjects(): TLib3MFMeshObjectIterator;
 		function GetComponentsObjects(): TLib3MFComponentsObjectIterator;
 		function GetBooleanObjects(): TLib3MFBooleanObjectIterator;
+		function GetDisplacementMeshObjects(): TLib3MFDisplacementMeshObjectIterator;
+		function GetDisplacement2Ds(): TLib3MFDisplacement2DIterator;
+		function GetNormVectorGroups(): TLib3MFNormVectorGroupIterator;
+		function GetDisp2DGroups(): TLib3MFDisp2DGroupIterator;
 		function GetTexture2Ds(): TLib3MFTexture2DIterator;
 		function GetBaseMaterialGroups(): TLib3MFBaseMaterialGroupIterator;
 		function GetColorGroups(): TLib3MFColorGroupIterator;
@@ -9720,6 +10319,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddMeshObject(): TLib3MFMeshObject;
 		function AddComponentsObject(): TLib3MFComponentsObject;
 		function AddBooleanObject(): TLib3MFBooleanObject;
+		function AddDisplacementMeshObject(): TLib3MFDisplacementMeshObject;
+		function AddDisplacement2D(const ATextureAttachment: TLib3MFAttachment): TLib3MFDisplacement2D;
+		function AddNormVectorGroup(): TLib3MFNormVectorGroup;
+		function AddDisp2DGroup(const ADisplacement2D: TLib3MFDisplacement2D; const ANormalVectorGroup: TLib3MFNormVectorGroup; const AHeight: Double; const AOffset: Double): TLib3MFDisp2DGroup;
 		function AddSliceStack(const AZBottom: Double): TLib3MFSliceStack;
 		function AddTexture2DFromAttachment(const ATextureAttachment: TLib3MFAttachment): TLib3MFTexture2D;
 		function AddBaseMaterialGroup(): TLib3MFBaseMaterialGroup;
@@ -9804,6 +10407,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFMeshObjectIterator_GetCurrentMeshObjectFunc: TLib3MFMeshObjectIterator_GetCurrentMeshObjectFunc;
 		FLib3MFComponentsObjectIterator_GetCurrentComponentsObjectFunc: TLib3MFComponentsObjectIterator_GetCurrentComponentsObjectFunc;
 		FLib3MFBooleanObjectIterator_GetCurrentBooleanObjectFunc: TLib3MFBooleanObjectIterator_GetCurrentBooleanObjectFunc;
+		FLib3MFDisplacementMeshObjectIterator_GetCurrentDisplacementMeshObjectFunc: TLib3MFDisplacementMeshObjectIterator_GetCurrentDisplacementMeshObjectFunc;
+		FLib3MFDisplacement2DIterator_GetCurrentDisplacement2DFunc: TLib3MFDisplacement2DIterator_GetCurrentDisplacement2DFunc;
+		FLib3MFNormVectorGroupIterator_GetCurrentNormVectorGroupFunc: TLib3MFNormVectorGroupIterator_GetCurrentNormVectorGroupFunc;
+		FLib3MFDisp2DGroupIterator_GetCurrentDisp2DGroupFunc: TLib3MFDisp2DGroupIterator_GetCurrentDisp2DGroupFunc;
 		FLib3MFTexture2DIterator_GetCurrentTexture2DFunc: TLib3MFTexture2DIterator_GetCurrentTexture2DFunc;
 		FLib3MFBaseMaterialGroupIterator_GetCurrentBaseMaterialGroupFunc: TLib3MFBaseMaterialGroupIterator_GetCurrentBaseMaterialGroupFunc;
 		FLib3MFColorGroupIterator_GetCurrentColorGroupFunc: TLib3MFColorGroupIterator_GetCurrentColorGroupFunc;
@@ -9853,6 +10460,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFObject_IsComponentsObjectFunc: TLib3MFObject_IsComponentsObjectFunc;
 		FLib3MFObject_IsLevelSetObjectFunc: TLib3MFObject_IsLevelSetObjectFunc;
 		FLib3MFObject_IsBooleanObjectFunc: TLib3MFObject_IsBooleanObjectFunc;
+		FLib3MFObject_IsDisplacementMeshObjectFunc: TLib3MFObject_IsDisplacementMeshObjectFunc;
 		FLib3MFObject_IsValidFunc: TLib3MFObject_IsValidFunc;
 		FLib3MFObject_SetAttachmentAsThumbnailFunc: TLib3MFObject_SetAttachmentAsThumbnailFunc;
 		FLib3MFObject_GetThumbnailAttachmentFunc: TLib3MFObject_GetThumbnailAttachmentFunc;
@@ -9894,6 +10502,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFMeshObject_FindTriangleSetFunc: TLib3MFMeshObject_FindTriangleSetFunc;
 		FLib3MFMeshObject_GetTriangleSetCountFunc: TLib3MFMeshObject_GetTriangleSetCountFunc;
 		FLib3MFMeshObject_GetTriangleSetFunc: TLib3MFMeshObject_GetTriangleSetFunc;
+		FLib3MFDisplacementMeshObject_HasTriangleDisplacementFunc: TLib3MFDisplacementMeshObject_HasTriangleDisplacementFunc;
+		FLib3MFDisplacementMeshObject_SetTriangleDisplacementFunc: TLib3MFDisplacementMeshObject_SetTriangleDisplacementFunc;
+		FLib3MFDisplacementMeshObject_GetTriangleDisplacementFunc: TLib3MFDisplacementMeshObject_GetTriangleDisplacementFunc;
+		FLib3MFDisplacementMeshObject_ClearTriangleDisplacementFunc: TLib3MFDisplacementMeshObject_ClearTriangleDisplacementFunc;
 		FLib3MFLevelSet_GetFunctionFunc: TLib3MFLevelSet_GetFunctionFunc;
 		FLib3MFLevelSet_SetFunctionFunc: TLib3MFLevelSet_SetFunctionFunc;
 		FLib3MFLevelSet_GetTransformFunc: TLib3MFLevelSet_GetTransformFunc;
@@ -10056,6 +10668,28 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFAttachment_GetStreamSizeFunc: TLib3MFAttachment_GetStreamSizeFunc;
 		FLib3MFAttachment_WriteToBufferFunc: TLib3MFAttachment_WriteToBufferFunc;
 		FLib3MFAttachment_ReadFromBufferFunc: TLib3MFAttachment_ReadFromBufferFunc;
+		FLib3MFDisplacement2D_GetAttachmentFunc: TLib3MFDisplacement2D_GetAttachmentFunc;
+		FLib3MFDisplacement2D_SetAttachmentFunc: TLib3MFDisplacement2D_SetAttachmentFunc;
+		FLib3MFDisplacement2D_GetChannelFunc: TLib3MFDisplacement2D_GetChannelFunc;
+		FLib3MFDisplacement2D_SetChannelFunc: TLib3MFDisplacement2D_SetChannelFunc;
+		FLib3MFDisplacement2D_GetTileStyleUVFunc: TLib3MFDisplacement2D_GetTileStyleUVFunc;
+		FLib3MFDisplacement2D_SetTileStyleUVFunc: TLib3MFDisplacement2D_SetTileStyleUVFunc;
+		FLib3MFDisplacement2D_GetFilterFunc: TLib3MFDisplacement2D_GetFilterFunc;
+		FLib3MFDisplacement2D_SetFilterFunc: TLib3MFDisplacement2D_SetFilterFunc;
+		FLib3MFNormVectorGroup_GetCountFunc: TLib3MFNormVectorGroup_GetCountFunc;
+		FLib3MFNormVectorGroup_AddVectorFunc: TLib3MFNormVectorGroup_AddVectorFunc;
+		FLib3MFNormVectorGroup_GetVectorFunc: TLib3MFNormVectorGroup_GetVectorFunc;
+		FLib3MFNormVectorGroup_SetVectorFunc: TLib3MFNormVectorGroup_SetVectorFunc;
+		FLib3MFDisp2DGroup_GetDisplacement2DFunc: TLib3MFDisp2DGroup_GetDisplacement2DFunc;
+		FLib3MFDisp2DGroup_GetNormalVectorGroupFunc: TLib3MFDisp2DGroup_GetNormalVectorGroupFunc;
+		FLib3MFDisp2DGroup_GetHeightFunc: TLib3MFDisp2DGroup_GetHeightFunc;
+		FLib3MFDisp2DGroup_SetHeightFunc: TLib3MFDisp2DGroup_SetHeightFunc;
+		FLib3MFDisp2DGroup_GetOffsetFunc: TLib3MFDisp2DGroup_GetOffsetFunc;
+		FLib3MFDisp2DGroup_SetOffsetFunc: TLib3MFDisp2DGroup_SetOffsetFunc;
+		FLib3MFDisp2DGroup_GetCountFunc: TLib3MFDisp2DGroup_GetCountFunc;
+		FLib3MFDisp2DGroup_AddCoordinateFunc: TLib3MFDisp2DGroup_AddCoordinateFunc;
+		FLib3MFDisp2DGroup_GetCoordinateFunc: TLib3MFDisp2DGroup_GetCoordinateFunc;
+		FLib3MFDisp2DGroup_SetCoordinateFunc: TLib3MFDisp2DGroup_SetCoordinateFunc;
 		FLib3MFTexture2D_GetAttachmentFunc: TLib3MFTexture2D_GetAttachmentFunc;
 		FLib3MFTexture2D_SetAttachmentFunc: TLib3MFTexture2D_SetAttachmentFunc;
 		FLib3MFTexture2D_GetContentTypeFunc: TLib3MFTexture2D_GetContentTypeFunc;
@@ -10350,6 +10984,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_GetMeshObjectByIDFunc: TLib3MFModel_GetMeshObjectByIDFunc;
 		FLib3MFModel_GetComponentsObjectByIDFunc: TLib3MFModel_GetComponentsObjectByIDFunc;
 		FLib3MFModel_GetBooleanObjectByIDFunc: TLib3MFModel_GetBooleanObjectByIDFunc;
+		FLib3MFModel_GetDisplacementMeshObjectByIDFunc: TLib3MFModel_GetDisplacementMeshObjectByIDFunc;
+		FLib3MFModel_GetDisplacement2DByIDFunc: TLib3MFModel_GetDisplacement2DByIDFunc;
+		FLib3MFModel_GetNormVectorGroupByIDFunc: TLib3MFModel_GetNormVectorGroupByIDFunc;
+		FLib3MFModel_GetDisp2DGroupByIDFunc: TLib3MFModel_GetDisp2DGroupByIDFunc;
 		FLib3MFModel_GetColorGroupByIDFunc: TLib3MFModel_GetColorGroupByIDFunc;
 		FLib3MFModel_GetSliceStackByIDFunc: TLib3MFModel_GetSliceStackByIDFunc;
 		FLib3MFModel_GetLevelSetByIDFunc: TLib3MFModel_GetLevelSetByIDFunc;
@@ -10362,6 +11000,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_GetMeshObjectsFunc: TLib3MFModel_GetMeshObjectsFunc;
 		FLib3MFModel_GetComponentsObjectsFunc: TLib3MFModel_GetComponentsObjectsFunc;
 		FLib3MFModel_GetBooleanObjectsFunc: TLib3MFModel_GetBooleanObjectsFunc;
+		FLib3MFModel_GetDisplacementMeshObjectsFunc: TLib3MFModel_GetDisplacementMeshObjectsFunc;
+		FLib3MFModel_GetDisplacement2DsFunc: TLib3MFModel_GetDisplacement2DsFunc;
+		FLib3MFModel_GetNormVectorGroupsFunc: TLib3MFModel_GetNormVectorGroupsFunc;
+		FLib3MFModel_GetDisp2DGroupsFunc: TLib3MFModel_GetDisp2DGroupsFunc;
 		FLib3MFModel_GetTexture2DsFunc: TLib3MFModel_GetTexture2DsFunc;
 		FLib3MFModel_GetBaseMaterialGroupsFunc: TLib3MFModel_GetBaseMaterialGroupsFunc;
 		FLib3MFModel_GetColorGroupsFunc: TLib3MFModel_GetColorGroupsFunc;
@@ -10375,6 +11017,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_AddMeshObjectFunc: TLib3MFModel_AddMeshObjectFunc;
 		FLib3MFModel_AddComponentsObjectFunc: TLib3MFModel_AddComponentsObjectFunc;
 		FLib3MFModel_AddBooleanObjectFunc: TLib3MFModel_AddBooleanObjectFunc;
+		FLib3MFModel_AddDisplacementMeshObjectFunc: TLib3MFModel_AddDisplacementMeshObjectFunc;
+		FLib3MFModel_AddDisplacement2DFunc: TLib3MFModel_AddDisplacement2DFunc;
+		FLib3MFModel_AddNormVectorGroupFunc: TLib3MFModel_AddNormVectorGroupFunc;
+		FLib3MFModel_AddDisp2DGroupFunc: TLib3MFModel_AddDisp2DGroupFunc;
 		FLib3MFModel_AddSliceStackFunc: TLib3MFModel_AddSliceStackFunc;
 		FLib3MFModel_AddTexture2DFromAttachmentFunc: TLib3MFModel_AddTexture2DFromAttachmentFunc;
 		FLib3MFModel_AddBaseMaterialGroupFunc: TLib3MFModel_AddBaseMaterialGroupFunc;
@@ -10479,6 +11125,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFMeshObjectIterator_GetCurrentMeshObjectFunc: TLib3MFMeshObjectIterator_GetCurrentMeshObjectFunc read FLib3MFMeshObjectIterator_GetCurrentMeshObjectFunc;
 		property Lib3MFComponentsObjectIterator_GetCurrentComponentsObjectFunc: TLib3MFComponentsObjectIterator_GetCurrentComponentsObjectFunc read FLib3MFComponentsObjectIterator_GetCurrentComponentsObjectFunc;
 		property Lib3MFBooleanObjectIterator_GetCurrentBooleanObjectFunc: TLib3MFBooleanObjectIterator_GetCurrentBooleanObjectFunc read FLib3MFBooleanObjectIterator_GetCurrentBooleanObjectFunc;
+		property Lib3MFDisplacementMeshObjectIterator_GetCurrentDisplacementMeshObjectFunc: TLib3MFDisplacementMeshObjectIterator_GetCurrentDisplacementMeshObjectFunc read FLib3MFDisplacementMeshObjectIterator_GetCurrentDisplacementMeshObjectFunc;
+		property Lib3MFDisplacement2DIterator_GetCurrentDisplacement2DFunc: TLib3MFDisplacement2DIterator_GetCurrentDisplacement2DFunc read FLib3MFDisplacement2DIterator_GetCurrentDisplacement2DFunc;
+		property Lib3MFNormVectorGroupIterator_GetCurrentNormVectorGroupFunc: TLib3MFNormVectorGroupIterator_GetCurrentNormVectorGroupFunc read FLib3MFNormVectorGroupIterator_GetCurrentNormVectorGroupFunc;
+		property Lib3MFDisp2DGroupIterator_GetCurrentDisp2DGroupFunc: TLib3MFDisp2DGroupIterator_GetCurrentDisp2DGroupFunc read FLib3MFDisp2DGroupIterator_GetCurrentDisp2DGroupFunc;
 		property Lib3MFTexture2DIterator_GetCurrentTexture2DFunc: TLib3MFTexture2DIterator_GetCurrentTexture2DFunc read FLib3MFTexture2DIterator_GetCurrentTexture2DFunc;
 		property Lib3MFBaseMaterialGroupIterator_GetCurrentBaseMaterialGroupFunc: TLib3MFBaseMaterialGroupIterator_GetCurrentBaseMaterialGroupFunc read FLib3MFBaseMaterialGroupIterator_GetCurrentBaseMaterialGroupFunc;
 		property Lib3MFColorGroupIterator_GetCurrentColorGroupFunc: TLib3MFColorGroupIterator_GetCurrentColorGroupFunc read FLib3MFColorGroupIterator_GetCurrentColorGroupFunc;
@@ -10528,6 +11178,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFObject_IsComponentsObjectFunc: TLib3MFObject_IsComponentsObjectFunc read FLib3MFObject_IsComponentsObjectFunc;
 		property Lib3MFObject_IsLevelSetObjectFunc: TLib3MFObject_IsLevelSetObjectFunc read FLib3MFObject_IsLevelSetObjectFunc;
 		property Lib3MFObject_IsBooleanObjectFunc: TLib3MFObject_IsBooleanObjectFunc read FLib3MFObject_IsBooleanObjectFunc;
+		property Lib3MFObject_IsDisplacementMeshObjectFunc: TLib3MFObject_IsDisplacementMeshObjectFunc read FLib3MFObject_IsDisplacementMeshObjectFunc;
 		property Lib3MFObject_IsValidFunc: TLib3MFObject_IsValidFunc read FLib3MFObject_IsValidFunc;
 		property Lib3MFObject_SetAttachmentAsThumbnailFunc: TLib3MFObject_SetAttachmentAsThumbnailFunc read FLib3MFObject_SetAttachmentAsThumbnailFunc;
 		property Lib3MFObject_GetThumbnailAttachmentFunc: TLib3MFObject_GetThumbnailAttachmentFunc read FLib3MFObject_GetThumbnailAttachmentFunc;
@@ -10569,6 +11220,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFMeshObject_FindTriangleSetFunc: TLib3MFMeshObject_FindTriangleSetFunc read FLib3MFMeshObject_FindTriangleSetFunc;
 		property Lib3MFMeshObject_GetTriangleSetCountFunc: TLib3MFMeshObject_GetTriangleSetCountFunc read FLib3MFMeshObject_GetTriangleSetCountFunc;
 		property Lib3MFMeshObject_GetTriangleSetFunc: TLib3MFMeshObject_GetTriangleSetFunc read FLib3MFMeshObject_GetTriangleSetFunc;
+		property Lib3MFDisplacementMeshObject_HasTriangleDisplacementFunc: TLib3MFDisplacementMeshObject_HasTriangleDisplacementFunc read FLib3MFDisplacementMeshObject_HasTriangleDisplacementFunc;
+		property Lib3MFDisplacementMeshObject_SetTriangleDisplacementFunc: TLib3MFDisplacementMeshObject_SetTriangleDisplacementFunc read FLib3MFDisplacementMeshObject_SetTriangleDisplacementFunc;
+		property Lib3MFDisplacementMeshObject_GetTriangleDisplacementFunc: TLib3MFDisplacementMeshObject_GetTriangleDisplacementFunc read FLib3MFDisplacementMeshObject_GetTriangleDisplacementFunc;
+		property Lib3MFDisplacementMeshObject_ClearTriangleDisplacementFunc: TLib3MFDisplacementMeshObject_ClearTriangleDisplacementFunc read FLib3MFDisplacementMeshObject_ClearTriangleDisplacementFunc;
 		property Lib3MFLevelSet_GetFunctionFunc: TLib3MFLevelSet_GetFunctionFunc read FLib3MFLevelSet_GetFunctionFunc;
 		property Lib3MFLevelSet_SetFunctionFunc: TLib3MFLevelSet_SetFunctionFunc read FLib3MFLevelSet_SetFunctionFunc;
 		property Lib3MFLevelSet_GetTransformFunc: TLib3MFLevelSet_GetTransformFunc read FLib3MFLevelSet_GetTransformFunc;
@@ -10731,6 +11386,28 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFAttachment_GetStreamSizeFunc: TLib3MFAttachment_GetStreamSizeFunc read FLib3MFAttachment_GetStreamSizeFunc;
 		property Lib3MFAttachment_WriteToBufferFunc: TLib3MFAttachment_WriteToBufferFunc read FLib3MFAttachment_WriteToBufferFunc;
 		property Lib3MFAttachment_ReadFromBufferFunc: TLib3MFAttachment_ReadFromBufferFunc read FLib3MFAttachment_ReadFromBufferFunc;
+		property Lib3MFDisplacement2D_GetAttachmentFunc: TLib3MFDisplacement2D_GetAttachmentFunc read FLib3MFDisplacement2D_GetAttachmentFunc;
+		property Lib3MFDisplacement2D_SetAttachmentFunc: TLib3MFDisplacement2D_SetAttachmentFunc read FLib3MFDisplacement2D_SetAttachmentFunc;
+		property Lib3MFDisplacement2D_GetChannelFunc: TLib3MFDisplacement2D_GetChannelFunc read FLib3MFDisplacement2D_GetChannelFunc;
+		property Lib3MFDisplacement2D_SetChannelFunc: TLib3MFDisplacement2D_SetChannelFunc read FLib3MFDisplacement2D_SetChannelFunc;
+		property Lib3MFDisplacement2D_GetTileStyleUVFunc: TLib3MFDisplacement2D_GetTileStyleUVFunc read FLib3MFDisplacement2D_GetTileStyleUVFunc;
+		property Lib3MFDisplacement2D_SetTileStyleUVFunc: TLib3MFDisplacement2D_SetTileStyleUVFunc read FLib3MFDisplacement2D_SetTileStyleUVFunc;
+		property Lib3MFDisplacement2D_GetFilterFunc: TLib3MFDisplacement2D_GetFilterFunc read FLib3MFDisplacement2D_GetFilterFunc;
+		property Lib3MFDisplacement2D_SetFilterFunc: TLib3MFDisplacement2D_SetFilterFunc read FLib3MFDisplacement2D_SetFilterFunc;
+		property Lib3MFNormVectorGroup_GetCountFunc: TLib3MFNormVectorGroup_GetCountFunc read FLib3MFNormVectorGroup_GetCountFunc;
+		property Lib3MFNormVectorGroup_AddVectorFunc: TLib3MFNormVectorGroup_AddVectorFunc read FLib3MFNormVectorGroup_AddVectorFunc;
+		property Lib3MFNormVectorGroup_GetVectorFunc: TLib3MFNormVectorGroup_GetVectorFunc read FLib3MFNormVectorGroup_GetVectorFunc;
+		property Lib3MFNormVectorGroup_SetVectorFunc: TLib3MFNormVectorGroup_SetVectorFunc read FLib3MFNormVectorGroup_SetVectorFunc;
+		property Lib3MFDisp2DGroup_GetDisplacement2DFunc: TLib3MFDisp2DGroup_GetDisplacement2DFunc read FLib3MFDisp2DGroup_GetDisplacement2DFunc;
+		property Lib3MFDisp2DGroup_GetNormalVectorGroupFunc: TLib3MFDisp2DGroup_GetNormalVectorGroupFunc read FLib3MFDisp2DGroup_GetNormalVectorGroupFunc;
+		property Lib3MFDisp2DGroup_GetHeightFunc: TLib3MFDisp2DGroup_GetHeightFunc read FLib3MFDisp2DGroup_GetHeightFunc;
+		property Lib3MFDisp2DGroup_SetHeightFunc: TLib3MFDisp2DGroup_SetHeightFunc read FLib3MFDisp2DGroup_SetHeightFunc;
+		property Lib3MFDisp2DGroup_GetOffsetFunc: TLib3MFDisp2DGroup_GetOffsetFunc read FLib3MFDisp2DGroup_GetOffsetFunc;
+		property Lib3MFDisp2DGroup_SetOffsetFunc: TLib3MFDisp2DGroup_SetOffsetFunc read FLib3MFDisp2DGroup_SetOffsetFunc;
+		property Lib3MFDisp2DGroup_GetCountFunc: TLib3MFDisp2DGroup_GetCountFunc read FLib3MFDisp2DGroup_GetCountFunc;
+		property Lib3MFDisp2DGroup_AddCoordinateFunc: TLib3MFDisp2DGroup_AddCoordinateFunc read FLib3MFDisp2DGroup_AddCoordinateFunc;
+		property Lib3MFDisp2DGroup_GetCoordinateFunc: TLib3MFDisp2DGroup_GetCoordinateFunc read FLib3MFDisp2DGroup_GetCoordinateFunc;
+		property Lib3MFDisp2DGroup_SetCoordinateFunc: TLib3MFDisp2DGroup_SetCoordinateFunc read FLib3MFDisp2DGroup_SetCoordinateFunc;
 		property Lib3MFTexture2D_GetAttachmentFunc: TLib3MFTexture2D_GetAttachmentFunc read FLib3MFTexture2D_GetAttachmentFunc;
 		property Lib3MFTexture2D_SetAttachmentFunc: TLib3MFTexture2D_SetAttachmentFunc read FLib3MFTexture2D_SetAttachmentFunc;
 		property Lib3MFTexture2D_GetContentTypeFunc: TLib3MFTexture2D_GetContentTypeFunc read FLib3MFTexture2D_GetContentTypeFunc;
@@ -11025,6 +11702,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_GetMeshObjectByIDFunc: TLib3MFModel_GetMeshObjectByIDFunc read FLib3MFModel_GetMeshObjectByIDFunc;
 		property Lib3MFModel_GetComponentsObjectByIDFunc: TLib3MFModel_GetComponentsObjectByIDFunc read FLib3MFModel_GetComponentsObjectByIDFunc;
 		property Lib3MFModel_GetBooleanObjectByIDFunc: TLib3MFModel_GetBooleanObjectByIDFunc read FLib3MFModel_GetBooleanObjectByIDFunc;
+		property Lib3MFModel_GetDisplacementMeshObjectByIDFunc: TLib3MFModel_GetDisplacementMeshObjectByIDFunc read FLib3MFModel_GetDisplacementMeshObjectByIDFunc;
+		property Lib3MFModel_GetDisplacement2DByIDFunc: TLib3MFModel_GetDisplacement2DByIDFunc read FLib3MFModel_GetDisplacement2DByIDFunc;
+		property Lib3MFModel_GetNormVectorGroupByIDFunc: TLib3MFModel_GetNormVectorGroupByIDFunc read FLib3MFModel_GetNormVectorGroupByIDFunc;
+		property Lib3MFModel_GetDisp2DGroupByIDFunc: TLib3MFModel_GetDisp2DGroupByIDFunc read FLib3MFModel_GetDisp2DGroupByIDFunc;
 		property Lib3MFModel_GetColorGroupByIDFunc: TLib3MFModel_GetColorGroupByIDFunc read FLib3MFModel_GetColorGroupByIDFunc;
 		property Lib3MFModel_GetSliceStackByIDFunc: TLib3MFModel_GetSliceStackByIDFunc read FLib3MFModel_GetSliceStackByIDFunc;
 		property Lib3MFModel_GetLevelSetByIDFunc: TLib3MFModel_GetLevelSetByIDFunc read FLib3MFModel_GetLevelSetByIDFunc;
@@ -11037,6 +11718,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_GetMeshObjectsFunc: TLib3MFModel_GetMeshObjectsFunc read FLib3MFModel_GetMeshObjectsFunc;
 		property Lib3MFModel_GetComponentsObjectsFunc: TLib3MFModel_GetComponentsObjectsFunc read FLib3MFModel_GetComponentsObjectsFunc;
 		property Lib3MFModel_GetBooleanObjectsFunc: TLib3MFModel_GetBooleanObjectsFunc read FLib3MFModel_GetBooleanObjectsFunc;
+		property Lib3MFModel_GetDisplacementMeshObjectsFunc: TLib3MFModel_GetDisplacementMeshObjectsFunc read FLib3MFModel_GetDisplacementMeshObjectsFunc;
+		property Lib3MFModel_GetDisplacement2DsFunc: TLib3MFModel_GetDisplacement2DsFunc read FLib3MFModel_GetDisplacement2DsFunc;
+		property Lib3MFModel_GetNormVectorGroupsFunc: TLib3MFModel_GetNormVectorGroupsFunc read FLib3MFModel_GetNormVectorGroupsFunc;
+		property Lib3MFModel_GetDisp2DGroupsFunc: TLib3MFModel_GetDisp2DGroupsFunc read FLib3MFModel_GetDisp2DGroupsFunc;
 		property Lib3MFModel_GetTexture2DsFunc: TLib3MFModel_GetTexture2DsFunc read FLib3MFModel_GetTexture2DsFunc;
 		property Lib3MFModel_GetBaseMaterialGroupsFunc: TLib3MFModel_GetBaseMaterialGroupsFunc read FLib3MFModel_GetBaseMaterialGroupsFunc;
 		property Lib3MFModel_GetColorGroupsFunc: TLib3MFModel_GetColorGroupsFunc read FLib3MFModel_GetColorGroupsFunc;
@@ -11050,6 +11735,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_AddMeshObjectFunc: TLib3MFModel_AddMeshObjectFunc read FLib3MFModel_AddMeshObjectFunc;
 		property Lib3MFModel_AddComponentsObjectFunc: TLib3MFModel_AddComponentsObjectFunc read FLib3MFModel_AddComponentsObjectFunc;
 		property Lib3MFModel_AddBooleanObjectFunc: TLib3MFModel_AddBooleanObjectFunc read FLib3MFModel_AddBooleanObjectFunc;
+		property Lib3MFModel_AddDisplacementMeshObjectFunc: TLib3MFModel_AddDisplacementMeshObjectFunc read FLib3MFModel_AddDisplacementMeshObjectFunc;
+		property Lib3MFModel_AddDisplacement2DFunc: TLib3MFModel_AddDisplacement2DFunc read FLib3MFModel_AddDisplacement2DFunc;
+		property Lib3MFModel_AddNormVectorGroupFunc: TLib3MFModel_AddNormVectorGroupFunc read FLib3MFModel_AddNormVectorGroupFunc;
+		property Lib3MFModel_AddDisp2DGroupFunc: TLib3MFModel_AddDisp2DGroupFunc read FLib3MFModel_AddDisp2DGroupFunc;
 		property Lib3MFModel_AddSliceStackFunc: TLib3MFModel_AddSliceStackFunc read FLib3MFModel_AddSliceStackFunc;
 		property Lib3MFModel_AddTexture2DFromAttachmentFunc: TLib3MFModel_AddTexture2DFromAttachmentFunc read FLib3MFModel_AddTexture2DFromAttachmentFunc;
 		property Lib3MFModel_AddBaseMaterialGroupFunc: TLib3MFModel_AddBaseMaterialGroupFunc read FLib3MFModel_AddBaseMaterialGroupFunc;
@@ -11141,6 +11830,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeMeshObjectIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMeshObjectIterator;
 	function TLib3MFPolymorphicFactoryMakeComponentsObjectIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFComponentsObjectIterator;
 	function TLib3MFPolymorphicFactoryMakeBooleanObjectIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBooleanObjectIterator;
+	function TLib3MFPolymorphicFactoryMakeDisplacementMeshObjectIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDisplacementMeshObjectIterator;
+	function TLib3MFPolymorphicFactoryMakeDisplacement2DIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDisplacement2DIterator;
+	function TLib3MFPolymorphicFactoryMakeNormVectorGroupIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNormVectorGroupIterator;
+	function TLib3MFPolymorphicFactoryMakeDisp2DGroupIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDisp2DGroupIterator;
 	function TLib3MFPolymorphicFactoryMakeTexture2DIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTexture2DIterator;
 	function TLib3MFPolymorphicFactoryMakeBaseMaterialGroupIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBaseMaterialGroupIterator;
 	function TLib3MFPolymorphicFactoryMakeColorGroupIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFColorGroupIterator;
@@ -11155,6 +11848,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeTriangleSet(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTriangleSet;
 	function TLib3MFPolymorphicFactoryMakeObject(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFObject;
 	function TLib3MFPolymorphicFactoryMakeMeshObject(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMeshObject;
+	function TLib3MFPolymorphicFactoryMakeDisplacementMeshObject(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDisplacementMeshObject;
 	function TLib3MFPolymorphicFactoryMakeLevelSet(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFLevelSet;
 	function TLib3MFPolymorphicFactoryMakeBooleanObject(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBooleanObject;
 	function TLib3MFPolymorphicFactoryMakeBeamLattice(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBeamLattice;
@@ -11175,6 +11869,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function TLib3MFPolymorphicFactoryMakeImage3D(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImage3D;
 	function TLib3MFPolymorphicFactoryMakeImageStack(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImageStack;
 	function TLib3MFPolymorphicFactoryMakeAttachment(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFAttachment;
+	function TLib3MFPolymorphicFactoryMakeDisplacement2D(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDisplacement2D;
+	function TLib3MFPolymorphicFactoryMakeNormVectorGroup(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNormVectorGroup;
+	function TLib3MFPolymorphicFactoryMakeDisp2DGroup(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDisp2DGroup;
 	function TLib3MFPolymorphicFactoryMakeTexture2D(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTexture2D;
 	function TLib3MFPolymorphicFactoryMakeImplicitPort(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFImplicitPort;
 	function TLib3MFPolymorphicFactoryMakeIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFIterator;
@@ -12055,6 +12752,10 @@ implementation
 			QWord($F4196034E2B9FDE6): begin Obj := TLIB3MFMeshObjectIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObjectIterator"
 			QWord($564DE4217ED7614A): begin Obj := TLIB3MFComponentsObjectIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ComponentsObjectIterator"
 			QWord($AFF01F512E1FF6AE): begin Obj := TLIB3MFBooleanObjectIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BooleanObjectIterator"
+			QWord($6985D4BCC417D63A): begin Obj := TLIB3MFDisplacementMeshObjectIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::DisplacementMeshObjectIterator"
+			QWord($BBE0E57916ABA639): begin Obj := TLIB3MFDisplacement2DIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Displacement2DIterator"
+			QWord($94F41D650A9D1201): begin Obj := TLIB3MFNormVectorGroupIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::NormVectorGroupIterator"
+			QWord($4F6F025BFF1BC77D): begin Obj := TLIB3MFDisp2DGroupIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Disp2DGroupIterator"
 			QWord($4BD32B4870FFC03B): begin Obj := TLIB3MFTexture2DIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2DIterator"
 			QWord($65E6EDD9362C79CB): begin Obj := TLIB3MFBaseMaterialGroupIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BaseMaterialGroupIterator"
 			QWord($10274A1757C729C0): begin Obj := TLIB3MFColorGroupIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ColorGroupIterator"
@@ -12069,6 +12770,7 @@ implementation
 			QWord($5950BB3EE8A82090): begin Obj := TLIB3MFTriangleSet.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::TriangleSet"
 			QWord($2DA2136F577A779C): begin Obj := TLIB3MFObject.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
 			QWord($3B3A6DC6EC610497): begin Obj := TLIB3MFMeshObject.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
+			QWord($062EC1EFBBB2C007): begin Obj := TLIB3MFDisplacementMeshObject.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::DisplacementMeshObject"
 			QWord($E8A7D9C192EFD0E2): begin Obj := TLIB3MFLevelSet.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
 			QWord($85FA0E8806B6C357): begin Obj := TLIB3MFBooleanObject.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BooleanObject"
 			QWord($63B3B461B30B4BA5): begin Obj := TLIB3MFBeamLattice.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BeamLattice"
@@ -12089,6 +12791,9 @@ implementation
 			QWord($BD938FF2D2663D61): begin Obj := TLIB3MFImage3D.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Image3D"
 			QWord($13A2561F0CFB712A): begin Obj := TLIB3MFImageStack.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImageStack"
 			QWord($8CE7A1191A63A35D): begin Obj := TLIB3MFAttachment.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Attachment"
+			QWord($D4FBF6402F29131F): begin Obj := TLIB3MFDisplacement2D.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Displacement2D"
+			QWord($A04BF4AC86AB47C3): begin Obj := TLIB3MFNormVectorGroup.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::NormVectorGroup"
+			QWord($823F487B8BB83E5B): begin Obj := TLIB3MFDisp2DGroup.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Disp2DGroup"
 			QWord($E0441CF976B36319): begin Obj := TLIB3MFTexture2D.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2D"
 			QWord($D5C49B04AF1963CD): begin Obj := TLIB3MFImplicitPort.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPort"
 			QWord($52F06268CD098EFE): begin Obj := TLIB3MFIterator.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Iterator"
@@ -12212,6 +12917,22 @@ implementation
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFBooleanObjectIterator, TLIB3MFBooleanObjectIterator>.Make(Wrapper, Handle);
 	end;
+	function TLib3MFPolymorphicFactoryMakeDisplacementMeshObjectIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDisplacementMeshObjectIterator;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFDisplacementMeshObjectIterator, TLIB3MFDisplacementMeshObjectIterator>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeDisplacement2DIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDisplacement2DIterator;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFDisplacement2DIterator, TLIB3MFDisplacement2DIterator>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeNormVectorGroupIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNormVectorGroupIterator;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFNormVectorGroupIterator, TLIB3MFNormVectorGroupIterator>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeDisp2DGroupIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDisp2DGroupIterator;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFDisp2DGroupIterator, TLIB3MFDisp2DGroupIterator>.Make(Wrapper, Handle);
+	end;
 	function TLib3MFPolymorphicFactoryMakeTexture2DIterator(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTexture2DIterator;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFTexture2DIterator, TLIB3MFTexture2DIterator>.Make(Wrapper, Handle);
@@ -12267,6 +12988,10 @@ implementation
 	function TLib3MFPolymorphicFactoryMakeMeshObject(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFMeshObject;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFMeshObject, TLIB3MFMeshObject>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeDisplacementMeshObject(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDisplacementMeshObject;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFDisplacementMeshObject, TLIB3MFDisplacementMeshObject>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeLevelSet(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFLevelSet;
 	begin
@@ -12347,6 +13072,18 @@ implementation
 	function TLib3MFPolymorphicFactoryMakeAttachment(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFAttachment;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFAttachment, TLIB3MFAttachment>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeDisplacement2D(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDisplacement2D;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFDisplacement2D, TLIB3MFDisplacement2D>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeNormVectorGroup(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFNormVectorGroup;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFNormVectorGroup, TLIB3MFNormVectorGroup>.Make(Wrapper, Handle);
+	end;
+	function TLib3MFPolymorphicFactoryMakeDisp2DGroup(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFDisp2DGroup;
+	begin
+		Result := TLib3MFPolymorphicFactory<TLIB3MFDisp2DGroup, TLIB3MFDisp2DGroup>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeTexture2D(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFTexture2D;
 	begin
@@ -13240,6 +13977,106 @@ implementation
 	end;
 
 (*************************************************************************************************************************
+ Class implementation for DisplacementMeshObjectIterator
+**************************************************************************************************************************)
+
+	constructor TLib3MFDisplacementMeshObjectIterator.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFDisplacementMeshObjectIterator.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFDisplacementMeshObjectIterator.GetCurrentDisplacementMeshObject(): TLib3MFDisplacementMeshObject;
+	var
+		HResource: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResource := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisplacementMeshObjectIterator_GetCurrentDisplacementMeshObjectFunc(FHandle, HResource));
+		if Assigned(HResource) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDisplacementMeshObject, TLib3MFDisplacementMeshObject>.Make(FWrapper, HResource);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for Displacement2DIterator
+**************************************************************************************************************************)
+
+	constructor TLib3MFDisplacement2DIterator.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFDisplacement2DIterator.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFDisplacement2DIterator.GetCurrentDisplacement2D(): TLib3MFDisplacement2D;
+	var
+		HResource: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResource := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisplacement2DIterator_GetCurrentDisplacement2DFunc(FHandle, HResource));
+		if Assigned(HResource) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDisplacement2D, TLib3MFDisplacement2D>.Make(FWrapper, HResource);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for NormVectorGroupIterator
+**************************************************************************************************************************)
+
+	constructor TLib3MFNormVectorGroupIterator.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFNormVectorGroupIterator.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFNormVectorGroupIterator.GetCurrentNormVectorGroup(): TLib3MFNormVectorGroup;
+	var
+		HResource: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResource := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNormVectorGroupIterator_GetCurrentNormVectorGroupFunc(FHandle, HResource));
+		if Assigned(HResource) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFNormVectorGroup, TLib3MFNormVectorGroup>.Make(FWrapper, HResource);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for Disp2DGroupIterator
+**************************************************************************************************************************)
+
+	constructor TLib3MFDisp2DGroupIterator.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFDisp2DGroupIterator.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFDisp2DGroupIterator.GetCurrentDisp2DGroup(): TLib3MFDisp2DGroup;
+	var
+		HResource: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResource := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisp2DGroupIterator_GetCurrentDisp2DGroupFunc(FHandle, HResource));
+		if Assigned(HResource) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDisp2DGroup, TLib3MFDisp2DGroup>.Make(FWrapper, HResource);
+	end;
+
+(*************************************************************************************************************************
  Class implementation for Texture2DIterator
 **************************************************************************************************************************)
 
@@ -13890,6 +14727,15 @@ implementation
 		Result := (ResultIsBooleanObject <> 0);
 	end;
 
+	function TLib3MFObject.IsDisplacementMeshObject(): Boolean;
+	var
+		ResultIsDisplacementMeshObject: Byte;
+	begin
+		ResultIsDisplacementMeshObject := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFObject_IsDisplacementMeshObjectFunc(FHandle, ResultIsDisplacementMeshObject));
+		Result := (ResultIsDisplacementMeshObject <> 0);
+	end;
+
 	function TLib3MFObject.IsValid(): Boolean;
 	var
 		ResultIsValid: Byte;
@@ -14262,6 +15108,56 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFMeshObject_GetTriangleSetFunc(FHandle, AIndex, HTheTriangleSet));
 		if Assigned(HTheTriangleSet) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFTriangleSet, TLib3MFTriangleSet>.Make(FWrapper, HTheTriangleSet);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for DisplacementMeshObject
+**************************************************************************************************************************)
+
+	constructor TLib3MFDisplacementMeshObject.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFDisplacementMeshObject.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFDisplacementMeshObject.HasTriangleDisplacement(const AIndex: Cardinal): Boolean;
+	var
+		ResultHasDisplacement: Byte;
+	begin
+		ResultHasDisplacement := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisplacementMeshObject_HasTriangleDisplacementFunc(FHandle, AIndex, ResultHasDisplacement));
+		Result := (ResultHasDisplacement <> 0);
+	end;
+
+	procedure TLib3MFDisplacementMeshObject.SetTriangleDisplacement(const AIndex: Cardinal; const ADisp2DGroup: TLib3MFDisp2DGroup; const ADisplacement: TLib3MFTriangleDisplacement);
+	var
+		ADisp2DGroupHandle: TLib3MFHandle;
+	begin
+		if Assigned(ADisp2DGroup) then
+		ADisp2DGroupHandle := ADisp2DGroup.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ADisp2DGroup is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisplacementMeshObject_SetTriangleDisplacementFunc(FHandle, AIndex, ADisp2DGroupHandle, @ADisplacement));
+	end;
+
+	function TLib3MFDisplacementMeshObject.GetTriangleDisplacement(const AIndex: Cardinal; out ADisp2DGroup: TLib3MFDisp2DGroup): TLib3MFTriangleDisplacement;
+	var
+		HDisp2DGroup: TLib3MFHandle;
+	begin
+		ADisp2DGroup := nil;
+		HDisp2DGroup := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisplacementMeshObject_GetTriangleDisplacementFunc(FHandle, AIndex, HDisp2DGroup, @Result));
+		if Assigned(HDisp2DGroup) then
+			ADisp2DGroup := TLib3MFDisp2DGroup.Create(FWrapper, HDisp2DGroup);
+	end;
+
+	procedure TLib3MFDisplacementMeshObject.ClearTriangleDisplacement(const AIndex: Cardinal);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisplacementMeshObject_ClearTriangleDisplacementFunc(FHandle, AIndex));
 	end;
 
 (*************************************************************************************************************************
@@ -15886,6 +16782,197 @@ implementation
 			PtrBuffer := nil;
 		
 		FWrapper.CheckError(Self, FWrapper.Lib3MFAttachment_ReadFromBufferFunc(FHandle, QWord(LenBuffer), PtrBuffer));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for Displacement2D
+**************************************************************************************************************************)
+
+	constructor TLib3MFDisplacement2D.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFDisplacement2D.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFDisplacement2D.GetAttachment(): TLib3MFAttachment;
+	var
+		HAttachment: TLib3MFHandle;
+	begin
+		Result := nil;
+		HAttachment := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisplacement2D_GetAttachmentFunc(FHandle, HAttachment));
+		if Assigned(HAttachment) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFAttachment, TLib3MFAttachment>.Make(FWrapper, HAttachment);
+	end;
+
+	procedure TLib3MFDisplacement2D.SetAttachment(const AAttachment: TLib3MFAttachment);
+	var
+		AAttachmentHandle: TLib3MFHandle;
+	begin
+		if Assigned(AAttachment) then
+		AAttachmentHandle := AAttachment.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AAttachment is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisplacement2D_SetAttachmentFunc(FHandle, AAttachmentHandle));
+	end;
+
+	function TLib3MFDisplacement2D.GetChannel(): TLib3MFChannelName;
+	var
+		ResultChannel: Integer;
+	begin
+		ResultChannel := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisplacement2D_GetChannelFunc(FHandle, ResultChannel));
+		Result := convertConstToChannelName(ResultChannel);
+	end;
+
+	procedure TLib3MFDisplacement2D.SetChannel(const AChannel: TLib3MFChannelName);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisplacement2D_SetChannelFunc(FHandle, convertChannelNameToConst(AChannel)));
+	end;
+
+	procedure TLib3MFDisplacement2D.GetTileStyleUV(out ATileStyleU: TLib3MFTextureTileStyle; out ATileStyleV: TLib3MFTextureTileStyle);
+	var
+		ResultTileStyleU: Integer;
+		ResultTileStyleV: Integer;
+	begin
+		ResultTileStyleU := 0;
+		ResultTileStyleV := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisplacement2D_GetTileStyleUVFunc(FHandle, ResultTileStyleU, ResultTileStyleV));
+		ATileStyleU := convertConstToTextureTileStyle(ResultTileStyleU);
+		ATileStyleV := convertConstToTextureTileStyle(ResultTileStyleV);
+	end;
+
+	procedure TLib3MFDisplacement2D.SetTileStyleUV(const ATileStyleU: TLib3MFTextureTileStyle; const ATileStyleV: TLib3MFTextureTileStyle);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisplacement2D_SetTileStyleUVFunc(FHandle, convertTextureTileStyleToConst(ATileStyleU), convertTextureTileStyleToConst(ATileStyleV)));
+	end;
+
+	function TLib3MFDisplacement2D.GetFilter(): TLib3MFTextureFilter;
+	var
+		ResultFilter: Integer;
+	begin
+		ResultFilter := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisplacement2D_GetFilterFunc(FHandle, ResultFilter));
+		Result := convertConstToTextureFilter(ResultFilter);
+	end;
+
+	procedure TLib3MFDisplacement2D.SetFilter(const AFilter: TLib3MFTextureFilter);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisplacement2D_SetFilterFunc(FHandle, convertTextureFilterToConst(AFilter)));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for NormVectorGroup
+**************************************************************************************************************************)
+
+	constructor TLib3MFNormVectorGroup.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFNormVectorGroup.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFNormVectorGroup.GetCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNormVectorGroup_GetCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFNormVectorGroup.AddVector(const AVector: TLib3MFVector): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNormVectorGroup_AddVectorFunc(FHandle, @AVector, Result));
+	end;
+
+	function TLib3MFNormVectorGroup.GetVector(const AIndex: Cardinal): TLib3MFVector;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNormVectorGroup_GetVectorFunc(FHandle, AIndex, @Result));
+	end;
+
+	procedure TLib3MFNormVectorGroup.SetVector(const AIndex: Cardinal; const AVector: TLib3MFVector);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFNormVectorGroup_SetVectorFunc(FHandle, AIndex, @AVector));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for Disp2DGroup
+**************************************************************************************************************************)
+
+	constructor TLib3MFDisp2DGroup.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFDisp2DGroup.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFDisp2DGroup.GetDisplacement2D(): TLib3MFDisplacement2D;
+	var
+		HDisplacement2D: TLib3MFHandle;
+	begin
+		Result := nil;
+		HDisplacement2D := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisp2DGroup_GetDisplacement2DFunc(FHandle, HDisplacement2D));
+		if Assigned(HDisplacement2D) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDisplacement2D, TLib3MFDisplacement2D>.Make(FWrapper, HDisplacement2D);
+	end;
+
+	function TLib3MFDisp2DGroup.GetNormalVectorGroup(): TLib3MFNormVectorGroup;
+	var
+		HNormVectorGroup: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNormVectorGroup := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisp2DGroup_GetNormalVectorGroupFunc(FHandle, HNormVectorGroup));
+		if Assigned(HNormVectorGroup) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFNormVectorGroup, TLib3MFNormVectorGroup>.Make(FWrapper, HNormVectorGroup);
+	end;
+
+	function TLib3MFDisp2DGroup.GetHeight(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisp2DGroup_GetHeightFunc(FHandle, Result));
+	end;
+
+	procedure TLib3MFDisp2DGroup.SetHeight(const AHeight: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisp2DGroup_SetHeightFunc(FHandle, AHeight));
+	end;
+
+	function TLib3MFDisp2DGroup.GetOffset(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisp2DGroup_GetOffsetFunc(FHandle, Result));
+	end;
+
+	procedure TLib3MFDisp2DGroup.SetOffset(const AOffset: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisp2DGroup_SetOffsetFunc(FHandle, AOffset));
+	end;
+
+	function TLib3MFDisp2DGroup.GetCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisp2DGroup_GetCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFDisp2DGroup.AddCoordinate(const ACoordinate: TLib3MFDisplacement2DCoordinate): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisp2DGroup_AddCoordinateFunc(FHandle, @ACoordinate, Result));
+	end;
+
+	function TLib3MFDisp2DGroup.GetCoordinate(const AIndex: Cardinal): TLib3MFDisplacement2DCoordinate;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisp2DGroup_GetCoordinateFunc(FHandle, AIndex, @Result));
+	end;
+
+	procedure TLib3MFDisp2DGroup.SetCoordinate(const AIndex: Cardinal; const ACoordinate: TLib3MFDisplacement2DCoordinate);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFDisp2DGroup_SetCoordinateFunc(FHandle, AIndex, @ACoordinate));
 	end;
 
 (*************************************************************************************************************************
@@ -19955,6 +21042,50 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFBooleanObject, TLib3MFBooleanObject>.Make(FWrapper, HBooleanObjectInstance);
 	end;
 
+	function TLib3MFModel.GetDisplacementMeshObjectByID(const AUniqueResourceID: Cardinal): TLib3MFDisplacementMeshObject;
+	var
+		HDisplacementMeshObjectInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HDisplacementMeshObjectInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetDisplacementMeshObjectByIDFunc(FHandle, AUniqueResourceID, HDisplacementMeshObjectInstance));
+		if Assigned(HDisplacementMeshObjectInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDisplacementMeshObject, TLib3MFDisplacementMeshObject>.Make(FWrapper, HDisplacementMeshObjectInstance);
+	end;
+
+	function TLib3MFModel.GetDisplacement2DByID(const AUniqueResourceID: Cardinal): TLib3MFDisplacement2D;
+	var
+		HDisplacement2DInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HDisplacement2DInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetDisplacement2DByIDFunc(FHandle, AUniqueResourceID, HDisplacement2DInstance));
+		if Assigned(HDisplacement2DInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDisplacement2D, TLib3MFDisplacement2D>.Make(FWrapper, HDisplacement2DInstance);
+	end;
+
+	function TLib3MFModel.GetNormVectorGroupByID(const AUniqueResourceID: Cardinal): TLib3MFNormVectorGroup;
+	var
+		HNormVectorGroupInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNormVectorGroupInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetNormVectorGroupByIDFunc(FHandle, AUniqueResourceID, HNormVectorGroupInstance));
+		if Assigned(HNormVectorGroupInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFNormVectorGroup, TLib3MFNormVectorGroup>.Make(FWrapper, HNormVectorGroupInstance);
+	end;
+
+	function TLib3MFModel.GetDisp2DGroupByID(const AUniqueResourceID: Cardinal): TLib3MFDisp2DGroup;
+	var
+		HDisp2DGroupInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HDisp2DGroupInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetDisp2DGroupByIDFunc(FHandle, AUniqueResourceID, HDisp2DGroupInstance));
+		if Assigned(HDisp2DGroupInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDisp2DGroup, TLib3MFDisp2DGroup>.Make(FWrapper, HDisp2DGroupInstance);
+	end;
+
 	function TLib3MFModel.GetColorGroupByID(const AUniqueResourceID: Cardinal): TLib3MFColorGroup;
 	var
 		HColorGroupInstance: TLib3MFHandle;
@@ -20079,6 +21210,50 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetBooleanObjectsFunc(FHandle, HResourceIterator));
 		if Assigned(HResourceIterator) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFBooleanObjectIterator, TLib3MFBooleanObjectIterator>.Make(FWrapper, HResourceIterator);
+	end;
+
+	function TLib3MFModel.GetDisplacementMeshObjects(): TLib3MFDisplacementMeshObjectIterator;
+	var
+		HResourceIterator: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResourceIterator := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetDisplacementMeshObjectsFunc(FHandle, HResourceIterator));
+		if Assigned(HResourceIterator) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDisplacementMeshObjectIterator, TLib3MFDisplacementMeshObjectIterator>.Make(FWrapper, HResourceIterator);
+	end;
+
+	function TLib3MFModel.GetDisplacement2Ds(): TLib3MFDisplacement2DIterator;
+	var
+		HResourceIterator: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResourceIterator := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetDisplacement2DsFunc(FHandle, HResourceIterator));
+		if Assigned(HResourceIterator) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDisplacement2DIterator, TLib3MFDisplacement2DIterator>.Make(FWrapper, HResourceIterator);
+	end;
+
+	function TLib3MFModel.GetNormVectorGroups(): TLib3MFNormVectorGroupIterator;
+	var
+		HResourceIterator: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResourceIterator := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetNormVectorGroupsFunc(FHandle, HResourceIterator));
+		if Assigned(HResourceIterator) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFNormVectorGroupIterator, TLib3MFNormVectorGroupIterator>.Make(FWrapper, HResourceIterator);
+	end;
+
+	function TLib3MFModel.GetDisp2DGroups(): TLib3MFDisp2DGroupIterator;
+	var
+		HResourceIterator: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResourceIterator := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetDisp2DGroupsFunc(FHandle, HResourceIterator));
+		if Assigned(HResourceIterator) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDisp2DGroupIterator, TLib3MFDisp2DGroupIterator>.Make(FWrapper, HResourceIterator);
 	end;
 
 	function TLib3MFModel.GetTexture2Ds(): TLib3MFTexture2DIterator;
@@ -20222,6 +21397,65 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddBooleanObjectFunc(FHandle, HBooleanObjectInstance));
 		if Assigned(HBooleanObjectInstance) then
 			Result := TLib3MFPolymorphicFactory<TLib3MFBooleanObject, TLib3MFBooleanObject>.Make(FWrapper, HBooleanObjectInstance);
+	end;
+
+	function TLib3MFModel.AddDisplacementMeshObject(): TLib3MFDisplacementMeshObject;
+	var
+		HDisplacementMeshObjectInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HDisplacementMeshObjectInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddDisplacementMeshObjectFunc(FHandle, HDisplacementMeshObjectInstance));
+		if Assigned(HDisplacementMeshObjectInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDisplacementMeshObject, TLib3MFDisplacementMeshObject>.Make(FWrapper, HDisplacementMeshObjectInstance);
+	end;
+
+	function TLib3MFModel.AddDisplacement2D(const ATextureAttachment: TLib3MFAttachment): TLib3MFDisplacement2D;
+	var
+		ATextureAttachmentHandle: TLib3MFHandle;
+		HDisplacement2DInstance: TLib3MFHandle;
+	begin
+		if Assigned(ATextureAttachment) then
+		ATextureAttachmentHandle := ATextureAttachment.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATextureAttachment is a nil value.');
+		Result := nil;
+		HDisplacement2DInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddDisplacement2DFunc(FHandle, ATextureAttachmentHandle, HDisplacement2DInstance));
+		if Assigned(HDisplacement2DInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDisplacement2D, TLib3MFDisplacement2D>.Make(FWrapper, HDisplacement2DInstance);
+	end;
+
+	function TLib3MFModel.AddNormVectorGroup(): TLib3MFNormVectorGroup;
+	var
+		HNormVectorGroupInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HNormVectorGroupInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddNormVectorGroupFunc(FHandle, HNormVectorGroupInstance));
+		if Assigned(HNormVectorGroupInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFNormVectorGroup, TLib3MFNormVectorGroup>.Make(FWrapper, HNormVectorGroupInstance);
+	end;
+
+	function TLib3MFModel.AddDisp2DGroup(const ADisplacement2D: TLib3MFDisplacement2D; const ANormalVectorGroup: TLib3MFNormVectorGroup; const AHeight: Double; const AOffset: Double): TLib3MFDisp2DGroup;
+	var
+		ADisplacement2DHandle: TLib3MFHandle;
+		ANormalVectorGroupHandle: TLib3MFHandle;
+		HDisp2DGroupInstance: TLib3MFHandle;
+	begin
+		if Assigned(ADisplacement2D) then
+		ADisplacement2DHandle := ADisplacement2D.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ADisplacement2D is a nil value.');
+		if Assigned(ANormalVectorGroup) then
+		ANormalVectorGroupHandle := ANormalVectorGroup.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ANormalVectorGroup is a nil value.');
+		Result := nil;
+		HDisp2DGroupInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddDisp2DGroupFunc(FHandle, ADisplacement2DHandle, ANormalVectorGroupHandle, AHeight, AOffset, HDisp2DGroupInstance));
+		if Assigned(HDisp2DGroupInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFDisp2DGroup, TLib3MFDisp2DGroup>.Make(FWrapper, HDisp2DGroupInstance);
 	end;
 
 	function TLib3MFModel.AddSliceStack(const AZBottom: Double): TLib3MFSliceStack;
@@ -20636,6 +21870,10 @@ implementation
 		FLib3MFMeshObjectIterator_GetCurrentMeshObjectFunc := LoadFunction('lib3mf_meshobjectiterator_getcurrentmeshobject');
 		FLib3MFComponentsObjectIterator_GetCurrentComponentsObjectFunc := LoadFunction('lib3mf_componentsobjectiterator_getcurrentcomponentsobject');
 		FLib3MFBooleanObjectIterator_GetCurrentBooleanObjectFunc := LoadFunction('lib3mf_booleanobjectiterator_getcurrentbooleanobject');
+		FLib3MFDisplacementMeshObjectIterator_GetCurrentDisplacementMeshObjectFunc := LoadFunction('lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject');
+		FLib3MFDisplacement2DIterator_GetCurrentDisplacement2DFunc := LoadFunction('lib3mf_displacement2diterator_getcurrentdisplacement2d');
+		FLib3MFNormVectorGroupIterator_GetCurrentNormVectorGroupFunc := LoadFunction('lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup');
+		FLib3MFDisp2DGroupIterator_GetCurrentDisp2DGroupFunc := LoadFunction('lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup');
 		FLib3MFTexture2DIterator_GetCurrentTexture2DFunc := LoadFunction('lib3mf_texture2diterator_getcurrenttexture2d');
 		FLib3MFBaseMaterialGroupIterator_GetCurrentBaseMaterialGroupFunc := LoadFunction('lib3mf_basematerialgroupiterator_getcurrentbasematerialgroup');
 		FLib3MFColorGroupIterator_GetCurrentColorGroupFunc := LoadFunction('lib3mf_colorgroupiterator_getcurrentcolorgroup');
@@ -20685,6 +21923,7 @@ implementation
 		FLib3MFObject_IsComponentsObjectFunc := LoadFunction('lib3mf_object_iscomponentsobject');
 		FLib3MFObject_IsLevelSetObjectFunc := LoadFunction('lib3mf_object_islevelsetobject');
 		FLib3MFObject_IsBooleanObjectFunc := LoadFunction('lib3mf_object_isbooleanobject');
+		FLib3MFObject_IsDisplacementMeshObjectFunc := LoadFunction('lib3mf_object_isdisplacementmeshobject');
 		FLib3MFObject_IsValidFunc := LoadFunction('lib3mf_object_isvalid');
 		FLib3MFObject_SetAttachmentAsThumbnailFunc := LoadFunction('lib3mf_object_setattachmentasthumbnail');
 		FLib3MFObject_GetThumbnailAttachmentFunc := LoadFunction('lib3mf_object_getthumbnailattachment');
@@ -20726,6 +21965,10 @@ implementation
 		FLib3MFMeshObject_FindTriangleSetFunc := LoadFunction('lib3mf_meshobject_findtriangleset');
 		FLib3MFMeshObject_GetTriangleSetCountFunc := LoadFunction('lib3mf_meshobject_gettrianglesetcount');
 		FLib3MFMeshObject_GetTriangleSetFunc := LoadFunction('lib3mf_meshobject_gettriangleset');
+		FLib3MFDisplacementMeshObject_HasTriangleDisplacementFunc := LoadFunction('lib3mf_displacementmeshobject_hastriangledisplacement');
+		FLib3MFDisplacementMeshObject_SetTriangleDisplacementFunc := LoadFunction('lib3mf_displacementmeshobject_settriangledisplacement');
+		FLib3MFDisplacementMeshObject_GetTriangleDisplacementFunc := LoadFunction('lib3mf_displacementmeshobject_gettriangledisplacement');
+		FLib3MFDisplacementMeshObject_ClearTriangleDisplacementFunc := LoadFunction('lib3mf_displacementmeshobject_cleartriangledisplacement');
 		FLib3MFLevelSet_GetFunctionFunc := LoadFunction('lib3mf_levelset_getfunction');
 		FLib3MFLevelSet_SetFunctionFunc := LoadFunction('lib3mf_levelset_setfunction');
 		FLib3MFLevelSet_GetTransformFunc := LoadFunction('lib3mf_levelset_gettransform');
@@ -20888,6 +22131,28 @@ implementation
 		FLib3MFAttachment_GetStreamSizeFunc := LoadFunction('lib3mf_attachment_getstreamsize');
 		FLib3MFAttachment_WriteToBufferFunc := LoadFunction('lib3mf_attachment_writetobuffer');
 		FLib3MFAttachment_ReadFromBufferFunc := LoadFunction('lib3mf_attachment_readfrombuffer');
+		FLib3MFDisplacement2D_GetAttachmentFunc := LoadFunction('lib3mf_displacement2d_getattachment');
+		FLib3MFDisplacement2D_SetAttachmentFunc := LoadFunction('lib3mf_displacement2d_setattachment');
+		FLib3MFDisplacement2D_GetChannelFunc := LoadFunction('lib3mf_displacement2d_getchannel');
+		FLib3MFDisplacement2D_SetChannelFunc := LoadFunction('lib3mf_displacement2d_setchannel');
+		FLib3MFDisplacement2D_GetTileStyleUVFunc := LoadFunction('lib3mf_displacement2d_gettilestyleuv');
+		FLib3MFDisplacement2D_SetTileStyleUVFunc := LoadFunction('lib3mf_displacement2d_settilestyleuv');
+		FLib3MFDisplacement2D_GetFilterFunc := LoadFunction('lib3mf_displacement2d_getfilter');
+		FLib3MFDisplacement2D_SetFilterFunc := LoadFunction('lib3mf_displacement2d_setfilter');
+		FLib3MFNormVectorGroup_GetCountFunc := LoadFunction('lib3mf_normvectorgroup_getcount');
+		FLib3MFNormVectorGroup_AddVectorFunc := LoadFunction('lib3mf_normvectorgroup_addvector');
+		FLib3MFNormVectorGroup_GetVectorFunc := LoadFunction('lib3mf_normvectorgroup_getvector');
+		FLib3MFNormVectorGroup_SetVectorFunc := LoadFunction('lib3mf_normvectorgroup_setvector');
+		FLib3MFDisp2DGroup_GetDisplacement2DFunc := LoadFunction('lib3mf_disp2dgroup_getdisplacement2d');
+		FLib3MFDisp2DGroup_GetNormalVectorGroupFunc := LoadFunction('lib3mf_disp2dgroup_getnormalvectorgroup');
+		FLib3MFDisp2DGroup_GetHeightFunc := LoadFunction('lib3mf_disp2dgroup_getheight');
+		FLib3MFDisp2DGroup_SetHeightFunc := LoadFunction('lib3mf_disp2dgroup_setheight');
+		FLib3MFDisp2DGroup_GetOffsetFunc := LoadFunction('lib3mf_disp2dgroup_getoffset');
+		FLib3MFDisp2DGroup_SetOffsetFunc := LoadFunction('lib3mf_disp2dgroup_setoffset');
+		FLib3MFDisp2DGroup_GetCountFunc := LoadFunction('lib3mf_disp2dgroup_getcount');
+		FLib3MFDisp2DGroup_AddCoordinateFunc := LoadFunction('lib3mf_disp2dgroup_addcoordinate');
+		FLib3MFDisp2DGroup_GetCoordinateFunc := LoadFunction('lib3mf_disp2dgroup_getcoordinate');
+		FLib3MFDisp2DGroup_SetCoordinateFunc := LoadFunction('lib3mf_disp2dgroup_setcoordinate');
 		FLib3MFTexture2D_GetAttachmentFunc := LoadFunction('lib3mf_texture2d_getattachment');
 		FLib3MFTexture2D_SetAttachmentFunc := LoadFunction('lib3mf_texture2d_setattachment');
 		FLib3MFTexture2D_GetContentTypeFunc := LoadFunction('lib3mf_texture2d_getcontenttype');
@@ -21182,6 +22447,10 @@ implementation
 		FLib3MFModel_GetMeshObjectByIDFunc := LoadFunction('lib3mf_model_getmeshobjectbyid');
 		FLib3MFModel_GetComponentsObjectByIDFunc := LoadFunction('lib3mf_model_getcomponentsobjectbyid');
 		FLib3MFModel_GetBooleanObjectByIDFunc := LoadFunction('lib3mf_model_getbooleanobjectbyid');
+		FLib3MFModel_GetDisplacementMeshObjectByIDFunc := LoadFunction('lib3mf_model_getdisplacementmeshobjectbyid');
+		FLib3MFModel_GetDisplacement2DByIDFunc := LoadFunction('lib3mf_model_getdisplacement2dbyid');
+		FLib3MFModel_GetNormVectorGroupByIDFunc := LoadFunction('lib3mf_model_getnormvectorgroupbyid');
+		FLib3MFModel_GetDisp2DGroupByIDFunc := LoadFunction('lib3mf_model_getdisp2dgroupbyid');
 		FLib3MFModel_GetColorGroupByIDFunc := LoadFunction('lib3mf_model_getcolorgroupbyid');
 		FLib3MFModel_GetSliceStackByIDFunc := LoadFunction('lib3mf_model_getslicestackbyid');
 		FLib3MFModel_GetLevelSetByIDFunc := LoadFunction('lib3mf_model_getlevelsetbyid');
@@ -21194,6 +22463,10 @@ implementation
 		FLib3MFModel_GetMeshObjectsFunc := LoadFunction('lib3mf_model_getmeshobjects');
 		FLib3MFModel_GetComponentsObjectsFunc := LoadFunction('lib3mf_model_getcomponentsobjects');
 		FLib3MFModel_GetBooleanObjectsFunc := LoadFunction('lib3mf_model_getbooleanobjects');
+		FLib3MFModel_GetDisplacementMeshObjectsFunc := LoadFunction('lib3mf_model_getdisplacementmeshobjects');
+		FLib3MFModel_GetDisplacement2DsFunc := LoadFunction('lib3mf_model_getdisplacement2ds');
+		FLib3MFModel_GetNormVectorGroupsFunc := LoadFunction('lib3mf_model_getnormvectorgroups');
+		FLib3MFModel_GetDisp2DGroupsFunc := LoadFunction('lib3mf_model_getdisp2dgroups');
 		FLib3MFModel_GetTexture2DsFunc := LoadFunction('lib3mf_model_gettexture2ds');
 		FLib3MFModel_GetBaseMaterialGroupsFunc := LoadFunction('lib3mf_model_getbasematerialgroups');
 		FLib3MFModel_GetColorGroupsFunc := LoadFunction('lib3mf_model_getcolorgroups');
@@ -21207,6 +22480,10 @@ implementation
 		FLib3MFModel_AddMeshObjectFunc := LoadFunction('lib3mf_model_addmeshobject');
 		FLib3MFModel_AddComponentsObjectFunc := LoadFunction('lib3mf_model_addcomponentsobject');
 		FLib3MFModel_AddBooleanObjectFunc := LoadFunction('lib3mf_model_addbooleanobject');
+		FLib3MFModel_AddDisplacementMeshObjectFunc := LoadFunction('lib3mf_model_adddisplacementmeshobject');
+		FLib3MFModel_AddDisplacement2DFunc := LoadFunction('lib3mf_model_adddisplacement2d');
+		FLib3MFModel_AddNormVectorGroupFunc := LoadFunction('lib3mf_model_addnormvectorgroup');
+		FLib3MFModel_AddDisp2DGroupFunc := LoadFunction('lib3mf_model_adddisp2dgroup');
 		FLib3MFModel_AddSliceStackFunc := LoadFunction('lib3mf_model_addslicestack');
 		FLib3MFModel_AddTexture2DFromAttachmentFunc := LoadFunction('lib3mf_model_addtexture2dfromattachment');
 		FLib3MFModel_AddBaseMaterialGroupFunc := LoadFunction('lib3mf_model_addbasematerialgroup');
@@ -21398,6 +22675,18 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_booleanobjectiterator_getcurrentbooleanobject'), @FLib3MFBooleanObjectIterator_GetCurrentBooleanObjectFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject'), @FLib3MFDisplacementMeshObjectIterator_GetCurrentDisplacementMeshObjectFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_displacement2diterator_getcurrentdisplacement2d'), @FLib3MFDisplacement2DIterator_GetCurrentDisplacement2DFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup'), @FLib3MFNormVectorGroupIterator_GetCurrentNormVectorGroupFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup'), @FLib3MFDisp2DGroupIterator_GetCurrentDisp2DGroupFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_texture2diterator_getcurrenttexture2d'), @FLib3MFTexture2DIterator_GetCurrentTexture2DFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -21545,6 +22834,9 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_object_isbooleanobject'), @FLib3MFObject_IsBooleanObjectFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_object_isdisplacementmeshobject'), @FLib3MFObject_IsDisplacementMeshObjectFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_object_isvalid'), @FLib3MFObject_IsValidFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -21666,6 +22958,18 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_meshobject_gettriangleset'), @FLib3MFMeshObject_GetTriangleSetFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_displacementmeshobject_hastriangledisplacement'), @FLib3MFDisplacementMeshObject_HasTriangleDisplacementFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_displacementmeshobject_settriangledisplacement'), @FLib3MFDisplacementMeshObject_SetTriangleDisplacementFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_displacementmeshobject_gettriangledisplacement'), @FLib3MFDisplacementMeshObject_GetTriangleDisplacementFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_displacementmeshobject_cleartriangledisplacement'), @FLib3MFDisplacementMeshObject_ClearTriangleDisplacementFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_levelset_getfunction'), @FLib3MFLevelSet_GetFunctionFunc);
@@ -22152,6 +23456,72 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_attachment_readfrombuffer'), @FLib3MFAttachment_ReadFromBufferFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_displacement2d_getattachment'), @FLib3MFDisplacement2D_GetAttachmentFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_displacement2d_setattachment'), @FLib3MFDisplacement2D_SetAttachmentFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_displacement2d_getchannel'), @FLib3MFDisplacement2D_GetChannelFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_displacement2d_setchannel'), @FLib3MFDisplacement2D_SetChannelFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_displacement2d_gettilestyleuv'), @FLib3MFDisplacement2D_GetTileStyleUVFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_displacement2d_settilestyleuv'), @FLib3MFDisplacement2D_SetTileStyleUVFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_displacement2d_getfilter'), @FLib3MFDisplacement2D_GetFilterFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_displacement2d_setfilter'), @FLib3MFDisplacement2D_SetFilterFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_normvectorgroup_getcount'), @FLib3MFNormVectorGroup_GetCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_normvectorgroup_addvector'), @FLib3MFNormVectorGroup_AddVectorFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_normvectorgroup_getvector'), @FLib3MFNormVectorGroup_GetVectorFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_normvectorgroup_setvector'), @FLib3MFNormVectorGroup_SetVectorFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_disp2dgroup_getdisplacement2d'), @FLib3MFDisp2DGroup_GetDisplacement2DFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_disp2dgroup_getnormalvectorgroup'), @FLib3MFDisp2DGroup_GetNormalVectorGroupFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_disp2dgroup_getheight'), @FLib3MFDisp2DGroup_GetHeightFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_disp2dgroup_setheight'), @FLib3MFDisp2DGroup_SetHeightFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_disp2dgroup_getoffset'), @FLib3MFDisp2DGroup_GetOffsetFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_disp2dgroup_setoffset'), @FLib3MFDisp2DGroup_SetOffsetFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_disp2dgroup_getcount'), @FLib3MFDisp2DGroup_GetCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_disp2dgroup_addcoordinate'), @FLib3MFDisp2DGroup_AddCoordinateFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_disp2dgroup_getcoordinate'), @FLib3MFDisp2DGroup_GetCoordinateFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_disp2dgroup_setcoordinate'), @FLib3MFDisp2DGroup_SetCoordinateFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_texture2d_getattachment'), @FLib3MFTexture2D_GetAttachmentFunc);
@@ -23036,6 +24406,18 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getbooleanobjectbyid'), @FLib3MFModel_GetBooleanObjectByIDFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getdisplacementmeshobjectbyid'), @FLib3MFModel_GetDisplacementMeshObjectByIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getdisplacement2dbyid'), @FLib3MFModel_GetDisplacement2DByIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getnormvectorgroupbyid'), @FLib3MFModel_GetNormVectorGroupByIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getdisp2dgroupbyid'), @FLib3MFModel_GetDisp2DGroupByIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getcolorgroupbyid'), @FLib3MFModel_GetColorGroupByIDFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -23070,6 +24452,18 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getbooleanobjects'), @FLib3MFModel_GetBooleanObjectsFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getdisplacementmeshobjects'), @FLib3MFModel_GetDisplacementMeshObjectsFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getdisplacement2ds'), @FLib3MFModel_GetDisplacement2DsFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getnormvectorgroups'), @FLib3MFModel_GetNormVectorGroupsFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getdisp2dgroups'), @FLib3MFModel_GetDisp2DGroupsFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_gettexture2ds'), @FLib3MFModel_GetTexture2DsFunc);
@@ -23109,6 +24503,18 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addbooleanobject'), @FLib3MFModel_AddBooleanObjectFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_adddisplacementmeshobject'), @FLib3MFModel_AddDisplacementMeshObjectFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_adddisplacement2d'), @FLib3MFModel_AddDisplacement2DFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addnormvectorgroup'), @FLib3MFModel_AddNormVectorGroupFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_adddisp2dgroup'), @FLib3MFModel_AddDisp2DGroupFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addslicestack'), @FLib3MFModel_AddSliceStackFunc);

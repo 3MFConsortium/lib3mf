@@ -52,6 +52,10 @@ Persistent<Function> CLib3MFObjectIterator::constructor;
 Persistent<Function> CLib3MFMeshObjectIterator::constructor;
 Persistent<Function> CLib3MFComponentsObjectIterator::constructor;
 Persistent<Function> CLib3MFBooleanObjectIterator::constructor;
+Persistent<Function> CLib3MFDisplacementMeshObjectIterator::constructor;
+Persistent<Function> CLib3MFDisplacement2DIterator::constructor;
+Persistent<Function> CLib3MFNormVectorGroupIterator::constructor;
+Persistent<Function> CLib3MFDisp2DGroupIterator::constructor;
 Persistent<Function> CLib3MFTexture2DIterator::constructor;
 Persistent<Function> CLib3MFBaseMaterialGroupIterator::constructor;
 Persistent<Function> CLib3MFColorGroupIterator::constructor;
@@ -66,6 +70,7 @@ Persistent<Function> CLib3MFMetaDataGroup::constructor;
 Persistent<Function> CLib3MFTriangleSet::constructor;
 Persistent<Function> CLib3MFObject::constructor;
 Persistent<Function> CLib3MFMeshObject::constructor;
+Persistent<Function> CLib3MFDisplacementMeshObject::constructor;
 Persistent<Function> CLib3MFLevelSet::constructor;
 Persistent<Function> CLib3MFBooleanObject::constructor;
 Persistent<Function> CLib3MFBeamLattice::constructor;
@@ -86,6 +91,9 @@ Persistent<Function> CLib3MFMultiPropertyGroup::constructor;
 Persistent<Function> CLib3MFImage3D::constructor;
 Persistent<Function> CLib3MFImageStack::constructor;
 Persistent<Function> CLib3MFAttachment::constructor;
+Persistent<Function> CLib3MFDisplacement2D::constructor;
+Persistent<Function> CLib3MFNormVectorGroup::constructor;
+Persistent<Function> CLib3MFDisp2DGroup::constructor;
 Persistent<Function> CLib3MFTexture2D::constructor;
 Persistent<Function> CLib3MFImplicitPort::constructor;
 Persistent<Function> CLib3MFIterator::constructor;
@@ -660,6 +668,176 @@ Local<Object> convertLib3MFTex2CoordToObject(Isolate* isolate, sLib3MFTex2Coord 
 	Local<Object> returnInstance = Object::New(isolate);
 	returnInstance->Set(String::NewFromUtf8(isolate, "U"), Number::New (isolate, sTex2Coord.m_U));
 	returnInstance->Set(String::NewFromUtf8(isolate, "V"), Number::New (isolate, sTex2Coord.m_V));
+
+	return returnInstance;
+}
+
+/*************************************************************************************************************************
+ Class sLib3MFDisplacement2DCoordinate Conversion
+**************************************************************************************************************************/
+sLib3MFDisplacement2DCoordinate convertObjectToLib3MFDisplacement2DCoordinate(Isolate* isolate, const Local<Value> & pParamValue)
+{
+	sLib3MFDisplacement2DCoordinate sDisplacement2DCoordinate;
+	Local<Context> context = isolate->GetCurrentContext();
+
+	sDisplacement2DCoordinate.m_U = 0.0;
+	sDisplacement2DCoordinate.m_V = 0.0;
+	sDisplacement2DCoordinate.m_NormalVectorIndex = 0;
+	sDisplacement2DCoordinate.m_DisplacementFactor = 0.0;
+
+	if (pParamValue->IsObject()) {
+		MaybeLocal<Object> maybeObject = pParamValue->ToObject(context);
+
+		if (!maybeObject.IsEmpty()) {
+			Local<Object> obj = maybeObject.ToLocalChecked();
+
+			// U Member
+			MaybeLocal<Value> maybeValU = obj->Get(context, String::NewFromUtf8(isolate, "U"));
+			if (!maybeValU.IsEmpty()) {
+				Local<Value> valU = maybeValU.ToLocalChecked();
+				if (valU->IsNumber()) {
+					MaybeLocal<Number> localValU = valU->ToNumber(context);
+					sDisplacement2DCoordinate.m_U = localValU.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
+				} else {
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "U member is not a number" )));
+				}
+			} else {
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "U member not found in object" )));
+			}
+
+			// V Member
+			MaybeLocal<Value> maybeValV = obj->Get(context, String::NewFromUtf8(isolate, "V"));
+			if (!maybeValV.IsEmpty()) {
+				Local<Value> valV = maybeValV.ToLocalChecked();
+				if (valV->IsNumber()) {
+					MaybeLocal<Number> localValV = valV->ToNumber(context);
+					sDisplacement2DCoordinate.m_V = localValV.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
+				} else {
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "V member is not a number" )));
+				}
+			} else {
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "V member not found in object" )));
+			}
+
+			// NormalVectorIndex Member
+			MaybeLocal<Value> maybeValNormalVectorIndex = obj->Get(context, String::NewFromUtf8(isolate, "NormalVectorIndex"));
+			if (!maybeValNormalVectorIndex.IsEmpty()) {
+				Local<Value> valNormalVectorIndex = maybeValNormalVectorIndex.ToLocalChecked();
+				if (valNormalVectorIndex->IsNumber()) {
+					MaybeLocal<Number> localValNormalVectorIndex = valNormalVectorIndex->ToNumber(context);
+					sDisplacement2DCoordinate.m_NormalVectorIndex = localValNormalVectorIndex.ToLocalChecked()->Uint32Value(isolate->GetCurrentContext()).ToChecked();
+				} else {
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "NormalVectorIndex member is not a number" )));
+				}
+			} else {
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "NormalVectorIndex member not found in object" )));
+			}
+
+			// DisplacementFactor Member
+			MaybeLocal<Value> maybeValDisplacementFactor = obj->Get(context, String::NewFromUtf8(isolate, "DisplacementFactor"));
+			if (!maybeValDisplacementFactor.IsEmpty()) {
+				Local<Value> valDisplacementFactor = maybeValDisplacementFactor.ToLocalChecked();
+				if (valDisplacementFactor->IsNumber()) {
+					MaybeLocal<Number> localValDisplacementFactor = valDisplacementFactor->ToNumber(context);
+					sDisplacement2DCoordinate.m_DisplacementFactor = localValDisplacementFactor.ToLocalChecked()->NumberValue(isolate->GetCurrentContext()).ToChecked();
+				} else {
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "DisplacementFactor member is not a number" )));
+				}
+			} else {
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "DisplacementFactor member not found in object" )));
+			}
+
+
+		} else {
+			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
+		}
+	} else {
+		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter." )));
+	}
+
+	return sDisplacement2DCoordinate;
+}
+
+
+
+Local<Object> convertLib3MFDisplacement2DCoordinateToObject(Isolate* isolate, sLib3MFDisplacement2DCoordinate sDisplacement2DCoordinate)
+{
+	Local<Object> returnInstance = Object::New(isolate);
+	returnInstance->Set(String::NewFromUtf8(isolate, "U"), Number::New (isolate, sDisplacement2DCoordinate.m_U));
+	returnInstance->Set(String::NewFromUtf8(isolate, "V"), Number::New (isolate, sDisplacement2DCoordinate.m_V));
+	returnInstance->Set(String::NewFromUtf8(isolate, "NormalVectorIndex"), Integer::NewFromUnsigned (isolate, sDisplacement2DCoordinate.m_NormalVectorIndex));
+	returnInstance->Set(String::NewFromUtf8(isolate, "DisplacementFactor"), Number::New (isolate, sDisplacement2DCoordinate.m_DisplacementFactor));
+
+	return returnInstance;
+}
+
+/*************************************************************************************************************************
+ Class sLib3MFTriangleDisplacement Conversion
+**************************************************************************************************************************/
+sLib3MFTriangleDisplacement convertObjectToLib3MFTriangleDisplacement(Isolate* isolate, const Local<Value> & pParamValue)
+{
+	sLib3MFTriangleDisplacement sTriangleDisplacement;
+	Local<Context> context = isolate->GetCurrentContext();
+	int rowIndex;
+
+	for (rowIndex = 0; rowIndex < 3; rowIndex++)
+		sTriangleDisplacement.m_DisplacementIndices[rowIndex] = 0;
+
+	if (pParamValue->IsObject()) {
+		MaybeLocal<Object> maybeObject = pParamValue->ToObject(context);
+
+		if (!maybeObject.IsEmpty()) {
+			Local<Object> obj = maybeObject.ToLocalChecked();
+
+			// DisplacementIndices Member
+			MaybeLocal<Value> maybeValDisplacementIndices = obj->Get(context, String::NewFromUtf8(isolate, "DisplacementIndices"));
+			if (!maybeValDisplacementIndices.IsEmpty()) {
+				Local<Value> valDisplacementIndices = maybeValDisplacementIndices.ToLocalChecked();
+				if (valDisplacementIndices->IsArray()) {
+					Local<Array> arrayDisplacementIndices = Local<Array>::Cast(valDisplacementIndices);
+					for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
+						MaybeLocal<Value> mlocalValue = arrayDisplacementIndices->Get(context, rowIndex);
+						Local<Value> localValue;
+						if (mlocalValue.ToLocal(&localValue)) {
+							if (localValue->IsNumber()) {
+								MaybeLocal<Number> localNumber = localValue->ToNumber(context);
+								sTriangleDisplacement.m_DisplacementIndices[rowIndex] = localNumber.ToLocalChecked()->Uint32Value(isolate->GetCurrentContext()).ToChecked();
+							} else {
+								isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "DisplacementIndices array entry is not a number" )));
+							}
+						} else {
+							isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "DisplacementIndices array entry is invalid" )));
+						}
+					}
+				} else {
+					isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "DisplacementIndices member is not an array" )));
+				}
+			} else {
+				isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "DisplacementIndices member not found in object" )));
+			}
+
+
+		} else {
+			isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "invalid object passed." )));
+		}
+	} else {
+		isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "expected object parameter." )));
+	}
+
+	return sTriangleDisplacement;
+}
+
+
+
+Local<Object> convertLib3MFTriangleDisplacementToObject(Isolate* isolate, sLib3MFTriangleDisplacement sTriangleDisplacement)
+{
+	Local<Object> returnInstance = Object::New(isolate);
+	Local<Array> newDisplacementIndices = Array::New(isolate, 3);
+	for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
+		newDisplacementIndices->Set(rowIndex, Integer::NewFromUnsigned(isolate, sTriangleDisplacement.m_DisplacementIndices[rowIndex]));
+	}
+	returnInstance->Set(String::NewFromUtf8(isolate, "DisplacementIndices"), newDisplacementIndices);
+
 
 	return returnInstance;
 }
@@ -3093,6 +3271,322 @@ void CLib3MFBooleanObjectIterator::GetCurrentBooleanObject(const FunctionCallbac
 }
 
 /*************************************************************************************************************************
+ Class CLib3MFDisplacementMeshObjectIterator Implementation
+**************************************************************************************************************************/
+
+CLib3MFDisplacementMeshObjectIterator::CLib3MFDisplacementMeshObjectIterator()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFDisplacementMeshObjectIterator::~CLib3MFDisplacementMeshObjectIterator()
+{
+}
+
+void CLib3MFDisplacementMeshObjectIterator::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFDisplacementMeshObjectIterator"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCurrentDisplacementMeshObject", GetCurrentDisplacementMeshObject);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFDisplacementMeshObjectIterator::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFDisplacementMeshObjectIterator * displacementmeshobjectiteratorInstance = new CLib3MFDisplacementMeshObjectIterator();
+				displacementmeshobjectiteratorInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFDisplacementMeshObjectIterator: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFDisplacementMeshObjectIterator::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFDisplacementMeshObjectIterator::GetCurrentDisplacementMeshObject(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnResource = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCurrentDisplacementMeshObject.");
+        if (wrapperTable->m_DisplacementMeshObjectIterator_GetCurrentDisplacementMeshObject == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method DisplacementMeshObjectIterator::GetCurrentDisplacementMeshObject.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_DisplacementMeshObjectIterator_GetCurrentDisplacementMeshObject(instanceHandle, &hReturnResource);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjResource = CLib3MFDisplacementMeshObject::NewInstance(args.Holder(), hReturnResource);
+        args.GetReturnValue().Set(instanceObjResource);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFDisplacement2DIterator Implementation
+**************************************************************************************************************************/
+
+CLib3MFDisplacement2DIterator::CLib3MFDisplacement2DIterator()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFDisplacement2DIterator::~CLib3MFDisplacement2DIterator()
+{
+}
+
+void CLib3MFDisplacement2DIterator::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFDisplacement2DIterator"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCurrentDisplacement2D", GetCurrentDisplacement2D);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFDisplacement2DIterator::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFDisplacement2DIterator * displacement2diteratorInstance = new CLib3MFDisplacement2DIterator();
+				displacement2diteratorInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFDisplacement2DIterator: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFDisplacement2DIterator::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFDisplacement2DIterator::GetCurrentDisplacement2D(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnResource = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCurrentDisplacement2D.");
+        if (wrapperTable->m_Displacement2DIterator_GetCurrentDisplacement2D == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Displacement2DIterator::GetCurrentDisplacement2D.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Displacement2DIterator_GetCurrentDisplacement2D(instanceHandle, &hReturnResource);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjResource = CLib3MFDisplacement2D::NewInstance(args.Holder(), hReturnResource);
+        args.GetReturnValue().Set(instanceObjResource);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFNormVectorGroupIterator Implementation
+**************************************************************************************************************************/
+
+CLib3MFNormVectorGroupIterator::CLib3MFNormVectorGroupIterator()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFNormVectorGroupIterator::~CLib3MFNormVectorGroupIterator()
+{
+}
+
+void CLib3MFNormVectorGroupIterator::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFNormVectorGroupIterator"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCurrentNormVectorGroup", GetCurrentNormVectorGroup);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFNormVectorGroupIterator::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFNormVectorGroupIterator * normvectorgroupiteratorInstance = new CLib3MFNormVectorGroupIterator();
+				normvectorgroupiteratorInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFNormVectorGroupIterator: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFNormVectorGroupIterator::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFNormVectorGroupIterator::GetCurrentNormVectorGroup(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnResource = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCurrentNormVectorGroup.");
+        if (wrapperTable->m_NormVectorGroupIterator_GetCurrentNormVectorGroup == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NormVectorGroupIterator::GetCurrentNormVectorGroup.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_NormVectorGroupIterator_GetCurrentNormVectorGroup(instanceHandle, &hReturnResource);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjResource = CLib3MFNormVectorGroup::NewInstance(args.Holder(), hReturnResource);
+        args.GetReturnValue().Set(instanceObjResource);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFDisp2DGroupIterator Implementation
+**************************************************************************************************************************/
+
+CLib3MFDisp2DGroupIterator::CLib3MFDisp2DGroupIterator()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFDisp2DGroupIterator::~CLib3MFDisp2DGroupIterator()
+{
+}
+
+void CLib3MFDisp2DGroupIterator::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFDisp2DGroupIterator"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCurrentDisp2DGroup", GetCurrentDisp2DGroup);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFDisp2DGroupIterator::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFDisp2DGroupIterator * disp2dgroupiteratorInstance = new CLib3MFDisp2DGroupIterator();
+				disp2dgroupiteratorInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFDisp2DGroupIterator: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFDisp2DGroupIterator::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFDisp2DGroupIterator::GetCurrentDisp2DGroup(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnResource = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCurrentDisp2DGroup.");
+        if (wrapperTable->m_Disp2DGroupIterator_GetCurrentDisp2DGroup == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Disp2DGroupIterator::GetCurrentDisp2DGroup.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Disp2DGroupIterator_GetCurrentDisp2DGroup(instanceHandle, &hReturnResource);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjResource = CLib3MFDisp2DGroup::NewInstance(args.Holder(), hReturnResource);
+        args.GetReturnValue().Set(instanceObjResource);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
  Class CLib3MFTexture2DIterator Implementation
 **************************************************************************************************************************/
 
@@ -4805,6 +5299,7 @@ void CLib3MFObject::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "IsComponentsObject", IsComponentsObject);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "IsLevelSetObject", IsLevelSetObject);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "IsBooleanObject", IsBooleanObject);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "IsDisplacementMeshObject", IsDisplacementMeshObject);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "IsValid", IsValid);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetAttachmentAsThumbnail", SetAttachmentAsThumbnail);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetThumbnailAttachment", GetThumbnailAttachment);
@@ -5083,6 +5578,28 @@ void CLib3MFObject::IsBooleanObject(const FunctionCallbackInfo<Value>& args)
         Lib3MFResult errorCode = wrapperTable->m_Object_IsBooleanObject(instanceHandle, &bReturnIsBooleanObject);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(Boolean::New(isolate, bReturnIsBooleanObject));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFObject::IsDisplacementMeshObject(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        bool bReturnIsDisplacementMeshObject = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method IsDisplacementMeshObject.");
+        if (wrapperTable->m_Object_IsDisplacementMeshObject == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Object::IsDisplacementMeshObject.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Object_IsDisplacementMeshObject(instanceHandle, &bReturnIsDisplacementMeshObject);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnIsDisplacementMeshObject));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -6176,6 +6693,182 @@ void CLib3MFMeshObject::GetTriangleSet(const FunctionCallbackInfo<Value>& args)
 }
 
 /*************************************************************************************************************************
+ Class CLib3MFDisplacementMeshObject Implementation
+**************************************************************************************************************************/
+
+CLib3MFDisplacementMeshObject::CLib3MFDisplacementMeshObject()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFDisplacementMeshObject::~CLib3MFDisplacementMeshObject()
+{
+}
+
+void CLib3MFDisplacementMeshObject::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFDisplacementMeshObject"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasTriangleDisplacement", HasTriangleDisplacement);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetTriangleDisplacement", SetTriangleDisplacement);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetTriangleDisplacement", GetTriangleDisplacement);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearTriangleDisplacement", ClearTriangleDisplacement);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFDisplacementMeshObject::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFDisplacementMeshObject * displacementmeshobjectInstance = new CLib3MFDisplacementMeshObject();
+				displacementmeshobjectInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFDisplacementMeshObject: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFDisplacementMeshObject::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFDisplacementMeshObject::HasTriangleDisplacement(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        bool bReturnHasDisplacement = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasTriangleDisplacement.");
+        if (wrapperTable->m_DisplacementMeshObject_HasTriangleDisplacement == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method DisplacementMeshObject::HasTriangleDisplacement.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_DisplacementMeshObject_HasTriangleDisplacement(instanceHandle, nIndex, &bReturnHasDisplacement);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasDisplacement));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisplacementMeshObject::SetTriangleDisplacement(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        if (!args[1]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 1 (Disp2DGroup)");
+        }
+        if (!args[2]->IsObject()) {
+            throw std::runtime_error("Expected struct parameter 2 (Displacement)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Local<Object> objDisp2DGroup = args[1]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFDisp2DGroup * instanceDisp2DGroup = ObjectWrap::Unwrap<CLib3MFDisp2DGroup>(objDisp2DGroup);
+        if (instanceDisp2DGroup == nullptr)
+            throw std::runtime_error("Invalid Object parameter 1 (Disp2DGroup)");
+        Lib3MFHandle hDisp2DGroup = instanceDisp2DGroup->getHandle( objDisp2DGroup );
+        sLib3MFTriangleDisplacement sDisplacement = convertObjectToLib3MFTriangleDisplacement(isolate, args[2]);
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetTriangleDisplacement.");
+        if (wrapperTable->m_DisplacementMeshObject_SetTriangleDisplacement == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method DisplacementMeshObject::SetTriangleDisplacement.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_DisplacementMeshObject_SetTriangleDisplacement(instanceHandle, nIndex, hDisp2DGroup, &sDisplacement);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisplacementMeshObject::GetTriangleDisplacement(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        Local<Object> outObject = Object::New(isolate);
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnDisp2DGroup = nullptr;
+        sLib3MFTriangleDisplacement sReturnDisplacement;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetTriangleDisplacement.");
+        if (wrapperTable->m_DisplacementMeshObject_GetTriangleDisplacement == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method DisplacementMeshObject::GetTriangleDisplacement.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_DisplacementMeshObject_GetTriangleDisplacement(instanceHandle, nIndex, &hReturnDisp2DGroup, &sReturnDisplacement);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjDisp2DGroup = CLib3MFDisp2DGroup::NewInstance(args.Holder(), hReturnDisp2DGroup);
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Disp2DGroup"), instanceObjDisp2DGroup);
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Displacement"), convertLib3MFTriangleDisplacementToObject(isolate, sReturnDisplacement));
+        args.GetReturnValue().Set(outObject);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisplacementMeshObject::ClearTriangleDisplacement(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ClearTriangleDisplacement.");
+        if (wrapperTable->m_DisplacementMeshObject_ClearTriangleDisplacement == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method DisplacementMeshObject::ClearTriangleDisplacement.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_DisplacementMeshObject_ClearTriangleDisplacement(instanceHandle, nIndex);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
  Class CLib3MFLevelSet Implementation
 **************************************************************************************************************************/
 
@@ -7029,7 +7722,7 @@ void CLib3MFBooleanObject::GetOperand(const FunctionCallbackInfo<Value>& args)
 }
 
 
-void CLib3MFBooleanObject::MergeToMeshObject(const FunctionCallbackInfo<Value>& args)
+void CLib3MFBooleanObject::MergeToMeshObject(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
@@ -11402,6 +12095,732 @@ void CLib3MFAttachment::ReadFromBuffer(const FunctionCallbackInfo<Value>& args)
             throw std::runtime_error("Could not call Lib3MF method Attachment::ReadFromBuffer.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Attachment_ReadFromBuffer(instanceHandle, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFDisplacement2D Implementation
+**************************************************************************************************************************/
+
+CLib3MFDisplacement2D::CLib3MFDisplacement2D()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFDisplacement2D::~CLib3MFDisplacement2D()
+{
+}
+
+void CLib3MFDisplacement2D::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFDisplacement2D"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetAttachment", GetAttachment);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetAttachment", SetAttachment);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetChannel", GetChannel);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetChannel", SetChannel);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetTileStyleUV", GetTileStyleUV);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetTileStyleUV", SetTileStyleUV);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetFilter", GetFilter);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetFilter", SetFilter);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFDisplacement2D::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFDisplacement2D * displacement2dInstance = new CLib3MFDisplacement2D();
+				displacement2dInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFDisplacement2D: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFDisplacement2D::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFDisplacement2D::GetAttachment(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnAttachment = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetAttachment.");
+        if (wrapperTable->m_Displacement2D_GetAttachment == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Displacement2D::GetAttachment.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Displacement2D_GetAttachment(instanceHandle, &hReturnAttachment);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjAttachment = CLib3MFAttachment::NewInstance(args.Holder(), hReturnAttachment);
+        args.GetReturnValue().Set(instanceObjAttachment);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisplacement2D::SetAttachment(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 0 (Attachment)");
+        }
+        Local<Object> objAttachment = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFAttachment * instanceAttachment = ObjectWrap::Unwrap<CLib3MFAttachment>(objAttachment);
+        if (instanceAttachment == nullptr)
+            throw std::runtime_error("Invalid Object parameter 0 (Attachment)");
+        Lib3MFHandle hAttachment = instanceAttachment->getHandle( objAttachment );
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetAttachment.");
+        if (wrapperTable->m_Displacement2D_SetAttachment == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Displacement2D::SetAttachment.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Displacement2D_SetAttachment(instanceHandle, hAttachment);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisplacement2D::GetChannel(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        eLib3MFChannelName eReturnChannel;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetChannel.");
+        if (wrapperTable->m_Displacement2D_GetChannel == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Displacement2D::GetChannel.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Displacement2D_GetChannel(instanceHandle, &eReturnChannel);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::New(isolate, (int)eReturnChannel));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisplacement2D::SetChannel(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 0 (Channel)");
+        }
+        unsigned int eChannel = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetChannel.");
+        if (wrapperTable->m_Displacement2D_SetChannel == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Displacement2D::SetChannel.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Displacement2D_SetChannel(instanceHandle, (eLib3MFChannelName) eChannel);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisplacement2D::GetTileStyleUV(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Local<Object> outObject = Object::New(isolate);
+        eLib3MFTextureTileStyle eReturnTileStyleU;
+        eLib3MFTextureTileStyle eReturnTileStyleV;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetTileStyleUV.");
+        if (wrapperTable->m_Displacement2D_GetTileStyleUV == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Displacement2D::GetTileStyleUV.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Displacement2D_GetTileStyleUV(instanceHandle, &eReturnTileStyleU, &eReturnTileStyleV);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "TileStyleU"), Integer::New(isolate, (int)eReturnTileStyleU));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "TileStyleV"), Integer::New(isolate, (int)eReturnTileStyleV));
+        args.GetReturnValue().Set(outObject);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisplacement2D::SetTileStyleUV(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 0 (TileStyleU)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 1 (TileStyleV)");
+        }
+        unsigned int eTileStyleU = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eTileStyleV = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetTileStyleUV.");
+        if (wrapperTable->m_Displacement2D_SetTileStyleUV == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Displacement2D::SetTileStyleUV.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Displacement2D_SetTileStyleUV(instanceHandle, (eLib3MFTextureTileStyle) eTileStyleU, (eLib3MFTextureTileStyle) eTileStyleV);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisplacement2D::GetFilter(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        eLib3MFTextureFilter eReturnFilter;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetFilter.");
+        if (wrapperTable->m_Displacement2D_GetFilter == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Displacement2D::GetFilter.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Displacement2D_GetFilter(instanceHandle, &eReturnFilter);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::New(isolate, (int)eReturnFilter));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisplacement2D::SetFilter(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 0 (Filter)");
+        }
+        unsigned int eFilter = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetFilter.");
+        if (wrapperTable->m_Displacement2D_SetFilter == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Displacement2D::SetFilter.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Displacement2D_SetFilter(instanceHandle, (eLib3MFTextureFilter) eFilter);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFNormVectorGroup Implementation
+**************************************************************************************************************************/
+
+CLib3MFNormVectorGroup::CLib3MFNormVectorGroup()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFNormVectorGroup::~CLib3MFNormVectorGroup()
+{
+}
+
+void CLib3MFNormVectorGroup::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFNormVectorGroup"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCount", GetCount);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddVector", AddVector);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetVector", GetVector);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetVector", SetVector);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFNormVectorGroup::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFNormVectorGroup * normvectorgroupInstance = new CLib3MFNormVectorGroup();
+				normvectorgroupInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFNormVectorGroup: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFNormVectorGroup::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFNormVectorGroup::GetCount(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnCount = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCount.");
+        if (wrapperTable->m_NormVectorGroup_GetCount == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NormVectorGroup::GetCount.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_NormVectorGroup_GetCount(instanceHandle, &nReturnCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnCount));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFNormVectorGroup::AddVector(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected struct parameter 0 (Vector)");
+        }
+        sLib3MFVector sVector = convertObjectToLib3MFVector(isolate, args[0]);
+        unsigned int nReturnIndex = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddVector.");
+        if (wrapperTable->m_NormVectorGroup_AddVector == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NormVectorGroup::AddVector.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_NormVectorGroup_AddVector(instanceHandle, &sVector, &nReturnIndex);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnIndex));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFNormVectorGroup::GetVector(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFVector sReturnVector;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetVector.");
+        if (wrapperTable->m_NormVectorGroup_GetVector == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NormVectorGroup::GetVector.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_NormVectorGroup_GetVector(instanceHandle, nIndex, &sReturnVector);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(convertLib3MFVectorToObject(isolate, sReturnVector));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFNormVectorGroup::SetVector(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        if (!args[1]->IsObject()) {
+            throw std::runtime_error("Expected struct parameter 1 (Vector)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFVector sVector = convertObjectToLib3MFVector(isolate, args[1]);
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetVector.");
+        if (wrapperTable->m_NormVectorGroup_SetVector == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method NormVectorGroup::SetVector.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_NormVectorGroup_SetVector(instanceHandle, nIndex, &sVector);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFDisp2DGroup Implementation
+**************************************************************************************************************************/
+
+CLib3MFDisp2DGroup::CLib3MFDisp2DGroup()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFDisp2DGroup::~CLib3MFDisp2DGroup()
+{
+}
+
+void CLib3MFDisp2DGroup::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFDisp2DGroup"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetDisplacement2D", GetDisplacement2D);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetNormalVectorGroup", GetNormalVectorGroup);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetHeight", GetHeight);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetHeight", SetHeight);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetOffset", GetOffset);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetOffset", SetOffset);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCount", GetCount);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddCoordinate", AddCoordinate);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCoordinate", GetCoordinate);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetCoordinate", SetCoordinate);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFDisp2DGroup::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFDisp2DGroup * disp2dgroupInstance = new CLib3MFDisp2DGroup();
+				disp2dgroupInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFDisp2DGroup: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFDisp2DGroup::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFDisp2DGroup::GetDisplacement2D(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnDisplacement2D = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetDisplacement2D.");
+        if (wrapperTable->m_Disp2DGroup_GetDisplacement2D == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Disp2DGroup::GetDisplacement2D.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Disp2DGroup_GetDisplacement2D(instanceHandle, &hReturnDisplacement2D);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjDisplacement2D = CLib3MFDisplacement2D::NewInstance(args.Holder(), hReturnDisplacement2D);
+        args.GetReturnValue().Set(instanceObjDisplacement2D);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisp2DGroup::GetNormalVectorGroup(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnNormVectorGroup = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetNormalVectorGroup.");
+        if (wrapperTable->m_Disp2DGroup_GetNormalVectorGroup == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Disp2DGroup::GetNormalVectorGroup.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Disp2DGroup_GetNormalVectorGroup(instanceHandle, &hReturnNormVectorGroup);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjNormVectorGroup = CLib3MFNormVectorGroup::NewInstance(args.Holder(), hReturnNormVectorGroup);
+        args.GetReturnValue().Set(instanceObjNormVectorGroup);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisp2DGroup::GetHeight(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        double dReturnHeight = 0.0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetHeight.");
+        if (wrapperTable->m_Disp2DGroup_GetHeight == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Disp2DGroup::GetHeight.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Disp2DGroup_GetHeight(instanceHandle, &dReturnHeight);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Number::New(isolate, dReturnHeight));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisp2DGroup::SetHeight(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 0 (Height)");
+        }
+        double dHeight = (double) args[0]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetHeight.");
+        if (wrapperTable->m_Disp2DGroup_SetHeight == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Disp2DGroup::SetHeight.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Disp2DGroup_SetHeight(instanceHandle, dHeight);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisp2DGroup::GetOffset(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        double dReturnOffset = 0.0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetOffset.");
+        if (wrapperTable->m_Disp2DGroup_GetOffset == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Disp2DGroup::GetOffset.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Disp2DGroup_GetOffset(instanceHandle, &dReturnOffset);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Number::New(isolate, dReturnOffset));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisp2DGroup::SetOffset(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 0 (Offset)");
+        }
+        double dOffset = (double) args[0]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetOffset.");
+        if (wrapperTable->m_Disp2DGroup_SetOffset == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Disp2DGroup::SetOffset.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Disp2DGroup_SetOffset(instanceHandle, dOffset);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisp2DGroup::GetCount(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnCount = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCount.");
+        if (wrapperTable->m_Disp2DGroup_GetCount == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Disp2DGroup::GetCount.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Disp2DGroup_GetCount(instanceHandle, &nReturnCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnCount));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisp2DGroup::AddCoordinate(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected struct parameter 0 (Coordinate)");
+        }
+        sLib3MFDisplacement2DCoordinate sCoordinate = convertObjectToLib3MFDisplacement2DCoordinate(isolate, args[0]);
+        unsigned int nReturnIndex = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddCoordinate.");
+        if (wrapperTable->m_Disp2DGroup_AddCoordinate == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Disp2DGroup::AddCoordinate.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Disp2DGroup_AddCoordinate(instanceHandle, &sCoordinate, &nReturnIndex);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnIndex));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisp2DGroup::GetCoordinate(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDisplacement2DCoordinate sReturnCoordinate;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCoordinate.");
+        if (wrapperTable->m_Disp2DGroup_GetCoordinate == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Disp2DGroup::GetCoordinate.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Disp2DGroup_GetCoordinate(instanceHandle, nIndex, &sReturnCoordinate);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(convertLib3MFDisplacement2DCoordinateToObject(isolate, sReturnCoordinate));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFDisp2DGroup::SetCoordinate(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        if (!args[1]->IsObject()) {
+            throw std::runtime_error("Expected struct parameter 1 (Coordinate)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDisplacement2DCoordinate sCoordinate = convertObjectToLib3MFDisplacement2DCoordinate(isolate, args[1]);
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetCoordinate.");
+        if (wrapperTable->m_Disp2DGroup_SetCoordinate == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Disp2DGroup::SetCoordinate.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Disp2DGroup_SetCoordinate(instanceHandle, nIndex, &sCoordinate);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
@@ -23487,6 +24906,10 @@ void CLib3MFModel::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetMeshObjectByID", GetMeshObjectByID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetComponentsObjectByID", GetComponentsObjectByID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetBooleanObjectByID", GetBooleanObjectByID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetDisplacementMeshObjectByID", GetDisplacementMeshObjectByID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetDisplacement2DByID", GetDisplacement2DByID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetNormVectorGroupByID", GetNormVectorGroupByID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetDisp2DGroupByID", GetDisp2DGroupByID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetColorGroupByID", GetColorGroupByID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSliceStackByID", GetSliceStackByID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLevelSetByID", GetLevelSetByID);
@@ -23499,6 +24922,10 @@ void CLib3MFModel::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetMeshObjects", GetMeshObjects);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetComponentsObjects", GetComponentsObjects);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetBooleanObjects", GetBooleanObjects);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetDisplacementMeshObjects", GetDisplacementMeshObjects);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetDisplacement2Ds", GetDisplacement2Ds);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetNormVectorGroups", GetNormVectorGroups);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetDisp2DGroups", GetDisp2DGroups);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetTexture2Ds", GetTexture2Ds);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetBaseMaterialGroups", GetBaseMaterialGroups);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetColorGroups", GetColorGroups);
@@ -23512,6 +24939,10 @@ void CLib3MFModel::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddMeshObject", AddMeshObject);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddComponentsObject", AddComponentsObject);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddBooleanObject", AddBooleanObject);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddDisplacementMeshObject", AddDisplacementMeshObject);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddDisplacement2D", AddDisplacement2D);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddNormVectorGroup", AddNormVectorGroup);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddDisp2DGroup", AddDisp2DGroup);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddSliceStack", AddSliceStack);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddTexture2DFromAttachment", AddTexture2DFromAttachment);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddBaseMaterialGroup", AddBaseMaterialGroup);
@@ -24051,6 +25482,114 @@ void CLib3MFModel::GetBooleanObjectByID(const FunctionCallbackInfo<Value>& args)
 }
 
 
+void CLib3MFModel::GetDisplacementMeshObjectByID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (UniqueResourceID)");
+        }
+        unsigned int nUniqueResourceID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnDisplacementMeshObjectInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetDisplacementMeshObjectByID.");
+        if (wrapperTable->m_Model_GetDisplacementMeshObjectByID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::GetDisplacementMeshObjectByID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_GetDisplacementMeshObjectByID(instanceHandle, nUniqueResourceID, &hReturnDisplacementMeshObjectInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjDisplacementMeshObjectInstance = CLib3MFDisplacementMeshObject::NewInstance(args.Holder(), hReturnDisplacementMeshObjectInstance);
+        args.GetReturnValue().Set(instanceObjDisplacementMeshObjectInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::GetDisplacement2DByID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (UniqueResourceID)");
+        }
+        unsigned int nUniqueResourceID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnDisplacement2DInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetDisplacement2DByID.");
+        if (wrapperTable->m_Model_GetDisplacement2DByID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::GetDisplacement2DByID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_GetDisplacement2DByID(instanceHandle, nUniqueResourceID, &hReturnDisplacement2DInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjDisplacement2DInstance = CLib3MFDisplacement2D::NewInstance(args.Holder(), hReturnDisplacement2DInstance);
+        args.GetReturnValue().Set(instanceObjDisplacement2DInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::GetNormVectorGroupByID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (UniqueResourceID)");
+        }
+        unsigned int nUniqueResourceID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnNormVectorGroupInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetNormVectorGroupByID.");
+        if (wrapperTable->m_Model_GetNormVectorGroupByID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::GetNormVectorGroupByID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_GetNormVectorGroupByID(instanceHandle, nUniqueResourceID, &hReturnNormVectorGroupInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjNormVectorGroupInstance = CLib3MFNormVectorGroup::NewInstance(args.Holder(), hReturnNormVectorGroupInstance);
+        args.GetReturnValue().Set(instanceObjNormVectorGroupInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::GetDisp2DGroupByID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (UniqueResourceID)");
+        }
+        unsigned int nUniqueResourceID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnDisp2DGroupInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetDisp2DGroupByID.");
+        if (wrapperTable->m_Model_GetDisp2DGroupByID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::GetDisp2DGroupByID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_GetDisp2DGroupByID(instanceHandle, nUniqueResourceID, &hReturnDisp2DGroupInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjDisp2DGroupInstance = CLib3MFDisp2DGroup::NewInstance(args.Holder(), hReturnDisp2DGroupInstance);
+        args.GetReturnValue().Set(instanceObjDisp2DGroupInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
 void CLib3MFModel::GetColorGroupByID(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
@@ -24340,6 +25879,98 @@ void CLib3MFModel::GetBooleanObjects(const FunctionCallbackInfo<Value>& args)
         Lib3MFResult errorCode = wrapperTable->m_Model_GetBooleanObjects(instanceHandle, &hReturnResourceIterator);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjResourceIterator = CLib3MFBooleanObjectIterator::NewInstance(args.Holder(), hReturnResourceIterator);
+        args.GetReturnValue().Set(instanceObjResourceIterator);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::GetDisplacementMeshObjects(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnResourceIterator = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetDisplacementMeshObjects.");
+        if (wrapperTable->m_Model_GetDisplacementMeshObjects == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::GetDisplacementMeshObjects.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_GetDisplacementMeshObjects(instanceHandle, &hReturnResourceIterator);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjResourceIterator = CLib3MFDisplacementMeshObjectIterator::NewInstance(args.Holder(), hReturnResourceIterator);
+        args.GetReturnValue().Set(instanceObjResourceIterator);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::GetDisplacement2Ds(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnResourceIterator = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetDisplacement2Ds.");
+        if (wrapperTable->m_Model_GetDisplacement2Ds == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::GetDisplacement2Ds.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_GetDisplacement2Ds(instanceHandle, &hReturnResourceIterator);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjResourceIterator = CLib3MFDisplacement2DIterator::NewInstance(args.Holder(), hReturnResourceIterator);
+        args.GetReturnValue().Set(instanceObjResourceIterator);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::GetNormVectorGroups(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnResourceIterator = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetNormVectorGroups.");
+        if (wrapperTable->m_Model_GetNormVectorGroups == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::GetNormVectorGroups.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_GetNormVectorGroups(instanceHandle, &hReturnResourceIterator);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjResourceIterator = CLib3MFNormVectorGroupIterator::NewInstance(args.Holder(), hReturnResourceIterator);
+        args.GetReturnValue().Set(instanceObjResourceIterator);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::GetDisp2DGroups(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnResourceIterator = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetDisp2DGroups.");
+        if (wrapperTable->m_Model_GetDisp2DGroups == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::GetDisp2DGroups.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_GetDisp2DGroups(instanceHandle, &hReturnResourceIterator);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjResourceIterator = CLib3MFDisp2DGroupIterator::NewInstance(args.Holder(), hReturnResourceIterator);
         args.GetReturnValue().Set(instanceObjResourceIterator);
 
 		} catch (std::exception & E) {
@@ -24645,6 +26276,130 @@ void CLib3MFModel::AddBooleanObject(const FunctionCallbackInfo<Value>& args)
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjBooleanObjectInstance = CLib3MFBooleanObject::NewInstance(args.Holder(), hReturnBooleanObjectInstance);
         args.GetReturnValue().Set(instanceObjBooleanObjectInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::AddDisplacementMeshObject(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnDisplacementMeshObjectInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddDisplacementMeshObject.");
+        if (wrapperTable->m_Model_AddDisplacementMeshObject == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::AddDisplacementMeshObject.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_AddDisplacementMeshObject(instanceHandle, &hReturnDisplacementMeshObjectInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjDisplacementMeshObjectInstance = CLib3MFDisplacementMeshObject::NewInstance(args.Holder(), hReturnDisplacementMeshObjectInstance);
+        args.GetReturnValue().Set(instanceObjDisplacementMeshObjectInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::AddDisplacement2D(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 0 (TextureAttachment)");
+        }
+        Local<Object> objTextureAttachment = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFAttachment * instanceTextureAttachment = ObjectWrap::Unwrap<CLib3MFAttachment>(objTextureAttachment);
+        if (instanceTextureAttachment == nullptr)
+            throw std::runtime_error("Invalid Object parameter 0 (TextureAttachment)");
+        Lib3MFHandle hTextureAttachment = instanceTextureAttachment->getHandle( objTextureAttachment );
+        Lib3MFHandle hReturnDisplacement2DInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddDisplacement2D.");
+        if (wrapperTable->m_Model_AddDisplacement2D == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::AddDisplacement2D.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_AddDisplacement2D(instanceHandle, hTextureAttachment, &hReturnDisplacement2DInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjDisplacement2DInstance = CLib3MFDisplacement2D::NewInstance(args.Holder(), hReturnDisplacement2DInstance);
+        args.GetReturnValue().Set(instanceObjDisplacement2DInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::AddNormVectorGroup(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnNormVectorGroupInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddNormVectorGroup.");
+        if (wrapperTable->m_Model_AddNormVectorGroup == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::AddNormVectorGroup.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_AddNormVectorGroup(instanceHandle, &hReturnNormVectorGroupInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjNormVectorGroupInstance = CLib3MFNormVectorGroup::NewInstance(args.Holder(), hReturnNormVectorGroupInstance);
+        args.GetReturnValue().Set(instanceObjNormVectorGroupInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::AddDisp2DGroup(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 0 (Displacement2D)");
+        }
+        if (!args[1]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 1 (NormalVectorGroup)");
+        }
+        if (!args[2]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 2 (Height)");
+        }
+        if (!args[3]->IsNumber()) {
+            throw std::runtime_error("Expected double parameter 3 (Offset)");
+        }
+        Local<Object> objDisplacement2D = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFDisplacement2D * instanceDisplacement2D = ObjectWrap::Unwrap<CLib3MFDisplacement2D>(objDisplacement2D);
+        if (instanceDisplacement2D == nullptr)
+            throw std::runtime_error("Invalid Object parameter 0 (Displacement2D)");
+        Lib3MFHandle hDisplacement2D = instanceDisplacement2D->getHandle( objDisplacement2D );
+        Local<Object> objNormalVectorGroup = args[1]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFNormVectorGroup * instanceNormalVectorGroup = ObjectWrap::Unwrap<CLib3MFNormVectorGroup>(objNormalVectorGroup);
+        if (instanceNormalVectorGroup == nullptr)
+            throw std::runtime_error("Invalid Object parameter 1 (NormalVectorGroup)");
+        Lib3MFHandle hNormalVectorGroup = instanceNormalVectorGroup->getHandle( objNormalVectorGroup );
+        double dHeight = (double) args[2]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        double dOffset = (double) args[3]->NumberValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnDisp2DGroupInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddDisp2DGroup.");
+        if (wrapperTable->m_Model_AddDisp2DGroup == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::AddDisp2DGroup.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_AddDisp2DGroup(instanceHandle, hDisplacement2D, hNormalVectorGroup, dHeight, dOffset, &hReturnDisp2DGroupInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjDisp2DGroupInstance = CLib3MFDisp2DGroup::NewInstance(args.Holder(), hReturnDisp2DGroupInstance);
+        args.GetReturnValue().Set(instanceObjDisp2DGroupInstance);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

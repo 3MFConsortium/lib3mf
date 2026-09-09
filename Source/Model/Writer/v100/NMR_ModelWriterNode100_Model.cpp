@@ -88,6 +88,7 @@ namespace NMR {
 		m_bWriteVolumetricExtension = true;
 		m_bWriteImplicitExtension = true;
 		m_bWriteBooleanExtension = false;
+		m_bWriteDisplacementExtension = false;
 
 		m_bWriteCustomNamespaces = true;
 
@@ -226,6 +227,11 @@ namespace NMR {
 					sRequiredExtensions = sRequiredExtensions + " ";
 				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_BOOLEAN;
 			}
+		}
+		if (m_bWriteDisplacementExtension) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT, XML_3MF_NAMESPACE_DISPLACEMENTSPEC);
+			if (!sRequiredExtensions.empty()) sRequiredExtensions += " ";
+			sRequiredExtensions += XML_3MF_NAMESPACEPREFIX_DISPLACEMENT;
 		}
 
 		if (m_bWriteCustomNamespaces) {
@@ -578,6 +584,9 @@ namespace NMR {
 		// Check if object is a mesh Object
 		CModelMeshObject *pMeshObject =
 			dynamic_cast<CModelMeshObject *>(&object);
+		auto pDisplacementObject = dynamic_cast<CModelDisplacementMeshObject *>(&object);
+		if (pDisplacementObject && !pDisplacementObject->isValid())
+			throw CNMRException(NMR_ERROR_INVALIDMESHTOPOLOGY);
 		if(pMeshObject)
 		{
 			// Prepare Object Level Property ID and Index
@@ -632,7 +641,11 @@ namespace NMR {
 
 		writeMetaDataGroup(object.metaDataGroup());
 
-		if(pMeshObject)
+		if(pDisplacementObject)
+		{
+			writeDisplacementMeshObject(pDisplacementObject);
+		}
+		else if(pMeshObject)
 		{
 			// Beam lattice balls namespace need already determined in detectRequiredExtensions()
 
@@ -732,6 +745,110 @@ namespace NMR {
 			writeEndElement();
 		}
 
+		writeFullEndElement();
+	}
+
+	void CModelWriterNode100_Model::writeDisplacementMeshObject(CModelDisplacementMeshObject * object)
+	{
+		auto mesh = object->getMesh();
+		writeStartElementWithPrefix(XML_3MF_ELEMENT_DISPLACEMENTMESH, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
+		writeStartElementWithPrefix(XML_3MF_ELEMENT_VERTICES, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
+		for (nfUint32 i = 0; i < mesh->getNodeCount(); ++i) {
+			auto node = mesh->getNode(i);
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_VERTEX, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
+			writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_X, node->m_position.m_values.x);
+			writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_Y, node->m_position.m_values.y);
+			writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_Z, node->m_position.m_values.z);
+			writeEndElement();
+		}
+		writeFullEndElement();
+		CMeshInformation_Properties * pProperties = nullptr;
+		auto informationHandler = mesh->getMeshInformationHandler();
+		if (informationHandler) {
+			auto information = informationHandler->getInformationByType(0, emiProperties);
+			pProperties = dynamic_cast<CMeshInformation_Properties *>(information);
+		}
+		writeStartElementWithPrefix(XML_3MF_ELEMENT_TRIANGLES, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
+		for (nfUint32 i = 0; i < mesh->getFaceCount(); ++i) {
+			auto face = mesh->getFace(i);
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_TRIANGLE, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
+			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V1, face->m_nodeindices[0]);
+			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V2, face->m_nodeindices[1]);
+			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V3, face->m_nodeindices[2]);
+			if (pProperties) {
+				auto data = (MESHINFORMATION_PROPERTIES *)pProperties->getFaceData(i);
+				if (data && data->m_nUniqueResourceID) {
+					auto packageID = m_pModel->findPackageResourceID(data->m_nUniqueResourceID);
+					if (!packageID) throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+					auto p1 = m_pPropertyIndexMapping->mapPropertyIDToIndex(data->m_nUniqueResourceID, data->m_nPropertyIDs[0]);
+					auto p2 = m_pPropertyIndexMapping->mapPropertyIDToIndex(data->m_nUniqueResourceID, data->m_nPropertyIDs[1]);
+					auto p3 = m_pPropertyIndexMapping->mapPropertyIDToIndex(data->m_nUniqueResourceID, data->m_nPropertyIDs[2]);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_PID, packageID->getModelResourceID());
+					writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_P1, p1);
+					if (p2 != p1 || p3 != p1) {
+						writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_P2, p2);
+						writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_P3, p3);
+					}
+				}
+			}
+			if (object->hasTriangleDisplacement(i)) {
+				auto displacement = object->getTriangleDisplacement(i);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_DID, displacement.m_pGroup->getPackageResourceID()->getModelResourceID());
+				writeIntAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_D1, displacement.m_nIndices[0]);
+				if (displacement.m_nIndices[1] != displacement.m_nIndices[0]) writeIntAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_D2, displacement.m_nIndices[1]);
+				if (displacement.m_nIndices[2] != displacement.m_nIndices[0]) writeIntAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_D3, displacement.m_nIndices[2]);
+			}
+			writeEndElement();
+		}
+		writeFullEndElement();
+		writeFullEndElement();
+	}
+
+	void CModelWriterNode100_Model::writeDisplacement2D(CModelDisplacement2DResource * resource)
+	{
+		writeStartElementWithPrefix(XML_3MF_ELEMENT_DISPLACEMENT2D, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
+		writeIntAttribute("id", resource->getPackageResourceID()->getModelResourceID());
+		writeStringAttribute("path", resource->getAttachment()->getPathURI());
+		if (resource->getChannel() != MODELCOLORCHANNEL_GREEN) writeStringAttribute("channel", resource->getChannelString());
+		if (resource->getTileStyleU() != MODELTEXTURETILESTYLE_WRAP) writeStringAttribute("tilestyleu", CModelTexture2DResource::tileStyleToString(resource->getTileStyleU()));
+		if (resource->getTileStyleV() != MODELTEXTURETILESTYLE_WRAP) writeStringAttribute("tilestylev", CModelTexture2DResource::tileStyleToString(resource->getTileStyleV()));
+		if (resource->getFilter() != MODELTEXTUREFILTER_AUTO) writeStringAttribute("filter", CModelTexture2DResource::filterToString(resource->getFilter()));
+		writeEndElement();
+	}
+
+	void CModelWriterNode100_Model::writeNormVectorGroup(CModelNormVectorGroupResource * resource)
+	{
+		if (resource->getCount() == 0)
+			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+		writeStartElementWithPrefix(XML_3MF_ELEMENT_NORMVECTORGROUP, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
+		writeIntAttribute("id", resource->getPackageResourceID()->getModelResourceID());
+		for (nfUint32 i = 0; i < resource->getCount(); ++i) {
+			auto vector = resource->getVector(i);
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_NORMVECTOR, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
+			writeDoubleAttribute("x", vector[0]); writeDoubleAttribute("y", vector[1]); writeDoubleAttribute("z", vector[2]);
+			writeEndElement();
+		}
+		writeFullEndElement();
+	}
+
+	void CModelWriterNode100_Model::writeDisp2DGroup(CModelDisp2DGroupResource * resource)
+	{
+		if (resource->getCount() == 0)
+			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+		writeStartElementWithPrefix(XML_3MF_ELEMENT_DISP2DGROUP, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
+		writeIntAttribute("id", resource->getPackageResourceID()->getModelResourceID());
+		writeIntAttribute("dispid", resource->getDisplacement2D()->getPackageResourceID()->getModelResourceID());
+		writeIntAttribute("nid", resource->getNormVectorGroup()->getPackageResourceID()->getModelResourceID());
+		writeDoubleAttribute("height", resource->getHeight());
+		if (resource->getOffset() != 0.0) writeDoubleAttribute("offset", resource->getOffset());
+		for (nfUint32 i = 0; i < resource->getCount(); ++i) {
+			auto coordinate = resource->getCoordinate(i);
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_DISP2DCOORD, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
+			writeDoubleAttribute("u", coordinate.m_dU); writeDoubleAttribute("v", coordinate.m_dV);
+			writeIntAttribute("n", coordinate.m_nNormalVectorIndex);
+			if (coordinate.m_dDisplacementFactor != 1.0) writeDoubleAttribute("f", coordinate.m_dDisplacementFactor);
+			writeEndElement();
+		}
 		writeFullEndElement();
 	}
 
@@ -1180,7 +1297,12 @@ namespace NMR {
 				writeSliceStacks();
 			}
 			if (m_bWriteObjects) {
-				writeObjects();
+				CResourceDependencySorter sorter(m_pModel);
+				for (auto & resourceID : sorter.sort()) {
+					if (resourceID->getPath() != m_pModel->currentPath()) continue;
+					auto resource = m_pModel->findResource(resourceID->getUniqueID());
+					if (resource) writeResource(resource.get());
+				}
 			}
 		}
 		
@@ -1223,6 +1345,9 @@ namespace NMR {
 			volumeWriter.writeVolumeDataResource(*pVolumeDataResource);
 			return;
 		}
+		if (auto resource = dynamic_cast<CModelDisplacement2DResource *>(pResource)) { writeDisplacement2D(resource); return; }
+		if (auto resource = dynamic_cast<CModelNormVectorGroupResource *>(pResource)) { writeNormVectorGroup(resource); return; }
+		if (auto resource = dynamic_cast<CModelDisp2DGroupResource *>(pResource)) { writeDisp2DGroup(resource); return; }
 
 		CModelObject * pObject = dynamic_cast<CModelObject *>(pResource);
 		if (pObject)
@@ -1328,6 +1453,13 @@ namespace NMR {
 
 	void CModelWriterNode100_Model::detectRequiredExtensions()
 	{
+		for (nfUint32 i = 0; i < m_pModel->getResourceCount(); ++i) {
+			auto resource = m_pModel->getResource(i);
+			if (dynamic_cast<CModelDisplacement2DResource *>(resource.get()) || dynamic_cast<CModelNormVectorGroupResource *>(resource.get()) || dynamic_cast<CModelDisp2DGroupResource *>(resource.get()) || dynamic_cast<CModelDisplacementMeshObject *>(resource.get())) {
+				m_bWriteDisplacementExtension = true;
+				break;
+			}
+		}
 		std::list <CModelObject *> objectList = m_pModel->getSortedObjectList();
 
 		for(auto iIterator = objectList.begin(); iIterator != objectList.end(); iIterator++)

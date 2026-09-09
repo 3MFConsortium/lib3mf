@@ -32,6 +32,9 @@ A model is an in memory representation of the 3MF file.
 --*/
 
 #include "Model/Classes/NMR_Model.h"
+#include "Model/Classes/NMR_ModelDisplacement2D.h"
+#include "Model/Classes/NMR_ModelNormVectorGroup.h"
+#include "Model/Classes/NMR_ModelDisp2DGroup.h"
 #include "Model/Classes/NMR_ModelObject.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelBooleanObject.h"
@@ -1820,6 +1823,11 @@ namespace NMR {
 			m_levelSetObjectLookup.erase(levelSetObjectIterator);
 			return;
 		}
+
+		if (std::dynamic_pointer_cast<CModelDisplacement2DResource>(pResource) ||
+			std::dynamic_pointer_cast<CModelNormVectorGroupResource>(pResource) ||
+			std::dynamic_pointer_cast<CModelDisp2DGroupResource>(pResource))
+			return;
 
 		throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 	}

@@ -15,6 +15,7 @@ set(SRCS_UNITTEST
 	./Source/BuildItems.cpp
 	./Source/ColorGroup.cpp
 	./Source/CompositeMaterials.cpp
+	./Source/Displacement.cpp
 	./Source/EncryptionMethods.cpp
 	./Source/ImplicitNodes.test.cpp
 	./Source/MeshObject.cpp

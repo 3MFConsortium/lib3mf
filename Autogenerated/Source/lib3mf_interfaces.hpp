@@ -62,6 +62,10 @@ class IObjectIterator;
 class IMeshObjectIterator;
 class IComponentsObjectIterator;
 class IBooleanObjectIterator;
+class IDisplacementMeshObjectIterator;
+class IDisplacement2DIterator;
+class INormVectorGroupIterator;
+class IDisp2DGroupIterator;
 class ITexture2DIterator;
 class IBaseMaterialGroupIterator;
 class IColorGroupIterator;
@@ -76,6 +80,7 @@ class IMetaDataGroup;
 class ITriangleSet;
 class IObject;
 class IMeshObject;
+class IDisplacementMeshObject;
 class ILevelSet;
 class IBooleanObject;
 class IBeamLattice;
@@ -96,6 +101,9 @@ class IMultiPropertyGroup;
 class IImage3D;
 class IImageStack;
 class IAttachment;
+class IDisplacement2D;
+class INormVectorGroup;
+class IDisp2DGroup;
 class ITexture2D;
 class IImplicitPort;
 class IIterator;
@@ -851,6 +859,110 @@ typedef IBaseSharedPtr<IBooleanObjectIterator> PIBooleanObjectIterator;
 
 
 /*************************************************************************************************************************
+ Class interface for DisplacementMeshObjectIterator 
+**************************************************************************************************************************/
+
+class IDisplacementMeshObjectIterator : public virtual IResourceIterator {
+public:
+	/**
+	* IDisplacementMeshObjectIterator::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x6985D4BCC417D63AUL; // First 64 bits of SHA1 of a string: "Lib3MF::DisplacementMeshObjectIterator"
+	}
+
+	/**
+	* IDisplacementMeshObjectIterator::GetCurrentDisplacementMeshObject - Returns the DisplacementMeshObject the iterator points at.
+	* @return returns the DisplacementMeshObject instance.
+	*/
+	virtual IDisplacementMeshObject * GetCurrentDisplacementMeshObject() = 0;
+
+};
+
+typedef IBaseSharedPtr<IDisplacementMeshObjectIterator> PIDisplacementMeshObjectIterator;
+
+
+/*************************************************************************************************************************
+ Class interface for Displacement2DIterator 
+**************************************************************************************************************************/
+
+class IDisplacement2DIterator : public virtual IResourceIterator {
+public:
+	/**
+	* IDisplacement2DIterator::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xBBE0E57916ABA639UL; // First 64 bits of SHA1 of a string: "Lib3MF::Displacement2DIterator"
+	}
+
+	/**
+	* IDisplacement2DIterator::GetCurrentDisplacement2D - Returns the Displacement2D resource the iterator points at.
+	* @return returns the Displacement2D instance.
+	*/
+	virtual IDisplacement2D * GetCurrentDisplacement2D() = 0;
+
+};
+
+typedef IBaseSharedPtr<IDisplacement2DIterator> PIDisplacement2DIterator;
+
+
+/*************************************************************************************************************************
+ Class interface for NormVectorGroupIterator 
+**************************************************************************************************************************/
+
+class INormVectorGroupIterator : public virtual IResourceIterator {
+public:
+	/**
+	* INormVectorGroupIterator::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x94F41D650A9D1201UL; // First 64 bits of SHA1 of a string: "Lib3MF::NormVectorGroupIterator"
+	}
+
+	/**
+	* INormVectorGroupIterator::GetCurrentNormVectorGroup - Returns the NormVectorGroup resource the iterator points at.
+	* @return returns the NormVectorGroup instance.
+	*/
+	virtual INormVectorGroup * GetCurrentNormVectorGroup() = 0;
+
+};
+
+typedef IBaseSharedPtr<INormVectorGroupIterator> PINormVectorGroupIterator;
+
+
+/*************************************************************************************************************************
+ Class interface for Disp2DGroupIterator 
+**************************************************************************************************************************/
+
+class IDisp2DGroupIterator : public virtual IResourceIterator {
+public:
+	/**
+	* IDisp2DGroupIterator::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x4F6F025BFF1BC77DUL; // First 64 bits of SHA1 of a string: "Lib3MF::Disp2DGroupIterator"
+	}
+
+	/**
+	* IDisp2DGroupIterator::GetCurrentDisp2DGroup - Returns the Disp2DGroup resource the iterator points at.
+	* @return returns the Disp2DGroup instance.
+	*/
+	virtual IDisp2DGroup * GetCurrentDisp2DGroup() = 0;
+
+};
+
+typedef IBaseSharedPtr<IDisp2DGroupIterator> PIDisp2DGroupIterator;
+
+
+/*************************************************************************************************************************
  Class interface for Texture2DIterator 
 **************************************************************************************************************************/
 
@@ -1412,6 +1524,12 @@ public:
 	virtual bool IsBooleanObject() = 0;
 
 	/**
+	* IObject::IsDisplacementMeshObject - Retrieves whether an object is a displacement mesh object.
+	* @return returns whether the object is a displacement mesh object
+	*/
+	virtual bool IsDisplacementMeshObject() = 0;
+
+	/**
 	* IObject::IsValid - Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.
 	* @return returns whether the object is a valid object description
 	*/
@@ -1705,6 +1823,55 @@ public:
 };
 
 typedef IBaseSharedPtr<IMeshObject> PIMeshObject;
+
+
+/*************************************************************************************************************************
+ Class interface for DisplacementMeshObject 
+**************************************************************************************************************************/
+
+class IDisplacementMeshObject : public virtual IMeshObject {
+public:
+	/**
+	* IDisplacementMeshObject::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x62EC1EFBBB2C007UL; // First 64 bits of SHA1 of a string: "Lib3MF::DisplacementMeshObject"
+	}
+
+	/**
+	* IDisplacementMeshObject::HasTriangleDisplacement - Returns whether a triangle has displacement information assigned.
+	* @param[in] nIndex - index of the triangle
+	* @return returns whether displacement information is assigned
+	*/
+	virtual bool HasTriangleDisplacement(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IDisplacementMeshObject::SetTriangleDisplacement - Assigns a displacement group and coordinate indices to a triangle.
+	* @param[in] nIndex - index of the triangle
+	* @param[in] pDisp2DGroup - displacement coordinate group used by the triangle
+	* @param[in] Displacement - coordinate indices for the triangle vertices
+	*/
+	virtual void SetTriangleDisplacement(const Lib3MF_uint32 nIndex, IDisp2DGroup* pDisp2DGroup, const Lib3MF::sTriangleDisplacement Displacement) = 0;
+
+	/**
+	* IDisplacementMeshObject::GetTriangleDisplacement - Returns the displacement group and coordinate indices assigned to a triangle.
+	* @param[in] nIndex - index of the triangle
+	* @param[out] pDisp2DGroup - displacement coordinate group used by the triangle
+	* @return coordinate indices for the triangle vertices
+	*/
+	virtual Lib3MF::sTriangleDisplacement GetTriangleDisplacement(const Lib3MF_uint32 nIndex, IDisp2DGroup*& pDisp2DGroup) = 0;
+
+	/**
+	* IDisplacementMeshObject::ClearTriangleDisplacement - Removes displacement information from a triangle.
+	* @param[in] nIndex - index of the triangle
+	*/
+	virtual void ClearTriangleDisplacement(const Lib3MF_uint32 nIndex) = 0;
+
+};
+
+typedef IBaseSharedPtr<IDisplacementMeshObject> PIDisplacementMeshObject;
 
 
 /*************************************************************************************************************************
@@ -3165,6 +3332,206 @@ public:
 };
 
 typedef IBaseSharedPtr<IAttachment> PIAttachment;
+
+
+/*************************************************************************************************************************
+ Class interface for Displacement2D 
+**************************************************************************************************************************/
+
+class IDisplacement2D : public virtual IResource {
+public:
+	/**
+	* IDisplacement2D::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xD4FBF6402F29131FUL; // First 64 bits of SHA1 of a string: "Lib3MF::Displacement2D"
+	}
+
+	/**
+	* IDisplacement2D::GetAttachment - Retrieves the PNG attachment used as displacement texture.
+	* @return attachment containing the displacement image
+	*/
+	virtual IAttachment * GetAttachment() = 0;
+
+	/**
+	* IDisplacement2D::SetAttachment - Sets the PNG attachment used as displacement texture.
+	* @param[in] pAttachment - attachment containing the displacement image
+	*/
+	virtual void SetAttachment(IAttachment* pAttachment) = 0;
+
+	/**
+	* IDisplacement2D::GetChannel - Returns the image channel used for displacement values.
+	* @return selected image channel
+	*/
+	virtual Lib3MF::eChannelName GetChannel() = 0;
+
+	/**
+	* IDisplacement2D::SetChannel - Sets the image channel used for displacement values.
+	* @param[in] eChannel - selected image channel
+	*/
+	virtual void SetChannel(const Lib3MF::eChannelName eChannel) = 0;
+
+	/**
+	* IDisplacement2D::GetTileStyleUV - Returns the displacement texture tile styles.
+	* @param[out] eTileStyleU - tile style in the u direction
+	* @param[out] eTileStyleV - tile style in the v direction
+	*/
+	virtual void GetTileStyleUV(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV) = 0;
+
+	/**
+	* IDisplacement2D::SetTileStyleUV - Sets the displacement texture tile styles.
+	* @param[in] eTileStyleU - tile style in the u direction
+	* @param[in] eTileStyleV - tile style in the v direction
+	*/
+	virtual void SetTileStyleUV(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV) = 0;
+
+	/**
+	* IDisplacement2D::GetFilter - Returns the displacement texture filter.
+	* @return selected texture filter
+	*/
+	virtual Lib3MF::eTextureFilter GetFilter() = 0;
+
+	/**
+	* IDisplacement2D::SetFilter - Sets the displacement texture filter.
+	* @param[in] eFilter - selected texture filter
+	*/
+	virtual void SetFilter(const Lib3MF::eTextureFilter eFilter) = 0;
+
+};
+
+typedef IBaseSharedPtr<IDisplacement2D> PIDisplacement2D;
+
+
+/*************************************************************************************************************************
+ Class interface for NormVectorGroup 
+**************************************************************************************************************************/
+
+class INormVectorGroup : public virtual IResource {
+public:
+	/**
+	* INormVectorGroup::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0xA04BF4AC86AB47C3UL; // First 64 bits of SHA1 of a string: "Lib3MF::NormVectorGroup"
+	}
+
+	/**
+	* INormVectorGroup::GetCount - Returns the number of normalized vectors.
+	* @return number of vectors
+	*/
+	virtual Lib3MF_uint32 GetCount() = 0;
+
+	/**
+	* INormVectorGroup::AddVector - Adds a normalized displacement vector.
+	* @param[in] Vector - vector to add; non-unit vectors are normalized
+	* @return zero-based vector index
+	*/
+	virtual Lib3MF_uint32 AddVector(const Lib3MF::sVector Vector) = 0;
+
+	/**
+	* INormVectorGroup::GetVector - Returns a normalized displacement vector.
+	* @param[in] nIndex - zero-based vector index
+	* @return normalized vector
+	*/
+	virtual Lib3MF::sVector GetVector(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* INormVectorGroup::SetVector - Updates a normalized displacement vector.
+	* @param[in] nIndex - zero-based vector index
+	* @param[in] Vector - new vector; non-unit vectors are normalized
+	*/
+	virtual void SetVector(const Lib3MF_uint32 nIndex, const Lib3MF::sVector Vector) = 0;
+
+};
+
+typedef IBaseSharedPtr<INormVectorGroup> PINormVectorGroup;
+
+
+/*************************************************************************************************************************
+ Class interface for Disp2DGroup 
+**************************************************************************************************************************/
+
+class IDisp2DGroup : public virtual IResource {
+public:
+	/**
+	* IDisp2DGroup::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x823F487B8BB83E5BUL; // First 64 bits of SHA1 of a string: "Lib3MF::Disp2DGroup"
+	}
+
+	/**
+	* IDisp2DGroup::GetDisplacement2D - Returns the displacement texture used by this group.
+	* @return displacement texture resource
+	*/
+	virtual IDisplacement2D * GetDisplacement2D() = 0;
+
+	/**
+	* IDisp2DGroup::GetNormalVectorGroup - Returns the normalized vector group used by this group.
+	* @return normalized vector group
+	*/
+	virtual INormVectorGroup * GetNormalVectorGroup() = 0;
+
+	/**
+	* IDisp2DGroup::GetHeight - Returns the displacement amplitude in model units.
+	* @return displacement amplitude
+	*/
+	virtual Lib3MF_double GetHeight() = 0;
+
+	/**
+	* IDisp2DGroup::SetHeight - Sets the displacement amplitude in model units.
+	* @param[in] dHeight - displacement amplitude
+	*/
+	virtual void SetHeight(const Lib3MF_double dHeight) = 0;
+
+	/**
+	* IDisp2DGroup::GetOffset - Returns the displacement offset in model units.
+	* @return displacement offset
+	*/
+	virtual Lib3MF_double GetOffset() = 0;
+
+	/**
+	* IDisp2DGroup::SetOffset - Sets the displacement offset in model units.
+	* @param[in] dOffset - displacement offset
+	*/
+	virtual void SetOffset(const Lib3MF_double dOffset) = 0;
+
+	/**
+	* IDisp2DGroup::GetCount - Returns the number of displacement coordinates.
+	* @return number of coordinates
+	*/
+	virtual Lib3MF_uint32 GetCount() = 0;
+
+	/**
+	* IDisp2DGroup::AddCoordinate - Adds a displacement coordinate.
+	* @param[in] Coordinate - coordinate to add
+	* @return zero-based coordinate index
+	*/
+	virtual Lib3MF_uint32 AddCoordinate(const Lib3MF::sDisplacement2DCoordinate Coordinate) = 0;
+
+	/**
+	* IDisp2DGroup::GetCoordinate - Returns a displacement coordinate.
+	* @param[in] nIndex - zero-based coordinate index
+	* @return displacement coordinate
+	*/
+	virtual Lib3MF::sDisplacement2DCoordinate GetCoordinate(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IDisp2DGroup::SetCoordinate - Updates a displacement coordinate.
+	* @param[in] nIndex - zero-based coordinate index
+	* @param[in] Coordinate - new displacement coordinate
+	*/
+	virtual void SetCoordinate(const Lib3MF_uint32 nIndex, const Lib3MF::sDisplacement2DCoordinate Coordinate) = 0;
+
+};
+
+typedef IBaseSharedPtr<IDisp2DGroup> PIDisp2DGroup;
 
 
 /*************************************************************************************************************************
@@ -6718,6 +7085,34 @@ public:
 	virtual IBooleanObject * GetBooleanObjectByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
 
 	/**
+	* IModel::GetDisplacementMeshObjectByID - finds a displacement mesh object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the displacement mesh object instance
+	*/
+	virtual IDisplacementMeshObject * GetDisplacementMeshObjectByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::GetDisplacement2DByID - finds a displacement texture resource by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the displacement texture instance
+	*/
+	virtual IDisplacement2D * GetDisplacement2DByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::GetNormVectorGroupByID - finds a normalized vector group by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the normalized vector group instance
+	*/
+	virtual INormVectorGroup * GetNormVectorGroupByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::GetDisp2DGroupByID - finds a displacement coordinate group by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the displacement coordinate group instance
+	*/
+	virtual IDisp2DGroup * GetDisp2DGroupByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
 	* IModel::GetColorGroupByID - finds a model color group by its UniqueResourceID
 	* @param[in] nUniqueResourceID - UniqueResourceID
 	* @return returns the ColorGroup instance
@@ -6792,6 +7187,30 @@ public:
 	* @return returns the iterator instance.
 	*/
 	virtual IBooleanObjectIterator * GetBooleanObjects() = 0;
+
+	/**
+	* IModel::GetDisplacementMeshObjects - creates an iterator over all displacement mesh objects.
+	* @return returns the iterator instance
+	*/
+	virtual IDisplacementMeshObjectIterator * GetDisplacementMeshObjects() = 0;
+
+	/**
+	* IModel::GetDisplacement2Ds - creates an iterator over all displacement texture resources.
+	* @return returns the iterator instance
+	*/
+	virtual IDisplacement2DIterator * GetDisplacement2Ds() = 0;
+
+	/**
+	* IModel::GetNormVectorGroups - creates an iterator over all normalized vector groups.
+	* @return returns the iterator instance
+	*/
+	virtual INormVectorGroupIterator * GetNormVectorGroups() = 0;
+
+	/**
+	* IModel::GetDisp2DGroups - creates an iterator over all displacement coordinate groups.
+	* @return returns the iterator instance
+	*/
+	virtual IDisp2DGroupIterator * GetDisp2DGroups() = 0;
 
 	/**
 	* IModel::GetTexture2Ds - creates a Texture2DIterator instance with all texture2d resources.
@@ -6870,6 +7289,35 @@ public:
 	* @return returns the boolean object instance
 	*/
 	virtual IBooleanObject * AddBooleanObject() = 0;
+
+	/**
+	* IModel::AddDisplacementMeshObject - adds an empty displacement mesh object to the model.
+	* @return returns the displacement mesh object instance
+	*/
+	virtual IDisplacementMeshObject * AddDisplacementMeshObject() = 0;
+
+	/**
+	* IModel::AddDisplacement2D - adds a displacement texture resource using a PNG attachment.
+	* @param[in] pTextureAttachment - PNG attachment containing the displacement image
+	* @return returns the displacement texture instance
+	*/
+	virtual IDisplacement2D * AddDisplacement2D(IAttachment* pTextureAttachment) = 0;
+
+	/**
+	* IModel::AddNormVectorGroup - adds an empty normalized vector group to the model.
+	* @return returns the normalized vector group instance
+	*/
+	virtual INormVectorGroup * AddNormVectorGroup() = 0;
+
+	/**
+	* IModel::AddDisp2DGroup - adds an empty displacement coordinate group to the model.
+	* @param[in] pDisplacement2D - displacement texture used by the group
+	* @param[in] pNormalVectorGroup - normalized vectors used by the group
+	* @param[in] dHeight - displacement amplitude in model units
+	* @param[in] dOffset - displacement offset in model units
+	* @return returns the displacement coordinate group instance
+	*/
+	virtual IDisp2DGroup * AddDisp2DGroup(IDisplacement2D* pDisplacement2D, INormVectorGroup* pNormalVectorGroup, const Lib3MF_double dHeight, const Lib3MF_double dOffset) = 0;
 
 	/**
 	* IModel::AddSliceStack - creates a new model slicestack by its id
