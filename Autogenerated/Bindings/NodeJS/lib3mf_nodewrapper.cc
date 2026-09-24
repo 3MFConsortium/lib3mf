@@ -26115,6 +26115,8 @@ void CLib3MFToolpath::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddLayer", AddLayer);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetBottomZ", GetBottomZ);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetBottomZ", SetBottomZ);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetToolpathType", GetToolpathType);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetToolpathType", SetToolpathType);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerAttachment", GetLayerAttachment);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "ReadLayerData", ReadLayerData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLayerViewable", GetLayerViewable);
@@ -26368,6 +26370,52 @@ void CLib3MFToolpath::SetBottomZ(const FunctionCallbackInfo<Value>& args)
             throw std::runtime_error("Could not call Lib3MF method Toolpath::SetBottomZ.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Toolpath_SetBottomZ(instanceHandle, nBottomZ);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::GetToolpathType(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        eLib3MFToolpathType eReturnToolpathType;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetToolpathType.");
+        if (wrapperTable->m_Toolpath_GetToolpathType == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetToolpathType.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetToolpathType(instanceHandle, &eReturnToolpathType);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::New(isolate, (int)eReturnToolpathType));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::SetToolpathType(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 0 (ToolpathType)");
+        }
+        unsigned int eToolpathType = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetToolpathType.");
+        if (wrapperTable->m_Toolpath_SetToolpathType == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::SetToolpathType.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_SetToolpathType(instanceHandle, (eLib3MFToolpathType) eToolpathType);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
@@ -31100,6 +31148,9 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Arc"), Integer::New(isolate, 5));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Delay"), Integer::New(isolate, 6));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathSegmentType_Sync"), Integer::New(isolate, 7));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathType_Planar"), Integer::New(isolate, 0));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathType_ThreeAxis"), Integer::New(isolate, 1));
+						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eToolpathType_SixAxis"), Integer::New(isolate, 2));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eChannelName_Red"), Integer::New(isolate, 0));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eChannelName_Green"), Integer::New(isolate, 1));
 						newObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "eChannelName_Blue"), Integer::New(isolate, 2));

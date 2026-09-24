@@ -708,6 +708,7 @@ namespace NMR {
 		case NMR_ERROR_MISSINGSCALEFACTORE2: return "Missing profile scale factor e2";
 		case NMR_ERROR_DUPLICATEOVERRIDEFACTORE: return "Duplicate profile override factor e";
 		case NMR_ERROR_MISSINGOVERRIDEFACTORE: return "Missing profile override factor e";
+		case NMR_ERROR_INVALIDTOOLPATHTYPE: return "Invalid toolpath type";
 
 		default:
 			return "unknown error";

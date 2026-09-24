@@ -696,6 +696,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Toolpath_AddLayer = NULL;
 	pWrapperTable->m_Toolpath_GetBottomZ = NULL;
 	pWrapperTable->m_Toolpath_SetBottomZ = NULL;
+	pWrapperTable->m_Toolpath_GetToolpathType = NULL;
+	pWrapperTable->m_Toolpath_SetToolpathType = NULL;
 	pWrapperTable->m_Toolpath_GetLayerAttachment = NULL;
 	pWrapperTable->m_Toolpath_ReadLayerData = NULL;
 	pWrapperTable->m_Toolpath_GetLayerViewable = NULL;
@@ -6750,6 +6752,24 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Toolpath_SetBottomZ == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_GetToolpathType = (PLib3MFToolpath_GetToolpathTypePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_gettoolpathtype");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_GetToolpathType = (PLib3MFToolpath_GetToolpathTypePtr) dlsym(hLibrary, "lib3mf_toolpath_gettoolpathtype");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_GetToolpathType == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_SetToolpathType = (PLib3MFToolpath_SetToolpathTypePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_settoolpathtype");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_SetToolpathType = (PLib3MFToolpath_SetToolpathTypePtr) dlsym(hLibrary, "lib3mf_toolpath_settoolpathtype");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_SetToolpathType == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

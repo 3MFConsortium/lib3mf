@@ -1333,9 +1333,9 @@ namespace NMR {
 				writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_UUID, sToolpathUUID.c_str());
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_UNITFACTOR, (nfFloat)pToolpathResource->getUnitFactor());
 
-				std::string sToolpathType = pToolpathResource->getToolpathType();
-				if (!sToolpathType.empty() && (sToolpathType != XML_3MF_TOOLPATHRESOURCETYPE_PLANAR))
-					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_TOOLPATHTYPE, sToolpathType.c_str());
+				Lib3MF::eToolpathType eToolpathType = pToolpathResource->getToolpathType();
+				if (eToolpathType != Lib3MF::eToolpathType::Planar)
+					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_TOOLPATHTYPE, CModelToolpath::toolpathTypeToString(eToolpathType));
 
 				uint32_t nXMLDataCount = pToolpathResource->getCustomXMLDataCount();
 				if (nXMLDataCount > 0) {

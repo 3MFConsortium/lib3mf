@@ -509,6 +509,12 @@ namespace Lib3MF {
     Sync = 7
   };
   
+  enum class eToolpathType : Lib3MF_int32 {
+    Planar = 0,
+    ThreeAxis = 1,
+    SixAxis = 2
+  };
+  
   enum class eChannelName : Lib3MF_int32 {
     Red = 0,
     Green = 1,
@@ -850,6 +856,7 @@ typedef Lib3MF::eBinaryStreamPredictionType eLib3MFBinaryStreamPredictionType;
 typedef Lib3MF::eProgressIdentifier eLib3MFProgressIdentifier;
 typedef Lib3MF::eBlendMethod eLib3MFBlendMethod;
 typedef Lib3MF::eToolpathSegmentType eLib3MFToolpathSegmentType;
+typedef Lib3MF::eToolpathType eLib3MFToolpathType;
 typedef Lib3MF::eChannelName eLib3MFChannelName;
 typedef Lib3MF::eToolpathAttributeType eLib3MFToolpathAttributeType;
 typedef Lib3MF::eToolpathProfileModificationFactor eLib3MFToolpathProfileModificationFactor;

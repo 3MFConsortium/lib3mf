@@ -3647,6 +3647,8 @@ public:
 	inline PToolpathLayerData AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, classParam<CWriter> pModelWriter);
 	inline Lib3MF_uint32 GetBottomZ();
 	inline void SetBottomZ(const Lib3MF_uint32 nBottomZ);
+	inline eToolpathType GetToolpathType();
+	inline void SetToolpathType(const eToolpathType eToolpathType);
 	inline PAttachment GetLayerAttachment(const Lib3MF_uint32 nIndex);
 	inline PToolpathLayerReader ReadLayerData(const Lib3MF_uint32 nIndex);
 	inline PToolpathViewable GetLayerViewable(const Lib3MF_uint32 nIndex);
@@ -13427,6 +13429,27 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CToolpath::SetBottomZ(const Lib3MF_uint32 nBottomZ)
 	{
 		CheckError(lib3mf_toolpath_setbottomz(m_pHandle, nBottomZ));
+	}
+	
+	/**
+	* CToolpath::GetToolpathType - Returns the toolpath type (planar, 3axis or 6axis). Defaults to planar.
+	* @return Toolpath type
+	*/
+	eToolpathType CToolpath::GetToolpathType()
+	{
+		eToolpathType resultToolpathType = (eToolpathType) 0;
+		CheckError(lib3mf_toolpath_gettoolpathtype(m_pHandle, &resultToolpathType));
+		
+		return resultToolpathType;
+	}
+	
+	/**
+	* CToolpath::SetToolpathType - Sets the toolpath type (planar, 3axis or 6axis).
+	* @param[in] eToolpathType - Toolpath type
+	*/
+	void CToolpath::SetToolpathType(const eToolpathType eToolpathType)
+	{
+		CheckError(lib3mf_toolpath_settoolpathtype(m_pHandle, eToolpathType));
 	}
 	
 	/**

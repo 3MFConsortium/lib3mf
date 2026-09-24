@@ -25587,6 +25587,72 @@ Lib3MFResult lib3mf_toolpath_setbottomz(Lib3MF_Toolpath pToolpath, Lib3MF_uint32
 	}
 }
 
+Lib3MFResult lib3mf_toolpath_gettoolpathtype(Lib3MF_Toolpath pToolpath, eLib3MFToolpathType * pToolpathType)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "GetToolpathType");
+		}
+		if (pToolpathType == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pToolpathType = pIToolpath->GetToolpathType();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addEnumResult("ToolpathType", "ToolpathType", (Lib3MF_int32)(*pToolpathType));
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_settoolpathtype(Lib3MF_Toolpath pToolpath, eLib3MFToolpathType eToolpathType)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "SetToolpathType");
+			pJournalEntry->addEnumParameter("ToolpathType", "ToolpathType", (Lib3MF_int32)(eToolpathType));
+		}
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpath->SetToolpathType(eToolpathType);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_toolpath_getlayerattachment(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_Attachment * pAttachment)
 {
 	IBase* pIBaseClass = (IBase *)pToolpath;
@@ -32733,6 +32799,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpath_getbottomz;
 	if (sProcName == "lib3mf_toolpath_setbottomz") 
 		*ppProcAddress = (void*) &lib3mf_toolpath_setbottomz;
+	if (sProcName == "lib3mf_toolpath_gettoolpathtype") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_gettoolpathtype;
+	if (sProcName == "lib3mf_toolpath_settoolpathtype") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_settoolpathtype;
 	if (sProcName == "lib3mf_toolpath_getlayerattachment") 
 		*ppProcAddress = (void*) &lib3mf_toolpath_getlayerattachment;
 	if (sProcName == "lib3mf_toolpath_readlayerdata") 

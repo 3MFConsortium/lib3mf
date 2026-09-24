@@ -534,6 +534,12 @@ namespace Lib3MF {
 		Sync = 7
 	};
 
+	public enum eToolpathType {
+		Planar = 0,
+		ThreeAxis = 1,
+		SixAxis = 2
+	};
+
 	public enum eChannelName {
 		Red = 0,
 		Green = 1,
@@ -2861,6 +2867,12 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_setbottomz", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_SetBottomZ (IntPtr Handle, UInt32 ABottomZ);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_gettoolpathtype", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetToolpathType (IntPtr Handle, out Int32 AToolpathType);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_settoolpathtype", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_SetToolpathType (IntPtr Handle, Int32 AToolpathType);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getlayerattachment", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_GetLayerAttachment (IntPtr Handle, UInt32 AIndex, out IntPtr AAttachment);
@@ -11016,6 +11028,21 @@ namespace Lib3MF {
 		{
 
 			CheckError(Internal.Lib3MFWrapper.Toolpath_SetBottomZ (Handle, ABottomZ));
+		}
+
+		public eToolpathType GetToolpathType ()
+		{
+			Int32 resultToolpathType = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetToolpathType (Handle, out resultToolpathType));
+			return (eToolpathType) (resultToolpathType);
+		}
+
+		public void SetToolpathType (eToolpathType AToolpathType)
+		{
+			Int32 enumToolpathType = (Int32) AToolpathType;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_SetToolpathType (Handle, enumToolpathType));
 		}
 
 		public CAttachment GetLayerAttachment (UInt32 AIndex)

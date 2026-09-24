@@ -43,7 +43,7 @@ namespace NMR {
 
 
 	CModelToolpath::CModelToolpath(_In_ const ModelResourceID sID, _In_ CModel * pModel, double dUnitFactor, CUUID uuid, nfUint32 nBottomZ)
-		: CModelResource(sID, pModel), m_dUnitFactor (dUnitFactor), m_UUID (uuid), m_nBottomZ (nBottomZ), m_sToolpathType (XML_3MF_TOOLPATHRESOURCETYPE_PLANAR)
+		: CModelResource(sID, pModel), m_dUnitFactor (dUnitFactor), m_UUID (uuid), m_nBottomZ (nBottomZ), m_eToolpathType (Lib3MF::eToolpathType::Planar)
 	{
 	}
 
@@ -65,14 +65,48 @@ namespace NMR {
 		m_nBottomZ = nBottomZ;
 	}
 
-	std::string CModelToolpath::getToolpathType()
+	Lib3MF::eToolpathType CModelToolpath::getToolpathType()
 	{
-		return m_sToolpathType;
+		return m_eToolpathType;
 	}
 
-	void CModelToolpath::setToolpathType(const std::string & sToolpathType)
+	void CModelToolpath::setToolpathType(Lib3MF::eToolpathType eToolpathType)
 	{
-		m_sToolpathType = sToolpathType;
+		switch (eToolpathType) {
+			case Lib3MF::eToolpathType::Planar:
+			case Lib3MF::eToolpathType::ThreeAxis:
+			case Lib3MF::eToolpathType::SixAxis:
+				m_eToolpathType = eToolpathType;
+				break;
+			default:
+				throw CNMRException(NMR_ERROR_INVALIDTOOLPATHTYPE);
+		}
+	}
+
+	Lib3MF::eToolpathType CModelToolpath::toolpathTypeFromString(const std::string & sToolpathType)
+	{
+		if (sToolpathType == XML_3MF_TOOLPATHRESOURCETYPE_PLANAR)
+			return Lib3MF::eToolpathType::Planar;
+		if (sToolpathType == XML_3MF_TOOLPATHRESOURCETYPE_3AXIS)
+			return Lib3MF::eToolpathType::ThreeAxis;
+		if (sToolpathType == XML_3MF_TOOLPATHRESOURCETYPE_6AXIS)
+			return Lib3MF::eToolpathType::SixAxis;
+
+		throw CNMRException(NMR_ERROR_INVALIDTOOLPATHTYPE);
+	}
+
+	std::string CModelToolpath::toolpathTypeToString(Lib3MF::eToolpathType eToolpathType)
+	{
+		switch (eToolpathType) {
+			case Lib3MF::eToolpathType::Planar:
+				return XML_3MF_TOOLPATHRESOURCETYPE_PLANAR;
+			case Lib3MF::eToolpathType::ThreeAxis:
+				return XML_3MF_TOOLPATHRESOURCETYPE_3AXIS;
+			case Lib3MF::eToolpathType::SixAxis:
+				return XML_3MF_TOOLPATHRESOURCETYPE_6AXIS;
+			default:
+				throw CNMRException(NMR_ERROR_INVALIDTOOLPATHTYPE);
+		}
 	}
 
 	bool CModelToolpath::layersAreEmpty()

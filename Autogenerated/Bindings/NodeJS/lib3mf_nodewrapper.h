@@ -2730,6 +2730,8 @@ private:
 	static void AddLayer(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetBottomZ(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetBottomZ(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetToolpathType(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetToolpathType(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetLayerAttachment(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void ReadLayerData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetLayerViewable(const v8::FunctionCallbackInfo<v8::Value>& args);

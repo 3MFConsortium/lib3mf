@@ -508,6 +508,12 @@ typedef enum eLib3MFToolpathSegmentType {
   eToolpathSegmentTypeSync = 7
 } eLib3MFToolpathSegmentType;
 
+typedef enum eLib3MFToolpathType {
+  eToolpathTypePlanar = 0,
+  eToolpathTypeThreeAxis = 1,
+  eToolpathTypeSixAxis = 2
+} eLib3MFToolpathType;
+
 typedef enum eLib3MFChannelName {
   eChannelNameRed = 0,
   eChannelNameGreen = 1,
@@ -730,6 +736,11 @@ typedef union {
   eLib3MFToolpathSegmentType m_enum;
   int m_code;
 } structEnumLib3MFToolpathSegmentType;
+
+typedef union {
+  eLib3MFToolpathType m_enum;
+  int m_code;
+} structEnumLib3MFToolpathType;
 
 typedef union {
   eLib3MFChannelName m_enum;

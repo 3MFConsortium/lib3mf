@@ -47,6 +47,8 @@ NMR_ModelToolpath.h defines the Model Toolpath.
 #include <map>
 #include <string>
 
+#include "lib3mf_types.hpp"
+
 namespace NMR {
 
 	class CModel;
@@ -61,7 +63,7 @@ namespace NMR {
 
 		nfUint32 m_nBottomZ;
 		double m_dUnitFactor;
-		std::string m_sToolpathType;
+		Lib3MF::eToolpathType m_eToolpathType;
 		std::vector<PModelToolpathLayer> m_Layers;
 		std::vector<PModelToolpathProfile> m_Profiles;
 		std::map<std::string, PModelToolpathProfile> m_ProfileMap;
@@ -77,8 +79,11 @@ namespace NMR {
 		nfUint32 getBottomZ();
 		void setBottomZ(nfUint32 nBottomZ);
 
-		std::string getToolpathType();
-		void setToolpathType(const std::string & sToolpathType);
+		Lib3MF::eToolpathType getToolpathType();
+		void setToolpathType(Lib3MF::eToolpathType eToolpathType);
+
+		static Lib3MF::eToolpathType toolpathTypeFromString(const std::string & sToolpathType);
+		static std::string toolpathTypeToString(Lib3MF::eToolpathType eToolpathType);
 
 		bool layersAreEmpty();
 

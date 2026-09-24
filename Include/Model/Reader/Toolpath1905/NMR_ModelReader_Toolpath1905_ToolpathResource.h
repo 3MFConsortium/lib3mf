@@ -52,7 +52,7 @@ namespace NMR {
 		nfBool m_bHasUnitFactor;
 
 		std::string m_sUUID;
-		std::string m_sToolpathType;
+		Lib3MF::eToolpathType m_eToolpathType;
 
 		PModelToolpath m_pToolpath;
 

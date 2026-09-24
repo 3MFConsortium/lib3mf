@@ -258,6 +258,16 @@ public class Lib3MFWrapper {
 		eSync
 	}
 
+	public static final int TOOLPATHTYPE_PLANAR = 0;
+	public static final int TOOLPATHTYPE_THREEAXIS = 1;
+	public static final int TOOLPATHTYPE_SIXAXIS = 2;
+
+	public enum ToolpathType {
+		ePlanar,
+		eThreeAxis,
+		eSixAxis
+	}
+
 	public static final int CHANNELNAME_RED = 0;
 	public static final int CHANNELNAME_GREEN = 1;
 	public static final int CHANNELNAME_BLUE = 2;
@@ -833,6 +843,24 @@ public class Lib3MFWrapper {
 				case TOOLPATHSEGMENTTYPE_ARC: return ToolpathSegmentType.eArc;
 				case TOOLPATHSEGMENTTYPE_DELAY: return ToolpathSegmentType.eDelay;
 				case TOOLPATHSEGMENTTYPE_SYNC: return ToolpathSegmentType.eSync;
+				default: throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "Unknown enum const : " + value);
+			}
+		}
+
+		public static int convertToolpathTypeToConst (ToolpathType value) throws Lib3MFException {
+			switch (value) {
+				case ePlanar: return TOOLPATHTYPE_PLANAR;
+				case eThreeAxis: return TOOLPATHTYPE_THREEAXIS;
+				case eSixAxis: return TOOLPATHTYPE_SIXAXIS;
+				default: throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "Unknown enum value : " + value);
+			}
+		}
+
+		public static ToolpathType convertConstToToolpathType (int value) throws Lib3MFException {
+			switch (value) {
+				case TOOLPATHTYPE_PLANAR: return ToolpathType.ePlanar;
+				case TOOLPATHTYPE_THREEAXIS: return ToolpathType.eThreeAxis;
+				case TOOLPATHTYPE_SIXAXIS: return ToolpathType.eSixAxis;
 				default: throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "Unknown enum const : " + value);
 			}
 		}
@@ -1902,6 +1930,8 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_toolpath_addlayer;
 	protected com.sun.jna.Function lib3mf_toolpath_getbottomz;
 	protected com.sun.jna.Function lib3mf_toolpath_setbottomz;
+	protected com.sun.jna.Function lib3mf_toolpath_gettoolpathtype;
+	protected com.sun.jna.Function lib3mf_toolpath_settoolpathtype;
 	protected com.sun.jna.Function lib3mf_toolpath_getlayerattachment;
 	protected com.sun.jna.Function lib3mf_toolpath_readlayerdata;
 	protected com.sun.jna.Function lib3mf_toolpath_getlayerviewable;
@@ -2725,6 +2755,8 @@ public class Lib3MFWrapper {
 		lib3mf_toolpath_addlayer = mLibrary.getFunction("lib3mf_toolpath_addlayer");
 		lib3mf_toolpath_getbottomz = mLibrary.getFunction("lib3mf_toolpath_getbottomz");
 		lib3mf_toolpath_setbottomz = mLibrary.getFunction("lib3mf_toolpath_setbottomz");
+		lib3mf_toolpath_gettoolpathtype = mLibrary.getFunction("lib3mf_toolpath_gettoolpathtype");
+		lib3mf_toolpath_settoolpathtype = mLibrary.getFunction("lib3mf_toolpath_settoolpathtype");
 		lib3mf_toolpath_getlayerattachment = mLibrary.getFunction("lib3mf_toolpath_getlayerattachment");
 		lib3mf_toolpath_readlayerdata = mLibrary.getFunction("lib3mf_toolpath_readlayerdata");
 		lib3mf_toolpath_getlayerviewable = mLibrary.getFunction("lib3mf_toolpath_getlayerviewable");
@@ -3547,6 +3579,8 @@ public class Lib3MFWrapper {
 		lib3mf_toolpath_addlayer = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_addlayer");
 		lib3mf_toolpath_getbottomz = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getbottomz");
 		lib3mf_toolpath_setbottomz = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_setbottomz");
+		lib3mf_toolpath_gettoolpathtype = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_gettoolpathtype");
+		lib3mf_toolpath_settoolpathtype = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_settoolpathtype");
 		lib3mf_toolpath_getlayerattachment = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getlayerattachment");
 		lib3mf_toolpath_readlayerdata = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_readlayerdata");
 		lib3mf_toolpath_getlayerviewable = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getlayerviewable");

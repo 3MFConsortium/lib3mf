@@ -7094,6 +7094,24 @@ typedef Lib3MFResult (*PLib3MFToolpath_GetBottomZPtr) (Lib3MF_Toolpath pToolpath
 typedef Lib3MFResult (*PLib3MFToolpath_SetBottomZPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nBottomZ);
 
 /**
+* Returns the toolpath type (planar, 3axis or 6axis). Defaults to planar.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pToolpathType - Toolpath type
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_GetToolpathTypePtr) (Lib3MF_Toolpath pToolpath, eLib3MFToolpathType * pToolpathType);
+
+/**
+* Sets the toolpath type (planar, 3axis or 6axis).
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] eToolpathType - Toolpath type
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_SetToolpathTypePtr) (Lib3MF_Toolpath pToolpath, eLib3MFToolpathType eToolpathType);
+
+/**
 * Retrieves the Attachment that contains the layer data.
 *
 * @param[in] pToolpath - Toolpath instance.
@@ -9463,6 +9481,8 @@ typedef struct {
 	PLib3MFToolpath_AddLayerPtr m_Toolpath_AddLayer;
 	PLib3MFToolpath_GetBottomZPtr m_Toolpath_GetBottomZ;
 	PLib3MFToolpath_SetBottomZPtr m_Toolpath_SetBottomZ;
+	PLib3MFToolpath_GetToolpathTypePtr m_Toolpath_GetToolpathType;
+	PLib3MFToolpath_SetToolpathTypePtr m_Toolpath_SetToolpathType;
 	PLib3MFToolpath_GetLayerAttachmentPtr m_Toolpath_GetLayerAttachment;
 	PLib3MFToolpath_ReadLayerDataPtr m_Toolpath_ReadLayerData;
 	PLib3MFToolpath_GetLayerViewablePtr m_Toolpath_GetLayerViewable;
@@ -11590,6 +11610,12 @@ Lib3MFResult CCall_lib3mf_toolpath_getbottomz(Lib3MFHandle libraryHandle, Lib3MF
 
 
 Lib3MFResult CCall_lib3mf_toolpath_setbottomz(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nBottomZ);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_gettoolpathtype(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, eLib3MFToolpathType * pToolpathType);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_settoolpathtype(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, eLib3MFToolpathType eToolpathType);
 
 
 Lib3MFResult CCall_lib3mf_toolpath_getlayerattachment(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_Attachment * pAttachment);

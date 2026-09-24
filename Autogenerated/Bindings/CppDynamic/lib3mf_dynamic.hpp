@@ -3671,6 +3671,8 @@ public:
 	inline PToolpathLayerData AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, classParam<CWriter> pModelWriter);
 	inline Lib3MF_uint32 GetBottomZ();
 	inline void SetBottomZ(const Lib3MF_uint32 nBottomZ);
+	inline eToolpathType GetToolpathType();
+	inline void SetToolpathType(const eToolpathType eToolpathType);
 	inline PAttachment GetLayerAttachment(const Lib3MF_uint32 nIndex);
 	inline PToolpathLayerReader ReadLayerData(const Lib3MF_uint32 nIndex);
 	inline PToolpathViewable GetLayerViewable(const Lib3MF_uint32 nIndex);
@@ -5046,6 +5048,8 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Toolpath_AddLayer = nullptr;
 		pWrapperTable->m_Toolpath_GetBottomZ = nullptr;
 		pWrapperTable->m_Toolpath_SetBottomZ = nullptr;
+		pWrapperTable->m_Toolpath_GetToolpathType = nullptr;
+		pWrapperTable->m_Toolpath_SetToolpathType = nullptr;
 		pWrapperTable->m_Toolpath_GetLayerAttachment = nullptr;
 		pWrapperTable->m_Toolpath_ReadLayerData = nullptr;
 		pWrapperTable->m_Toolpath_GetLayerViewable = nullptr;
@@ -11099,6 +11103,24 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_GetToolpathType = (PLib3MFToolpath_GetToolpathTypePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_gettoolpathtype");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_GetToolpathType = (PLib3MFToolpath_GetToolpathTypePtr) dlsym(hLibrary, "lib3mf_toolpath_gettoolpathtype");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_GetToolpathType == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Toolpath_SetToolpathType = (PLib3MFToolpath_SetToolpathTypePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_settoolpathtype");
+		#else // _WIN32
+		pWrapperTable->m_Toolpath_SetToolpathType = (PLib3MFToolpath_SetToolpathTypePtr) dlsym(hLibrary, "lib3mf_toolpath_settoolpathtype");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Toolpath_SetToolpathType == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_Toolpath_GetLayerAttachment = (PLib3MFToolpath_GetLayerAttachmentPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getlayerattachment");
 		#else // _WIN32
 		pWrapperTable->m_Toolpath_GetLayerAttachment = (PLib3MFToolpath_GetLayerAttachmentPtr) dlsym(hLibrary, "lib3mf_toolpath_getlayerattachment");
@@ -15234,6 +15256,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_toolpath_setbottomz", (void**)&(pWrapperTable->m_Toolpath_SetBottomZ));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_SetBottomZ == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_gettoolpathtype", (void**)&(pWrapperTable->m_Toolpath_GetToolpathType));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_GetToolpathType == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpath_settoolpathtype", (void**)&(pWrapperTable->m_Toolpath_SetToolpathType));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Toolpath_SetToolpathType == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_toolpath_getlayerattachment", (void**)&(pWrapperTable->m_Toolpath_GetLayerAttachment));
@@ -24978,6 +25008,27 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CToolpath::SetBottomZ(const Lib3MF_uint32 nBottomZ)
 	{
 		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_SetBottomZ(m_pHandle, nBottomZ));
+	}
+	
+	/**
+	* CToolpath::GetToolpathType - Returns the toolpath type (planar, 3axis or 6axis). Defaults to planar.
+	* @return Toolpath type
+	*/
+	eToolpathType CToolpath::GetToolpathType()
+	{
+		eToolpathType resultToolpathType = (eToolpathType) 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_GetToolpathType(m_pHandle, &resultToolpathType));
+		
+		return resultToolpathType;
+	}
+	
+	/**
+	* CToolpath::SetToolpathType - Sets the toolpath type (planar, 3axis or 6axis).
+	* @param[in] eToolpathType - Toolpath type
+	*/
+	void CToolpath::SetToolpathType(const eToolpathType eToolpathType)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Toolpath_SetToolpathType(m_pHandle, eToolpathType));
 	}
 	
 	/**

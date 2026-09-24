@@ -221,6 +221,15 @@ const (
 	ToolpathSegmentType_Sync = 7
 )
 
+// ToolpathType represents a Lib3MF enum.
+type ToolpathType int
+
+const (
+	ToolpathType_Planar = 0
+	ToolpathType_ThreeAxis = 1
+	ToolpathType_SixAxis = 2
+)
+
 // ChannelName represents a Lib3MF enum.
 type ChannelName int
 
@@ -9078,6 +9087,25 @@ func (inst Toolpath) GetBottomZ() (uint32, error) {
 // SetBottomZ sets the bottom Z Value of the toolpath. Will fail if a layer is already existing.
 func (inst Toolpath) SetBottomZ(bottomZ uint32) error {
 	ret := C.CCall_lib3mf_toolpath_setbottomz(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(bottomZ))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetToolpathType returns the toolpath type (planar, 3axis or 6axis). Defaults to planar.
+func (inst Toolpath) GetToolpathType() (ToolpathType, error) {
+	var toolpathType C.eLib3MFToolpathType
+	ret := C.CCall_lib3mf_toolpath_gettoolpathtype(inst.wrapperRef.LibraryHandle, inst.Ref, &toolpathType)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return ToolpathType(toolpathType), nil
+}
+
+// SetToolpathType sets the toolpath type (planar, 3axis or 6axis).
+func (inst Toolpath) SetToolpathType(toolpathType ToolpathType) error {
+	ret := C.CCall_lib3mf_toolpath_settoolpathtype(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFToolpathType(toolpathType))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}

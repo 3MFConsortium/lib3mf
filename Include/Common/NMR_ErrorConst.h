@@ -2075,4 +2075,7 @@ Toolpath errors (0xBXXX)
 // Missing profile override factor e
 #define NMR_ERROR_MISSINGOVERRIDEFACTORE 0xB05B
 
+// Invalid toolpath type
+#define NMR_ERROR_INVALIDTOOLPATHTYPE 0xB05C
+
 #endif // __NMR_ERRORCONST

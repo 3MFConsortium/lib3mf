@@ -278,6 +278,12 @@ type
 		eToolpathSegmentTypeSync
 	);
 
+	TLib3MFToolpathType = (
+		eToolpathTypePlanar,
+		eToolpathTypeThreeAxis,
+		eToolpathTypeSixAxis
+	);
+
 	TLib3MFChannelName = (
 		eChannelNameRed,
 		eChannelNameGreen,
@@ -7878,6 +7884,24 @@ type
 	TLib3MFToolpath_SetBottomZFunc = function(pToolpath: TLib3MFHandle; const nBottomZ: Cardinal): TLib3MFResult; cdecl;
 	
 	(**
+	* Returns the toolpath type (planar, 3axis or 6axis). Defaults to planar.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[out] pToolpathType - Toolpath type
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetToolpathTypeFunc = function(pToolpath: TLib3MFHandle; out pToolpathType: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the toolpath type (planar, 3axis or 6axis).
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] eToolpathType - Toolpath type
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_SetToolpathTypeFunc = function(pToolpath: TLib3MFHandle; const eToolpathType: Integer): TLib3MFResult; cdecl;
+	
+	(**
 	* Retrieves the Attachment that contains the layer data.
 	*
 	* @param[in] pToolpath - Toolpath instance.
@@ -11582,6 +11606,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddLayer(const AZMax: Cardinal; const APath: String; const AModelWriter: TLib3MFWriter): TLib3MFToolpathLayerData;
 		function GetBottomZ(): Cardinal;
 		procedure SetBottomZ(const ABottomZ: Cardinal);
+		function GetToolpathType(): TLib3MFToolpathType;
+		procedure SetToolpathType(const AToolpathType: TLib3MFToolpathType);
 		function GetLayerAttachment(const AIndex: Cardinal): TLib3MFAttachment;
 		function ReadLayerData(const AIndex: Cardinal): TLib3MFToolpathLayerReader;
 		function GetLayerViewable(const AIndex: Cardinal): TLib3MFToolpathViewable;
@@ -12489,6 +12515,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFToolpath_AddLayerFunc: TLib3MFToolpath_AddLayerFunc;
 		FLib3MFToolpath_GetBottomZFunc: TLib3MFToolpath_GetBottomZFunc;
 		FLib3MFToolpath_SetBottomZFunc: TLib3MFToolpath_SetBottomZFunc;
+		FLib3MFToolpath_GetToolpathTypeFunc: TLib3MFToolpath_GetToolpathTypeFunc;
+		FLib3MFToolpath_SetToolpathTypeFunc: TLib3MFToolpath_SetToolpathTypeFunc;
 		FLib3MFToolpath_GetLayerAttachmentFunc: TLib3MFToolpath_GetLayerAttachmentFunc;
 		FLib3MFToolpath_ReadLayerDataFunc: TLib3MFToolpath_ReadLayerDataFunc;
 		FLib3MFToolpath_GetLayerViewableFunc: TLib3MFToolpath_GetLayerViewableFunc;
@@ -13317,6 +13345,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFToolpath_AddLayerFunc: TLib3MFToolpath_AddLayerFunc read FLib3MFToolpath_AddLayerFunc;
 		property Lib3MFToolpath_GetBottomZFunc: TLib3MFToolpath_GetBottomZFunc read FLib3MFToolpath_GetBottomZFunc;
 		property Lib3MFToolpath_SetBottomZFunc: TLib3MFToolpath_SetBottomZFunc read FLib3MFToolpath_SetBottomZFunc;
+		property Lib3MFToolpath_GetToolpathTypeFunc: TLib3MFToolpath_GetToolpathTypeFunc read FLib3MFToolpath_GetToolpathTypeFunc;
+		property Lib3MFToolpath_SetToolpathTypeFunc: TLib3MFToolpath_SetToolpathTypeFunc read FLib3MFToolpath_SetToolpathTypeFunc;
 		property Lib3MFToolpath_GetLayerAttachmentFunc: TLib3MFToolpath_GetLayerAttachmentFunc read FLib3MFToolpath_GetLayerAttachmentFunc;
 		property Lib3MFToolpath_ReadLayerDataFunc: TLib3MFToolpath_ReadLayerDataFunc read FLib3MFToolpath_ReadLayerDataFunc;
 		property Lib3MFToolpath_GetLayerViewableFunc: TLib3MFToolpath_GetLayerViewableFunc read FLib3MFToolpath_GetLayerViewableFunc;
@@ -13678,6 +13708,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function convertConstToBlendMethod(const AValue: Integer): TLib3MFBlendMethod;
 	function convertToolpathSegmentTypeToConst(const AValue: TLib3MFToolpathSegmentType): Integer;
 	function convertConstToToolpathSegmentType(const AValue: Integer): TLib3MFToolpathSegmentType;
+	function convertToolpathTypeToConst(const AValue: TLib3MFToolpathType): Integer;
+	function convertConstToToolpathType(const AValue: Integer): TLib3MFToolpathType;
 	function convertChannelNameToConst(const AValue: TLib3MFChannelName): Integer;
 	function convertConstToChannelName(const AValue: Integer): TLib3MFChannelName;
 	function convertToolpathAttributeTypeToConst(const AValue: TLib3MFToolpathAttributeType): Integer;
@@ -14119,6 +14151,29 @@ implementation
 			5: Result := eToolpathSegmentTypeArc;
 			6: Result := eToolpathSegmentTypeDelay;
 			7: Result := eToolpathSegmentTypeSync;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
+		end;
+	end;
+	
+	
+	function convertToolpathTypeToConst(const AValue: TLib3MFToolpathType): Integer;
+	begin
+		case AValue of
+			eToolpathTypePlanar: Result := 0;
+			eToolpathTypeThreeAxis: Result := 1;
+			eToolpathTypeSixAxis: Result := 2;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
+		end;
+	end;
+	
+	function convertConstToToolpathType(const AValue: Integer): TLib3MFToolpathType;
+	begin
+		case AValue of
+			0: Result := eToolpathTypePlanar;
+			1: Result := eToolpathTypeThreeAxis;
+			2: Result := eToolpathTypeSixAxis;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -23186,6 +23241,20 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_SetBottomZFunc(FHandle, ABottomZ));
 	end;
 
+	function TLib3MFToolpath.GetToolpathType(): TLib3MFToolpathType;
+	var
+		ResultToolpathType: Integer;
+	begin
+		ResultToolpathType := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetToolpathTypeFunc(FHandle, ResultToolpathType));
+		Result := convertConstToToolpathType(ResultToolpathType);
+	end;
+
+	procedure TLib3MFToolpath.SetToolpathType(const AToolpathType: TLib3MFToolpathType);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_SetToolpathTypeFunc(FHandle, convertToolpathTypeToConst(AToolpathType)));
+	end;
+
 	function TLib3MFToolpath.GetLayerAttachment(const AIndex: Cardinal): TLib3MFAttachment;
 	var
 		HAttachment: TLib3MFHandle;
@@ -25605,6 +25674,8 @@ implementation
 		FLib3MFToolpath_AddLayerFunc := LoadFunction('lib3mf_toolpath_addlayer');
 		FLib3MFToolpath_GetBottomZFunc := LoadFunction('lib3mf_toolpath_getbottomz');
 		FLib3MFToolpath_SetBottomZFunc := LoadFunction('lib3mf_toolpath_setbottomz');
+		FLib3MFToolpath_GetToolpathTypeFunc := LoadFunction('lib3mf_toolpath_gettoolpathtype');
+		FLib3MFToolpath_SetToolpathTypeFunc := LoadFunction('lib3mf_toolpath_settoolpathtype');
 		FLib3MFToolpath_GetLayerAttachmentFunc := LoadFunction('lib3mf_toolpath_getlayerattachment');
 		FLib3MFToolpath_ReadLayerDataFunc := LoadFunction('lib3mf_toolpath_readlayerdata');
 		FLib3MFToolpath_GetLayerViewableFunc := LoadFunction('lib3mf_toolpath_getlayerviewable');
@@ -27728,6 +27799,12 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_setbottomz'), @FLib3MFToolpath_SetBottomZFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_gettoolpathtype'), @FLib3MFToolpath_GetToolpathTypeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_settoolpathtype'), @FLib3MFToolpath_SetToolpathTypeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getlayerattachment'), @FLib3MFToolpath_GetLayerAttachmentFunc);

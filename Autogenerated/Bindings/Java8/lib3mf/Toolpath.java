@@ -171,6 +171,28 @@ public class Toolpath extends Resource {
 	}
 
 	/**
+	 * Returns the toolpath type (planar, 3axis or 6axis). Defaults to planar.
+	 *
+	 * @return Toolpath type
+	 * @throws Lib3MFException
+	 */
+	public Lib3MFWrapper.ToolpathType getToolpathType() throws Lib3MFException {
+		Pointer bufferToolpathType = new Memory(4);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_gettoolpathtype.invokeInt(new java.lang.Object[]{mHandle, bufferToolpathType}));
+		return Lib3MFWrapper.EnumConversion.convertConstToToolpathType(bufferToolpathType.getInt(0));
+	}
+
+	/**
+	 * Sets the toolpath type (planar, 3axis or 6axis).
+	 *
+	 * @param toolpathType Toolpath type
+	 * @throws Lib3MFException
+	 */
+	public void setToolpathType(Lib3MFWrapper.ToolpathType toolpathType) throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_settoolpathtype.invokeInt(new java.lang.Object[]{mHandle, Lib3MFWrapper.EnumConversion.convertToolpathTypeToConst(toolpathType)}));
+	}
+
+	/**
 	 * Retrieves the Attachment that contains the layer data.
 	 *
 	 * @param index Layer Index

@@ -76,6 +76,10 @@ public:
 
 	void SetBottomZ(const Lib3MF_uint32 nBottomZ) override;
 
+	Lib3MF::eToolpathType GetToolpathType() override;
+
+	void SetToolpathType(const Lib3MF::eToolpathType eToolpathType) override;
+
 	IToolpathLayerData * AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, IWriter* pModelWriter) override;
 
 	IAttachment * GetLayerAttachment(const Lib3MF_uint32 nIndex) override;

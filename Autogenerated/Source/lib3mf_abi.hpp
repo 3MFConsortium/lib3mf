@@ -7107,6 +7107,24 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_getbottomz(Lib3MF_Toolpath pToolpat
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_setbottomz(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nBottomZ);
 
 /**
+* Returns the toolpath type (planar, 3axis or 6axis). Defaults to planar.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pToolpathType - Toolpath type
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_gettoolpathtype(Lib3MF_Toolpath pToolpath, Lib3MF::eToolpathType * pToolpathType);
+
+/**
+* Sets the toolpath type (planar, 3axis or 6axis).
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] eToolpathType - Toolpath type
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpath_settoolpathtype(Lib3MF_Toolpath pToolpath, Lib3MF::eToolpathType eToolpathType);
+
+/**
 * Retrieves the Attachment that contains the layer data.
 *
 * @param[in] pToolpath - Toolpath instance.

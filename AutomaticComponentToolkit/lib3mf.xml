@@ -275,6 +275,12 @@
 		<option name="Sync" value="7" />
 	</enum>
 
+	<enum name="ToolpathType">
+		<option name="Planar" value="0" />
+		<option name="ThreeAxis" value="1" />
+		<option name="SixAxis" value="2" />
+	</enum>
+
 	<enum name="ChannelName">
 		<option name="Red" value="0" />
 		<option name="Green" value="1" />
@@ -4559,6 +4565,14 @@
 
 		<method name="SetBottomZ" description = "Sets the bottom Z Value of the toolpath. Will fail if a layer is already existing.">
 			<param name="BottomZ" type="uint32" pass="in" description="BottomZ value in Toolpath units" />
+		</method>
+
+		<method name="GetToolpathType" description = "Returns the toolpath type (planar, 3axis or 6axis). Defaults to planar.">
+			<param name="ToolpathType" type="enum" class="ToolpathType" pass="return" description="Toolpath type" />
+		</method>
+
+		<method name="SetToolpathType" description = "Sets the toolpath type (planar, 3axis or 6axis).">
+			<param name="ToolpathType" type="enum" class="ToolpathType" pass="in" description="Toolpath type" />
 		</method>
 
 		<method name="GetLayerAttachment" description = "Retrieves the Attachment that contains the layer data.">

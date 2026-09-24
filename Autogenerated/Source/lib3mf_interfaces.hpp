@@ -7286,6 +7286,18 @@ public:
 	virtual void SetBottomZ(const Lib3MF_uint32 nBottomZ) = 0;
 
 	/**
+	* IToolpath::GetToolpathType - Returns the toolpath type (planar, 3axis or 6axis). Defaults to planar.
+	* @return Toolpath type
+	*/
+	virtual Lib3MF::eToolpathType GetToolpathType() = 0;
+
+	/**
+	* IToolpath::SetToolpathType - Sets the toolpath type (planar, 3axis or 6axis).
+	* @param[in] eToolpathType - Toolpath type
+	*/
+	virtual void SetToolpathType(const Lib3MF::eToolpathType eToolpathType) = 0;
+
+	/**
 	* IToolpath::GetLayerAttachment - Retrieves the Attachment that contains the layer data.
 	* @param[in] nIndex - Layer Index
 	* @return Attachment

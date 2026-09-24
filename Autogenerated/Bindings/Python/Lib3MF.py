@@ -1132,6 +1132,8 @@ class FunctionTable:
 	lib3mf_toolpath_addlayer = None
 	lib3mf_toolpath_getbottomz = None
 	lib3mf_toolpath_setbottomz = None
+	lib3mf_toolpath_gettoolpathtype = None
+	lib3mf_toolpath_settoolpathtype = None
 	lib3mf_toolpath_getlayerattachment = None
 	lib3mf_toolpath_readlayerdata = None
 	lib3mf_toolpath_getlayerviewable = None
@@ -1416,6 +1418,12 @@ class ToolpathSegmentType(CTypesEnum):
 	Arc = 5
 	Delay = 6
 	Sync = 7
+'''Definition of ToolpathType
+'''
+class ToolpathType(CTypesEnum):
+	Planar = 0
+	ThreeAxis = 1
+	SixAxis = 2
 '''Definition of ChannelName
 '''
 class ChannelName(CTypesEnum):
@@ -5780,6 +5788,18 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
 			self.lib.lib3mf_toolpath_setbottomz = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_gettoolpathtype")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32))
+			self.lib.lib3mf_toolpath_gettoolpathtype = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_settoolpathtype")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ToolpathType)
+			self.lib.lib3mf_toolpath_settoolpathtype = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getlayerattachment")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -8691,6 +8711,12 @@ class Wrapper:
 			
 			self.lib.lib3mf_toolpath_setbottomz.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_setbottomz.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_toolpath_gettoolpathtype.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_gettoolpathtype.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
+			
+			self.lib.lib3mf_toolpath_settoolpathtype.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_settoolpathtype.argtypes = [ctypes.c_void_p, ToolpathType]
 			
 			self.lib.lib3mf_toolpath_getlayerattachment.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_getlayerattachment.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
@@ -15974,6 +16000,16 @@ class Toolpath(Resource):
 	def SetBottomZ(self, BottomZ):
 		nBottomZ = ctypes.c_uint32(BottomZ)
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_setbottomz(self._handle, nBottomZ))
+		
+	
+	def GetToolpathType(self):
+		pToolpathType = ctypes.c_int32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_gettoolpathtype(self._handle, pToolpathType))
+		
+		return ToolpathType(pToolpathType.value)
+	
+	def SetToolpathType(self, ToolpathType):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_settoolpathtype(self._handle, ToolpathType))
 		
 	
 	def GetLayerAttachment(self, Index):

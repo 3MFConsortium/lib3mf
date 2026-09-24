@@ -97,6 +97,16 @@ void CToolpath::SetBottomZ(const Lib3MF_uint32 nBottomZ)
 	m_pToolpath->setBottomZ(nBottomZ);
 }
 
+Lib3MF::eToolpathType CToolpath::GetToolpathType()
+{
+	return m_pToolpath->getToolpathType();
+}
+
+void CToolpath::SetToolpathType(const Lib3MF::eToolpathType eToolpathType)
+{
+	m_pToolpath->setToolpathType(eToolpathType);
+}
+
 
 IToolpathProfile* CToolpath::AddProfile(const std::string& sName)
 {
