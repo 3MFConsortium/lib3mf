@@ -145,6 +145,10 @@ namespace NMR {
 		// build's UUID. Empty if none defined
 		PUUID m_buildUUID;
 
+		// Toolpath extension: model resource id of the toolpathresource selected for
+		// this build via the tp:toolpathid attribute on <build>. 0 means not set.
+		nfUint32 m_nBuildToolpathResourceID;
+
 		// Model Properties
 		nfUint32 m_nHandleCounter;
 		eModelUnit m_Unit;
@@ -247,6 +251,13 @@ namespace NMR {
 
 		PUUID buildUUID();
 		void setBuildUUID(PUUID pUUID);
+
+		// Toolpath extension build reference (tp:toolpathid). A value of 0 means no toolpath
+		// is selected for the build.
+		nfUint32 getBuildToolpathResourceID();
+		void setBuildToolpathResourceID(_In_ nfUint32 nResourceID);
+		nfBool hasBuildToolpathResourceID();
+
 		void unRegisterUUID(PUUID pUUID);
 		void registerUUID(PUUID pUUID);
 

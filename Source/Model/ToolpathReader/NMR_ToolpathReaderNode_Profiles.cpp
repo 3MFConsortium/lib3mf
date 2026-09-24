@@ -78,7 +78,7 @@ namespace NMR {
 
 	void CToolpathReaderNode_Profiles::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
-		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_TOOLPATHSPEC) == 0) {
+		if (XML_3MF_ISTOOLPATHNAMESPACE(pNameSpace)) {
 			if (strcmp(pChildName, XML_3MF_TOOLPATHELEMENT_PROFILE) == 0) {
 				PToolpathReaderNode_Profile pXMLNode = std::make_shared<CToolpathReaderNode_Profile>(m_pWarnings, m_pProgressMonitor, m_pReadData);
 				pXMLNode->parseXML(pXMLReader);

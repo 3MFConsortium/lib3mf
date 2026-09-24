@@ -86,7 +86,7 @@ namespace NMR {
 	void CModelReaderNode_Toolpath1905_ToolpathLayers::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 
-		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_TOOLPATHSPEC) == 0) {
+		if (XML_3MF_ISTOOLPATHNAMESPACE(pNameSpace)) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_TOOLPATHLAYER) == 0) {
 
 				PModelReaderNode_Toolpath1905_ToolpathLayer pXMLNode = std::make_shared<CModelReaderNode_Toolpath1905_ToolpathLayer>(

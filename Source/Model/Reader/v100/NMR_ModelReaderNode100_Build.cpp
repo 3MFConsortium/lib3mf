@@ -91,6 +91,16 @@ namespace NMR {
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 		}
+
+		// Toolpath extension: optional reference from <build> to the toolpathresource to use.
+		// Accept both the current (3mf.io/2026/03) and legacy (microsoft/2019/05) namespaces.
+		if (XML_3MF_ISTOOLPATHNAMESPACE(pNameSpace)) {
+			if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BUILD_TOOLPATHID) == 0) {
+				m_pModel->setBuildToolpathResourceID(fnStringToUint32(pAttributeValue));
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+		}
 	}
 
 	void CModelReaderNode100_Build::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)

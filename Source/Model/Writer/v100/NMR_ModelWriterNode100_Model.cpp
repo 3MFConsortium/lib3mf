@@ -1182,6 +1182,12 @@ namespace NMR {
 			writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, m_pModel->buildUUID()->toString());
 		}
 
+		// Toolpath extension: write the optional tp:toolpathid reference selecting the toolpathresource.
+		if (m_bWriteToolpaths && m_pModel->hasBuildToolpathResourceID()) {
+			writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_TOOLPATH, XML_3MF_ATTRIBUTE_BUILD_TOOLPATHID,
+				std::to_string(m_pModel->getBuildToolpathResourceID()));
+		}
+
 		if (m_bIsRootModel)
 		{
 			m_pProgressMonitor->IncrementProgress(1);

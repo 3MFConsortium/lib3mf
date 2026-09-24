@@ -84,6 +84,8 @@ namespace NMR {
 		m_pCurPath = m_pPath;
 		m_pKeyStore = CKeyStoreFactory::makeKeyStore();
 
+		m_nBuildToolpathResourceID = 0;
+
 		setBuildUUID(std::make_shared<CUUID>());
 
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
@@ -393,6 +395,21 @@ namespace NMR {
 		registerUUID(pUUID);
 		unRegisterUUID(m_buildUUID);
 		m_buildUUID = pUUID;
+	}
+
+	nfUint32 CModel::getBuildToolpathResourceID()
+	{
+		return m_nBuildToolpathResourceID;
+	}
+
+	void CModel::setBuildToolpathResourceID(_In_ nfUint32 nResourceID)
+	{
+		m_nBuildToolpathResourceID = nResourceID;
+	}
+
+	nfBool CModel::hasBuildToolpathResourceID()
+	{
+		return (m_nBuildToolpathResourceID != 0);
 	}
 
 	void CModel::unRegisterUUID(PUUID pUUID)

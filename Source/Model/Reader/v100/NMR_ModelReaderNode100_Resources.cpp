@@ -178,7 +178,7 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 
-		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_TOOLPATHSPEC) == 0) {
+		if (XML_3MF_ISTOOLPATHNAMESPACE(pNameSpace)) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_TOOLPATHRESOURCE) == 0) {
 
 				m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READRESOURCES);

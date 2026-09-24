@@ -72,7 +72,9 @@ These are given by the 3MF Standard
 #define PACKAGE_MUST_PRESERVE_RELATIONSHIP_TYPE "http://schemas.openxmlformats.org/package/2006/relationships/mustpreserve"
 #define PACKAGE_KEYSTORE_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/04/keystore"
 #define PACKAGE_ENCRYPTED_FILE_RELATIONSHIP "http://schemas.openxmlformats.org/package/2006/relationships/encryptedfile"
-#define PACKAGE_TOOLPATH_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/toolpath"
+#define PACKAGE_TOOLPATH_RELATIONSHIP_TYPE "http://schemas.3mf.io/3dmanufacturing/toolpath/2026/03/layer"
+// Legacy toolpath layer relationship type (Microsoft namespace, 2019/05). Kept for backward-compatible reading.
+#define PACKAGE_TOOLPATH_RELATIONSHIP_TYPE_LEGACY1905 "http://schemas.microsoft.com/3dmanufacturing/2019/05/toolpath"
 #define PACKAGE_BINARY_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/binary"
 #define PACKAGE_BINARYINDEX_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/binaryindex"
 
@@ -91,7 +93,12 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_CIPHERVALUESPEC "http://www.w3.org/2001/04/xmlenc#"
 #define XML_3MF_NAMESPACE_VOLUMETRICSPEC "http://schemas.3mf.io/3dmanufacturing/volumetric/2022/01"
 #define XML_3MF_NAMESPACE_IMPLICITSPEC "http://schemas.3mf.io/3dmanufacturing/implicit/2023/12"
-#define XML_3MF_NAMESPACE_TOOLPATHSPEC "http://schemas.microsoft.com/3dmanufacturing/toolpath/2019/05"
+#define XML_3MF_NAMESPACE_TOOLPATHSPEC "http://schemas.3mf.io/3dmanufacturing/toolpath/2026/03"
+// Legacy toolpath namespace (Microsoft, 2019/05). Still accepted on read for backward compatibility.
+#define XML_3MF_NAMESPACE_TOOLPATHSPEC_LEGACY1905 "http://schemas.microsoft.com/3dmanufacturing/toolpath/2019/05"
+// Returns true if the given namespace URI is a recognized toolpath namespace (current or legacy).
+// Used by readers so that both new (3mf.io/2026/03) and old (microsoft/2019/05) packages can be parsed.
+#define XML_3MF_ISTOOLPATHNAMESPACE(ns) ((strcmp((ns), XML_3MF_NAMESPACE_TOOLPATHSPEC) == 0) || (strcmp((ns), XML_3MF_NAMESPACE_TOOLPATHSPEC_LEGACY1905) == 0))
 #define XML_3MF_NAMESPACE_BINARYSPEC "http://schemas.microsoft.com/3dmanufacturing/binary/2023/05"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
@@ -406,6 +413,8 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_ITEM_OBJECTID             "objectid"
 #define XML_3MF_ATTRIBUTE_ITEM_TRANSFORM            "transform"
 #define XML_3MF_ATTRIBUTE_ITEM_PARTNUMBER           "partnumber"
+// Toolpath extension attribute on <build>: references the toolpathresource to be used for this build.
+#define XML_3MF_ATTRIBUTE_BUILD_TOOLPATHID          "toolpathid"
 
 // Texture element.
 #define XML_3MF_ELEMENT_TEXTURE                     "texture"
