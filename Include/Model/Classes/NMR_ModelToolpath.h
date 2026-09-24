@@ -67,6 +67,7 @@ namespace NMR {
 		std::vector<PModelToolpathLayer> m_Layers;
 		std::vector<PModelToolpathProfile> m_Profiles;
 		std::map<std::string, PModelToolpathProfile> m_ProfileMap;
+		PModelToolpathProfileNameRegistry m_pProfileNameRegistry;
 
 		std::vector<PCustomXMLTree> m_CustomXMLData;
 

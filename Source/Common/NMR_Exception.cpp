@@ -711,6 +711,9 @@ namespace NMR {
 		case NMR_ERROR_INVALIDTOOLPATHTYPE: return "Invalid toolpath type";
 		case NMR_ERROR_INVALIDBUILDTOOLPATHID: return "Build toolpath reference does not resolve to a toolpath resource";
 		case NMR_ERROR_INVALIDTOOLPATHUNITFACTOR: return "Toolpath unit factor must be positive";
+		case NMR_ERROR_MISSINGPROFILEMODIFIERFACTOR: return "Missing or invalid profile modifier factor";
+		case NMR_ERROR_PROFILEMODIFIERFACTORINUSE: return "Profile modifier factor is already used by another modifier of the same profile";
+		case NMR_ERROR_DUPLICATETOOLPATHPROFILENAME: return "Toolpath profile name is not unique within the toolpath";
 
 		default:
 			return "unknown error";

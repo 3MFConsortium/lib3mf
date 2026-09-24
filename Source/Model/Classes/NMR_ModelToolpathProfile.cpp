@@ -177,10 +177,25 @@ namespace NMR {
 
 
 
-	CModelToolpathProfile::CModelToolpathProfile(std::string sUUID, std::string sName)
-		: m_sUUID (sUUID), m_sName (sName)
+	void CModelToolpathProfileNameRegistry::registerName(const std::string & sName)
 	{
-		
+		if (!m_Names.insert(sName).second)
+			throw CNMRException(NMR_ERROR_DUPLICATETOOLPATHPROFILENAME);
+	}
+
+	void CModelToolpathProfileNameRegistry::unregisterName(const std::string & sName)
+	{
+		m_Names.erase(sName);
+	}
+
+
+	CModelToolpathProfile::CModelToolpathProfile(std::string sUUID, std::string sName, PModelToolpathProfileNameRegistry pNameRegistry)
+		: m_sUUID (sUUID), m_sName (sName), m_pNameRegistry (pNameRegistry)
+	{
+		if (pNameRegistry.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		m_pNameRegistry->registerName(m_sName);
 	}
 
 	std::string CModelToolpathProfile::getUUID()
@@ -195,6 +210,11 @@ namespace NMR {
 
 	void CModelToolpathProfile::setName(const std::string & sName)
 	{
+		if (sName == m_sName)
+			return;
+
+		m_pNameRegistry->registerName(sName);
+		m_pNameRegistry->unregisterName(m_sName);
 		m_sName = sName;
 	}
 
@@ -365,8 +385,32 @@ namespace NMR {
 		return iIter->second;
 	}
 
+	void CModelToolpathProfile::checkModifierFactor(const std::pair<std::string, std::string> & key, Lib3MF::eToolpathProfileModificationFactor modificationFactor)
+	{
+		switch (modificationFactor) {
+			case Lib3MF::eToolpathProfileModificationFactor::FactorE:
+			case Lib3MF::eToolpathProfileModificationFactor::FactorF:
+			case Lib3MF::eToolpathProfileModificationFactor::FactorG:
+			case Lib3MF::eToolpathProfileModificationFactor::FactorH:
+				break;
+			default:
+				throw CNMRException(NMR_ERROR_MISSINGPROFILEMODIFIERFACTOR);
+		}
+
+		// With four distinct factors available, this also limits a profile to four modifiers.
+		for (auto & modifierEntry : m_ModifierMap) {
+			if ((modifierEntry.first != key) && (modifierEntry.second->getModificationFactor() == modificationFactor))
+				throw CNMRException(NMR_ERROR_PROFILEMODIFIERFACTORINUSE);
+		}
+	}
+
 	void CModelToolpathProfile::changeModifier(const std::string& sNameSpace, const std::string& sValueName, Lib3MF::eToolpathProfileModificationType modifierType, double dMinimum, double dMaximum, Lib3MF::eToolpathProfileModificationFactor modificationFactor)
 	{
+		auto key = std::make_pair(sNameSpace, sValueName);
+		if (m_ValueMap.find(key) == m_ValueMap.end())
+			throw CNMRException(NMR_ERROR_PROFILEVALUENOTFOUND);
+		checkModifierFactor(key, modificationFactor);
+
 		removeModifier(sNameSpace, sValueName);
 		addModifier(sNameSpace, sValueName, modifierType, dMinimum, dMaximum, modificationFactor);
 	}
@@ -383,6 +427,8 @@ namespace NMR {
 		auto iModifierIter = m_ModifierMap.find(key);
 		if (iModifierIter != m_ModifierMap.end())
 			throw CNMRException(NMR_ERROR_DUPLICATEPROFILEMODIFIER);
+
+		checkModifierFactor(key, modificationFactor);
 
 		auto pModifier = std::make_shared<CModelToolpathProfileModifier>(pValue, modifierType, dMinimum, dMaximum, modificationFactor);
 

@@ -42,6 +42,7 @@ NMR_ModelToolpathProfile.h defines the Model Toolpath Profile.
 #include <map>
 #include <string>
 #include <list>
+#include <set>
 
 #include "lib3mf_types.hpp"
 
@@ -104,10 +105,23 @@ namespace NMR {
 
 	typedef std::shared_ptr<CModelToolpathProfileModifier> PModelToolpathProfileModifier;
 
+	// Profile names MUST be unique within a toolpath. The registry is shared between a toolpath
+	// and its profiles, so that renaming a profile can be checked against its siblings.
+	class CModelToolpathProfileNameRegistry {
+	private:
+		std::set<std::string> m_Names;
+	public:
+		void registerName(const std::string & sName);
+		void unregisterName(const std::string & sName);
+	};
+
+	typedef std::shared_ptr<CModelToolpathProfileNameRegistry> PModelToolpathProfileNameRegistry;
+
 	class CModelToolpathProfile {
 	private:
 		std::string m_sUUID;
 		std::string m_sName;
+		PModelToolpathProfileNameRegistry m_pNameRegistry;
 
 
 		std::vector<PModelToolpathProfileValue> m_ValueList;
@@ -116,9 +130,12 @@ namespace NMR {
 		std::vector<PModelToolpathProfileModifier> m_ModifierList;
 		std::map<std::pair<std::string, std::string>, PModelToolpathProfileModifier> m_ModifierMap;
 
+		// Throws if the factor is not e/f/g/h, or if it is used by a modifier on another attribute.
+		void checkModifierFactor(const std::pair<std::string, std::string> & key, Lib3MF::eToolpathProfileModificationFactor modificationFactor);
+
 	public:
 		CModelToolpathProfile() = delete;
-		CModelToolpathProfile(std::string sUUID, std::string sName);
+		CModelToolpathProfile(std::string sUUID, std::string sName, PModelToolpathProfileNameRegistry pNameRegistry);
 
 		std::string getUUID();
 		std::string getName();

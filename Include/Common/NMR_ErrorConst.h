@@ -2084,4 +2084,13 @@ Toolpath errors (0xBXXX)
 // Toolpath unit factor must be positive
 #define NMR_ERROR_INVALIDTOOLPATHUNITFACTOR 0xB05E
 
+// Missing or invalid profile modifier factor
+#define NMR_ERROR_MISSINGPROFILEMODIFIERFACTOR 0xB05F
+
+// Profile modifier factor is already used by another modifier of the same profile
+#define NMR_ERROR_PROFILEMODIFIERFACTORINUSE 0xB060
+
+// Toolpath profile name is not unique within the toolpath
+#define NMR_ERROR_DUPLICATETOOLPATHPROFILENAME 0xB061
+
 #endif // __NMR_ERRORCONST

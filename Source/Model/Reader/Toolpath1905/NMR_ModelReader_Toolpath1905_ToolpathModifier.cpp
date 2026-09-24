@@ -181,9 +181,11 @@ namespace NMR {
 		if (!m_bHasMinimum)
 			throw CNMRException(NMR_ERROR_MISSINGPROFILEMODIFIERMINIMUM);
 		if (!m_bHasMaximum)
-			throw CNMRException(NMR_ERROR_MISSINGPROFILEMODIFIERMINIMUM);
+			throw CNMRException(NMR_ERROR_MISSINGPROFILEMODIFIERMAXIMUM);
 		if (m_ModificationType == Lib3MF::eToolpathProfileModificationType::NoModification)
 			throw CNMRException(NMR_ERROR_MISSINGPROFILEMODIFIERTYPE);
+		if (m_ModificationFactor == Lib3MF::eToolpathProfileModificationFactor::Unknown)
+			throw CNMRException(NMR_ERROR_MISSINGPROFILEMODIFIERFACTOR);
 
 
 		size_t nPos = m_sAttribute.find(":");
