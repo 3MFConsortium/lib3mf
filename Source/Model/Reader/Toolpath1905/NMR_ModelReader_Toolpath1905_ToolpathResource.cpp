@@ -111,6 +111,8 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
 			if (fabs(m_dUnitFactor) > XML_3MF_MAXIMUMCOORDINATEVALUE)
 				throw CNMRException(NMR_ERROR_INVALIDUNITS);
+			if (m_dUnitFactor <= 0.0)
+				throw CNMRException(NMR_ERROR_INVALIDTOOLPATHUNITFACTOR);
 			m_bHasUnitFactor = true;
 		}
 

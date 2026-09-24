@@ -115,6 +115,9 @@ namespace NMR {
 	class CModelVolumeData;
 	typedef std::shared_ptr <CModelVolumeData> PModelVolumeData;
 
+	class CModelToolpath;
+	typedef std::shared_ptr <CModelToolpath> PModelToolpath;
+
 	class LevelSetObject;
 	typedef std::shared_ptr <LevelSetObject> PLevelSetObject;
 
@@ -145,9 +148,9 @@ namespace NMR {
 		// build's UUID. Empty if none defined
 		PUUID m_buildUUID;
 
-		// Toolpath extension: model resource id of the toolpathresource selected for
+		// Toolpath extension: unique resource id of the toolpathresource selected for
 		// this build via the tp:toolpathid attribute on <build>. 0 means not set.
-		nfUint32 m_nBuildToolpathResourceID;
+		UniqueResourceID m_nBuildToolpathUniqueID;
 
 		// Model Properties
 		nfUint32 m_nHandleCounter;
@@ -252,11 +255,11 @@ namespace NMR {
 		PUUID buildUUID();
 		void setBuildUUID(PUUID pUUID);
 
-		// Toolpath extension build reference (tp:toolpathid). A value of 0 means no toolpath
-		// is selected for the build.
-		nfUint32 getBuildToolpathResourceID();
-		void setBuildToolpathResourceID(_In_ nfUint32 nResourceID);
-		nfBool hasBuildToolpathResourceID();
+		// Toolpath extension build reference (tp:toolpathid). Returns nullptr if no toolpath
+		// is selected for the build, or if the selected toolpath is no longer part of the model.
+		PModelToolpath getBuildToolpath();
+		// Passing nullptr clears the selection. The toolpath MUST be a resource of this model.
+		void setBuildToolpath(_In_ PModelToolpath pToolpath);
 
 		void unRegisterUUID(PUUID pUUID);
 		void registerUUID(PUUID pUUID);

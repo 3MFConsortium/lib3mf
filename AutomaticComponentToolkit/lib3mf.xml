@@ -5325,6 +5325,21 @@
 			<param name="BottomZ" type="uint32" pass="in" description="The bottom Z value to be used in the toolpath." />
 			<param name="ToolpathInstance" type="handle" class="Toolpath" pass="return" description="The toolpath instance of the created Toolpath." />
 		</method>
+
+		<method name="HasBuildToolpath" description = "Returns whether the build selects a toolpath resource (tp:toolpathid on the build element).">
+			<param name="HasToolpath" type="bool" pass="return" description="True if a toolpath is selected for the build." />
+		</method>
+
+		<method name="GetBuildToolpath" description = "Returns the toolpath resource selected for the build (tp:toolpathid on the build element). Fails if no toolpath is selected.">
+			<param name="ToolpathInstance" type="handle" class="Toolpath" pass="return" description="The toolpath selected for the build." />
+		</method>
+
+		<method name="SetBuildToolpath" description = "Selects the toolpath resource that should be used to fabricate the build (tp:toolpathid on the build element). The toolpath MUST be a resource of this model.">
+			<param name="ToolpathInstance" type="handle" class="Toolpath" pass="in" description="The toolpath to select for the build." />
+		</method>
+
+		<method name="ClearBuildToolpath" description = "Removes the toolpath selection from the build.">
+		</method>
 		
 		<method name="GetMetaDataGroup" description="Returns the metadata of the model as MetaDataGroup">
 			<param name="TheMetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of the model"/>

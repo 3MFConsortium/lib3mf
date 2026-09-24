@@ -1183,9 +1183,12 @@ namespace NMR {
 		}
 
 		// Toolpath extension: write the optional tp:toolpathid reference selecting the toolpathresource.
-		if (m_bWriteToolpaths && m_pModel->hasBuildToolpathResourceID()) {
-			writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_TOOLPATH, XML_3MF_ATTRIBUTE_BUILD_TOOLPATHID,
-				std::to_string(m_pModel->getBuildToolpathResourceID()));
+		if (m_bWriteToolpaths) {
+			PModelToolpath pBuildToolpath = m_pModel->getBuildToolpath();
+			if (pBuildToolpath.get() != nullptr) {
+				writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_TOOLPATH, XML_3MF_ATTRIBUTE_BUILD_TOOLPATHID,
+					std::to_string(pBuildToolpath->getPackageResourceID()->getModelResourceID()));
+			}
 		}
 
 		if (m_bIsRootModel)
@@ -1329,7 +1332,7 @@ namespace NMR {
 
 				std::string sToolpathUUID = pToolpathResource->getUUID().toString();
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHRESOURCE, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
-				writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_ID, pToolpathResource->getPackageResourceID()->getUniqueID());
+				writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_ID, pToolpathResource->getPackageResourceID()->getModelResourceID());
 				writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_UUID, sToolpathUUID.c_str());
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_UNITFACTOR, (nfFloat)pToolpathResource->getUnitFactor());
 

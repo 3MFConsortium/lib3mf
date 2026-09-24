@@ -730,7 +730,7 @@ IToolpath* CModel::AddToolpath(const Lib3MF_double dUnitFactor)
 
 IToolpath* CModel::AddToolpathWithBottomZ(const Lib3MF_double dUnitFactor, const Lib3MF_uint32 nBottomZ) 
 {
-	if (dUnitFactor <= 0.0)
+	if (!(dUnitFactor > 0.0))
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
 	NMR::CUUID uuid;
@@ -739,6 +739,38 @@ IToolpath* CModel::AddToolpathWithBottomZ(const Lib3MF_double dUnitFactor, const
 	model().addResource(pToolpath);
 
 	return new CToolpath(pToolpath);
+}
+
+bool CModel::HasBuildToolpath()
+{
+	return (model().getBuildToolpath().get() != nullptr);
+}
+
+IToolpath* CModel::GetBuildToolpath()
+{
+	auto pToolpath = model().getBuildToolpath();
+	if (pToolpath.get() == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+
+	return new CToolpath(pToolpath);
+}
+
+void CModel::SetBuildToolpath(IToolpath* pToolpathInstance)
+{
+	CToolpath* pToolpath = dynamic_cast<CToolpath*> (pToolpathInstance);
+	if (pToolpath == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	auto pModelToolpath = std::dynamic_pointer_cast<NMR::CModelToolpath> (pToolpath->resource());
+	if (pModelToolpath.get() == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	model().setBuildToolpath(pModelToolpath);
+}
+
+void CModel::ClearBuildToolpath()
+{
+	model().setBuildToolpath(nullptr);
 }
 
 

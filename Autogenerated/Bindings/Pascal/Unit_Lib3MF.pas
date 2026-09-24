@@ -9200,6 +9200,41 @@ type
 	TLib3MFModel_AddToolpathWithBottomZFunc = function(pModel: TLib3MFHandle; const dUnitFactor: Double; const nBottomZ: Cardinal; out pToolpathInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
+	* Returns whether the build selects a toolpath resource (tp:toolpathid on the build element).
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pHasToolpath - True if a toolpath is selected for the build.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_HasBuildToolpathFunc = function(pModel: TLib3MFHandle; out pHasToolpath: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the toolpath resource selected for the build (tp:toolpathid on the build element). Fails if no toolpath is selected.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pToolpathInstance - The toolpath selected for the build.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetBuildToolpathFunc = function(pModel: TLib3MFHandle; out pToolpathInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Selects the toolpath resource that should be used to fabricate the build (tp:toolpathid on the build element). The toolpath MUST be a resource of this model.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] pToolpathInstance - The toolpath to select for the build.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_SetBuildToolpathFunc = function(pModel: TLib3MFHandle; const pToolpathInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes the toolpath selection from the build.
+	*
+	* @param[in] pModel - Model instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_ClearBuildToolpathFunc = function(pModel: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
 	* Returns the metadata of the model as MetaDataGroup
 	*
 	* @param[in] pModel - Model instance.
@@ -11834,6 +11869,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure RemoveBuildItem(const ABuildItemInstance: TLib3MFBuildItem);
 		function AddToolpath(const AUnitFactor: Double): TLib3MFToolpath;
 		function AddToolpathWithBottomZ(const AUnitFactor: Double; const ABottomZ: Cardinal): TLib3MFToolpath;
+		function HasBuildToolpath(): Boolean;
+		function GetBuildToolpath(): TLib3MFToolpath;
+		procedure SetBuildToolpath(const AToolpathInstance: TLib3MFToolpath);
+		procedure ClearBuildToolpath();
 		function GetMetaDataGroup(): TLib3MFMetaDataGroup;
 		function AddAttachment(const AURI: String; const ARelationShipType: String): TLib3MFAttachment;
 		procedure RemoveAttachment(const AAttachmentInstance: TLib3MFAttachment);
@@ -12644,6 +12683,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_RemoveBuildItemFunc: TLib3MFModel_RemoveBuildItemFunc;
 		FLib3MFModel_AddToolpathFunc: TLib3MFModel_AddToolpathFunc;
 		FLib3MFModel_AddToolpathWithBottomZFunc: TLib3MFModel_AddToolpathWithBottomZFunc;
+		FLib3MFModel_HasBuildToolpathFunc: TLib3MFModel_HasBuildToolpathFunc;
+		FLib3MFModel_GetBuildToolpathFunc: TLib3MFModel_GetBuildToolpathFunc;
+		FLib3MFModel_SetBuildToolpathFunc: TLib3MFModel_SetBuildToolpathFunc;
+		FLib3MFModel_ClearBuildToolpathFunc: TLib3MFModel_ClearBuildToolpathFunc;
 		FLib3MFModel_GetMetaDataGroupFunc: TLib3MFModel_GetMetaDataGroupFunc;
 		FLib3MFModel_AddAttachmentFunc: TLib3MFModel_AddAttachmentFunc;
 		FLib3MFModel_RemoveAttachmentFunc: TLib3MFModel_RemoveAttachmentFunc;
@@ -13474,6 +13517,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_RemoveBuildItemFunc: TLib3MFModel_RemoveBuildItemFunc read FLib3MFModel_RemoveBuildItemFunc;
 		property Lib3MFModel_AddToolpathFunc: TLib3MFModel_AddToolpathFunc read FLib3MFModel_AddToolpathFunc;
 		property Lib3MFModel_AddToolpathWithBottomZFunc: TLib3MFModel_AddToolpathWithBottomZFunc read FLib3MFModel_AddToolpathWithBottomZFunc;
+		property Lib3MFModel_HasBuildToolpathFunc: TLib3MFModel_HasBuildToolpathFunc read FLib3MFModel_HasBuildToolpathFunc;
+		property Lib3MFModel_GetBuildToolpathFunc: TLib3MFModel_GetBuildToolpathFunc read FLib3MFModel_GetBuildToolpathFunc;
+		property Lib3MFModel_SetBuildToolpathFunc: TLib3MFModel_SetBuildToolpathFunc read FLib3MFModel_SetBuildToolpathFunc;
+		property Lib3MFModel_ClearBuildToolpathFunc: TLib3MFModel_ClearBuildToolpathFunc read FLib3MFModel_ClearBuildToolpathFunc;
 		property Lib3MFModel_GetMetaDataGroupFunc: TLib3MFModel_GetMetaDataGroupFunc read FLib3MFModel_GetMetaDataGroupFunc;
 		property Lib3MFModel_AddAttachmentFunc: TLib3MFModel_AddAttachmentFunc read FLib3MFModel_AddAttachmentFunc;
 		property Lib3MFModel_RemoveAttachmentFunc: TLib3MFModel_RemoveAttachmentFunc read FLib3MFModel_RemoveAttachmentFunc;
@@ -24751,6 +24798,42 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFToolpath, TLib3MFToolpath>.Make(FWrapper, HToolpathInstance);
 	end;
 
+	function TLib3MFModel.HasBuildToolpath(): Boolean;
+	var
+		ResultHasToolpath: Byte;
+	begin
+		ResultHasToolpath := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_HasBuildToolpathFunc(FHandle, ResultHasToolpath));
+		Result := (ResultHasToolpath <> 0);
+	end;
+
+	function TLib3MFModel.GetBuildToolpath(): TLib3MFToolpath;
+	var
+		HToolpathInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HToolpathInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetBuildToolpathFunc(FHandle, HToolpathInstance));
+		if Assigned(HToolpathInstance) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFToolpath, TLib3MFToolpath>.Make(FWrapper, HToolpathInstance);
+	end;
+
+	procedure TLib3MFModel.SetBuildToolpath(const AToolpathInstance: TLib3MFToolpath);
+	var
+		AToolpathInstanceHandle: TLib3MFHandle;
+	begin
+		if Assigned(AToolpathInstance) then
+		AToolpathInstanceHandle := AToolpathInstance.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AToolpathInstance is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_SetBuildToolpathFunc(FHandle, AToolpathInstanceHandle));
+	end;
+
+	procedure TLib3MFModel.ClearBuildToolpath();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_ClearBuildToolpathFunc(FHandle));
+	end;
+
 	function TLib3MFModel.GetMetaDataGroup(): TLib3MFMetaDataGroup;
 	var
 		HTheMetaDataGroup: TLib3MFHandle;
@@ -25803,6 +25886,10 @@ implementation
 		FLib3MFModel_RemoveBuildItemFunc := LoadFunction('lib3mf_model_removebuilditem');
 		FLib3MFModel_AddToolpathFunc := LoadFunction('lib3mf_model_addtoolpath');
 		FLib3MFModel_AddToolpathWithBottomZFunc := LoadFunction('lib3mf_model_addtoolpathwithbottomz');
+		FLib3MFModel_HasBuildToolpathFunc := LoadFunction('lib3mf_model_hasbuildtoolpath');
+		FLib3MFModel_GetBuildToolpathFunc := LoadFunction('lib3mf_model_getbuildtoolpath');
+		FLib3MFModel_SetBuildToolpathFunc := LoadFunction('lib3mf_model_setbuildtoolpath');
+		FLib3MFModel_ClearBuildToolpathFunc := LoadFunction('lib3mf_model_clearbuildtoolpath');
 		FLib3MFModel_GetMetaDataGroupFunc := LoadFunction('lib3mf_model_getmetadatagroup');
 		FLib3MFModel_AddAttachmentFunc := LoadFunction('lib3mf_model_addattachment');
 		FLib3MFModel_RemoveAttachmentFunc := LoadFunction('lib3mf_model_removeattachment');
@@ -28186,6 +28273,18 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addtoolpathwithbottomz'), @FLib3MFModel_AddToolpathWithBottomZFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_hasbuildtoolpath'), @FLib3MFModel_HasBuildToolpathFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getbuildtoolpath'), @FLib3MFModel_GetBuildToolpathFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_setbuildtoolpath'), @FLib3MFModel_SetBuildToolpathFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_clearbuildtoolpath'), @FLib3MFModel_ClearBuildToolpathFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getmetadatagroup'), @FLib3MFModel_GetMetaDataGroupFunc);

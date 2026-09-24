@@ -3944,6 +3944,10 @@ public:
 	inline void RemoveBuildItem(classParam<CBuildItem> pBuildItemInstance);
 	inline PToolpath AddToolpath(const Lib3MF_double dUnitFactor);
 	inline PToolpath AddToolpathWithBottomZ(const Lib3MF_double dUnitFactor, const Lib3MF_uint32 nBottomZ);
+	inline bool HasBuildToolpath();
+	inline PToolpath GetBuildToolpath();
+	inline void SetBuildToolpath(classParam<CToolpath> pToolpathInstance);
+	inline void ClearBuildToolpath();
 	inline PMetaDataGroup GetMetaDataGroup();
 	inline PAttachment AddAttachment(const std::string & sURI, const std::string & sRelationShipType);
 	inline void RemoveAttachment(classParam<CAttachment> pAttachmentInstance);
@@ -5177,6 +5181,10 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_Model_RemoveBuildItem = nullptr;
 		pWrapperTable->m_Model_AddToolpath = nullptr;
 		pWrapperTable->m_Model_AddToolpathWithBottomZ = nullptr;
+		pWrapperTable->m_Model_HasBuildToolpath = nullptr;
+		pWrapperTable->m_Model_GetBuildToolpath = nullptr;
+		pWrapperTable->m_Model_SetBuildToolpath = nullptr;
+		pWrapperTable->m_Model_ClearBuildToolpath = nullptr;
 		pWrapperTable->m_Model_GetMetaDataGroup = nullptr;
 		pWrapperTable->m_Model_AddAttachment = nullptr;
 		pWrapperTable->m_Model_RemoveAttachment = nullptr;
@@ -12264,6 +12272,42 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Model_HasBuildToolpath = (PLib3MFModel_HasBuildToolpathPtr) GetProcAddress(hLibrary, "lib3mf_model_hasbuildtoolpath");
+		#else // _WIN32
+		pWrapperTable->m_Model_HasBuildToolpath = (PLib3MFModel_HasBuildToolpathPtr) dlsym(hLibrary, "lib3mf_model_hasbuildtoolpath");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_HasBuildToolpath == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_GetBuildToolpath = (PLib3MFModel_GetBuildToolpathPtr) GetProcAddress(hLibrary, "lib3mf_model_getbuildtoolpath");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetBuildToolpath = (PLib3MFModel_GetBuildToolpathPtr) dlsym(hLibrary, "lib3mf_model_getbuildtoolpath");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetBuildToolpath == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_SetBuildToolpath = (PLib3MFModel_SetBuildToolpathPtr) GetProcAddress(hLibrary, "lib3mf_model_setbuildtoolpath");
+		#else // _WIN32
+		pWrapperTable->m_Model_SetBuildToolpath = (PLib3MFModel_SetBuildToolpathPtr) dlsym(hLibrary, "lib3mf_model_setbuildtoolpath");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_SetBuildToolpath == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_ClearBuildToolpath = (PLib3MFModel_ClearBuildToolpathPtr) GetProcAddress(hLibrary, "lib3mf_model_clearbuildtoolpath");
+		#else // _WIN32
+		pWrapperTable->m_Model_ClearBuildToolpath = (PLib3MFModel_ClearBuildToolpathPtr) dlsym(hLibrary, "lib3mf_model_clearbuildtoolpath");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_ClearBuildToolpath == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_Model_GetMetaDataGroup = (PLib3MFModel_GetMetaDataGroupPtr) GetProcAddress(hLibrary, "lib3mf_model_getmetadatagroup");
 		#else // _WIN32
 		pWrapperTable->m_Model_GetMetaDataGroup = (PLib3MFModel_GetMetaDataGroupPtr) dlsym(hLibrary, "lib3mf_model_getmetadatagroup");
@@ -15772,6 +15816,22 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_model_addtoolpathwithbottomz", (void**)&(pWrapperTable->m_Model_AddToolpathWithBottomZ));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddToolpathWithBottomZ == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_hasbuildtoolpath", (void**)&(pWrapperTable->m_Model_HasBuildToolpath));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_HasBuildToolpath == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getbuildtoolpath", (void**)&(pWrapperTable->m_Model_GetBuildToolpath));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetBuildToolpath == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_setbuildtoolpath", (void**)&(pWrapperTable->m_Model_SetBuildToolpath));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_SetBuildToolpath == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_clearbuildtoolpath", (void**)&(pWrapperTable->m_Model_ClearBuildToolpath));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_ClearBuildToolpath == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_model_getmetadatagroup", (void**)&(pWrapperTable->m_Model_GetMetaDataGroup));
@@ -26893,6 +26953,51 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CToolpath>(dynamic_cast<CToolpath*>(m_pWrapper->polymorphicFactory(hToolpathInstance)));
+	}
+	
+	/**
+	* CModel::HasBuildToolpath - Returns whether the build selects a toolpath resource (tp:toolpathid on the build element).
+	* @return True if a toolpath is selected for the build.
+	*/
+	bool CModel::HasBuildToolpath()
+	{
+		bool resultHasToolpath = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_HasBuildToolpath(m_pHandle, &resultHasToolpath));
+		
+		return resultHasToolpath;
+	}
+	
+	/**
+	* CModel::GetBuildToolpath - Returns the toolpath resource selected for the build (tp:toolpathid on the build element). Fails if no toolpath is selected.
+	* @return The toolpath selected for the build.
+	*/
+	PToolpath CModel::GetBuildToolpath()
+	{
+		Lib3MFHandle hToolpathInstance = (Lib3MFHandle)nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetBuildToolpath(m_pHandle, &hToolpathInstance));
+		
+		if (!hToolpathInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpath>(dynamic_cast<CToolpath*>(m_pWrapper->polymorphicFactory(hToolpathInstance)));
+	}
+	
+	/**
+	* CModel::SetBuildToolpath - Selects the toolpath resource that should be used to fabricate the build (tp:toolpathid on the build element). The toolpath MUST be a resource of this model.
+	* @param[in] pToolpathInstance - The toolpath to select for the build.
+	*/
+	void CModel::SetBuildToolpath(classParam<CToolpath> pToolpathInstance)
+	{
+		Lib3MFHandle hToolpathInstance = pToolpathInstance.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_SetBuildToolpath(m_pHandle, hToolpathInstance));
+	}
+	
+	/**
+	* CModel::ClearBuildToolpath - Removes the toolpath selection from the build.
+	*/
+	void CModel::ClearBuildToolpath()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_ClearBuildToolpath(m_pHandle));
 	}
 	
 	/**

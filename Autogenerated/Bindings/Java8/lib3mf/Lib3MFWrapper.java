@@ -2059,6 +2059,10 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_model_removebuilditem;
 	protected com.sun.jna.Function lib3mf_model_addtoolpath;
 	protected com.sun.jna.Function lib3mf_model_addtoolpathwithbottomz;
+	protected com.sun.jna.Function lib3mf_model_hasbuildtoolpath;
+	protected com.sun.jna.Function lib3mf_model_getbuildtoolpath;
+	protected com.sun.jna.Function lib3mf_model_setbuildtoolpath;
+	protected com.sun.jna.Function lib3mf_model_clearbuildtoolpath;
 	protected com.sun.jna.Function lib3mf_model_getmetadatagroup;
 	protected com.sun.jna.Function lib3mf_model_addattachment;
 	protected com.sun.jna.Function lib3mf_model_removeattachment;
@@ -2884,6 +2888,10 @@ public class Lib3MFWrapper {
 		lib3mf_model_removebuilditem = mLibrary.getFunction("lib3mf_model_removebuilditem");
 		lib3mf_model_addtoolpath = mLibrary.getFunction("lib3mf_model_addtoolpath");
 		lib3mf_model_addtoolpathwithbottomz = mLibrary.getFunction("lib3mf_model_addtoolpathwithbottomz");
+		lib3mf_model_hasbuildtoolpath = mLibrary.getFunction("lib3mf_model_hasbuildtoolpath");
+		lib3mf_model_getbuildtoolpath = mLibrary.getFunction("lib3mf_model_getbuildtoolpath");
+		lib3mf_model_setbuildtoolpath = mLibrary.getFunction("lib3mf_model_setbuildtoolpath");
+		lib3mf_model_clearbuildtoolpath = mLibrary.getFunction("lib3mf_model_clearbuildtoolpath");
 		lib3mf_model_getmetadatagroup = mLibrary.getFunction("lib3mf_model_getmetadatagroup");
 		lib3mf_model_addattachment = mLibrary.getFunction("lib3mf_model_addattachment");
 		lib3mf_model_removeattachment = mLibrary.getFunction("lib3mf_model_removeattachment");
@@ -3708,6 +3716,10 @@ public class Lib3MFWrapper {
 		lib3mf_model_removebuilditem = loadFunctionByLookup(lookupMethod, "lib3mf_model_removebuilditem");
 		lib3mf_model_addtoolpath = loadFunctionByLookup(lookupMethod, "lib3mf_model_addtoolpath");
 		lib3mf_model_addtoolpathwithbottomz = loadFunctionByLookup(lookupMethod, "lib3mf_model_addtoolpathwithbottomz");
+		lib3mf_model_hasbuildtoolpath = loadFunctionByLookup(lookupMethod, "lib3mf_model_hasbuildtoolpath");
+		lib3mf_model_getbuildtoolpath = loadFunctionByLookup(lookupMethod, "lib3mf_model_getbuildtoolpath");
+		lib3mf_model_setbuildtoolpath = loadFunctionByLookup(lookupMethod, "lib3mf_model_setbuildtoolpath");
+		lib3mf_model_clearbuildtoolpath = loadFunctionByLookup(lookupMethod, "lib3mf_model_clearbuildtoolpath");
 		lib3mf_model_getmetadatagroup = loadFunctionByLookup(lookupMethod, "lib3mf_model_getmetadatagroup");
 		lib3mf_model_addattachment = loadFunctionByLookup(lookupMethod, "lib3mf_model_addattachment");
 		lib3mf_model_removeattachment = loadFunctionByLookup(lookupMethod, "lib3mf_model_removeattachment");

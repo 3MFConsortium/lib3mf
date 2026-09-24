@@ -35,6 +35,7 @@ A build reader model node is a parser for the build node of an XML Model Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_BuildItem.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "Model/Classes/NMR_ModelToolpath.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
@@ -96,7 +97,15 @@ namespace NMR {
 		// Accept both the current (3mf.io/2026/03) and legacy (microsoft/2019/05) namespaces.
 		if (XML_3MF_ISTOOLPATHNAMESPACE(pNameSpace)) {
 			if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BUILD_TOOLPATHID) == 0) {
-				m_pModel->setBuildToolpathResourceID(fnStringToUint32(pAttributeValue));
+				ModelResourceID nToolpathID = fnStringToUint32(pAttributeValue);
+				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), nToolpathID);
+				PModelToolpath pToolpath;
+				if (pID.get() != nullptr)
+					pToolpath = std::dynamic_pointer_cast<CModelToolpath>(m_pModel->findResource(pID));
+				if (pToolpath.get() == nullptr)
+					throw CNMRException(NMR_ERROR_INVALIDBUILDTOOLPATHID);
+
+				m_pModel->setBuildToolpath(pToolpath);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);

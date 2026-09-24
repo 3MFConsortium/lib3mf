@@ -1064,6 +1064,61 @@ public class Model extends Base {
 	}
 
 	/**
+	 * Returns whether the build selects a toolpath resource (tp:toolpathid on the build element).
+	 *
+	 * @return True if a toolpath is selected for the build.
+	 * @throws Lib3MFException
+	 */
+	public boolean hasBuildToolpath() throws Lib3MFException {
+		Pointer bufferHasToolpath = new Memory(1);
+		mWrapper.checkError(this, mWrapper.lib3mf_model_hasbuildtoolpath.invokeInt(new java.lang.Object[]{mHandle, bufferHasToolpath}));
+		return bufferHasToolpath.getByte(0) != 0;
+	}
+
+	/**
+	 * Returns the toolpath resource selected for the build (tp:toolpathid on the build element). Fails if no toolpath is selected.
+	 *
+	 * @return The toolpath selected for the build.
+	 * @throws Lib3MFException
+	 */
+	public Toolpath getBuildToolpath() throws Lib3MFException {
+		Pointer bufferToolpathInstance = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_model_getbuildtoolpath.invokeInt(new java.lang.Object[]{mHandle, bufferToolpathInstance}));
+		Pointer valueToolpathInstance = bufferToolpathInstance.getPointer(0);
+		Toolpath toolpathInstance = null;
+		if (valueToolpathInstance == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "ToolpathInstance was a null pointer");
+		}
+		toolpathInstance = mWrapper.PolymorphicFactory(valueToolpathInstance, Toolpath.class);
+		return toolpathInstance;
+	}
+
+	/**
+	 * Selects the toolpath resource that should be used to fabricate the build (tp:toolpathid on the build element). The toolpath MUST be a resource of this model.
+	 *
+	 * @param toolpathInstance The toolpath to select for the build.
+	 * @throws Lib3MFException
+	 */
+	public void setBuildToolpath(Toolpath toolpathInstance) throws Lib3MFException {
+		Pointer toolpathInstanceHandle = null;
+		if (toolpathInstance != null) {
+			toolpathInstanceHandle = toolpathInstance.getHandle();
+		} else {
+			throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "ToolpathInstance is a null value.");
+		}
+		mWrapper.checkError(this, mWrapper.lib3mf_model_setbuildtoolpath.invokeInt(new java.lang.Object[]{mHandle, toolpathInstanceHandle}));
+	}
+
+	/**
+	 * Removes the toolpath selection from the build.
+	 *
+	 * @throws Lib3MFException
+	 */
+	public void clearBuildToolpath() throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_model_clearbuildtoolpath.invokeInt(new java.lang.Object[]{mHandle}));
+	}
+
+	/**
 	 * Returns the metadata of the model as MetaDataGroup
 	 *
 	 * @return returns an Instance of the metadatagroup of the model

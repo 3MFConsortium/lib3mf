@@ -3012,6 +3012,10 @@ private:
 	static void RemoveBuildItem(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddToolpath(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddToolpathWithBottomZ(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasBuildToolpath(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetBuildToolpath(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetBuildToolpath(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ClearBuildToolpath(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetMetaDataGroup(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddAttachment(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveAttachment(const v8::FunctionCallbackInfo<v8::Value>& args);

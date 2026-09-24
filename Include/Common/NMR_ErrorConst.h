@@ -2078,4 +2078,10 @@ Toolpath errors (0xBXXX)
 // Invalid toolpath type
 #define NMR_ERROR_INVALIDTOOLPATHTYPE 0xB05C
 
+// Build toolpath reference does not resolve to a toolpath resource
+#define NMR_ERROR_INVALIDBUILDTOOLPATHID 0xB05D
+
+// Toolpath unit factor must be positive
+#define NMR_ERROR_INVALIDTOOLPATHUNITFACTOR 0xB05E
+
 #endif // __NMR_ERRORCONST

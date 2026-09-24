@@ -10594,6 +10594,44 @@ func (inst Model) AddToolpathWithBottomZ(unitFactor float64, bottomZ uint32) (To
 	return inst.wrapperRef.NewToolpath(toolpathInstance), nil
 }
 
+// HasBuildToolpath returns whether the build selects a toolpath resource (tp:toolpathid on the build element).
+func (inst Model) HasBuildToolpath() (bool, error) {
+	var hasToolpath C.bool
+	ret := C.CCall_lib3mf_model_hasbuildtoolpath(inst.wrapperRef.LibraryHandle, inst.Ref, &hasToolpath)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(hasToolpath), nil
+}
+
+// GetBuildToolpath returns the toolpath resource selected for the build (tp:toolpathid on the build element). Fails if no toolpath is selected.
+func (inst Model) GetBuildToolpath() (Toolpath, error) {
+	var toolpathInstance ref
+	ret := C.CCall_lib3mf_model_getbuildtoolpath(inst.wrapperRef.LibraryHandle, inst.Ref, &toolpathInstance)
+	if ret != 0 {
+		return Toolpath{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpath(toolpathInstance), nil
+}
+
+// SetBuildToolpath selects the toolpath resource that should be used to fabricate the build (tp:toolpathid on the build element). The toolpath MUST be a resource of this model.
+func (inst Model) SetBuildToolpath(toolpathInstance Toolpath) error {
+	ret := C.CCall_lib3mf_model_setbuildtoolpath(inst.wrapperRef.LibraryHandle, inst.Ref, toolpathInstance.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// ClearBuildToolpath removes the toolpath selection from the build.
+func (inst Model) ClearBuildToolpath() error {
+	ret := C.CCall_lib3mf_model_clearbuildtoolpath(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
 // GetMetaDataGroup returns the metadata of the model as MetaDataGroup.
 func (inst Model) GetMetaDataGroup() (MetaDataGroup, error) {
 	var theMetaDataGroup ref

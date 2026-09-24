@@ -28933,6 +28933,10 @@ void CLib3MFModel::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveBuildItem", RemoveBuildItem);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddToolpath", AddToolpath);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddToolpathWithBottomZ", AddToolpathWithBottomZ);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasBuildToolpath", HasBuildToolpath);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetBuildToolpath", GetBuildToolpath);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetBuildToolpath", SetBuildToolpath);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearBuildToolpath", ClearBuildToolpath);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetMetaDataGroup", GetMetaDataGroup);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddAttachment", AddAttachment);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveAttachment", RemoveAttachment);
@@ -30380,6 +30384,99 @@ void CLib3MFModel::AddToolpathWithBottomZ(const FunctionCallbackInfo<Value>& arg
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjToolpathInstance = CLib3MFToolpath::NewInstance(args.Holder(), hReturnToolpathInstance);
         args.GetReturnValue().Set(instanceObjToolpathInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::HasBuildToolpath(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        bool bReturnHasToolpath = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasBuildToolpath.");
+        if (wrapperTable->m_Model_HasBuildToolpath == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::HasBuildToolpath.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_HasBuildToolpath(instanceHandle, &bReturnHasToolpath);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasToolpath));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::GetBuildToolpath(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnToolpathInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetBuildToolpath.");
+        if (wrapperTable->m_Model_GetBuildToolpath == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::GetBuildToolpath.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_GetBuildToolpath(instanceHandle, &hReturnToolpathInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjToolpathInstance = CLib3MFToolpath::NewInstance(args.Holder(), hReturnToolpathInstance);
+        args.GetReturnValue().Set(instanceObjToolpathInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::SetBuildToolpath(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 0 (ToolpathInstance)");
+        }
+        Local<Object> objToolpathInstance = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFToolpath * instanceToolpathInstance = ObjectWrap::Unwrap<CLib3MFToolpath>(objToolpathInstance);
+        if (instanceToolpathInstance == nullptr)
+            throw std::runtime_error("Invalid Object parameter 0 (ToolpathInstance)");
+        Lib3MFHandle hToolpathInstance = instanceToolpathInstance->getHandle( objToolpathInstance );
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetBuildToolpath.");
+        if (wrapperTable->m_Model_SetBuildToolpath == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::SetBuildToolpath.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_SetBuildToolpath(instanceHandle, hToolpathInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::ClearBuildToolpath(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ClearBuildToolpath.");
+        if (wrapperTable->m_Model_ClearBuildToolpath == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::ClearBuildToolpath.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_ClearBuildToolpath(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

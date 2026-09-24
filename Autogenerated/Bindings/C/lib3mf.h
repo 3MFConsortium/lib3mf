@@ -8414,6 +8414,41 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addtoolpath(Lib3MF_Model pModel, Lib3M
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addtoolpathwithbottomz(Lib3MF_Model pModel, Lib3MF_double dUnitFactor, Lib3MF_uint32 nBottomZ, Lib3MF_Toolpath * pToolpathInstance);
 
 /**
+* Returns whether the build selects a toolpath resource (tp:toolpathid on the build element).
+*
+* @param[in] pModel - Model instance.
+* @param[out] pHasToolpath - True if a toolpath is selected for the build.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_hasbuildtoolpath(Lib3MF_Model pModel, bool * pHasToolpath);
+
+/**
+* Returns the toolpath resource selected for the build (tp:toolpathid on the build element). Fails if no toolpath is selected.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pToolpathInstance - The toolpath selected for the build.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getbuildtoolpath(Lib3MF_Model pModel, Lib3MF_Toolpath * pToolpathInstance);
+
+/**
+* Selects the toolpath resource that should be used to fabricate the build (tp:toolpathid on the build element). The toolpath MUST be a resource of this model.
+*
+* @param[in] pModel - Model instance.
+* @param[in] pToolpathInstance - The toolpath to select for the build.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_setbuildtoolpath(Lib3MF_Model pModel, Lib3MF_Toolpath pToolpathInstance);
+
+/**
+* Removes the toolpath selection from the build.
+*
+* @param[in] pModel - Model instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_clearbuildtoolpath(Lib3MF_Model pModel);
+
+/**
 * Returns the metadata of the model as MetaDataGroup
 *
 * @param[in] pModel - Model instance.

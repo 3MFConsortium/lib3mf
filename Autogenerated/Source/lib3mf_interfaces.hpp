@@ -8326,6 +8326,29 @@ public:
 	virtual IToolpath * AddToolpathWithBottomZ(const Lib3MF_double dUnitFactor, const Lib3MF_uint32 nBottomZ) = 0;
 
 	/**
+	* IModel::HasBuildToolpath - Returns whether the build selects a toolpath resource (tp:toolpathid on the build element).
+	* @return True if a toolpath is selected for the build.
+	*/
+	virtual bool HasBuildToolpath() = 0;
+
+	/**
+	* IModel::GetBuildToolpath - Returns the toolpath resource selected for the build (tp:toolpathid on the build element). Fails if no toolpath is selected.
+	* @return The toolpath selected for the build.
+	*/
+	virtual IToolpath * GetBuildToolpath() = 0;
+
+	/**
+	* IModel::SetBuildToolpath - Selects the toolpath resource that should be used to fabricate the build (tp:toolpathid on the build element). The toolpath MUST be a resource of this model.
+	* @param[in] pToolpathInstance - The toolpath to select for the build.
+	*/
+	virtual void SetBuildToolpath(IToolpath* pToolpathInstance) = 0;
+
+	/**
+	* IModel::ClearBuildToolpath - Removes the toolpath selection from the build.
+	*/
+	virtual void ClearBuildToolpath() = 0;
+
+	/**
 	* IModel::GetMetaDataGroup - Returns the metadata of the model as MetaDataGroup
 	* @return returns an Instance of the metadatagroup of the model
 	*/

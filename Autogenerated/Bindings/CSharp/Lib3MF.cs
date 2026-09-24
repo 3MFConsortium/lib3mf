@@ -3255,6 +3255,18 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addtoolpathwithbottomz", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddToolpathWithBottomZ (IntPtr Handle, Double AUnitFactor, UInt32 ABottomZ, out IntPtr AToolpathInstance);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_hasbuildtoolpath", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_HasBuildToolpath (IntPtr Handle, out Byte AHasToolpath);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getbuildtoolpath", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetBuildToolpath (IntPtr Handle, out IntPtr AToolpathInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_setbuildtoolpath", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_SetBuildToolpath (IntPtr Handle, IntPtr AToolpathInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_clearbuildtoolpath", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_ClearBuildToolpath (IntPtr Handle);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getmetadatagroup", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetMetaDataGroup (IntPtr Handle, out IntPtr ATheMetaDataGroup);
 
@@ -12290,6 +12302,37 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_AddToolpathWithBottomZ (Handle, AUnitFactor, ABottomZ, out newToolpathInstance));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpath>(newToolpathInstance);
+		}
+
+		public bool HasBuildToolpath ()
+		{
+			Byte resultHasToolpath = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Model_HasBuildToolpath (Handle, out resultHasToolpath));
+			return (resultHasToolpath != 0);
+		}
+
+		public CToolpath GetBuildToolpath ()
+		{
+			IntPtr newToolpathInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetBuildToolpath (Handle, out newToolpathInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpath>(newToolpathInstance);
+		}
+
+		public void SetBuildToolpath (CToolpath AToolpathInstance)
+		{
+			IntPtr AToolpathInstanceHandle = IntPtr.Zero;
+			if (AToolpathInstance != null)
+				AToolpathInstanceHandle = AToolpathInstance.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.Model_SetBuildToolpath (Handle, AToolpathInstanceHandle));
+		}
+
+		public void ClearBuildToolpath ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Model_ClearBuildToolpath (Handle));
 		}
 
 		public CMetaDataGroup GetMetaDataGroup ()

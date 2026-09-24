@@ -825,6 +825,10 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_RemoveBuildItem = NULL;
 	pWrapperTable->m_Model_AddToolpath = NULL;
 	pWrapperTable->m_Model_AddToolpathWithBottomZ = NULL;
+	pWrapperTable->m_Model_HasBuildToolpath = NULL;
+	pWrapperTable->m_Model_GetBuildToolpath = NULL;
+	pWrapperTable->m_Model_SetBuildToolpath = NULL;
+	pWrapperTable->m_Model_ClearBuildToolpath = NULL;
 	pWrapperTable->m_Model_GetMetaDataGroup = NULL;
 	pWrapperTable->m_Model_AddAttachment = NULL;
 	pWrapperTable->m_Model_RemoveAttachment = NULL;
@@ -7913,6 +7917,42 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_AddToolpathWithBottomZ == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_HasBuildToolpath = (PLib3MFModel_HasBuildToolpathPtr) GetProcAddress(hLibrary, "lib3mf_model_hasbuildtoolpath");
+	#else // _WIN32
+	pWrapperTable->m_Model_HasBuildToolpath = (PLib3MFModel_HasBuildToolpathPtr) dlsym(hLibrary, "lib3mf_model_hasbuildtoolpath");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_HasBuildToolpath == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_GetBuildToolpath = (PLib3MFModel_GetBuildToolpathPtr) GetProcAddress(hLibrary, "lib3mf_model_getbuildtoolpath");
+	#else // _WIN32
+	pWrapperTable->m_Model_GetBuildToolpath = (PLib3MFModel_GetBuildToolpathPtr) dlsym(hLibrary, "lib3mf_model_getbuildtoolpath");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_GetBuildToolpath == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_SetBuildToolpath = (PLib3MFModel_SetBuildToolpathPtr) GetProcAddress(hLibrary, "lib3mf_model_setbuildtoolpath");
+	#else // _WIN32
+	pWrapperTable->m_Model_SetBuildToolpath = (PLib3MFModel_SetBuildToolpathPtr) dlsym(hLibrary, "lib3mf_model_setbuildtoolpath");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_SetBuildToolpath == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_ClearBuildToolpath = (PLib3MFModel_ClearBuildToolpathPtr) GetProcAddress(hLibrary, "lib3mf_model_clearbuildtoolpath");
+	#else // _WIN32
+	pWrapperTable->m_Model_ClearBuildToolpath = (PLib3MFModel_ClearBuildToolpathPtr) dlsym(hLibrary, "lib3mf_model_clearbuildtoolpath");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_ClearBuildToolpath == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -15327,6 +15367,42 @@ Lib3MFResult CCall_lib3mf_model_addtoolpathwithbottomz(Lib3MFHandle libraryHandl
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Model_AddToolpathWithBottomZ (pModel, dUnitFactor, nBottomZ, pToolpathInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_hasbuildtoolpath(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, bool * pHasToolpath)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_HasBuildToolpath (pModel, pHasToolpath);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_getbuildtoolpath(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Toolpath * pToolpathInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetBuildToolpath (pModel, pToolpathInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_setbuildtoolpath(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_Toolpath pToolpathInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_SetBuildToolpath (pModel, pToolpathInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_model_clearbuildtoolpath(Lib3MFHandle libraryHandle, Lib3MF_Model pModel)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_ClearBuildToolpath (pModel);
 }
 
 

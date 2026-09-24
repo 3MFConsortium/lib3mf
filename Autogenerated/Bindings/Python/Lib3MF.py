@@ -1261,6 +1261,10 @@ class FunctionTable:
 	lib3mf_model_removebuilditem = None
 	lib3mf_model_addtoolpath = None
 	lib3mf_model_addtoolpathwithbottomz = None
+	lib3mf_model_hasbuildtoolpath = None
+	lib3mf_model_getbuildtoolpath = None
+	lib3mf_model_setbuildtoolpath = None
+	lib3mf_model_clearbuildtoolpath = None
 	lib3mf_model_getmetadatagroup = None
 	lib3mf_model_addattachment = None
 	lib3mf_model_removeattachment = None
@@ -6562,6 +6566,30 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_addtoolpathwithbottomz = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_hasbuildtoolpath")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_model_hasbuildtoolpath = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getbuildtoolpath")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getbuildtoolpath = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_setbuildtoolpath")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_model_setbuildtoolpath = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_clearbuildtoolpath")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_model_clearbuildtoolpath = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getmetadatagroup")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -9098,6 +9126,18 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_addtoolpathwithbottomz.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addtoolpathwithbottomz.argtypes = [ctypes.c_void_p, ctypes.c_double, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_hasbuildtoolpath.restype = ctypes.c_int32
+			self.lib.lib3mf_model_hasbuildtoolpath.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_model_getbuildtoolpath.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getbuildtoolpath.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_setbuildtoolpath.restype = ctypes.c_int32
+			self.lib.lib3mf_model_setbuildtoolpath.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_model_clearbuildtoolpath.restype = ctypes.c_int32
+			self.lib.lib3mf_model_clearbuildtoolpath.argtypes = [ctypes.c_void_p]
 			
 			self.lib.lib3mf_model_getmetadatagroup.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getmetadatagroup.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -17329,6 +17369,35 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return ToolpathInstanceObject
+	
+	def HasBuildToolpath(self):
+		pHasToolpath = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_hasbuildtoolpath(self._handle, pHasToolpath))
+		
+		return pHasToolpath.value
+	
+	def GetBuildToolpath(self):
+		ToolpathInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getbuildtoolpath(self._handle, ToolpathInstanceHandle))
+		if ToolpathInstanceHandle:
+			ToolpathInstanceObject = self._wrapper._polymorphicFactory(ToolpathInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ToolpathInstanceObject
+	
+	def SetBuildToolpath(self, ToolpathInstanceObject):
+		ToolpathInstanceHandle = None
+		if ToolpathInstanceObject:
+			ToolpathInstanceHandle = ToolpathInstanceObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_setbuildtoolpath(self._handle, ToolpathInstanceHandle))
+		
+	
+	def ClearBuildToolpath(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_clearbuildtoolpath(self._handle))
+		
 	
 	def GetMetaDataGroup(self):
 		TheMetaDataGroupHandle = ctypes.c_void_p()

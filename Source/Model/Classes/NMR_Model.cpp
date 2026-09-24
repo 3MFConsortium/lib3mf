@@ -52,6 +52,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_KeyStore.h"
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Model/Classes/NMR_ModelFunctionFromImage3D.h"
+#include "Model/Classes/NMR_ModelToolpath.h"
 
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Common/MeshInformation/NMR_MeshInformation.h"
@@ -84,7 +85,7 @@ namespace NMR {
 		m_pCurPath = m_pPath;
 		m_pKeyStore = CKeyStoreFactory::makeKeyStore();
 
-		m_nBuildToolpathResourceID = 0;
+		m_nBuildToolpathUniqueID = 0;
 
 		setBuildUUID(std::make_shared<CUUID>());
 
@@ -397,19 +398,26 @@ namespace NMR {
 		m_buildUUID = pUUID;
 	}
 
-	nfUint32 CModel::getBuildToolpathResourceID()
+	PModelToolpath CModel::getBuildToolpath()
 	{
-		return m_nBuildToolpathResourceID;
+		if (m_nBuildToolpathUniqueID == 0)
+			return nullptr;
+
+		return std::dynamic_pointer_cast<CModelToolpath>(findResource(m_nBuildToolpathUniqueID));
 	}
 
-	void CModel::setBuildToolpathResourceID(_In_ nfUint32 nResourceID)
+	void CModel::setBuildToolpath(_In_ PModelToolpath pToolpath)
 	{
-		m_nBuildToolpathResourceID = nResourceID;
-	}
+		if (pToolpath.get() == nullptr) {
+			m_nBuildToolpathUniqueID = 0;
+			return;
+		}
 
-	nfBool CModel::hasBuildToolpathResourceID()
-	{
-		return (m_nBuildToolpathResourceID != 0);
+		UniqueResourceID nUniqueID = pToolpath->getPackageResourceID()->getUniqueID();
+		if (findResource(nUniqueID) != pToolpath)
+			throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+
+		m_nBuildToolpathUniqueID = nUniqueID;
 	}
 
 	void CModel::unRegisterUUID(PUUID pUUID)

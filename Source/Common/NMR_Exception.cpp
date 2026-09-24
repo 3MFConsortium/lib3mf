@@ -709,6 +709,8 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATEOVERRIDEFACTORE: return "Duplicate profile override factor e";
 		case NMR_ERROR_MISSINGOVERRIDEFACTORE: return "Missing profile override factor e";
 		case NMR_ERROR_INVALIDTOOLPATHTYPE: return "Invalid toolpath type";
+		case NMR_ERROR_INVALIDBUILDTOOLPATHID: return "Build toolpath reference does not resolve to a toolpath resource";
+		case NMR_ERROR_INVALIDTOOLPATHUNITFACTOR: return "Toolpath unit factor must be positive";
 
 		default:
 			return "unknown error";

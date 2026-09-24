@@ -30606,6 +30606,144 @@ Lib3MFResult lib3mf_model_addtoolpathwithbottomz(Lib3MF_Model pModel, Lib3MF_dou
 	}
 }
 
+Lib3MFResult lib3mf_model_hasbuildtoolpath(Lib3MF_Model pModel, bool * pHasToolpath)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "HasBuildToolpath");
+		}
+		if (pHasToolpath == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pHasToolpath = pIModel->HasBuildToolpath();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasToolpath", *pHasToolpath);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_getbuildtoolpath(Lib3MF_Model pModel, Lib3MF_Toolpath * pToolpathInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetBuildToolpath");
+		}
+		if (pToolpathInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseToolpathInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseToolpathInstance = pIModel->GetBuildToolpath();
+
+		*pToolpathInstance = (IBase*)(pBaseToolpathInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ToolpathInstance", *pToolpathInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_setbuildtoolpath(Lib3MF_Model pModel, Lib3MF_Toolpath pToolpathInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "SetBuildToolpath");
+			pJournalEntry->addHandleParameter("ToolpathInstance", pToolpathInstance);
+		}
+		IBase* pIBaseClassToolpathInstance = (IBase *)pToolpathInstance;
+		IToolpath* pIToolpathInstance = dynamic_cast<IToolpath*>(pIBaseClassToolpathInstance);
+		if (!pIToolpathInstance)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIModel->SetBuildToolpath(pIToolpathInstance);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_clearbuildtoolpath(Lib3MF_Model pModel)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "ClearBuildToolpath");
+		}
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIModel->ClearBuildToolpath();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_model_getmetadatagroup(Lib3MF_Model pModel, Lib3MF_MetaDataGroup * pTheMetaDataGroup)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
@@ -33057,6 +33195,14 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_addtoolpath;
 	if (sProcName == "lib3mf_model_addtoolpathwithbottomz") 
 		*ppProcAddress = (void*) &lib3mf_model_addtoolpathwithbottomz;
+	if (sProcName == "lib3mf_model_hasbuildtoolpath") 
+		*ppProcAddress = (void*) &lib3mf_model_hasbuildtoolpath;
+	if (sProcName == "lib3mf_model_getbuildtoolpath") 
+		*ppProcAddress = (void*) &lib3mf_model_getbuildtoolpath;
+	if (sProcName == "lib3mf_model_setbuildtoolpath") 
+		*ppProcAddress = (void*) &lib3mf_model_setbuildtoolpath;
+	if (sProcName == "lib3mf_model_clearbuildtoolpath") 
+		*ppProcAddress = (void*) &lib3mf_model_clearbuildtoolpath;
 	if (sProcName == "lib3mf_model_getmetadatagroup") 
 		*ppProcAddress = (void*) &lib3mf_model_getmetadatagroup;
 	if (sProcName == "lib3mf_model_addattachment") 

@@ -3920,6 +3920,10 @@ public:
 	inline void RemoveBuildItem(classParam<CBuildItem> pBuildItemInstance);
 	inline PToolpath AddToolpath(const Lib3MF_double dUnitFactor);
 	inline PToolpath AddToolpathWithBottomZ(const Lib3MF_double dUnitFactor, const Lib3MF_uint32 nBottomZ);
+	inline bool HasBuildToolpath();
+	inline PToolpath GetBuildToolpath();
+	inline void SetBuildToolpath(classParam<CToolpath> pToolpathInstance);
+	inline void ClearBuildToolpath();
 	inline PMetaDataGroup GetMetaDataGroup();
 	inline PAttachment AddAttachment(const std::string & sURI, const std::string & sRelationShipType);
 	inline void RemoveAttachment(classParam<CAttachment> pAttachmentInstance);
@@ -15314,6 +15318,51 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CToolpath>(dynamic_cast<CToolpath*>(m_pWrapper->polymorphicFactory(hToolpathInstance)));
+	}
+	
+	/**
+	* CModel::HasBuildToolpath - Returns whether the build selects a toolpath resource (tp:toolpathid on the build element).
+	* @return True if a toolpath is selected for the build.
+	*/
+	bool CModel::HasBuildToolpath()
+	{
+		bool resultHasToolpath = 0;
+		CheckError(lib3mf_model_hasbuildtoolpath(m_pHandle, &resultHasToolpath));
+		
+		return resultHasToolpath;
+	}
+	
+	/**
+	* CModel::GetBuildToolpath - Returns the toolpath resource selected for the build (tp:toolpathid on the build element). Fails if no toolpath is selected.
+	* @return The toolpath selected for the build.
+	*/
+	PToolpath CModel::GetBuildToolpath()
+	{
+		Lib3MFHandle hToolpathInstance = (Lib3MFHandle)nullptr;
+		CheckError(lib3mf_model_getbuildtoolpath(m_pHandle, &hToolpathInstance));
+		
+		if (!hToolpathInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CToolpath>(dynamic_cast<CToolpath*>(m_pWrapper->polymorphicFactory(hToolpathInstance)));
+	}
+	
+	/**
+	* CModel::SetBuildToolpath - Selects the toolpath resource that should be used to fabricate the build (tp:toolpathid on the build element). The toolpath MUST be a resource of this model.
+	* @param[in] pToolpathInstance - The toolpath to select for the build.
+	*/
+	void CModel::SetBuildToolpath(classParam<CToolpath> pToolpathInstance)
+	{
+		Lib3MFHandle hToolpathInstance = pToolpathInstance.GetHandle();
+		CheckError(lib3mf_model_setbuildtoolpath(m_pHandle, hToolpathInstance));
+	}
+	
+	/**
+	* CModel::ClearBuildToolpath - Removes the toolpath selection from the build.
+	*/
+	void CModel::ClearBuildToolpath()
+	{
+		CheckError(lib3mf_model_clearbuildtoolpath(m_pHandle));
 	}
 	
 	/**

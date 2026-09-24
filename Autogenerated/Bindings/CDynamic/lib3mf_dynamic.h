@@ -8401,6 +8401,41 @@ typedef Lib3MFResult (*PLib3MFModel_AddToolpathPtr) (Lib3MF_Model pModel, Lib3MF
 typedef Lib3MFResult (*PLib3MFModel_AddToolpathWithBottomZPtr) (Lib3MF_Model pModel, Lib3MF_double dUnitFactor, Lib3MF_uint32 nBottomZ, Lib3MF_Toolpath * pToolpathInstance);
 
 /**
+* Returns whether the build selects a toolpath resource (tp:toolpathid on the build element).
+*
+* @param[in] pModel - Model instance.
+* @param[out] pHasToolpath - True if a toolpath is selected for the build.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_HasBuildToolpathPtr) (Lib3MF_Model pModel, bool * pHasToolpath);
+
+/**
+* Returns the toolpath resource selected for the build (tp:toolpathid on the build element). Fails if no toolpath is selected.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pToolpathInstance - The toolpath selected for the build.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetBuildToolpathPtr) (Lib3MF_Model pModel, Lib3MF_Toolpath * pToolpathInstance);
+
+/**
+* Selects the toolpath resource that should be used to fabricate the build (tp:toolpathid on the build element). The toolpath MUST be a resource of this model.
+*
+* @param[in] pModel - Model instance.
+* @param[in] pToolpathInstance - The toolpath to select for the build.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_SetBuildToolpathPtr) (Lib3MF_Model pModel, Lib3MF_Toolpath pToolpathInstance);
+
+/**
+* Removes the toolpath selection from the build.
+*
+* @param[in] pModel - Model instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_ClearBuildToolpathPtr) (Lib3MF_Model pModel);
+
+/**
 * Returns the metadata of the model as MetaDataGroup
 *
 * @param[in] pModel - Model instance.
@@ -9610,6 +9645,10 @@ typedef struct {
 	PLib3MFModel_RemoveBuildItemPtr m_Model_RemoveBuildItem;
 	PLib3MFModel_AddToolpathPtr m_Model_AddToolpath;
 	PLib3MFModel_AddToolpathWithBottomZPtr m_Model_AddToolpathWithBottomZ;
+	PLib3MFModel_HasBuildToolpathPtr m_Model_HasBuildToolpath;
+	PLib3MFModel_GetBuildToolpathPtr m_Model_GetBuildToolpath;
+	PLib3MFModel_SetBuildToolpathPtr m_Model_SetBuildToolpath;
+	PLib3MFModel_ClearBuildToolpathPtr m_Model_ClearBuildToolpath;
 	PLib3MFModel_GetMetaDataGroupPtr m_Model_GetMetaDataGroup;
 	PLib3MFModel_AddAttachmentPtr m_Model_AddAttachment;
 	PLib3MFModel_RemoveAttachmentPtr m_Model_RemoveAttachment;
