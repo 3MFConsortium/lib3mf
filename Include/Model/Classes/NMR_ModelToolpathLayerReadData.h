@@ -83,6 +83,7 @@ namespace NMR {
 		nfUint32 m_nPointCount;
 		nfUint32 m_nOverrideInterpolationCount;
 		nfInt64* m_pAttributeData;
+		TOOLPATHSEGMENTATTRIBUTES m_StandardAttributes;
 	} TOOLPATHREADSEGMENT;
 
 	typedef struct {
@@ -147,7 +148,7 @@ namespace NMR {
 
 		std::string getUUID();
 
-		void beginSegment(eModelToolpathSegmentType eType, nfUint32 nProfileID, nfUint32 nPartID);
+		void beginSegment(eModelToolpathSegmentType eType, nfUint32 nProfileID, nfUint32 nPartID, const TOOLPATHSEGMENTATTRIBUTES & standardAttributes);
 		void endSegment();
 		void addDiscretePoint (nfInt32 nX, nfInt32 nY, nfInt32 nTag, bool bHasFactorF, nfDouble nFactorF, bool bHasFactorG, nfDouble nFactorG, bool bHasFactorH, nfDouble nFactorH, bool bHasFactorE, nfDouble nFactorE, uint32_t nOverrideStart, uint32_t nOverrideCount);
 
@@ -158,6 +159,7 @@ namespace NMR {
 		nfUint32 getSegmentCount();
 		void getSegmentInfo (nfUint32 nSegmentIndex, eModelToolpathSegmentType & eType, nfUint32 & nProfileID, nfUint32 & nPartID, nfUint32 & nPointCount);
 		eModelToolpathSegmentType getSegmentType(nfUint32 nSegmentIndex);
+		const TOOLPATHSEGMENTATTRIBUTES & getSegmentStandardAttributes(nfUint32 nSegmentIndex);
 		TOOLPATHREADPOINT & getSegmentPoint (nfUint32 nSegmentIndex, nfUint32 nPointIndex);
 		void getSegmentHatchOverrideInterpolationIndices(nfUint32 nSegmentIndex, nfUint32 nHatchIndex, nfUint32 & nOverrideStartIndex, nfUint32 & nOverrideCount);
 		uint32_t getSegmentOverrideInterpolationCount(uint32_t nSegmentIndex);

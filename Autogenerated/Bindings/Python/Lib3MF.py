@@ -1082,6 +1082,11 @@ class FunctionTable:
 	lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid = None
 	lib3mf_toolpathlayerreader_getsegmentdefaultprofileid = None
 	lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid = None
+	lib3mf_toolpathlayerreader_getsegmentlaserindex = None
+	lib3mf_toolpathlayerreader_getsegmentlasersync = None
+	lib3mf_toolpathlayerreader_getsegmenttimeprediction = None
+	lib3mf_toolpathlayerreader_getsegmentjumpprediction = None
+	lib3mf_toolpathlayerreader_getsegmenttag = None
 	lib3mf_toolpathlayerreader_segmenthasmodificationfactors = None
 	lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits = None
 	lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete = None
@@ -1099,6 +1104,14 @@ class FunctionTable:
 	lib3mf_toolpathlayerdata_clearsegmentattributes = None
 	lib3mf_toolpathlayerdata_setlaserindex = None
 	lib3mf_toolpathlayerdata_clearlaserindex = None
+	lib3mf_toolpathlayerdata_setlasersync = None
+	lib3mf_toolpathlayerdata_clearlasersync = None
+	lib3mf_toolpathlayerdata_settimeprediction = None
+	lib3mf_toolpathlayerdata_cleartimeprediction = None
+	lib3mf_toolpathlayerdata_setjumpprediction = None
+	lib3mf_toolpathlayerdata_clearjumpprediction = None
+	lib3mf_toolpathlayerdata_setsegmenttag = None
+	lib3mf_toolpathlayerdata_clearsegmenttag = None
 	lib3mf_toolpathlayerdata_writehatchdatainmodelunits = None
 	lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithconstantfactors = None
 	lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithlinearfactors = None
@@ -5492,6 +5505,36 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
 			self.lib.lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentlaserindex")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool), ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentlaserindex = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentlasersync")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool), ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentlasersync = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmenttimeprediction")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool), ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerreader_getsegmenttimeprediction = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentjumpprediction")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool), ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentjumpprediction = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmenttag")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool), ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerreader_getsegmenttag = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_segmenthasmodificationfactors")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -5593,6 +5636,54 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
 			self.lib.lib3mf_toolpathlayerdata_clearlaserindex = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_setlasersync")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_toolpathlayerdata_setlasersync = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_clearlasersync")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_toolpathlayerdata_clearlasersync = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_settimeprediction")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_toolpathlayerdata_settimeprediction = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_cleartimeprediction")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_toolpathlayerdata_cleartimeprediction = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_setjumpprediction")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_toolpathlayerdata_setjumpprediction = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_clearjumpprediction")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_toolpathlayerdata_clearjumpprediction = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_setsegmenttag")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_toolpathlayerdata_setsegmenttag = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_clearsegmenttag")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_toolpathlayerdata_clearsegmenttag = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_writehatchdatainmodelunits")), methodAddress)
 			if err != 0:
@@ -8590,6 +8681,21 @@ class Wrapper:
 			self.lib.lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentlaserindex.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentlaserindex.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool), ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentlasersync.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentlasersync.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool), ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmenttimeprediction.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmenttimeprediction.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool), ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentjumpprediction.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentjumpprediction.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool), ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmenttag.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmenttag.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool), ctypes.POINTER(ctypes.c_uint32)]
+			
 			self.lib.lib3mf_toolpathlayerreader_segmenthasmodificationfactors.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_segmenthasmodificationfactors.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ToolpathProfileModificationFactor, ctypes.POINTER(ctypes.c_bool)]
 			
@@ -8640,6 +8746,30 @@ class Wrapper:
 			
 			self.lib.lib3mf_toolpathlayerdata_clearlaserindex.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerdata_clearlaserindex.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_toolpathlayerdata_setlasersync.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_setlasersync.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_toolpathlayerdata_clearlasersync.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_clearlasersync.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_toolpathlayerdata_settimeprediction.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_settimeprediction.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_toolpathlayerdata_cleartimeprediction.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_cleartimeprediction.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_toolpathlayerdata_setjumpprediction.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_setjumpprediction.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_toolpathlayerdata_clearjumpprediction.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_clearjumpprediction.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_toolpathlayerdata_setsegmenttag.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_setsegmenttag.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_toolpathlayerdata_clearsegmenttag.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_clearsegmenttag.argtypes = [ctypes.c_void_p]
 			
 			self.lib.lib3mf_toolpathlayerdata_writehatchdatainmodelunits.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerdata_writehatchdatainmodelunits.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Hatch2D)]
@@ -15547,6 +15677,46 @@ class ToolpathLayerReader(Base):
 		
 		return pProfileUUIDBuffer.value.decode()
 	
+	def GetSegmentLaserIndex(self, SegmentIndex, HasLaserIndex = None):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		pHasLaserIndex = ctypes.c_bool(HasLaserIndex if HasLaserIndex is not None else 0)
+		pLaserIndex = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentlaserindex(self._handle, nSegmentIndex, pHasLaserIndex, pLaserIndex))
+		
+		return pHasLaserIndex.value, pLaserIndex.value
+	
+	def GetSegmentLaserSync(self, SegmentIndex, HasLaserSync = None):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		pHasLaserSync = ctypes.c_bool(HasLaserSync if HasLaserSync is not None else 0)
+		pLaserSync = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentlasersync(self._handle, nSegmentIndex, pHasLaserSync, pLaserSync))
+		
+		return pHasLaserSync.value, pLaserSync.value
+	
+	def GetSegmentTimePrediction(self, SegmentIndex, HasTimePrediction = None):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		pHasTimePrediction = ctypes.c_bool(HasTimePrediction if HasTimePrediction is not None else 0)
+		pTimePrediction = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenttimeprediction(self._handle, nSegmentIndex, pHasTimePrediction, pTimePrediction))
+		
+		return pHasTimePrediction.value, pTimePrediction.value
+	
+	def GetSegmentJumpPrediction(self, SegmentIndex, HasJumpPrediction = None):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		pHasJumpPrediction = ctypes.c_bool(HasJumpPrediction if HasJumpPrediction is not None else 0)
+		pJumpPrediction = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentjumpprediction(self._handle, nSegmentIndex, pHasJumpPrediction, pJumpPrediction))
+		
+		return pHasJumpPrediction.value, pJumpPrediction.value
+	
+	def GetSegmentTag(self, SegmentIndex, HasTag = None):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		pHasTag = ctypes.c_bool(HasTag if HasTag is not None else 0)
+		pTag = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmenttag(self._handle, nSegmentIndex, pHasTag, pTag))
+		
+		return pHasTag.value, pTag.value
+	
 	def SegmentHasModificationFactors(self, SegmentIndex, ModificationFactor):
 		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
 		pHasModificationFactors = ctypes.c_bool()
@@ -15721,6 +15891,42 @@ class ToolpathLayerData(Base):
 	
 	def ClearLaserIndex(self):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_clearlaserindex(self._handle))
+		
+	
+	def SetLaserSync(self, Value):
+		nValue = ctypes.c_uint32(Value)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_setlasersync(self._handle, nValue))
+		
+	
+	def ClearLaserSync(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_clearlasersync(self._handle))
+		
+	
+	def SetTimePrediction(self, Value):
+		nValue = ctypes.c_uint32(Value)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_settimeprediction(self._handle, nValue))
+		
+	
+	def ClearTimePrediction(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_cleartimeprediction(self._handle))
+		
+	
+	def SetJumpPrediction(self, Value):
+		nValue = ctypes.c_uint32(Value)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_setjumpprediction(self._handle, nValue))
+		
+	
+	def ClearJumpPrediction(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_clearjumpprediction(self._handle))
+		
+	
+	def SetSegmentTag(self, Value):
+		nValue = ctypes.c_uint32(Value)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_setsegmenttag(self._handle, nValue))
+		
+	
+	def ClearSegmentTag(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_clearsegmenttag(self._handle))
 		
 	
 	def WriteHatchDataInModelUnits(self, ProfileID, PartID, HatchData):

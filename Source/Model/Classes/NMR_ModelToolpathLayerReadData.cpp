@@ -62,7 +62,7 @@ namespace NMR {
 		return m_sUUID;
 	}
 
-	void CModelToolpathLayerReadData::beginSegment(eModelToolpathSegmentType eType, nfUint32 nProfileID, nfUint32 nPartID)
+	void CModelToolpathLayerReadData::beginSegment(eModelToolpathSegmentType eType, nfUint32 nProfileID, nfUint32 nPartID, const TOOLPATHSEGMENTATTRIBUTES & standardAttributes)
 	{
 		if (m_pCurrentSegment != nullptr)
 			throw CNMRException(NMR_ERROR_LAYERSEGMENTALREADYOPEN);
@@ -72,6 +72,7 @@ namespace NMR {
 		m_pCurrentSegment->m_nFlags = 0;
 		m_pCurrentSegment->m_nPartID = nPartID;
 		m_pCurrentSegment->m_nProfileID = nProfileID;
+		m_pCurrentSegment->m_StandardAttributes = standardAttributes;
 		m_pCurrentSegment->m_nStartPoint = m_Points.getCount ();
 		m_pCurrentSegment->m_nPointCount = 0;
 		m_pCurrentSegment->m_nOverrideInterpolationCount = 0;
@@ -185,6 +186,13 @@ namespace NMR {
 		__NMRASSERT(pSegment != nullptr);
 		return pSegment->m_eType;
 
+	}
+
+	const TOOLPATHSEGMENTATTRIBUTES & CModelToolpathLayerReadData::getSegmentStandardAttributes(nfUint32 nSegmentIndex)
+	{
+		TOOLPATHREADSEGMENT* pSegment = m_Segments.getData(nSegmentIndex);
+		__NMRASSERT(pSegment != nullptr);
+		return pSegment->m_StandardAttributes;
 	}
 
 	void CModelToolpathLayerReadData::getSegmentHatchOverrideInterpolationIndices(nfUint32 nSegmentIndex, nfUint32 nHatchIndex, nfUint32& nOverrideStartIndex, nfUint32& nOverrideCount)

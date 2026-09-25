@@ -45,6 +45,7 @@ namespace NMR {
 		eModelToolpathSegmentType m_eSegmentType;
 		nfBool m_bHasSegmentType;
 		std::string m_sBinaryIndexStreamPath;
+		TOOLPATHSEGMENTATTRIBUTES m_StandardAttributes;
 
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);

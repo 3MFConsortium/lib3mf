@@ -8483,6 +8483,61 @@ func (inst ToolpathLayerReader) GetProfileUUIDByLocalProfileID(localProfileID ui
 	return string(bufferprofileUUID[:(filledinprofileUUID-1)]), nil
 }
 
+// GetSegmentLaserIndex retrieves the laser index given on the segment. If absent, the profile's laser index or the laser source default applies.
+func (inst ToolpathLayerReader) GetSegmentLaserIndex(segmentIndex uint32) (bool, uint32, error) {
+	var hasLaserIndex C.bool
+	var laserIndex C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentlaserindex(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), &hasLaserIndex, &laserIndex)
+	if ret != 0 {
+		return false, 0, makeError(uint32(ret))
+	}
+	return bool(hasLaserIndex), uint32(laserIndex), nil
+}
+
+// GetSegmentLaserSync retrieves the laser sync group id given on the segment.
+func (inst ToolpathLayerReader) GetSegmentLaserSync(segmentIndex uint32) (bool, uint32, error) {
+	var hasLaserSync C.bool
+	var laserSync C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentlasersync(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), &hasLaserSync, &laserSync)
+	if ret != 0 {
+		return false, 0, makeError(uint32(ret))
+	}
+	return bool(hasLaserSync), uint32(laserSync), nil
+}
+
+// GetSegmentTimePrediction retrieves the predicted marking time of the segment.
+func (inst ToolpathLayerReader) GetSegmentTimePrediction(segmentIndex uint32) (bool, uint32, error) {
+	var hasTimePrediction C.bool
+	var timePrediction C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmenttimeprediction(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), &hasTimePrediction, &timePrediction)
+	if ret != 0 {
+		return false, 0, makeError(uint32(ret))
+	}
+	return bool(hasTimePrediction), uint32(timePrediction), nil
+}
+
+// GetSegmentJumpPrediction retrieves the predicted jump time to the start of the segment.
+func (inst ToolpathLayerReader) GetSegmentJumpPrediction(segmentIndex uint32) (bool, uint32, error) {
+	var hasJumpPrediction C.bool
+	var jumpPrediction C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentjumpprediction(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), &hasJumpPrediction, &jumpPrediction)
+	if ret != 0 {
+		return false, 0, makeError(uint32(ret))
+	}
+	return bool(hasJumpPrediction), uint32(jumpPrediction), nil
+}
+
+// GetSegmentTag retrieves the segment-level tag.
+func (inst ToolpathLayerReader) GetSegmentTag(segmentIndex uint32) (bool, uint32, error) {
+	var hasTag C.bool
+	var tag C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmenttag(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), &hasTag, &tag)
+	if ret != 0 {
+		return false, 0, makeError(uint32(ret))
+	}
+	return bool(hasTag), uint32(tag), nil
+}
+
 // SegmentHasModificationFactors retrieves if the segment has specific modification factors attached.
 func (inst ToolpathLayerReader) SegmentHasModificationFactors(segmentIndex uint32, modificationFactor ToolpathProfileModificationFactor) (bool, error) {
 	var hasModificationFactors C.bool
@@ -8708,7 +8763,7 @@ func (inst ToolpathLayerData) ClearSegmentAttributes() error {
 	return nil
 }
 
-// SetLaserIndex sets the laser index for all subsequent segments.
+// SetLaserIndex sets the laser index for all subsequent segments. 0 is a valid laser index and is written explicitly.
 func (inst ToolpathLayerData) SetLaserIndex(value uint32) error {
 	ret := C.CCall_lib3mf_toolpathlayerdata_setlaserindex(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(value))
 	if ret != 0 {
@@ -8720,6 +8775,78 @@ func (inst ToolpathLayerData) SetLaserIndex(value uint32) error {
 // ClearLaserIndex removes the laser index for all subsequent segments.
 func (inst ToolpathLayerData) ClearLaserIndex() error {
 	ret := C.CCall_lib3mf_toolpathlayerdata_clearlaserindex(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetLaserSync sets the laser sync group id (lasersync) for all subsequent segments.
+func (inst ToolpathLayerData) SetLaserSync(value uint32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_setlasersync(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// ClearLaserSync removes the laser sync group id for all subsequent segments.
+func (inst ToolpathLayerData) ClearLaserSync() error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_clearlasersync(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetTimePrediction sets the predicted marking time (timeprediction) for all subsequent segments.
+func (inst ToolpathLayerData) SetTimePrediction(value uint32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_settimeprediction(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// ClearTimePrediction removes the predicted marking time for all subsequent segments.
+func (inst ToolpathLayerData) ClearTimePrediction() error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_cleartimeprediction(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetJumpPrediction sets the predicted jump time to the start of the segment (jumpprediction) for all subsequent segments.
+func (inst ToolpathLayerData) SetJumpPrediction(value uint32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_setjumpprediction(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// ClearJumpPrediction removes the predicted jump time for all subsequent segments.
+func (inst ToolpathLayerData) ClearJumpPrediction() error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_clearjumpprediction(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetSegmentTag sets the segment-level tag for all subsequent segments.
+func (inst ToolpathLayerData) SetSegmentTag(value uint32) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_setsegmenttag(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(value))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// ClearSegmentTag removes the segment-level tag for all subsequent segments.
+func (inst ToolpathLayerData) ClearSegmentTag() error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_clearsegmenttag(inst.wrapperRef.LibraryHandle, inst.Ref)
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}

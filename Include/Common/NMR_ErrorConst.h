@@ -2093,4 +2093,7 @@ Toolpath errors (0xBXXX)
 // Toolpath profile name is not unique within the toolpath
 #define NMR_ERROR_DUPLICATETOOLPATHPROFILENAME 0xB061
 
+// Invalid value of a standard toolpath segment attribute
+#define NMR_ERROR_INVALIDSEGMENTATTRIBUTEVALUE 0xB062
+
 #endif // __NMR_ERRORCONST

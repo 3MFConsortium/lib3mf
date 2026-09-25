@@ -520,6 +520,151 @@ public class ToolpathLayerReader extends Base {
 	}
 
 	/**
+	 * Retrieves the laser index given on the segment. If absent, the profile's laser index or the laser source default applies.
+	 *
+	 * @param segmentIndex Segment Index. Must be between 0 and SegmentCount - 1.
+	 * @return GetSegmentLaserIndex Result Tuple
+	 * @throws Lib3MFException
+	 */
+	public GetSegmentLaserIndexResult getSegmentLaserIndex(int segmentIndex) throws Lib3MFException {
+		Pointer bufferHasLaserIndex = new Memory(1);
+		Pointer bufferLaserIndex = new Memory(4);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerreader_getsegmentlaserindex.invokeInt(new java.lang.Object[]{mHandle, segmentIndex, bufferHasLaserIndex, bufferLaserIndex}));
+		GetSegmentLaserIndexResult returnTuple = new GetSegmentLaserIndexResult();
+		returnTuple.HasLaserIndex = bufferHasLaserIndex.getByte(0) != 0;
+		returnTuple.LaserIndex = bufferLaserIndex.getInt(0);
+		return returnTuple;
+	}
+
+	public static class GetSegmentLaserIndexResult {
+		/**
+		 * True if the segment carries a laserindex attribute.
+		 */
+		public boolean HasLaserIndex;
+
+		/**
+		 * The laser index. 0 if absent.
+		 */
+		public int LaserIndex;
+
+	}
+	/**
+	 * Retrieves the laser sync group id given on the segment.
+	 *
+	 * @param segmentIndex Segment Index. Must be between 0 and SegmentCount - 1.
+	 * @return GetSegmentLaserSync Result Tuple
+	 * @throws Lib3MFException
+	 */
+	public GetSegmentLaserSyncResult getSegmentLaserSync(int segmentIndex) throws Lib3MFException {
+		Pointer bufferHasLaserSync = new Memory(1);
+		Pointer bufferLaserSync = new Memory(4);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerreader_getsegmentlasersync.invokeInt(new java.lang.Object[]{mHandle, segmentIndex, bufferHasLaserSync, bufferLaserSync}));
+		GetSegmentLaserSyncResult returnTuple = new GetSegmentLaserSyncResult();
+		returnTuple.HasLaserSync = bufferHasLaserSync.getByte(0) != 0;
+		returnTuple.LaserSync = bufferLaserSync.getInt(0);
+		return returnTuple;
+	}
+
+	public static class GetSegmentLaserSyncResult {
+		/**
+		 * True if the segment carries a lasersync attribute.
+		 */
+		public boolean HasLaserSync;
+
+		/**
+		 * The sync group id. 0 if absent.
+		 */
+		public int LaserSync;
+
+	}
+	/**
+	 * Retrieves the predicted marking time of the segment.
+	 *
+	 * @param segmentIndex Segment Index. Must be between 0 and SegmentCount - 1.
+	 * @return GetSegmentTimePrediction Result Tuple
+	 * @throws Lib3MFException
+	 */
+	public GetSegmentTimePredictionResult getSegmentTimePrediction(int segmentIndex) throws Lib3MFException {
+		Pointer bufferHasTimePrediction = new Memory(1);
+		Pointer bufferTimePrediction = new Memory(4);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerreader_getsegmenttimeprediction.invokeInt(new java.lang.Object[]{mHandle, segmentIndex, bufferHasTimePrediction, bufferTimePrediction}));
+		GetSegmentTimePredictionResult returnTuple = new GetSegmentTimePredictionResult();
+		returnTuple.HasTimePrediction = bufferHasTimePrediction.getByte(0) != 0;
+		returnTuple.TimePrediction = bufferTimePrediction.getInt(0);
+		return returnTuple;
+	}
+
+	public static class GetSegmentTimePredictionResult {
+		/**
+		 * True if the segment carries a timeprediction attribute.
+		 */
+		public boolean HasTimePrediction;
+
+		/**
+		 * The predicted marking time in microseconds. 0 if absent.
+		 */
+		public int TimePrediction;
+
+	}
+	/**
+	 * Retrieves the predicted jump time to the start of the segment.
+	 *
+	 * @param segmentIndex Segment Index. Must be between 0 and SegmentCount - 1.
+	 * @return GetSegmentJumpPrediction Result Tuple
+	 * @throws Lib3MFException
+	 */
+	public GetSegmentJumpPredictionResult getSegmentJumpPrediction(int segmentIndex) throws Lib3MFException {
+		Pointer bufferHasJumpPrediction = new Memory(1);
+		Pointer bufferJumpPrediction = new Memory(4);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerreader_getsegmentjumpprediction.invokeInt(new java.lang.Object[]{mHandle, segmentIndex, bufferHasJumpPrediction, bufferJumpPrediction}));
+		GetSegmentJumpPredictionResult returnTuple = new GetSegmentJumpPredictionResult();
+		returnTuple.HasJumpPrediction = bufferHasJumpPrediction.getByte(0) != 0;
+		returnTuple.JumpPrediction = bufferJumpPrediction.getInt(0);
+		return returnTuple;
+	}
+
+	public static class GetSegmentJumpPredictionResult {
+		/**
+		 * True if the segment carries a jumpprediction attribute.
+		 */
+		public boolean HasJumpPrediction;
+
+		/**
+		 * The predicted jump time in microseconds. 0 if absent.
+		 */
+		public int JumpPrediction;
+
+	}
+	/**
+	 * Retrieves the segment-level tag.
+	 *
+	 * @param segmentIndex Segment Index. Must be between 0 and SegmentCount - 1.
+	 * @return GetSegmentTag Result Tuple
+	 * @throws Lib3MFException
+	 */
+	public GetSegmentTagResult getSegmentTag(int segmentIndex) throws Lib3MFException {
+		Pointer bufferHasTag = new Memory(1);
+		Pointer bufferTag = new Memory(4);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerreader_getsegmenttag.invokeInt(new java.lang.Object[]{mHandle, segmentIndex, bufferHasTag, bufferTag}));
+		GetSegmentTagResult returnTuple = new GetSegmentTagResult();
+		returnTuple.HasTag = bufferHasTag.getByte(0) != 0;
+		returnTuple.Tag = bufferTag.getInt(0);
+		return returnTuple;
+	}
+
+	public static class GetSegmentTagResult {
+		/**
+		 * True if the segment carries a tag attribute.
+		 */
+		public boolean HasTag;
+
+		/**
+		 * The tag value. 0 if absent.
+		 */
+		public int Tag;
+
+	}
+	/**
 	 * Retrieves if the segment has specific modification factors attached.
 	 *
 	 * @param segmentIndex Segment Index. Must be between 0 and SegmentCount - 1.

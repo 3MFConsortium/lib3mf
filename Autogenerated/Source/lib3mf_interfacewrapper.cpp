@@ -23673,6 +23673,196 @@ Lib3MFResult lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid(Lib3MF_To
 	}
 }
 
+Lib3MFResult lib3mf_toolpathlayerreader_getsegmentlaserindex(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasLaserIndex, Lib3MF_uint32 * pLaserIndex)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentLaserIndex");
+			pJournalEntry->addUInt32Parameter("SegmentIndex", nSegmentIndex);
+		}
+		if (!pHasLaserIndex)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pLaserIndex == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pLaserIndex = pIToolpathLayerReader->GetSegmentLaserIndex(nSegmentIndex, *pHasLaserIndex);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasLaserIndex", *pHasLaserIndex);
+			pJournalEntry->addUInt32Result("LaserIndex", *pLaserIndex);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerreader_getsegmentlasersync(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasLaserSync, Lib3MF_uint32 * pLaserSync)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentLaserSync");
+			pJournalEntry->addUInt32Parameter("SegmentIndex", nSegmentIndex);
+		}
+		if (!pHasLaserSync)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pLaserSync == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pLaserSync = pIToolpathLayerReader->GetSegmentLaserSync(nSegmentIndex, *pHasLaserSync);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasLaserSync", *pHasLaserSync);
+			pJournalEntry->addUInt32Result("LaserSync", *pLaserSync);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerreader_getsegmenttimeprediction(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasTimePrediction, Lib3MF_uint32 * pTimePrediction)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentTimePrediction");
+			pJournalEntry->addUInt32Parameter("SegmentIndex", nSegmentIndex);
+		}
+		if (!pHasTimePrediction)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTimePrediction == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pTimePrediction = pIToolpathLayerReader->GetSegmentTimePrediction(nSegmentIndex, *pHasTimePrediction);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasTimePrediction", *pHasTimePrediction);
+			pJournalEntry->addUInt32Result("TimePrediction", *pTimePrediction);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerreader_getsegmentjumpprediction(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasJumpPrediction, Lib3MF_uint32 * pJumpPrediction)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentJumpPrediction");
+			pJournalEntry->addUInt32Parameter("SegmentIndex", nSegmentIndex);
+		}
+		if (!pHasJumpPrediction)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pJumpPrediction == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pJumpPrediction = pIToolpathLayerReader->GetSegmentJumpPrediction(nSegmentIndex, *pHasJumpPrediction);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasJumpPrediction", *pHasJumpPrediction);
+			pJournalEntry->addUInt32Result("JumpPrediction", *pJumpPrediction);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerreader_getsegmenttag(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasTag, Lib3MF_uint32 * pTag)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerReader, "ToolpathLayerReader", "GetSegmentTag");
+			pJournalEntry->addUInt32Parameter("SegmentIndex", nSegmentIndex);
+		}
+		if (!pHasTag)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTag == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLayerReader* pIToolpathLayerReader = dynamic_cast<IToolpathLayerReader*>(pIBaseClass);
+		if (!pIToolpathLayerReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pTag = pIToolpathLayerReader->GetSegmentTag(nSegmentIndex, *pHasTag);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasTag", *pHasTag);
+			pJournalEntry->addUInt32Result("Tag", *pTag);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_toolpathlayerreader_segmenthasmodificationfactors(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, eLib3MFToolpathProfileModificationFactor eModificationFactor, bool * pHasModificationFactors)
 {
 	IBase* pIBaseClass = (IBase *)pToolpathLayerReader;
@@ -24283,6 +24473,258 @@ Lib3MFResult lib3mf_toolpathlayerdata_clearlaserindex(Lib3MF_ToolpathLayerData p
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pIToolpathLayerData->ClearLaserIndex();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerdata_setlasersync(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "SetLaserSync");
+			pJournalEntry->addUInt32Parameter("Value", nValue);
+		}
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerData->SetLaserSync(nValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerdata_clearlasersync(Lib3MF_ToolpathLayerData pToolpathLayerData)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "ClearLaserSync");
+		}
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerData->ClearLaserSync();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerdata_settimeprediction(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "SetTimePrediction");
+			pJournalEntry->addUInt32Parameter("Value", nValue);
+		}
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerData->SetTimePrediction(nValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerdata_cleartimeprediction(Lib3MF_ToolpathLayerData pToolpathLayerData)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "ClearTimePrediction");
+		}
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerData->ClearTimePrediction();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerdata_setjumpprediction(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "SetJumpPrediction");
+			pJournalEntry->addUInt32Parameter("Value", nValue);
+		}
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerData->SetJumpPrediction(nValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerdata_clearjumpprediction(Lib3MF_ToolpathLayerData pToolpathLayerData)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "ClearJumpPrediction");
+		}
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerData->ClearJumpPrediction();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerdata_setsegmenttag(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "SetSegmentTag");
+			pJournalEntry->addUInt32Parameter("Value", nValue);
+		}
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerData->SetSegmentTag(nValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlayerdata_clearsegmenttag(Lib3MF_ToolpathLayerData pToolpathLayerData)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLayerData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLayerData, "ToolpathLayerData", "ClearSegmentTag");
+		}
+		IToolpathLayerData* pIToolpathLayerData = dynamic_cast<IToolpathLayerData*>(pIBaseClass);
+		if (!pIToolpathLayerData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLayerData->ClearSegmentTag();
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -32837,6 +33279,16 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentdefaultprofileid;
 	if (sProcName == "lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid;
+	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentlaserindex") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentlaserindex;
+	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentlasersync") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentlasersync;
+	if (sProcName == "lib3mf_toolpathlayerreader_getsegmenttimeprediction") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmenttimeprediction;
+	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentjumpprediction") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmentjumpprediction;
+	if (sProcName == "lib3mf_toolpathlayerreader_getsegmenttag") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getsegmenttag;
 	if (sProcName == "lib3mf_toolpathlayerreader_segmenthasmodificationfactors") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_segmenthasmodificationfactors;
 	if (sProcName == "lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits") 
@@ -32871,6 +33323,22 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_setlaserindex;
 	if (sProcName == "lib3mf_toolpathlayerdata_clearlaserindex") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_clearlaserindex;
+	if (sProcName == "lib3mf_toolpathlayerdata_setlasersync") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_setlasersync;
+	if (sProcName == "lib3mf_toolpathlayerdata_clearlasersync") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_clearlasersync;
+	if (sProcName == "lib3mf_toolpathlayerdata_settimeprediction") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_settimeprediction;
+	if (sProcName == "lib3mf_toolpathlayerdata_cleartimeprediction") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_cleartimeprediction;
+	if (sProcName == "lib3mf_toolpathlayerdata_setjumpprediction") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_setjumpprediction;
+	if (sProcName == "lib3mf_toolpathlayerdata_clearjumpprediction") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_clearjumpprediction;
+	if (sProcName == "lib3mf_toolpathlayerdata_setsegmenttag") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_setsegmenttag;
+	if (sProcName == "lib3mf_toolpathlayerdata_clearsegmenttag") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_clearsegmenttag;
 	if (sProcName == "lib3mf_toolpathlayerdata_writehatchdatainmodelunits") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerdata_writehatchdatainmodelunits;
 	if (sProcName == "lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithconstantfactors") 

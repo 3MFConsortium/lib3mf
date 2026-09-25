@@ -139,7 +139,7 @@ public class ToolpathLayerData extends Base {
 	}
 
 	/**
-	 * Sets the laser index for all subsequent segments.
+	 * Sets the laser index for all subsequent segments. 0 is a valid laser index and is written explicitly.
 	 *
 	 * @param value The value of the laser index for all subsequent segments.
 	 * @throws Lib3MFException
@@ -155,6 +155,82 @@ public class ToolpathLayerData extends Base {
 	 */
 	public void clearLaserIndex() throws Lib3MFException {
 		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_clearlaserindex.invokeInt(new java.lang.Object[]{mHandle}));
+	}
+
+	/**
+	 * Sets the laser sync group id (lasersync) for all subsequent segments.
+	 *
+	 * @param value The id of the sync group. MUST be positive.
+	 * @throws Lib3MFException
+	 */
+	public void setLaserSync(int value) throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_setlasersync.invokeInt(new java.lang.Object[]{mHandle, value}));
+	}
+
+	/**
+	 * Removes the laser sync group id for all subsequent segments.
+	 *
+	 * @throws Lib3MFException
+	 */
+	public void clearLaserSync() throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_clearlasersync.invokeInt(new java.lang.Object[]{mHandle}));
+	}
+
+	/**
+	 * Sets the predicted marking time (timeprediction) for all subsequent segments.
+	 *
+	 * @param value The predicted marking time in microseconds.
+	 * @throws Lib3MFException
+	 */
+	public void setTimePrediction(int value) throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_settimeprediction.invokeInt(new java.lang.Object[]{mHandle, value}));
+	}
+
+	/**
+	 * Removes the predicted marking time for all subsequent segments.
+	 *
+	 * @throws Lib3MFException
+	 */
+	public void clearTimePrediction() throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_cleartimeprediction.invokeInt(new java.lang.Object[]{mHandle}));
+	}
+
+	/**
+	 * Sets the predicted jump time to the start of the segment (jumpprediction) for all subsequent segments.
+	 *
+	 * @param value The predicted jump time in microseconds.
+	 * @throws Lib3MFException
+	 */
+	public void setJumpPrediction(int value) throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_setjumpprediction.invokeInt(new java.lang.Object[]{mHandle, value}));
+	}
+
+	/**
+	 * Removes the predicted jump time for all subsequent segments.
+	 *
+	 * @throws Lib3MFException
+	 */
+	public void clearJumpPrediction() throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_clearjumpprediction.invokeInt(new java.lang.Object[]{mHandle}));
+	}
+
+	/**
+	 * Sets the segment-level tag for all subsequent segments.
+	 *
+	 * @param value The producer-defined tag value.
+	 * @throws Lib3MFException
+	 */
+	public void setSegmentTag(int value) throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_setsegmenttag.invokeInt(new java.lang.Object[]{mHandle, value}));
+	}
+
+	/**
+	 * Removes the segment-level tag for all subsequent segments.
+	 *
+	 * @throws Lib3MFException
+	 */
+	public void clearSegmentTag() throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_clearsegmenttag.invokeInt(new java.lang.Object[]{mHandle}));
 	}
 
 	/**

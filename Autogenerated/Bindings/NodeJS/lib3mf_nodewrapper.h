@@ -2629,6 +2629,11 @@ private:
 	static void GetSegmentDefaultProfileUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentDefaultProfileID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetProfileUUIDByLocalProfileID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentLaserIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentLaserSync(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentTimePrediction(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentJumpPrediction(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentTag(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SegmentHasModificationFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentPointDataInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentPointDataDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -2663,6 +2668,14 @@ private:
 	static void ClearSegmentAttributes(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetLaserIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void ClearLaserIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetLaserSync(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ClearLaserSync(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetTimePrediction(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ClearTimePrediction(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetJumpPrediction(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ClearJumpPrediction(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetSegmentTag(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ClearSegmentTag(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteHatchDataInModelUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteHatchDataInModelUnitsWithConstantFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WriteHatchDataInModelUnitsWithLinearFactors(const v8::FunctionCallbackInfo<v8::Value>& args);

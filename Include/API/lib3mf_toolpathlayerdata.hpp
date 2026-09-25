@@ -79,6 +79,22 @@ public:
 
 	void ClearLaserIndex() override;
 
+	void SetLaserSync(const Lib3MF_uint32 nValue) override;
+
+	void ClearLaserSync() override;
+
+	void SetTimePrediction(const Lib3MF_uint32 nValue) override;
+
+	void ClearTimePrediction() override;
+
+	void SetJumpPrediction(const Lib3MF_uint32 nValue) override;
+
+	void ClearJumpPrediction() override;
+
+	void SetSegmentTag(const Lib3MF_uint32 nValue) override;
+
+	void ClearSegmentTag() override;
+
 	Lib3MF_uint32 RegisterProfile(IToolpathProfile* pProfile) override;
 
 	Lib3MF_uint32 RegisterBuildItem(IBuildItem* pBuildItem) override;

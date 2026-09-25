@@ -24069,6 +24069,11 @@ void CLib3MFToolpathLayerReader::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentDefaultProfileUUID", GetSegmentDefaultProfileUUID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentDefaultProfileID", GetSegmentDefaultProfileID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfileUUIDByLocalProfileID", GetProfileUUIDByLocalProfileID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentLaserIndex", GetSegmentLaserIndex);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentLaserSync", GetSegmentLaserSync);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentTimePrediction", GetSegmentTimePrediction);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentJumpPrediction", GetSegmentJumpPrediction);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentTag", GetSegmentTag);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SegmentHasModificationFactors", SegmentHasModificationFactors);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPointDataInModelUnits", GetSegmentPointDataInModelUnits);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentPointDataDiscrete", GetSegmentPointDataDiscrete);
@@ -24824,6 +24829,156 @@ void CLib3MFToolpathLayerReader::GetProfileUUIDByLocalProfileID(const FunctionCa
 }
 
 
+void CLib3MFToolpathLayerReader::GetSegmentLaserIndex(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SegmentIndex)");
+        }
+        Local<Object> outObject = Object::New(isolate);
+        unsigned int nSegmentIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        bool bReturnHasLaserIndex = false;
+        unsigned int nReturnLaserIndex = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentLaserIndex.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentLaserIndex == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentLaserIndex.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentLaserIndex(instanceHandle, nSegmentIndex, &bReturnHasLaserIndex, &nReturnLaserIndex);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasLaserIndex"), Boolean::New(isolate, bReturnHasLaserIndex));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "LaserIndex"), Integer::NewFromUnsigned(isolate, nReturnLaserIndex));
+        args.GetReturnValue().Set(outObject);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetSegmentLaserSync(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SegmentIndex)");
+        }
+        Local<Object> outObject = Object::New(isolate);
+        unsigned int nSegmentIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        bool bReturnHasLaserSync = false;
+        unsigned int nReturnLaserSync = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentLaserSync.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentLaserSync == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentLaserSync.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentLaserSync(instanceHandle, nSegmentIndex, &bReturnHasLaserSync, &nReturnLaserSync);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasLaserSync"), Boolean::New(isolate, bReturnHasLaserSync));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "LaserSync"), Integer::NewFromUnsigned(isolate, nReturnLaserSync));
+        args.GetReturnValue().Set(outObject);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetSegmentTimePrediction(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SegmentIndex)");
+        }
+        Local<Object> outObject = Object::New(isolate);
+        unsigned int nSegmentIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        bool bReturnHasTimePrediction = false;
+        unsigned int nReturnTimePrediction = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentTimePrediction.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentTimePrediction == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentTimePrediction.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentTimePrediction(instanceHandle, nSegmentIndex, &bReturnHasTimePrediction, &nReturnTimePrediction);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasTimePrediction"), Boolean::New(isolate, bReturnHasTimePrediction));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "TimePrediction"), Integer::NewFromUnsigned(isolate, nReturnTimePrediction));
+        args.GetReturnValue().Set(outObject);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetSegmentJumpPrediction(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SegmentIndex)");
+        }
+        Local<Object> outObject = Object::New(isolate);
+        unsigned int nSegmentIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        bool bReturnHasJumpPrediction = false;
+        unsigned int nReturnJumpPrediction = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentJumpPrediction.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentJumpPrediction == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentJumpPrediction.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentJumpPrediction(instanceHandle, nSegmentIndex, &bReturnHasJumpPrediction, &nReturnJumpPrediction);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasJumpPrediction"), Boolean::New(isolate, bReturnHasJumpPrediction));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "JumpPrediction"), Integer::NewFromUnsigned(isolate, nReturnJumpPrediction));
+        args.GetReturnValue().Set(outObject);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetSegmentTag(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SegmentIndex)");
+        }
+        Local<Object> outObject = Object::New(isolate);
+        unsigned int nSegmentIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        bool bReturnHasTag = false;
+        unsigned int nReturnTag = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentTag.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentTag == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentTag.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentTag(instanceHandle, nSegmentIndex, &bReturnHasTag, &nReturnTag);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "HasTag"), Boolean::New(isolate, bReturnHasTag));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "Tag"), Integer::NewFromUnsigned(isolate, nReturnTag));
+        args.GetReturnValue().Set(outObject);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
 void CLib3MFToolpathLayerReader::SegmentHasModificationFactors(const FunctionCallbackInfo<Value>& args) 
 {
 		Isolate* isolate = args.GetIsolate();
@@ -25123,6 +25278,14 @@ void CLib3MFToolpathLayerData::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearSegmentAttributes", ClearSegmentAttributes);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetLaserIndex", SetLaserIndex);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearLaserIndex", ClearLaserIndex);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetLaserSync", SetLaserSync);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearLaserSync", ClearLaserSync);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetTimePrediction", SetTimePrediction);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearTimePrediction", ClearTimePrediction);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetJumpPrediction", SetJumpPrediction);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearJumpPrediction", ClearJumpPrediction);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetSegmentTag", SetSegmentTag);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearSegmentTag", ClearSegmentTag);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteHatchDataInModelUnits", WriteHatchDataInModelUnits);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteHatchDataInModelUnitsWithConstantFactors", WriteHatchDataInModelUnitsWithConstantFactors);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteHatchDataInModelUnitsWithLinearFactors", WriteHatchDataInModelUnitsWithLinearFactors);
@@ -25352,6 +25515,182 @@ void CLib3MFToolpathLayerData::ClearLaserIndex(const FunctionCallbackInfo<Value>
             throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::ClearLaserIndex.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_ClearLaserIndex(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::SetLaserSync(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Value)");
+        }
+        unsigned int nValue = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetLaserSync.");
+        if (wrapperTable->m_ToolpathLayerData_SetLaserSync == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::SetLaserSync.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_SetLaserSync(instanceHandle, nValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::ClearLaserSync(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ClearLaserSync.");
+        if (wrapperTable->m_ToolpathLayerData_ClearLaserSync == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::ClearLaserSync.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_ClearLaserSync(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::SetTimePrediction(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Value)");
+        }
+        unsigned int nValue = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetTimePrediction.");
+        if (wrapperTable->m_ToolpathLayerData_SetTimePrediction == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::SetTimePrediction.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_SetTimePrediction(instanceHandle, nValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::ClearTimePrediction(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ClearTimePrediction.");
+        if (wrapperTable->m_ToolpathLayerData_ClearTimePrediction == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::ClearTimePrediction.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_ClearTimePrediction(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::SetJumpPrediction(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Value)");
+        }
+        unsigned int nValue = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetJumpPrediction.");
+        if (wrapperTable->m_ToolpathLayerData_SetJumpPrediction == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::SetJumpPrediction.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_SetJumpPrediction(instanceHandle, nValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::ClearJumpPrediction(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ClearJumpPrediction.");
+        if (wrapperTable->m_ToolpathLayerData_ClearJumpPrediction == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::ClearJumpPrediction.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_ClearJumpPrediction(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::SetSegmentTag(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Value)");
+        }
+        unsigned int nValue = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetSegmentTag.");
+        if (wrapperTable->m_ToolpathLayerData_SetSegmentTag == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::SetSegmentTag.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_SetSegmentTag(instanceHandle, nValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::ClearSegmentTag(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ClearSegmentTag.");
+        if (wrapperTable->m_ToolpathLayerData_ClearSegmentTag == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::ClearSegmentTag.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_ClearSegmentTag(instanceHandle);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {

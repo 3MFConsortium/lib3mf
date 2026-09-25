@@ -2718,6 +2718,21 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_GetProfileUUIDByLocalProfileID (IntPtr Handle, UInt32 ALocalProfileID, UInt32 sizeProfileUUID, out UInt32 neededProfileUUID, IntPtr dataProfileUUID);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentlaserindex", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentLaserIndex (IntPtr Handle, UInt32 ASegmentIndex, out Byte AHasLaserIndex, out UInt32 ALaserIndex);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentlasersync", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentLaserSync (IntPtr Handle, UInt32 ASegmentIndex, out Byte AHasLaserSync, out UInt32 ALaserSync);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmenttimeprediction", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentTimePrediction (IntPtr Handle, UInt32 ASegmentIndex, out Byte AHasTimePrediction, out UInt32 ATimePrediction);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentjumpprediction", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentJumpPrediction (IntPtr Handle, UInt32 ASegmentIndex, out Byte AHasJumpPrediction, out UInt32 AJumpPrediction);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmenttag", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentTag (IntPtr Handle, UInt32 ASegmentIndex, out Byte AHasTag, out UInt32 ATag);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_segmenthasmodificationfactors", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_SegmentHasModificationFactors (IntPtr Handle, UInt32 ASegmentIndex, Int32 AModificationFactor, out Byte AHasModificationFactors);
 
@@ -2768,6 +2783,30 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_clearlaserindex", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerData_ClearLaserIndex (IntPtr Handle);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_setlasersync", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_SetLaserSync (IntPtr Handle, UInt32 AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_clearlasersync", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_ClearLaserSync (IntPtr Handle);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_settimeprediction", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_SetTimePrediction (IntPtr Handle, UInt32 AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_cleartimeprediction", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_ClearTimePrediction (IntPtr Handle);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_setjumpprediction", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_SetJumpPrediction (IntPtr Handle, UInt32 AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_clearjumpprediction", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_ClearJumpPrediction (IntPtr Handle);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_setsegmenttag", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_SetSegmentTag (IntPtr Handle, UInt32 AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_clearsegmenttag", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_ClearSegmentTag (IntPtr Handle);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_writehatchdatainmodelunits", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerData_WriteHatchDataInModelUnits (IntPtr Handle, UInt32 AProfileID, UInt32 APartID, UInt64 sizeHatchData, IntPtr dataHatchData);
@@ -10418,6 +10457,56 @@ namespace Lib3MF {
 			return Encoding.UTF8.GetString(bytesProfileUUID).TrimEnd(char.MinValue);
 		}
 
+		public UInt32 GetSegmentLaserIndex (UInt32 ASegmentIndex, out bool AHasLaserIndex)
+		{
+			Byte resultHasLaserIndex = 0;
+			UInt32 resultLaserIndex = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentLaserIndex (Handle, ASegmentIndex, out resultHasLaserIndex, out resultLaserIndex));
+			AHasLaserIndex = (resultHasLaserIndex != 0);
+			return resultLaserIndex;
+		}
+
+		public UInt32 GetSegmentLaserSync (UInt32 ASegmentIndex, out bool AHasLaserSync)
+		{
+			Byte resultHasLaserSync = 0;
+			UInt32 resultLaserSync = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentLaserSync (Handle, ASegmentIndex, out resultHasLaserSync, out resultLaserSync));
+			AHasLaserSync = (resultHasLaserSync != 0);
+			return resultLaserSync;
+		}
+
+		public UInt32 GetSegmentTimePrediction (UInt32 ASegmentIndex, out bool AHasTimePrediction)
+		{
+			Byte resultHasTimePrediction = 0;
+			UInt32 resultTimePrediction = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentTimePrediction (Handle, ASegmentIndex, out resultHasTimePrediction, out resultTimePrediction));
+			AHasTimePrediction = (resultHasTimePrediction != 0);
+			return resultTimePrediction;
+		}
+
+		public UInt32 GetSegmentJumpPrediction (UInt32 ASegmentIndex, out bool AHasJumpPrediction)
+		{
+			Byte resultHasJumpPrediction = 0;
+			UInt32 resultJumpPrediction = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentJumpPrediction (Handle, ASegmentIndex, out resultHasJumpPrediction, out resultJumpPrediction));
+			AHasJumpPrediction = (resultHasJumpPrediction != 0);
+			return resultJumpPrediction;
+		}
+
+		public UInt32 GetSegmentTag (UInt32 ASegmentIndex, out bool AHasTag)
+		{
+			Byte resultHasTag = 0;
+			UInt32 resultTag = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentTag (Handle, ASegmentIndex, out resultHasTag, out resultTag));
+			AHasTag = (resultHasTag != 0);
+			return resultTag;
+		}
+
 		public bool SegmentHasModificationFactors (UInt32 ASegmentIndex, eToolpathProfileModificationFactor AModificationFactor)
 		{
 			Int32 enumModificationFactor = (Int32) AModificationFactor;
@@ -10639,6 +10728,54 @@ namespace Lib3MF {
 		{
 
 			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_ClearLaserIndex (Handle));
+		}
+
+		public void SetLaserSync (UInt32 AValue)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_SetLaserSync (Handle, AValue));
+		}
+
+		public void ClearLaserSync ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_ClearLaserSync (Handle));
+		}
+
+		public void SetTimePrediction (UInt32 AValue)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_SetTimePrediction (Handle, AValue));
+		}
+
+		public void ClearTimePrediction ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_ClearTimePrediction (Handle));
+		}
+
+		public void SetJumpPrediction (UInt32 AValue)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_SetJumpPrediction (Handle, AValue));
+		}
+
+		public void ClearJumpPrediction ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_ClearJumpPrediction (Handle));
+		}
+
+		public void SetSegmentTag (UInt32 AValue)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_SetSegmentTag (Handle, AValue));
+		}
+
+		public void ClearSegmentTag ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_ClearSegmentTag (Handle));
 		}
 
 		public void WriteHatchDataInModelUnits (UInt32 AProfileID, UInt32 APartID, sHatch2D[] AHatchData)

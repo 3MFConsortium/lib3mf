@@ -52,11 +52,28 @@ namespace NMR {
 		m_nProfileID (0),
 		m_bHasSegmentType (false),
 		m_eSegmentType (eModelToolpathSegmentType::HatchSegment),
-		m_sBinaryIndexStreamPath(sBinaryIndexStreamPath)
+		m_sBinaryIndexStreamPath(sBinaryIndexStreamPath),
+		m_StandardAttributes ()
 	{
 		if (pReadData == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
+	}
+
+	static nfUint32 parseSegmentAttributeValue(_In_z_ const nfChar * pAttributeValue, bool bMustBePositive)
+	{
+		// strtoul silently wraps negative numbers, so only accept a plain digit sequence.
+		const nfChar * pChar = pAttributeValue;
+		while (*pChar == ' ')
+			pChar++;
+		if ((*pChar < '0') || (*pChar > '9'))
+			throw CNMRException(NMR_ERROR_INVALIDSEGMENTATTRIBUTEVALUE);
+
+		nfUint32 nValue = fnStringToUint32(pChar);
+		if (bMustBePositive && (nValue == 0))
+			throw CNMRException(NMR_ERROR_INVALIDSEGMENTATTRIBUTEVALUE);
+
+		return nValue;
 	}
 
 
@@ -78,7 +95,7 @@ namespace NMR {
 		if (!hasProfileID())
 			throw CNMRException(NMR_ERROR_MISSINGID);
 
-		m_pReadData->beginSegment(m_eSegmentType, getProfileID(), getPartID());
+		m_pReadData->beginSegment(m_eSegmentType, getProfileID(), getPartID(), m_StandardAttributes);
 
 		// Parse Content
 		parseContent(pXMLReader);
@@ -133,6 +150,31 @@ namespace NMR {
 			if (!m_bHasSegmentType)
 				throw CNMRException(NMR_ERROR_INVALIDTYPEATTRIBUTE);
 
+		}
+
+		if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_LASERINDEX) == 0) {
+			m_StandardAttributes.m_nLaserIndex = parseSegmentAttributeValue(pAttributeValue, false);
+			m_StandardAttributes.m_nFlags |= TOOLPATHSEGMENTATTRIBUTE_HASLASERINDEX;
+		}
+
+		if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_LASERSYNC) == 0) {
+			m_StandardAttributes.m_nLaserSync = parseSegmentAttributeValue(pAttributeValue, true);
+			m_StandardAttributes.m_nFlags |= TOOLPATHSEGMENTATTRIBUTE_HASLASERSYNC;
+		}
+
+		if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_TIMEPREDICTION) == 0) {
+			m_StandardAttributes.m_nTimePrediction = parseSegmentAttributeValue(pAttributeValue, false);
+			m_StandardAttributes.m_nFlags |= TOOLPATHSEGMENTATTRIBUTE_HASTIMEPREDICTION;
+		}
+
+		if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_JUMPPREDICTION) == 0) {
+			m_StandardAttributes.m_nJumpPrediction = parseSegmentAttributeValue(pAttributeValue, false);
+			m_StandardAttributes.m_nFlags |= TOOLPATHSEGMENTATTRIBUTE_HASJUMPPREDICTION;
+		}
+
+		if (strcmp(pAttributeName, XML_3MF_TOOLPATHATTRIBUTE_TAG) == 0) {
+			m_StandardAttributes.m_nTag = parseSegmentAttributeValue(pAttributeValue, false);
+			m_StandardAttributes.m_nFlags |= TOOLPATHSEGMENTATTRIBUTE_HASTAG;
 		}
 
 	}

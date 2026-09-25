@@ -6799,6 +6799,46 @@ public:
 	virtual std::string GetProfileUUIDByLocalProfileID(const Lib3MF_uint32 nLocalProfileID) = 0;
 
 	/**
+	* IToolpathLayerReader::GetSegmentLaserIndex - Retrieves the laser index given on the segment. If absent, the profile's laser index or the laser source default applies.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] bHasLaserIndex - True if the segment carries a laserindex attribute.
+	* @return The laser index. 0 if absent.
+	*/
+	virtual Lib3MF_uint32 GetSegmentLaserIndex(const Lib3MF_uint32 nSegmentIndex, bool & bHasLaserIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentLaserSync - Retrieves the laser sync group id given on the segment.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] bHasLaserSync - True if the segment carries a lasersync attribute.
+	* @return The sync group id. 0 if absent.
+	*/
+	virtual Lib3MF_uint32 GetSegmentLaserSync(const Lib3MF_uint32 nSegmentIndex, bool & bHasLaserSync) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentTimePrediction - Retrieves the predicted marking time of the segment.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] bHasTimePrediction - True if the segment carries a timeprediction attribute.
+	* @return The predicted marking time in microseconds. 0 if absent.
+	*/
+	virtual Lib3MF_uint32 GetSegmentTimePrediction(const Lib3MF_uint32 nSegmentIndex, bool & bHasTimePrediction) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentJumpPrediction - Retrieves the predicted jump time to the start of the segment.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] bHasJumpPrediction - True if the segment carries a jumpprediction attribute.
+	* @return The predicted jump time in microseconds. 0 if absent.
+	*/
+	virtual Lib3MF_uint32 GetSegmentJumpPrediction(const Lib3MF_uint32 nSegmentIndex, bool & bHasJumpPrediction) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentTag - Retrieves the segment-level tag.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] bHasTag - True if the segment carries a tag attribute.
+	* @return The tag value. 0 if absent.
+	*/
+	virtual Lib3MF_uint32 GetSegmentTag(const Lib3MF_uint32 nSegmentIndex, bool & bHasTag) = 0;
+
+	/**
 	* IToolpathLayerReader::SegmentHasModificationFactors - Retrieves if the segment has specific modification factors attached.
 	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
 	* @param[in] eModificationFactor - Which modification factor value to retrieve (F, G or H). Returns an array of 0.0, if modification factor type is unknown or not given.
@@ -6947,7 +6987,7 @@ public:
 	virtual void ClearSegmentAttributes() = 0;
 
 	/**
-	* IToolpathLayerData::SetLaserIndex - Sets the laser index for all subsequent segments.
+	* IToolpathLayerData::SetLaserIndex - Sets the laser index for all subsequent segments. 0 is a valid laser index and is written explicitly.
 	* @param[in] nValue - The value of the laser index for all subsequent segments.
 	*/
 	virtual void SetLaserIndex(const Lib3MF_uint32 nValue) = 0;
@@ -6956,6 +6996,50 @@ public:
 	* IToolpathLayerData::ClearLaserIndex - Removes the laser index for all subsequent segments.
 	*/
 	virtual void ClearLaserIndex() = 0;
+
+	/**
+	* IToolpathLayerData::SetLaserSync - Sets the laser sync group id (lasersync) for all subsequent segments.
+	* @param[in] nValue - The id of the sync group. MUST be positive.
+	*/
+	virtual void SetLaserSync(const Lib3MF_uint32 nValue) = 0;
+
+	/**
+	* IToolpathLayerData::ClearLaserSync - Removes the laser sync group id for all subsequent segments.
+	*/
+	virtual void ClearLaserSync() = 0;
+
+	/**
+	* IToolpathLayerData::SetTimePrediction - Sets the predicted marking time (timeprediction) for all subsequent segments.
+	* @param[in] nValue - The predicted marking time in microseconds.
+	*/
+	virtual void SetTimePrediction(const Lib3MF_uint32 nValue) = 0;
+
+	/**
+	* IToolpathLayerData::ClearTimePrediction - Removes the predicted marking time for all subsequent segments.
+	*/
+	virtual void ClearTimePrediction() = 0;
+
+	/**
+	* IToolpathLayerData::SetJumpPrediction - Sets the predicted jump time to the start of the segment (jumpprediction) for all subsequent segments.
+	* @param[in] nValue - The predicted jump time in microseconds.
+	*/
+	virtual void SetJumpPrediction(const Lib3MF_uint32 nValue) = 0;
+
+	/**
+	* IToolpathLayerData::ClearJumpPrediction - Removes the predicted jump time for all subsequent segments.
+	*/
+	virtual void ClearJumpPrediction() = 0;
+
+	/**
+	* IToolpathLayerData::SetSegmentTag - Sets the segment-level tag for all subsequent segments.
+	* @param[in] nValue - The producer-defined tag value.
+	*/
+	virtual void SetSegmentTag(const Lib3MF_uint32 nValue) = 0;
+
+	/**
+	* IToolpathLayerData::ClearSegmentTag - Removes the segment-level tag for all subsequent segments.
+	*/
+	virtual void ClearSegmentTag() = 0;
 
 	/**
 	* IToolpathLayerData::WriteHatchDataInModelUnits - writes hatch data to the layer in model units.

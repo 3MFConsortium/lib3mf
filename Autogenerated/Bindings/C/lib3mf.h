@@ -6508,6 +6508,61 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentdefaultprofile
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nLocalProfileID, const Lib3MF_uint32 nProfileUUIDBufferSize, Lib3MF_uint32* pProfileUUIDNeededChars, char * pProfileUUIDBuffer);
 
 /**
+* Retrieves the laser index given on the segment. If absent, the profile's laser index or the laser source default applies.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+* @param[out] pHasLaserIndex - True if the segment carries a laserindex attribute.
+* @param[out] pLaserIndex - The laser index. 0 if absent.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentlaserindex(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasLaserIndex, Lib3MF_uint32 * pLaserIndex);
+
+/**
+* Retrieves the laser sync group id given on the segment.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+* @param[out] pHasLaserSync - True if the segment carries a lasersync attribute.
+* @param[out] pLaserSync - The sync group id. 0 if absent.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentlasersync(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasLaserSync, Lib3MF_uint32 * pLaserSync);
+
+/**
+* Retrieves the predicted marking time of the segment.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+* @param[out] pHasTimePrediction - True if the segment carries a timeprediction attribute.
+* @param[out] pTimePrediction - The predicted marking time in microseconds. 0 if absent.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmenttimeprediction(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasTimePrediction, Lib3MF_uint32 * pTimePrediction);
+
+/**
+* Retrieves the predicted jump time to the start of the segment.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+* @param[out] pHasJumpPrediction - True if the segment carries a jumpprediction attribute.
+* @param[out] pJumpPrediction - The predicted jump time in microseconds. 0 if absent.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmentjumpprediction(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasJumpPrediction, Lib3MF_uint32 * pJumpPrediction);
+
+/**
+* Retrieves the segment-level tag.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+* @param[out] pHasTag - True if the segment carries a tag attribute.
+* @param[out] pTag - The tag value. 0 if absent.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerreader_getsegmenttag(Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasTag, Lib3MF_uint32 * pTag);
+
+/**
 * Retrieves if the segment has specific modification factors attached.
 *
 * @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
@@ -6687,7 +6742,7 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_setsegmentattribute(Lib3MF
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_clearsegmentattributes(Lib3MF_ToolpathLayerData pToolpathLayerData);
 
 /**
-* Sets the laser index for all subsequent segments.
+* Sets the laser index for all subsequent segments. 0 is a valid laser index and is written explicitly.
 *
 * @param[in] pToolpathLayerData - ToolpathLayerData instance.
 * @param[in] nValue - The value of the laser index for all subsequent segments.
@@ -6702,6 +6757,74 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_setlaserindex(Lib3MF_Toolp
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_clearlaserindex(Lib3MF_ToolpathLayerData pToolpathLayerData);
+
+/**
+* Sets the laser sync group id (lasersync) for all subsequent segments.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nValue - The id of the sync group. MUST be positive.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_setlasersync(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue);
+
+/**
+* Removes the laser sync group id for all subsequent segments.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_clearlasersync(Lib3MF_ToolpathLayerData pToolpathLayerData);
+
+/**
+* Sets the predicted marking time (timeprediction) for all subsequent segments.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nValue - The predicted marking time in microseconds.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_settimeprediction(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue);
+
+/**
+* Removes the predicted marking time for all subsequent segments.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_cleartimeprediction(Lib3MF_ToolpathLayerData pToolpathLayerData);
+
+/**
+* Sets the predicted jump time to the start of the segment (jumpprediction) for all subsequent segments.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nValue - The predicted jump time in microseconds.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_setjumpprediction(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue);
+
+/**
+* Removes the predicted jump time for all subsequent segments.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_clearjumpprediction(Lib3MF_ToolpathLayerData pToolpathLayerData);
+
+/**
+* Sets the segment-level tag for all subsequent segments.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nValue - The producer-defined tag value.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_setsegmenttag(Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue);
+
+/**
+* Removes the segment-level tag for all subsequent segments.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_toolpathlayerdata_clearsegmenttag(Lib3MF_ToolpathLayerData pToolpathLayerData);
 
 /**
 * writes hatch data to the layer in model units.

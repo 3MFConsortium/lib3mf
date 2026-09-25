@@ -7282,6 +7282,61 @@ type
 	TLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nLocalProfileID: Cardinal; const nProfileUUIDBufferSize: Cardinal; out pProfileUUIDNeededChars: Cardinal; pProfileUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
+	* Retrieves the laser index given on the segment. If absent, the profile's laser index or the laser source default applies.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] pHasLaserIndex - True if the segment carries a laserindex attribute.
+	* @param[out] pLaserIndex - The laser index. 0 if absent.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentLaserIndexFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; out pHasLaserIndex: Byte; out pLaserIndex: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the laser sync group id given on the segment.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] pHasLaserSync - True if the segment carries a lasersync attribute.
+	* @param[out] pLaserSync - The sync group id. 0 if absent.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentLaserSyncFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; out pHasLaserSync: Byte; out pLaserSync: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the predicted marking time of the segment.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] pHasTimePrediction - True if the segment carries a timeprediction attribute.
+	* @param[out] pTimePrediction - The predicted marking time in microseconds. 0 if absent.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentTimePredictionFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; out pHasTimePrediction: Byte; out pTimePrediction: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the predicted jump time to the start of the segment.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] pHasJumpPrediction - True if the segment carries a jumpprediction attribute.
+	* @param[out] pJumpPrediction - The predicted jump time in microseconds. 0 if absent.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentJumpPredictionFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; out pHasJumpPrediction: Byte; out pJumpPrediction: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the segment-level tag.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] pHasTag - True if the segment carries a tag attribute.
+	* @param[out] pTag - The tag value. 0 if absent.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentTagFunc = function(pToolpathLayerReader: TLib3MFHandle; const nSegmentIndex: Cardinal; out pHasTag: Byte; out pTag: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
 	* Retrieves if the segment has specific modification factors attached.
 	*
 	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
@@ -7462,7 +7517,7 @@ type
 	TLib3MFToolpathLayerData_ClearSegmentAttributesFunc = function(pToolpathLayerData: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets the laser index for all subsequent segments.
+	* Sets the laser index for all subsequent segments. 0 is a valid laser index and is written explicitly.
 	*
 	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
 	* @param[in] nValue - The value of the laser index for all subsequent segments.
@@ -7477,6 +7532,74 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFToolpathLayerData_ClearLaserIndexFunc = function(pToolpathLayerData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the laser sync group id (lasersync) for all subsequent segments.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nValue - The id of the sync group. MUST be positive.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_SetLaserSyncFunc = function(pToolpathLayerData: TLib3MFHandle; const nValue: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes the laser sync group id for all subsequent segments.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_ClearLaserSyncFunc = function(pToolpathLayerData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the predicted marking time (timeprediction) for all subsequent segments.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nValue - The predicted marking time in microseconds.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_SetTimePredictionFunc = function(pToolpathLayerData: TLib3MFHandle; const nValue: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes the predicted marking time for all subsequent segments.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_ClearTimePredictionFunc = function(pToolpathLayerData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the predicted jump time to the start of the segment (jumpprediction) for all subsequent segments.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nValue - The predicted jump time in microseconds.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_SetJumpPredictionFunc = function(pToolpathLayerData: TLib3MFHandle; const nValue: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes the predicted jump time for all subsequent segments.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_ClearJumpPredictionFunc = function(pToolpathLayerData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the segment-level tag for all subsequent segments.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nValue - The producer-defined tag value.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_SetSegmentTagFunc = function(pToolpathLayerData: TLib3MFHandle; const nValue: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes the segment-level tag for all subsequent segments.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_ClearSegmentTagFunc = function(pToolpathLayerData: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* writes hatch data to the layer in model units.
@@ -11558,6 +11681,11 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetSegmentDefaultProfileUUID(const ASegmentIndex: Cardinal): String;
 		function GetSegmentDefaultProfileID(const ASegmentIndex: Cardinal): Cardinal;
 		function GetProfileUUIDByLocalProfileID(const ALocalProfileID: Cardinal): String;
+		function GetSegmentLaserIndex(const ASegmentIndex: Cardinal; out AHasLaserIndex: Boolean): Cardinal;
+		function GetSegmentLaserSync(const ASegmentIndex: Cardinal; out AHasLaserSync: Boolean): Cardinal;
+		function GetSegmentTimePrediction(const ASegmentIndex: Cardinal; out AHasTimePrediction: Boolean): Cardinal;
+		function GetSegmentJumpPrediction(const ASegmentIndex: Cardinal; out AHasJumpPrediction: Boolean): Cardinal;
+		function GetSegmentTag(const ASegmentIndex: Cardinal; out AHasTag: Boolean): Cardinal;
 		function SegmentHasModificationFactors(const ASegmentIndex: Cardinal; const AModificationFactor: TLib3MFToolpathProfileModificationFactor): Boolean;
 		procedure GetSegmentPointDataInModelUnits(const ASegmentIndex: Cardinal; out APointData: ArrayOfLib3MFPosition2D);
 		procedure GetSegmentPointDataDiscrete(const ASegmentIndex: Cardinal; out APointData: ArrayOfLib3MFDiscretePosition2D);
@@ -11586,6 +11714,14 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure ClearSegmentAttributes();
 		procedure SetLaserIndex(const AValue: Cardinal);
 		procedure ClearLaserIndex();
+		procedure SetLaserSync(const AValue: Cardinal);
+		procedure ClearLaserSync();
+		procedure SetTimePrediction(const AValue: Cardinal);
+		procedure ClearTimePrediction();
+		procedure SetJumpPrediction(const AValue: Cardinal);
+		procedure ClearJumpPrediction();
+		procedure SetSegmentTag(const AValue: Cardinal);
+		procedure ClearSegmentTag();
 		procedure WriteHatchDataInModelUnits(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFHatch2D);
 		procedure WriteHatchDataInModelUnitsWithConstantFactors(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFHatch2D; const AFactorData: TDoubleDynArray);
 		procedure WriteHatchDataInModelUnitsWithLinearFactors(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFHatch2D; const AFactorData1: TDoubleDynArray; const AFactorData2: TDoubleDynArray);
@@ -12504,6 +12640,11 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc;
 		FLib3MFToolpathLayerReader_GetSegmentDefaultProfileIDFunc: TLib3MFToolpathLayerReader_GetSegmentDefaultProfileIDFunc;
 		FLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc: TLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc;
+		FLib3MFToolpathLayerReader_GetSegmentLaserIndexFunc: TLib3MFToolpathLayerReader_GetSegmentLaserIndexFunc;
+		FLib3MFToolpathLayerReader_GetSegmentLaserSyncFunc: TLib3MFToolpathLayerReader_GetSegmentLaserSyncFunc;
+		FLib3MFToolpathLayerReader_GetSegmentTimePredictionFunc: TLib3MFToolpathLayerReader_GetSegmentTimePredictionFunc;
+		FLib3MFToolpathLayerReader_GetSegmentJumpPredictionFunc: TLib3MFToolpathLayerReader_GetSegmentJumpPredictionFunc;
+		FLib3MFToolpathLayerReader_GetSegmentTagFunc: TLib3MFToolpathLayerReader_GetSegmentTagFunc;
 		FLib3MFToolpathLayerReader_SegmentHasModificationFactorsFunc: TLib3MFToolpathLayerReader_SegmentHasModificationFactorsFunc;
 		FLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc;
 		FLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc;
@@ -12521,6 +12662,14 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFToolpathLayerData_ClearSegmentAttributesFunc: TLib3MFToolpathLayerData_ClearSegmentAttributesFunc;
 		FLib3MFToolpathLayerData_SetLaserIndexFunc: TLib3MFToolpathLayerData_SetLaserIndexFunc;
 		FLib3MFToolpathLayerData_ClearLaserIndexFunc: TLib3MFToolpathLayerData_ClearLaserIndexFunc;
+		FLib3MFToolpathLayerData_SetLaserSyncFunc: TLib3MFToolpathLayerData_SetLaserSyncFunc;
+		FLib3MFToolpathLayerData_ClearLaserSyncFunc: TLib3MFToolpathLayerData_ClearLaserSyncFunc;
+		FLib3MFToolpathLayerData_SetTimePredictionFunc: TLib3MFToolpathLayerData_SetTimePredictionFunc;
+		FLib3MFToolpathLayerData_ClearTimePredictionFunc: TLib3MFToolpathLayerData_ClearTimePredictionFunc;
+		FLib3MFToolpathLayerData_SetJumpPredictionFunc: TLib3MFToolpathLayerData_SetJumpPredictionFunc;
+		FLib3MFToolpathLayerData_ClearJumpPredictionFunc: TLib3MFToolpathLayerData_ClearJumpPredictionFunc;
+		FLib3MFToolpathLayerData_SetSegmentTagFunc: TLib3MFToolpathLayerData_SetSegmentTagFunc;
+		FLib3MFToolpathLayerData_ClearSegmentTagFunc: TLib3MFToolpathLayerData_ClearSegmentTagFunc;
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc;
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantFactorsFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantFactorsFunc;
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithLinearFactorsFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithLinearFactorsFunc;
@@ -13338,6 +13487,11 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc read FLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentDefaultProfileIDFunc: TLib3MFToolpathLayerReader_GetSegmentDefaultProfileIDFunc read FLib3MFToolpathLayerReader_GetSegmentDefaultProfileIDFunc;
 		property Lib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc: TLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc read FLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentLaserIndexFunc: TLib3MFToolpathLayerReader_GetSegmentLaserIndexFunc read FLib3MFToolpathLayerReader_GetSegmentLaserIndexFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentLaserSyncFunc: TLib3MFToolpathLayerReader_GetSegmentLaserSyncFunc read FLib3MFToolpathLayerReader_GetSegmentLaserSyncFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentTimePredictionFunc: TLib3MFToolpathLayerReader_GetSegmentTimePredictionFunc read FLib3MFToolpathLayerReader_GetSegmentTimePredictionFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentJumpPredictionFunc: TLib3MFToolpathLayerReader_GetSegmentJumpPredictionFunc read FLib3MFToolpathLayerReader_GetSegmentJumpPredictionFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentTagFunc: TLib3MFToolpathLayerReader_GetSegmentTagFunc read FLib3MFToolpathLayerReader_GetSegmentTagFunc;
 		property Lib3MFToolpathLayerReader_SegmentHasModificationFactorsFunc: TLib3MFToolpathLayerReader_SegmentHasModificationFactorsFunc read FLib3MFToolpathLayerReader_SegmentHasModificationFactorsFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc read FLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc;
 		property Lib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc read FLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc;
@@ -13355,6 +13509,14 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFToolpathLayerData_ClearSegmentAttributesFunc: TLib3MFToolpathLayerData_ClearSegmentAttributesFunc read FLib3MFToolpathLayerData_ClearSegmentAttributesFunc;
 		property Lib3MFToolpathLayerData_SetLaserIndexFunc: TLib3MFToolpathLayerData_SetLaserIndexFunc read FLib3MFToolpathLayerData_SetLaserIndexFunc;
 		property Lib3MFToolpathLayerData_ClearLaserIndexFunc: TLib3MFToolpathLayerData_ClearLaserIndexFunc read FLib3MFToolpathLayerData_ClearLaserIndexFunc;
+		property Lib3MFToolpathLayerData_SetLaserSyncFunc: TLib3MFToolpathLayerData_SetLaserSyncFunc read FLib3MFToolpathLayerData_SetLaserSyncFunc;
+		property Lib3MFToolpathLayerData_ClearLaserSyncFunc: TLib3MFToolpathLayerData_ClearLaserSyncFunc read FLib3MFToolpathLayerData_ClearLaserSyncFunc;
+		property Lib3MFToolpathLayerData_SetTimePredictionFunc: TLib3MFToolpathLayerData_SetTimePredictionFunc read FLib3MFToolpathLayerData_SetTimePredictionFunc;
+		property Lib3MFToolpathLayerData_ClearTimePredictionFunc: TLib3MFToolpathLayerData_ClearTimePredictionFunc read FLib3MFToolpathLayerData_ClearTimePredictionFunc;
+		property Lib3MFToolpathLayerData_SetJumpPredictionFunc: TLib3MFToolpathLayerData_SetJumpPredictionFunc read FLib3MFToolpathLayerData_SetJumpPredictionFunc;
+		property Lib3MFToolpathLayerData_ClearJumpPredictionFunc: TLib3MFToolpathLayerData_ClearJumpPredictionFunc read FLib3MFToolpathLayerData_ClearJumpPredictionFunc;
+		property Lib3MFToolpathLayerData_SetSegmentTagFunc: TLib3MFToolpathLayerData_SetSegmentTagFunc read FLib3MFToolpathLayerData_SetSegmentTagFunc;
+		property Lib3MFToolpathLayerData_ClearSegmentTagFunc: TLib3MFToolpathLayerData_ClearSegmentTagFunc read FLib3MFToolpathLayerData_ClearSegmentTagFunc;
 		property Lib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc read FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc;
 		property Lib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantFactorsFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantFactorsFunc read FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantFactorsFunc;
 		property Lib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithLinearFactorsFunc: TLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithLinearFactorsFunc read FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithLinearFactorsFunc;
@@ -22490,6 +22652,51 @@ implementation
 		Result := StrPas(@bufferProfileUUID[0]);
 	end;
 
+	function TLib3MFToolpathLayerReader.GetSegmentLaserIndex(const ASegmentIndex: Cardinal; out AHasLaserIndex: Boolean): Cardinal;
+	var
+		ResultHasLaserIndex: Byte;
+	begin
+		ResultHasLaserIndex := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentLaserIndexFunc(FHandle, ASegmentIndex, ResultHasLaserIndex, Result));
+		AHasLaserIndex := ResultHasLaserIndex <> 0;
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentLaserSync(const ASegmentIndex: Cardinal; out AHasLaserSync: Boolean): Cardinal;
+	var
+		ResultHasLaserSync: Byte;
+	begin
+		ResultHasLaserSync := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentLaserSyncFunc(FHandle, ASegmentIndex, ResultHasLaserSync, Result));
+		AHasLaserSync := ResultHasLaserSync <> 0;
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentTimePrediction(const ASegmentIndex: Cardinal; out AHasTimePrediction: Boolean): Cardinal;
+	var
+		ResultHasTimePrediction: Byte;
+	begin
+		ResultHasTimePrediction := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentTimePredictionFunc(FHandle, ASegmentIndex, ResultHasTimePrediction, Result));
+		AHasTimePrediction := ResultHasTimePrediction <> 0;
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentJumpPrediction(const ASegmentIndex: Cardinal; out AHasJumpPrediction: Boolean): Cardinal;
+	var
+		ResultHasJumpPrediction: Byte;
+	begin
+		ResultHasJumpPrediction := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentJumpPredictionFunc(FHandle, ASegmentIndex, ResultHasJumpPrediction, Result));
+		AHasJumpPrediction := ResultHasJumpPrediction <> 0;
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentTag(const ASegmentIndex: Cardinal; out AHasTag: Boolean): Cardinal;
+	var
+		ResultHasTag: Byte;
+	begin
+		ResultHasTag := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentTagFunc(FHandle, ASegmentIndex, ResultHasTag, Result));
+		AHasTag := ResultHasTag <> 0;
+	end;
+
 	function TLib3MFToolpathLayerReader.SegmentHasModificationFactors(const ASegmentIndex: Cardinal; const AModificationFactor: TLib3MFToolpathProfileModificationFactor): Boolean;
 	var
 		ResultHasModificationFactors: Byte;
@@ -22677,6 +22884,46 @@ implementation
 	procedure TLib3MFToolpathLayerData.ClearLaserIndex();
 	begin
 		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_ClearLaserIndexFunc(FHandle));
+	end;
+
+	procedure TLib3MFToolpathLayerData.SetLaserSync(const AValue: Cardinal);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_SetLaserSyncFunc(FHandle, AValue));
+	end;
+
+	procedure TLib3MFToolpathLayerData.ClearLaserSync();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_ClearLaserSyncFunc(FHandle));
+	end;
+
+	procedure TLib3MFToolpathLayerData.SetTimePrediction(const AValue: Cardinal);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_SetTimePredictionFunc(FHandle, AValue));
+	end;
+
+	procedure TLib3MFToolpathLayerData.ClearTimePrediction();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_ClearTimePredictionFunc(FHandle));
+	end;
+
+	procedure TLib3MFToolpathLayerData.SetJumpPrediction(const AValue: Cardinal);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_SetJumpPredictionFunc(FHandle, AValue));
+	end;
+
+	procedure TLib3MFToolpathLayerData.ClearJumpPrediction();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_ClearJumpPredictionFunc(FHandle));
+	end;
+
+	procedure TLib3MFToolpathLayerData.SetSegmentTag(const AValue: Cardinal);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_SetSegmentTagFunc(FHandle, AValue));
+	end;
+
+	procedure TLib3MFToolpathLayerData.ClearSegmentTag();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_ClearSegmentTagFunc(FHandle));
 	end;
 
 	procedure TLib3MFToolpathLayerData.WriteHatchDataInModelUnits(const AProfileID: Cardinal; const APartID: Cardinal; const AHatchData: ArrayOfLib3MFHatch2D);
@@ -25707,6 +25954,11 @@ implementation
 		FLib3MFToolpathLayerReader_GetSegmentDefaultProfileUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentdefaultprofileuuid');
 		FLib3MFToolpathLayerReader_GetSegmentDefaultProfileIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentdefaultprofileid');
 		FLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid');
+		FLib3MFToolpathLayerReader_GetSegmentLaserIndexFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentlaserindex');
+		FLib3MFToolpathLayerReader_GetSegmentLaserSyncFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentlasersync');
+		FLib3MFToolpathLayerReader_GetSegmentTimePredictionFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmenttimeprediction');
+		FLib3MFToolpathLayerReader_GetSegmentJumpPredictionFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentjumpprediction');
+		FLib3MFToolpathLayerReader_GetSegmentTagFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmenttag');
 		FLib3MFToolpathLayerReader_SegmentHasModificationFactorsFunc := LoadFunction('lib3mf_toolpathlayerreader_segmenthasmodificationfactors');
 		FLib3MFToolpathLayerReader_GetSegmentPointDataInModelUnitsFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpointdatainmodelunits');
 		FLib3MFToolpathLayerReader_GetSegmentPointDataDiscreteFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpointdatadiscrete');
@@ -25724,6 +25976,14 @@ implementation
 		FLib3MFToolpathLayerData_ClearSegmentAttributesFunc := LoadFunction('lib3mf_toolpathlayerdata_clearsegmentattributes');
 		FLib3MFToolpathLayerData_SetLaserIndexFunc := LoadFunction('lib3mf_toolpathlayerdata_setlaserindex');
 		FLib3MFToolpathLayerData_ClearLaserIndexFunc := LoadFunction('lib3mf_toolpathlayerdata_clearlaserindex');
+		FLib3MFToolpathLayerData_SetLaserSyncFunc := LoadFunction('lib3mf_toolpathlayerdata_setlasersync');
+		FLib3MFToolpathLayerData_ClearLaserSyncFunc := LoadFunction('lib3mf_toolpathlayerdata_clearlasersync');
+		FLib3MFToolpathLayerData_SetTimePredictionFunc := LoadFunction('lib3mf_toolpathlayerdata_settimeprediction');
+		FLib3MFToolpathLayerData_ClearTimePredictionFunc := LoadFunction('lib3mf_toolpathlayerdata_cleartimeprediction');
+		FLib3MFToolpathLayerData_SetJumpPredictionFunc := LoadFunction('lib3mf_toolpathlayerdata_setjumpprediction');
+		FLib3MFToolpathLayerData_ClearJumpPredictionFunc := LoadFunction('lib3mf_toolpathlayerdata_clearjumpprediction');
+		FLib3MFToolpathLayerData_SetSegmentTagFunc := LoadFunction('lib3mf_toolpathlayerdata_setsegmenttag');
+		FLib3MFToolpathLayerData_ClearSegmentTagFunc := LoadFunction('lib3mf_toolpathlayerdata_clearsegmenttag');
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdatainmodelunits');
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithConstantFactorsFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithconstantfactors');
 		FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsWithLinearFactorsFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdatainmodelunitswithlinearfactors');
@@ -27738,6 +27998,21 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid'), @FLib3MFToolpathLayerReader_GetProfileUUIDByLocalProfileIDFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentlaserindex'), @FLib3MFToolpathLayerReader_GetSegmentLaserIndexFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentlasersync'), @FLib3MFToolpathLayerReader_GetSegmentLaserSyncFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmenttimeprediction'), @FLib3MFToolpathLayerReader_GetSegmentTimePredictionFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentjumpprediction'), @FLib3MFToolpathLayerReader_GetSegmentJumpPredictionFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmenttag'), @FLib3MFToolpathLayerReader_GetSegmentTagFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_segmenthasmodificationfactors'), @FLib3MFToolpathLayerReader_SegmentHasModificationFactorsFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -27787,6 +28062,30 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_clearlaserindex'), @FLib3MFToolpathLayerData_ClearLaserIndexFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_setlasersync'), @FLib3MFToolpathLayerData_SetLaserSyncFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_clearlasersync'), @FLib3MFToolpathLayerData_ClearLaserSyncFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_settimeprediction'), @FLib3MFToolpathLayerData_SetTimePredictionFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_cleartimeprediction'), @FLib3MFToolpathLayerData_ClearTimePredictionFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_setjumpprediction'), @FLib3MFToolpathLayerData_SetJumpPredictionFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_clearjumpprediction'), @FLib3MFToolpathLayerData_ClearJumpPredictionFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_setsegmenttag'), @FLib3MFToolpathLayerData_SetSegmentTagFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_clearsegmenttag'), @FLib3MFToolpathLayerData_ClearSegmentTagFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writehatchdatainmodelunits'), @FLib3MFToolpathLayerData_WriteHatchDataInModelUnitsFunc);

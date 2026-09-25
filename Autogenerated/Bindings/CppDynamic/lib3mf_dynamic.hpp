@@ -3573,6 +3573,11 @@ public:
 	inline std::string GetSegmentDefaultProfileUUID(const Lib3MF_uint32 nSegmentIndex);
 	inline Lib3MF_uint32 GetSegmentDefaultProfileID(const Lib3MF_uint32 nSegmentIndex);
 	inline std::string GetProfileUUIDByLocalProfileID(const Lib3MF_uint32 nLocalProfileID);
+	inline Lib3MF_uint32 GetSegmentLaserIndex(const Lib3MF_uint32 nSegmentIndex, bool & bHasLaserIndex);
+	inline Lib3MF_uint32 GetSegmentLaserSync(const Lib3MF_uint32 nSegmentIndex, bool & bHasLaserSync);
+	inline Lib3MF_uint32 GetSegmentTimePrediction(const Lib3MF_uint32 nSegmentIndex, bool & bHasTimePrediction);
+	inline Lib3MF_uint32 GetSegmentJumpPrediction(const Lib3MF_uint32 nSegmentIndex, bool & bHasJumpPrediction);
+	inline Lib3MF_uint32 GetSegmentTag(const Lib3MF_uint32 nSegmentIndex, bool & bHasTag);
 	inline bool SegmentHasModificationFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileModificationFactor eModificationFactor);
 	inline void GetSegmentPointDataInModelUnits(const Lib3MF_uint32 nSegmentIndex, std::vector<sPosition2D> & PointDataBuffer);
 	inline void GetSegmentPointDataDiscrete(const Lib3MF_uint32 nSegmentIndex, std::vector<sDiscretePosition2D> & PointDataBuffer);
@@ -3606,6 +3611,14 @@ public:
 	inline void ClearSegmentAttributes();
 	inline void SetLaserIndex(const Lib3MF_uint32 nValue);
 	inline void ClearLaserIndex();
+	inline void SetLaserSync(const Lib3MF_uint32 nValue);
+	inline void ClearLaserSync();
+	inline void SetTimePrediction(const Lib3MF_uint32 nValue);
+	inline void ClearTimePrediction();
+	inline void SetJumpPrediction(const Lib3MF_uint32 nValue);
+	inline void ClearJumpPrediction();
+	inline void SetSegmentTag(const Lib3MF_uint32 nValue);
+	inline void ClearSegmentTag();
 	inline void WriteHatchDataInModelUnits(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer);
 	inline void WriteHatchDataInModelUnitsWithConstantFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_double> & FactorDataBuffer);
 	inline void WriteHatchDataInModelUnitsWithLinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sHatch2D> & HatchDataBuffer, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer);
@@ -5002,6 +5015,11 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfileUUID = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfileID = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetProfileUUIDByLocalProfileID = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserIndex = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserSync = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentTimePrediction = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentJumpPrediction = nullptr;
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentTag = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_SegmentHasModificationFactors = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentPointDataInModelUnits = nullptr;
 		pWrapperTable->m_ToolpathLayerReader_GetSegmentPointDataDiscrete = nullptr;
@@ -5019,6 +5037,14 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes = nullptr;
 		pWrapperTable->m_ToolpathLayerData_SetLaserIndex = nullptr;
 		pWrapperTable->m_ToolpathLayerData_ClearLaserIndex = nullptr;
+		pWrapperTable->m_ToolpathLayerData_SetLaserSync = nullptr;
+		pWrapperTable->m_ToolpathLayerData_ClearLaserSync = nullptr;
+		pWrapperTable->m_ToolpathLayerData_SetTimePrediction = nullptr;
+		pWrapperTable->m_ToolpathLayerData_ClearTimePrediction = nullptr;
+		pWrapperTable->m_ToolpathLayerData_SetJumpPrediction = nullptr;
+		pWrapperTable->m_ToolpathLayerData_ClearJumpPrediction = nullptr;
+		pWrapperTable->m_ToolpathLayerData_SetSegmentTag = nullptr;
+		pWrapperTable->m_ToolpathLayerData_ClearSegmentTag = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnits = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithConstantFactors = nullptr;
 		pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithLinearFactors = nullptr;
@@ -10661,6 +10687,51 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserIndex = (PLib3MFToolpathLayerReader_GetSegmentLaserIndexPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentlaserindex");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserIndex = (PLib3MFToolpathLayerReader_GetSegmentLaserIndexPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentlaserindex");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserIndex == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserSync = (PLib3MFToolpathLayerReader_GetSegmentLaserSyncPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentlasersync");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserSync = (PLib3MFToolpathLayerReader_GetSegmentLaserSyncPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentlasersync");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserSync == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentTimePrediction = (PLib3MFToolpathLayerReader_GetSegmentTimePredictionPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmenttimeprediction");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentTimePrediction = (PLib3MFToolpathLayerReader_GetSegmentTimePredictionPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmenttimeprediction");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentTimePrediction == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentJumpPrediction = (PLib3MFToolpathLayerReader_GetSegmentJumpPredictionPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentjumpprediction");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentJumpPrediction = (PLib3MFToolpathLayerReader_GetSegmentJumpPredictionPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentjumpprediction");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentJumpPrediction == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentTag = (PLib3MFToolpathLayerReader_GetSegmentTagPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmenttag");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerReader_GetSegmentTag = (PLib3MFToolpathLayerReader_GetSegmentTagPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmenttag");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerReader_GetSegmentTag == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ToolpathLayerReader_SegmentHasModificationFactors = (PLib3MFToolpathLayerReader_SegmentHasModificationFactorsPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_segmenthasmodificationfactors");
 		#else // _WIN32
 		pWrapperTable->m_ToolpathLayerReader_SegmentHasModificationFactors = (PLib3MFToolpathLayerReader_SegmentHasModificationFactorsPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_segmenthasmodificationfactors");
@@ -10811,6 +10882,78 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ToolpathLayerData_ClearLaserIndex == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_SetLaserSync = (PLib3MFToolpathLayerData_SetLaserSyncPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_setlasersync");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_SetLaserSync = (PLib3MFToolpathLayerData_SetLaserSyncPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_setlasersync");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_SetLaserSync == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_ClearLaserSync = (PLib3MFToolpathLayerData_ClearLaserSyncPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_clearlasersync");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_ClearLaserSync = (PLib3MFToolpathLayerData_ClearLaserSyncPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_clearlasersync");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_ClearLaserSync == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_SetTimePrediction = (PLib3MFToolpathLayerData_SetTimePredictionPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_settimeprediction");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_SetTimePrediction = (PLib3MFToolpathLayerData_SetTimePredictionPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_settimeprediction");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_SetTimePrediction == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_ClearTimePrediction = (PLib3MFToolpathLayerData_ClearTimePredictionPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_cleartimeprediction");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_ClearTimePrediction = (PLib3MFToolpathLayerData_ClearTimePredictionPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_cleartimeprediction");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_ClearTimePrediction == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_SetJumpPrediction = (PLib3MFToolpathLayerData_SetJumpPredictionPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_setjumpprediction");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_SetJumpPrediction = (PLib3MFToolpathLayerData_SetJumpPredictionPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_setjumpprediction");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_SetJumpPrediction == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_ClearJumpPrediction = (PLib3MFToolpathLayerData_ClearJumpPredictionPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_clearjumpprediction");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_ClearJumpPrediction = (PLib3MFToolpathLayerData_ClearJumpPredictionPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_clearjumpprediction");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_ClearJumpPrediction == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_SetSegmentTag = (PLib3MFToolpathLayerData_SetSegmentTagPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_setsegmenttag");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_SetSegmentTag = (PLib3MFToolpathLayerData_SetSegmentTagPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_setsegmenttag");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_SetSegmentTag == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ToolpathLayerData_ClearSegmentTag = (PLib3MFToolpathLayerData_ClearSegmentTagPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_clearsegmenttag");
+		#else // _WIN32
+		pWrapperTable->m_ToolpathLayerData_ClearSegmentTag = (PLib3MFToolpathLayerData_ClearSegmentTagPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_clearsegmenttag");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ToolpathLayerData_ClearSegmentTag == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -15102,6 +15245,26 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetProfileUUIDByLocalProfileID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentlaserindex", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserIndex));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserIndex == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentlasersync", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserSync));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserSync == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmenttimeprediction", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentTimePrediction));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentTimePrediction == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmentjumpprediction", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentJumpPrediction));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentJumpPrediction == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_getsegmenttag", (void**)&(pWrapperTable->m_ToolpathLayerReader_GetSegmentTag));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_GetSegmentTag == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerreader_segmenthasmodificationfactors", (void**)&(pWrapperTable->m_ToolpathLayerReader_SegmentHasModificationFactors));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerReader_SegmentHasModificationFactors == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -15168,6 +15331,38 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_clearlaserindex", (void**)&(pWrapperTable->m_ToolpathLayerData_ClearLaserIndex));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_ClearLaserIndex == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_setlasersync", (void**)&(pWrapperTable->m_ToolpathLayerData_SetLaserSync));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_SetLaserSync == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_clearlasersync", (void**)&(pWrapperTable->m_ToolpathLayerData_ClearLaserSync));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_ClearLaserSync == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_settimeprediction", (void**)&(pWrapperTable->m_ToolpathLayerData_SetTimePrediction));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_SetTimePrediction == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_cleartimeprediction", (void**)&(pWrapperTable->m_ToolpathLayerData_ClearTimePrediction));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_ClearTimePrediction == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_setjumpprediction", (void**)&(pWrapperTable->m_ToolpathLayerData_SetJumpPrediction));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_SetJumpPrediction == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_clearjumpprediction", (void**)&(pWrapperTable->m_ToolpathLayerData_ClearJumpPrediction));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_ClearJumpPrediction == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_setsegmenttag", (void**)&(pWrapperTable->m_ToolpathLayerData_SetSegmentTag));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_SetSegmentTag == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_clearsegmenttag", (void**)&(pWrapperTable->m_ToolpathLayerData_ClearSegmentTag));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ToolpathLayerData_ClearSegmentTag == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_toolpathlayerdata_writehatchdatainmodelunits", (void**)&(pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnits));
@@ -24382,6 +24577,76 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CToolpathLayerReader::GetSegmentLaserIndex - Retrieves the laser index given on the segment. If absent, the profile's laser index or the laser source default applies.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] bHasLaserIndex - True if the segment carries a laserindex attribute.
+	* @return The laser index. 0 if absent.
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentLaserIndex(const Lib3MF_uint32 nSegmentIndex, bool & bHasLaserIndex)
+	{
+		Lib3MF_uint32 resultLaserIndex = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentLaserIndex(m_pHandle, nSegmentIndex, &bHasLaserIndex, &resultLaserIndex));
+		
+		return resultLaserIndex;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentLaserSync - Retrieves the laser sync group id given on the segment.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] bHasLaserSync - True if the segment carries a lasersync attribute.
+	* @return The sync group id. 0 if absent.
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentLaserSync(const Lib3MF_uint32 nSegmentIndex, bool & bHasLaserSync)
+	{
+		Lib3MF_uint32 resultLaserSync = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentLaserSync(m_pHandle, nSegmentIndex, &bHasLaserSync, &resultLaserSync));
+		
+		return resultLaserSync;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentTimePrediction - Retrieves the predicted marking time of the segment.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] bHasTimePrediction - True if the segment carries a timeprediction attribute.
+	* @return The predicted marking time in microseconds. 0 if absent.
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentTimePrediction(const Lib3MF_uint32 nSegmentIndex, bool & bHasTimePrediction)
+	{
+		Lib3MF_uint32 resultTimePrediction = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentTimePrediction(m_pHandle, nSegmentIndex, &bHasTimePrediction, &resultTimePrediction));
+		
+		return resultTimePrediction;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentJumpPrediction - Retrieves the predicted jump time to the start of the segment.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] bHasJumpPrediction - True if the segment carries a jumpprediction attribute.
+	* @return The predicted jump time in microseconds. 0 if absent.
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentJumpPrediction(const Lib3MF_uint32 nSegmentIndex, bool & bHasJumpPrediction)
+	{
+		Lib3MF_uint32 resultJumpPrediction = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentJumpPrediction(m_pHandle, nSegmentIndex, &bHasJumpPrediction, &resultJumpPrediction));
+		
+		return resultJumpPrediction;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentTag - Retrieves the segment-level tag.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[out] bHasTag - True if the segment carries a tag attribute.
+	* @return The tag value. 0 if absent.
+	*/
+	Lib3MF_uint32 CToolpathLayerReader::GetSegmentTag(const Lib3MF_uint32 nSegmentIndex, bool & bHasTag)
+	{
+		Lib3MF_uint32 resultTag = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerReader_GetSegmentTag(m_pHandle, nSegmentIndex, &bHasTag, &resultTag));
+		
+		return resultTag;
+	}
+	
+	/**
 	* CToolpathLayerReader::SegmentHasModificationFactors - Retrieves if the segment has specific modification factors attached.
 	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
 	* @param[in] eModificationFactor - Which modification factor value to retrieve (F, G or H). Returns an array of 0.0, if modification factor type is unknown or not given.
@@ -24596,7 +24861,7 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	* CToolpathLayerData::SetLaserIndex - Sets the laser index for all subsequent segments.
+	* CToolpathLayerData::SetLaserIndex - Sets the laser index for all subsequent segments. 0 is a valid laser index and is written explicitly.
 	* @param[in] nValue - The value of the laser index for all subsequent segments.
 	*/
 	void CToolpathLayerData::SetLaserIndex(const Lib3MF_uint32 nValue)
@@ -24610,6 +24875,74 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CToolpathLayerData::ClearLaserIndex()
 	{
 		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_ClearLaserIndex(m_pHandle));
+	}
+	
+	/**
+	* CToolpathLayerData::SetLaserSync - Sets the laser sync group id (lasersync) for all subsequent segments.
+	* @param[in] nValue - The id of the sync group. MUST be positive.
+	*/
+	void CToolpathLayerData::SetLaserSync(const Lib3MF_uint32 nValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_SetLaserSync(m_pHandle, nValue));
+	}
+	
+	/**
+	* CToolpathLayerData::ClearLaserSync - Removes the laser sync group id for all subsequent segments.
+	*/
+	void CToolpathLayerData::ClearLaserSync()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_ClearLaserSync(m_pHandle));
+	}
+	
+	/**
+	* CToolpathLayerData::SetTimePrediction - Sets the predicted marking time (timeprediction) for all subsequent segments.
+	* @param[in] nValue - The predicted marking time in microseconds.
+	*/
+	void CToolpathLayerData::SetTimePrediction(const Lib3MF_uint32 nValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_SetTimePrediction(m_pHandle, nValue));
+	}
+	
+	/**
+	* CToolpathLayerData::ClearTimePrediction - Removes the predicted marking time for all subsequent segments.
+	*/
+	void CToolpathLayerData::ClearTimePrediction()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_ClearTimePrediction(m_pHandle));
+	}
+	
+	/**
+	* CToolpathLayerData::SetJumpPrediction - Sets the predicted jump time to the start of the segment (jumpprediction) for all subsequent segments.
+	* @param[in] nValue - The predicted jump time in microseconds.
+	*/
+	void CToolpathLayerData::SetJumpPrediction(const Lib3MF_uint32 nValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_SetJumpPrediction(m_pHandle, nValue));
+	}
+	
+	/**
+	* CToolpathLayerData::ClearJumpPrediction - Removes the predicted jump time for all subsequent segments.
+	*/
+	void CToolpathLayerData::ClearJumpPrediction()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_ClearJumpPrediction(m_pHandle));
+	}
+	
+	/**
+	* CToolpathLayerData::SetSegmentTag - Sets the segment-level tag for all subsequent segments.
+	* @param[in] nValue - The producer-defined tag value.
+	*/
+	void CToolpathLayerData::SetSegmentTag(const Lib3MF_uint32 nValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_SetSegmentTag(m_pHandle, nValue));
+	}
+	
+	/**
+	* CToolpathLayerData::ClearSegmentTag - Removes the segment-level tag for all subsequent segments.
+	*/
+	void CToolpathLayerData::ClearSegmentTag()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ToolpathLayerData_ClearSegmentTag(m_pHandle));
 	}
 	
 	/**

@@ -646,6 +646,11 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfileUUID = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetSegmentDefaultProfileID = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetProfileUUIDByLocalProfileID = NULL;
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserIndex = NULL;
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserSync = NULL;
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentTimePrediction = NULL;
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentJumpPrediction = NULL;
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentTag = NULL;
 	pWrapperTable->m_ToolpathLayerReader_SegmentHasModificationFactors = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetSegmentPointDataInModelUnits = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetSegmentPointDataDiscrete = NULL;
@@ -663,6 +668,14 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ToolpathLayerData_ClearSegmentAttributes = NULL;
 	pWrapperTable->m_ToolpathLayerData_SetLaserIndex = NULL;
 	pWrapperTable->m_ToolpathLayerData_ClearLaserIndex = NULL;
+	pWrapperTable->m_ToolpathLayerData_SetLaserSync = NULL;
+	pWrapperTable->m_ToolpathLayerData_ClearLaserSync = NULL;
+	pWrapperTable->m_ToolpathLayerData_SetTimePrediction = NULL;
+	pWrapperTable->m_ToolpathLayerData_ClearTimePrediction = NULL;
+	pWrapperTable->m_ToolpathLayerData_SetJumpPrediction = NULL;
+	pWrapperTable->m_ToolpathLayerData_ClearJumpPrediction = NULL;
+	pWrapperTable->m_ToolpathLayerData_SetSegmentTag = NULL;
+	pWrapperTable->m_ToolpathLayerData_ClearSegmentTag = NULL;
 	pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnits = NULL;
 	pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithConstantFactors = NULL;
 	pWrapperTable->m_ToolpathLayerData_WriteHatchDataInModelUnitsWithLinearFactors = NULL;
@@ -6309,6 +6322,51 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserIndex = (PLib3MFToolpathLayerReader_GetSegmentLaserIndexPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentlaserindex");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserIndex = (PLib3MFToolpathLayerReader_GetSegmentLaserIndexPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentlaserindex");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserIndex == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserSync = (PLib3MFToolpathLayerReader_GetSegmentLaserSyncPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentlasersync");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserSync = (PLib3MFToolpathLayerReader_GetSegmentLaserSyncPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentlasersync");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerReader_GetSegmentLaserSync == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentTimePrediction = (PLib3MFToolpathLayerReader_GetSegmentTimePredictionPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmenttimeprediction");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentTimePrediction = (PLib3MFToolpathLayerReader_GetSegmentTimePredictionPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmenttimeprediction");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerReader_GetSegmentTimePrediction == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentJumpPrediction = (PLib3MFToolpathLayerReader_GetSegmentJumpPredictionPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmentjumpprediction");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentJumpPrediction = (PLib3MFToolpathLayerReader_GetSegmentJumpPredictionPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmentjumpprediction");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerReader_GetSegmentJumpPrediction == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentTag = (PLib3MFToolpathLayerReader_GetSegmentTagPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getsegmenttag");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerReader_GetSegmentTag = (PLib3MFToolpathLayerReader_GetSegmentTagPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getsegmenttag");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerReader_GetSegmentTag == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_ToolpathLayerReader_SegmentHasModificationFactors = (PLib3MFToolpathLayerReader_SegmentHasModificationFactorsPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_segmenthasmodificationfactors");
 	#else // _WIN32
 	pWrapperTable->m_ToolpathLayerReader_SegmentHasModificationFactors = (PLib3MFToolpathLayerReader_SegmentHasModificationFactorsPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_segmenthasmodificationfactors");
@@ -6459,6 +6517,78 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ToolpathLayerData_ClearLaserIndex == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_SetLaserSync = (PLib3MFToolpathLayerData_SetLaserSyncPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_setlasersync");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_SetLaserSync = (PLib3MFToolpathLayerData_SetLaserSyncPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_setlasersync");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_SetLaserSync == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_ClearLaserSync = (PLib3MFToolpathLayerData_ClearLaserSyncPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_clearlasersync");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_ClearLaserSync = (PLib3MFToolpathLayerData_ClearLaserSyncPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_clearlasersync");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_ClearLaserSync == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_SetTimePrediction = (PLib3MFToolpathLayerData_SetTimePredictionPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_settimeprediction");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_SetTimePrediction = (PLib3MFToolpathLayerData_SetTimePredictionPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_settimeprediction");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_SetTimePrediction == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_ClearTimePrediction = (PLib3MFToolpathLayerData_ClearTimePredictionPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_cleartimeprediction");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_ClearTimePrediction = (PLib3MFToolpathLayerData_ClearTimePredictionPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_cleartimeprediction");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_ClearTimePrediction == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_SetJumpPrediction = (PLib3MFToolpathLayerData_SetJumpPredictionPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_setjumpprediction");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_SetJumpPrediction = (PLib3MFToolpathLayerData_SetJumpPredictionPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_setjumpprediction");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_SetJumpPrediction == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_ClearJumpPrediction = (PLib3MFToolpathLayerData_ClearJumpPredictionPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_clearjumpprediction");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_ClearJumpPrediction = (PLib3MFToolpathLayerData_ClearJumpPredictionPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_clearjumpprediction");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_ClearJumpPrediction == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_SetSegmentTag = (PLib3MFToolpathLayerData_SetSegmentTagPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_setsegmenttag");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_SetSegmentTag = (PLib3MFToolpathLayerData_SetSegmentTagPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_setsegmenttag");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_SetSegmentTag == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLayerData_ClearSegmentTag = (PLib3MFToolpathLayerData_ClearSegmentTagPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerdata_clearsegmenttag");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLayerData_ClearSegmentTag = (PLib3MFToolpathLayerData_ClearSegmentTagPtr) dlsym(hLibrary, "lib3mf_toolpathlayerdata_clearsegmenttag");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLayerData_ClearSegmentTag == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -13759,6 +13889,51 @@ Lib3MFResult CCall_lib3mf_toolpathlayerreader_getprofileuuidbylocalprofileid(Lib
 }
 
 
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentlaserindex(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasLaserIndex, Lib3MF_uint32 * pLaserIndex)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentLaserIndex (pToolpathLayerReader, nSegmentIndex, pHasLaserIndex, pLaserIndex);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentlasersync(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasLaserSync, Lib3MF_uint32 * pLaserSync)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentLaserSync (pToolpathLayerReader, nSegmentIndex, pHasLaserSync, pLaserSync);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmenttimeprediction(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasTimePrediction, Lib3MF_uint32 * pTimePrediction)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentTimePrediction (pToolpathLayerReader, nSegmentIndex, pHasTimePrediction, pTimePrediction);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmentjumpprediction(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasJumpPrediction, Lib3MF_uint32 * pJumpPrediction)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentJumpPrediction (pToolpathLayerReader, nSegmentIndex, pHasJumpPrediction, pJumpPrediction);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerreader_getsegmenttag(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasTag, Lib3MF_uint32 * pTag)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerReader_GetSegmentTag (pToolpathLayerReader, nSegmentIndex, pHasTag, pTag);
+}
+
+
 Lib3MFResult CCall_lib3mf_toolpathlayerreader_segmenthasmodificationfactors(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, eLib3MFToolpathProfileModificationFactor eModificationFactor, bool * pHasModificationFactors)
 {
 	if (libraryHandle == 0) 
@@ -13909,6 +14084,78 @@ Lib3MFResult CCall_lib3mf_toolpathlayerdata_clearlaserindex(Lib3MFHandle library
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ToolpathLayerData_ClearLaserIndex (pToolpathLayerData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_setlasersync(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_SetLaserSync (pToolpathLayerData, nValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_clearlasersync(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_ClearLaserSync (pToolpathLayerData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_settimeprediction(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_SetTimePrediction (pToolpathLayerData, nValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_cleartimeprediction(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_ClearTimePrediction (pToolpathLayerData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_setjumpprediction(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_SetJumpPrediction (pToolpathLayerData, nValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_clearjumpprediction(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_ClearJumpPrediction (pToolpathLayerData);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_setsegmenttag(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_SetSegmentTag (pToolpathLayerData, nValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_toolpathlayerdata_clearsegmenttag(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerData pToolpathLayerData)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ToolpathLayerData_ClearSegmentTag (pToolpathLayerData);
 }
 
 

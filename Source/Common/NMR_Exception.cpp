@@ -714,6 +714,7 @@ namespace NMR {
 		case NMR_ERROR_MISSINGPROFILEMODIFIERFACTOR: return "Missing or invalid profile modifier factor";
 		case NMR_ERROR_PROFILEMODIFIERFACTORINUSE: return "Profile modifier factor is already used by another modifier of the same profile";
 		case NMR_ERROR_DUPLICATETOOLPATHPROFILENAME: return "Toolpath profile name is not unique within the toolpath";
+		case NMR_ERROR_INVALIDSEGMENTATTRIBUTEVALUE: return "Invalid value of a standard toolpath segment attribute";
 
 		default:
 			return "unknown error";

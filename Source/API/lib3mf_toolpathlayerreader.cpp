@@ -122,6 +122,41 @@ std::string CToolpathLayerReader::GetProfileUUIDByLocalProfileID(const Lib3MF_ui
 }
 
 
+Lib3MF_uint32 CToolpathLayerReader::GetSegmentLaserIndex(const Lib3MF_uint32 nSegmentIndex, bool & bHasLaserIndex)
+{
+	auto & attributes = m_pReadData->getSegmentStandardAttributes(nSegmentIndex);
+	bHasLaserIndex = (attributes.m_nFlags & TOOLPATHSEGMENTATTRIBUTE_HASLASERINDEX) != 0;
+	return bHasLaserIndex ? attributes.m_nLaserIndex : 0;
+}
+
+Lib3MF_uint32 CToolpathLayerReader::GetSegmentLaserSync(const Lib3MF_uint32 nSegmentIndex, bool & bHasLaserSync)
+{
+	auto & attributes = m_pReadData->getSegmentStandardAttributes(nSegmentIndex);
+	bHasLaserSync = (attributes.m_nFlags & TOOLPATHSEGMENTATTRIBUTE_HASLASERSYNC) != 0;
+	return bHasLaserSync ? attributes.m_nLaserSync : 0;
+}
+
+Lib3MF_uint32 CToolpathLayerReader::GetSegmentTimePrediction(const Lib3MF_uint32 nSegmentIndex, bool & bHasTimePrediction)
+{
+	auto & attributes = m_pReadData->getSegmentStandardAttributes(nSegmentIndex);
+	bHasTimePrediction = (attributes.m_nFlags & TOOLPATHSEGMENTATTRIBUTE_HASTIMEPREDICTION) != 0;
+	return bHasTimePrediction ? attributes.m_nTimePrediction : 0;
+}
+
+Lib3MF_uint32 CToolpathLayerReader::GetSegmentJumpPrediction(const Lib3MF_uint32 nSegmentIndex, bool & bHasJumpPrediction)
+{
+	auto & attributes = m_pReadData->getSegmentStandardAttributes(nSegmentIndex);
+	bHasJumpPrediction = (attributes.m_nFlags & TOOLPATHSEGMENTATTRIBUTE_HASJUMPPREDICTION) != 0;
+	return bHasJumpPrediction ? attributes.m_nJumpPrediction : 0;
+}
+
+Lib3MF_uint32 CToolpathLayerReader::GetSegmentTag(const Lib3MF_uint32 nSegmentIndex, bool & bHasTag)
+{
+	auto & attributes = m_pReadData->getSegmentStandardAttributes(nSegmentIndex);
+	bHasTag = (attributes.m_nFlags & TOOLPATHSEGMENTATTRIBUTE_HASTAG) != 0;
+	return bHasTag ? attributes.m_nTag : 0;
+}
+
 bool CToolpathLayerReader::SegmentHasModificationFactors(const Lib3MF_uint32 nSegmentIndex, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor)
 {
 

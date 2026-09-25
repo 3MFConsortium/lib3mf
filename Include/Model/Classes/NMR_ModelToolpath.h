@@ -57,6 +57,22 @@ namespace NMR {
 	class CModelToolpath;
 	typedef std::shared_ptr <CModelToolpath> PModelToolpath;
 
+	// Optional standard attributes of a layer <segment>. A value is only meaningful if its flag is set.
+	#define TOOLPATHSEGMENTATTRIBUTE_HASLASERINDEX 0x01
+	#define TOOLPATHSEGMENTATTRIBUTE_HASLASERSYNC 0x02
+	#define TOOLPATHSEGMENTATTRIBUTE_HASTIMEPREDICTION 0x04
+	#define TOOLPATHSEGMENTATTRIBUTE_HASJUMPPREDICTION 0x08
+	#define TOOLPATHSEGMENTATTRIBUTE_HASTAG 0x10
+
+	typedef struct {
+		nfUint32 m_nFlags;
+		nfUint32 m_nLaserIndex;
+		nfUint32 m_nLaserSync;
+		nfUint32 m_nTimePrediction;
+		nfUint32 m_nJumpPrediction;
+		nfUint32 m_nTag;
+	} TOOLPATHSEGMENTATTRIBUTES;
+
 	class CModelToolpath : public CModelResource {
 	private:
 		CUUID m_UUID;

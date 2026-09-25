@@ -4276,6 +4276,36 @@
 		<param name="ProfileUUID" type="string" pass="return" description="Segment Profile UUID" />
 	</method>
 
+	<method name="GetSegmentLaserIndex" description="Retrieves the laser index given on the segment. If absent, the profile's laser index or the laser source default applies.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
+		<param name="HasLaserIndex" type="bool" pass="out" description="True if the segment carries a laserindex attribute." />
+		<param name="LaserIndex" type="uint32" pass="return" description="The laser index. 0 if absent." />
+	</method>
+
+	<method name="GetSegmentLaserSync" description="Retrieves the laser sync group id given on the segment.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
+		<param name="HasLaserSync" type="bool" pass="out" description="True if the segment carries a lasersync attribute." />
+		<param name="LaserSync" type="uint32" pass="return" description="The sync group id. 0 if absent." />
+	</method>
+
+	<method name="GetSegmentTimePrediction" description="Retrieves the predicted marking time of the segment.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
+		<param name="HasTimePrediction" type="bool" pass="out" description="True if the segment carries a timeprediction attribute." />
+		<param name="TimePrediction" type="uint32" pass="return" description="The predicted marking time in microseconds. 0 if absent." />
+	</method>
+
+	<method name="GetSegmentJumpPrediction" description="Retrieves the predicted jump time to the start of the segment.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
+		<param name="HasJumpPrediction" type="bool" pass="out" description="True if the segment carries a jumpprediction attribute." />
+		<param name="JumpPrediction" type="uint32" pass="return" description="The predicted jump time in microseconds. 0 if absent." />
+	</method>
+
+	<method name="GetSegmentTag" description="Retrieves the segment-level tag.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
+		<param name="HasTag" type="bool" pass="out" description="True if the segment carries a tag attribute." />
+		<param name="Tag" type="uint32" pass="return" description="The tag value. 0 if absent." />
+	</method>
+
 	<method name="SegmentHasModificationFactors" description="Retrieves if the segment has specific modification factors attached.">
 		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
 		<param name="ModificationFactor" type="enum" class="ToolpathProfileModificationFactor" pass="in" description="Which modification factor value to retrieve (F, G or H). Returns an array of 0.0, if modification factor type is unknown or not given." />		
@@ -4365,11 +4395,39 @@
     <method name="ClearSegmentAttributes" description="Clears current segment attributes.">
     </method>
 	
-	<method name="SetLaserIndex" description="Sets the laser index for all subsequent segments.">
+	<method name="SetLaserIndex" description="Sets the laser index for all subsequent segments. 0 is a valid laser index and is written explicitly.">
       <param name="Value" type="uint32" pass="in" description="The value of the laser index for all subsequent segments." />
     </method>
 
 	<method name="ClearLaserIndex" description="Removes the laser index for all subsequent segments.">
+    </method>
+
+	<method name="SetLaserSync" description="Sets the laser sync group id (lasersync) for all subsequent segments.">
+      <param name="Value" type="uint32" pass="in" description="The id of the sync group. MUST be positive." />
+    </method>
+
+	<method name="ClearLaserSync" description="Removes the laser sync group id for all subsequent segments.">
+    </method>
+
+	<method name="SetTimePrediction" description="Sets the predicted marking time (timeprediction) for all subsequent segments.">
+      <param name="Value" type="uint32" pass="in" description="The predicted marking time in microseconds." />
+    </method>
+
+	<method name="ClearTimePrediction" description="Removes the predicted marking time for all subsequent segments.">
+    </method>
+
+	<method name="SetJumpPrediction" description="Sets the predicted jump time to the start of the segment (jumpprediction) for all subsequent segments.">
+      <param name="Value" type="uint32" pass="in" description="The predicted jump time in microseconds." />
+    </method>
+
+	<method name="ClearJumpPrediction" description="Removes the predicted jump time for all subsequent segments.">
+    </method>
+
+	<method name="SetSegmentTag" description="Sets the segment-level tag for all subsequent segments.">
+      <param name="Value" type="uint32" pass="in" description="The producer-defined tag value." />
+    </method>
+
+	<method name="ClearSegmentTag" description="Removes the segment-level tag for all subsequent segments.">
     </method>
 	
     <method name="WriteHatchDataInModelUnits" description="writes hatch data to the layer in model units.">

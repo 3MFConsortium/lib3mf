@@ -122,6 +122,16 @@ public:
 
 	void GetSegmentPointModificationFactors(const Lib3MF_uint32 nSegmentIndex, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor, Lib3MF_uint64 nFactorValuesBufferSize, Lib3MF_uint64* pFactorValuesNeededCount, Lib3MF_double* pFactorValuesBuffer) override;
 
+	Lib3MF_uint32 GetSegmentLaserIndex(const Lib3MF_uint32 nSegmentIndex, bool & bHasLaserIndex) override;
+
+	Lib3MF_uint32 GetSegmentLaserSync(const Lib3MF_uint32 nSegmentIndex, bool & bHasLaserSync) override;
+
+	Lib3MF_uint32 GetSegmentTimePrediction(const Lib3MF_uint32 nSegmentIndex, bool & bHasTimePrediction) override;
+
+	Lib3MF_uint32 GetSegmentJumpPrediction(const Lib3MF_uint32 nSegmentIndex, bool & bHasJumpPrediction) override;
+
+	Lib3MF_uint32 GetSegmentTag(const Lib3MF_uint32 nSegmentIndex, bool & bHasTag) override;
+
 	bool SegmentHasModificationFactors(const Lib3MF_uint32 nSegmentIndex, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor) override;
 
 	void GetSegmentHatchDataInModelUnits(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nHatchDataBufferSize, Lib3MF_uint64* pHatchDataNeededCount, Lib3MF::sHatch2D* pHatchDataBuffer) override;

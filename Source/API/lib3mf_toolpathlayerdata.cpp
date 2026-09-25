@@ -553,12 +553,52 @@ void CToolpathLayerData::ClearSegmentAttributes()
 
 void CToolpathLayerData::SetLaserIndex(const Lib3MF_uint32 nValue)
 {
-	m_pLayerData->setCurrentLaserIndex(nValue);
+	m_pLayerData->setStandardSegmentAttribute(TOOLPATHSEGMENTATTRIBUTE_HASLASERINDEX, nValue);
 }
 
 void CToolpathLayerData::ClearLaserIndex()
 {
-	m_pLayerData->setCurrentLaserIndex(0);
+	m_pLayerData->clearStandardSegmentAttribute(TOOLPATHSEGMENTATTRIBUTE_HASLASERINDEX);
+}
+
+void CToolpathLayerData::SetLaserSync(const Lib3MF_uint32 nValue)
+{
+	m_pLayerData->setStandardSegmentAttribute(TOOLPATHSEGMENTATTRIBUTE_HASLASERSYNC, nValue);
+}
+
+void CToolpathLayerData::ClearLaserSync()
+{
+	m_pLayerData->clearStandardSegmentAttribute(TOOLPATHSEGMENTATTRIBUTE_HASLASERSYNC);
+}
+
+void CToolpathLayerData::SetTimePrediction(const Lib3MF_uint32 nValue)
+{
+	m_pLayerData->setStandardSegmentAttribute(TOOLPATHSEGMENTATTRIBUTE_HASTIMEPREDICTION, nValue);
+}
+
+void CToolpathLayerData::ClearTimePrediction()
+{
+	m_pLayerData->clearStandardSegmentAttribute(TOOLPATHSEGMENTATTRIBUTE_HASTIMEPREDICTION);
+}
+
+void CToolpathLayerData::SetJumpPrediction(const Lib3MF_uint32 nValue)
+{
+	m_pLayerData->setStandardSegmentAttribute(TOOLPATHSEGMENTATTRIBUTE_HASJUMPPREDICTION, nValue);
+}
+
+void CToolpathLayerData::ClearJumpPrediction()
+{
+	m_pLayerData->clearStandardSegmentAttribute(TOOLPATHSEGMENTATTRIBUTE_HASJUMPPREDICTION);
+}
+
+void CToolpathLayerData::SetSegmentTag(const Lib3MF_uint32 nValue)
+{
+	m_pLayerData->setStandardSegmentAttribute(TOOLPATHSEGMENTATTRIBUTE_HASTAG, nValue);
+}
+
+void CToolpathLayerData::ClearSegmentTag()
+{
+	m_pLayerData->clearStandardSegmentAttribute(TOOLPATHSEGMENTATTRIBUTE_HASTAG);
 }
 
 

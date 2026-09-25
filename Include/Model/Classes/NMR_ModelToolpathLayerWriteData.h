@@ -79,7 +79,7 @@ namespace NMR {
 		bool m_bWritingFinished;
 		unsigned int m_nIDCounter;
 
-		uint32_t m_nCurrentLaserIndex;
+		TOOLPATHSEGMENTATTRIBUTES m_CurrentSegmentAttributes;
 
 		std::vector<PCustomXMLTree> m_CustomXMLData;
 		std::map<std::pair<std::string, std::string>, std::string> m_CustomSegmentAttributes;
@@ -93,6 +93,8 @@ namespace NMR {
 		void writeCustomXMLDataNode(PCustomXMLNode pXMLNode, const std::string & sNameSpace);
 
 		std::string findNameSpacePrefix(const std::string& sNameSpace);
+
+		void writeSegmentStartElement(const char * pszSegmentType, const nfUint32 nProfileID, const nfUint32 nPartID);
 
 	public:
 		CModelToolpathLayerWriteData() = delete;
@@ -124,7 +126,9 @@ namespace NMR {
 
 		void clearCustomSegmentAttributes();
 
-		void setCurrentLaserIndex(uint32_t nLaserIndex);
+		// nFlag is one of TOOLPATHSEGMENTATTRIBUTE_HAS*. Applies to all subsequently written segments.
+		void setStandardSegmentAttribute(nfUint32 nFlag, nfUint32 nValue);
+		void clearStandardSegmentAttribute(nfUint32 nFlag);
 
 	};
 

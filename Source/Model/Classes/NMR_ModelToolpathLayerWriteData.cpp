@@ -49,7 +49,7 @@ namespace NMR {
 
 	CModelToolpathLayerWriteData::CModelToolpathLayerWriteData(CModelToolpath * pModelToolpath, NMR::PModelWriter_3MF pModelWriter, const std::string & sPackagePath, std::map<std::string, PModelWriter_CustomNameSpace> PrefixToNameSpaceMap)
 		: m_pModelToolpath (pModelToolpath), m_pModelWriter (pModelWriter), m_sPackagePath (sPackagePath), m_PrefixToNameSpaceMap (PrefixToNameSpaceMap),
-		m_nCurrentLaserIndex (0)
+		m_CurrentSegmentAttributes ()
 	{
 		if (pModelToolpath == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -153,27 +153,7 @@ namespace NMR {
 		if (!m_bWritingData)
 			throw CNMRException(NMR_ERROR_TOOLPATH_NOTWRITINGDATA);
 
-		std::string sPartID = std::to_string(nPartID);
-		std::string sProfileID = std::to_string(nProfileID);
-
-		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_SEGMENT, nullptr);
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TYPE, nullptr, XML_3MF_TOOLPATHTYPE_HATCH);
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PROFILEID, nullptr, sProfileID.c_str());
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
-		
-		if (m_nCurrentLaserIndex != 0) {
-			std::string sLaserIndex = std::to_string(m_nCurrentLaserIndex);
-			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_LASERINDEX, nullptr, sLaserIndex.c_str());
-		}
-
-
-		for (auto& customAttribute : m_CustomSegmentAttributes) {
-			std::string sNameSpace = customAttribute.first.first;
-			std::string sAttributeName = customAttribute.first.second;
-			std::string sAttributeValue = customAttribute.second;
-			std::string sAttributePrefix = findNameSpacePrefix (sNameSpace);
-			m_pXmlWriter->WriteAttributeString(sAttributePrefix.c_str (), sAttributeName.c_str (), nullptr, sAttributeValue.c_str ());
-		}
+		writeSegmentStartElement(XML_3MF_TOOLPATHTYPE_HATCH, nProfileID, nPartID);
 
 		if (pStreamWriter != nullptr) {
 			uint32_t binaryKeyX1 = pStreamWriter->addIntArray(pX1Buffer, nHatchCount, eChunkedBinaryPredictionType::eptDeltaPredicition);
@@ -471,34 +451,9 @@ namespace NMR {
 		if (!m_bWritingData)
 			throw CNMRException(NMR_ERROR_TOOLPATH_NOTWRITINGDATA);
 
-		std::string sPartID = std::to_string(nPartID);
-		std::string sProfileID = std::to_string(nProfileID);
-
 		double dDiscretizationUnits = 0.001;
 
-		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_SEGMENT, nullptr);
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TYPE, nullptr, XML_3MF_TOOLPATHTYPE_LOOP);
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PROFILEID, nullptr, sProfileID.c_str());
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
-
-
-		if (m_nCurrentLaserIndex != 0) {
-			std::string sLaserIndex = std::to_string(m_nCurrentLaserIndex);
-			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_LASERINDEX, nullptr, sLaserIndex.c_str());
-		}
-
-		if ((pScalingFDataBuffer != nullptr) || (pScalingGDataBuffer != nullptr) || (pScalingHDataBuffer != nullptr)) {
-			/*std::string sOverrideFraction = std::to_string(m_nOverrideFraction);
-			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_OVERRIDEFRACTION, nullptr, sOverrideFraction.c_str());*/
-		}
-
-		for (auto& customAttribute : m_CustomSegmentAttributes) {
-			std::string sNameSpace = customAttribute.first.first;
-			std::string sAttributeName = customAttribute.first.second;
-			std::string sAttributeValue = customAttribute.second;
-			std::string sAttributePrefix = findNameSpacePrefix(sNameSpace);
-			m_pXmlWriter->WriteAttributeString(sAttributePrefix.c_str(), sAttributeName.c_str(), nullptr, sAttributeValue.c_str());
-		}
+		writeSegmentStartElement(XML_3MF_TOOLPATHTYPE_LOOP, nProfileID, nPartID);
 
 		if (pStreamWriter != nullptr) {
 			uint32_t binaryKeyX = pStreamWriter->addIntArray(pXBuffer, nPointCount, eChunkedBinaryPredictionType::eptDeltaPredicition);
@@ -622,33 +577,9 @@ namespace NMR {
 		if (!m_bWritingData)
 			throw CNMRException(NMR_ERROR_TOOLPATH_NOTWRITINGDATA);
 
-		std::string sPartID = std::to_string(nPartID);
-		std::string sProfileID = std::to_string(nProfileID);
-
 		double dDiscretizationUnits = 0.001;
 
-
-		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_SEGMENT, nullptr);
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TYPE, nullptr, XML_3MF_TOOLPATHTYPE_POLYLINE);
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PROFILEID, nullptr, sProfileID.c_str());
-		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
-		if (m_nCurrentLaserIndex != 0) {
-			std::string sLaserIndex = std::to_string(m_nCurrentLaserIndex);
-			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_LASERINDEX, nullptr, sLaserIndex.c_str());
-		}
-
-		if ((pScalingFDataBuffer != nullptr) || (pScalingGDataBuffer != nullptr) || (pScalingHDataBuffer != nullptr)) {
-			/*std::string sOverrideFraction = std::to_string(m_nOverrideFraction);
-			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_OVERRIDEFRACTION, nullptr, sOverrideFraction.c_str());*/
-		}
-
-		for (auto& customAttribute : m_CustomSegmentAttributes) {
-			std::string sNameSpace = customAttribute.first.first;
-			std::string sAttributeName = customAttribute.first.second;
-			std::string sAttributeValue = customAttribute.second;
-			std::string sAttributePrefix = findNameSpacePrefix(sNameSpace);
-			m_pXmlWriter->WriteAttributeString(sAttributePrefix.c_str(), sAttributeName.c_str(), nullptr, sAttributeValue.c_str());
-		}
+		writeSegmentStartElement(XML_3MF_TOOLPATHTYPE_POLYLINE, nProfileID, nPartID);
 
 		if (pStreamWriter != nullptr) {
 
@@ -920,9 +851,59 @@ namespace NMR {
 		return iIter->second;
 	}
 
-	void CModelToolpathLayerWriteData::setCurrentLaserIndex(uint32_t nLaserIndex)
+	void CModelToolpathLayerWriteData::setStandardSegmentAttribute(nfUint32 nFlag, nfUint32 nValue)
 	{
-		m_nCurrentLaserIndex = nLaserIndex;
+		switch (nFlag) {
+			case TOOLPATHSEGMENTATTRIBUTE_HASLASERINDEX: m_CurrentSegmentAttributes.m_nLaserIndex = nValue; break;
+			case TOOLPATHSEGMENTATTRIBUTE_HASLASERSYNC:
+				if (nValue == 0)
+					throw CNMRException(NMR_ERROR_INVALIDSEGMENTATTRIBUTEVALUE);
+				m_CurrentSegmentAttributes.m_nLaserSync = nValue;
+				break;
+			case TOOLPATHSEGMENTATTRIBUTE_HASTIMEPREDICTION: m_CurrentSegmentAttributes.m_nTimePrediction = nValue; break;
+			case TOOLPATHSEGMENTATTRIBUTE_HASJUMPPREDICTION: m_CurrentSegmentAttributes.m_nJumpPrediction = nValue; break;
+			case TOOLPATHSEGMENTATTRIBUTE_HASTAG: m_CurrentSegmentAttributes.m_nTag = nValue; break;
+			default:
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		}
+
+		m_CurrentSegmentAttributes.m_nFlags |= nFlag;
+	}
+
+	void CModelToolpathLayerWriteData::clearStandardSegmentAttribute(nfUint32 nFlag)
+	{
+		m_CurrentSegmentAttributes.m_nFlags &= ~nFlag;
+	}
+
+	void CModelToolpathLayerWriteData::writeSegmentStartElement(const char * pszSegmentType, const nfUint32 nProfileID, const nfUint32 nPartID)
+	{
+		std::string sProfileID = std::to_string(nProfileID);
+		std::string sPartID = std::to_string(nPartID);
+
+		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_SEGMENT, nullptr);
+		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TYPE, nullptr, pszSegmentType);
+		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PROFILEID, nullptr, sProfileID.c_str());
+		m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARTID, nullptr, sPartID.c_str());
+
+		const std::pair<nfUint32, std::pair<const char *, nfUint32>> standardAttributes[] = {
+			{ TOOLPATHSEGMENTATTRIBUTE_HASLASERINDEX, { XML_3MF_TOOLPATHATTRIBUTE_LASERINDEX, m_CurrentSegmentAttributes.m_nLaserIndex } },
+			{ TOOLPATHSEGMENTATTRIBUTE_HASLASERSYNC, { XML_3MF_TOOLPATHATTRIBUTE_LASERSYNC, m_CurrentSegmentAttributes.m_nLaserSync } },
+			{ TOOLPATHSEGMENTATTRIBUTE_HASTIMEPREDICTION, { XML_3MF_TOOLPATHATTRIBUTE_TIMEPREDICTION, m_CurrentSegmentAttributes.m_nTimePrediction } },
+			{ TOOLPATHSEGMENTATTRIBUTE_HASJUMPPREDICTION, { XML_3MF_TOOLPATHATTRIBUTE_JUMPPREDICTION, m_CurrentSegmentAttributes.m_nJumpPrediction } },
+			{ TOOLPATHSEGMENTATTRIBUTE_HASTAG, { XML_3MF_TOOLPATHATTRIBUTE_TAG, m_CurrentSegmentAttributes.m_nTag } },
+		};
+
+		for (auto & attribute : standardAttributes) {
+			if ((m_CurrentSegmentAttributes.m_nFlags & attribute.first) != 0) {
+				std::string sValue = std::to_string(attribute.second.second);
+				m_pXmlWriter->WriteAttributeString(nullptr, attribute.second.first, nullptr, sValue.c_str());
+			}
+		}
+
+		for (auto& customAttribute : m_CustomSegmentAttributes) {
+			std::string sAttributePrefix = findNameSpacePrefix(customAttribute.first.first);
+			m_pXmlWriter->WriteAttributeString(sAttributePrefix.c_str(), customAttribute.first.second.c_str(), nullptr, customAttribute.second.c_str());
+		}
 	}
 
 
