@@ -40,6 +40,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Common/Platform/NMR_XmlWriter.h"
 #include "Model/Classes/NMR_CustomXMLNode.h"
+#include "Common/NMR_ModelWarnings.h"
 
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 
@@ -50,6 +51,7 @@ namespace NMR {
 	class CModelWriterNode100_Model : public CModelWriterNode_ModelBase {
 	protected:
 		nfUint32 m_nDecimalPrecision;
+		PModelWarnings m_pWarnings;
 		
 		PMeshInformation_PropertyIndexMapping m_pPropertyIndexMapping;
 		
@@ -122,7 +124,7 @@ namespace NMR {
 
 	public:
 		CModelWriterNode100_Model() = delete;
-		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, _In_ nfUint32 nDecimalPrecision, _In_ nfBool bWritesRootModel);
+		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, _In_ PModelWarnings pWarnings, _In_ nfUint32 nDecimalPrecision, _In_ nfBool bWritesRootModel);
 		
 		virtual void writeToXML();
 

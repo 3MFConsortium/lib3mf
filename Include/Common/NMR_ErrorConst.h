@@ -2096,4 +2096,7 @@ Toolpath errors (0xBXXX)
 // Invalid value of a standard toolpath segment attribute
 #define NMR_ERROR_INVALIDSEGMENTATTRIBUTEVALUE 0xB062
 
+// Invalid value of a standard toolpath profile attribute
+#define NMR_ERROR_INVALIDTOOLPATHPROFILEVALUE 0xB063
+
 #endif // __NMR_ERRORCONST

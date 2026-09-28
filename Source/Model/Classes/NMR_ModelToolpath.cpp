@@ -167,7 +167,7 @@ namespace NMR {
 		CUUID newUUID;
 		std::string sUUID = newUUID.toString();
 
-		auto pProfile = std::make_shared<CModelToolpathProfile>(sUUID, sName, m_pProfileNameRegistry);
+		auto pProfile = std::make_shared<CModelToolpathProfile>(sUUID, sName, m_pProfileNameRegistry, false);
 		m_Profiles.push_back(pProfile);
 
 		m_ProfileMap.insert(std::make_pair (sUUID, pProfile));
@@ -181,13 +181,18 @@ namespace NMR {
 	{
 		CUUID checkUUID (sUUID.c_str());
 
-		auto pProfile = std::make_shared<CModelToolpathProfile>(checkUUID.toString (), sName, m_pProfileNameRegistry);
+		auto pProfile = std::make_shared<CModelToolpathProfile>(checkUUID.toString (), sName, m_pProfileNameRegistry, true);
 		m_Profiles.push_back(pProfile);
 
 		m_ProfileMap.insert(std::make_pair(sUUID, pProfile));
 
 		return pProfile;
 
+	}
+
+	bool CModelToolpath::hasProfileName(const std::string & sName)
+	{
+		return m_pProfileNameRegistry->hasName(sName);
 	}
 
 

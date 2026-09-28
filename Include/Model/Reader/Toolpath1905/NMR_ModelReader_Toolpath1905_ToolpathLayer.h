@@ -44,7 +44,6 @@ namespace NMR {
 	class CModelReaderNode_Toolpath1905_ToolpathLayer : public CModelReaderNode {
 	private:
 		CModel * m_pModel;
-		PModelWarnings m_pWarnings;
 
 		nfBool m_bHasPath;
 		std::string m_sPath;

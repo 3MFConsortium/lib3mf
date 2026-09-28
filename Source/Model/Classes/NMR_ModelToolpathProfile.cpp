@@ -37,8 +37,140 @@ NMR_ModelToolpathProfile.cpp defines the Model Toolpath Profile.
 
 #include <sstream>
 #include <algorithm>
+#include <cmath>
 
 namespace NMR {
+
+	namespace {
+
+		enum class eProfileValueType { Number, PositiveNumber, NonNegativeNumber, NonNegativeInteger };
+
+		bool findStandardValueType(const std::string & sValueName, eProfileValueType & eType)
+		{
+			static const std::map<std::string, eProfileValueType> standardValueTypes = {
+				{ XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERPOWER, eProfileValueType::NonNegativeNumber },
+				{ XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERSPEED, eProfileValueType::PositiveNumber },
+				{ XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_JUMPSPEED, eProfileValueType::PositiveNumber },
+				{ XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERFOCUS, eProfileValueType::Number },
+				{ XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_SPOTRADIUS, eProfileValueType::PositiveNumber },
+				{ XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERINDEX, eProfileValueType::NonNegativeInteger },
+				{ XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_DEPOSITIONSPEED, eProfileValueType::PositiveNumber },
+				{ XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_BEADWIDTH, eProfileValueType::PositiveNumber },
+				{ XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_BEADHEIGHT, eProfileValueType::PositiveNumber },
+				{ XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_PREWAITTIME, eProfileValueType::PositiveNumber },
+				{ XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_POSTWAITTIME, eProfileValueType::PositiveNumber },
+			};
+
+			auto iIter = standardValueTypes.find(sValueName);
+			if (iIter == standardValueTypes.end())
+				return false;
+
+			eType = iIter->second;
+			return true;
+		}
+
+		bool isDigit(char c)
+		{
+			return (c >= '0') && (c <= '9');
+		}
+
+		// Lexical space of ST_Number: [-+]?((([0-9]+(\.[0-9]*)?)|(\.[0-9]+))([eE][-+]?[0-9]+)?)
+		bool matchesNumberPattern(const std::string & sValue)
+		{
+			size_t nIndex = 0;
+			size_t nLength = sValue.length();
+
+			if ((nIndex < nLength) && ((sValue[nIndex] == '+') || (sValue[nIndex] == '-')))
+				nIndex++;
+
+			size_t nMantissaDigits = 0;
+			while ((nIndex < nLength) && isDigit(sValue[nIndex])) {
+				nIndex++;
+				nMantissaDigits++;
+			}
+			if ((nIndex < nLength) && (sValue[nIndex] == '.')) {
+				nIndex++;
+				while ((nIndex < nLength) && isDigit(sValue[nIndex])) {
+					nIndex++;
+					nMantissaDigits++;
+				}
+			}
+			if (nMantissaDigits == 0)
+				return false;
+
+			if ((nIndex < nLength) && ((sValue[nIndex] == 'e') || (sValue[nIndex] == 'E'))) {
+				nIndex++;
+				if ((nIndex < nLength) && ((sValue[nIndex] == '+') || (sValue[nIndex] == '-')))
+					nIndex++;
+				size_t nExponentDigits = 0;
+				while ((nIndex < nLength) && isDigit(sValue[nIndex])) {
+					nIndex++;
+					nExponentDigits++;
+				}
+				if (nExponentDigits == 0)
+					return false;
+			}
+
+			return nIndex == nLength;
+		}
+
+		// ST_NonNegativeInteger: xs:nonNegativeInteger below 2^31.
+		bool isValidNonNegativeInteger(const std::string & sValue)
+		{
+			size_t nIndex = 0;
+			if ((nIndex < sValue.length()) && (sValue[nIndex] == '+'))
+				nIndex++;
+			if (nIndex == sValue.length())
+				return false;
+
+			nfUint64 nValue = 0;
+			for (; nIndex < sValue.length(); nIndex++) {
+				if (!isDigit(sValue[nIndex]))
+					return false;
+				nValue = nValue * 10 + (nfUint64)(sValue[nIndex] - '0');
+				if (nValue > 2147483647ULL)
+					return false;
+			}
+			return true;
+		}
+
+	}
+
+	bool CModelToolpathProfile::isValidStandardValue(const std::string & sValueName, const std::string & sValue)
+	{
+		eProfileValueType eType;
+		if (!findStandardValueType(sValueName, eType))
+			return true;
+
+		// Schema number types collapse surrounding whitespace.
+		size_t nFirst = sValue.find_first_not_of(" \t\r\n");
+		if (nFirst == std::string::npos)
+			return false;
+		size_t nLast = sValue.find_last_not_of(" \t\r\n");
+		std::string sTrimmed = sValue.substr(nFirst, nLast - nFirst + 1);
+
+		if (eType == eProfileValueType::NonNegativeInteger)
+			return isValidNonNegativeInteger(sTrimmed);
+
+		if (!matchesNumberPattern(sTrimmed))
+			return false;
+
+		double dValue;
+		try {
+			dValue = fnStringToDouble(sTrimmed.c_str());
+		}
+		catch (CNMRException &) {
+			return false;
+		}
+		if (!std::isfinite(dValue))
+			return false;
+
+		switch (eType) {
+			case eProfileValueType::PositiveNumber: return dValue > 0.0;
+			case eProfileValueType::NonNegativeNumber: return dValue >= 0.0;
+			default: return true;
+		}
+	}
 
 
 	CModelToolpathProfileValue::CModelToolpathProfileValue(const std::string& sNameSpace, const std::string& sValueName, const std::string& sValue)
@@ -177,25 +309,45 @@ namespace NMR {
 
 
 
-	void CModelToolpathProfileNameRegistry::registerName(const std::string & sName)
+	bool CModelToolpathProfileNameRegistry::hasName(const std::string & sName)
 	{
-		if (!m_Names.insert(sName).second)
+		return m_Names.find(sName) != m_Names.end();
+	}
+
+	void CModelToolpathProfileNameRegistry::registerName(const std::string & sName, bool bAllowDuplicate)
+	{
+		auto iIter = m_Names.find(sName);
+		if (iIter == m_Names.end()) {
+			m_Names.insert(std::make_pair(sName, 1));
+			return;
+		}
+
+		if (!bAllowDuplicate)
 			throw CNMRException(NMR_ERROR_DUPLICATETOOLPATHPROFILENAME);
+
+		iIter->second++;
 	}
 
 	void CModelToolpathProfileNameRegistry::unregisterName(const std::string & sName)
 	{
-		m_Names.erase(sName);
+		auto iIter = m_Names.find(sName);
+		if (iIter == m_Names.end())
+			return;
+
+		if (iIter->second > 1)
+			iIter->second--;
+		else
+			m_Names.erase(iIter);
 	}
 
 
-	CModelToolpathProfile::CModelToolpathProfile(std::string sUUID, std::string sName, PModelToolpathProfileNameRegistry pNameRegistry)
+	CModelToolpathProfile::CModelToolpathProfile(std::string sUUID, std::string sName, PModelToolpathProfileNameRegistry pNameRegistry, bool bAllowDuplicateName)
 		: m_sUUID (sUUID), m_sName (sName), m_pNameRegistry (pNameRegistry)
 	{
 		if (pNameRegistry.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		m_pNameRegistry->registerName(m_sName);
+		m_pNameRegistry->registerName(m_sName, bAllowDuplicateName);
 	}
 
 	std::string CModelToolpathProfile::getUUID()
@@ -213,7 +365,7 @@ namespace NMR {
 		if (sName == m_sName)
 			return;
 
-		m_pNameRegistry->registerName(sName);
+		m_pNameRegistry->registerName(sName, false);
 		m_pNameRegistry->unregisterName(m_sName);
 		m_sName = sName;
 	}

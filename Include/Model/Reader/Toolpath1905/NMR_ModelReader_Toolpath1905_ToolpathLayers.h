@@ -45,7 +45,6 @@ namespace NMR {
 	private:
 		CModel * m_pModel;
 		CModelToolpath * m_pToolpath;
-		PModelWarnings m_pWarnings;
 
 		nfUint32 m_nBottomZ;
 		bool m_bHasBottomZ;

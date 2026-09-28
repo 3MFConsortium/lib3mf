@@ -45,7 +45,6 @@ namespace NMR {
 	class CModelReaderNode_Toolpath1905_ToolpathModifier : public CModelReaderNode {
 	private:
 		CModel * m_pModel;
-		PModelWarnings m_pWarnings;
 
 		nfBool m_bHasAttribute;
 		std::string m_sAttribute;

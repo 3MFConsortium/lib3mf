@@ -44,7 +44,6 @@ namespace NMR {
 	class CModelReaderNode_Toolpath1905_ToolpathResource : public CModelReaderNode {
 	private:
 		CModel * m_pModel;
-		PModelWarnings m_pWarnings;
 
 		ModelResourceID m_nID;
 		nfBool m_bHasID;

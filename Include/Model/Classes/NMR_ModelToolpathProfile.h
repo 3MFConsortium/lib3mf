@@ -107,11 +107,13 @@ namespace NMR {
 
 	// Profile names MUST be unique within a toolpath. The registry is shared between a toolpath
 	// and its profiles, so that renaming a profile can be checked against its siblings.
+	// Names are reference counted, because files read in non-strict mode may contain duplicates.
 	class CModelToolpathProfileNameRegistry {
 	private:
-		std::set<std::string> m_Names;
+		std::map<std::string, uint32_t> m_Names;
 	public:
-		void registerName(const std::string & sName);
+		bool hasName(const std::string & sName);
+		void registerName(const std::string & sName, bool bAllowDuplicate);
 		void unregisterName(const std::string & sName);
 	};
 
@@ -135,7 +137,7 @@ namespace NMR {
 
 	public:
 		CModelToolpathProfile() = delete;
-		CModelToolpathProfile(std::string sUUID, std::string sName, PModelToolpathProfileNameRegistry pNameRegistry);
+		CModelToolpathProfile(std::string sUUID, std::string sName, PModelToolpathProfileNameRegistry pNameRegistry, bool bAllowDuplicateName);
 
 		std::string getUUID();
 		std::string getName();
@@ -168,6 +170,10 @@ namespace NMR {
 		std::vector<PModelToolpathProfileModifier>& getModifiers();
 
 		double evaluate(const std::string& sNameSpace, const std::string& sValueName, double dFactorF, double dFactorG, double dFactorH);
+
+		// Checks an unprefixed standard profile attribute (e.g. laserpower, laserindex) against its schema type.
+		// Attribute names that are not standard profile attributes are always reported as valid.
+		static bool isValidStandardValue(const std::string & sValueName, const std::string & sValue);
 
 	};	
 

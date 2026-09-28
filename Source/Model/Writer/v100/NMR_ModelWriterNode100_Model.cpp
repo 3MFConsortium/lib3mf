@@ -71,9 +71,12 @@ This is the class for exporting the 3mf model stream root node.
 namespace NMR {
 
 	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-		_In_ nfUint32 nDecimalPrecision, nfBool bWritesRootModel) : CModelWriterNode_ModelBase(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision),
-		m_bWriteBinaryExtension (false)
+		_In_ PModelWarnings pWarnings, _In_ nfUint32 nDecimalPrecision, nfBool bWritesRootModel) : CModelWriterNode_ModelBase(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision),
+		m_pWarnings (pWarnings), m_bWriteBinaryExtension (false)
 	{
+		if (pWarnings.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
 		m_pPropertyIndexMapping = std::make_shared<CMeshInformation_PropertyIndexMapping>();
 		m_bIsRootModel = bWritesRootModel;
 
@@ -1369,6 +1372,9 @@ namespace NMR {
 					auto profileValues = pProfile->getValues();
 					for (auto profileValue : profileValues) {
 						if (!profileValue->hasNameSpace ()) {
+							if (!CModelToolpathProfile::isValidStandardValue(profileValue->getValueName(), profileValue->getValue()))
+								m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDTOOLPATHPROFILEVALUE, profileValue->getValueName() + "=\"" + profileValue->getValue() + "\""), mrwInvalidOptionalValue);
+
 							writeStringAttribute(profileValue->getValueName().c_str(), profileValue->getValue ());
 						}
 						else {

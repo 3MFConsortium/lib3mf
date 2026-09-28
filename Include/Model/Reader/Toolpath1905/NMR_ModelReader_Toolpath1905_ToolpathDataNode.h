@@ -38,7 +38,6 @@ namespace NMR {
 	class CModelReaderNode_Toolpath1905_ToolpathDataNode : public CModelReaderNode {
 	private:
 		CModel * m_pModel;
-		PModelWarnings m_pWarnings;
 		CModelToolpath * m_pToolpath;
 
 		PCustomXMLNode m_pXMLNode;

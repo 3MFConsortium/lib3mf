@@ -120,7 +120,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		pXMLWriter->WriteStartDocument();
-		CModelWriterNode100_Model ModelNode(model().get(), pXMLWriter, monitor(), GetDecimalPrecision(), false);
+		CModelWriterNode100_Model ModelNode(model().get(), pXMLWriter, monitor(), warnings(), GetDecimalPrecision(), false);
 		ModelNode.writeToXML();
 
 		pXMLWriter->WriteEndDocument();
@@ -137,7 +137,7 @@ namespace NMR {
 
 		pXMLWriter->WriteStartDocument();
 
-		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, monitor(), GetDecimalPrecision(), true);
+		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, monitor(), warnings(), GetDecimalPrecision(), true);
 		ModelNode.setWriteBinaryExtension(m_bAllowBinaryStreams);
 
 		for (auto iIter : m_CustomNameSpacePrefixMap) {

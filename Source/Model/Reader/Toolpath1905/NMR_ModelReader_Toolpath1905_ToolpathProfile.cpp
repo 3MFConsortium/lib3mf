@@ -87,7 +87,7 @@ namespace NMR {
 			m_bHasUUID = true;
 		}
 
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_NAME) == 0) {
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_NAME) == 0) {
 			if (m_bHasName)
 				throw CNMRException(NMR_ERROR_DUPLICATEVALUE);
 
@@ -96,6 +96,9 @@ namespace NMR {
 			m_bHasName = true;
 		}
 		else {
+			if (!CModelToolpathProfile::isValidStandardValue(pAttributeName, pAttributeValue))
+				m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDTOOLPATHPROFILEVALUE, std::string(pAttributeName) + "=\"" + pAttributeValue + "\""), mrwInvalidOptionalValue);
+
 			m_Parameters.insert(std::make_pair (std::make_pair ("", pAttributeName), pAttributeValue));
 		}
 
@@ -138,6 +141,9 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_MISSINGUUID);
 		if (!m_bHasName)
 			throw CNMRException(NMR_ERROR_MISSINGNAME);
+
+		if (pToolpath->hasProfileName(m_sName))
+			m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATETOOLPATHPROFILENAME, m_sName), mrwInvalidOptionalValue);
 
 		m_pProfile = pToolpath->addExistingProfile(m_sUUID, m_sName);
 

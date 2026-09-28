@@ -109,7 +109,9 @@ namespace NMR {
 		PModelToolpathLayer getLayer(nfUint32 nIndex);
 
 		PModelToolpathProfile addProfile(const std::string & sName);
+		// Accepts duplicate names; the reader reports them as a warning.
 		PModelToolpathProfile addExistingProfile(const std::string & sUUID, const std::string & sName);
+		bool hasProfileName(const std::string & sName);
 
 		nfUint32 getProfileCount();
 		PModelToolpathProfile getProfile(nfUint32 nIndex);
