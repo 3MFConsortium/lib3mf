@@ -68,10 +68,14 @@ void CDisplacementMeshObject::SetTriangleDisplacement(const Lib3MF_uint32 nIndex
 {
 	if (!pDisp2DGroup)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	auto pResource = displacementMeshObject()->getModel()->findResource(pDisp2DGroup->GetResourceID());
-	auto pGroup = std::dynamic_pointer_cast<NMR::CModelDisp2DGroupResource>(pResource);
+	auto pResource = dynamic_cast<CResource *>(pDisp2DGroup);
+	if (!pResource || pResource->model() != displacementMeshObject()->getModel())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCE);
+	auto pGroup = std::dynamic_pointer_cast<NMR::CModelDisp2DGroupResource>(pResource->resource());
 	if (!pGroup)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	if (displacementMeshObject()->getModel()->findResource(pDisp2DGroup->GetResourceID()) != pGroup)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCE);
 	displacementMeshObject()->setTriangleDisplacement(nIndex, pGroup,
 		Displacement.m_DisplacementIndices[0], Displacement.m_DisplacementIndices[1], Displacement.m_DisplacementIndices[2]);
 }

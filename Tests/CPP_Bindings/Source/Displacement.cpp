@@ -194,3 +194,65 @@ TEST_F(Displacement, RemoveResourcesUpdatesGenericLookup)
 	ASSERT_EQ(model->GetNormVectorGroups()->Count(), 0u);
 	ASSERT_EQ(model->GetDisplacement2Ds()->Count(), 0u);
 }
+
+TEST_F(Displacement, RejectForeignModelHandlesWithMatchingIDsAndPaths)
+{
+	auto model = wrapper->CreateModel();
+	auto otherModel = wrapper->CreateModel();
+	auto attachment = addPNGAttachment(model);
+	auto otherAttachment = addPNGAttachment(otherModel);
+	auto texture = model->AddDisplacement2D(attachment.get());
+	auto otherTexture = otherModel->AddDisplacement2D(otherAttachment.get());
+	auto normals = model->AddNormVectorGroup();
+	auto otherNormals = otherModel->AddNormVectorGroup();
+	Lib3MF::sVector vector{ { 1.0, 1.0, 1.0 } };
+	normals->AddVector(vector);
+	otherNormals->AddVector(vector);
+	auto group = model->AddDisp2DGroup(texture.get(), normals.get(), 1.0, 0.0);
+	auto otherGroup = otherModel->AddDisp2DGroup(otherTexture.get(), otherNormals.get(), 1.0, 0.0);
+	Lib3MF::sDisplacement2DCoordinate coordinate{ 0.0, 0.0, 0, 1.0 };
+	group->AddCoordinate(coordinate);
+	otherGroup->AddCoordinate(coordinate);
+	ASSERT_EQ(texture->GetResourceID(), otherTexture->GetResourceID());
+	ASSERT_EQ(normals->GetResourceID(), otherNormals->GetResourceID());
+	ASSERT_EQ(group->GetResourceID(), otherGroup->GetResourceID());
+	ASSERT_EQ(attachment->GetPath(), otherAttachment->GetPath());
+
+	ASSERT_SPECIFIC_THROW(model->AddDisplacement2D(otherAttachment.get()), Lib3MF::ELib3MFException);
+	ASSERT_SPECIFIC_THROW(texture->SetAttachment(otherAttachment.get()), Lib3MF::ELib3MFException);
+	ASSERT_SPECIFIC_THROW(model->AddDisp2DGroup(otherTexture.get(), normals.get(), 1.0, 0.0), Lib3MF::ELib3MFException);
+	ASSERT_SPECIFIC_THROW(model->AddDisp2DGroup(texture.get(), otherNormals.get(), 1.0, 0.0), Lib3MF::ELib3MFException);
+
+	auto mesh = addTetrahedron(model);
+	Lib3MF::sTriangleDisplacement displacement{ { 0, 0, 0 } };
+	ASSERT_SPECIFIC_THROW(mesh->SetTriangleDisplacement(3, otherGroup.get(), displacement), Lib3MF::ELib3MFException);
+	ASSERT_FALSE(mesh->HasTriangleDisplacement(3));
+	mesh->SetTriangleDisplacement(3, group.get(), displacement);
+	ASSERT_TRUE(mesh->HasTriangleDisplacement(3));
+	texture->SetAttachment(attachment.get());
+	ASSERT_EQ(model->GetDisplacement2Ds()->Count(), 1u);
+	ASSERT_EQ(model->GetDisp2DGroups()->Count(), 1u);
+
+	model->RemoveResource(group.get());
+	ASSERT_SPECIFIC_THROW(mesh->SetTriangleDisplacement(3, group.get(), displacement), Lib3MF::ELib3MFException);
+	model->RemoveResource(texture.get());
+	ASSERT_SPECIFIC_THROW(model->AddDisp2DGroup(texture.get(), normals.get(), 1.0, 0.0), Lib3MF::ELib3MFException);
+}
+
+TEST_F(Displacement, RejectInvalidTextureEnumsWithoutChangingState)
+{
+	auto model = wrapper->CreateModel();
+	auto texture = model->AddDisplacement2D(addPNGAttachment(model).get());
+	texture->SetTileStyleUV(Lib3MF::eTextureTileStyle::Mirror, Lib3MF::eTextureTileStyle::Clamp);
+	texture->SetFilter(Lib3MF::eTextureFilter::Nearest);
+	for (int invalid : { -1, 999 }) {
+		ASSERT_SPECIFIC_THROW(texture->SetFilter(static_cast<Lib3MF::eTextureFilter>(invalid)), Lib3MF::ELib3MFException);
+		ASSERT_SPECIFIC_THROW(texture->SetTileStyleUV(static_cast<Lib3MF::eTextureTileStyle>(invalid), Lib3MF::eTextureTileStyle::Wrap), Lib3MF::ELib3MFException);
+		ASSERT_SPECIFIC_THROW(texture->SetTileStyleUV(Lib3MF::eTextureTileStyle::Wrap, static_cast<Lib3MF::eTextureTileStyle>(invalid)), Lib3MF::ELib3MFException);
+		Lib3MF::eTextureTileStyle u, v;
+		texture->GetTileStyleUV(u, v);
+		ASSERT_EQ(u, Lib3MF::eTextureTileStyle::Mirror);
+		ASSERT_EQ(v, Lib3MF::eTextureTileStyle::Clamp);
+		ASSERT_EQ(texture->GetFilter(), Lib3MF::eTextureFilter::Nearest);
+	}
+}

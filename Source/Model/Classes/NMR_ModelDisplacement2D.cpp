@@ -103,11 +103,26 @@ namespace NMR {
 
 	eModelTextureTileStyle CModelDisplacement2DResource::getTileStyleU() const { return m_eTileStyleU; }
 	eModelTextureTileStyle CModelDisplacement2DResource::getTileStyleV() const { return m_eTileStyleV; }
-	void CModelDisplacement2DResource::setTileStyleU(eModelTextureTileStyle eStyle) { m_eTileStyleU = eStyle; }
-	void CModelDisplacement2DResource::setTileStyleV(eModelTextureTileStyle eStyle) { m_eTileStyleV = eStyle; }
-	void CModelDisplacement2DResource::setTileStyleUString(const std::string & sValue) { m_eTileStyleU = CModelTexture2DResource::tileStyleFromString(sValue); }
-	void CModelDisplacement2DResource::setTileStyleVString(const std::string & sValue) { m_eTileStyleV = CModelTexture2DResource::tileStyleFromString(sValue); }
+	void CModelDisplacement2DResource::setTileStyleU(eModelTextureTileStyle eStyle)
+	{
+		if (eStyle < MODELTEXTURETILESTYLE_WRAP || eStyle > MODELTEXTURETILESTYLE_NONE)
+			throw CNMRException(NMR_ERROR_INVALIDTILESTYLE);
+		m_eTileStyleU = eStyle;
+	}
+	void CModelDisplacement2DResource::setTileStyleV(eModelTextureTileStyle eStyle)
+	{
+		if (eStyle < MODELTEXTURETILESTYLE_WRAP || eStyle > MODELTEXTURETILESTYLE_NONE)
+			throw CNMRException(NMR_ERROR_INVALIDTILESTYLE);
+		m_eTileStyleV = eStyle;
+	}
+	void CModelDisplacement2DResource::setTileStyleUString(const std::string & sValue) { setTileStyleU(CModelTexture2DResource::tileStyleFromString(sValue)); }
+	void CModelDisplacement2DResource::setTileStyleVString(const std::string & sValue) { setTileStyleV(CModelTexture2DResource::tileStyleFromString(sValue)); }
 	eModelTextureFilter CModelDisplacement2DResource::getFilter() const { return m_eFilter; }
-	void CModelDisplacement2DResource::setFilter(eModelTextureFilter eFilter) { m_eFilter = eFilter; }
-	void CModelDisplacement2DResource::setFilterString(const std::string & sValue) { m_eFilter = CModelTexture2DResource::filterFromString(sValue); }
+	void CModelDisplacement2DResource::setFilter(eModelTextureFilter eFilter)
+	{
+		if (eFilter < MODELTEXTUREFILTER_AUTO || eFilter > MODELTEXTUREFILTER_NEAREST)
+			throw CNMRException(NMR_ERROR_INVALIDFILTER);
+		m_eFilter = eFilter;
+	}
+	void CModelDisplacement2DResource::setFilterString(const std::string & sValue) { setFilter(CModelTexture2DResource::filterFromString(sValue)); }
 }

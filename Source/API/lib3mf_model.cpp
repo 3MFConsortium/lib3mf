@@ -795,8 +795,12 @@ IDisplacementMeshObject * CModel::AddDisplacementMeshObject()
 IDisplacement2D * CModel::AddDisplacement2D(IAttachment* pTextureAttachment)
 {
 	if (!pTextureAttachment) throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	auto attachment = model().findModelAttachment(pTextureAttachment->GetPath());
+	auto pAttachment = dynamic_cast<CAttachment *>(pTextureAttachment);
+	if (!pAttachment) throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	auto attachment = pAttachment->getModelAttachment();
 	NMR::CModelDisplacement2DResource::validateAttachment(attachment, &model());
+	if (model().findModelAttachment(attachment->getPathURI()) != attachment)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCE);
 	auto p = std::make_shared<NMR::CModelDisplacement2DResource>(model().generateResourceID(), &model(), attachment);
 	model().addResource(p);
 	return new CDisplacement2D(p);
@@ -814,9 +818,17 @@ IDisp2DGroup * CModel::AddDisp2DGroup(IDisplacement2D* pDisplacement2D, INormVec
 {
 	if (!pDisplacement2D || !pNormalVectorGroup) throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 	if (!std::isfinite(dHeight) || !std::isfinite(dOffset)) throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	auto displacement = std::dynamic_pointer_cast<NMR::CModelDisplacement2DResource>(model().findResource(pDisplacement2D->GetResourceID()));
-	auto normals = std::dynamic_pointer_cast<NMR::CModelNormVectorGroupResource>(model().findResource(pNormalVectorGroup->GetResourceID()));
+	auto pDisplacementResource = dynamic_cast<CResource *>(pDisplacement2D);
+	auto pNormalResource = dynamic_cast<CResource *>(pNormalVectorGroup);
+	if (!pDisplacementResource || !pNormalResource ||
+		pDisplacementResource->model() != &model() || pNormalResource->model() != &model())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCE);
+	auto displacement = std::dynamic_pointer_cast<NMR::CModelDisplacement2DResource>(pDisplacementResource->resource());
+	auto normals = std::dynamic_pointer_cast<NMR::CModelNormVectorGroupResource>(pNormalResource->resource());
 	if (!displacement || !normals) throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCE);
+	if (model().findResource(pDisplacement2D->GetResourceID()) != displacement ||
+		model().findResource(pNormalVectorGroup->GetResourceID()) != normals)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCE);
 	auto p = std::make_shared<NMR::CModelDisp2DGroupResource>(model().generateResourceID(), &model(), displacement, normals, dHeight, dOffset);
 	model().addResource(p);
 	return new CDisp2DGroup(p);

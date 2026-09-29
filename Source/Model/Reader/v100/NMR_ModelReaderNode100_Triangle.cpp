@@ -89,12 +89,15 @@ namespace NMR {
 	nfBool CModelReaderNode100_Triangle::retrieveProperties(_Inout_ ModelResourceID & nPropertyID, _Inout_ ModelResourceIndex & nPropertyIndex1, _Inout_ ModelResourceIndex & nPropertyIndex2, _Inout_ ModelResourceIndex & nPropertyIndex3)
 	{
 		if (m_nPropertyIndex1 < 0) {
-			if (m_nPropertyIndex2 >= 0 || m_nPropertyIndex3 >= 0)
+			if (m_bDisplacement && (m_nPropertyIndex2 >= 0 || m_nPropertyIndex3 >= 0))
 				throw CNMRException(NMR_ERROR_INVALIDMESHINFORMATIONINDEX);
 			return false;
 		}
-		if (m_nPropertyID == 0 && nPropertyID == 0)
-			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+		if (m_nPropertyID == 0 && nPropertyID == 0) {
+			if (m_bDisplacement)
+				throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+			return false;
+		}
 
 		// See Core Spec 4.1.3.1 (Triangle)
 		if (m_nPropertyID != 0)

@@ -63,7 +63,13 @@ void CDisplacement2D::SetAttachment(IAttachment* pAttachment)
 {
 	if (!pAttachment)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	auto pModelAttachment = displacement2D()->getModel()->findModelAttachment(pAttachment->GetPath());
+	auto pAttachmentImpl = dynamic_cast<CAttachment *>(pAttachment);
+	if (!pAttachmentImpl)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	auto pModelAttachment = pAttachmentImpl->getModelAttachment();
+	NMR::CModelDisplacement2DResource::validateAttachment(pModelAttachment, displacement2D()->getModel());
+	if (displacement2D()->getModel()->findModelAttachment(pModelAttachment->getPathURI()) != pModelAttachment)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCE);
 	displacement2D()->setAttachment(pModelAttachment);
 }
 
@@ -85,6 +91,9 @@ void CDisplacement2D::GetTileStyleUV(Lib3MF::eTextureTileStyle & eTileStyleU, Li
 
 void CDisplacement2D::SetTileStyleUV(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV)
 {
+	if (eTileStyleU < Lib3MF::eTextureTileStyle::Wrap || eTileStyleU > Lib3MF::eTextureTileStyle::NoTileStyle ||
+		eTileStyleV < Lib3MF::eTextureTileStyle::Wrap || eTileStyleV > Lib3MF::eTextureTileStyle::NoTileStyle)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 	displacement2D()->setTileStyleU(static_cast<NMR::eModelTextureTileStyle>(eTileStyleU));
 	displacement2D()->setTileStyleV(static_cast<NMR::eModelTextureTileStyle>(eTileStyleV));
 }

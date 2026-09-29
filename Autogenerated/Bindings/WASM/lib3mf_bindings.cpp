@@ -1092,7 +1092,8 @@ static emscripten::val wrap_MeshObject_GetAllTriangleProperties(CMeshObject &sel
 static emscripten::val wrap_DisplacementMeshObject_GetTriangleDisplacement(CDisplacementMeshObject &self, const Lib3MF_uint32& Index) {
     emscripten::val output = emscripten::val::object();
     PDisp2DGroup Disp2DGroup;
-    Lib3MF_struct return_value = self.GetTriangleDisplacement(Index, Disp2DGroup);
+    sTriangleDisplacementWrapper return_value;
+    return_value.value = self.GetTriangleDisplacement(Index, Disp2DGroup);
     output.set("return", return_value);
     output.set("Disp2DGroup", Disp2DGroup);
     return output;
