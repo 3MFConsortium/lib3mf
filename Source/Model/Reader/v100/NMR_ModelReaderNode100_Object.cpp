@@ -388,8 +388,13 @@ namespace NMR {
 				m_pWarnings->addWarning(NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
 			auto node = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, object, m_pWarnings, m_pProgressMonitor, m_pObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
 			node->parseXML(pXMLReader);
+			// Beam lattice and volume data have no defined meaning on a displaced mesh
+			if (object->getMesh()->getBeamCount() > 0 || object->getMesh()->getBallCount() > 0 || object->getVolumeData())
+				throw CNMRException(NMR_ERROR_DISPLACEMENTMESH_UNSUPPORTEDDATA);
 			if (!object->isValid())
 				throw CNMRException(NMR_ERROR_INVALIDMESHTOPOLOGY);
+			for (auto triangleSet : node->getTriangleSets())
+				object->addTriangleSet(triangleSet);
 			m_pModel->addResource(m_pObject);
 			createDefaultProperties();
 		}

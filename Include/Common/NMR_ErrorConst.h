@@ -1563,6 +1563,15 @@ XML Parser Error Constants (0x9XXX)
 // Displacement content is present without listing its namespace as required
 #define NMR_ERROR_DISPLACEMENTEXTENSION_NOT_REQUIRED 0x901A
 
+// A mesh with triangle displacements was exported to a format that cannot hold them
+#define NMR_ERROR_DISPLACEMENT_NOT_APPLIED 0x901B
+
+// A displacement mesh has beam lattice or volume data
+#define NMR_ERROR_DISPLACEMENTMESH_UNSUPPORTEDDATA 0x901C
+
+// A displacement mesh uses a displacement group from another model part
+#define NMR_ERROR_DISPLACEMENTGROUP_IN_OTHER_PART 0x901D
+
 
 /*-------------------------------------------------------------------
 Library errors (0xAXXX)

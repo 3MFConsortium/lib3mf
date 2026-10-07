@@ -9,6 +9,7 @@ All rights reserved.
 #include "UnitTest_Utilities.h"
 #include "lib3mf_implicit.hpp"
 #include <cmath>
+#include <functional>
 
 namespace {
 
@@ -359,7 +360,9 @@ INSTANTIATE_TEST_SUITE_P(Displacement, InvalidDisplacementFiles, ::testing::Valu
 	std::string("displacement_normal_inward"),
 	std::string("displacement_negative_factor"),
 	std::string("displacement_core_namespace_vertices"),
-	std::string("displacement_missing_texture_relationship")
+	std::string("displacement_missing_texture_relationship"),
+	std::string("displacement_mesh_not_required"),
+	std::string("displacement_beam_lattice")
 ));
 
 TEST_F(Displacement, CoreTrianglesIgnoreUnknownAttributes)
@@ -403,4 +406,136 @@ TEST_F(Displacement, WritingAfterRemovingReferencedResourcesReportsMissingResour
 			model->RemoveResource(texture.get());
 		expectResourceNotFound(model);
 	}
+}
+
+namespace {
+
+// Builds a model with one displaced tetrahedron; the group and mesh can be inspected by the caller.
+Lib3MF::PDisplacementMeshObject addDisplacedTetrahedron(const Lib3MF::PModel & model)
+{
+	auto texture = model->AddDisplacement2D(addPNGAttachment(model).get());
+	auto normals = model->AddNormVectorGroup();
+	Lib3MF::sVector outward{ { 1.0, 1.0, 1.0 } };
+	normals->AddVector(outward);
+	auto coordinates = model->AddDisp2DGroup(texture.get(), normals.get(), 1.0, 0.0);
+	Lib3MF::sDisplacement2DCoordinate coordinate{ 0.0, 0.0, 0, 1.0 };
+	coordinates->AddCoordinate(coordinate);
+	auto mesh = addTetrahedron(model);
+	mesh->SetTriangleDisplacement(3, coordinates.get(), Lib3MF::sTriangleDisplacement{ { 0, 0, 0 } });
+	return mesh;
+}
+
+void expectErrorMessage(const std::function<void()> & action, const std::string & expectedText)
+{
+	try {
+		action();
+		FAIL() << "Expected an error containing: " << expectedText;
+	}
+	catch (Lib3MF::ELib3MFException & e) {
+		ASSERT_NE(std::string(e.what()).find(expectedText), std::string::npos) << e.what();
+	}
+}
+
+}
+
+TEST_F(Displacement, UnknownAttributeGivesWarning)
+{
+	auto model = wrapper->CreateModel();
+	auto reader = model->QueryReader("3mf");
+	reader->ReadFromFile(sTestFilesPath + "/Displacement/displacement_unknown_attribute.3mf");
+	CheckReaderWarnings(reader, 1);
+	ASSERT_EQ(model->GetDisplacementMeshObjects()->Count(), 1u);
+}
+
+TEST_F(Displacement, ResourcesOnlyPartDoesNotNeedRequiredExtension)
+{
+	auto model = wrapper->CreateModel();
+	auto reader = model->QueryReader("3mf");
+	reader->ReadFromFile(sTestFilesPath + "/Displacement/displacement_resources_only_not_required.3mf");
+	CheckReaderWarnings(reader, 0);
+	ASSERT_EQ(model->GetDisplacementMeshObjects()->Count(), 0u);
+	ASSERT_EQ(model->GetDisp2DGroups()->Count(), 1u);
+}
+
+TEST_F(Displacement, StlExportOfDisplacedMeshExplainsWhatToDo)
+{
+	auto model = wrapper->CreateModel();
+	auto mesh = addDisplacedTetrahedron(model);
+	model->AddBuildItem(mesh.get(), wrapper->GetIdentityTransform());
+	std::vector<Lib3MF_uint8> buffer;
+	expectErrorMessage([&]() { model->QueryWriter("stl")->WriteToBuffer(buffer); }, "Write a 3MF file");
+
+	// Without displacements the base mesh is the real shape, so STL export works.
+	mesh->ClearTriangleDisplacement(3);
+	model->QueryWriter("stl")->WriteToBuffer(buffer);
+}
+
+TEST_F(Displacement, TriangleSetsRoundTrip)
+{
+	auto model = wrapper->CreateModel();
+	auto mesh = addDisplacedTetrahedron(model);
+	model->AddBuildItem(mesh.get(), wrapper->GetIdentityTransform());
+	auto triangleSet = mesh->AddTriangleSet("top", "Top face");
+	triangleSet->AddTriangle(3);
+	triangleSet->AddTriangle(1);
+
+	std::vector<Lib3MF_uint8> buffer;
+	model->QueryWriter("3mf")->WriteToBuffer(buffer);
+	auto readModel = wrapper->CreateModel();
+	auto reader = readModel->QueryReader("3mf");
+	reader->ReadFromBuffer(buffer);
+	CheckReaderWarnings(reader, 0);
+
+	auto meshes = readModel->GetDisplacementMeshObjects();
+	ASSERT_TRUE(meshes->MoveNext());
+	auto readMesh = meshes->GetCurrentDisplacementMeshObject();
+	ASSERT_EQ(readMesh->GetTriangleSetCount(), 1u);
+	auto readSet = readMesh->GetTriangleSet(0);
+	ASSERT_EQ(readSet->GetIdentifier(), "top");
+	ASSERT_EQ(readSet->GetName(), "Top face");
+	std::vector<Lib3MF_uint32> triangles;
+	readSet->GetTriangleList(triangles);
+	ASSERT_EQ(triangles, (std::vector<Lib3MF_uint32>{ 1, 3 }));
+	ASSERT_TRUE(readMesh->HasTriangleDisplacement(3));
+}
+
+TEST_F(Displacement, WriterRefusesBeamLatticeAndVolumeData)
+{
+	{
+		auto model = wrapper->CreateModel();
+		auto mesh = addDisplacedTetrahedron(model);
+		model->AddBuildItem(mesh.get(), wrapper->GetIdentityTransform());
+		Lib3MF::sBeam beam{ { 0, 1 }, { 0.1, 0.1 }, { Lib3MF::eBeamLatticeCapMode::Sphere, Lib3MF::eBeamLatticeCapMode::Sphere } };
+		mesh->BeamLattice()->AddBeam(beam);
+		std::vector<Lib3MF_uint8> buffer;
+		expectErrorMessage([&]() { model->QueryWriter("3mf")->WriteToBuffer(buffer); }, "not supported on a displacement mesh");
+	}
+	{
+		auto model = wrapper->CreateModel();
+		auto mesh = addDisplacedTetrahedron(model);
+		model->AddBuildItem(mesh.get(), wrapper->GetIdentityTransform());
+		mesh->SetVolumeData(model->AddVolumeData().get());
+		std::vector<Lib3MF_uint8> buffer;
+		expectErrorMessage([&]() { model->QueryWriter("3mf")->WriteToBuffer(buffer); }, "not supported on a displacement mesh");
+	}
+}
+
+TEST_F(Displacement, ReaderRefusesBeamLattice)
+{
+	auto model = wrapper->CreateModel();
+	auto reader = model->QueryReader("3mf");
+	expectErrorMessage([&]() { reader->ReadFromFile(sTestFilesPath + "/Displacement/displacement_beam_lattice.3mf"); },
+		"not supported on a displacement mesh");
+}
+
+TEST_F(Displacement, WriterRefusesGroupFromOtherModelPart)
+{
+	auto model = wrapper->CreateModel();
+	auto mesh = addDisplacedTetrahedron(model);
+	mesh->SetPackagePart(model->FindOrCreatePackagePart("/3D/displacement.model").get());
+	auto components = model->AddComponentsObject();
+	components->AddComponent(mesh.get(), wrapper->GetIdentityTransform());
+	model->AddBuildItem(components.get(), wrapper->GetIdentityTransform());
+	std::vector<Lib3MF_uint8> buffer;
+	expectErrorMessage([&]() { model->QueryWriter("3mf")->WriteToBuffer(buffer); }, "same model part");
 }

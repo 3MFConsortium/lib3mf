@@ -147,8 +147,9 @@ namespace NMR {
 
 	void CModelDisplacementMeshObject::mergeToMesh(CMesh * pMesh, const NMATRIX3 mMatrix)
 	{
+		// Exporting the base mesh would give the wrong shape, so refuse instead
 		if (!m_TriangleDisplacements.empty())
-			throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+			throw CNMRException(NMR_ERROR_DISPLACEMENT_NOT_APPLIED);
 		CModelMeshObject::mergeToMesh(pMesh, mMatrix);
 	}
 

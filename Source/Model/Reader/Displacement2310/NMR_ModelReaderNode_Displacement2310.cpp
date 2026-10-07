@@ -55,13 +55,13 @@ namespace NMR {
 				if (!strcmp(name, "x")) { x = fnStringToDouble(value); hasX = true; }
 				else if (!strcmp(name, "y")) { y = fnStringToDouble(value); hasY = true; }
 				else if (!strcmp(name, "z")) { z = fnStringToDouble(value); hasZ = true; }
-				else throw CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE);
+				else m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 			} else {
 				if (!strcmp(name, "u")) { u = fnStringToDouble(value); hasU = true; }
 				else if (!strcmp(name, "v")) { v = fnStringToDouble(value); hasV = true; }
 				else if (!strcmp(name, XML_3MF_ATTRIBUTE_DISPLACEMENT_FACTOR)) factor = fnStringToDouble(value);
 				else if (!strcmp(name, XML_3MF_ATTRIBUTE_DISPLACEMENT_NORMAL)) { normal = fnStringToInt32(value); hasNormal = true; }
-				else throw CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE);
+				else m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 			}
 		}
 	};
@@ -82,7 +82,8 @@ namespace NMR {
 		else if (m_Kind == eDisplacementResourceKind::Disp2DGroup && !strcmp(name, "nid")) m_nNormID = fnStringToUint32(value);
 		else if (m_Kind == eDisplacementResourceKind::Disp2DGroup && !strcmp(name, "height")) { m_dHeight = fnStringToDouble(value); m_bHasHeight = true; }
 		else if (m_Kind == eDisplacementResourceKind::Disp2DGroup && !strcmp(name, "offset")) m_dOffset = fnStringToDouble(value);
-		else throw CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE);
+		// Unknown attributes give a warning, as in the rest of lib3mf
+		else m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_Displacement2310_Resource::OnNSChildElement(const nfChar * name, const nfChar * ns, CXmlReader * reader) {

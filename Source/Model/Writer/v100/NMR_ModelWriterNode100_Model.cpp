@@ -751,6 +751,15 @@ namespace NMR {
 	void CModelWriterNode100_Model::writeDisplacementMeshObject(CModelDisplacementMeshObject * object)
 	{
 		auto mesh = object->getMesh();
+		// Beam lattice and volume data have no defined meaning on a displaced mesh, so refuse instead of dropping them
+		if (mesh->getBeamCount() > 0 || mesh->getBallCount() > 0 || object->getVolumeData())
+			throw CNMRException(NMR_ERROR_DISPLACEMENTMESH_UNSUPPORTEDDATA);
+		// The reader looks up displacement groups in the part of the mesh only
+		for (nfUint32 i = 0; i < mesh->getFaceCount(); ++i) {
+			if (object->hasTriangleDisplacement(i) &&
+				object->getTriangleDisplacement(i).m_pGroup->getPackageResourceID()->getPath() != object->getPackageResourceID()->getPath())
+				throw CNMRException(NMR_ERROR_DISPLACEMENTGROUP_IN_OTHER_PART);
+		}
 		writeStartElementWithPrefix(XML_3MF_ELEMENT_DISPLACEMENTMESH, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
 		writeStartElementWithPrefix(XML_3MF_ELEMENT_VERTICES, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
 		for (nfUint32 i = 0; i < mesh->getNodeCount(); ++i) {
@@ -801,6 +810,22 @@ namespace NMR {
 			writeEndElement();
 		}
 		writeFullEndElement();
+		if (m_bWriteTriangleSetExtension && object->getTriangleSetCount() > 0) {
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_TRIANGLESETS, XML_3MF_NAMESPACEPREFIX_TRIANGLESETS);
+			for (nfUint32 nSet = 0; nSet < object->getTriangleSetCount(); ++nSet) {
+				auto pTriangleSet = object->getTriangleSet(nSet);
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_TRIANGLESET, XML_3MF_NAMESPACEPREFIX_TRIANGLESETS);
+				writeStringAttribute(XML_3MF_ATTRIBUTE_TRIANGLESET_IDENTIFIER, pTriangleSet->getIdentifier());
+				writeStringAttribute(XML_3MF_ATTRIBUTE_TRIANGLESET_NAME, pTriangleSet->getName());
+				for (auto nTriangle : pTriangleSet->getTriangles()) {
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_REF, XML_3MF_NAMESPACEPREFIX_TRIANGLESETS);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLESETREF_INDEX, nTriangle);
+					writeEndElement();
+				}
+				writeFullEndElement();
+			}
+			writeFullEndElement();
+		}
 		writeFullEndElement();
 	}
 

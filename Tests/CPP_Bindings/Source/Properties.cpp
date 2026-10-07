@@ -71,9 +71,10 @@ namespace Lib3MF
 		ASSERT_EQ(properties[0].m_ResourceID, properties[2].m_ResourceID);
 		for (size_t i = 0; i < 3; ++i) {
 			ASSERT_EQ(properties[0].m_PropertyIDs[i], properties[2].m_PropertyIDs[i]);
-			// A triangle p1 inherits the object's pid when no triangle pid is given.
+			// For normal meshes, a triangle p1 without a triangle pid is ignored (behaviour from before the
+			// displacement extension), so the object-level property applies.
 			ASSERT_EQ(properties[1].m_ResourceID, properties[0].m_ResourceID);
-			ASSERT_NE(properties[1].m_PropertyIDs[i], properties[0].m_PropertyIDs[i]);
+			ASSERT_EQ(properties[1].m_PropertyIDs[i], properties[0].m_PropertyIDs[i]);
 		}
 		// With neither an object nor triangle pid, a stray p1 is ignored.
 		readModel->GetMeshObjectByID(3)->GetAllTriangleProperties(properties);

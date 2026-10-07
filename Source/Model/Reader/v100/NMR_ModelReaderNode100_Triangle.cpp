@@ -91,11 +91,13 @@ namespace NMR {
 		// Without p1, the object-level property applies and p2/p3 are ignored (Core Spec 4.1.4.1)
 		if (m_nPropertyIndex1 < 0)
 			return false;
-		if (m_nPropertyID == 0 && nPropertyID == 0) {
-			if (m_bDisplacement)
-				throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+		// Normal meshes keep the behaviour from before the displacement extension: p1 without a triangle pid is ignored.
+		// Only displacement meshes use the object pid in this case.
+		if (!m_bDisplacement && m_nPropertyID == 0)
 			return false;
-		}
+		// A displacement mesh triangle with p1 needs a pid on the triangle or on the object
+		if (m_nPropertyID == 0 && nPropertyID == 0)
+			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 
 		// See Core Spec 4.1.3.1 (Triangle)
 		if (m_nPropertyID != 0)
