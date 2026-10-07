@@ -42,8 +42,8 @@ XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Vertices::CModelReaderNode100_Vertices(_In_ CMesh * pMesh, _In_ PModelWarnings pWarnings)
-		: CModelReaderNode(pWarnings)
+	CModelReaderNode100_Vertices::CModelReaderNode100_Vertices(_In_ CMesh * pMesh, _In_ PModelWarnings pWarnings, _In_ nfBool bDisplacement)
+		: CModelReaderNode(pWarnings), m_bDisplacement(bDisplacement)
 	{
 		__NMRASSERT(pMesh);
 		m_pMesh = pMesh;
@@ -73,7 +73,8 @@ namespace NMR {
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
-		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
+		const nfChar * pExpectedNamespace = m_bDisplacement ? XML_3MF_NAMESPACE_DISPLACEMENTSPEC : XML_3MF_NAMESPACE_CORESPEC100;
+		if (strcmp(pNameSpace, pExpectedNamespace) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_VERTEX) == 0)
 			{
 				PModelReaderNode100_Vertex pXMLNode = std::make_shared<CModelReaderNode100_Vertex>(m_pWarnings);
@@ -86,6 +87,8 @@ namespace NMR {
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		} else if (m_bDisplacement) {
+			throw CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT);
 		}
 	}
 

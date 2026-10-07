@@ -1141,6 +1141,10 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_meshobjectiterator_getcurrentmeshobject;
 	protected com.sun.jna.Function lib3mf_componentsobjectiterator_getcurrentcomponentsobject;
 	protected com.sun.jna.Function lib3mf_booleanobjectiterator_getcurrentbooleanobject;
+	protected com.sun.jna.Function lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject;
+	protected com.sun.jna.Function lib3mf_displacement2diterator_getcurrentdisplacement2d;
+	protected com.sun.jna.Function lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup;
+	protected com.sun.jna.Function lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup;
 	protected com.sun.jna.Function lib3mf_texture2diterator_getcurrenttexture2d;
 	protected com.sun.jna.Function lib3mf_basematerialgroupiterator_getcurrentbasematerialgroup;
 	protected com.sun.jna.Function lib3mf_colorgroupiterator_getcurrentcolorgroup;
@@ -1190,6 +1194,7 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_object_iscomponentsobject;
 	protected com.sun.jna.Function lib3mf_object_islevelsetobject;
 	protected com.sun.jna.Function lib3mf_object_isbooleanobject;
+	protected com.sun.jna.Function lib3mf_object_isdisplacementmeshobject;
 	protected com.sun.jna.Function lib3mf_object_isvalid;
 	protected com.sun.jna.Function lib3mf_object_setattachmentasthumbnail;
 	protected com.sun.jna.Function lib3mf_object_getthumbnailattachment;
@@ -1231,6 +1236,10 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_meshobject_findtriangleset;
 	protected com.sun.jna.Function lib3mf_meshobject_gettrianglesetcount;
 	protected com.sun.jna.Function lib3mf_meshobject_gettriangleset;
+	protected com.sun.jna.Function lib3mf_displacementmeshobject_hastriangledisplacement;
+	protected com.sun.jna.Function lib3mf_displacementmeshobject_settriangledisplacement;
+	protected com.sun.jna.Function lib3mf_displacementmeshobject_gettriangledisplacement;
+	protected com.sun.jna.Function lib3mf_displacementmeshobject_cleartriangledisplacement;
 	protected com.sun.jna.Function lib3mf_levelset_getfunction;
 	protected com.sun.jna.Function lib3mf_levelset_setfunction;
 	protected com.sun.jna.Function lib3mf_levelset_gettransform;
@@ -1393,6 +1402,28 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_attachment_getstreamsize;
 	protected com.sun.jna.Function lib3mf_attachment_writetobuffer;
 	protected com.sun.jna.Function lib3mf_attachment_readfrombuffer;
+	protected com.sun.jna.Function lib3mf_displacement2d_getattachment;
+	protected com.sun.jna.Function lib3mf_displacement2d_setattachment;
+	protected com.sun.jna.Function lib3mf_displacement2d_getchannel;
+	protected com.sun.jna.Function lib3mf_displacement2d_setchannel;
+	protected com.sun.jna.Function lib3mf_displacement2d_gettilestyleuv;
+	protected com.sun.jna.Function lib3mf_displacement2d_settilestyleuv;
+	protected com.sun.jna.Function lib3mf_displacement2d_getfilter;
+	protected com.sun.jna.Function lib3mf_displacement2d_setfilter;
+	protected com.sun.jna.Function lib3mf_normvectorgroup_getcount;
+	protected com.sun.jna.Function lib3mf_normvectorgroup_addvector;
+	protected com.sun.jna.Function lib3mf_normvectorgroup_getvector;
+	protected com.sun.jna.Function lib3mf_normvectorgroup_setvector;
+	protected com.sun.jna.Function lib3mf_disp2dgroup_getdisplacement2d;
+	protected com.sun.jna.Function lib3mf_disp2dgroup_getnormalvectorgroup;
+	protected com.sun.jna.Function lib3mf_disp2dgroup_getheight;
+	protected com.sun.jna.Function lib3mf_disp2dgroup_setheight;
+	protected com.sun.jna.Function lib3mf_disp2dgroup_getoffset;
+	protected com.sun.jna.Function lib3mf_disp2dgroup_setoffset;
+	protected com.sun.jna.Function lib3mf_disp2dgroup_getcount;
+	protected com.sun.jna.Function lib3mf_disp2dgroup_addcoordinate;
+	protected com.sun.jna.Function lib3mf_disp2dgroup_getcoordinate;
+	protected com.sun.jna.Function lib3mf_disp2dgroup_setcoordinate;
 	protected com.sun.jna.Function lib3mf_texture2d_getattachment;
 	protected com.sun.jna.Function lib3mf_texture2d_setattachment;
 	protected com.sun.jna.Function lib3mf_texture2d_getcontenttype;
@@ -1687,6 +1718,10 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_model_getmeshobjectbyid;
 	protected com.sun.jna.Function lib3mf_model_getcomponentsobjectbyid;
 	protected com.sun.jna.Function lib3mf_model_getbooleanobjectbyid;
+	protected com.sun.jna.Function lib3mf_model_getdisplacementmeshobjectbyid;
+	protected com.sun.jna.Function lib3mf_model_getdisplacement2dbyid;
+	protected com.sun.jna.Function lib3mf_model_getnormvectorgroupbyid;
+	protected com.sun.jna.Function lib3mf_model_getdisp2dgroupbyid;
 	protected com.sun.jna.Function lib3mf_model_getcolorgroupbyid;
 	protected com.sun.jna.Function lib3mf_model_getslicestackbyid;
 	protected com.sun.jna.Function lib3mf_model_getlevelsetbyid;
@@ -1699,6 +1734,10 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_model_getmeshobjects;
 	protected com.sun.jna.Function lib3mf_model_getcomponentsobjects;
 	protected com.sun.jna.Function lib3mf_model_getbooleanobjects;
+	protected com.sun.jna.Function lib3mf_model_getdisplacementmeshobjects;
+	protected com.sun.jna.Function lib3mf_model_getdisplacement2ds;
+	protected com.sun.jna.Function lib3mf_model_getnormvectorgroups;
+	protected com.sun.jna.Function lib3mf_model_getdisp2dgroups;
 	protected com.sun.jna.Function lib3mf_model_gettexture2ds;
 	protected com.sun.jna.Function lib3mf_model_getbasematerialgroups;
 	protected com.sun.jna.Function lib3mf_model_getcolorgroups;
@@ -1712,6 +1751,10 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_model_addmeshobject;
 	protected com.sun.jna.Function lib3mf_model_addcomponentsobject;
 	protected com.sun.jna.Function lib3mf_model_addbooleanobject;
+	protected com.sun.jna.Function lib3mf_model_adddisplacementmeshobject;
+	protected com.sun.jna.Function lib3mf_model_adddisplacement2d;
+	protected com.sun.jna.Function lib3mf_model_addnormvectorgroup;
+	protected com.sun.jna.Function lib3mf_model_adddisp2dgroup;
 	protected com.sun.jna.Function lib3mf_model_addslicestack;
 	protected com.sun.jna.Function lib3mf_model_addtexture2dfromattachment;
 	protected com.sun.jna.Function lib3mf_model_addbasematerialgroup;
@@ -1811,6 +1854,10 @@ public class Lib3MFWrapper {
 		lib3mf_meshobjectiterator_getcurrentmeshobject = mLibrary.getFunction("lib3mf_meshobjectiterator_getcurrentmeshobject");
 		lib3mf_componentsobjectiterator_getcurrentcomponentsobject = mLibrary.getFunction("lib3mf_componentsobjectiterator_getcurrentcomponentsobject");
 		lib3mf_booleanobjectiterator_getcurrentbooleanobject = mLibrary.getFunction("lib3mf_booleanobjectiterator_getcurrentbooleanobject");
+		lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject = mLibrary.getFunction("lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject");
+		lib3mf_displacement2diterator_getcurrentdisplacement2d = mLibrary.getFunction("lib3mf_displacement2diterator_getcurrentdisplacement2d");
+		lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup = mLibrary.getFunction("lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup");
+		lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup = mLibrary.getFunction("lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup");
 		lib3mf_texture2diterator_getcurrenttexture2d = mLibrary.getFunction("lib3mf_texture2diterator_getcurrenttexture2d");
 		lib3mf_basematerialgroupiterator_getcurrentbasematerialgroup = mLibrary.getFunction("lib3mf_basematerialgroupiterator_getcurrentbasematerialgroup");
 		lib3mf_colorgroupiterator_getcurrentcolorgroup = mLibrary.getFunction("lib3mf_colorgroupiterator_getcurrentcolorgroup");
@@ -1860,6 +1907,7 @@ public class Lib3MFWrapper {
 		lib3mf_object_iscomponentsobject = mLibrary.getFunction("lib3mf_object_iscomponentsobject");
 		lib3mf_object_islevelsetobject = mLibrary.getFunction("lib3mf_object_islevelsetobject");
 		lib3mf_object_isbooleanobject = mLibrary.getFunction("lib3mf_object_isbooleanobject");
+		lib3mf_object_isdisplacementmeshobject = mLibrary.getFunction("lib3mf_object_isdisplacementmeshobject");
 		lib3mf_object_isvalid = mLibrary.getFunction("lib3mf_object_isvalid");
 		lib3mf_object_setattachmentasthumbnail = mLibrary.getFunction("lib3mf_object_setattachmentasthumbnail");
 		lib3mf_object_getthumbnailattachment = mLibrary.getFunction("lib3mf_object_getthumbnailattachment");
@@ -1901,6 +1949,10 @@ public class Lib3MFWrapper {
 		lib3mf_meshobject_findtriangleset = mLibrary.getFunction("lib3mf_meshobject_findtriangleset");
 		lib3mf_meshobject_gettrianglesetcount = mLibrary.getFunction("lib3mf_meshobject_gettrianglesetcount");
 		lib3mf_meshobject_gettriangleset = mLibrary.getFunction("lib3mf_meshobject_gettriangleset");
+		lib3mf_displacementmeshobject_hastriangledisplacement = mLibrary.getFunction("lib3mf_displacementmeshobject_hastriangledisplacement");
+		lib3mf_displacementmeshobject_settriangledisplacement = mLibrary.getFunction("lib3mf_displacementmeshobject_settriangledisplacement");
+		lib3mf_displacementmeshobject_gettriangledisplacement = mLibrary.getFunction("lib3mf_displacementmeshobject_gettriangledisplacement");
+		lib3mf_displacementmeshobject_cleartriangledisplacement = mLibrary.getFunction("lib3mf_displacementmeshobject_cleartriangledisplacement");
 		lib3mf_levelset_getfunction = mLibrary.getFunction("lib3mf_levelset_getfunction");
 		lib3mf_levelset_setfunction = mLibrary.getFunction("lib3mf_levelset_setfunction");
 		lib3mf_levelset_gettransform = mLibrary.getFunction("lib3mf_levelset_gettransform");
@@ -2063,6 +2115,28 @@ public class Lib3MFWrapper {
 		lib3mf_attachment_getstreamsize = mLibrary.getFunction("lib3mf_attachment_getstreamsize");
 		lib3mf_attachment_writetobuffer = mLibrary.getFunction("lib3mf_attachment_writetobuffer");
 		lib3mf_attachment_readfrombuffer = mLibrary.getFunction("lib3mf_attachment_readfrombuffer");
+		lib3mf_displacement2d_getattachment = mLibrary.getFunction("lib3mf_displacement2d_getattachment");
+		lib3mf_displacement2d_setattachment = mLibrary.getFunction("lib3mf_displacement2d_setattachment");
+		lib3mf_displacement2d_getchannel = mLibrary.getFunction("lib3mf_displacement2d_getchannel");
+		lib3mf_displacement2d_setchannel = mLibrary.getFunction("lib3mf_displacement2d_setchannel");
+		lib3mf_displacement2d_gettilestyleuv = mLibrary.getFunction("lib3mf_displacement2d_gettilestyleuv");
+		lib3mf_displacement2d_settilestyleuv = mLibrary.getFunction("lib3mf_displacement2d_settilestyleuv");
+		lib3mf_displacement2d_getfilter = mLibrary.getFunction("lib3mf_displacement2d_getfilter");
+		lib3mf_displacement2d_setfilter = mLibrary.getFunction("lib3mf_displacement2d_setfilter");
+		lib3mf_normvectorgroup_getcount = mLibrary.getFunction("lib3mf_normvectorgroup_getcount");
+		lib3mf_normvectorgroup_addvector = mLibrary.getFunction("lib3mf_normvectorgroup_addvector");
+		lib3mf_normvectorgroup_getvector = mLibrary.getFunction("lib3mf_normvectorgroup_getvector");
+		lib3mf_normvectorgroup_setvector = mLibrary.getFunction("lib3mf_normvectorgroup_setvector");
+		lib3mf_disp2dgroup_getdisplacement2d = mLibrary.getFunction("lib3mf_disp2dgroup_getdisplacement2d");
+		lib3mf_disp2dgroup_getnormalvectorgroup = mLibrary.getFunction("lib3mf_disp2dgroup_getnormalvectorgroup");
+		lib3mf_disp2dgroup_getheight = mLibrary.getFunction("lib3mf_disp2dgroup_getheight");
+		lib3mf_disp2dgroup_setheight = mLibrary.getFunction("lib3mf_disp2dgroup_setheight");
+		lib3mf_disp2dgroup_getoffset = mLibrary.getFunction("lib3mf_disp2dgroup_getoffset");
+		lib3mf_disp2dgroup_setoffset = mLibrary.getFunction("lib3mf_disp2dgroup_setoffset");
+		lib3mf_disp2dgroup_getcount = mLibrary.getFunction("lib3mf_disp2dgroup_getcount");
+		lib3mf_disp2dgroup_addcoordinate = mLibrary.getFunction("lib3mf_disp2dgroup_addcoordinate");
+		lib3mf_disp2dgroup_getcoordinate = mLibrary.getFunction("lib3mf_disp2dgroup_getcoordinate");
+		lib3mf_disp2dgroup_setcoordinate = mLibrary.getFunction("lib3mf_disp2dgroup_setcoordinate");
 		lib3mf_texture2d_getattachment = mLibrary.getFunction("lib3mf_texture2d_getattachment");
 		lib3mf_texture2d_setattachment = mLibrary.getFunction("lib3mf_texture2d_setattachment");
 		lib3mf_texture2d_getcontenttype = mLibrary.getFunction("lib3mf_texture2d_getcontenttype");
@@ -2357,6 +2431,10 @@ public class Lib3MFWrapper {
 		lib3mf_model_getmeshobjectbyid = mLibrary.getFunction("lib3mf_model_getmeshobjectbyid");
 		lib3mf_model_getcomponentsobjectbyid = mLibrary.getFunction("lib3mf_model_getcomponentsobjectbyid");
 		lib3mf_model_getbooleanobjectbyid = mLibrary.getFunction("lib3mf_model_getbooleanobjectbyid");
+		lib3mf_model_getdisplacementmeshobjectbyid = mLibrary.getFunction("lib3mf_model_getdisplacementmeshobjectbyid");
+		lib3mf_model_getdisplacement2dbyid = mLibrary.getFunction("lib3mf_model_getdisplacement2dbyid");
+		lib3mf_model_getnormvectorgroupbyid = mLibrary.getFunction("lib3mf_model_getnormvectorgroupbyid");
+		lib3mf_model_getdisp2dgroupbyid = mLibrary.getFunction("lib3mf_model_getdisp2dgroupbyid");
 		lib3mf_model_getcolorgroupbyid = mLibrary.getFunction("lib3mf_model_getcolorgroupbyid");
 		lib3mf_model_getslicestackbyid = mLibrary.getFunction("lib3mf_model_getslicestackbyid");
 		lib3mf_model_getlevelsetbyid = mLibrary.getFunction("lib3mf_model_getlevelsetbyid");
@@ -2369,6 +2447,10 @@ public class Lib3MFWrapper {
 		lib3mf_model_getmeshobjects = mLibrary.getFunction("lib3mf_model_getmeshobjects");
 		lib3mf_model_getcomponentsobjects = mLibrary.getFunction("lib3mf_model_getcomponentsobjects");
 		lib3mf_model_getbooleanobjects = mLibrary.getFunction("lib3mf_model_getbooleanobjects");
+		lib3mf_model_getdisplacementmeshobjects = mLibrary.getFunction("lib3mf_model_getdisplacementmeshobjects");
+		lib3mf_model_getdisplacement2ds = mLibrary.getFunction("lib3mf_model_getdisplacement2ds");
+		lib3mf_model_getnormvectorgroups = mLibrary.getFunction("lib3mf_model_getnormvectorgroups");
+		lib3mf_model_getdisp2dgroups = mLibrary.getFunction("lib3mf_model_getdisp2dgroups");
 		lib3mf_model_gettexture2ds = mLibrary.getFunction("lib3mf_model_gettexture2ds");
 		lib3mf_model_getbasematerialgroups = mLibrary.getFunction("lib3mf_model_getbasematerialgroups");
 		lib3mf_model_getcolorgroups = mLibrary.getFunction("lib3mf_model_getcolorgroups");
@@ -2382,6 +2464,10 @@ public class Lib3MFWrapper {
 		lib3mf_model_addmeshobject = mLibrary.getFunction("lib3mf_model_addmeshobject");
 		lib3mf_model_addcomponentsobject = mLibrary.getFunction("lib3mf_model_addcomponentsobject");
 		lib3mf_model_addbooleanobject = mLibrary.getFunction("lib3mf_model_addbooleanobject");
+		lib3mf_model_adddisplacementmeshobject = mLibrary.getFunction("lib3mf_model_adddisplacementmeshobject");
+		lib3mf_model_adddisplacement2d = mLibrary.getFunction("lib3mf_model_adddisplacement2d");
+		lib3mf_model_addnormvectorgroup = mLibrary.getFunction("lib3mf_model_addnormvectorgroup");
+		lib3mf_model_adddisp2dgroup = mLibrary.getFunction("lib3mf_model_adddisp2dgroup");
 		lib3mf_model_addslicestack = mLibrary.getFunction("lib3mf_model_addslicestack");
 		lib3mf_model_addtexture2dfromattachment = mLibrary.getFunction("lib3mf_model_addtexture2dfromattachment");
 		lib3mf_model_addbasematerialgroup = mLibrary.getFunction("lib3mf_model_addbasematerialgroup");
@@ -2480,6 +2566,10 @@ public class Lib3MFWrapper {
 		lib3mf_meshobjectiterator_getcurrentmeshobject = loadFunctionByLookup(lookupMethod, "lib3mf_meshobjectiterator_getcurrentmeshobject");
 		lib3mf_componentsobjectiterator_getcurrentcomponentsobject = loadFunctionByLookup(lookupMethod, "lib3mf_componentsobjectiterator_getcurrentcomponentsobject");
 		lib3mf_booleanobjectiterator_getcurrentbooleanobject = loadFunctionByLookup(lookupMethod, "lib3mf_booleanobjectiterator_getcurrentbooleanobject");
+		lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject = loadFunctionByLookup(lookupMethod, "lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject");
+		lib3mf_displacement2diterator_getcurrentdisplacement2d = loadFunctionByLookup(lookupMethod, "lib3mf_displacement2diterator_getcurrentdisplacement2d");
+		lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup = loadFunctionByLookup(lookupMethod, "lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup");
+		lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup = loadFunctionByLookup(lookupMethod, "lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup");
 		lib3mf_texture2diterator_getcurrenttexture2d = loadFunctionByLookup(lookupMethod, "lib3mf_texture2diterator_getcurrenttexture2d");
 		lib3mf_basematerialgroupiterator_getcurrentbasematerialgroup = loadFunctionByLookup(lookupMethod, "lib3mf_basematerialgroupiterator_getcurrentbasematerialgroup");
 		lib3mf_colorgroupiterator_getcurrentcolorgroup = loadFunctionByLookup(lookupMethod, "lib3mf_colorgroupiterator_getcurrentcolorgroup");
@@ -2529,6 +2619,7 @@ public class Lib3MFWrapper {
 		lib3mf_object_iscomponentsobject = loadFunctionByLookup(lookupMethod, "lib3mf_object_iscomponentsobject");
 		lib3mf_object_islevelsetobject = loadFunctionByLookup(lookupMethod, "lib3mf_object_islevelsetobject");
 		lib3mf_object_isbooleanobject = loadFunctionByLookup(lookupMethod, "lib3mf_object_isbooleanobject");
+		lib3mf_object_isdisplacementmeshobject = loadFunctionByLookup(lookupMethod, "lib3mf_object_isdisplacementmeshobject");
 		lib3mf_object_isvalid = loadFunctionByLookup(lookupMethod, "lib3mf_object_isvalid");
 		lib3mf_object_setattachmentasthumbnail = loadFunctionByLookup(lookupMethod, "lib3mf_object_setattachmentasthumbnail");
 		lib3mf_object_getthumbnailattachment = loadFunctionByLookup(lookupMethod, "lib3mf_object_getthumbnailattachment");
@@ -2570,6 +2661,10 @@ public class Lib3MFWrapper {
 		lib3mf_meshobject_findtriangleset = loadFunctionByLookup(lookupMethod, "lib3mf_meshobject_findtriangleset");
 		lib3mf_meshobject_gettrianglesetcount = loadFunctionByLookup(lookupMethod, "lib3mf_meshobject_gettrianglesetcount");
 		lib3mf_meshobject_gettriangleset = loadFunctionByLookup(lookupMethod, "lib3mf_meshobject_gettriangleset");
+		lib3mf_displacementmeshobject_hastriangledisplacement = loadFunctionByLookup(lookupMethod, "lib3mf_displacementmeshobject_hastriangledisplacement");
+		lib3mf_displacementmeshobject_settriangledisplacement = loadFunctionByLookup(lookupMethod, "lib3mf_displacementmeshobject_settriangledisplacement");
+		lib3mf_displacementmeshobject_gettriangledisplacement = loadFunctionByLookup(lookupMethod, "lib3mf_displacementmeshobject_gettriangledisplacement");
+		lib3mf_displacementmeshobject_cleartriangledisplacement = loadFunctionByLookup(lookupMethod, "lib3mf_displacementmeshobject_cleartriangledisplacement");
 		lib3mf_levelset_getfunction = loadFunctionByLookup(lookupMethod, "lib3mf_levelset_getfunction");
 		lib3mf_levelset_setfunction = loadFunctionByLookup(lookupMethod, "lib3mf_levelset_setfunction");
 		lib3mf_levelset_gettransform = loadFunctionByLookup(lookupMethod, "lib3mf_levelset_gettransform");
@@ -2732,6 +2827,28 @@ public class Lib3MFWrapper {
 		lib3mf_attachment_getstreamsize = loadFunctionByLookup(lookupMethod, "lib3mf_attachment_getstreamsize");
 		lib3mf_attachment_writetobuffer = loadFunctionByLookup(lookupMethod, "lib3mf_attachment_writetobuffer");
 		lib3mf_attachment_readfrombuffer = loadFunctionByLookup(lookupMethod, "lib3mf_attachment_readfrombuffer");
+		lib3mf_displacement2d_getattachment = loadFunctionByLookup(lookupMethod, "lib3mf_displacement2d_getattachment");
+		lib3mf_displacement2d_setattachment = loadFunctionByLookup(lookupMethod, "lib3mf_displacement2d_setattachment");
+		lib3mf_displacement2d_getchannel = loadFunctionByLookup(lookupMethod, "lib3mf_displacement2d_getchannel");
+		lib3mf_displacement2d_setchannel = loadFunctionByLookup(lookupMethod, "lib3mf_displacement2d_setchannel");
+		lib3mf_displacement2d_gettilestyleuv = loadFunctionByLookup(lookupMethod, "lib3mf_displacement2d_gettilestyleuv");
+		lib3mf_displacement2d_settilestyleuv = loadFunctionByLookup(lookupMethod, "lib3mf_displacement2d_settilestyleuv");
+		lib3mf_displacement2d_getfilter = loadFunctionByLookup(lookupMethod, "lib3mf_displacement2d_getfilter");
+		lib3mf_displacement2d_setfilter = loadFunctionByLookup(lookupMethod, "lib3mf_displacement2d_setfilter");
+		lib3mf_normvectorgroup_getcount = loadFunctionByLookup(lookupMethod, "lib3mf_normvectorgroup_getcount");
+		lib3mf_normvectorgroup_addvector = loadFunctionByLookup(lookupMethod, "lib3mf_normvectorgroup_addvector");
+		lib3mf_normvectorgroup_getvector = loadFunctionByLookup(lookupMethod, "lib3mf_normvectorgroup_getvector");
+		lib3mf_normvectorgroup_setvector = loadFunctionByLookup(lookupMethod, "lib3mf_normvectorgroup_setvector");
+		lib3mf_disp2dgroup_getdisplacement2d = loadFunctionByLookup(lookupMethod, "lib3mf_disp2dgroup_getdisplacement2d");
+		lib3mf_disp2dgroup_getnormalvectorgroup = loadFunctionByLookup(lookupMethod, "lib3mf_disp2dgroup_getnormalvectorgroup");
+		lib3mf_disp2dgroup_getheight = loadFunctionByLookup(lookupMethod, "lib3mf_disp2dgroup_getheight");
+		lib3mf_disp2dgroup_setheight = loadFunctionByLookup(lookupMethod, "lib3mf_disp2dgroup_setheight");
+		lib3mf_disp2dgroup_getoffset = loadFunctionByLookup(lookupMethod, "lib3mf_disp2dgroup_getoffset");
+		lib3mf_disp2dgroup_setoffset = loadFunctionByLookup(lookupMethod, "lib3mf_disp2dgroup_setoffset");
+		lib3mf_disp2dgroup_getcount = loadFunctionByLookup(lookupMethod, "lib3mf_disp2dgroup_getcount");
+		lib3mf_disp2dgroup_addcoordinate = loadFunctionByLookup(lookupMethod, "lib3mf_disp2dgroup_addcoordinate");
+		lib3mf_disp2dgroup_getcoordinate = loadFunctionByLookup(lookupMethod, "lib3mf_disp2dgroup_getcoordinate");
+		lib3mf_disp2dgroup_setcoordinate = loadFunctionByLookup(lookupMethod, "lib3mf_disp2dgroup_setcoordinate");
 		lib3mf_texture2d_getattachment = loadFunctionByLookup(lookupMethod, "lib3mf_texture2d_getattachment");
 		lib3mf_texture2d_setattachment = loadFunctionByLookup(lookupMethod, "lib3mf_texture2d_setattachment");
 		lib3mf_texture2d_getcontenttype = loadFunctionByLookup(lookupMethod, "lib3mf_texture2d_getcontenttype");
@@ -3026,6 +3143,10 @@ public class Lib3MFWrapper {
 		lib3mf_model_getmeshobjectbyid = loadFunctionByLookup(lookupMethod, "lib3mf_model_getmeshobjectbyid");
 		lib3mf_model_getcomponentsobjectbyid = loadFunctionByLookup(lookupMethod, "lib3mf_model_getcomponentsobjectbyid");
 		lib3mf_model_getbooleanobjectbyid = loadFunctionByLookup(lookupMethod, "lib3mf_model_getbooleanobjectbyid");
+		lib3mf_model_getdisplacementmeshobjectbyid = loadFunctionByLookup(lookupMethod, "lib3mf_model_getdisplacementmeshobjectbyid");
+		lib3mf_model_getdisplacement2dbyid = loadFunctionByLookup(lookupMethod, "lib3mf_model_getdisplacement2dbyid");
+		lib3mf_model_getnormvectorgroupbyid = loadFunctionByLookup(lookupMethod, "lib3mf_model_getnormvectorgroupbyid");
+		lib3mf_model_getdisp2dgroupbyid = loadFunctionByLookup(lookupMethod, "lib3mf_model_getdisp2dgroupbyid");
 		lib3mf_model_getcolorgroupbyid = loadFunctionByLookup(lookupMethod, "lib3mf_model_getcolorgroupbyid");
 		lib3mf_model_getslicestackbyid = loadFunctionByLookup(lookupMethod, "lib3mf_model_getslicestackbyid");
 		lib3mf_model_getlevelsetbyid = loadFunctionByLookup(lookupMethod, "lib3mf_model_getlevelsetbyid");
@@ -3038,6 +3159,10 @@ public class Lib3MFWrapper {
 		lib3mf_model_getmeshobjects = loadFunctionByLookup(lookupMethod, "lib3mf_model_getmeshobjects");
 		lib3mf_model_getcomponentsobjects = loadFunctionByLookup(lookupMethod, "lib3mf_model_getcomponentsobjects");
 		lib3mf_model_getbooleanobjects = loadFunctionByLookup(lookupMethod, "lib3mf_model_getbooleanobjects");
+		lib3mf_model_getdisplacementmeshobjects = loadFunctionByLookup(lookupMethod, "lib3mf_model_getdisplacementmeshobjects");
+		lib3mf_model_getdisplacement2ds = loadFunctionByLookup(lookupMethod, "lib3mf_model_getdisplacement2ds");
+		lib3mf_model_getnormvectorgroups = loadFunctionByLookup(lookupMethod, "lib3mf_model_getnormvectorgroups");
+		lib3mf_model_getdisp2dgroups = loadFunctionByLookup(lookupMethod, "lib3mf_model_getdisp2dgroups");
 		lib3mf_model_gettexture2ds = loadFunctionByLookup(lookupMethod, "lib3mf_model_gettexture2ds");
 		lib3mf_model_getbasematerialgroups = loadFunctionByLookup(lookupMethod, "lib3mf_model_getbasematerialgroups");
 		lib3mf_model_getcolorgroups = loadFunctionByLookup(lookupMethod, "lib3mf_model_getcolorgroups");
@@ -3051,6 +3176,10 @@ public class Lib3MFWrapper {
 		lib3mf_model_addmeshobject = loadFunctionByLookup(lookupMethod, "lib3mf_model_addmeshobject");
 		lib3mf_model_addcomponentsobject = loadFunctionByLookup(lookupMethod, "lib3mf_model_addcomponentsobject");
 		lib3mf_model_addbooleanobject = loadFunctionByLookup(lookupMethod, "lib3mf_model_addbooleanobject");
+		lib3mf_model_adddisplacementmeshobject = loadFunctionByLookup(lookupMethod, "lib3mf_model_adddisplacementmeshobject");
+		lib3mf_model_adddisplacement2d = loadFunctionByLookup(lookupMethod, "lib3mf_model_adddisplacement2d");
+		lib3mf_model_addnormvectorgroup = loadFunctionByLookup(lookupMethod, "lib3mf_model_addnormvectorgroup");
+		lib3mf_model_adddisp2dgroup = loadFunctionByLookup(lookupMethod, "lib3mf_model_adddisp2dgroup");
 		lib3mf_model_addslicestack = loadFunctionByLookup(lookupMethod, "lib3mf_model_addslicestack");
 		lib3mf_model_addtexture2dfromattachment = loadFunctionByLookup(lookupMethod, "lib3mf_model_addtexture2dfromattachment");
 		lib3mf_model_addbasematerialgroup = loadFunctionByLookup(lookupMethod, "lib3mf_model_addbasematerialgroup");
@@ -3606,6 +3735,11 @@ public class Lib3MFWrapper {
 						case 0xEF740121: obj = (T)(new FunctionGradientNode(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionGradientNode"
 					}
 				break;
+				case 0x062EC1EF: 
+					switch(lsbId) {
+						case 0xBBB2C007: obj = (T)(new DisplacementMeshObject(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::DisplacementMeshObject"
+					}
+				break;
 				case 0x073F9103: 
 					switch(lsbId) {
 						case 0x81BF250D: obj = (T)(new MaxNode(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::MaxNode"
@@ -3786,6 +3920,11 @@ public class Lib3MFWrapper {
 						case 0xF69F2BEB: obj = (T)(new Component(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::Component"
 					}
 				break;
+				case 0x4F6F025B: 
+					switch(lsbId) {
+						case 0xFF1BC77D: obj = (T)(new Disp2DGroupIterator(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::Disp2DGroupIterator"
+					}
+				break;
 				case 0x52F06268: 
 					switch(lsbId) {
 						case 0xCD098EFE: obj = (T)(new Iterator(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::Iterator"
@@ -3866,6 +4005,11 @@ public class Lib3MFWrapper {
 						case 0x9FA813F6: obj = (T)(new SliceStackIterator(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::SliceStackIterator"
 					}
 				break;
+				case 0x6985D4BC: 
+					switch(lsbId) {
+						case 0xC417D63A: obj = (T)(new DisplacementMeshObjectIterator(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::DisplacementMeshObjectIterator"
+					}
+				break;
 				case 0x6B641C70: 
 					switch(lsbId) {
 						case 0x60040BE3: obj = (T)(new AbsNode(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::AbsNode"
@@ -3904,6 +4048,11 @@ public class Lib3MFWrapper {
 				case 0x817D2E56: 
 					switch(lsbId) {
 						case 0x6E73AA8F: obj = (T)(new NormalizeDistanceNode(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::NormalizeDistanceNode"
+					}
+				break;
+				case 0x823F487B: 
+					switch(lsbId) {
+						case 0x8BB83E5B: obj = (T)(new Disp2DGroup(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::Disp2DGroup"
 					}
 				break;
 				case 0x846AFDE9: 
@@ -3946,6 +4095,11 @@ public class Lib3MFWrapper {
 						case 0x0EFD2B8A: obj = (T)(new ArcCosNode(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::ArcCosNode"
 					}
 				break;
+				case 0x94F41D65: 
+					switch(lsbId) {
+						case 0x0A9D1201: obj = (T)(new NormVectorGroupIterator(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::NormVectorGroupIterator"
+					}
+				break;
 				case 0x9BD7D3C2: 
 					switch(lsbId) {
 						case 0x026B8CE8: obj = (T)(new FunctionFromImage3D(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::FunctionFromImage3D"
@@ -3969,6 +4123,11 @@ public class Lib3MFWrapper {
 				case 0x9F831944: 
 					switch(lsbId) {
 						case 0xA3DE31DA: obj = (T)(new SqrtNode(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::SqrtNode"
+					}
+				break;
+				case 0xA04BF4AC: 
+					switch(lsbId) {
+						case 0x86AB47C3: obj = (T)(new NormVectorGroup(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::NormVectorGroup"
 					}
 				break;
 				case 0xA0C005C0: 
@@ -4026,6 +4185,11 @@ public class Lib3MFWrapper {
 						case 0x43158FE6: obj = (T)(new MultiPropertyGroup(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::MultiPropertyGroup"
 					}
 				break;
+				case 0xBBE0E579: 
+					switch(lsbId) {
+						case 0x16ABA639: obj = (T)(new Displacement2DIterator(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::Displacement2DIterator"
+					}
+				break;
 				case 0xBC120839: 
 					switch(lsbId) {
 						case 0x7E37055D: obj = (T)(new Texture2DGroup(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2DGroup"
@@ -4079,6 +4243,11 @@ public class Lib3MFWrapper {
 				case 0xD17716D0: 
 					switch(lsbId) {
 						case 0x63DE2C22: obj = (T)(new MetaData(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::MetaData"
+					}
+				break;
+				case 0xD4FBF640: 
+					switch(lsbId) {
+						case 0x2F29131F: obj = (T)(new Displacement2D(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::Displacement2D"
 					}
 				break;
 				case 0xD5906722: 

@@ -422,6 +422,10 @@ class FunctionTable:
 	lib3mf_meshobjectiterator_getcurrentmeshobject = None
 	lib3mf_componentsobjectiterator_getcurrentcomponentsobject = None
 	lib3mf_booleanobjectiterator_getcurrentbooleanobject = None
+	lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject = None
+	lib3mf_displacement2diterator_getcurrentdisplacement2d = None
+	lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup = None
+	lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup = None
 	lib3mf_texture2diterator_getcurrenttexture2d = None
 	lib3mf_basematerialgroupiterator_getcurrentbasematerialgroup = None
 	lib3mf_colorgroupiterator_getcurrentcolorgroup = None
@@ -471,6 +475,7 @@ class FunctionTable:
 	lib3mf_object_iscomponentsobject = None
 	lib3mf_object_islevelsetobject = None
 	lib3mf_object_isbooleanobject = None
+	lib3mf_object_isdisplacementmeshobject = None
 	lib3mf_object_isvalid = None
 	lib3mf_object_setattachmentasthumbnail = None
 	lib3mf_object_getthumbnailattachment = None
@@ -512,6 +517,10 @@ class FunctionTable:
 	lib3mf_meshobject_findtriangleset = None
 	lib3mf_meshobject_gettrianglesetcount = None
 	lib3mf_meshobject_gettriangleset = None
+	lib3mf_displacementmeshobject_hastriangledisplacement = None
+	lib3mf_displacementmeshobject_settriangledisplacement = None
+	lib3mf_displacementmeshobject_gettriangledisplacement = None
+	lib3mf_displacementmeshobject_cleartriangledisplacement = None
 	lib3mf_levelset_getfunction = None
 	lib3mf_levelset_setfunction = None
 	lib3mf_levelset_gettransform = None
@@ -674,6 +683,28 @@ class FunctionTable:
 	lib3mf_attachment_getstreamsize = None
 	lib3mf_attachment_writetobuffer = None
 	lib3mf_attachment_readfrombuffer = None
+	lib3mf_displacement2d_getattachment = None
+	lib3mf_displacement2d_setattachment = None
+	lib3mf_displacement2d_getchannel = None
+	lib3mf_displacement2d_setchannel = None
+	lib3mf_displacement2d_gettilestyleuv = None
+	lib3mf_displacement2d_settilestyleuv = None
+	lib3mf_displacement2d_getfilter = None
+	lib3mf_displacement2d_setfilter = None
+	lib3mf_normvectorgroup_getcount = None
+	lib3mf_normvectorgroup_addvector = None
+	lib3mf_normvectorgroup_getvector = None
+	lib3mf_normvectorgroup_setvector = None
+	lib3mf_disp2dgroup_getdisplacement2d = None
+	lib3mf_disp2dgroup_getnormalvectorgroup = None
+	lib3mf_disp2dgroup_getheight = None
+	lib3mf_disp2dgroup_setheight = None
+	lib3mf_disp2dgroup_getoffset = None
+	lib3mf_disp2dgroup_setoffset = None
+	lib3mf_disp2dgroup_getcount = None
+	lib3mf_disp2dgroup_addcoordinate = None
+	lib3mf_disp2dgroup_getcoordinate = None
+	lib3mf_disp2dgroup_setcoordinate = None
 	lib3mf_texture2d_getattachment = None
 	lib3mf_texture2d_setattachment = None
 	lib3mf_texture2d_getcontenttype = None
@@ -968,6 +999,10 @@ class FunctionTable:
 	lib3mf_model_getmeshobjectbyid = None
 	lib3mf_model_getcomponentsobjectbyid = None
 	lib3mf_model_getbooleanobjectbyid = None
+	lib3mf_model_getdisplacementmeshobjectbyid = None
+	lib3mf_model_getdisplacement2dbyid = None
+	lib3mf_model_getnormvectorgroupbyid = None
+	lib3mf_model_getdisp2dgroupbyid = None
 	lib3mf_model_getcolorgroupbyid = None
 	lib3mf_model_getslicestackbyid = None
 	lib3mf_model_getlevelsetbyid = None
@@ -980,6 +1015,10 @@ class FunctionTable:
 	lib3mf_model_getmeshobjects = None
 	lib3mf_model_getcomponentsobjects = None
 	lib3mf_model_getbooleanobjects = None
+	lib3mf_model_getdisplacementmeshobjects = None
+	lib3mf_model_getdisplacement2ds = None
+	lib3mf_model_getnormvectorgroups = None
+	lib3mf_model_getdisp2dgroups = None
 	lib3mf_model_gettexture2ds = None
 	lib3mf_model_getbasematerialgroups = None
 	lib3mf_model_getcolorgroups = None
@@ -993,6 +1032,10 @@ class FunctionTable:
 	lib3mf_model_addmeshobject = None
 	lib3mf_model_addcomponentsobject = None
 	lib3mf_model_addbooleanobject = None
+	lib3mf_model_adddisplacementmeshobject = None
+	lib3mf_model_adddisplacement2d = None
+	lib3mf_model_addnormvectorgroup = None
+	lib3mf_model_adddisp2dgroup = None
 	lib3mf_model_addslicestack = None
 	lib3mf_model_addtexture2dfromattachment = None
 	lib3mf_model_addbasematerialgroup = None
@@ -1314,6 +1357,23 @@ class Tex2Coord(ctypes.Structure):
 	_fields_ = [
 		("U", ctypes.c_double), 
 		("V", ctypes.c_double)
+	]
+'''Definition of Displacement2DCoordinate
+'''
+class Displacement2DCoordinate(ctypes.Structure):
+	_pack_ = 1
+	_fields_ = [
+		("U", ctypes.c_double), 
+		("V", ctypes.c_double), 
+		("NormalVectorIndex", ctypes.c_uint32), 
+		("DisplacementFactor", ctypes.c_double)
+	]
+'''Definition of TriangleDisplacement
+'''
+class TriangleDisplacement(ctypes.Structure):
+	_pack_ = 1
+	_fields_ = [
+		("DisplacementIndices", ctypes.c_uint32 * 3)
 	]
 '''Definition of Transform
 '''
@@ -1817,6 +1877,30 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_booleanobjectiterator_getcurrentbooleanobject = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_displacement2diterator_getcurrentdisplacement2d")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_displacement2diterator_getcurrentdisplacement2d = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_texture2diterator_getcurrenttexture2d")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -2111,6 +2195,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
 			self.lib.lib3mf_object_isbooleanobject = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_object_isdisplacementmeshobject")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_object_isdisplacementmeshobject = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_object_isvalid")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -2357,6 +2447,30 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_meshobject_gettriangleset = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_displacementmeshobject_hastriangledisplacement")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_displacementmeshobject_hastriangledisplacement = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_displacementmeshobject_settriangledisplacement")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_void_p, ctypes.POINTER(TriangleDisplacement))
+			self.lib.lib3mf_displacementmeshobject_settriangledisplacement = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_displacementmeshobject_gettriangledisplacement")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p), ctypes.POINTER(TriangleDisplacement))
+			self.lib.lib3mf_displacementmeshobject_gettriangledisplacement = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_displacementmeshobject_cleartriangledisplacement")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_displacementmeshobject_cleartriangledisplacement = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_levelset_getfunction")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -2536,7 +2650,7 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_booleanobject_mergetomeshobject = methodType(int(methodAddress.value))
-
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_beamlattice_getminlength")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -3328,6 +3442,138 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint8))
 			self.lib.lib3mf_attachment_readfrombuffer = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_displacement2d_getattachment")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_displacement2d_getattachment = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_displacement2d_setattachment")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_displacement2d_setattachment = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_displacement2d_getchannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32))
+			self.lib.lib3mf_displacement2d_getchannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_displacement2d_setchannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ChannelName)
+			self.lib.lib3mf_displacement2d_setchannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_displacement2d_gettilestyleuv")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_int32))
+			self.lib.lib3mf_displacement2d_gettilestyleuv = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_displacement2d_settilestyleuv")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, TextureTileStyle, TextureTileStyle)
+			self.lib.lib3mf_displacement2d_settilestyleuv = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_displacement2d_getfilter")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32))
+			self.lib.lib3mf_displacement2d_getfilter = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_displacement2d_setfilter")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, TextureFilter)
+			self.lib.lib3mf_displacement2d_setfilter = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_normvectorgroup_getcount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_normvectorgroup_getcount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_normvectorgroup_addvector")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(Vector), ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_normvectorgroup_addvector = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_normvectorgroup_getvector")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(Vector))
+			self.lib.lib3mf_normvectorgroup_getvector = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_normvectorgroup_setvector")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(Vector))
+			self.lib.lib3mf_normvectorgroup_setvector = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_disp2dgroup_getdisplacement2d")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_disp2dgroup_getdisplacement2d = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_disp2dgroup_getnormalvectorgroup")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_disp2dgroup_getnormalvectorgroup = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_disp2dgroup_getheight")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_disp2dgroup_getheight = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_disp2dgroup_setheight")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double)
+			self.lib.lib3mf_disp2dgroup_setheight = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_disp2dgroup_getoffset")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_disp2dgroup_getoffset = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_disp2dgroup_setoffset")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double)
+			self.lib.lib3mf_disp2dgroup_setoffset = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_disp2dgroup_getcount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_disp2dgroup_getcount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_disp2dgroup_addcoordinate")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(Displacement2DCoordinate), ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_disp2dgroup_addcoordinate = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_disp2dgroup_getcoordinate")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(Displacement2DCoordinate))
+			self.lib.lib3mf_disp2dgroup_getcoordinate = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_disp2dgroup_setcoordinate")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(Displacement2DCoordinate))
+			self.lib.lib3mf_disp2dgroup_setcoordinate = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_texture2d_getattachment")), methodAddress)
 			if err != 0:
@@ -5093,6 +5339,30 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_getbooleanobjectbyid = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getdisplacementmeshobjectbyid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getdisplacementmeshobjectbyid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getdisplacement2dbyid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getdisplacement2dbyid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getnormvectorgroupbyid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getnormvectorgroupbyid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getdisp2dgroupbyid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getdisp2dgroupbyid = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getcolorgroupbyid")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -5164,6 +5434,30 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_getbooleanobjects = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getdisplacementmeshobjects")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getdisplacementmeshobjects = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getdisplacement2ds")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getdisplacement2ds = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getnormvectorgroups")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getnormvectorgroups = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getdisp2dgroups")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getdisp2dgroups = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_gettexture2ds")), methodAddress)
 			if err != 0:
@@ -5242,6 +5536,30 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_addbooleanobject = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_adddisplacementmeshobject")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_adddisplacementmeshobject = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_adddisplacement2d")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_adddisplacement2d = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addnormvectorgroup")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_addnormvectorgroup = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_adddisp2dgroup")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_double, ctypes.c_double, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_adddisp2dgroup = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addslicestack")), methodAddress)
 			if err != 0:
@@ -5626,6 +5944,18 @@ class Wrapper:
 			self.lib.lib3mf_booleanobjectiterator_getcurrentbooleanobject.restype = ctypes.c_int32
 			self.lib.lib3mf_booleanobjectiterator_getcurrentbooleanobject.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject.restype = ctypes.c_int32
+			self.lib.lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_displacement2diterator_getcurrentdisplacement2d.restype = ctypes.c_int32
+			self.lib.lib3mf_displacement2diterator_getcurrentdisplacement2d.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup.restype = ctypes.c_int32
+			self.lib.lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup.restype = ctypes.c_int32
+			self.lib.lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 			self.lib.lib3mf_texture2diterator_getcurrenttexture2d.restype = ctypes.c_int32
 			self.lib.lib3mf_texture2diterator_getcurrenttexture2d.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
@@ -5773,6 +6103,9 @@ class Wrapper:
 			self.lib.lib3mf_object_isbooleanobject.restype = ctypes.c_int32
 			self.lib.lib3mf_object_isbooleanobject.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
 			
+			self.lib.lib3mf_object_isdisplacementmeshobject.restype = ctypes.c_int32
+			self.lib.lib3mf_object_isdisplacementmeshobject.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
 			self.lib.lib3mf_object_isvalid.restype = ctypes.c_int32
 			self.lib.lib3mf_object_isvalid.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
 			
@@ -5896,6 +6229,18 @@ class Wrapper:
 			self.lib.lib3mf_meshobject_gettriangleset.restype = ctypes.c_int32
 			self.lib.lib3mf_meshobject_gettriangleset.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_displacementmeshobject_hastriangledisplacement.restype = ctypes.c_int32
+			self.lib.lib3mf_displacementmeshobject_hastriangledisplacement.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_displacementmeshobject_settriangledisplacement.restype = ctypes.c_int32
+			self.lib.lib3mf_displacementmeshobject_settriangledisplacement.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_void_p, ctypes.POINTER(TriangleDisplacement)]
+			
+			self.lib.lib3mf_displacementmeshobject_gettriangledisplacement.restype = ctypes.c_int32
+			self.lib.lib3mf_displacementmeshobject_gettriangledisplacement.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p), ctypes.POINTER(TriangleDisplacement)]
+			
+			self.lib.lib3mf_displacementmeshobject_cleartriangledisplacement.restype = ctypes.c_int32
+			self.lib.lib3mf_displacementmeshobject_cleartriangledisplacement.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
 			self.lib.lib3mf_levelset_getfunction.restype = ctypes.c_int32
 			self.lib.lib3mf_levelset_getfunction.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
@@ -5985,7 +6330,7 @@ class Wrapper:
 			
 			self.lib.lib3mf_booleanobject_mergetomeshobject.restype = ctypes.c_int32
 			self.lib.lib3mf_booleanobject_mergetomeshobject.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
-
+			
 			self.lib.lib3mf_beamlattice_getminlength.restype = ctypes.c_int32
 			self.lib.lib3mf_beamlattice_getminlength.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
 			
@@ -6381,6 +6726,72 @@ class Wrapper:
 			
 			self.lib.lib3mf_attachment_readfrombuffer.restype = ctypes.c_int32
 			self.lib.lib3mf_attachment_readfrombuffer.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint8)]
+			
+			self.lib.lib3mf_displacement2d_getattachment.restype = ctypes.c_int32
+			self.lib.lib3mf_displacement2d_getattachment.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_displacement2d_setattachment.restype = ctypes.c_int32
+			self.lib.lib3mf_displacement2d_setattachment.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_displacement2d_getchannel.restype = ctypes.c_int32
+			self.lib.lib3mf_displacement2d_getchannel.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
+			
+			self.lib.lib3mf_displacement2d_setchannel.restype = ctypes.c_int32
+			self.lib.lib3mf_displacement2d_setchannel.argtypes = [ctypes.c_void_p, ChannelName]
+			
+			self.lib.lib3mf_displacement2d_gettilestyleuv.restype = ctypes.c_int32
+			self.lib.lib3mf_displacement2d_gettilestyleuv.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_int32)]
+			
+			self.lib.lib3mf_displacement2d_settilestyleuv.restype = ctypes.c_int32
+			self.lib.lib3mf_displacement2d_settilestyleuv.argtypes = [ctypes.c_void_p, TextureTileStyle, TextureTileStyle]
+			
+			self.lib.lib3mf_displacement2d_getfilter.restype = ctypes.c_int32
+			self.lib.lib3mf_displacement2d_getfilter.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
+			
+			self.lib.lib3mf_displacement2d_setfilter.restype = ctypes.c_int32
+			self.lib.lib3mf_displacement2d_setfilter.argtypes = [ctypes.c_void_p, TextureFilter]
+			
+			self.lib.lib3mf_normvectorgroup_getcount.restype = ctypes.c_int32
+			self.lib.lib3mf_normvectorgroup_getcount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_normvectorgroup_addvector.restype = ctypes.c_int32
+			self.lib.lib3mf_normvectorgroup_addvector.argtypes = [ctypes.c_void_p, ctypes.POINTER(Vector), ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_normvectorgroup_getvector.restype = ctypes.c_int32
+			self.lib.lib3mf_normvectorgroup_getvector.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(Vector)]
+			
+			self.lib.lib3mf_normvectorgroup_setvector.restype = ctypes.c_int32
+			self.lib.lib3mf_normvectorgroup_setvector.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(Vector)]
+			
+			self.lib.lib3mf_disp2dgroup_getdisplacement2d.restype = ctypes.c_int32
+			self.lib.lib3mf_disp2dgroup_getdisplacement2d.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_disp2dgroup_getnormalvectorgroup.restype = ctypes.c_int32
+			self.lib.lib3mf_disp2dgroup_getnormalvectorgroup.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_disp2dgroup_getheight.restype = ctypes.c_int32
+			self.lib.lib3mf_disp2dgroup_getheight.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_disp2dgroup_setheight.restype = ctypes.c_int32
+			self.lib.lib3mf_disp2dgroup_setheight.argtypes = [ctypes.c_void_p, ctypes.c_double]
+			
+			self.lib.lib3mf_disp2dgroup_getoffset.restype = ctypes.c_int32
+			self.lib.lib3mf_disp2dgroup_getoffset.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_disp2dgroup_setoffset.restype = ctypes.c_int32
+			self.lib.lib3mf_disp2dgroup_setoffset.argtypes = [ctypes.c_void_p, ctypes.c_double]
+			
+			self.lib.lib3mf_disp2dgroup_getcount.restype = ctypes.c_int32
+			self.lib.lib3mf_disp2dgroup_getcount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_disp2dgroup_addcoordinate.restype = ctypes.c_int32
+			self.lib.lib3mf_disp2dgroup_addcoordinate.argtypes = [ctypes.c_void_p, ctypes.POINTER(Displacement2DCoordinate), ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_disp2dgroup_getcoordinate.restype = ctypes.c_int32
+			self.lib.lib3mf_disp2dgroup_getcoordinate.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(Displacement2DCoordinate)]
+			
+			self.lib.lib3mf_disp2dgroup_setcoordinate.restype = ctypes.c_int32
+			self.lib.lib3mf_disp2dgroup_setcoordinate.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(Displacement2DCoordinate)]
 			
 			self.lib.lib3mf_texture2d_getattachment.restype = ctypes.c_int32
 			self.lib.lib3mf_texture2d_getattachment.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -7264,6 +7675,18 @@ class Wrapper:
 			self.lib.lib3mf_model_getbooleanobjectbyid.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getbooleanobjectbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_model_getdisplacementmeshobjectbyid.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getdisplacementmeshobjectbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_getdisplacement2dbyid.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getdisplacement2dbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_getnormvectorgroupbyid.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getnormvectorgroupbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_getdisp2dgroupbyid.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getdisp2dgroupbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
 			self.lib.lib3mf_model_getcolorgroupbyid.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getcolorgroupbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
@@ -7299,6 +7722,18 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_getbooleanobjects.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getbooleanobjects.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_getdisplacementmeshobjects.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getdisplacementmeshobjects.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_getdisplacement2ds.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getdisplacement2ds.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_getnormvectorgroups.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getnormvectorgroups.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_getdisp2dgroups.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getdisp2dgroups.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_model_gettexture2ds.restype = ctypes.c_int32
 			self.lib.lib3mf_model_gettexture2ds.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -7338,6 +7773,18 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_addbooleanobject.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addbooleanobject.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_adddisplacementmeshobject.restype = ctypes.c_int32
+			self.lib.lib3mf_model_adddisplacementmeshobject.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_adddisplacement2d.restype = ctypes.c_int32
+			self.lib.lib3mf_model_adddisplacement2d.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_addnormvectorgroup.restype = ctypes.c_int32
+			self.lib.lib3mf_model_addnormvectorgroup.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_adddisp2dgroup.restype = ctypes.c_int32
+			self.lib.lib3mf_model_adddisp2dgroup.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_double, ctypes.c_double, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_model_addslicestack.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addslicestack.argtypes = [ctypes.c_void_p, ctypes.c_double, ctypes.POINTER(ctypes.c_void_p)]
@@ -7667,6 +8114,14 @@ class Wrapper:
 				return ComponentsObjectIterator(handle, wrapper)
 			def getObjectById_AFF01F512E1FF6AE(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::BooleanObjectIterator"
 				return BooleanObjectIterator(handle, wrapper)
+			def getObjectById_6985D4BCC417D63A(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::DisplacementMeshObjectIterator"
+				return DisplacementMeshObjectIterator(handle, wrapper)
+			def getObjectById_BBE0E57916ABA639(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Displacement2DIterator"
+				return Displacement2DIterator(handle, wrapper)
+			def getObjectById_94F41D650A9D1201(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::NormVectorGroupIterator"
+				return NormVectorGroupIterator(handle, wrapper)
+			def getObjectById_4F6F025BFF1BC77D(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Disp2DGroupIterator"
+				return Disp2DGroupIterator(handle, wrapper)
 			def getObjectById_4BD32B4870FFC03B(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Texture2DIterator"
 				return Texture2DIterator(handle, wrapper)
 			def getObjectById_65E6EDD9362C79CB(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::BaseMaterialGroupIterator"
@@ -7695,6 +8150,8 @@ class Wrapper:
 				return Object(handle, wrapper)
 			def getObjectById_3B3A6DC6EC610497(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
 				return MeshObject(handle, wrapper)
+			def getObjectById_062EC1EFBBB2C007(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::DisplacementMeshObject"
+				return DisplacementMeshObject(handle, wrapper)
 			def getObjectById_E8A7D9C192EFD0E2(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
 				return LevelSet(handle, wrapper)
 			def getObjectById_85FA0E8806B6C357(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::BooleanObject"
@@ -7735,6 +8192,12 @@ class Wrapper:
 				return ImageStack(handle, wrapper)
 			def getObjectById_8CE7A1191A63A35D(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Attachment"
 				return Attachment(handle, wrapper)
+			def getObjectById_D4FBF6402F29131F(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Displacement2D"
+				return Displacement2D(handle, wrapper)
+			def getObjectById_A04BF4AC86AB47C3(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::NormVectorGroup"
+				return NormVectorGroup(handle, wrapper)
+			def getObjectById_823F487B8BB83E5B(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Disp2DGroup"
+				return Disp2DGroup(handle, wrapper)
 			def getObjectById_E0441CF976B36319(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Texture2D"
 				return Texture2D(handle, wrapper)
 			def getObjectById_D5C49B04AF1963CD(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPort"
@@ -8284,6 +8747,74 @@ class BooleanObjectIterator(ResourceIterator):
 	
 
 
+''' Class Implementation for DisplacementMeshObjectIterator
+'''
+class DisplacementMeshObjectIterator(ResourceIterator):
+	def __init__(self, handle, wrapper):
+		ResourceIterator.__init__(self, handle, wrapper)
+	def GetCurrentDisplacementMeshObject(self):
+		ResourceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject(self._handle, ResourceHandle))
+		if ResourceHandle:
+			ResourceObject = self._wrapper._polymorphicFactory(ResourceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceObject
+	
+
+
+''' Class Implementation for Displacement2DIterator
+'''
+class Displacement2DIterator(ResourceIterator):
+	def __init__(self, handle, wrapper):
+		ResourceIterator.__init__(self, handle, wrapper)
+	def GetCurrentDisplacement2D(self):
+		ResourceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_displacement2diterator_getcurrentdisplacement2d(self._handle, ResourceHandle))
+		if ResourceHandle:
+			ResourceObject = self._wrapper._polymorphicFactory(ResourceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceObject
+	
+
+
+''' Class Implementation for NormVectorGroupIterator
+'''
+class NormVectorGroupIterator(ResourceIterator):
+	def __init__(self, handle, wrapper):
+		ResourceIterator.__init__(self, handle, wrapper)
+	def GetCurrentNormVectorGroup(self):
+		ResourceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup(self._handle, ResourceHandle))
+		if ResourceHandle:
+			ResourceObject = self._wrapper._polymorphicFactory(ResourceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceObject
+	
+
+
+''' Class Implementation for Disp2DGroupIterator
+'''
+class Disp2DGroupIterator(ResourceIterator):
+	def __init__(self, handle, wrapper):
+		ResourceIterator.__init__(self, handle, wrapper)
+	def GetCurrentDisp2DGroup(self):
+		ResourceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup(self._handle, ResourceHandle))
+		if ResourceHandle:
+			ResourceObject = self._wrapper._polymorphicFactory(ResourceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceObject
+	
+
+
 ''' Class Implementation for Texture2DIterator
 '''
 class Texture2DIterator(ResourceIterator):
@@ -8767,6 +9298,12 @@ class Object(Resource):
 		
 		return pIsBooleanObject.value
 	
+	def IsDisplacementMeshObject(self):
+		pIsDisplacementMeshObject = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_object_isdisplacementmeshobject(self._handle, pIsDisplacementMeshObject))
+		
+		return pIsDisplacementMeshObject.value
+	
 	def IsValid(self):
 		pIsValid = ctypes.c_bool()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_object_isvalid(self._handle, pIsValid))
@@ -9085,6 +9622,51 @@ class MeshObject(Object):
 	
 
 
+''' Class Implementation for DisplacementMeshObject
+'''
+class DisplacementMeshObject(MeshObject):
+	def __init__(self, handle, wrapper):
+		MeshObject.__init__(self, handle, wrapper)
+	def HasTriangleDisplacement(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		pHasDisplacement = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_displacementmeshobject_hastriangledisplacement(self._handle, nIndex, pHasDisplacement))
+		
+		return pHasDisplacement.value
+	
+	def SetTriangleDisplacement(self, Index, Disp2DGroupObject, Displacement):
+		nIndex = ctypes.c_uint32(Index)
+		Disp2DGroupHandle = None
+		if Disp2DGroupObject:
+			Disp2DGroupHandle = Disp2DGroupObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_displacementmeshobject_settriangledisplacement(self._handle, nIndex, Disp2DGroupHandle, Displacement))
+		
+	
+	def GetTriangleDisplacement(self, Index, Disp2DGroupObject = None):
+		nIndex = ctypes.c_uint32(Index)
+		Disp2DGroupHandle = ctypes.c_void_p()
+		if Disp2DGroupObject is not None:
+			Disp2DGroupHandle = ctypes.c_void_p(Disp2DGroupObject._handle)
+		else:
+			Disp2DGroupHandle = ctypes.c_void_p()
+		pDisplacement = TriangleDisplacement()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_displacementmeshobject_gettriangledisplacement(self._handle, nIndex, Disp2DGroupHandle, pDisplacement))
+		if Disp2DGroupHandle.value:
+			Disp2DGroupObject = self._wrapper._polymorphicFactory(Disp2DGroupHandle.value)
+		else:
+			Disp2DGroupObject = None
+		
+		return Disp2DGroupObject, pDisplacement
+	
+	def ClearTriangleDisplacement(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_displacementmeshobject_cleartriangledisplacement(self._handle, nIndex))
+		
+	
+
+
 ''' Class Implementation for LevelSet
 '''
 class LevelSet(Object):
@@ -9312,9 +9894,9 @@ class BooleanObject(Object):
 			MeshObjectObject = self._wrapper._polymorphicFactory(MeshObjectHandle)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
-
+		
 		return MeshObjectObject
-
+	
 
 
 ''' Class Implementation for BeamLattice
@@ -10437,6 +11019,167 @@ class Attachment(Base):
 		nBufferCount = ctypes.c_uint64(len(Buffer))
 		pBufferBuffer = (ctypes.c_uint8*len(Buffer))(*Buffer)
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_attachment_readfrombuffer(self._handle, nBufferCount, pBufferBuffer))
+		
+	
+
+
+''' Class Implementation for Displacement2D
+'''
+class Displacement2D(Resource):
+	def __init__(self, handle, wrapper):
+		Resource.__init__(self, handle, wrapper)
+	def GetAttachment(self):
+		AttachmentHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_displacement2d_getattachment(self._handle, AttachmentHandle))
+		if AttachmentHandle:
+			AttachmentObject = self._wrapper._polymorphicFactory(AttachmentHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return AttachmentObject
+	
+	def SetAttachment(self, AttachmentObject):
+		AttachmentHandle = None
+		if AttachmentObject:
+			AttachmentHandle = AttachmentObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_displacement2d_setattachment(self._handle, AttachmentHandle))
+		
+	
+	def GetChannel(self):
+		pChannel = ctypes.c_int32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_displacement2d_getchannel(self._handle, pChannel))
+		
+		return ChannelName(pChannel.value)
+	
+	def SetChannel(self, Channel):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_displacement2d_setchannel(self._handle, Channel))
+		
+	
+	def GetTileStyleUV(self, TileStyleU = None, TileStyleV = None):
+		pTileStyleU = ctypes.c_int32(TileStyleU if TileStyleU else 0)
+		pTileStyleV = ctypes.c_int32(TileStyleV if TileStyleV else 0)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_displacement2d_gettilestyleuv(self._handle, pTileStyleU, pTileStyleV))
+		
+		return pTileStyleU.value, pTileStyleV.value
+	
+	def SetTileStyleUV(self, TileStyleU, TileStyleV):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_displacement2d_settilestyleuv(self._handle, TileStyleU, TileStyleV))
+		
+	
+	def GetFilter(self):
+		pFilter = ctypes.c_int32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_displacement2d_getfilter(self._handle, pFilter))
+		
+		return TextureFilter(pFilter.value)
+	
+	def SetFilter(self, Filter):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_displacement2d_setfilter(self._handle, Filter))
+		
+	
+
+
+''' Class Implementation for NormVectorGroup
+'''
+class NormVectorGroup(Resource):
+	def __init__(self, handle, wrapper):
+		Resource.__init__(self, handle, wrapper)
+	def GetCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_normvectorgroup_getcount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def AddVector(self, Vector):
+		pIndex = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_normvectorgroup_addvector(self._handle, Vector, pIndex))
+		
+		return pIndex.value
+	
+	def GetVector(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		pVector = Vector()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_normvectorgroup_getvector(self._handle, nIndex, pVector))
+		
+		return pVector
+	
+	def SetVector(self, Index, Vector):
+		nIndex = ctypes.c_uint32(Index)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_normvectorgroup_setvector(self._handle, nIndex, Vector))
+		
+	
+
+
+''' Class Implementation for Disp2DGroup
+'''
+class Disp2DGroup(Resource):
+	def __init__(self, handle, wrapper):
+		Resource.__init__(self, handle, wrapper)
+	def GetDisplacement2D(self):
+		Displacement2DHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_disp2dgroup_getdisplacement2d(self._handle, Displacement2DHandle))
+		if Displacement2DHandle:
+			Displacement2DObject = self._wrapper._polymorphicFactory(Displacement2DHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return Displacement2DObject
+	
+	def GetNormalVectorGroup(self):
+		NormVectorGroupHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_disp2dgroup_getnormalvectorgroup(self._handle, NormVectorGroupHandle))
+		if NormVectorGroupHandle:
+			NormVectorGroupObject = self._wrapper._polymorphicFactory(NormVectorGroupHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return NormVectorGroupObject
+	
+	def GetHeight(self):
+		pHeight = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_disp2dgroup_getheight(self._handle, pHeight))
+		
+		return pHeight.value
+	
+	def SetHeight(self, Height):
+		dHeight = ctypes.c_double(Height)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_disp2dgroup_setheight(self._handle, dHeight))
+		
+	
+	def GetOffset(self):
+		pOffset = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_disp2dgroup_getoffset(self._handle, pOffset))
+		
+		return pOffset.value
+	
+	def SetOffset(self, Offset):
+		dOffset = ctypes.c_double(Offset)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_disp2dgroup_setoffset(self._handle, dOffset))
+		
+	
+	def GetCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_disp2dgroup_getcount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def AddCoordinate(self, Coordinate):
+		pIndex = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_disp2dgroup_addcoordinate(self._handle, Coordinate, pIndex))
+		
+		return pIndex.value
+	
+	def GetCoordinate(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		pCoordinate = Displacement2DCoordinate()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_disp2dgroup_getcoordinate(self._handle, nIndex, pCoordinate))
+		
+		return pCoordinate
+	
+	def SetCoordinate(self, Index, Coordinate):
+		nIndex = ctypes.c_uint32(Index)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_disp2dgroup_setcoordinate(self._handle, nIndex, Coordinate))
 		
 	
 
@@ -13794,6 +14537,50 @@ class Model(Base):
 		
 		return BooleanObjectInstanceObject
 	
+	def GetDisplacementMeshObjectByID(self, UniqueResourceID):
+		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)
+		DisplacementMeshObjectInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getdisplacementmeshobjectbyid(self._handle, nUniqueResourceID, DisplacementMeshObjectInstanceHandle))
+		if DisplacementMeshObjectInstanceHandle:
+			DisplacementMeshObjectInstanceObject = self._wrapper._polymorphicFactory(DisplacementMeshObjectInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return DisplacementMeshObjectInstanceObject
+	
+	def GetDisplacement2DByID(self, UniqueResourceID):
+		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)
+		Displacement2DInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getdisplacement2dbyid(self._handle, nUniqueResourceID, Displacement2DInstanceHandle))
+		if Displacement2DInstanceHandle:
+			Displacement2DInstanceObject = self._wrapper._polymorphicFactory(Displacement2DInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return Displacement2DInstanceObject
+	
+	def GetNormVectorGroupByID(self, UniqueResourceID):
+		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)
+		NormVectorGroupInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getnormvectorgroupbyid(self._handle, nUniqueResourceID, NormVectorGroupInstanceHandle))
+		if NormVectorGroupInstanceHandle:
+			NormVectorGroupInstanceObject = self._wrapper._polymorphicFactory(NormVectorGroupInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return NormVectorGroupInstanceObject
+	
+	def GetDisp2DGroupByID(self, UniqueResourceID):
+		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)
+		Disp2DGroupInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getdisp2dgroupbyid(self._handle, nUniqueResourceID, Disp2DGroupInstanceHandle))
+		if Disp2DGroupInstanceHandle:
+			Disp2DGroupInstanceObject = self._wrapper._polymorphicFactory(Disp2DGroupInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return Disp2DGroupInstanceObject
+	
 	def GetColorGroupByID(self, UniqueResourceID):
 		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)
 		ColorGroupInstanceHandle = ctypes.c_void_p()
@@ -13903,6 +14690,46 @@ class Model(Base):
 	def GetBooleanObjects(self):
 		ResourceIteratorHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getbooleanobjects(self._handle, ResourceIteratorHandle))
+		if ResourceIteratorHandle:
+			ResourceIteratorObject = self._wrapper._polymorphicFactory(ResourceIteratorHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceIteratorObject
+	
+	def GetDisplacementMeshObjects(self):
+		ResourceIteratorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getdisplacementmeshobjects(self._handle, ResourceIteratorHandle))
+		if ResourceIteratorHandle:
+			ResourceIteratorObject = self._wrapper._polymorphicFactory(ResourceIteratorHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceIteratorObject
+	
+	def GetDisplacement2Ds(self):
+		ResourceIteratorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getdisplacement2ds(self._handle, ResourceIteratorHandle))
+		if ResourceIteratorHandle:
+			ResourceIteratorObject = self._wrapper._polymorphicFactory(ResourceIteratorHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceIteratorObject
+	
+	def GetNormVectorGroups(self):
+		ResourceIteratorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getnormvectorgroups(self._handle, ResourceIteratorHandle))
+		if ResourceIteratorHandle:
+			ResourceIteratorObject = self._wrapper._polymorphicFactory(ResourceIteratorHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceIteratorObject
+	
+	def GetDisp2DGroups(self):
+		ResourceIteratorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getdisp2dgroups(self._handle, ResourceIteratorHandle))
 		if ResourceIteratorHandle:
 			ResourceIteratorObject = self._wrapper._polymorphicFactory(ResourceIteratorHandle)
 		else:
@@ -14038,6 +14865,63 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return BooleanObjectInstanceObject
+	
+	def AddDisplacementMeshObject(self):
+		DisplacementMeshObjectInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_adddisplacementmeshobject(self._handle, DisplacementMeshObjectInstanceHandle))
+		if DisplacementMeshObjectInstanceHandle:
+			DisplacementMeshObjectInstanceObject = self._wrapper._polymorphicFactory(DisplacementMeshObjectInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return DisplacementMeshObjectInstanceObject
+	
+	def AddDisplacement2D(self, TextureAttachmentObject):
+		TextureAttachmentHandle = None
+		if TextureAttachmentObject:
+			TextureAttachmentHandle = TextureAttachmentObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		Displacement2DInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_adddisplacement2d(self._handle, TextureAttachmentHandle, Displacement2DInstanceHandle))
+		if Displacement2DInstanceHandle:
+			Displacement2DInstanceObject = self._wrapper._polymorphicFactory(Displacement2DInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return Displacement2DInstanceObject
+	
+	def AddNormVectorGroup(self):
+		NormVectorGroupInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addnormvectorgroup(self._handle, NormVectorGroupInstanceHandle))
+		if NormVectorGroupInstanceHandle:
+			NormVectorGroupInstanceObject = self._wrapper._polymorphicFactory(NormVectorGroupInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return NormVectorGroupInstanceObject
+	
+	def AddDisp2DGroup(self, Displacement2DObject, NormalVectorGroupObject, Height, Offset):
+		Displacement2DHandle = None
+		if Displacement2DObject:
+			Displacement2DHandle = Displacement2DObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		NormalVectorGroupHandle = None
+		if NormalVectorGroupObject:
+			NormalVectorGroupHandle = NormalVectorGroupObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		dHeight = ctypes.c_double(Height)
+		dOffset = ctypes.c_double(Offset)
+		Disp2DGroupInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_adddisp2dgroup(self._handle, Displacement2DHandle, NormalVectorGroupHandle, dHeight, dOffset, Disp2DGroupInstanceHandle))
+		if Disp2DGroupInstanceHandle:
+			Disp2DGroupInstanceObject = self._wrapper._polymorphicFactory(Disp2DGroupInstanceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return Disp2DGroupInstanceObject
 	
 	def AddSliceStack(self, ZBottom):
 		dZBottom = ctypes.c_double(ZBottom)

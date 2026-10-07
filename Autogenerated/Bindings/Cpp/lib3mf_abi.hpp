@@ -511,6 +511,58 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_componentsobjectiterator_getcurrentcomponent
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_booleanobjectiterator_getcurrentbooleanobject(Lib3MF_BooleanObjectIterator pBooleanObjectIterator, Lib3MF_BooleanObject * pResource);
 
 /*************************************************************************************************************************
+ Class definition for DisplacementMeshObjectIterator
+**************************************************************************************************************************/
+
+/**
+* Returns the DisplacementMeshObject the iterator points at.
+*
+* @param[in] pDisplacementMeshObjectIterator - DisplacementMeshObjectIterator instance.
+* @param[out] pResource - returns the DisplacementMeshObject instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject(Lib3MF_DisplacementMeshObjectIterator pDisplacementMeshObjectIterator, Lib3MF_DisplacementMeshObject * pResource);
+
+/*************************************************************************************************************************
+ Class definition for Displacement2DIterator
+**************************************************************************************************************************/
+
+/**
+* Returns the Displacement2D resource the iterator points at.
+*
+* @param[in] pDisplacement2DIterator - Displacement2DIterator instance.
+* @param[out] pResource - returns the Displacement2D instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_displacement2diterator_getcurrentdisplacement2d(Lib3MF_Displacement2DIterator pDisplacement2DIterator, Lib3MF_Displacement2D * pResource);
+
+/*************************************************************************************************************************
+ Class definition for NormVectorGroupIterator
+**************************************************************************************************************************/
+
+/**
+* Returns the NormVectorGroup resource the iterator points at.
+*
+* @param[in] pNormVectorGroupIterator - NormVectorGroupIterator instance.
+* @param[out] pResource - returns the NormVectorGroup instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup(Lib3MF_NormVectorGroupIterator pNormVectorGroupIterator, Lib3MF_NormVectorGroup * pResource);
+
+/*************************************************************************************************************************
+ Class definition for Disp2DGroupIterator
+**************************************************************************************************************************/
+
+/**
+* Returns the Disp2DGroup resource the iterator points at.
+*
+* @param[in] pDisp2DGroupIterator - Disp2DGroupIterator instance.
+* @param[out] pResource - returns the Disp2DGroup instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup(Lib3MF_Disp2DGroupIterator pDisp2DGroupIterator, Lib3MF_Disp2DGroup * pResource);
+
+/*************************************************************************************************************************
  Class definition for Texture2DIterator
 **************************************************************************************************************************/
 
@@ -1034,6 +1086,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_object_islevelsetobject(Lib3MF_Object pObjec
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_object_isbooleanobject(Lib3MF_Object pObject, bool * pIsBooleanObject);
 
 /**
+* Retrieves whether an object is a displacement mesh object.
+*
+* @param[in] pObject - Object instance.
+* @param[out] pIsDisplacementMeshObject - returns whether the object is a displacement mesh object
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_object_isdisplacementmeshobject(Lib3MF_Object pObject, bool * pIsDisplacementMeshObject);
+
+/**
 * Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.
 *
 * @param[in] pObject - Object instance.
@@ -1432,6 +1493,51 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_gettrianglesetcount(Lib3MF_MeshOb
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_gettriangleset(Lib3MF_MeshObject pMeshObject, Lib3MF_uint32 nIndex, Lib3MF_TriangleSet * pTheTriangleSet);
+
+/*************************************************************************************************************************
+ Class definition for DisplacementMeshObject
+**************************************************************************************************************************/
+
+/**
+* Returns whether a triangle has displacement information assigned.
+*
+* @param[in] pDisplacementMeshObject - DisplacementMeshObject instance.
+* @param[in] nIndex - index of the triangle
+* @param[out] pHasDisplacement - returns whether displacement information is assigned
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_displacementmeshobject_hastriangledisplacement(Lib3MF_DisplacementMeshObject pDisplacementMeshObject, Lib3MF_uint32 nIndex, bool * pHasDisplacement);
+
+/**
+* Assigns a displacement group and coordinate indices to a triangle.
+*
+* @param[in] pDisplacementMeshObject - DisplacementMeshObject instance.
+* @param[in] nIndex - index of the triangle
+* @param[in] pDisp2DGroup - displacement coordinate group used by the triangle
+* @param[in] pDisplacement - coordinate indices for the triangle vertices
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_displacementmeshobject_settriangledisplacement(Lib3MF_DisplacementMeshObject pDisplacementMeshObject, Lib3MF_uint32 nIndex, Lib3MF_Disp2DGroup pDisp2DGroup, const Lib3MF::sTriangleDisplacement * pDisplacement);
+
+/**
+* Returns the displacement group and coordinate indices assigned to a triangle.
+*
+* @param[in] pDisplacementMeshObject - DisplacementMeshObject instance.
+* @param[in] nIndex - index of the triangle
+* @param[out] pDisp2DGroup - displacement coordinate group used by the triangle
+* @param[out] pDisplacement - coordinate indices for the triangle vertices
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_displacementmeshobject_gettriangledisplacement(Lib3MF_DisplacementMeshObject pDisplacementMeshObject, Lib3MF_uint32 nIndex, Lib3MF_Disp2DGroup * pDisp2DGroup, Lib3MF::sTriangleDisplacement * pDisplacement);
+
+/**
+* Removes displacement information from a triangle.
+*
+* @param[in] pDisplacementMeshObject - DisplacementMeshObject instance.
+* @param[in] nIndex - index of the triangle
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_displacementmeshobject_cleartriangledisplacement(Lib3MF_DisplacementMeshObject pDisplacementMeshObject, Lib3MF_uint32 nIndex);
 
 /*************************************************************************************************************************
  Class definition for LevelSet
@@ -3078,6 +3184,224 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_attachment_writetobuffer(Lib3MF_Attachment p
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_attachment_readfrombuffer(Lib3MF_Attachment pAttachment, Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);
+
+/*************************************************************************************************************************
+ Class definition for Displacement2D
+**************************************************************************************************************************/
+
+/**
+* Retrieves the PNG attachment used as displacement texture.
+*
+* @param[in] pDisplacement2D - Displacement2D instance.
+* @param[out] pAttachment - attachment containing the displacement image
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_displacement2d_getattachment(Lib3MF_Displacement2D pDisplacement2D, Lib3MF_Attachment * pAttachment);
+
+/**
+* Sets the PNG attachment used as displacement texture.
+*
+* @param[in] pDisplacement2D - Displacement2D instance.
+* @param[in] pAttachment - attachment containing the displacement image
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_displacement2d_setattachment(Lib3MF_Displacement2D pDisplacement2D, Lib3MF_Attachment pAttachment);
+
+/**
+* Returns the image channel used for displacement values.
+*
+* @param[in] pDisplacement2D - Displacement2D instance.
+* @param[out] pChannel - selected image channel
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_displacement2d_getchannel(Lib3MF_Displacement2D pDisplacement2D, Lib3MF::eChannelName * pChannel);
+
+/**
+* Sets the image channel used for displacement values.
+*
+* @param[in] pDisplacement2D - Displacement2D instance.
+* @param[in] eChannel - selected image channel
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_displacement2d_setchannel(Lib3MF_Displacement2D pDisplacement2D, Lib3MF::eChannelName eChannel);
+
+/**
+* Returns the displacement texture tile styles.
+*
+* @param[in] pDisplacement2D - Displacement2D instance.
+* @param[out] pTileStyleU - tile style in the u direction
+* @param[out] pTileStyleV - tile style in the v direction
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_displacement2d_gettilestyleuv(Lib3MF_Displacement2D pDisplacement2D, Lib3MF::eTextureTileStyle * pTileStyleU, Lib3MF::eTextureTileStyle * pTileStyleV);
+
+/**
+* Sets the displacement texture tile styles.
+*
+* @param[in] pDisplacement2D - Displacement2D instance.
+* @param[in] eTileStyleU - tile style in the u direction
+* @param[in] eTileStyleV - tile style in the v direction
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_displacement2d_settilestyleuv(Lib3MF_Displacement2D pDisplacement2D, Lib3MF::eTextureTileStyle eTileStyleU, Lib3MF::eTextureTileStyle eTileStyleV);
+
+/**
+* Returns the displacement texture filter.
+*
+* @param[in] pDisplacement2D - Displacement2D instance.
+* @param[out] pFilter - selected texture filter
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_displacement2d_getfilter(Lib3MF_Displacement2D pDisplacement2D, Lib3MF::eTextureFilter * pFilter);
+
+/**
+* Sets the displacement texture filter.
+*
+* @param[in] pDisplacement2D - Displacement2D instance.
+* @param[in] eFilter - selected texture filter
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_displacement2d_setfilter(Lib3MF_Displacement2D pDisplacement2D, Lib3MF::eTextureFilter eFilter);
+
+/*************************************************************************************************************************
+ Class definition for NormVectorGroup
+**************************************************************************************************************************/
+
+/**
+* Returns the number of normalized vectors.
+*
+* @param[in] pNormVectorGroup - NormVectorGroup instance.
+* @param[out] pCount - number of vectors
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_normvectorgroup_getcount(Lib3MF_NormVectorGroup pNormVectorGroup, Lib3MF_uint32 * pCount);
+
+/**
+* Adds a normalized displacement vector.
+*
+* @param[in] pNormVectorGroup - NormVectorGroup instance.
+* @param[in] pVector - vector to add; non-unit vectors are normalized
+* @param[out] pIndex - zero-based vector index
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_normvectorgroup_addvector(Lib3MF_NormVectorGroup pNormVectorGroup, const Lib3MF::sVector * pVector, Lib3MF_uint32 * pIndex);
+
+/**
+* Returns a normalized displacement vector.
+*
+* @param[in] pNormVectorGroup - NormVectorGroup instance.
+* @param[in] nIndex - zero-based vector index
+* @param[out] pVector - normalized vector
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_normvectorgroup_getvector(Lib3MF_NormVectorGroup pNormVectorGroup, Lib3MF_uint32 nIndex, Lib3MF::sVector * pVector);
+
+/**
+* Updates a normalized displacement vector.
+*
+* @param[in] pNormVectorGroup - NormVectorGroup instance.
+* @param[in] nIndex - zero-based vector index
+* @param[in] pVector - new vector; non-unit vectors are normalized
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_normvectorgroup_setvector(Lib3MF_NormVectorGroup pNormVectorGroup, Lib3MF_uint32 nIndex, const Lib3MF::sVector * pVector);
+
+/*************************************************************************************************************************
+ Class definition for Disp2DGroup
+**************************************************************************************************************************/
+
+/**
+* Returns the displacement texture used by this group.
+*
+* @param[in] pDisp2DGroup - Disp2DGroup instance.
+* @param[out] pDisplacement2D - displacement texture resource
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_disp2dgroup_getdisplacement2d(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_Displacement2D * pDisplacement2D);
+
+/**
+* Returns the normalized vector group used by this group.
+*
+* @param[in] pDisp2DGroup - Disp2DGroup instance.
+* @param[out] pNormVectorGroup - normalized vector group
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_disp2dgroup_getnormalvectorgroup(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_NormVectorGroup * pNormVectorGroup);
+
+/**
+* Returns the displacement amplitude in model units.
+*
+* @param[in] pDisp2DGroup - Disp2DGroup instance.
+* @param[out] pHeight - displacement amplitude
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_disp2dgroup_getheight(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_double * pHeight);
+
+/**
+* Sets the displacement amplitude in model units.
+*
+* @param[in] pDisp2DGroup - Disp2DGroup instance.
+* @param[in] dHeight - displacement amplitude
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_disp2dgroup_setheight(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_double dHeight);
+
+/**
+* Returns the displacement offset in model units.
+*
+* @param[in] pDisp2DGroup - Disp2DGroup instance.
+* @param[out] pOffset - displacement offset
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_disp2dgroup_getoffset(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_double * pOffset);
+
+/**
+* Sets the displacement offset in model units.
+*
+* @param[in] pDisp2DGroup - Disp2DGroup instance.
+* @param[in] dOffset - displacement offset
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_disp2dgroup_setoffset(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_double dOffset);
+
+/**
+* Returns the number of displacement coordinates.
+*
+* @param[in] pDisp2DGroup - Disp2DGroup instance.
+* @param[out] pCount - number of coordinates
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_disp2dgroup_getcount(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_uint32 * pCount);
+
+/**
+* Adds a displacement coordinate.
+*
+* @param[in] pDisp2DGroup - Disp2DGroup instance.
+* @param[in] pCoordinate - coordinate to add
+* @param[out] pIndex - zero-based coordinate index
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_disp2dgroup_addcoordinate(Lib3MF_Disp2DGroup pDisp2DGroup, const Lib3MF::sDisplacement2DCoordinate * pCoordinate, Lib3MF_uint32 * pIndex);
+
+/**
+* Returns a displacement coordinate.
+*
+* @param[in] pDisp2DGroup - Disp2DGroup instance.
+* @param[in] nIndex - zero-based coordinate index
+* @param[out] pCoordinate - displacement coordinate
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_disp2dgroup_getcoordinate(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_uint32 nIndex, Lib3MF::sDisplacement2DCoordinate * pCoordinate);
+
+/**
+* Updates a displacement coordinate.
+*
+* @param[in] pDisp2DGroup - Disp2DGroup instance.
+* @param[in] nIndex - zero-based coordinate index
+* @param[in] pCoordinate - new displacement coordinate
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_disp2dgroup_setcoordinate(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_uint32 nIndex, const Lib3MF::sDisplacement2DCoordinate * pCoordinate);
 
 /*************************************************************************************************************************
  Class definition for Texture2D
@@ -6345,6 +6669,46 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getcomponentsobjectbyid(Lib3MF_Model p
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getbooleanobjectbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_BooleanObject * pBooleanObjectInstance);
 
 /**
+* finds a displacement mesh object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pDisplacementMeshObjectInstance - returns the displacement mesh object instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getdisplacementmeshobjectbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_DisplacementMeshObject * pDisplacementMeshObjectInstance);
+
+/**
+* finds a displacement texture resource by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pDisplacement2DInstance - returns the displacement texture instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getdisplacement2dbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Displacement2D * pDisplacement2DInstance);
+
+/**
+* finds a normalized vector group by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pNormVectorGroupInstance - returns the normalized vector group instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getnormvectorgroupbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_NormVectorGroup * pNormVectorGroupInstance);
+
+/**
+* finds a displacement coordinate group by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pDisp2DGroupInstance - returns the displacement coordinate group instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getdisp2dgroupbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Disp2DGroup * pDisp2DGroupInstance);
+
+/**
 * finds a model color group by its UniqueResourceID
 *
 * @param[in] pModel - Model instance.
@@ -6457,6 +6821,42 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getcomponentsobjects(Lib3MF_Model pMod
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getbooleanobjects(Lib3MF_Model pModel, Lib3MF_BooleanObjectIterator * pResourceIterator);
+
+/**
+* creates an iterator over all displacement mesh objects.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pResourceIterator - returns the iterator instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getdisplacementmeshobjects(Lib3MF_Model pModel, Lib3MF_DisplacementMeshObjectIterator * pResourceIterator);
+
+/**
+* creates an iterator over all displacement texture resources.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pResourceIterator - returns the iterator instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getdisplacement2ds(Lib3MF_Model pModel, Lib3MF_Displacement2DIterator * pResourceIterator);
+
+/**
+* creates an iterator over all normalized vector groups.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pResourceIterator - returns the iterator instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getnormvectorgroups(Lib3MF_Model pModel, Lib3MF_NormVectorGroupIterator * pResourceIterator);
+
+/**
+* creates an iterator over all displacement coordinate groups.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pResourceIterator - returns the iterator instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getdisp2dgroups(Lib3MF_Model pModel, Lib3MF_Disp2DGroupIterator * pResourceIterator);
 
 /**
 * creates a Texture2DIterator instance with all texture2d resources.
@@ -6574,6 +6974,47 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addcomponentsobject(Lib3MF_Model pMode
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addbooleanobject(Lib3MF_Model pModel, Lib3MF_BooleanObject * pBooleanObjectInstance);
+
+/**
+* adds an empty displacement mesh object to the model.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pDisplacementMeshObjectInstance - returns the displacement mesh object instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_adddisplacementmeshobject(Lib3MF_Model pModel, Lib3MF_DisplacementMeshObject * pDisplacementMeshObjectInstance);
+
+/**
+* adds a displacement texture resource using a PNG attachment.
+*
+* @param[in] pModel - Model instance.
+* @param[in] pTextureAttachment - PNG attachment containing the displacement image
+* @param[out] pDisplacement2DInstance - returns the displacement texture instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_adddisplacement2d(Lib3MF_Model pModel, Lib3MF_Attachment pTextureAttachment, Lib3MF_Displacement2D * pDisplacement2DInstance);
+
+/**
+* adds an empty normalized vector group to the model.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pNormVectorGroupInstance - returns the normalized vector group instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addnormvectorgroup(Lib3MF_Model pModel, Lib3MF_NormVectorGroup * pNormVectorGroupInstance);
+
+/**
+* adds an empty displacement coordinate group to the model.
+*
+* @param[in] pModel - Model instance.
+* @param[in] pDisplacement2D - displacement texture used by the group
+* @param[in] pNormalVectorGroup - normalized vectors used by the group
+* @param[in] dHeight - displacement amplitude in model units
+* @param[in] dOffset - displacement offset in model units
+* @param[out] pDisp2DGroupInstance - returns the displacement coordinate group instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_adddisp2dgroup(Lib3MF_Model pModel, Lib3MF_Displacement2D pDisplacement2D, Lib3MF_NormVectorGroup pNormalVectorGroup, Lib3MF_double dHeight, Lib3MF_double dOffset, Lib3MF_Disp2DGroup * pDisp2DGroupInstance);
 
 /**
 * creates a new model slicestack by its id

@@ -388,6 +388,19 @@ type Tex2Coord struct {
 	V float64
 }
 
+// Displacement2DCoordinate represents a Lib3MF struct.
+type Displacement2DCoordinate struct {
+	U float64
+	V float64
+	NormalVectorIndex uint32
+	DisplacementFactor float64
+}
+
+// TriangleDisplacement represents a Lib3MF struct.
+type TriangleDisplacement struct {
+	DisplacementIndices[3] uint32
+}
+
 // Transform represents a Lib3MF struct.
 type Transform struct {
 	Fields[4][3] float32
@@ -1282,6 +1295,86 @@ func (inst BooleanObjectIterator) GetCurrentBooleanObject() (BooleanObject, erro
 }
 
 
+// DisplacementMeshObjectIterator represents a Lib3MF class.
+type DisplacementMeshObjectIterator struct {
+	ResourceIterator
+}
+
+func (wrapper Wrapper) NewDisplacementMeshObjectIterator(r ref) DisplacementMeshObjectIterator {
+	return DisplacementMeshObjectIterator{wrapper.NewResourceIterator(r)}
+}
+
+// GetCurrentDisplacementMeshObject returns the DisplacementMeshObject the iterator points at.
+func (inst DisplacementMeshObjectIterator) GetCurrentDisplacementMeshObject() (DisplacementMeshObject, error) {
+	var resource ref
+	ret := C.CCall_lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject(inst.wrapperRef.LibraryHandle, inst.Ref, &resource)
+	if ret != 0 {
+		return DisplacementMeshObject{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDisplacementMeshObject(resource), nil
+}
+
+
+// Displacement2DIterator represents a Lib3MF class.
+type Displacement2DIterator struct {
+	ResourceIterator
+}
+
+func (wrapper Wrapper) NewDisplacement2DIterator(r ref) Displacement2DIterator {
+	return Displacement2DIterator{wrapper.NewResourceIterator(r)}
+}
+
+// GetCurrentDisplacement2D returns the Displacement2D resource the iterator points at.
+func (inst Displacement2DIterator) GetCurrentDisplacement2D() (Displacement2D, error) {
+	var resource ref
+	ret := C.CCall_lib3mf_displacement2diterator_getcurrentdisplacement2d(inst.wrapperRef.LibraryHandle, inst.Ref, &resource)
+	if ret != 0 {
+		return Displacement2D{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDisplacement2D(resource), nil
+}
+
+
+// NormVectorGroupIterator represents a Lib3MF class.
+type NormVectorGroupIterator struct {
+	ResourceIterator
+}
+
+func (wrapper Wrapper) NewNormVectorGroupIterator(r ref) NormVectorGroupIterator {
+	return NormVectorGroupIterator{wrapper.NewResourceIterator(r)}
+}
+
+// GetCurrentNormVectorGroup returns the NormVectorGroup resource the iterator points at.
+func (inst NormVectorGroupIterator) GetCurrentNormVectorGroup() (NormVectorGroup, error) {
+	var resource ref
+	ret := C.CCall_lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup(inst.wrapperRef.LibraryHandle, inst.Ref, &resource)
+	if ret != 0 {
+		return NormVectorGroup{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewNormVectorGroup(resource), nil
+}
+
+
+// Disp2DGroupIterator represents a Lib3MF class.
+type Disp2DGroupIterator struct {
+	ResourceIterator
+}
+
+func (wrapper Wrapper) NewDisp2DGroupIterator(r ref) Disp2DGroupIterator {
+	return Disp2DGroupIterator{wrapper.NewResourceIterator(r)}
+}
+
+// GetCurrentDisp2DGroup returns the Disp2DGroup resource the iterator points at.
+func (inst Disp2DGroupIterator) GetCurrentDisp2DGroup() (Disp2DGroup, error) {
+	var resource ref
+	ret := C.CCall_lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup(inst.wrapperRef.LibraryHandle, inst.Ref, &resource)
+	if ret != 0 {
+		return Disp2DGroup{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDisp2DGroup(resource), nil
+}
+
+
 // Texture2DIterator represents a Lib3MF class.
 type Texture2DIterator struct {
 	ResourceIterator
@@ -1952,6 +2045,16 @@ func (inst Object) IsBooleanObject() (bool, error) {
 	return bool(isBooleanObject), nil
 }
 
+// IsDisplacementMeshObject retrieves whether an object is a displacement mesh object.
+func (inst Object) IsDisplacementMeshObject() (bool, error) {
+	var isDisplacementMeshObject C.bool
+	ret := C.CCall_lib3mf_object_isdisplacementmeshobject(inst.wrapperRef.LibraryHandle, inst.Ref, &isDisplacementMeshObject)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(isDisplacementMeshObject), nil
+}
+
 // IsValid retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.
 func (inst Object) IsValid() (bool, error) {
 	var isValid C.bool
@@ -2397,6 +2500,55 @@ func (inst MeshObject) GetTriangleSet(index uint32) (TriangleSet, error) {
 		return TriangleSet{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewTriangleSet(theTriangleSet), nil
+}
+
+
+// DisplacementMeshObject represents a Lib3MF class.
+type DisplacementMeshObject struct {
+	MeshObject
+}
+
+func (wrapper Wrapper) NewDisplacementMeshObject(r ref) DisplacementMeshObject {
+	return DisplacementMeshObject{wrapper.NewMeshObject(r)}
+}
+
+// HasTriangleDisplacement returns whether a triangle has displacement information assigned.
+func (inst DisplacementMeshObject) HasTriangleDisplacement(index uint32) (bool, error) {
+	var hasDisplacement C.bool
+	ret := C.CCall_lib3mf_displacementmeshobject_hastriangledisplacement(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &hasDisplacement)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(hasDisplacement), nil
+}
+
+// SetTriangleDisplacement assigns a displacement group and coordinate indices to a triangle.
+func (inst DisplacementMeshObject) SetTriangleDisplacement(index uint32, disp2DGroup Disp2DGroup, displacement TriangleDisplacement) error {
+	ret := C.CCall_lib3mf_displacementmeshobject_settriangledisplacement(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), disp2DGroup.Ref, (*C.sLib3MFTriangleDisplacement)(unsafe.Pointer(&displacement)))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetTriangleDisplacement returns the displacement group and coordinate indices assigned to a triangle.
+func (inst DisplacementMeshObject) GetTriangleDisplacement(index uint32) (Disp2DGroup, TriangleDisplacement, error) {
+	var disp2DGroup ref
+	var displacement C.sLib3MFTriangleDisplacement
+	ret := C.CCall_lib3mf_displacementmeshobject_gettriangledisplacement(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &disp2DGroup, &displacement)
+	if ret != 0 {
+		return Disp2DGroup{}, TriangleDisplacement{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDisp2DGroup(disp2DGroup), *(*TriangleDisplacement)(unsafe.Pointer(&displacement)), nil
+}
+
+// ClearTriangleDisplacement removes displacement information from a triangle.
+func (inst DisplacementMeshObject) ClearTriangleDisplacement(index uint32) error {
+	ret := C.CCall_lib3mf_displacementmeshobject_cleartriangledisplacement(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
 }
 
 
@@ -4340,6 +4492,249 @@ func (inst Attachment) WriteToBuffer(buffer []uint8) ([]uint8, error) {
 // ReadFromBuffer reads an attachment from a memory buffer. This buffer is immediately read (in contrast to the ReadFromCallback and ReadFromFile-methods).
 func (inst Attachment) ReadFromBuffer(buffer []uint8) error {
 	ret := C.CCall_lib3mf_attachment_readfrombuffer(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(len(buffer)), (*C.uint8_t)(unsafe.Pointer(&buffer[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// Displacement2D represents a Lib3MF class.
+type Displacement2D struct {
+	Resource
+}
+
+func (wrapper Wrapper) NewDisplacement2D(r ref) Displacement2D {
+	return Displacement2D{wrapper.NewResource(r)}
+}
+
+// GetAttachment retrieves the PNG attachment used as displacement texture.
+func (inst Displacement2D) GetAttachment() (Attachment, error) {
+	var attachment ref
+	ret := C.CCall_lib3mf_displacement2d_getattachment(inst.wrapperRef.LibraryHandle, inst.Ref, &attachment)
+	if ret != 0 {
+		return Attachment{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewAttachment(attachment), nil
+}
+
+// SetAttachment sets the PNG attachment used as displacement texture.
+func (inst Displacement2D) SetAttachment(attachment Attachment) error {
+	ret := C.CCall_lib3mf_displacement2d_setattachment(inst.wrapperRef.LibraryHandle, inst.Ref, attachment.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetChannel returns the image channel used for displacement values.
+func (inst Displacement2D) GetChannel() (ChannelName, error) {
+	var channel C.eLib3MFChannelName
+	ret := C.CCall_lib3mf_displacement2d_getchannel(inst.wrapperRef.LibraryHandle, inst.Ref, &channel)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return ChannelName(channel), nil
+}
+
+// SetChannel sets the image channel used for displacement values.
+func (inst Displacement2D) SetChannel(channel ChannelName) error {
+	ret := C.CCall_lib3mf_displacement2d_setchannel(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFChannelName(channel))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetTileStyleUV returns the displacement texture tile styles.
+func (inst Displacement2D) GetTileStyleUV() (TextureTileStyle, TextureTileStyle, error) {
+	var tileStyleU C.eLib3MFTextureTileStyle
+	var tileStyleV C.eLib3MFTextureTileStyle
+	ret := C.CCall_lib3mf_displacement2d_gettilestyleuv(inst.wrapperRef.LibraryHandle, inst.Ref, &tileStyleU, &tileStyleV)
+	if ret != 0 {
+		return 0, 0, makeError(uint32(ret))
+	}
+	return TextureTileStyle(tileStyleU), TextureTileStyle(tileStyleV), nil
+}
+
+// SetTileStyleUV sets the displacement texture tile styles.
+func (inst Displacement2D) SetTileStyleUV(tileStyleU TextureTileStyle, tileStyleV TextureTileStyle) error {
+	ret := C.CCall_lib3mf_displacement2d_settilestyleuv(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFTextureTileStyle(tileStyleU), C.eLib3MFTextureTileStyle(tileStyleV))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetFilter returns the displacement texture filter.
+func (inst Displacement2D) GetFilter() (TextureFilter, error) {
+	var filter C.eLib3MFTextureFilter
+	ret := C.CCall_lib3mf_displacement2d_getfilter(inst.wrapperRef.LibraryHandle, inst.Ref, &filter)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return TextureFilter(filter), nil
+}
+
+// SetFilter sets the displacement texture filter.
+func (inst Displacement2D) SetFilter(filter TextureFilter) error {
+	ret := C.CCall_lib3mf_displacement2d_setfilter(inst.wrapperRef.LibraryHandle, inst.Ref, C.eLib3MFTextureFilter(filter))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// NormVectorGroup represents a Lib3MF class.
+type NormVectorGroup struct {
+	Resource
+}
+
+func (wrapper Wrapper) NewNormVectorGroup(r ref) NormVectorGroup {
+	return NormVectorGroup{wrapper.NewResource(r)}
+}
+
+// GetCount returns the number of normalized vectors.
+func (inst NormVectorGroup) GetCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_normvectorgroup_getcount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// AddVector adds a normalized displacement vector.
+func (inst NormVectorGroup) AddVector(vector Vector) (uint32, error) {
+	var index C.uint32_t
+	ret := C.CCall_lib3mf_normvectorgroup_addvector(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.sLib3MFVector)(unsafe.Pointer(&vector)), &index)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(index), nil
+}
+
+// GetVector returns a normalized displacement vector.
+func (inst NormVectorGroup) GetVector(index uint32) (Vector, error) {
+	var vector C.sLib3MFVector
+	ret := C.CCall_lib3mf_normvectorgroup_getvector(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &vector)
+	if ret != 0 {
+		return Vector{}, makeError(uint32(ret))
+	}
+	return *(*Vector)(unsafe.Pointer(&vector)), nil
+}
+
+// SetVector updates a normalized displacement vector.
+func (inst NormVectorGroup) SetVector(index uint32, vector Vector) error {
+	ret := C.CCall_lib3mf_normvectorgroup_setvector(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), (*C.sLib3MFVector)(unsafe.Pointer(&vector)))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// Disp2DGroup represents a Lib3MF class.
+type Disp2DGroup struct {
+	Resource
+}
+
+func (wrapper Wrapper) NewDisp2DGroup(r ref) Disp2DGroup {
+	return Disp2DGroup{wrapper.NewResource(r)}
+}
+
+// GetDisplacement2D returns the displacement texture used by this group.
+func (inst Disp2DGroup) GetDisplacement2D() (Displacement2D, error) {
+	var displacement2D ref
+	ret := C.CCall_lib3mf_disp2dgroup_getdisplacement2d(inst.wrapperRef.LibraryHandle, inst.Ref, &displacement2D)
+	if ret != 0 {
+		return Displacement2D{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDisplacement2D(displacement2D), nil
+}
+
+// GetNormalVectorGroup returns the normalized vector group used by this group.
+func (inst Disp2DGroup) GetNormalVectorGroup() (NormVectorGroup, error) {
+	var normVectorGroup ref
+	ret := C.CCall_lib3mf_disp2dgroup_getnormalvectorgroup(inst.wrapperRef.LibraryHandle, inst.Ref, &normVectorGroup)
+	if ret != 0 {
+		return NormVectorGroup{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewNormVectorGroup(normVectorGroup), nil
+}
+
+// GetHeight returns the displacement amplitude in model units.
+func (inst Disp2DGroup) GetHeight() (float64, error) {
+	var height C.double
+	ret := C.CCall_lib3mf_disp2dgroup_getheight(inst.wrapperRef.LibraryHandle, inst.Ref, &height)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(height), nil
+}
+
+// SetHeight sets the displacement amplitude in model units.
+func (inst Disp2DGroup) SetHeight(height float64) error {
+	ret := C.CCall_lib3mf_disp2dgroup_setheight(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(height))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetOffset returns the displacement offset in model units.
+func (inst Disp2DGroup) GetOffset() (float64, error) {
+	var offset C.double
+	ret := C.CCall_lib3mf_disp2dgroup_getoffset(inst.wrapperRef.LibraryHandle, inst.Ref, &offset)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return float64(offset), nil
+}
+
+// SetOffset sets the displacement offset in model units.
+func (inst Disp2DGroup) SetOffset(offset float64) error {
+	ret := C.CCall_lib3mf_disp2dgroup_setoffset(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(offset))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetCount returns the number of displacement coordinates.
+func (inst Disp2DGroup) GetCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_disp2dgroup_getcount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// AddCoordinate adds a displacement coordinate.
+func (inst Disp2DGroup) AddCoordinate(coordinate Displacement2DCoordinate) (uint32, error) {
+	var index C.uint32_t
+	ret := C.CCall_lib3mf_disp2dgroup_addcoordinate(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.sLib3MFDisplacement2DCoordinate)(unsafe.Pointer(&coordinate)), &index)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(index), nil
+}
+
+// GetCoordinate returns a displacement coordinate.
+func (inst Disp2DGroup) GetCoordinate(index uint32) (Displacement2DCoordinate, error) {
+	var coordinate C.sLib3MFDisplacement2DCoordinate
+	ret := C.CCall_lib3mf_disp2dgroup_getcoordinate(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &coordinate)
+	if ret != 0 {
+		return Displacement2DCoordinate{}, makeError(uint32(ret))
+	}
+	return *(*Displacement2DCoordinate)(unsafe.Pointer(&coordinate)), nil
+}
+
+// SetCoordinate updates a displacement coordinate.
+func (inst Disp2DGroup) SetCoordinate(index uint32, coordinate Displacement2DCoordinate) error {
+	ret := C.CCall_lib3mf_disp2dgroup_setcoordinate(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), (*C.sLib3MFDisplacement2DCoordinate)(unsafe.Pointer(&coordinate)))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}
@@ -8234,6 +8629,46 @@ func (inst Model) GetBooleanObjectByID(uniqueResourceID uint32) (BooleanObject, 
 	return inst.wrapperRef.NewBooleanObject(booleanObjectInstance), nil
 }
 
+// GetDisplacementMeshObjectByID finds a displacement mesh object by its UniqueResourceID.
+func (inst Model) GetDisplacementMeshObjectByID(uniqueResourceID uint32) (DisplacementMeshObject, error) {
+	var displacementMeshObjectInstance ref
+	ret := C.CCall_lib3mf_model_getdisplacementmeshobjectbyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID), &displacementMeshObjectInstance)
+	if ret != 0 {
+		return DisplacementMeshObject{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDisplacementMeshObject(displacementMeshObjectInstance), nil
+}
+
+// GetDisplacement2DByID finds a displacement texture resource by its UniqueResourceID.
+func (inst Model) GetDisplacement2DByID(uniqueResourceID uint32) (Displacement2D, error) {
+	var displacement2DInstance ref
+	ret := C.CCall_lib3mf_model_getdisplacement2dbyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID), &displacement2DInstance)
+	if ret != 0 {
+		return Displacement2D{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDisplacement2D(displacement2DInstance), nil
+}
+
+// GetNormVectorGroupByID finds a normalized vector group by its UniqueResourceID.
+func (inst Model) GetNormVectorGroupByID(uniqueResourceID uint32) (NormVectorGroup, error) {
+	var normVectorGroupInstance ref
+	ret := C.CCall_lib3mf_model_getnormvectorgroupbyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID), &normVectorGroupInstance)
+	if ret != 0 {
+		return NormVectorGroup{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewNormVectorGroup(normVectorGroupInstance), nil
+}
+
+// GetDisp2DGroupByID finds a displacement coordinate group by its UniqueResourceID.
+func (inst Model) GetDisp2DGroupByID(uniqueResourceID uint32) (Disp2DGroup, error) {
+	var disp2DGroupInstance ref
+	ret := C.CCall_lib3mf_model_getdisp2dgroupbyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID), &disp2DGroupInstance)
+	if ret != 0 {
+		return Disp2DGroup{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDisp2DGroup(disp2DGroupInstance), nil
+}
+
 // GetColorGroupByID finds a model color group by its UniqueResourceID.
 func (inst Model) GetColorGroupByID(uniqueResourceID uint32) (ColorGroup, error) {
 	var colorGroupInstance ref
@@ -8359,6 +8794,46 @@ func (inst Model) GetBooleanObjects() (BooleanObjectIterator, error) {
 		return BooleanObjectIterator{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewBooleanObjectIterator(resourceIterator), nil
+}
+
+// GetDisplacementMeshObjects creates an iterator over all displacement mesh objects.
+func (inst Model) GetDisplacementMeshObjects() (DisplacementMeshObjectIterator, error) {
+	var resourceIterator ref
+	ret := C.CCall_lib3mf_model_getdisplacementmeshobjects(inst.wrapperRef.LibraryHandle, inst.Ref, &resourceIterator)
+	if ret != 0 {
+		return DisplacementMeshObjectIterator{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDisplacementMeshObjectIterator(resourceIterator), nil
+}
+
+// GetDisplacement2Ds creates an iterator over all displacement texture resources.
+func (inst Model) GetDisplacement2Ds() (Displacement2DIterator, error) {
+	var resourceIterator ref
+	ret := C.CCall_lib3mf_model_getdisplacement2ds(inst.wrapperRef.LibraryHandle, inst.Ref, &resourceIterator)
+	if ret != 0 {
+		return Displacement2DIterator{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDisplacement2DIterator(resourceIterator), nil
+}
+
+// GetNormVectorGroups creates an iterator over all normalized vector groups.
+func (inst Model) GetNormVectorGroups() (NormVectorGroupIterator, error) {
+	var resourceIterator ref
+	ret := C.CCall_lib3mf_model_getnormvectorgroups(inst.wrapperRef.LibraryHandle, inst.Ref, &resourceIterator)
+	if ret != 0 {
+		return NormVectorGroupIterator{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewNormVectorGroupIterator(resourceIterator), nil
+}
+
+// GetDisp2DGroups creates an iterator over all displacement coordinate groups.
+func (inst Model) GetDisp2DGroups() (Disp2DGroupIterator, error) {
+	var resourceIterator ref
+	ret := C.CCall_lib3mf_model_getdisp2dgroups(inst.wrapperRef.LibraryHandle, inst.Ref, &resourceIterator)
+	if ret != 0 {
+		return Disp2DGroupIterator{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDisp2DGroupIterator(resourceIterator), nil
 }
 
 // GetTexture2Ds creates a Texture2DIterator instance with all texture2d resources.
@@ -8488,6 +8963,46 @@ func (inst Model) AddBooleanObject() (BooleanObject, error) {
 		return BooleanObject{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewBooleanObject(booleanObjectInstance), nil
+}
+
+// AddDisplacementMeshObject adds an empty displacement mesh object to the model.
+func (inst Model) AddDisplacementMeshObject() (DisplacementMeshObject, error) {
+	var displacementMeshObjectInstance ref
+	ret := C.CCall_lib3mf_model_adddisplacementmeshobject(inst.wrapperRef.LibraryHandle, inst.Ref, &displacementMeshObjectInstance)
+	if ret != 0 {
+		return DisplacementMeshObject{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDisplacementMeshObject(displacementMeshObjectInstance), nil
+}
+
+// AddDisplacement2D adds a displacement texture resource using a PNG attachment.
+func (inst Model) AddDisplacement2D(textureAttachment Attachment) (Displacement2D, error) {
+	var displacement2DInstance ref
+	ret := C.CCall_lib3mf_model_adddisplacement2d(inst.wrapperRef.LibraryHandle, inst.Ref, textureAttachment.Ref, &displacement2DInstance)
+	if ret != 0 {
+		return Displacement2D{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDisplacement2D(displacement2DInstance), nil
+}
+
+// AddNormVectorGroup adds an empty normalized vector group to the model.
+func (inst Model) AddNormVectorGroup() (NormVectorGroup, error) {
+	var normVectorGroupInstance ref
+	ret := C.CCall_lib3mf_model_addnormvectorgroup(inst.wrapperRef.LibraryHandle, inst.Ref, &normVectorGroupInstance)
+	if ret != 0 {
+		return NormVectorGroup{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewNormVectorGroup(normVectorGroupInstance), nil
+}
+
+// AddDisp2DGroup adds an empty displacement coordinate group to the model.
+func (inst Model) AddDisp2DGroup(displacement2D Displacement2D, normalVectorGroup NormVectorGroup, height float64, offset float64) (Disp2DGroup, error) {
+	var disp2DGroupInstance ref
+	ret := C.CCall_lib3mf_model_adddisp2dgroup(inst.wrapperRef.LibraryHandle, inst.Ref, displacement2D.Ref, normalVectorGroup.Ref, C.double(height), C.double(offset), &disp2DGroupInstance)
+	if ret != 0 {
+		return Disp2DGroup{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewDisp2DGroup(disp2DGroupInstance), nil
 }
 
 // AddSliceStack creates a new model slicestack by its id.

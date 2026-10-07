@@ -544,6 +544,10 @@ namespace NMR {
 		case NMR_ERROR_XMLPARSER_INVALID_ESCAPESTRING: return "XML contains an invalid escape character.";
 		case NMR_ERROR_DUPLICATE_BOX_ATTRIBUTE: return "A box attribute is duplicated.";
 		case NMR_ERROR_DUPLICATE_MATINDICES_ATTRIBUTE: return "A matindices attribute is duplicated.";
+		case NMR_ERROR_DISPLACEMENTEXTENSION_NOT_REQUIRED: return "Displacement content requires the displacement extension namespace.";
+		case NMR_ERROR_DISPLACEMENT_NOT_APPLIED: return "Displacement is not applied to the mesh geometry. Write a 3MF file, or clear the triangle displacements first.";
+		case NMR_ERROR_DISPLACEMENTMESH_UNSUPPORTEDDATA: return "Beam lattice and volume data are not supported on a displacement mesh.";
+		case NMR_ERROR_DISPLACEMENTGROUP_IN_OTHER_PART: return "A displacement mesh can only use displacement groups from the same model part.";
 
 		// Library errors (0xAXXX)
 		case NMR_ERROR_COULDNOTGETINTERFACEVERSION: return "Could not get interface version";

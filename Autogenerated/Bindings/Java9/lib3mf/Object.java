@@ -181,6 +181,18 @@ public class Object extends Resource {
 	}
 
 	/**
+	 * Retrieves whether an object is a displacement mesh object.
+	 *
+	 * @return returns whether the object is a displacement mesh object
+	 * @throws Lib3MFException
+	 */
+	public boolean isDisplacementMeshObject() throws Lib3MFException {
+		Pointer bufferIsDisplacementMeshObject = new Memory(1);
+		mWrapper.checkError(this, mWrapper.lib3mf_object_isdisplacementmeshobject.invokeInt(new java.lang.Object[]{mHandle, bufferIsDisplacementMeshObject}));
+		return bufferIsDisplacementMeshObject.getByte(0) != 0;
+	}
+
+	/**
 	 * Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.
 	 *
 	 * @return returns whether the object is a valid object description

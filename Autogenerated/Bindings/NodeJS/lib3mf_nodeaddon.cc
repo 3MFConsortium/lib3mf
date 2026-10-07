@@ -59,6 +59,10 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFMeshObjectIterator::Init();
 	CLib3MFComponentsObjectIterator::Init();
 	CLib3MFBooleanObjectIterator::Init();
+	CLib3MFDisplacementMeshObjectIterator::Init();
+	CLib3MFDisplacement2DIterator::Init();
+	CLib3MFNormVectorGroupIterator::Init();
+	CLib3MFDisp2DGroupIterator::Init();
 	CLib3MFTexture2DIterator::Init();
 	CLib3MFBaseMaterialGroupIterator::Init();
 	CLib3MFColorGroupIterator::Init();
@@ -73,6 +77,7 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFTriangleSet::Init();
 	CLib3MFObject::Init();
 	CLib3MFMeshObject::Init();
+	CLib3MFDisplacementMeshObject::Init();
 	CLib3MFLevelSet::Init();
 	CLib3MFBooleanObject::Init();
 	CLib3MFBeamLattice::Init();
@@ -93,6 +98,9 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 	CLib3MFImage3D::Init();
 	CLib3MFImageStack::Init();
 	CLib3MFAttachment::Init();
+	CLib3MFDisplacement2D::Init();
+	CLib3MFNormVectorGroup::Init();
+	CLib3MFDisp2DGroup::Init();
 	CLib3MFTexture2D::Init();
 	CLib3MFImplicitPort::Init();
 	CLib3MFIterator::Init();

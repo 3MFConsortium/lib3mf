@@ -220,6 +220,10 @@ typedef Lib3MFHandle Lib3MF_ObjectIterator;
 typedef Lib3MFHandle Lib3MF_MeshObjectIterator;
 typedef Lib3MFHandle Lib3MF_ComponentsObjectIterator;
 typedef Lib3MFHandle Lib3MF_BooleanObjectIterator;
+typedef Lib3MFHandle Lib3MF_DisplacementMeshObjectIterator;
+typedef Lib3MFHandle Lib3MF_Displacement2DIterator;
+typedef Lib3MFHandle Lib3MF_NormVectorGroupIterator;
+typedef Lib3MFHandle Lib3MF_Disp2DGroupIterator;
 typedef Lib3MFHandle Lib3MF_Texture2DIterator;
 typedef Lib3MFHandle Lib3MF_BaseMaterialGroupIterator;
 typedef Lib3MFHandle Lib3MF_ColorGroupIterator;
@@ -234,6 +238,7 @@ typedef Lib3MFHandle Lib3MF_MetaDataGroup;
 typedef Lib3MFHandle Lib3MF_TriangleSet;
 typedef Lib3MFHandle Lib3MF_Object;
 typedef Lib3MFHandle Lib3MF_MeshObject;
+typedef Lib3MFHandle Lib3MF_DisplacementMeshObject;
 typedef Lib3MFHandle Lib3MF_LevelSet;
 typedef Lib3MFHandle Lib3MF_BooleanObject;
 typedef Lib3MFHandle Lib3MF_BeamLattice;
@@ -254,6 +259,9 @@ typedef Lib3MFHandle Lib3MF_MultiPropertyGroup;
 typedef Lib3MFHandle Lib3MF_Image3D;
 typedef Lib3MFHandle Lib3MF_ImageStack;
 typedef Lib3MFHandle Lib3MF_Attachment;
+typedef Lib3MFHandle Lib3MF_Displacement2D;
+typedef Lib3MFHandle Lib3MF_NormVectorGroup;
+typedef Lib3MFHandle Lib3MF_Disp2DGroup;
 typedef Lib3MFHandle Lib3MF_Texture2D;
 typedef Lib3MFHandle Lib3MF_ImplicitPort;
 typedef Lib3MFHandle Lib3MF_Iterator;
@@ -608,6 +616,17 @@ namespace Lib3MF {
       Lib3MF_double m_V;
   } sTex2Coord;
   
+  typedef struct sDisplacement2DCoordinate {
+      Lib3MF_double m_U;
+      Lib3MF_double m_V;
+      Lib3MF_uint32 m_NormalVectorIndex;
+      Lib3MF_double m_DisplacementFactor;
+  } sDisplacement2DCoordinate;
+  
+  typedef struct sTriangleDisplacement {
+      Lib3MF_uint32 m_DisplacementIndices[3];
+  } sTriangleDisplacement;
+  
   typedef struct sTransform {
       Lib3MF_single m_Fields[4][3];
   } sTransform;
@@ -757,6 +776,8 @@ typedef Lib3MF::sPosition2D sLib3MFPosition2D;
 typedef Lib3MF::sCompositeConstituent sLib3MFCompositeConstituent;
 typedef Lib3MF::sMultiPropertyLayer sLib3MFMultiPropertyLayer;
 typedef Lib3MF::sTex2Coord sLib3MFTex2Coord;
+typedef Lib3MF::sDisplacement2DCoordinate sLib3MFDisplacement2DCoordinate;
+typedef Lib3MF::sTriangleDisplacement sLib3MFTriangleDisplacement;
 typedef Lib3MF::sTransform sLib3MFTransform;
 typedef Lib3MF::sBox sLib3MFBox;
 typedef Lib3MF::sColor sLib3MFColor;

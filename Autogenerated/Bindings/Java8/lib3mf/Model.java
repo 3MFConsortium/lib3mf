@@ -374,6 +374,82 @@ public class Model extends Base {
 	}
 
 	/**
+	 * finds a displacement mesh object by its UniqueResourceID
+	 *
+	 * @param uniqueResourceID UniqueResourceID
+	 * @return returns the displacement mesh object instance
+	 * @throws Lib3MFException
+	 */
+	public DisplacementMeshObject getDisplacementMeshObjectByID(int uniqueResourceID) throws Lib3MFException {
+		Pointer bufferDisplacementMeshObjectInstance = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_model_getdisplacementmeshobjectbyid.invokeInt(new java.lang.Object[]{mHandle, uniqueResourceID, bufferDisplacementMeshObjectInstance}));
+		Pointer valueDisplacementMeshObjectInstance = bufferDisplacementMeshObjectInstance.getPointer(0);
+		DisplacementMeshObject displacementMeshObjectInstance = null;
+		if (valueDisplacementMeshObjectInstance == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "DisplacementMeshObjectInstance was a null pointer");
+		}
+		displacementMeshObjectInstance = mWrapper.PolymorphicFactory(valueDisplacementMeshObjectInstance, DisplacementMeshObject.class);
+		return displacementMeshObjectInstance;
+	}
+
+	/**
+	 * finds a displacement texture resource by its UniqueResourceID
+	 *
+	 * @param uniqueResourceID UniqueResourceID
+	 * @return returns the displacement texture instance
+	 * @throws Lib3MFException
+	 */
+	public Displacement2D getDisplacement2DByID(int uniqueResourceID) throws Lib3MFException {
+		Pointer bufferDisplacement2DInstance = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_model_getdisplacement2dbyid.invokeInt(new java.lang.Object[]{mHandle, uniqueResourceID, bufferDisplacement2DInstance}));
+		Pointer valueDisplacement2DInstance = bufferDisplacement2DInstance.getPointer(0);
+		Displacement2D displacement2DInstance = null;
+		if (valueDisplacement2DInstance == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "Displacement2DInstance was a null pointer");
+		}
+		displacement2DInstance = mWrapper.PolymorphicFactory(valueDisplacement2DInstance, Displacement2D.class);
+		return displacement2DInstance;
+	}
+
+	/**
+	 * finds a normalized vector group by its UniqueResourceID
+	 *
+	 * @param uniqueResourceID UniqueResourceID
+	 * @return returns the normalized vector group instance
+	 * @throws Lib3MFException
+	 */
+	public NormVectorGroup getNormVectorGroupByID(int uniqueResourceID) throws Lib3MFException {
+		Pointer bufferNormVectorGroupInstance = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_model_getnormvectorgroupbyid.invokeInt(new java.lang.Object[]{mHandle, uniqueResourceID, bufferNormVectorGroupInstance}));
+		Pointer valueNormVectorGroupInstance = bufferNormVectorGroupInstance.getPointer(0);
+		NormVectorGroup normVectorGroupInstance = null;
+		if (valueNormVectorGroupInstance == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "NormVectorGroupInstance was a null pointer");
+		}
+		normVectorGroupInstance = mWrapper.PolymorphicFactory(valueNormVectorGroupInstance, NormVectorGroup.class);
+		return normVectorGroupInstance;
+	}
+
+	/**
+	 * finds a displacement coordinate group by its UniqueResourceID
+	 *
+	 * @param uniqueResourceID UniqueResourceID
+	 * @return returns the displacement coordinate group instance
+	 * @throws Lib3MFException
+	 */
+	public Disp2DGroup getDisp2DGroupByID(int uniqueResourceID) throws Lib3MFException {
+		Pointer bufferDisp2DGroupInstance = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_model_getdisp2dgroupbyid.invokeInt(new java.lang.Object[]{mHandle, uniqueResourceID, bufferDisp2DGroupInstance}));
+		Pointer valueDisp2DGroupInstance = bufferDisp2DGroupInstance.getPointer(0);
+		Disp2DGroup disp2DGroupInstance = null;
+		if (valueDisp2DGroupInstance == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "Disp2DGroupInstance was a null pointer");
+		}
+		disp2DGroupInstance = mWrapper.PolymorphicFactory(valueDisp2DGroupInstance, Disp2DGroup.class);
+		return disp2DGroupInstance;
+	}
+
+	/**
 	 * finds a model color group by its UniqueResourceID
 	 *
 	 * @param uniqueResourceID UniqueResourceID
@@ -594,6 +670,78 @@ public class Model extends Base {
 		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "ResourceIterator was a null pointer");
 		}
 		resourceIterator = mWrapper.PolymorphicFactory(valueResourceIterator, BooleanObjectIterator.class);
+		return resourceIterator;
+	}
+
+	/**
+	 * creates an iterator over all displacement mesh objects.
+	 *
+	 * @return returns the iterator instance
+	 * @throws Lib3MFException
+	 */
+	public DisplacementMeshObjectIterator getDisplacementMeshObjects() throws Lib3MFException {
+		Pointer bufferResourceIterator = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_model_getdisplacementmeshobjects.invokeInt(new java.lang.Object[]{mHandle, bufferResourceIterator}));
+		Pointer valueResourceIterator = bufferResourceIterator.getPointer(0);
+		DisplacementMeshObjectIterator resourceIterator = null;
+		if (valueResourceIterator == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "ResourceIterator was a null pointer");
+		}
+		resourceIterator = mWrapper.PolymorphicFactory(valueResourceIterator, DisplacementMeshObjectIterator.class);
+		return resourceIterator;
+	}
+
+	/**
+	 * creates an iterator over all displacement texture resources.
+	 *
+	 * @return returns the iterator instance
+	 * @throws Lib3MFException
+	 */
+	public Displacement2DIterator getDisplacement2Ds() throws Lib3MFException {
+		Pointer bufferResourceIterator = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_model_getdisplacement2ds.invokeInt(new java.lang.Object[]{mHandle, bufferResourceIterator}));
+		Pointer valueResourceIterator = bufferResourceIterator.getPointer(0);
+		Displacement2DIterator resourceIterator = null;
+		if (valueResourceIterator == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "ResourceIterator was a null pointer");
+		}
+		resourceIterator = mWrapper.PolymorphicFactory(valueResourceIterator, Displacement2DIterator.class);
+		return resourceIterator;
+	}
+
+	/**
+	 * creates an iterator over all normalized vector groups.
+	 *
+	 * @return returns the iterator instance
+	 * @throws Lib3MFException
+	 */
+	public NormVectorGroupIterator getNormVectorGroups() throws Lib3MFException {
+		Pointer bufferResourceIterator = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_model_getnormvectorgroups.invokeInt(new java.lang.Object[]{mHandle, bufferResourceIterator}));
+		Pointer valueResourceIterator = bufferResourceIterator.getPointer(0);
+		NormVectorGroupIterator resourceIterator = null;
+		if (valueResourceIterator == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "ResourceIterator was a null pointer");
+		}
+		resourceIterator = mWrapper.PolymorphicFactory(valueResourceIterator, NormVectorGroupIterator.class);
+		return resourceIterator;
+	}
+
+	/**
+	 * creates an iterator over all displacement coordinate groups.
+	 *
+	 * @return returns the iterator instance
+	 * @throws Lib3MFException
+	 */
+	public Disp2DGroupIterator getDisp2DGroups() throws Lib3MFException {
+		Pointer bufferResourceIterator = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_model_getdisp2dgroups.invokeInt(new java.lang.Object[]{mHandle, bufferResourceIterator}));
+		Pointer valueResourceIterator = bufferResourceIterator.getPointer(0);
+		Disp2DGroupIterator resourceIterator = null;
+		if (valueResourceIterator == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "ResourceIterator was a null pointer");
+		}
+		resourceIterator = mWrapper.PolymorphicFactory(valueResourceIterator, Disp2DGroupIterator.class);
 		return resourceIterator;
 	}
 
@@ -827,6 +975,101 @@ public class Model extends Base {
 		}
 		booleanObjectInstance = mWrapper.PolymorphicFactory(valueBooleanObjectInstance, BooleanObject.class);
 		return booleanObjectInstance;
+	}
+
+	/**
+	 * adds an empty displacement mesh object to the model.
+	 *
+	 * @return returns the displacement mesh object instance
+	 * @throws Lib3MFException
+	 */
+	public DisplacementMeshObject addDisplacementMeshObject() throws Lib3MFException {
+		Pointer bufferDisplacementMeshObjectInstance = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_model_adddisplacementmeshobject.invokeInt(new java.lang.Object[]{mHandle, bufferDisplacementMeshObjectInstance}));
+		Pointer valueDisplacementMeshObjectInstance = bufferDisplacementMeshObjectInstance.getPointer(0);
+		DisplacementMeshObject displacementMeshObjectInstance = null;
+		if (valueDisplacementMeshObjectInstance == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "DisplacementMeshObjectInstance was a null pointer");
+		}
+		displacementMeshObjectInstance = mWrapper.PolymorphicFactory(valueDisplacementMeshObjectInstance, DisplacementMeshObject.class);
+		return displacementMeshObjectInstance;
+	}
+
+	/**
+	 * adds a displacement texture resource using a PNG attachment.
+	 *
+	 * @param textureAttachment PNG attachment containing the displacement image
+	 * @return returns the displacement texture instance
+	 * @throws Lib3MFException
+	 */
+	public Displacement2D addDisplacement2D(Attachment textureAttachment) throws Lib3MFException {
+		Pointer textureAttachmentHandle = null;
+		if (textureAttachment != null) {
+			textureAttachmentHandle = textureAttachment.getHandle();
+		} else {
+			throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "TextureAttachment is a null value.");
+		}
+		Pointer bufferDisplacement2DInstance = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_model_adddisplacement2d.invokeInt(new java.lang.Object[]{mHandle, textureAttachmentHandle, bufferDisplacement2DInstance}));
+		Pointer valueDisplacement2DInstance = bufferDisplacement2DInstance.getPointer(0);
+		Displacement2D displacement2DInstance = null;
+		if (valueDisplacement2DInstance == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "Displacement2DInstance was a null pointer");
+		}
+		displacement2DInstance = mWrapper.PolymorphicFactory(valueDisplacement2DInstance, Displacement2D.class);
+		return displacement2DInstance;
+	}
+
+	/**
+	 * adds an empty normalized vector group to the model.
+	 *
+	 * @return returns the normalized vector group instance
+	 * @throws Lib3MFException
+	 */
+	public NormVectorGroup addNormVectorGroup() throws Lib3MFException {
+		Pointer bufferNormVectorGroupInstance = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_model_addnormvectorgroup.invokeInt(new java.lang.Object[]{mHandle, bufferNormVectorGroupInstance}));
+		Pointer valueNormVectorGroupInstance = bufferNormVectorGroupInstance.getPointer(0);
+		NormVectorGroup normVectorGroupInstance = null;
+		if (valueNormVectorGroupInstance == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "NormVectorGroupInstance was a null pointer");
+		}
+		normVectorGroupInstance = mWrapper.PolymorphicFactory(valueNormVectorGroupInstance, NormVectorGroup.class);
+		return normVectorGroupInstance;
+	}
+
+	/**
+	 * adds an empty displacement coordinate group to the model.
+	 *
+	 * @param displacement2D displacement texture used by the group
+	 * @param normalVectorGroup normalized vectors used by the group
+	 * @param height displacement amplitude in model units
+	 * @param offset displacement offset in model units
+	 * @return returns the displacement coordinate group instance
+	 * @throws Lib3MFException
+	 */
+	public Disp2DGroup addDisp2DGroup(Displacement2D displacement2D, NormVectorGroup normalVectorGroup, double height, double offset) throws Lib3MFException {
+		Pointer displacement2DHandle = null;
+		if (displacement2D != null) {
+			displacement2DHandle = displacement2D.getHandle();
+		} else {
+			throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "Displacement2D is a null value.");
+		}
+		Pointer normalVectorGroupHandle = null;
+		if (normalVectorGroup != null) {
+			normalVectorGroupHandle = normalVectorGroup.getHandle();
+		} else {
+			throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "NormalVectorGroup is a null value.");
+		}
+		Pointer bufferDisp2DGroupInstance = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_model_adddisp2dgroup.invokeInt(new java.lang.Object[]{mHandle, displacement2DHandle, normalVectorGroupHandle, height, offset, bufferDisp2DGroupInstance}));
+		Pointer valueDisp2DGroupInstance = bufferDisp2DGroupInstance.getPointer(0);
+		Disp2DGroup disp2DGroupInstance = null;
+		if (valueDisp2DGroupInstance == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "Disp2DGroupInstance was a null pointer");
+		}
+		disp2DGroupInstance = mWrapper.PolymorphicFactory(valueDisp2DGroupInstance, Disp2DGroup.class);
+		return disp2DGroupInstance;
 	}
 
 	/**

@@ -49,15 +49,21 @@ namespace NMR {
 		nfInt32 m_nIndex1;
 		nfInt32 m_nIndex2;
 		nfInt32 m_nIndex3;
+		nfBool m_bDisplacement;
+		nfInt32 m_nDisplacementID;
+		nfInt32 m_nDisplacementIndex1;
+		nfInt32 m_nDisplacementIndex2;
+		nfInt32 m_nDisplacementIndex3;
 
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
 		CModelReaderNode100_Triangle() = delete;
-		CModelReaderNode100_Triangle(_In_ PModelWarnings pWarnings);
+		CModelReaderNode100_Triangle(_In_ PModelWarnings pWarnings, _In_ nfBool bDisplacement = false);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		void retrieveIndices(_Out_ nfInt32 & nIndex1, _Out_ nfInt32 & nIndex2, _Out_ nfInt32 & nIndex3, nfInt32 nNodeCount);
 		nfBool retrieveProperties(_Inout_ ModelResourceID & nPropertyID, _Inout_ ModelResourceIndex & nPropertyIndex1, _Inout_ ModelResourceIndex & nPropertyIndex2, _Inout_ ModelResourceIndex & nPropertyIndex3);
+		nfBool retrieveDisplacement(_Out_ nfInt32 & nDisplacementID, _Out_ nfInt32 & nIndex1, _Out_ nfInt32 & nIndex2, _Out_ nfInt32 & nIndex3) const;
 	};
 
 	typedef std::shared_ptr <CModelReaderNode100_Triangle> PModelReaderNode100_Triangle;
