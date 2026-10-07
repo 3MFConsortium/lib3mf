@@ -31,6 +31,7 @@ In-memory representation and serialization support for the 3MF Displacement exte
 --*/
 
 #include "Model/Classes/NMR_ModelDisplacementMeshObject.h"
+#include "Model/Classes/NMR_Model.h"
 #include "Common/NMR_Exception.h"
 #include "Common/Math/NMR_Vector.h"
 #include <cmath>
@@ -71,7 +72,7 @@ namespace NMR {
 			auto normal = pNormals->getVector(coordinate.m_nNormalVectorIndex);
 			const nfDouble dScalarProduct = normal[0] * vFaceNormal.m_values.x +
 				normal[1] * vFaceNormal.m_values.y + normal[2] * vFaceNormal.m_values.z;
-			if (dScalarProduct < 0.0)
+			if (dScalarProduct <= 0.0)
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		}
 		m_TriangleDisplacements[nTriangleIndex] = { pGroup, { nD1, nD2, nD3 } };
@@ -92,6 +93,11 @@ namespace NMR {
 		if (nTriangleIndex >= getMesh()->getFaceCount())
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 		m_TriangleDisplacements.erase(nTriangleIndex);
+	}
+
+	void CModelDisplacementMeshObject::clearAllTriangleDisplacements()
+	{
+		m_TriangleDisplacements.clear();
 	}
 
 	nfUint32 CModelDisplacementMeshObject::getDisplacedTriangleCount() const { return (nfUint32)m_TriangleDisplacements.size(); }
@@ -132,7 +138,7 @@ namespace NMR {
 					return false;
 				auto coordinate = entry.second.m_pGroup->getCoordinate(nIndex);
 				auto normal = entry.second.m_pGroup->getNormVectorGroup()->getVector(coordinate.m_nNormalVectorIndex);
-				if (normal[0] * vFaceNormal.m_values.x + normal[1] * vFaceNormal.m_values.y + normal[2] * vFaceNormal.m_values.z < 0.0)
+				if (normal[0] * vFaceNormal.m_values.x + normal[1] * vFaceNormal.m_values.y + normal[2] * vFaceNormal.m_values.z <= 0.0)
 					return false;
 			}
 		}
@@ -154,6 +160,9 @@ namespace NMR {
 			seen.insert(dependency->getUniqueID());
 		for (const auto & entry : m_TriangleDisplacements) {
 			auto pID = entry.second.m_pGroup->getPackageResourceID();
+			// The group may have been removed from the model while triangles still reference it
+			if (getModel()->findResource(pID->getUniqueID()) != entry.second.m_pGroup)
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 			if (seen.insert(pID->getUniqueID()).second)
 				dependencies.push_back(pID);
 		}

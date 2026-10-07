@@ -80,7 +80,10 @@ namespace NMR {
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
-		if (m_pDisplacementObject && strcmp(pAttributeName, XML_3MF_ATTRIBUTE_DISPLACEMENT_DID) == 0)
+		// Core <triangles> attributes are ignored, as before the displacement extension
+		if (!m_pDisplacementObject)
+			return;
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_DISPLACEMENT_DID) == 0)
 			m_nDefaultDisplacementID = fnStringToInt32(pAttributeValue);
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);

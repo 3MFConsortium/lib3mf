@@ -88,11 +88,9 @@ namespace NMR {
 
 	nfBool CModelReaderNode100_Triangle::retrieveProperties(_Inout_ ModelResourceID & nPropertyID, _Inout_ ModelResourceIndex & nPropertyIndex1, _Inout_ ModelResourceIndex & nPropertyIndex2, _Inout_ ModelResourceIndex & nPropertyIndex3)
 	{
-		if (m_nPropertyIndex1 < 0) {
-			if (m_bDisplacement && (m_nPropertyIndex2 >= 0 || m_nPropertyIndex3 >= 0))
-				throw CNMRException(NMR_ERROR_INVALIDMESHINFORMATIONINDEX);
+		// Without p1, the object-level property applies and p2/p3 are ignored (Core Spec 4.1.4.1)
+		if (m_nPropertyIndex1 < 0)
 			return false;
-		}
 		if (m_nPropertyID == 0 && nPropertyID == 0) {
 			if (m_bDisplacement)
 				throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
@@ -126,11 +124,9 @@ namespace NMR {
 	{
 		if (!m_bDisplacement)
 			return false;
-		if (m_nDisplacementIndex1 < 0) {
-			if (m_nDisplacementIndex2 >= 0 || m_nDisplacementIndex3 >= 0)
-				throw CNMRException(NMR_ERROR_INVALIDMESHINFORMATIONINDEX);
+		// Without d1, no displacement is applied and did/d2/d3 are ignored (Displacement Spec 4.1.2.1)
+		if (m_nDisplacementIndex1 < 0)
 			return false;
-		}
 		nDisplacementID = m_nDisplacementID;
 		nIndex1 = m_nDisplacementIndex1;
 		nIndex2 = m_nDisplacementIndex2 >= 0 ? m_nDisplacementIndex2 : m_nDisplacementIndex1;

@@ -138,7 +138,8 @@ TEST_F(Displacement, RejectInvalidApiState)
 	ASSERT_SPECIFIC_THROW(mesh->SetTriangleDisplacement(4, coordinates.get(), displacement), Lib3MF::ELib3MFException);
 	auto mirrored = wrapper->GetIdentityTransform();
 	mirrored.m_Fields[0][0] = -1.0f;
-	ASSERT_SPECIFIC_THROW(model->AddBuildItem(mesh.get(), mirrored), Lib3MF::ELib3MFException);
+	// The spec does not restrict build item transforms of displacement meshes.
+	model->AddBuildItem(mesh.get(), mirrored);
 
 	auto incompleteModel = wrapper->CreateModel();
 	incompleteModel->AddDisplacementMeshObject();
@@ -254,5 +255,152 @@ TEST_F(Displacement, RejectInvalidTextureEnumsWithoutChangingState)
 		ASSERT_EQ(u, Lib3MF::eTextureTileStyle::Mirror);
 		ASSERT_EQ(v, Lib3MF::eTextureTileStyle::Clamp);
 		ASSERT_EQ(texture->GetFilter(), Lib3MF::eTextureFilter::Nearest);
+	}
+}
+
+TEST_F(Displacement, RejectNormalPerpendicularToTriangle)
+{
+	auto model = wrapper->CreateModel();
+	auto texture = model->AddDisplacement2D(addPNGAttachment(model).get());
+	auto normals = model->AddNormVectorGroup();
+	// Triangle 3 of the tetrahedron faces (1, 1, 1); (1, -1, 0) lies in its plane.
+	Lib3MF::sVector perpendicular{ { 1.0, -1.0, 0.0 } };
+	normals->AddVector(perpendicular);
+	auto coordinates = model->AddDisp2DGroup(texture.get(), normals.get(), 1.0, 0.0);
+	Lib3MF::sDisplacement2DCoordinate coordinate{ 0.0, 0.0, 0, 1.0 };
+	coordinates->AddCoordinate(coordinate);
+	auto mesh = addTetrahedron(model);
+	Lib3MF::sTriangleDisplacement displacement{ { 0, 0, 0 } };
+	ASSERT_SPECIFIC_THROW(mesh->SetTriangleDisplacement(3, coordinates.get(), displacement), Lib3MF::ELib3MFException);
+}
+
+TEST_F(Displacement, ReplacingTrianglesClearsTheirDisplacement)
+{
+	auto model = wrapper->CreateModel();
+	auto texture = model->AddDisplacement2D(addPNGAttachment(model).get());
+	auto normals = model->AddNormVectorGroup();
+	Lib3MF::sVector outward{ { 1.0, 1.0, 1.0 } };
+	normals->AddVector(outward);
+	auto coordinates = model->AddDisp2DGroup(texture.get(), normals.get(), 1.0, 0.0);
+	Lib3MF::sDisplacement2DCoordinate coordinate{ 0.0, 0.0, 0, 1.0 };
+	coordinates->AddCoordinate(coordinate);
+	auto mesh = addTetrahedron(model);
+	Lib3MF::sTriangleDisplacement displacement{ { 0, 0, 0 } };
+
+	mesh->SetTriangleDisplacement(3, coordinates.get(), displacement);
+	mesh->SetTriangle(3, mesh->GetTriangle(3));
+	ASSERT_FALSE(mesh->HasTriangleDisplacement(3));
+
+	mesh->SetTriangleDisplacement(3, coordinates.get(), displacement);
+	std::vector<Lib3MF::sPosition> vertices;
+	std::vector<Lib3MF::sTriangle> triangles;
+	mesh->GetVertices(vertices);
+	mesh->GetTriangleIndices(triangles);
+	mesh->SetGeometry(vertices, triangles);
+	ASSERT_FALSE(mesh->HasTriangleDisplacement(3));
+}
+
+TEST_F(Displacement, MergeFromModelIntoItselfTerminates)
+{
+	// Without attachments, merging a model into itself reaches the displacement merge loops.
+	auto model = wrapper->CreateModel();
+	auto normals = model->AddNormVectorGroup();
+	Lib3MF::sVector vector{ { 0.0, 0.0, 1.0 } };
+	normals->AddVector(vector);
+
+	model->MergeFromModel(model.get());
+	ASSERT_EQ(model->GetNormVectorGroups()->Count(), 2u);
+}
+
+class DisplacementFiles : public Lib3MFTest, public ::testing::WithParamInterface<std::pair<std::string, Lib3MF_uint32>> {
+};
+
+// Spec-conformant files, with the number of displaced triangles each one contains
+TEST_P(DisplacementFiles, ReadValidFile)
+{
+	auto model = wrapper->CreateModel();
+	auto reader = model->QueryReader("3mf");
+	reader->ReadFromFile(sTestFilesPath + "/Displacement/" + GetParam().first + ".3mf");
+	CheckReaderWarnings(reader, 0);
+	auto meshes = model->GetDisplacementMeshObjects();
+	ASSERT_EQ(meshes->Count(), 1u);
+	ASSERT_TRUE(meshes->MoveNext());
+	auto mesh = meshes->GetCurrentDisplacementMeshObject();
+	Lib3MF_uint32 nDisplaced = 0;
+	for (Lib3MF_uint32 i = 0; i < mesh->GetTriangleCount(); ++i)
+		if (mesh->HasTriangleDisplacement(i))
+			++nDisplaced;
+	ASSERT_EQ(nDisplaced, GetParam().second);
+}
+
+INSTANTIATE_TEST_SUITE_P(Displacement, DisplacementFiles, ::testing::Values(
+	std::make_pair(std::string("displacement_valid"), 2u),
+	std::make_pair(std::string("displacement_triangles_level_did"), 2u),
+	std::make_pair(std::string("displacement_d1_omitted"), 1u),
+	std::make_pair(std::string("displacement_p1_omitted"), 2u),
+	std::make_pair(std::string("displacement_mirrored_build_item"), 2u),
+	std::make_pair(std::string("displacement_channel_alpha"), 2u),
+	std::make_pair(std::string("displacement_unused_did_ignored"), 0u)
+));
+
+class InvalidDisplacementFiles : public Lib3MFTest, public ::testing::WithParamInterface<std::string> {
+};
+
+TEST_P(InvalidDisplacementFiles, RejectInvalidFile)
+{
+	auto model = wrapper->CreateModel();
+	auto reader = model->QueryReader("3mf");
+	ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Displacement/" + GetParam() + ".3mf"), Lib3MF::ELib3MFException);
+}
+
+INSTANTIATE_TEST_SUITE_P(Displacement, InvalidDisplacementFiles, ::testing::Values(
+	std::string("displacement_missing_did"),
+	std::string("displacement_normal_perpendicular"),
+	std::string("displacement_normal_inward"),
+	std::string("displacement_negative_factor"),
+	std::string("displacement_core_namespace_vertices"),
+	std::string("displacement_missing_texture_relationship")
+));
+
+TEST_F(Displacement, CoreTrianglesIgnoreUnknownAttributes)
+{
+	auto model = wrapper->CreateModel();
+	auto reader = model->QueryReader("3mf");
+	reader->ReadFromFile(sTestFilesPath + "/Reader/core_triangles_unknown_attribute.3mf");
+	CheckReaderWarnings(reader, 0);
+}
+
+TEST_F(Displacement, WritingAfterRemovingReferencedResourcesReportsMissingResource)
+{
+	// Removing a resource that is still referenced is allowed, as for other resource types; the write reports it.
+	auto expectResourceNotFound = [](const Lib3MF::PModel & model) {
+		std::vector<Lib3MF_uint8> buffer;
+		try {
+			model->QueryWriter("3mf")->WriteToBuffer(buffer);
+			FAIL() << "Write should fail";
+		}
+		catch (Lib3MF::ELib3MFException & e) {
+			ASSERT_NE(std::string(e.what()).find("Resource not found"), std::string::npos) << e.what();
+		}
+	};
+
+	for (int removeGroup = 0; removeGroup < 2; ++removeGroup) {
+		auto model = wrapper->CreateModel();
+		auto texture = model->AddDisplacement2D(addPNGAttachment(model).get());
+		auto normals = model->AddNormVectorGroup();
+		Lib3MF::sVector outward{ { 1.0, 1.0, 1.0 } };
+		normals->AddVector(outward);
+		auto coordinates = model->AddDisp2DGroup(texture.get(), normals.get(), 1.0, 0.0);
+		Lib3MF::sDisplacement2DCoordinate coordinate{ 0.0, 0.0, 0, 1.0 };
+		coordinates->AddCoordinate(coordinate);
+		auto mesh = addTetrahedron(model);
+		mesh->SetTriangleDisplacement(3, coordinates.get(), Lib3MF::sTriangleDisplacement{ { 0, 0, 0 } });
+		model->AddBuildItem(mesh.get(), wrapper->GetIdentityTransform());
+
+		if (removeGroup)
+			model->RemoveResource(coordinates.get());
+		else
+			model->RemoveResource(texture.get());
+		expectResourceNotFound(model);
 	}
 }

@@ -127,7 +127,9 @@ void CModel::mergeModel(NMR::CModel& sourceModel,
 	targetModel.mergeImage3Ds(&sourceModel, oldToNewUniqueResourceIDs);
 	targetModel.mergeFunctions(&sourceModel, oldToNewUniqueResourceIDs);
 
-	for (NMR::nfUint32 nIndex = 0; nIndex < sourceModel.getResourceCount(); ++nIndex) {
+	// Capture the count once, so resources added to the target are not merged again when source and target are the same model
+	const NMR::nfUint32 nSourceResourceCount = sourceModel.getResourceCount();
+	for (NMR::nfUint32 nIndex = 0; nIndex < nSourceResourceCount; ++nIndex) {
 		auto pOld = std::dynamic_pointer_cast<NMR::CModelDisplacement2DResource>(sourceModel.getResource(nIndex));
 		if (!pOld)
 			continue;
@@ -143,7 +145,7 @@ void CModel::mergeModel(NMR::CModel& sourceModel,
 		oldToNewUniqueResourceIDs[pOld->getPackageResourceID()->getUniqueID()] = pNew->getPackageResourceID()->getUniqueID();
 	}
 
-	for (NMR::nfUint32 nIndex = 0; nIndex < sourceModel.getResourceCount(); ++nIndex) {
+	for (NMR::nfUint32 nIndex = 0; nIndex < nSourceResourceCount; ++nIndex) {
 		auto pOld = std::dynamic_pointer_cast<NMR::CModelNormVectorGroupResource>(sourceModel.getResource(nIndex));
 		if (!pOld)
 			continue;
@@ -154,7 +156,7 @@ void CModel::mergeModel(NMR::CModel& sourceModel,
 		oldToNewUniqueResourceIDs[pOld->getPackageResourceID()->getUniqueID()] = pNew->getPackageResourceID()->getUniqueID();
 	}
 
-	for (NMR::nfUint32 nIndex = 0; nIndex < sourceModel.getResourceCount(); ++nIndex) {
+	for (NMR::nfUint32 nIndex = 0; nIndex < nSourceResourceCount; ++nIndex) {
 		auto pOld = std::dynamic_pointer_cast<NMR::CModelDisp2DGroupResource>(sourceModel.getResource(nIndex));
 		if (!pOld)
 			continue;

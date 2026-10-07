@@ -57,6 +57,7 @@ namespace NMR {
 			_In_ nfUint32 nD1, _In_ nfUint32 nD2, _In_ nfUint32 nD3);
 		MODELMESHTRIANGLEDISPLACEMENT getTriangleDisplacement(_In_ nfUint32 nTriangleIndex) const;
 		void clearTriangleDisplacement(_In_ nfUint32 nTriangleIndex);
+		void clearAllTriangleDisplacements();
 		nfUint32 getDisplacedTriangleCount() const;
 
 		void setObjectType(_In_ eModelObjectType ObjectType) override;

@@ -69,6 +69,10 @@ public:
 	CDisplacementMeshObject(NMR::PModelDisplacementMeshObject pResource);
 	bool IsDisplacementMeshObject() override;
 
+	// Replacing triangles invalidates the displacements attached to them.
+	void SetTriangle(const Lib3MF_uint32 nIndex, const sLib3MFTriangle Indices) override;
+	void SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition * pVerticesBuffer, const Lib3MF_uint64 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer) override;
+
 
 	/**
 	* Public member functions to implement.

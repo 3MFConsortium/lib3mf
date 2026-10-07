@@ -1455,6 +1455,9 @@ namespace NMR {
 	{
 		for (nfUint32 i = 0; i < m_pModel->getResourceCount(); ++i) {
 			auto resource = m_pModel->getResource(i);
+			// Only displacement content written into this part makes the extension required here
+			if (resource->getPackageResourceID()->getPath() != m_pModel->currentPath())
+				continue;
 			if (dynamic_cast<CModelDisplacement2DResource *>(resource.get()) || dynamic_cast<CModelNormVectorGroupResource *>(resource.get()) || dynamic_cast<CModelDisp2DGroupResource *>(resource.get()) || dynamic_cast<CModelDisplacementMeshObject *>(resource.get())) {
 				m_bWriteDisplacementExtension = true;
 				break;

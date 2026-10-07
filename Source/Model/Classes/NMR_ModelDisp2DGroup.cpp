@@ -31,6 +31,7 @@ In-memory representation and serialization support for the 3MF Displacement exte
 --*/
 
 #include "Model/Classes/NMR_ModelDisp2DGroup.h"
+#include "Model/Classes/NMR_Model.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
 #include <cmath>
@@ -94,6 +95,10 @@ namespace NMR {
 
 	ResourceDependencies CModelDisp2DGroupResource::getDependencies()
 	{
+		// Referenced resources may have been removed from the model after this group was created
+		if (getModel()->findResource(m_pDisplacement2D->getPackageResourceID()->getUniqueID()) != m_pDisplacement2D ||
+			getModel()->findResource(m_pNormVectorGroup->getPackageResourceID()->getUniqueID()) != m_pNormVectorGroup)
+			throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 		return { m_pDisplacement2D->getPackageResourceID(), m_pNormVectorGroup->getPackageResourceID() };
 	}
 }

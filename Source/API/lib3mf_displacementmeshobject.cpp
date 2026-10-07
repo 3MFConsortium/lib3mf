@@ -59,6 +59,18 @@ bool CDisplacementMeshObject::IsDisplacementMeshObject()
 	return true;
 }
 
+void CDisplacementMeshObject::SetTriangle(const Lib3MF_uint32 nIndex, const sLib3MFTriangle Indices)
+{
+	CMeshObject::SetTriangle(nIndex, Indices);
+	displacementMeshObject()->clearTriangleDisplacement(nIndex);
+}
+
+void CDisplacementMeshObject::SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition * pVerticesBuffer, const Lib3MF_uint64 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer)
+{
+	CMeshObject::SetGeometry(nVerticesBufferSize, pVerticesBuffer, nIndicesBufferSize, pIndicesBuffer);
+	displacementMeshObject()->clearAllTriangleDisplacements();
+}
+
 bool CDisplacementMeshObject::HasTriangleDisplacement(const Lib3MF_uint32 nIndex)
 {
 	return displacementMeshObject()->hasTriangleDisplacement(nIndex);
