@@ -35,6 +35,7 @@ Vulometric.cpp: Defines Unittests for the Volumetric extension
 #include "ZipBuffer.h"
 
 #include <algorithm>
+#include <sstream>
 
 namespace Lib3MF
 {
@@ -1068,6 +1069,55 @@ namespace Lib3MF
                                   propertyFromFile->GetTransform());
         EXPECT_EQ(property->GetChannelName(), ChannelName);
         EXPECT_EQ(property->GetName(), propertyFromFile->GetName());
+    }
+
+    TEST_F(Volumetric, LevelSet_RequiresVolumetricExtension)
+    {
+        model = wrapper->CreateModel();
+        auto reader = model->QueryReader("3mf");
+        reader->ReadFromFile(InFolder + "Cube.3mf");
+
+        auto mesh = GetMesh();
+        auto implicitFunction = helper::createGyroidFunction(*model);
+
+        auto levelSet = model->AddLevelSet();
+        levelSet->SetMesh(mesh);
+        levelSet->SetFunction(implicitFunction.get());
+
+        auto writer = model->QueryWriter("3mf");
+        std::vector<Lib3MF_uint8> buffer;
+        writer->WriteToBuffer(buffer);
+
+        std::string const xml =
+            helper::extractZipEntryFromBuffer(buffer, "3D/3dmodel.model");
+        std::string const requiredExtensionsAttribute =
+            "requiredextensions=\"";
+        size_t const requiredExtensionsAttributePos =
+            xml.find(requiredExtensionsAttribute);
+        ASSERT_NE(requiredExtensionsAttributePos, std::string::npos);
+
+        size_t const requiredExtensionsValueStart =
+            requiredExtensionsAttributePos +
+            requiredExtensionsAttribute.size();
+        size_t const requiredExtensionsValueEnd =
+            xml.find('"', requiredExtensionsValueStart);
+        ASSERT_NE(requiredExtensionsValueEnd, std::string::npos);
+
+        std::istringstream requiredExtensionsStream(xml.substr(
+            requiredExtensionsValueStart,
+            requiredExtensionsValueEnd - requiredExtensionsValueStart));
+        std::string requiredExtension;
+        bool hasVolumetricExtension = false;
+        while(requiredExtensionsStream >> requiredExtension)
+        {
+            if(requiredExtension == "v")
+            {
+                hasVolumetricExtension = true;
+                break;
+            }
+        }
+
+        EXPECT_TRUE(hasVolumetricExtension);
     }
 
     TEST_F(Volumetric, LevelSet_WritesVolumeDataBeforeLevelSet)
