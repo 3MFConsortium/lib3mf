@@ -34,8 +34,36 @@ ImplicitNodes.test.cpp: Defines unit tests for new implicit node types
 #include "UnitTest_Utilities.h"
 #include "lib3mf_implicit.hpp"
 
+#include <locale>
+
 namespace Lib3MF
 {
+    namespace
+    {
+        class CommaDecimalPoint : public std::numpunct<char>
+        {
+        protected:
+            char do_decimal_point() const override { return ','; }
+        };
+
+        class ScopedGlobalLocale
+        {
+        public:
+            explicit ScopedGlobalLocale(const std::locale& locale)
+                : m_previousLocale(std::locale::global(locale))
+            {
+            }
+
+            ~ScopedGlobalLocale()
+            {
+                std::locale::global(m_previousLocale);
+            }
+
+        private:
+            std::locale m_previousLocale;
+        };
+    }
+
     class ImplicitNodes : public ::testing::Test
     {
     protected:
@@ -630,6 +658,70 @@ namespace Lib3MF
             }
         }
         EXPECT_TRUE(foundNormalizeDistance);
+    }
+
+    TEST_F(ImplicitNodes, ConstantNode_DoubleValueRoundTripsIndependentOfLocale)
+    {
+        model = wrapper->CreateModel();
+        writer3MF = model->QueryWriter("3mf");
+
+        std::vector<sPosition> vertices = {
+            fnCreateVertex(0.0f, 0.0f, 0.0f),
+            fnCreateVertex(1.0f, 0.0f, 0.0f),
+            fnCreateVertex(0.0f, 1.0f, 0.0f)
+        };
+        std::vector<sTriangle> triangles = { fnCreateTriangle(0, 1, 2) };
+        auto mesh = model->AddMeshObject();
+        mesh->SetGeometry(vertices, triangles);
+
+        const Lib3MF_double value = 0.70710678118654757;
+        auto function = model->AddImplicitFunction();
+        function->SetDisplayName("high_precision_constant");
+        function->AddInput("pos", "position", Lib3MF::eImplicitPortType::Vector);
+
+        auto constantNode = function->AddConstantNode(
+            "constant", "high precision constant", "group_constant");
+        constantNode->SetConstant(value);
+
+        auto output = function->AddOutput(
+            "shape", "constant field", Lib3MF::eImplicitPortType::Scalar);
+        function->AddLink(constantNode->GetOutputValue(), output);
+
+        auto levelSet = model->AddLevelSet();
+        levelSet->SetMesh(mesh);
+        levelSet->SetFunction(function.get());
+
+        std::vector<Lib3MF_uint8> buffer;
+        const std::locale commaLocale(std::locale::classic(), new CommaDecimalPoint);
+        {
+            ScopedGlobalLocale localeGuard(commaLocale);
+            writer3MF->WriteToBuffer(buffer);
+        }
+
+        auto readModel = wrapper->CreateModel();
+        auto reader = readModel->QueryReader("3mf");
+        reader->ReadFromBuffer(buffer);
+
+        auto functions = readModel->GetFunctions();
+        ASSERT_EQ(functions->Count(), 1u);
+        ASSERT_TRUE(functions->MoveNext());
+        auto readFunction = std::dynamic_pointer_cast<CImplicitFunction>(
+            functions->GetCurrentFunction());
+        ASSERT_NE(readFunction, nullptr);
+
+        auto nodes = readFunction->GetNodes();
+        bool foundConstant = false;
+        while (nodes->MoveNext())
+        {
+            auto readConstant = std::dynamic_pointer_cast<CConstantNode>(
+                nodes->GetCurrent());
+            if (readConstant)
+            {
+                foundConstant = true;
+                EXPECT_EQ(readConstant->GetConstant(), value);
+            }
+        }
+        EXPECT_TRUE(foundConstant);
     }
 
     // ============================================================================

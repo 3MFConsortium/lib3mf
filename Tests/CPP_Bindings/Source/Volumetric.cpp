@@ -483,7 +483,10 @@ namespace Lib3MF
         auto theBoundary = model->AddLevelSet();
         theBoundary->SetMesh(theMesh);
         theBoundary->SetFunction(newFunction.get());
-        theBoundary->SetFallBackValue(-1.2345);
+        const Lib3MF_double minFeatureSize = 0.12345678901234567;
+        const Lib3MF_double fallbackValue = -1.2345678901234567;
+        theBoundary->SetMinFeatureSize(minFeatureSize);
+        theBoundary->SetFallBackValue(fallbackValue);
 
         // Write to file
         writer3MF->WriteToFile(Volumetric::OutFolder + "ImplicitSphere.3mf");
@@ -510,7 +513,8 @@ namespace Lib3MF
 
         // Check the fallback value
         auto boundaryFromWrittenFile = helper::getFirstLevelSet(ioModel);
-        EXPECT_EQ(boundaryFromWrittenFile->GetFallBackValue(), -1.2345);
+        EXPECT_EQ(boundaryFromWrittenFile->GetMinFeatureSize(), minFeatureSize);
+        EXPECT_EQ(boundaryFromWrittenFile->GetFallBackValue(), fallbackValue);
 
         // Compare the functions
         helper::compareFunctions(model, newFunction, ioModel,
@@ -1017,7 +1021,6 @@ namespace Lib3MF
         ASSERT_TRUE(funcFromImage3d);
         funcFromImage3d->SetDisplayName("function from image3d");
 
-        auto const funcImg3dId = funcFromImage3d->GetUniqueResourceID();
         funcFromImage3d->SetTileStyles(Lib3MF::eTextureTileStyle::Wrap,
                                        Lib3MF::eTextureTileStyle::Clamp,
                                        Lib3MF::eTextureTileStyle::Mirror);
@@ -1034,6 +1037,10 @@ namespace Lib3MF
             helper::ComputeTransformFromMeshCoordinatesToUVW(theMesh));
         std::string const ChannelName = "g";
         property->SetChannelName(ChannelName);
+        const Lib3MF_double minFeatureSize = 0.12345678901234567;
+        const Lib3MF_double fallbackValue = -1.2345678901234567;
+        property->SetMinFeatureSize(minFeatureSize);
+        property->SetFallBackValue(fallbackValue);
 
         // Write to file
         writer3MF = model->QueryWriter("3mf");
@@ -1059,15 +1066,23 @@ namespace Lib3MF
         helper::compareFunctions(model, funcFromImage3d, ioModel,
                                  functionFromFile);
 
-        // Check the property
-        ASSERT_EQ(volumeData->GetPropertyCount(), 1);
-        auto propertyFromFile = volumeData->GetProperty(0);
+        // Check the property from the round-tripped model
+        auto meshIterator = ioModel->GetMeshObjects();
+        ASSERT_TRUE(meshIterator->MoveNext());
+        auto meshFromFile = meshIterator->GetCurrentMeshObject();
+        auto volumeDataFromFile = meshFromFile->GetVolumeData();
+        ASSERT_TRUE(volumeDataFromFile);
+        ASSERT_EQ(volumeDataFromFile->GetPropertyCount(), 1u);
+        auto propertyFromFile = volumeDataFromFile->GetProperty(0);
         ASSERT_TRUE(propertyFromFile);
-        EXPECT_EQ(propertyFromFile->GetFunctionResourceID(), funcImg3dId);
+        EXPECT_EQ(propertyFromFile->GetFunctionResourceID(),
+              functionFromFile->GetUniqueResourceID());
         helper::CompareTransforms(property->GetTransform(),
                                   propertyFromFile->GetTransform());
         EXPECT_EQ(property->GetChannelName(), ChannelName);
         EXPECT_EQ(property->GetName(), propertyFromFile->GetName());
+        EXPECT_EQ(propertyFromFile->GetMinFeatureSize(), minFeatureSize);
+        EXPECT_EQ(propertyFromFile->GetFallBackValue(), fallbackValue);
     }
 
     TEST_F(Volumetric, LevelSet_WritesVolumeDataBeforeLevelSet)

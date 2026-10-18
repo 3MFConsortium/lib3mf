@@ -128,14 +128,14 @@ namespace NMR
 
         if(property.getMinFeatureSize() != 0.0)
         {
-            writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_MINFEATURESIZE,
-                                float(property.getMinFeatureSize()));
+            writeDoubleAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_MINFEATURESIZE,
+                                 property.getMinFeatureSize());
         }
 
         if(property.getFallBackValue() != 0.0)
         {
-            writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FALLBACKVALUE,
-                                float(property.getFallBackValue()));
+            writeDoubleAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FALLBACKVALUE,
+                                 property.getFallBackValue());
         }
 
         writeEndElement();
@@ -166,14 +166,14 @@ namespace NMR
 
         if(color.getMinFeatureSize() != 0.0)
         {
-            writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_MINFEATURESIZE,
-                                float(color.getMinFeatureSize()));
+            writeDoubleAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_MINFEATURESIZE,
+                                 color.getMinFeatureSize());
         }
 
         if(color.getFallBackValue() != 0.0)
         {
-            writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FALLBACKVALUE,
-                                float(color.getFallBackValue()));
+            writeDoubleAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FALLBACKVALUE,
+                                 color.getFallBackValue());
         }
 
         writeEndElement();
