@@ -33,6 +33,9 @@ Writer node for implicit functions
 #include "Common/NMR_Exception.h"
 #include "lib3mf_types.hpp"
 
+#include <iomanip>
+#include <limits>
+#include <locale>
 #include <sstream>
 
 namespace NMR
@@ -99,6 +102,8 @@ namespace NMR
     std::string mat4x4ToString(Lib3MF::sMatrix4x4 const & mat)
     {
         std::stringstream outStream;
+        outStream.imbue(std::locale::classic());
+        outStream << std::setprecision(std::numeric_limits<double>::max_digits10);
         outStream << mat.m_Field[0][0] << " " << mat.m_Field[0][1] << " " << mat.m_Field[0][2] << " "
            << mat.m_Field[0][3] << " " << mat.m_Field[1][0] << " " << mat.m_Field[1][1] << " "
            << mat.m_Field[1][2] << " " << mat.m_Field[1][3] << " " << mat.m_Field[2][0] << " "

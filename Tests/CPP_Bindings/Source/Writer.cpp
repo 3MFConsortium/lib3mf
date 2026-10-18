@@ -238,7 +238,57 @@ namespace Lib3MF
 		ASSERT_TRUE(readMesh);
 		auto readBeamLattice = readMesh->BeamLattice();
 		ASSERT_EQ(readBeamLattice->GetBeamCount(), 1u);
-		EXPECT_EQ(readBeamLattice->GetBeam(0).m_Radii[0], static_cast<double>(1.234568f));
+		EXPECT_EQ(readBeamLattice->GetBeam(0).m_Radii[0], 1.234568);
+	}
+
+	TEST_F(Writer, BeamAndBallRadiiPreserveDoublePrecisionOnRead)
+	{
+		std::vector<sPosition> vertices = {
+			fnCreateVertex(0.0f, 0.0f, 0.0f),
+			fnCreateVertex(1.0f, 0.0f, 0.0f),
+			fnCreateVertex(0.0f, 1.0f, 0.0f)
+		};
+		std::vector<sTriangle> triangles = { fnCreateTriangle(0, 1, 2) };
+		auto mesh = model->AddMeshObject();
+		mesh->SetGeometry(vertices, triangles);
+
+		const double beamRadius1 = 1.23456789123;
+		const double beamRadius2 = 1.98765432123;
+		const double ballRadius = 2.3456789123;
+		auto beamLattice = mesh->BeamLattice();
+		beamLattice->SetBallOptions(eBeamLatticeBallMode::Mixed, 1.0);
+
+		sBeam beam = {};
+		beam.m_CapModes[0] = eBeamLatticeCapMode::HemiSphere;
+		beam.m_CapModes[1] = eBeamLatticeCapMode::Butt;
+		beam.m_Indices[0] = 0;
+		beam.m_Indices[1] = 1;
+		beam.m_Radii[0] = beamRadius1;
+		beam.m_Radii[1] = beamRadius2;
+		beamLattice->AddBeam(beam);
+
+		sBall ball = {};
+		ball.m_Index = 0;
+		ball.m_Radius = ballRadius;
+		beamLattice->AddBall(ball);
+		writer3MF->SetDecimalPrecision(12);
+
+		std::vector<Lib3MF_uint8> buffer;
+		writer3MF->WriteToBuffer(buffer);
+
+		auto readModel = wrapper->CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->ReadFromBuffer(buffer);
+		auto readMesh = readModel->GetMeshObjectByID(mesh->GetResourceID());
+		ASSERT_TRUE(readMesh);
+		auto readBeamLattice = readMesh->BeamLattice();
+		ASSERT_EQ(readBeamLattice->GetBeamCount(), 1u);
+		ASSERT_EQ(readBeamLattice->GetBallCount(), 1u);
+
+		const auto readBeam = readBeamLattice->GetBeam(0);
+		EXPECT_NEAR(readBeam.m_Radii[0], beamRadius1, 1e-12);
+		EXPECT_NEAR(readBeam.m_Radii[1], beamRadius2, 1e-12);
+		EXPECT_NEAR(readBeamLattice->GetBall(0).m_Radius, ballRadius, 1e-12);
 	}
 
 	TEST_F(Writer, STLCompare)

@@ -40,6 +40,7 @@ Reader for nodes of graph representing a function for implicit modelling
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
+#include <locale>
 #include <sstream>
 
 namespace NMR
@@ -75,6 +76,7 @@ namespace NMR
     {
         Lib3MF::sMatrix4x4 mat;
         std::stringstream ss(str);
+        ss.imbue(std::locale::classic());
         for (int i = 0; i < 4; i++)
         {
             for (int j = 0; j < 4; j++)
@@ -114,21 +116,21 @@ namespace NMR
         else if (m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::Constant &&
                  strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_VALUE) == 0)
         {
-            m_pImplicitNode->setConstant(strtod(pAttributeValue, nullptr));
+            m_pImplicitNode->setConstant(fnStringToDouble(pAttributeValue));
         }
         else if (m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::ConstVec)
         {
             if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_X) == 0)
             {
-                m_vector.m_Coordinates[0] = strtod(pAttributeValue, nullptr);
+                m_vector.m_Coordinates[0] = fnStringToDouble(pAttributeValue);
             }
             else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_Y) == 0)
             {
-                m_vector.m_Coordinates[1] = strtod(pAttributeValue, nullptr);
+                m_vector.m_Coordinates[1] = fnStringToDouble(pAttributeValue);
             }
             else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_Z) == 0)
             {
-                m_vector.m_Coordinates[2] = strtod(pAttributeValue, nullptr);
+                m_vector.m_Coordinates[2] = fnStringToDouble(pAttributeValue);
             }
             m_pImplicitNode->setVector(m_vector);
         }
@@ -151,7 +153,7 @@ namespace NMR
         {
             if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMPLICIT_NODE_ACCURATERANGE) == 0)
             {
-                m_pImplicitNode->setAccurateRange(strtod(pAttributeValue, nullptr));
+                m_pImplicitNode->setAccurateRange(fnStringToDouble(pAttributeValue));
             }
         }
         else if (m_pImplicitNode->getNodeType() == Lib3MF::eImplicitNodeType::FunctionGradient ||

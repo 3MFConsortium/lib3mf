@@ -112,9 +112,9 @@ namespace NMR {
 				m_nIndex = nValue;
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_BALL_R) == 0) {
-			nfFloat fValue = fnStringToFloat(pAttributeValue);
-			if ((fValue >= 0) && (fValue < XML_3MF_MAXIMUMBALLRADIUSVALUE)) {
-				m_dRadius = fValue;
+			nfDouble dValue = fnStringToDouble(pAttributeValue);
+			if ((dValue >= 0) && (dValue < XML_3MF_MAXIMUMBALLRADIUSVALUE)) {
+				m_dRadius = dValue;
 				m_bHasRadius = true;
 			}
 		}

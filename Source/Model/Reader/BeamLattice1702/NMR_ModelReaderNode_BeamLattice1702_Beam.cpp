@@ -141,16 +141,16 @@ namespace NMR {
 				m_nIndex2 = nValue;
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_R1) == 0) {
-			nfFloat fValue = fnStringToFloat(pAttributeValue);
-			if ((fValue >= 0) && (fValue < XML_3MF_MAXIMUMBEAMRADIUSVALUE)) {
-				m_dRadius1 = fValue;
+			nfDouble dValue = fnStringToDouble(pAttributeValue);
+			if ((dValue >= 0) && (dValue < XML_3MF_MAXIMUMBEAMRADIUSVALUE)) {
+				m_dRadius1 = dValue;
 				m_bHasRadius1 = true;
 			}
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_R2) == 0) {
-			nfFloat fValue = fnStringToFloat(pAttributeValue);
-			if ((fValue >= 0) && (fValue < XML_3MF_MAXIMUMBEAMRADIUSVALUE)) {
-				m_dRadius2 = fValue;
+			nfDouble dValue = fnStringToDouble(pAttributeValue);
+			if ((dValue >= 0) && (dValue < XML_3MF_MAXIMUMBEAMRADIUSVALUE)) {
+				m_dRadius2 = dValue;
 				m_bHasRadius2 = true;
 			}
 		}
