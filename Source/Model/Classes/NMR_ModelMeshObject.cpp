@@ -66,6 +66,11 @@ namespace NMR {
 		return m_pMesh.get();
 	}
 
+	_Ret_notnull_ const CMesh * CModelMeshObject::getMesh() const
+	{
+		return m_pMesh.get();
+	}
+
 	void CModelMeshObject::setMesh(_In_ PMesh pMesh)
 	{
 		if (!pMesh)

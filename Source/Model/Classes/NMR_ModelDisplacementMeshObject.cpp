@@ -46,7 +46,7 @@ namespace NMR {
 
 	nfBool CModelDisplacementMeshObject::hasTriangleDisplacement(nfUint32 nTriangleIndex) const
 	{
-		if (nTriangleIndex >= const_cast<CModelDisplacementMeshObject *>(this)->getMesh()->getFaceCount())
+		if (nTriangleIndex >= getMesh()->getFaceCount())
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 		return m_TriangleDisplacements.find(nTriangleIndex) != m_TriangleDisplacements.end();
 	}
@@ -80,7 +80,7 @@ namespace NMR {
 
 	MODELMESHTRIANGLEDISPLACEMENT CModelDisplacementMeshObject::getTriangleDisplacement(nfUint32 nTriangleIndex) const
 	{
-		if (nTriangleIndex >= const_cast<CModelDisplacementMeshObject *>(this)->getMesh()->getFaceCount())
+		if (nTriangleIndex >= getMesh()->getFaceCount())
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 		auto iIterator = m_TriangleDisplacements.find(nTriangleIndex);
 		if (iIterator == m_TriangleDisplacements.end())
@@ -163,7 +163,7 @@ namespace NMR {
 			auto pID = entry.second.m_pGroup->getPackageResourceID();
 			// The group may have been removed from the model while triangles still reference it
 			if (getModel()->findResource(pID->getUniqueID()) != entry.second.m_pGroup)
-				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+				throw CNMRException(NMR_ERROR_DISPLACEMENTGROUP_MISSING);
 			if (seen.insert(pID->getUniqueID()).second)
 				dependencies.push_back(pID);
 		}

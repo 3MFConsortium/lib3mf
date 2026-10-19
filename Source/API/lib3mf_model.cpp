@@ -127,50 +127,9 @@ void CModel::mergeModel(NMR::CModel& sourceModel,
 	targetModel.mergeImage3Ds(&sourceModel, oldToNewUniqueResourceIDs);
 	targetModel.mergeFunctions(&sourceModel, oldToNewUniqueResourceIDs);
 
-	// Capture the count once, so resources added to the target are not merged again when source and target are the same model
-	const NMR::nfUint32 nSourceResourceCount = sourceModel.getResourceCount();
-	for (NMR::nfUint32 nIndex = 0; nIndex < nSourceResourceCount; ++nIndex) {
-		auto pOld = std::dynamic_pointer_cast<NMR::CModelDisplacement2DResource>(sourceModel.getResource(nIndex));
-		if (!pOld)
-			continue;
-		auto pAttachment = targetModel.findModelAttachment(pOld->getAttachment()->getPathURI());
-		if (!pAttachment)
-			throw NMR::CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
-		auto pNew = std::make_shared<NMR::CModelDisplacement2DResource>(targetModel.generateResourceID(), &targetModel, pAttachment);
-		pNew->setChannel(pOld->getChannel());
-		pNew->setTileStyleU(pOld->getTileStyleU());
-		pNew->setTileStyleV(pOld->getTileStyleV());
-		pNew->setFilter(pOld->getFilter());
-		targetModel.addResource(pNew);
-		oldToNewUniqueResourceIDs[pOld->getPackageResourceID()->getUniqueID()] = pNew->getPackageResourceID()->getUniqueID();
-	}
-
-	for (NMR::nfUint32 nIndex = 0; nIndex < nSourceResourceCount; ++nIndex) {
-		auto pOld = std::dynamic_pointer_cast<NMR::CModelNormVectorGroupResource>(sourceModel.getResource(nIndex));
-		if (!pOld)
-			continue;
-		auto pNew = std::make_shared<NMR::CModelNormVectorGroupResource>(targetModel.generateResourceID(), &targetModel);
-		for (NMR::nfUint32 nVector = 0; nVector < pOld->getCount(); ++nVector)
-			pNew->addVector(pOld->getVector(nVector));
-		targetModel.addResource(pNew);
-		oldToNewUniqueResourceIDs[pOld->getPackageResourceID()->getUniqueID()] = pNew->getPackageResourceID()->getUniqueID();
-	}
-
-	for (NMR::nfUint32 nIndex = 0; nIndex < nSourceResourceCount; ++nIndex) {
-		auto pOld = std::dynamic_pointer_cast<NMR::CModelDisp2DGroupResource>(sourceModel.getResource(nIndex));
-		if (!pOld)
-			continue;
-		auto pDisplacement = std::dynamic_pointer_cast<NMR::CModelDisplacement2DResource>(
-			targetModel.findResource(oldToNewUniqueResourceIDs.at(pOld->getDisplacement2D()->getPackageResourceID()->getUniqueID())));
-		auto pNormals = std::dynamic_pointer_cast<NMR::CModelNormVectorGroupResource>(
-			targetModel.findResource(oldToNewUniqueResourceIDs.at(pOld->getNormVectorGroup()->getPackageResourceID()->getUniqueID())));
-		auto pNew = std::make_shared<NMR::CModelDisp2DGroupResource>(targetModel.generateResourceID(), &targetModel,
-			pDisplacement, pNormals, pOld->getHeight(), pOld->getOffset());
-		for (NMR::nfUint32 nCoordinate = 0; nCoordinate < pOld->getCount(); ++nCoordinate)
-			pNew->addCoordinate(pOld->getCoordinate(nCoordinate));
-		targetModel.addResource(pNew);
-		oldToNewUniqueResourceIDs[pOld->getPackageResourceID()->getUniqueID()] = pNew->getPackageResourceID()->getUniqueID();
-	}
+	targetModel.mergeDisplacement2Ds(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeNormVectorGroups(&sourceModel, oldToNewUniqueResourceIDs);
+	targetModel.mergeDisp2DGroups(&sourceModel, oldToNewUniqueResourceIDs);
 	targetModel.mergeMetaData(&sourceModel);
 }
 
@@ -592,30 +551,24 @@ IDisplacementMeshObjectIterator * CModel::GetDisplacementMeshObjects()
 IDisplacement2DIterator * CModel::GetDisplacement2Ds()
 {
 	auto result = std::unique_ptr<CDisplacement2DIterator>(new CDisplacement2DIterator());
-	for (Lib3MF_uint32 i = 0; i < model().getResourceCount(); ++i) {
-		auto resource = model().getResource(i);
-		if (std::dynamic_pointer_cast<NMR::CModelDisplacement2DResource>(resource)) result->addResource(resource);
-	}
+	for (Lib3MF_uint32 i = 0; i < model().getDisplacement2DCount(); ++i)
+		result->addResource(model().getDisplacement2DResource(i));
 	return result.release();
 }
 
 INormVectorGroupIterator * CModel::GetNormVectorGroups()
 {
 	auto result = std::unique_ptr<CNormVectorGroupIterator>(new CNormVectorGroupIterator());
-	for (Lib3MF_uint32 i = 0; i < model().getResourceCount(); ++i) {
-		auto resource = model().getResource(i);
-		if (std::dynamic_pointer_cast<NMR::CModelNormVectorGroupResource>(resource)) result->addResource(resource);
-	}
+	for (Lib3MF_uint32 i = 0; i < model().getNormVectorGroupCount(); ++i)
+		result->addResource(model().getNormVectorGroupResource(i));
 	return result.release();
 }
 
 IDisp2DGroupIterator * CModel::GetDisp2DGroups()
 {
 	auto result = std::unique_ptr<CDisp2DGroupIterator>(new CDisp2DGroupIterator());
-	for (Lib3MF_uint32 i = 0; i < model().getResourceCount(); ++i) {
-		auto resource = model().getResource(i);
-		if (std::dynamic_pointer_cast<NMR::CModelDisp2DGroupResource>(resource)) result->addResource(resource);
-	}
+	for (Lib3MF_uint32 i = 0; i < model().getDisp2DGroupCount(); ++i)
+		result->addResource(model().getDisp2DGroupResource(i));
 	return result.release();
 }
 

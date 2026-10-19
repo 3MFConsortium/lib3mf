@@ -117,6 +117,10 @@ namespace NMR {
 	class LevelSetObject;
 	typedef std::shared_ptr <LevelSetObject> PLevelSetObject;
 
+	class CModelDisplacement2DResource;
+	class CModelNormVectorGroupResource;
+	class CModelDisp2DGroupResource;
+
 	// The Model class implements the unification of all model-file in a 3MF package
 	// It should be understood as a "MultiModel"
 	class CModel {
@@ -173,6 +177,9 @@ namespace NMR {
 		std::vector<PModelResource> m_FunctionLookup; // for implicit models
 		std::vector<PModelResource> m_VolumeDataLookup;
 		std::vector<PModelResource> m_levelSetObjectLookup;
+		std::vector<PModelResource> m_Displacement2DLookup;
+		std::vector<PModelResource> m_NormVectorGroupLookup;
+		std::vector<PModelResource> m_Disp2DGroupLookup;
 
 		// The KeyStore reference
 		PKeyStore m_pKeyStore;
@@ -326,6 +333,22 @@ namespace NMR {
 		nfUint32 getVolumeDataCount();
 		PModelResource getVolumeDataResource(_In_ nfUint32 nIndex);
 		CModelVolumeData* getVolumeData(_In_ nfUint32 nIndex);
+
+		// Convenience functions for displacement resources
+		nfUint32 getDisplacement2DCount();
+		PModelResource getDisplacement2DResource(_In_ nfUint32 nIndex);
+		CModelDisplacement2DResource* getDisplacement2D(_In_ nfUint32 nIndex);
+		void mergeDisplacement2Ds(_In_ CModel* pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping);
+
+		nfUint32 getNormVectorGroupCount();
+		PModelResource getNormVectorGroupResource(_In_ nfUint32 nIndex);
+		CModelNormVectorGroupResource* getNormVectorGroup(_In_ nfUint32 nIndex);
+		void mergeNormVectorGroups(_In_ CModel* pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping);
+
+		nfUint32 getDisp2DGroupCount();
+		PModelResource getDisp2DGroupResource(_In_ nfUint32 nIndex);
+		CModelDisp2DGroupResource* getDisp2DGroup(_In_ nfUint32 nIndex);
+		void mergeDisp2DGroups(_In_ CModel* pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping);
 
 		
 		// Clear all build items and Resources

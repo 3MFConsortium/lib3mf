@@ -1572,6 +1572,15 @@ XML Parser Error Constants (0x9XXX)
 // A displacement mesh uses a displacement group from another model part
 #define NMR_ERROR_DISPLACEMENTGROUP_IN_OTHER_PART 0x901D
 
+// A displacement group references a displacement2d resource that is not in the model
+#define NMR_ERROR_DISPLACEMENT2D_MISSING 0x901E
+
+// A displacement group references a normal vector group that is not in the model
+#define NMR_ERROR_DISPLACEMENTNORMALS_MISSING 0x901F
+
+// A displacement mesh references a displacement group that is not in the model
+#define NMR_ERROR_DISPLACEMENTGROUP_MISSING 0x9020
+
 
 /*-------------------------------------------------------------------
 Library errors (0xAXXX)

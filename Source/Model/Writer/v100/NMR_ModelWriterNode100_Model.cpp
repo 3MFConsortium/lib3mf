@@ -754,12 +754,6 @@ namespace NMR {
 		// Beam lattice and volume data have no defined meaning on a displaced mesh, so refuse instead of dropping them
 		if (mesh->getBeamCount() > 0 || mesh->getBallCount() > 0 || object->getVolumeData())
 			throw CNMRException(NMR_ERROR_DISPLACEMENTMESH_UNSUPPORTEDDATA);
-		// The reader looks up displacement groups in the part of the mesh only
-		for (nfUint32 i = 0; i < mesh->getFaceCount(); ++i) {
-			if (object->hasTriangleDisplacement(i) &&
-				object->getTriangleDisplacement(i).m_pGroup->getPackageResourceID()->getPath() != object->getPackageResourceID()->getPath())
-				throw CNMRException(NMR_ERROR_DISPLACEMENTGROUP_IN_OTHER_PART);
-		}
 		writeStartElementWithPrefix(XML_3MF_ELEMENT_DISPLACEMENTMESH, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
 		writeStartElementWithPrefix(XML_3MF_ELEMENT_VERTICES, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
 		for (nfUint32 i = 0; i < mesh->getNodeCount(); ++i) {
@@ -802,6 +796,9 @@ namespace NMR {
 			}
 			if (object->hasTriangleDisplacement(i)) {
 				auto displacement = object->getTriangleDisplacement(i);
+				// The reader looks up displacement groups in the part of the mesh only
+				if (displacement.m_pGroup->getPackageResourceID()->getPath() != object->getPackageResourceID()->getPath())
+					throw CNMRException(NMR_ERROR_DISPLACEMENTGROUP_IN_OTHER_PART);
 				writeIntAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_DID, displacement.m_pGroup->getPackageResourceID()->getModelResourceID());
 				writeIntAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_D1, displacement.m_nIndices[0]);
 				if (displacement.m_nIndices[1] != displacement.m_nIndices[0]) writeIntAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_D2, displacement.m_nIndices[1]);
@@ -832,12 +829,12 @@ namespace NMR {
 	void CModelWriterNode100_Model::writeDisplacement2D(CModelDisplacement2DResource * resource)
 	{
 		writeStartElementWithPrefix(XML_3MF_ELEMENT_DISPLACEMENT2D, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
-		writeIntAttribute("id", resource->getPackageResourceID()->getModelResourceID());
-		writeStringAttribute("path", resource->getAttachment()->getPathURI());
-		if (resource->getChannel() != MODELCOLORCHANNEL_GREEN) writeStringAttribute("channel", resource->getChannelString());
-		if (resource->getTileStyleU() != MODELTEXTURETILESTYLE_WRAP) writeStringAttribute("tilestyleu", CModelTexture2DResource::tileStyleToString(resource->getTileStyleU()));
-		if (resource->getTileStyleV() != MODELTEXTURETILESTYLE_WRAP) writeStringAttribute("tilestylev", CModelTexture2DResource::tileStyleToString(resource->getTileStyleV()));
-		if (resource->getFilter() != MODELTEXTUREFILTER_AUTO) writeStringAttribute("filter", CModelTexture2DResource::filterToString(resource->getFilter()));
+		writeIntAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_ID, resource->getPackageResourceID()->getModelResourceID());
+		writeStringAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_PATH, resource->getAttachment()->getPathURI());
+		if (resource->getChannel() != MODELCOLORCHANNEL_GREEN) writeStringAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_CHANNEL, resource->getChannelString());
+		if (resource->getTileStyleU() != MODELTEXTURETILESTYLE_WRAP) writeStringAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_TILESTYLEU, CModelTexture2DResource::tileStyleToString(resource->getTileStyleU()));
+		if (resource->getTileStyleV() != MODELTEXTURETILESTYLE_WRAP) writeStringAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_TILESTYLEV, CModelTexture2DResource::tileStyleToString(resource->getTileStyleV()));
+		if (resource->getFilter() != MODELTEXTUREFILTER_AUTO) writeStringAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_FILTER, CModelTexture2DResource::filterToString(resource->getFilter()));
 		writeEndElement();
 	}
 
@@ -846,11 +843,11 @@ namespace NMR {
 		if (resource->getCount() == 0)
 			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 		writeStartElementWithPrefix(XML_3MF_ELEMENT_NORMVECTORGROUP, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
-		writeIntAttribute("id", resource->getPackageResourceID()->getModelResourceID());
+		writeIntAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_ID, resource->getPackageResourceID()->getModelResourceID());
 		for (nfUint32 i = 0; i < resource->getCount(); ++i) {
 			auto vector = resource->getVector(i);
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_NORMVECTOR, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
-			writeDoubleAttribute("x", vector[0]); writeDoubleAttribute("y", vector[1]); writeDoubleAttribute("z", vector[2]);
+			writeDoubleAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_X, vector[0]); writeDoubleAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_Y, vector[1]); writeDoubleAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_Z, vector[2]);
 			writeEndElement();
 		}
 		writeFullEndElement();
@@ -861,17 +858,17 @@ namespace NMR {
 		if (resource->getCount() == 0)
 			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 		writeStartElementWithPrefix(XML_3MF_ELEMENT_DISP2DGROUP, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
-		writeIntAttribute("id", resource->getPackageResourceID()->getModelResourceID());
-		writeIntAttribute("dispid", resource->getDisplacement2D()->getPackageResourceID()->getModelResourceID());
-		writeIntAttribute("nid", resource->getNormVectorGroup()->getPackageResourceID()->getModelResourceID());
-		writeDoubleAttribute("height", resource->getHeight());
-		if (resource->getOffset() != 0.0) writeDoubleAttribute("offset", resource->getOffset());
+		writeIntAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_ID, resource->getPackageResourceID()->getModelResourceID());
+		writeIntAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_DISPID, resource->getDisplacement2D()->getPackageResourceID()->getModelResourceID());
+		writeIntAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_NID, resource->getNormVectorGroup()->getPackageResourceID()->getModelResourceID());
+		writeDoubleAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_HEIGHT, resource->getHeight());
+		if (resource->getOffset() != 0.0) writeDoubleAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_OFFSET, resource->getOffset());
 		for (nfUint32 i = 0; i < resource->getCount(); ++i) {
 			auto coordinate = resource->getCoordinate(i);
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_DISP2DCOORD, XML_3MF_NAMESPACEPREFIX_DISPLACEMENT);
-			writeDoubleAttribute("u", coordinate.m_dU); writeDoubleAttribute("v", coordinate.m_dV);
-			writeIntAttribute("n", coordinate.m_nNormalVectorIndex);
-			if (coordinate.m_dDisplacementFactor != 1.0) writeDoubleAttribute("f", coordinate.m_dDisplacementFactor);
+			writeDoubleAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_U, coordinate.m_dU); writeDoubleAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_V, coordinate.m_dV);
+			writeIntAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_NORMAL, coordinate.m_nNormalVectorIndex);
+			if (coordinate.m_dDisplacementFactor != 1.0) writeDoubleAttribute(XML_3MF_ATTRIBUTE_DISPLACEMENT_FACTOR, coordinate.m_dDisplacementFactor);
 			writeEndElement();
 		}
 		writeFullEndElement();

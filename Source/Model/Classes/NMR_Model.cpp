@@ -577,6 +577,15 @@ namespace NMR {
 		if (pVolumeData != nullptr)
 			m_VolumeDataLookup.push_back(pResource);
 
+		if (dynamic_cast<CModelDisplacement2DResource*>(pResource.get()) != nullptr)
+			m_Displacement2DLookup.push_back(pResource);
+
+		if (dynamic_cast<CModelNormVectorGroupResource*>(pResource.get()) != nullptr)
+			m_NormVectorGroupLookup.push_back(pResource);
+
+		if (dynamic_cast<CModelDisp2DGroupResource*>(pResource.get()) != nullptr)
+			m_Disp2DGroupLookup.push_back(pResource);
+
 	}
 
 	// Clear all build items and Resources
@@ -596,6 +605,9 @@ namespace NMR {
 		m_CompositeMaterialsLookup.clear();
 		m_MultiPropertyGroupLookup.clear();
 		m_Image3DLookup.clear();
+		m_Displacement2DLookup.clear();
+		m_NormVectorGroupLookup.clear();
+		m_Disp2DGroupLookup.clear();
 
 		m_MetaDataGroup->clear();
 
@@ -1711,6 +1723,142 @@ namespace NMR {
 		return dynamic_cast<CModelVolumeData*>(pResource.get());
 	}
 
+	nfUint32 CModel::getDisplacement2DCount()
+	{
+		return (nfUint32)m_Displacement2DLookup.size();
+	}
+
+	PModelResource CModel::getDisplacement2DResource(_In_ nfUint32 nIndex)
+	{
+		if (nIndex >= getDisplacement2DCount())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_Displacement2DLookup[nIndex];
+	}
+
+	CModelDisplacement2DResource * CModel::getDisplacement2D(_In_ nfUint32 nIndex)
+	{
+		CModelDisplacement2DResource * pDisplacement2D = dynamic_cast<CModelDisplacement2DResource *> (getDisplacement2DResource(nIndex).get());
+		if (pDisplacement2D == nullptr)
+			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+
+		return pDisplacement2D;
+	}
+
+	void CModel::mergeDisplacement2Ds(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping)
+	{
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		// Capture the count once, so resources added here are not merged again when source and target are the same model
+		nfUint32 nCount = pSourceModel->getDisplacement2DCount();
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++)
+		{
+			CModelDisplacement2DResource * pOld = pSourceModel->getDisplacement2D(nIndex);
+			PModelAttachment pAttachment = findModelAttachment(pOld->getAttachment()->getPathURI());
+			if (pAttachment.get() == nullptr)
+				throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
+
+			auto pNew = std::make_shared<CModelDisplacement2DResource>(generateResourceID(), this, pAttachment);
+			pNew->setChannel(pOld->getChannel());
+			pNew->setTileStyleU(pOld->getTileStyleU());
+			pNew->setTileStyleV(pOld->getTileStyleV());
+			pNew->setFilter(pOld->getFilter());
+			addResource(pNew);
+			oldToNewMapping[pOld->getPackageResourceID()->getUniqueID()] = pNew->getPackageResourceID()->getUniqueID();
+		}
+	}
+
+	nfUint32 CModel::getNormVectorGroupCount()
+	{
+		return (nfUint32)m_NormVectorGroupLookup.size();
+	}
+
+	PModelResource CModel::getNormVectorGroupResource(_In_ nfUint32 nIndex)
+	{
+		if (nIndex >= getNormVectorGroupCount())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_NormVectorGroupLookup[nIndex];
+	}
+
+	CModelNormVectorGroupResource * CModel::getNormVectorGroup(_In_ nfUint32 nIndex)
+	{
+		CModelNormVectorGroupResource * pNormVectorGroup = dynamic_cast<CModelNormVectorGroupResource *> (getNormVectorGroupResource(nIndex).get());
+		if (pNormVectorGroup == nullptr)
+			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+
+		return pNormVectorGroup;
+	}
+
+	void CModel::mergeNormVectorGroups(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping)
+	{
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 nCount = pSourceModel->getNormVectorGroupCount();
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++)
+		{
+			CModelNormVectorGroupResource * pOld = pSourceModel->getNormVectorGroup(nIndex);
+			auto pNew = std::make_shared<CModelNormVectorGroupResource>(generateResourceID(), this);
+			for (nfUint32 nVector = 0; nVector < pOld->getCount(); nVector++)
+				pNew->addVector(pOld->getVector(nVector));
+			addResource(pNew);
+			oldToNewMapping[pOld->getPackageResourceID()->getUniqueID()] = pNew->getPackageResourceID()->getUniqueID();
+		}
+	}
+
+	nfUint32 CModel::getDisp2DGroupCount()
+	{
+		return (nfUint32)m_Disp2DGroupLookup.size();
+	}
+
+	PModelResource CModel::getDisp2DGroupResource(_In_ nfUint32 nIndex)
+	{
+		if (nIndex >= getDisp2DGroupCount())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_Disp2DGroupLookup[nIndex];
+	}
+
+	CModelDisp2DGroupResource * CModel::getDisp2DGroup(_In_ nfUint32 nIndex)
+	{
+		CModelDisp2DGroupResource * pDisp2DGroup = dynamic_cast<CModelDisp2DGroupResource *> (getDisp2DGroupResource(nIndex).get());
+		if (pDisp2DGroup == nullptr)
+			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+
+		return pDisp2DGroup;
+	}
+
+	void CModel::mergeDisp2DGroups(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping& oldToNewMapping)
+	{
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		// Requires mergeDisplacement2Ds and mergeNormVectorGroups to have filled oldToNewMapping
+		nfUint32 nCount = pSourceModel->getDisp2DGroupCount();
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++)
+		{
+			CModelDisp2DGroupResource * pOld = pSourceModel->getDisp2DGroup(nIndex);
+
+			auto displacementIterator = oldToNewMapping.find(pOld->getDisplacement2D()->getPackageResourceID()->getUniqueID());
+			if (displacementIterator == oldToNewMapping.end())
+				throw CNMRException(NMR_ERROR_DISPLACEMENT2D_MISSING);
+			auto normalsIterator = oldToNewMapping.find(pOld->getNormVectorGroup()->getPackageResourceID()->getUniqueID());
+			if (normalsIterator == oldToNewMapping.end())
+				throw CNMRException(NMR_ERROR_DISPLACEMENTNORMALS_MISSING);
+
+			auto pDisplacement = std::dynamic_pointer_cast<CModelDisplacement2DResource>(findResource(displacementIterator->second));
+			auto pNormals = std::dynamic_pointer_cast<CModelNormVectorGroupResource>(findResource(normalsIterator->second));
+			auto pNew = std::make_shared<CModelDisp2DGroupResource>(generateResourceID(), this,
+				pDisplacement, pNormals, pOld->getHeight(), pOld->getOffset());
+			for (nfUint32 nCoordinate = 0; nCoordinate < pOld->getCount(); nCoordinate++)
+				pNew->addCoordinate(pOld->getCoordinate(nCoordinate));
+			addResource(pNew);
+			oldToNewMapping[pOld->getPackageResourceID()->getUniqueID()] = pNew->getPackageResourceID()->getUniqueID();
+		}
+	}
+
 
 	void CModel::removeResource(PModelResource pResource)
 	{
@@ -1824,10 +1972,26 @@ namespace NMR {
 			return;
 		}
 
-		if (std::dynamic_pointer_cast<CModelDisplacement2DResource>(pResource) ||
-			std::dynamic_pointer_cast<CModelNormVectorGroupResource>(pResource) ||
-			std::dynamic_pointer_cast<CModelDisp2DGroupResource>(pResource))
+		auto displacement2DIterator = std::find(m_Displacement2DLookup.begin(), m_Displacement2DLookup.end(), pResource);
+		if (displacement2DIterator != m_Displacement2DLookup.end())
+		{
+			m_Displacement2DLookup.erase(displacement2DIterator);
 			return;
+		}
+
+		auto normVectorGroupIterator = std::find(m_NormVectorGroupLookup.begin(), m_NormVectorGroupLookup.end(), pResource);
+		if (normVectorGroupIterator != m_NormVectorGroupLookup.end())
+		{
+			m_NormVectorGroupLookup.erase(normVectorGroupIterator);
+			return;
+		}
+
+		auto disp2DGroupIterator = std::find(m_Disp2DGroupLookup.begin(), m_Disp2DGroupLookup.end(), pResource);
+		if (disp2DGroupIterator != m_Disp2DGroupLookup.end())
+		{
+			m_Disp2DGroupLookup.erase(disp2DGroupIterator);
+			return;
+		}
 
 		throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 	}

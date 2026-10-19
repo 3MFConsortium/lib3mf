@@ -66,6 +66,7 @@ namespace NMR {
 		~CModelMeshObject();
 		
 		_Ret_notnull_ CMesh * getMesh ();
+		_Ret_notnull_ const CMesh * getMesh () const;
 		void setMesh (_In_ PMesh pMesh);
 
 		void mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix) override;

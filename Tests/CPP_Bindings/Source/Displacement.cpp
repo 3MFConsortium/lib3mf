@@ -365,12 +365,12 @@ INSTANTIATE_TEST_SUITE_P(Displacement, InvalidDisplacementFiles, ::testing::Valu
 	std::string("displacement_beam_lattice")
 ));
 
-TEST_F(Displacement, CoreTrianglesIgnoreUnknownAttributes)
+TEST_F(Displacement, CoreTrianglesWarnOnUnknownAttributes)
 {
 	auto model = wrapper->CreateModel();
 	auto reader = model->QueryReader("3mf");
 	reader->ReadFromFile(sTestFilesPath + "/Reader/core_triangles_unknown_attribute.3mf");
-	CheckReaderWarnings(reader, 0);
+	CheckReaderWarnings(reader, 1);
 }
 
 TEST_F(Displacement, WritingAfterRemovingReferencedResourcesReportsMissingResource)
@@ -383,7 +383,7 @@ TEST_F(Displacement, WritingAfterRemovingReferencedResourcesReportsMissingResour
 			FAIL() << "Write should fail";
 		}
 		catch (Lib3MF::ELib3MFException & e) {
-			ASSERT_NE(std::string(e.what()).find("Resource not found"), std::string::npos) << e.what();
+			ASSERT_NE(std::string(e.what()).find("that is not in the model"), std::string::npos) << e.what();
 		}
 	};
 
@@ -538,4 +538,40 @@ TEST_F(Displacement, WriterRefusesGroupFromOtherModelPart)
 	model->AddBuildItem(components.get(), wrapper->GetIdentityTransform());
 	std::vector<Lib3MF_uint8> buffer;
 	expectErrorMessage([&]() { model->QueryWriter("3mf")->WriteToBuffer(buffer); }, "same model part");
+}
+
+TEST_F(Displacement, RemovedResourcesLeaveTheIterators)
+{
+	auto model = wrapper->CreateModel();
+	auto texture = model->AddDisplacement2D(addPNGAttachment(model).get());
+	auto normals = model->AddNormVectorGroup();
+	Lib3MF::sVector outward{ { 1.0, 1.0, 1.0 } };
+	normals->AddVector(outward);
+	auto coordinates = model->AddDisp2DGroup(texture.get(), normals.get(), 1.0, 0.0);
+	ASSERT_EQ(model->GetDisplacement2Ds()->Count(), 1u);
+	ASSERT_EQ(model->GetNormVectorGroups()->Count(), 1u);
+	ASSERT_EQ(model->GetDisp2DGroups()->Count(), 1u);
+
+	model->RemoveResource(coordinates.get());
+	model->RemoveResource(normals.get());
+	model->RemoveResource(texture.get());
+	ASSERT_EQ(model->GetDisplacement2Ds()->Count(), 0u);
+	ASSERT_EQ(model->GetNormVectorGroups()->Count(), 0u);
+	ASSERT_EQ(model->GetDisp2DGroups()->Count(), 0u);
+}
+
+TEST_F(Displacement, MergeToModelUsesBaseMeshWithoutDisplacements)
+{
+	auto model = wrapper->CreateModel();
+	auto mesh = addDisplacedTetrahedron(model);
+	model->AddBuildItem(mesh.get(), wrapper->GetIdentityTransform());
+	expectErrorMessage([&]() { model->MergeToModel(); }, "Displacement is not applied");
+
+	mesh->ClearTriangleDisplacement(3);
+	auto merged = model->MergeToModel();
+	auto meshes = merged->GetMeshObjects();
+	ASSERT_EQ(meshes->Count(), 1u);
+	ASSERT_TRUE(meshes->MoveNext());
+	ASSERT_EQ(meshes->GetCurrentMeshObject()->GetTriangleCount(), 4u);
+	ASSERT_EQ(merged->GetDisplacementMeshObjects()->Count(), 0u);
 }

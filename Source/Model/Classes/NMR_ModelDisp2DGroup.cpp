@@ -42,7 +42,7 @@ namespace NMR {
 		PModelDisplacement2DResource pDisplacement2D, PModelNormVectorGroupResource pNormVectorGroup,
 		nfDouble dHeight, nfDouble dOffset)
 		: CModelResource(nID, pModel), m_pDisplacement2D(pDisplacement2D),
-		m_pNormVectorGroup(pNormVectorGroup), m_dHeight(dHeight), m_dOffset(dOffset)
+		m_pNormVectorGroup(pNormVectorGroup)
 	{
 		if (!pDisplacement2D || !pNormVectorGroup)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -96,9 +96,10 @@ namespace NMR {
 	ResourceDependencies CModelDisp2DGroupResource::getDependencies()
 	{
 		// Referenced resources may have been removed from the model after this group was created
-		if (getModel()->findResource(m_pDisplacement2D->getPackageResourceID()->getUniqueID()) != m_pDisplacement2D ||
-			getModel()->findResource(m_pNormVectorGroup->getPackageResourceID()->getUniqueID()) != m_pNormVectorGroup)
-			throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+		if (getModel()->findResource(m_pDisplacement2D->getPackageResourceID()->getUniqueID()) != m_pDisplacement2D)
+			throw CNMRException(NMR_ERROR_DISPLACEMENT2D_MISSING);
+		if (getModel()->findResource(m_pNormVectorGroup->getPackageResourceID()->getUniqueID()) != m_pNormVectorGroup)
+			throw CNMRException(NMR_ERROR_DISPLACEMENTNORMALS_MISSING);
 		return { m_pDisplacement2D->getPackageResourceID(), m_pNormVectorGroup->getPackageResourceID() };
 	}
 }

@@ -79,7 +79,7 @@ namespace NMR {
 		_Ret_notnull_ PBEAMSET addBeamSet();
 		
 		nfUint32 getNodeCount();
-		nfUint32 getFaceCount();
+		nfUint32 getFaceCount() const;
 		nfUint32 getBeamCount();
 		nfUint32 getBallCount();
 		nfUint32 getBeamSetCount();
