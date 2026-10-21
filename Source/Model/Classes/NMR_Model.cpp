@@ -53,6 +53,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_KeyStore.h"
 #include "Model/Classes/NMR_ModelImplicitFunction.h"
 #include "Model/Classes/NMR_ModelFunctionFromImage3D.h"
+#include "Model/Classes/NMR_ModelLevelSetObject.h"
 
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Common/MeshInformation/NMR_MeshInformation.h"
@@ -1492,6 +1493,12 @@ namespace NMR {
 		{
 			for(size_t i = 0; i < m_ObjectLookup.size(); i++)
 			{
+				CModelLevelSetObject *pLevelSetObject =
+					dynamic_cast<CModelLevelSetObject *>(
+						m_ObjectLookup[i].get());
+				if (pLevelSetObject != nullptr)
+					return true;
+
 				CModelMeshObject *pMeshObject =
 					dynamic_cast<CModelMeshObject *>(
 						m_ObjectLookup[i].get());
