@@ -33,6 +33,7 @@ Abstract: This is a stub class definition of CMeshObject
 
 #include "lib3mf_beamlattice.hpp"
 #include "lib3mf_volumedata.hpp"
+#include "lib3mf_displacementmeshobject.hpp"
 // Include custom headers here.
 
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
@@ -50,6 +51,9 @@ IMeshObject* CMeshObject::fnCreateMeshObjectFromModelResource(NMR::PModelResourc
 
 	if (!pResource.get())
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	if (auto pDisplacement = std::dynamic_pointer_cast<NMR::CModelDisplacementMeshObject>(pResource)) {
+		return new CDisplacementMeshObject(pDisplacement);
+	}
 
 	NMR::CModelMeshObject * pMeshObject = dynamic_cast<NMR::CModelMeshObject *> (pResource.get());
 	if (pMeshObject) {

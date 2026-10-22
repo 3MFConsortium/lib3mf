@@ -1560,7 +1560,26 @@ XML Parser Error Constants (0x9XXX)
 // A matindices attribute is duplicated
 #define NMR_ERROR_DUPLICATE_MATINDICES_ATTRIBUTE 0x9019
 
-//
+// Displacement content is present without listing its namespace as required
+#define NMR_ERROR_DISPLACEMENTEXTENSION_NOT_REQUIRED 0x901A
+
+// A mesh with triangle displacements was exported to a format that cannot hold them
+#define NMR_ERROR_DISPLACEMENT_NOT_APPLIED 0x901B
+
+// A displacement mesh has beam lattice or volume data
+#define NMR_ERROR_DISPLACEMENTMESH_UNSUPPORTEDDATA 0x901C
+
+// A displacement mesh uses a displacement group from another model part
+#define NMR_ERROR_DISPLACEMENTGROUP_IN_OTHER_PART 0x901D
+
+// A displacement group references a displacement2d resource that is not in the model
+#define NMR_ERROR_DISPLACEMENT2D_MISSING 0x901E
+
+// A displacement group references a normal vector group that is not in the model
+#define NMR_ERROR_DISPLACEMENTNORMALS_MISSING 0x901F
+
+// A displacement mesh references a displacement group that is not in the model
+#define NMR_ERROR_DISPLACEMENTGROUP_MISSING 0x9020
 
 
 /*-------------------------------------------------------------------

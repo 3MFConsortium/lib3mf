@@ -43,12 +43,13 @@ namespace NMR {
 	class CModelReaderNode100_Vertices : public CModelReaderNode {
 	private:
 		CMesh * m_pMesh;
+		nfBool m_bDisplacement;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Vertices() = delete;
-		CModelReaderNode100_Vertices(_In_ CMesh * pMesh, _In_ PModelWarnings pWarnings);
+		CModelReaderNode100_Vertices(_In_ CMesh * pMesh, _In_ PModelWarnings pWarnings, _In_ nfBool bDisplacement = false);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

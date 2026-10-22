@@ -39,6 +39,7 @@ A triangles reader model node is a parser for the triangles node of an XML Model
 #include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelDisplacementMeshObject.h"
 
 namespace NMR {
 
@@ -50,6 +51,8 @@ namespace NMR {
 		PPackageResourceID m_pObjectLevelPropertyID;
 		ModelResourceIndex m_nDefaultResourceIndex;
 		ModelResourceID m_nUsedResourceID;
+		PModelDisplacementMeshObject m_pDisplacementObject;
+		nfInt32 m_nDefaultDisplacementID;
 
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
@@ -58,7 +61,8 @@ namespace NMR {
 	public:
 		CModelReaderNode100_Triangles() = delete;
 		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelWarnings pWarnings,
-			_In_ PPackageResourceID pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
+			_In_ PPackageResourceID pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex,
+			_In_opt_ PModelDisplacementMeshObject pDisplacementObject = nullptr);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		ModelResourceID getUsedPropertyID() const;

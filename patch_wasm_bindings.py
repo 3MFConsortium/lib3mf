@@ -29,6 +29,26 @@ BOOLEAN_FIXED = """static emscripten::val wrap_BooleanObject_GetOperand(CBoolean
 }"""
 
 
+DISPLACEMENT_BROKEN = """static emscripten::val wrap_DisplacementMeshObject_GetTriangleDisplacement(CDisplacementMeshObject &self, const Lib3MF_uint32& Index) {
+    emscripten::val output = emscripten::val::object();
+    PDisp2DGroup Disp2DGroup;
+    Lib3MF_struct return_value = self.GetTriangleDisplacement(Index, Disp2DGroup);
+    output.set("return", return_value);
+    output.set("Disp2DGroup", Disp2DGroup);
+    return output;
+}"""
+
+DISPLACEMENT_FIXED = """static emscripten::val wrap_DisplacementMeshObject_GetTriangleDisplacement(CDisplacementMeshObject &self, const Lib3MF_uint32& Index) {
+    emscripten::val output = emscripten::val::object();
+    PDisp2DGroup Disp2DGroup;
+    sTriangleDisplacementWrapper return_value;
+    return_value.value = self.GetTriangleDisplacement(Index, Disp2DGroup);
+    output.set("return", return_value);
+    output.set("Disp2DGroup", Disp2DGroup);
+    return output;
+}"""
+
+
 VECTOR_STRUCT_PATCHES = [
     (
         """static emscripten::val wrap_MeshObject_GetVertices(CMeshObject &self) {
@@ -202,6 +222,14 @@ def main() -> int:
         BOOLEAN_BROKEN,
         BOOLEAN_FIXED,
         "BooleanObject_GetOperand",
+    )
+    changed = changed or local_changed
+
+    contents, local_changed = apply_literal_patch(
+        contents,
+        DISPLACEMENT_BROKEN,
+        DISPLACEMENT_FIXED,
+        "DisplacementMeshObject_GetTriangleDisplacement",
     )
     changed = changed or local_changed
 

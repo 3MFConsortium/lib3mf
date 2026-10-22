@@ -40,6 +40,7 @@ A model reader node is an abstract base class for all XML nodes of a 3MF Model S
 #include "Model/Reader/v093/NMR_ModelReaderNode093_Build.h" 
 
 #include "Model/Classes/NMR_ModelConstants.h" 
+#include "Model/Classes/NMR_ModelDisplacementMeshObject.h"
 #include "Common/3MF_ProgressMonitor.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
@@ -89,7 +90,8 @@ namespace NMR {
 				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_SECURECONTENTSPEC) != 0 &&
 				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_VOLUMETRICSPEC) != 0 &&
 				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_IMPLICITSPEC) != 0 &&
-				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_BOOLEANSPEC) != 0
+				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_BOOLEANSPEC) != 0 &&
+				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_DISPLACEMENTSPEC) != 0
 				 )
 			{
 				m_pWarnings->addWarning(NMR_ERROR_REQUIREDEXTENSIONNOTSUPPORTED, mrwInvalidMandatoryValue);
@@ -110,6 +112,34 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
+
+		bool bHasDisplacementMesh = false;
+		for (nfUint32 nIndex = 0; nIndex < m_pModel->getResourceCount(); ++nIndex) {
+			auto pResource = m_pModel->getResource(nIndex);
+			if (pResource->getPackageResourceID()->getPath() != m_sPath)
+				continue;
+			// Only a displacement mesh changes the shape; displacement resources alone do not need 'd' to be required
+			if (std::dynamic_pointer_cast<CModelDisplacementMeshObject>(pResource)) {
+				bHasDisplacementMesh = true;
+				break;
+			}
+		}
+
+		if (bHasDisplacementMesh) {
+			std::istringstream requiredExtensions(m_sRequiredExtensions);
+			std::vector<std::string> tokens{ std::istream_iterator<std::string, char>{requiredExtensions},
+				std::istream_iterator<std::string, char>{} };
+			bool bDisplacementIsRequired = false;
+			for (const auto & extension : m_ListedExtensions) {
+				if (extension.second == XML_3MF_NAMESPACE_DISPLACEMENTSPEC &&
+					std::find(tokens.begin(), tokens.end(), extension.first) != tokens.end()) {
+					bDisplacementIsRequired = true;
+					break;
+				}
+			}
+			if (!bDisplacementIsRequired)
+				throw CNMRException(NMR_ERROR_DISPLACEMENTEXTENSION_NOT_REQUIRED);
+		}
 
 	}
 

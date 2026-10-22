@@ -126,6 +126,12 @@ void CWrapper::GetSpecificationVersion (const std::string & sSpecificationURL, b
 		nMicro = NMR_SPECVERSION_BOOLEAN_MICRO;
 		bIsSupported = true;
 	}
+	else if (!sSpecificationURL.compare(std::string(XML_3MF_NAMESPACE_DISPLACEMENTSPEC))) {
+		nMajor = NMR_SPECVERSION_DISPLACEMENT_MAJOR;
+		nMinor = NMR_SPECVERSION_DISPLACEMENT_MINOR;
+		nMicro = NMR_SPECVERSION_DISPLACEMENT_MICRO;
+		bIsSupported = true;
+	}
 	else {
 		bIsSupported = false;
 	}
@@ -280,4 +286,3 @@ sLib3MFTransform CWrapper::GetTranslationTransform(const Lib3MF_single fVectorX,
 
 	return Transform;
 }
-

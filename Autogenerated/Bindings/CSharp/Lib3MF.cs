@@ -590,6 +590,19 @@ namespace Lib3MF {
 		public Double V;
 	}
 
+	public struct sDisplacement2DCoordinate
+	{
+		public Double U;
+		public Double V;
+		public UInt32 NormalVectorIndex;
+		public Double DisplacementFactor;
+	}
+
+	public struct sTriangleDisplacement
+	{
+		public UInt32[] DisplacementIndices;
+	}
+
 	public struct sTransform
 	{
 		public Single[][] Fields;
@@ -679,6 +692,21 @@ namespace Lib3MF {
 		{
 			[FieldOffset(0)] public Double U;
 			[FieldOffset(8)] public Double V;
+		}
+
+		[StructLayout(LayoutKind.Explicit, Size=28)]
+		public unsafe struct InternalDisplacement2DCoordinate
+		{
+			[FieldOffset(0)] public Double U;
+			[FieldOffset(8)] public Double V;
+			[FieldOffset(16)] public UInt32 NormalVectorIndex;
+			[FieldOffset(20)] public Double DisplacementFactor;
+		}
+
+		[StructLayout(LayoutKind.Explicit, Size=12)]
+		public unsafe struct InternalTriangleDisplacement
+		{
+			[FieldOffset(0)] public fixed UInt32 DisplacementIndices[3];
 		}
 
 		[StructLayout(LayoutKind.Explicit, Size=48)]
@@ -862,6 +890,18 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_booleanobjectiterator_getcurrentbooleanobject", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BooleanObjectIterator_GetCurrentBooleanObject (IntPtr Handle, out IntPtr AResource);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 DisplacementMeshObjectIterator_GetCurrentDisplacementMeshObject (IntPtr Handle, out IntPtr AResource);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_displacement2diterator_getcurrentdisplacement2d", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Displacement2DIterator_GetCurrentDisplacement2D (IntPtr Handle, out IntPtr AResource);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NormVectorGroupIterator_GetCurrentNormVectorGroup (IntPtr Handle, out IntPtr AResource);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Disp2DGroupIterator_GetCurrentDisp2DGroup (IntPtr Handle, out IntPtr AResource);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_texture2diterator_getcurrenttexture2d", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Texture2DIterator_GetCurrentTexture2D (IntPtr Handle, out IntPtr AResource);
 
@@ -1009,6 +1049,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_object_isbooleanobject", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Object_IsBooleanObject (IntPtr Handle, out Byte AIsBooleanObject);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_object_isdisplacementmeshobject", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Object_IsDisplacementMeshObject (IntPtr Handle, out Byte AIsDisplacementMeshObject);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_object_isvalid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Object_IsValid (IntPtr Handle, out Byte AIsValid);
 
@@ -1131,6 +1174,18 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_meshobject_gettriangleset", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 MeshObject_GetTriangleSet (IntPtr Handle, UInt32 AIndex, out IntPtr ATheTriangleSet);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_displacementmeshobject_hastriangledisplacement", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 DisplacementMeshObject_HasTriangleDisplacement (IntPtr Handle, UInt32 AIndex, out Byte AHasDisplacement);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_displacementmeshobject_settriangledisplacement", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 DisplacementMeshObject_SetTriangleDisplacement (IntPtr Handle, UInt32 AIndex, IntPtr ADisp2DGroup, ref InternalTriangleDisplacement ADisplacement);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_displacementmeshobject_gettriangledisplacement", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 DisplacementMeshObject_GetTriangleDisplacement (IntPtr Handle, UInt32 AIndex, out IntPtr ADisp2DGroup, out InternalTriangleDisplacement ADisplacement);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_displacementmeshobject_cleartriangledisplacement", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 DisplacementMeshObject_ClearTriangleDisplacement (IntPtr Handle, UInt32 AIndex);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_levelset_getfunction", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 LevelSet_GetFunction (IntPtr Handle, out IntPtr ATheFunction);
@@ -1617,6 +1672,72 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_attachment_readfrombuffer", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Attachment_ReadFromBuffer (IntPtr Handle, UInt64 sizeBuffer, IntPtr dataBuffer);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_displacement2d_getattachment", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Displacement2D_GetAttachment (IntPtr Handle, out IntPtr AAttachment);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_displacement2d_setattachment", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Displacement2D_SetAttachment (IntPtr Handle, IntPtr AAttachment);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_displacement2d_getchannel", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Displacement2D_GetChannel (IntPtr Handle, out Int32 AChannel);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_displacement2d_setchannel", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Displacement2D_SetChannel (IntPtr Handle, Int32 AChannel);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_displacement2d_gettilestyleuv", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Displacement2D_GetTileStyleUV (IntPtr Handle, out Int32 ATileStyleU, out Int32 ATileStyleV);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_displacement2d_settilestyleuv", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Displacement2D_SetTileStyleUV (IntPtr Handle, Int32 ATileStyleU, Int32 ATileStyleV);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_displacement2d_getfilter", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Displacement2D_GetFilter (IntPtr Handle, out Int32 AFilter);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_displacement2d_setfilter", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Displacement2D_SetFilter (IntPtr Handle, Int32 AFilter);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_normvectorgroup_getcount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NormVectorGroup_GetCount (IntPtr Handle, out UInt32 ACount);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_normvectorgroup_addvector", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NormVectorGroup_AddVector (IntPtr Handle, ref InternalVector AVector, out UInt32 AIndex);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_normvectorgroup_getvector", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NormVectorGroup_GetVector (IntPtr Handle, UInt32 AIndex, out InternalVector AVector);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_normvectorgroup_setvector", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 NormVectorGroup_SetVector (IntPtr Handle, UInt32 AIndex, ref InternalVector AVector);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_disp2dgroup_getdisplacement2d", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Disp2DGroup_GetDisplacement2D (IntPtr Handle, out IntPtr ADisplacement2D);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_disp2dgroup_getnormalvectorgroup", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Disp2DGroup_GetNormalVectorGroup (IntPtr Handle, out IntPtr ANormVectorGroup);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_disp2dgroup_getheight", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Disp2DGroup_GetHeight (IntPtr Handle, out Double AHeight);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_disp2dgroup_setheight", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Disp2DGroup_SetHeight (IntPtr Handle, Double AHeight);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_disp2dgroup_getoffset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Disp2DGroup_GetOffset (IntPtr Handle, out Double AOffset);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_disp2dgroup_setoffset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Disp2DGroup_SetOffset (IntPtr Handle, Double AOffset);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_disp2dgroup_getcount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Disp2DGroup_GetCount (IntPtr Handle, out UInt32 ACount);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_disp2dgroup_addcoordinate", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Disp2DGroup_AddCoordinate (IntPtr Handle, ref InternalDisplacement2DCoordinate ACoordinate, out UInt32 AIndex);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_disp2dgroup_getcoordinate", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Disp2DGroup_GetCoordinate (IntPtr Handle, UInt32 AIndex, out InternalDisplacement2DCoordinate ACoordinate);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_disp2dgroup_setcoordinate", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Disp2DGroup_SetCoordinate (IntPtr Handle, UInt32 AIndex, ref InternalDisplacement2DCoordinate ACoordinate);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_texture2d_getattachment", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Texture2D_GetAttachment (IntPtr Handle, out IntPtr AAttachment);
@@ -2500,6 +2621,18 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getbooleanobjectbyid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetBooleanObjectByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr ABooleanObjectInstance);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getdisplacementmeshobjectbyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetDisplacementMeshObjectByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr ADisplacementMeshObjectInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getdisplacement2dbyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetDisplacement2DByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr ADisplacement2DInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getnormvectorgroupbyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetNormVectorGroupByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr ANormVectorGroupInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getdisp2dgroupbyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetDisp2DGroupByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr ADisp2DGroupInstance);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getcolorgroupbyid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetColorGroupByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AColorGroupInstance);
 
@@ -2535,6 +2668,18 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getbooleanobjects", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetBooleanObjects (IntPtr Handle, out IntPtr AResourceIterator);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getdisplacementmeshobjects", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetDisplacementMeshObjects (IntPtr Handle, out IntPtr AResourceIterator);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getdisplacement2ds", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetDisplacement2Ds (IntPtr Handle, out IntPtr AResourceIterator);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getnormvectorgroups", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetNormVectorGroups (IntPtr Handle, out IntPtr AResourceIterator);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getdisp2dgroups", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetDisp2DGroups (IntPtr Handle, out IntPtr AResourceIterator);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_gettexture2ds", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetTexture2Ds (IntPtr Handle, out IntPtr AResourceIterator);
@@ -2574,6 +2719,18 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addbooleanobject", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddBooleanObject (IntPtr Handle, out IntPtr ABooleanObjectInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_adddisplacementmeshobject", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddDisplacementMeshObject (IntPtr Handle, out IntPtr ADisplacementMeshObjectInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_adddisplacement2d", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddDisplacement2D (IntPtr Handle, IntPtr ATextureAttachment, out IntPtr ADisplacement2DInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addnormvectorgroup", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddNormVectorGroup (IntPtr Handle, out IntPtr ANormVectorGroupInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_adddisp2dgroup", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddDisp2DGroup (IntPtr Handle, IntPtr ADisplacement2D, IntPtr ANormalVectorGroup, Double AHeight, Double AOffset, out IntPtr ADisp2DGroupInstance);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addslicestack", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddSliceStack (IntPtr Handle, Double AZBottom, out IntPtr ASliceStackInstance);
@@ -2862,6 +3019,47 @@ namespace Lib3MF {
 				return intTex2Coord;
 			}
 
+			public unsafe static sDisplacement2DCoordinate convertInternalToStruct_Displacement2DCoordinate (InternalDisplacement2DCoordinate intDisplacement2DCoordinate)
+			{
+				sDisplacement2DCoordinate Displacement2DCoordinate;
+				Displacement2DCoordinate.U = intDisplacement2DCoordinate.U;
+				Displacement2DCoordinate.V = intDisplacement2DCoordinate.V;
+				Displacement2DCoordinate.NormalVectorIndex = intDisplacement2DCoordinate.NormalVectorIndex;
+				Displacement2DCoordinate.DisplacementFactor = intDisplacement2DCoordinate.DisplacementFactor;
+				return Displacement2DCoordinate;
+			}
+
+			public unsafe static InternalDisplacement2DCoordinate convertStructToInternal_Displacement2DCoordinate (sDisplacement2DCoordinate Displacement2DCoordinate)
+			{
+				InternalDisplacement2DCoordinate intDisplacement2DCoordinate;
+				intDisplacement2DCoordinate.U = Displacement2DCoordinate.U;
+				intDisplacement2DCoordinate.V = Displacement2DCoordinate.V;
+				intDisplacement2DCoordinate.NormalVectorIndex = Displacement2DCoordinate.NormalVectorIndex;
+				intDisplacement2DCoordinate.DisplacementFactor = Displacement2DCoordinate.DisplacementFactor;
+				return intDisplacement2DCoordinate;
+			}
+
+			public unsafe static sTriangleDisplacement convertInternalToStruct_TriangleDisplacement (InternalTriangleDisplacement intTriangleDisplacement)
+			{
+				sTriangleDisplacement TriangleDisplacement;
+				TriangleDisplacement.DisplacementIndices = new UInt32[3];
+				for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
+					TriangleDisplacement.DisplacementIndices[rowIndex] = intTriangleDisplacement.DisplacementIndices[rowIndex];
+				}
+
+				return TriangleDisplacement;
+			}
+
+			public unsafe static InternalTriangleDisplacement convertStructToInternal_TriangleDisplacement (sTriangleDisplacement TriangleDisplacement)
+			{
+				InternalTriangleDisplacement intTriangleDisplacement;
+				for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
+					intTriangleDisplacement.DisplacementIndices[rowIndex] = TriangleDisplacement.DisplacementIndices[rowIndex];
+				}
+
+				return intTriangleDisplacement;
+			}
+
 			public unsafe static sTransform convertInternalToStruct_Transform (InternalTransform intTransform)
 			{
 				sTransform Transform;
@@ -3094,6 +3292,10 @@ namespace Lib3MF {
 					case 0xF4196034E2B9FDE6: Object = new CMeshObjectIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObjectIterator"
 					case 0x564DE4217ED7614A: Object = new CComponentsObjectIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ComponentsObjectIterator"
 					case 0xAFF01F512E1FF6AE: Object = new CBooleanObjectIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BooleanObjectIterator"
+					case 0x6985D4BCC417D63A: Object = new CDisplacementMeshObjectIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::DisplacementMeshObjectIterator"
+					case 0xBBE0E57916ABA639: Object = new CDisplacement2DIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Displacement2DIterator"
+					case 0x94F41D650A9D1201: Object = new CNormVectorGroupIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::NormVectorGroupIterator"
+					case 0x4F6F025BFF1BC77D: Object = new CDisp2DGroupIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Disp2DGroupIterator"
 					case 0x4BD32B4870FFC03B: Object = new CTexture2DIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2DIterator"
 					case 0x65E6EDD9362C79CB: Object = new CBaseMaterialGroupIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BaseMaterialGroupIterator"
 					case 0x10274A1757C729C0: Object = new CColorGroupIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ColorGroupIterator"
@@ -3108,6 +3310,7 @@ namespace Lib3MF {
 					case 0x5950BB3EE8A82090: Object = new CTriangleSet(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::TriangleSet"
 					case 0x2DA2136F577A779C: Object = new CObject(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Object"
 					case 0x3B3A6DC6EC610497: Object = new CMeshObject(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::MeshObject"
+					case 0x062EC1EFBBB2C007: Object = new CDisplacementMeshObject(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::DisplacementMeshObject"
 					case 0xE8A7D9C192EFD0E2: Object = new CLevelSet(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSet"
 					case 0x85FA0E8806B6C357: Object = new CBooleanObject(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BooleanObject"
 					case 0x63B3B461B30B4BA5: Object = new CBeamLattice(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BeamLattice"
@@ -3128,6 +3331,9 @@ namespace Lib3MF {
 					case 0xBD938FF2D2663D61: Object = new CImage3D(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Image3D"
 					case 0x13A2561F0CFB712A: Object = new CImageStack(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImageStack"
 					case 0x8CE7A1191A63A35D: Object = new CAttachment(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Attachment"
+					case 0xD4FBF6402F29131F: Object = new CDisplacement2D(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Displacement2D"
+					case 0xA04BF4AC86AB47C3: Object = new CNormVectorGroup(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::NormVectorGroup"
+					case 0x823F487B8BB83E5B: Object = new CDisp2DGroup(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Disp2DGroup"
 					case 0xE0441CF976B36319: Object = new CTexture2D(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Texture2D"
 					case 0xD5C49B04AF1963CD: Object = new CImplicitPort(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ImplicitPort"
 					case 0x52F06268CD098EFE: Object = new CIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Iterator"
@@ -3681,6 +3887,70 @@ namespace Lib3MF {
 
 	}
 
+	public class CDisplacementMeshObjectIterator : CResourceIterator
+	{
+		public CDisplacementMeshObjectIterator (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CDisplacementMeshObject GetCurrentDisplacementMeshObject ()
+		{
+			IntPtr newResource = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.DisplacementMeshObjectIterator_GetCurrentDisplacementMeshObject (Handle, out newResource));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDisplacementMeshObject>(newResource);
+		}
+
+	}
+
+	public class CDisplacement2DIterator : CResourceIterator
+	{
+		public CDisplacement2DIterator (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CDisplacement2D GetCurrentDisplacement2D ()
+		{
+			IntPtr newResource = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Displacement2DIterator_GetCurrentDisplacement2D (Handle, out newResource));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDisplacement2D>(newResource);
+		}
+
+	}
+
+	public class CNormVectorGroupIterator : CResourceIterator
+	{
+		public CNormVectorGroupIterator (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CNormVectorGroup GetCurrentNormVectorGroup ()
+		{
+			IntPtr newResource = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.NormVectorGroupIterator_GetCurrentNormVectorGroup (Handle, out newResource));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CNormVectorGroup>(newResource);
+		}
+
+	}
+
+	public class CDisp2DGroupIterator : CResourceIterator
+	{
+		public CDisp2DGroupIterator (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CDisp2DGroup GetCurrentDisp2DGroup ()
+		{
+			IntPtr newResource = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Disp2DGroupIterator_GetCurrentDisp2DGroup (Handle, out newResource));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDisp2DGroup>(newResource);
+		}
+
+	}
+
 	public class CTexture2DIterator : CResourceIterator
 	{
 		public CTexture2DIterator (IntPtr NewHandle) : base (NewHandle)
@@ -4222,6 +4492,14 @@ namespace Lib3MF {
 			return (resultIsBooleanObject != 0);
 		}
 
+		public bool IsDisplacementMeshObject ()
+		{
+			Byte resultIsDisplacementMeshObject = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Object_IsDisplacementMeshObject (Handle, out resultIsDisplacementMeshObject));
+			return (resultIsDisplacementMeshObject != 0);
+		}
+
 		public bool IsValid ()
 		{
 			Byte resultIsValid = 0;
@@ -4595,6 +4873,48 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.MeshObject_GetTriangleSet (Handle, AIndex, out newTheTriangleSet));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CTriangleSet>(newTheTriangleSet);
+		}
+
+	}
+
+	public class CDisplacementMeshObject : CMeshObject
+	{
+		public CDisplacementMeshObject (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public bool HasTriangleDisplacement (UInt32 AIndex)
+		{
+			Byte resultHasDisplacement = 0;
+
+			CheckError(Internal.Lib3MFWrapper.DisplacementMeshObject_HasTriangleDisplacement (Handle, AIndex, out resultHasDisplacement));
+			return (resultHasDisplacement != 0);
+		}
+
+		public void SetTriangleDisplacement (UInt32 AIndex, CDisp2DGroup ADisp2DGroup, sTriangleDisplacement ADisplacement)
+		{
+			IntPtr ADisp2DGroupHandle = IntPtr.Zero;
+			if (ADisp2DGroup != null)
+				ADisp2DGroupHandle = ADisp2DGroup.GetHandle();
+			Internal.InternalTriangleDisplacement intDisplacement = Internal.Lib3MFWrapper.convertStructToInternal_TriangleDisplacement (ADisplacement);
+
+			CheckError(Internal.Lib3MFWrapper.DisplacementMeshObject_SetTriangleDisplacement (Handle, AIndex, ADisp2DGroupHandle, ref intDisplacement));
+		}
+
+		public sTriangleDisplacement GetTriangleDisplacement (UInt32 AIndex, out CDisp2DGroup ADisp2DGroup)
+		{
+			IntPtr newDisp2DGroup = IntPtr.Zero;
+			Internal.InternalTriangleDisplacement intresultDisplacement;
+
+			CheckError(Internal.Lib3MFWrapper.DisplacementMeshObject_GetTriangleDisplacement (Handle, AIndex, out newDisp2DGroup, out intresultDisplacement));
+			ADisp2DGroup = Internal.Lib3MFWrapper.PolymorphicFactory<CDisp2DGroup>(newDisp2DGroup);
+			return Internal.Lib3MFWrapper.convertInternalToStruct_TriangleDisplacement (intresultDisplacement);
+		}
+
+		public void ClearTriangleDisplacement (UInt32 AIndex)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.DisplacementMeshObject_ClearTriangleDisplacement (Handle, AIndex));
 		}
 
 	}
@@ -6161,6 +6481,203 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Attachment_ReadFromBuffer (Handle, (UInt64) ABuffer.Length, dataBuffer.AddrOfPinnedObject()));
 			dataBuffer.Free ();
+		}
+
+	}
+
+	public class CDisplacement2D : CResource
+	{
+		public CDisplacement2D (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CAttachment GetAttachment ()
+		{
+			IntPtr newAttachment = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Displacement2D_GetAttachment (Handle, out newAttachment));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CAttachment>(newAttachment);
+		}
+
+		public void SetAttachment (CAttachment AAttachment)
+		{
+			IntPtr AAttachmentHandle = IntPtr.Zero;
+			if (AAttachment != null)
+				AAttachmentHandle = AAttachment.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.Displacement2D_SetAttachment (Handle, AAttachmentHandle));
+		}
+
+		public eChannelName GetChannel ()
+		{
+			Int32 resultChannel = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Displacement2D_GetChannel (Handle, out resultChannel));
+			return (eChannelName) (resultChannel);
+		}
+
+		public void SetChannel (eChannelName AChannel)
+		{
+			Int32 enumChannel = (Int32) AChannel;
+
+			CheckError(Internal.Lib3MFWrapper.Displacement2D_SetChannel (Handle, enumChannel));
+		}
+
+		public void GetTileStyleUV (out eTextureTileStyle ATileStyleU, out eTextureTileStyle ATileStyleV)
+		{
+			Int32 resultTileStyleU = 0;
+			Int32 resultTileStyleV = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Displacement2D_GetTileStyleUV (Handle, out resultTileStyleU, out resultTileStyleV));
+			ATileStyleU = (eTextureTileStyle) (resultTileStyleU);
+			ATileStyleV = (eTextureTileStyle) (resultTileStyleV);
+		}
+
+		public void SetTileStyleUV (eTextureTileStyle ATileStyleU, eTextureTileStyle ATileStyleV)
+		{
+			Int32 enumTileStyleU = (Int32) ATileStyleU;
+			Int32 enumTileStyleV = (Int32) ATileStyleV;
+
+			CheckError(Internal.Lib3MFWrapper.Displacement2D_SetTileStyleUV (Handle, enumTileStyleU, enumTileStyleV));
+		}
+
+		public eTextureFilter GetFilter ()
+		{
+			Int32 resultFilter = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Displacement2D_GetFilter (Handle, out resultFilter));
+			return (eTextureFilter) (resultFilter);
+		}
+
+		public void SetFilter (eTextureFilter AFilter)
+		{
+			Int32 enumFilter = (Int32) AFilter;
+
+			CheckError(Internal.Lib3MFWrapper.Displacement2D_SetFilter (Handle, enumFilter));
+		}
+
+	}
+
+	public class CNormVectorGroup : CResource
+	{
+		public CNormVectorGroup (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public UInt32 GetCount ()
+		{
+			UInt32 resultCount = 0;
+
+			CheckError(Internal.Lib3MFWrapper.NormVectorGroup_GetCount (Handle, out resultCount));
+			return resultCount;
+		}
+
+		public UInt32 AddVector (sVector AVector)
+		{
+			Internal.InternalVector intVector = Internal.Lib3MFWrapper.convertStructToInternal_Vector (AVector);
+			UInt32 resultIndex = 0;
+
+			CheckError(Internal.Lib3MFWrapper.NormVectorGroup_AddVector (Handle, ref intVector, out resultIndex));
+			return resultIndex;
+		}
+
+		public sVector GetVector (UInt32 AIndex)
+		{
+			Internal.InternalVector intresultVector;
+
+			CheckError(Internal.Lib3MFWrapper.NormVectorGroup_GetVector (Handle, AIndex, out intresultVector));
+			return Internal.Lib3MFWrapper.convertInternalToStruct_Vector (intresultVector);
+		}
+
+		public void SetVector (UInt32 AIndex, sVector AVector)
+		{
+			Internal.InternalVector intVector = Internal.Lib3MFWrapper.convertStructToInternal_Vector (AVector);
+
+			CheckError(Internal.Lib3MFWrapper.NormVectorGroup_SetVector (Handle, AIndex, ref intVector));
+		}
+
+	}
+
+	public class CDisp2DGroup : CResource
+	{
+		public CDisp2DGroup (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CDisplacement2D GetDisplacement2D ()
+		{
+			IntPtr newDisplacement2D = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Disp2DGroup_GetDisplacement2D (Handle, out newDisplacement2D));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDisplacement2D>(newDisplacement2D);
+		}
+
+		public CNormVectorGroup GetNormalVectorGroup ()
+		{
+			IntPtr newNormVectorGroup = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Disp2DGroup_GetNormalVectorGroup (Handle, out newNormVectorGroup));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CNormVectorGroup>(newNormVectorGroup);
+		}
+
+		public Double GetHeight ()
+		{
+			Double resultHeight = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Disp2DGroup_GetHeight (Handle, out resultHeight));
+			return resultHeight;
+		}
+
+		public void SetHeight (Double AHeight)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Disp2DGroup_SetHeight (Handle, AHeight));
+		}
+
+		public Double GetOffset ()
+		{
+			Double resultOffset = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Disp2DGroup_GetOffset (Handle, out resultOffset));
+			return resultOffset;
+		}
+
+		public void SetOffset (Double AOffset)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Disp2DGroup_SetOffset (Handle, AOffset));
+		}
+
+		public UInt32 GetCount ()
+		{
+			UInt32 resultCount = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Disp2DGroup_GetCount (Handle, out resultCount));
+			return resultCount;
+		}
+
+		public UInt32 AddCoordinate (sDisplacement2DCoordinate ACoordinate)
+		{
+			Internal.InternalDisplacement2DCoordinate intCoordinate = Internal.Lib3MFWrapper.convertStructToInternal_Displacement2DCoordinate (ACoordinate);
+			UInt32 resultIndex = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Disp2DGroup_AddCoordinate (Handle, ref intCoordinate, out resultIndex));
+			return resultIndex;
+		}
+
+		public sDisplacement2DCoordinate GetCoordinate (UInt32 AIndex)
+		{
+			Internal.InternalDisplacement2DCoordinate intresultCoordinate;
+
+			CheckError(Internal.Lib3MFWrapper.Disp2DGroup_GetCoordinate (Handle, AIndex, out intresultCoordinate));
+			return Internal.Lib3MFWrapper.convertInternalToStruct_Displacement2DCoordinate (intresultCoordinate);
+		}
+
+		public void SetCoordinate (UInt32 AIndex, sDisplacement2DCoordinate ACoordinate)
+		{
+			Internal.InternalDisplacement2DCoordinate intCoordinate = Internal.Lib3MFWrapper.convertStructToInternal_Displacement2DCoordinate (ACoordinate);
+
+			CheckError(Internal.Lib3MFWrapper.Disp2DGroup_SetCoordinate (Handle, AIndex, ref intCoordinate));
 		}
 
 	}
@@ -9523,6 +10040,38 @@ namespace Lib3MF {
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CBooleanObject>(newBooleanObjectInstance);
 		}
 
+		public CDisplacementMeshObject GetDisplacementMeshObjectByID (UInt32 AUniqueResourceID)
+		{
+			IntPtr newDisplacementMeshObjectInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetDisplacementMeshObjectByID (Handle, AUniqueResourceID, out newDisplacementMeshObjectInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDisplacementMeshObject>(newDisplacementMeshObjectInstance);
+		}
+
+		public CDisplacement2D GetDisplacement2DByID (UInt32 AUniqueResourceID)
+		{
+			IntPtr newDisplacement2DInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetDisplacement2DByID (Handle, AUniqueResourceID, out newDisplacement2DInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDisplacement2D>(newDisplacement2DInstance);
+		}
+
+		public CNormVectorGroup GetNormVectorGroupByID (UInt32 AUniqueResourceID)
+		{
+			IntPtr newNormVectorGroupInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetNormVectorGroupByID (Handle, AUniqueResourceID, out newNormVectorGroupInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CNormVectorGroup>(newNormVectorGroupInstance);
+		}
+
+		public CDisp2DGroup GetDisp2DGroupByID (UInt32 AUniqueResourceID)
+		{
+			IntPtr newDisp2DGroupInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetDisp2DGroupByID (Handle, AUniqueResourceID, out newDisp2DGroupInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDisp2DGroup>(newDisp2DGroupInstance);
+		}
+
 		public CColorGroup GetColorGroupByID (UInt32 AUniqueResourceID)
 		{
 			IntPtr newColorGroupInstance = IntPtr.Zero;
@@ -9624,6 +10173,38 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_GetBooleanObjects (Handle, out newResourceIterator));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CBooleanObjectIterator>(newResourceIterator);
+		}
+
+		public CDisplacementMeshObjectIterator GetDisplacementMeshObjects ()
+		{
+			IntPtr newResourceIterator = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetDisplacementMeshObjects (Handle, out newResourceIterator));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDisplacementMeshObjectIterator>(newResourceIterator);
+		}
+
+		public CDisplacement2DIterator GetDisplacement2Ds ()
+		{
+			IntPtr newResourceIterator = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetDisplacement2Ds (Handle, out newResourceIterator));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDisplacement2DIterator>(newResourceIterator);
+		}
+
+		public CNormVectorGroupIterator GetNormVectorGroups ()
+		{
+			IntPtr newResourceIterator = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetNormVectorGroups (Handle, out newResourceIterator));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CNormVectorGroupIterator>(newResourceIterator);
+		}
+
+		public CDisp2DGroupIterator GetDisp2DGroups ()
+		{
+			IntPtr newResourceIterator = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetDisp2DGroups (Handle, out newResourceIterator));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDisp2DGroupIterator>(newResourceIterator);
 		}
 
 		public CTexture2DIterator GetTexture2Ds ()
@@ -9729,6 +10310,47 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_AddBooleanObject (Handle, out newBooleanObjectInstance));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CBooleanObject>(newBooleanObjectInstance);
+		}
+
+		public CDisplacementMeshObject AddDisplacementMeshObject ()
+		{
+			IntPtr newDisplacementMeshObjectInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_AddDisplacementMeshObject (Handle, out newDisplacementMeshObjectInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDisplacementMeshObject>(newDisplacementMeshObjectInstance);
+		}
+
+		public CDisplacement2D AddDisplacement2D (CAttachment ATextureAttachment)
+		{
+			IntPtr ATextureAttachmentHandle = IntPtr.Zero;
+			if (ATextureAttachment != null)
+				ATextureAttachmentHandle = ATextureAttachment.GetHandle();
+			IntPtr newDisplacement2DInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_AddDisplacement2D (Handle, ATextureAttachmentHandle, out newDisplacement2DInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDisplacement2D>(newDisplacement2DInstance);
+		}
+
+		public CNormVectorGroup AddNormVectorGroup ()
+		{
+			IntPtr newNormVectorGroupInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_AddNormVectorGroup (Handle, out newNormVectorGroupInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CNormVectorGroup>(newNormVectorGroupInstance);
+		}
+
+		public CDisp2DGroup AddDisp2DGroup (CDisplacement2D ADisplacement2D, CNormVectorGroup ANormalVectorGroup, Double AHeight, Double AOffset)
+		{
+			IntPtr ADisplacement2DHandle = IntPtr.Zero;
+			if (ADisplacement2D != null)
+				ADisplacement2DHandle = ADisplacement2D.GetHandle();
+			IntPtr ANormalVectorGroupHandle = IntPtr.Zero;
+			if (ANormalVectorGroup != null)
+				ANormalVectorGroupHandle = ANormalVectorGroup.GetHandle();
+			IntPtr newDisp2DGroupInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_AddDisp2DGroup (Handle, ADisplacement2DHandle, ANormalVectorGroupHandle, AHeight, AOffset, out newDisp2DGroupInstance));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CDisp2DGroup>(newDisp2DGroupInstance);
 		}
 
 		public CSliceStack AddSliceStack (Double AZBottom)

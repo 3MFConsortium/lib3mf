@@ -221,6 +221,10 @@ typedef Lib3MFHandle Lib3MF_ObjectIterator;
 typedef Lib3MFHandle Lib3MF_MeshObjectIterator;
 typedef Lib3MFHandle Lib3MF_ComponentsObjectIterator;
 typedef Lib3MFHandle Lib3MF_BooleanObjectIterator;
+typedef Lib3MFHandle Lib3MF_DisplacementMeshObjectIterator;
+typedef Lib3MFHandle Lib3MF_Displacement2DIterator;
+typedef Lib3MFHandle Lib3MF_NormVectorGroupIterator;
+typedef Lib3MFHandle Lib3MF_Disp2DGroupIterator;
 typedef Lib3MFHandle Lib3MF_Texture2DIterator;
 typedef Lib3MFHandle Lib3MF_BaseMaterialGroupIterator;
 typedef Lib3MFHandle Lib3MF_ColorGroupIterator;
@@ -235,6 +239,7 @@ typedef Lib3MFHandle Lib3MF_MetaDataGroup;
 typedef Lib3MFHandle Lib3MF_TriangleSet;
 typedef Lib3MFHandle Lib3MF_Object;
 typedef Lib3MFHandle Lib3MF_MeshObject;
+typedef Lib3MFHandle Lib3MF_DisplacementMeshObject;
 typedef Lib3MFHandle Lib3MF_LevelSet;
 typedef Lib3MFHandle Lib3MF_BooleanObject;
 typedef Lib3MFHandle Lib3MF_BeamLattice;
@@ -255,6 +260,9 @@ typedef Lib3MFHandle Lib3MF_MultiPropertyGroup;
 typedef Lib3MFHandle Lib3MF_Image3D;
 typedef Lib3MFHandle Lib3MF_ImageStack;
 typedef Lib3MFHandle Lib3MF_Attachment;
+typedef Lib3MFHandle Lib3MF_Displacement2D;
+typedef Lib3MFHandle Lib3MF_NormVectorGroup;
+typedef Lib3MFHandle Lib3MF_Disp2DGroup;
 typedef Lib3MFHandle Lib3MF_Texture2D;
 typedef Lib3MFHandle Lib3MF_ImplicitPort;
 typedef Lib3MFHandle Lib3MF_Iterator;
@@ -730,6 +738,17 @@ typedef struct sLib3MFTex2Coord {
     Lib3MF_double m_U;
     Lib3MF_double m_V;
 } sLib3MFTex2Coord;
+
+typedef struct sLib3MFDisplacement2DCoordinate {
+    Lib3MF_double m_U;
+    Lib3MF_double m_V;
+    Lib3MF_uint32 m_NormalVectorIndex;
+    Lib3MF_double m_DisplacementFactor;
+} sLib3MFDisplacement2DCoordinate;
+
+typedef struct sLib3MFTriangleDisplacement {
+    Lib3MF_uint32 m_DisplacementIndices[3];
+} sLib3MFTriangleDisplacement;
 
 typedef struct sLib3MFTransform {
     Lib3MF_single m_Fields[4][3];

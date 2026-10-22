@@ -66,7 +66,7 @@ IObject* CObject::fnCreateObjectFromModelResource(NMR::PModelResource pResource,
 
 	NMR::CModelMeshObject * pMeshObject = dynamic_cast<NMR::CModelMeshObject *> (pResource.get());
 	if (pMeshObject) {
-		return new CMeshObject(pResource);
+		return CMeshObject::fnCreateMeshObjectFromModelResource(pResource, true);
 	}
 
 	NMR::CModelLevelSetObject * PILevelSet = dynamic_cast<NMR::CModelLevelSetObject *> (pResource.get());
@@ -150,12 +150,17 @@ bool CObject::IsBooleanObject()
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_SHOULDNOTBECALLED);
 }
 
+bool CObject::IsDisplacementMeshObject()
+{
+	return false;
+}
+
 
 IMeshObject * CObject::AsMeshObject()
 {
 	if (dynamic_cast<NMR::CModelMeshObject*>(resource().get()))
 	{
-		return new CMeshObject(resource());
+		return CMeshObject::fnCreateMeshObjectFromModelResource(resource(), true);
 	}
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 }

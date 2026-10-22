@@ -96,6 +96,8 @@ public:
 
 	virtual bool IsBooleanObject ();
 
+	virtual bool IsDisplacementMeshObject ();
+
 	virtual IMeshObject * AsMeshObject();
 
 	virtual IComponentsObject * AsComponentsObject();

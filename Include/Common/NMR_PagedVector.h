@@ -71,7 +71,7 @@ namespace NMR {
 			clearAllData();
 		}
 
-		nfUint32 getCount() {
+		nfUint32 getCount() const {
 			return m_nCount;
 		}
 

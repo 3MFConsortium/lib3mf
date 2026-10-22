@@ -171,6 +171,8 @@ jobs:
           cmake --build build/wasm --target lib3mf_wasm -j"$(nproc)"
       - name: Test indexed WASM slice vertices
         run: node Tests/SliceVertex.mjs Tests/TestFiles/Slice/MultiSliceStack_TwoFiles.3mf
+      - name: Test WASM triangle displacement
+        run: node Tests/DisplacementWasm.mjs
       - name: Package WASM artifact
         run: |
           mkdir -p build/wasm-artifact

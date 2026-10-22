@@ -45,6 +45,7 @@ XML Model Stream.
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_FunctionFromImage3D.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_LevelSet.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_VolumeData.h"
+#include "Model/Reader/Displacement2310/NMR_ModelReaderNode_Displacement2310.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_StringUtils.h"
@@ -175,6 +176,16 @@ namespace NMR {
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		}
+
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_DISPLACEMENTSPEC) == 0) {
+			eDisplacementResourceKind kind;
+			if (strcmp(pChildName, XML_3MF_ELEMENT_DISPLACEMENT2D) == 0) kind = eDisplacementResourceKind::Displacement2D;
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_NORMVECTORGROUP) == 0) kind = eDisplacementResourceKind::NormVectorGroup;
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_DISP2DGROUP) == 0) kind = eDisplacementResourceKind::Disp2DGroup;
+			else { m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue); return; }
+			auto node = std::make_shared<CModelReaderNode_Displacement2310_Resource>(m_pModel, m_pWarnings, kind);
+			node->parseXML(pXMLReader);
 		}
 
 	}

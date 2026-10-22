@@ -57,6 +57,32 @@ namespace Lib3MF
 		PMeshObject mesh;
 	};
 
+	TEST_F(Properties, ReadCoreTrianglePropertyDefaults)
+	{
+		auto readModel = wrapper->CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->ReadFromFile(sTestFilesPath + "/Materials/core_triangle_property_defaults.3mf");
+		auto readMesh = readModel->GetMeshObjectByID(2);
+		std::vector<sTriangleProperties> properties;
+		readMesh->GetAllTriangleProperties(properties);
+		ASSERT_EQ(properties.size(), 4u);
+		// Without p1, p2/p3 are ignored and the object-level property applies.
+		ASSERT_NE(properties[0].m_ResourceID, 0u);
+		ASSERT_EQ(properties[0].m_ResourceID, properties[2].m_ResourceID);
+		for (size_t i = 0; i < 3; ++i) {
+			ASSERT_EQ(properties[0].m_PropertyIDs[i], properties[2].m_PropertyIDs[i]);
+			// For normal meshes, a triangle p1 without a triangle pid is ignored (behaviour from before the
+			// displacement extension), so the object-level property applies.
+			ASSERT_EQ(properties[1].m_ResourceID, properties[0].m_ResourceID);
+			ASSERT_EQ(properties[1].m_PropertyIDs[i], properties[0].m_PropertyIDs[i]);
+		}
+		// With neither an object nor triangle pid, a stray p1 is ignored.
+		readModel->GetMeshObjectByID(3)->GetAllTriangleProperties(properties);
+		ASSERT_EQ(properties.size(), 4u);
+		for (const auto & property : properties)
+			ASSERT_EQ(property.m_ResourceID, 0u);
+	}
+
 	TEST_F(Properties, GetProperties)
 	{
 		std::vector<sTriangleProperties> properties;

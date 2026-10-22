@@ -1675,6 +1675,166 @@ Lib3MFResult lib3mf_booleanobjectiterator_getcurrentbooleanobject(Lib3MF_Boolean
 
 
 /*************************************************************************************************************************
+ Class implementation for DisplacementMeshObjectIterator
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject(Lib3MF_DisplacementMeshObjectIterator pDisplacementMeshObjectIterator, Lib3MF_DisplacementMeshObject * pResource)
+{
+	IBase* pIBaseClass = (IBase *)pDisplacementMeshObjectIterator;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisplacementMeshObjectIterator, "DisplacementMeshObjectIterator", "GetCurrentDisplacementMeshObject");
+		}
+		if (pResource == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResource(nullptr);
+		IDisplacementMeshObjectIterator* pIDisplacementMeshObjectIterator = dynamic_cast<IDisplacementMeshObjectIterator*>(pIBaseClass);
+		if (!pIDisplacementMeshObjectIterator)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResource = pIDisplacementMeshObjectIterator->GetCurrentDisplacementMeshObject();
+
+		*pResource = (IBase*)(pBaseResource);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Resource", *pResource);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for Displacement2DIterator
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_displacement2diterator_getcurrentdisplacement2d(Lib3MF_Displacement2DIterator pDisplacement2DIterator, Lib3MF_Displacement2D * pResource)
+{
+	IBase* pIBaseClass = (IBase *)pDisplacement2DIterator;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisplacement2DIterator, "Displacement2DIterator", "GetCurrentDisplacement2D");
+		}
+		if (pResource == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResource(nullptr);
+		IDisplacement2DIterator* pIDisplacement2DIterator = dynamic_cast<IDisplacement2DIterator*>(pIBaseClass);
+		if (!pIDisplacement2DIterator)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResource = pIDisplacement2DIterator->GetCurrentDisplacement2D();
+
+		*pResource = (IBase*)(pBaseResource);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Resource", *pResource);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for NormVectorGroupIterator
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup(Lib3MF_NormVectorGroupIterator pNormVectorGroupIterator, Lib3MF_NormVectorGroup * pResource)
+{
+	IBase* pIBaseClass = (IBase *)pNormVectorGroupIterator;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNormVectorGroupIterator, "NormVectorGroupIterator", "GetCurrentNormVectorGroup");
+		}
+		if (pResource == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResource(nullptr);
+		INormVectorGroupIterator* pINormVectorGroupIterator = dynamic_cast<INormVectorGroupIterator*>(pIBaseClass);
+		if (!pINormVectorGroupIterator)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResource = pINormVectorGroupIterator->GetCurrentNormVectorGroup();
+
+		*pResource = (IBase*)(pBaseResource);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Resource", *pResource);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for Disp2DGroupIterator
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup(Lib3MF_Disp2DGroupIterator pDisp2DGroupIterator, Lib3MF_Disp2DGroup * pResource)
+{
+	IBase* pIBaseClass = (IBase *)pDisp2DGroupIterator;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisp2DGroupIterator, "Disp2DGroupIterator", "GetCurrentDisp2DGroup");
+		}
+		if (pResource == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResource(nullptr);
+		IDisp2DGroupIterator* pIDisp2DGroupIterator = dynamic_cast<IDisp2DGroupIterator*>(pIBaseClass);
+		if (!pIDisp2DGroupIterator)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResource = pIDisp2DGroupIterator->GetCurrentDisp2DGroup();
+
+		*pResource = (IBase*)(pBaseResource);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Resource", *pResource);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
  Class implementation for Texture2DIterator
 **************************************************************************************************************************/
 Lib3MFResult lib3mf_texture2diterator_getcurrenttexture2d(Lib3MF_Texture2DIterator pTexture2DIterator, Lib3MF_Texture2D * pResource)
@@ -3641,6 +3801,40 @@ Lib3MFResult lib3mf_object_isbooleanobject(Lib3MF_Object pObject, bool * pIsBool
 	}
 }
 
+Lib3MFResult lib3mf_object_isdisplacementmeshobject(Lib3MF_Object pObject, bool * pIsDisplacementMeshObject)
+{
+	IBase* pIBaseClass = (IBase *)pObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pObject, "Object", "IsDisplacementMeshObject");
+		}
+		if (pIsDisplacementMeshObject == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IObject* pIObject = dynamic_cast<IObject*>(pIBaseClass);
+		if (!pIObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pIsDisplacementMeshObject = pIObject->IsDisplacementMeshObject();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("IsDisplacementMeshObject", *pIsDisplacementMeshObject);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_object_isvalid(Lib3MF_Object pObject, bool * pIsValid)
 {
 	IBase* pIBaseClass = (IBase *)pObject;
@@ -5094,6 +5288,154 @@ Lib3MFResult lib3mf_meshobject_gettriangleset(Lib3MF_MeshObject pMeshObject, Lib
 
 
 /*************************************************************************************************************************
+ Class implementation for DisplacementMeshObject
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_displacementmeshobject_hastriangledisplacement(Lib3MF_DisplacementMeshObject pDisplacementMeshObject, Lib3MF_uint32 nIndex, bool * pHasDisplacement)
+{
+	IBase* pIBaseClass = (IBase *)pDisplacementMeshObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisplacementMeshObject, "DisplacementMeshObject", "HasTriangleDisplacement");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if (pHasDisplacement == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IDisplacementMeshObject* pIDisplacementMeshObject = dynamic_cast<IDisplacementMeshObject*>(pIBaseClass);
+		if (!pIDisplacementMeshObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pHasDisplacement = pIDisplacementMeshObject->HasTriangleDisplacement(nIndex);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasDisplacement", *pHasDisplacement);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_displacementmeshobject_settriangledisplacement(Lib3MF_DisplacementMeshObject pDisplacementMeshObject, Lib3MF_uint32 nIndex, Lib3MF_Disp2DGroup pDisp2DGroup, const sLib3MFTriangleDisplacement * pDisplacement)
+{
+	IBase* pIBaseClass = (IBase *)pDisplacementMeshObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisplacementMeshObject, "DisplacementMeshObject", "SetTriangleDisplacement");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+			pJournalEntry->addHandleParameter("Disp2DGroup", pDisp2DGroup);
+		}
+		IBase* pIBaseClassDisp2DGroup = (IBase *)pDisp2DGroup;
+		IDisp2DGroup* pIDisp2DGroup = dynamic_cast<IDisp2DGroup*>(pIBaseClassDisp2DGroup);
+		if (!pIDisp2DGroup)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IDisplacementMeshObject* pIDisplacementMeshObject = dynamic_cast<IDisplacementMeshObject*>(pIBaseClass);
+		if (!pIDisplacementMeshObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIDisplacementMeshObject->SetTriangleDisplacement(nIndex, pIDisp2DGroup, *pDisplacement);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_displacementmeshobject_gettriangledisplacement(Lib3MF_DisplacementMeshObject pDisplacementMeshObject, Lib3MF_uint32 nIndex, Lib3MF_Disp2DGroup * pDisp2DGroup, sLib3MFTriangleDisplacement * pDisplacement)
+{
+	IBase* pIBaseClass = (IBase *)pDisplacementMeshObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisplacementMeshObject, "DisplacementMeshObject", "GetTriangleDisplacement");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if (pDisp2DGroup == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pDisplacement == nullptr)
+		throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IDisp2DGroup* pBaseDisp2DGroup(nullptr);
+		IDisplacementMeshObject* pIDisplacementMeshObject = dynamic_cast<IDisplacementMeshObject*>(pIBaseClass);
+		if (!pIDisplacementMeshObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pDisplacement = pIDisplacementMeshObject->GetTriangleDisplacement(nIndex, pBaseDisp2DGroup);
+
+		*pDisp2DGroup = (IBase*)(pBaseDisp2DGroup);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Disp2DGroup", *pDisp2DGroup);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_displacementmeshobject_cleartriangledisplacement(Lib3MF_DisplacementMeshObject pDisplacementMeshObject, Lib3MF_uint32 nIndex)
+{
+	IBase* pIBaseClass = (IBase *)pDisplacementMeshObject;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisplacementMeshObject, "DisplacementMeshObject", "ClearTriangleDisplacement");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		IDisplacementMeshObject* pIDisplacementMeshObject = dynamic_cast<IDisplacementMeshObject*>(pIBaseClass);
+		if (!pIDisplacementMeshObject)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIDisplacementMeshObject->ClearTriangleDisplacement(nIndex);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
  Class implementation for LevelSet
 **************************************************************************************************************************/
 Lib3MFResult lib3mf_levelset_getfunction(Lib3MF_LevelSet pLevelSet, Lib3MF_Function * pTheFunction)
@@ -6132,7 +6474,7 @@ Lib3MFResult lib3mf_booleanobject_mergetomeshobject(Lib3MF_BooleanObject pBoolea
 		IBooleanObject* pIBooleanObject = dynamic_cast<IBooleanObject*>(pIBaseClass);
 		if (!pIBooleanObject)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-
+		
 		pBaseMeshObject = pIBooleanObject->MergeToMeshObject();
 
 		*pMeshObject = (IBase*)(pBaseMeshObject);
@@ -10951,6 +11293,765 @@ Lib3MFResult lib3mf_attachment_readfrombuffer(Lib3MF_Attachment pAttachment, Lib
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pIAttachment->ReadFromBuffer(nBufferBufferSize, pBufferBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for Displacement2D
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_displacement2d_getattachment(Lib3MF_Displacement2D pDisplacement2D, Lib3MF_Attachment * pAttachment)
+{
+	IBase* pIBaseClass = (IBase *)pDisplacement2D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisplacement2D, "Displacement2D", "GetAttachment");
+		}
+		if (pAttachment == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseAttachment(nullptr);
+		IDisplacement2D* pIDisplacement2D = dynamic_cast<IDisplacement2D*>(pIBaseClass);
+		if (!pIDisplacement2D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseAttachment = pIDisplacement2D->GetAttachment();
+
+		*pAttachment = (IBase*)(pBaseAttachment);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Attachment", *pAttachment);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_displacement2d_setattachment(Lib3MF_Displacement2D pDisplacement2D, Lib3MF_Attachment pAttachment)
+{
+	IBase* pIBaseClass = (IBase *)pDisplacement2D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisplacement2D, "Displacement2D", "SetAttachment");
+			pJournalEntry->addHandleParameter("Attachment", pAttachment);
+		}
+		IBase* pIBaseClassAttachment = (IBase *)pAttachment;
+		IAttachment* pIAttachment = dynamic_cast<IAttachment*>(pIBaseClassAttachment);
+		if (!pIAttachment)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IDisplacement2D* pIDisplacement2D = dynamic_cast<IDisplacement2D*>(pIBaseClass);
+		if (!pIDisplacement2D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIDisplacement2D->SetAttachment(pIAttachment);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_displacement2d_getchannel(Lib3MF_Displacement2D pDisplacement2D, eLib3MFChannelName * pChannel)
+{
+	IBase* pIBaseClass = (IBase *)pDisplacement2D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisplacement2D, "Displacement2D", "GetChannel");
+		}
+		if (pChannel == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IDisplacement2D* pIDisplacement2D = dynamic_cast<IDisplacement2D*>(pIBaseClass);
+		if (!pIDisplacement2D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pChannel = pIDisplacement2D->GetChannel();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addEnumResult("Channel", "ChannelName", (Lib3MF_int32)(*pChannel));
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_displacement2d_setchannel(Lib3MF_Displacement2D pDisplacement2D, eLib3MFChannelName eChannel)
+{
+	IBase* pIBaseClass = (IBase *)pDisplacement2D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisplacement2D, "Displacement2D", "SetChannel");
+			pJournalEntry->addEnumParameter("Channel", "ChannelName", (Lib3MF_int32)(eChannel));
+		}
+		IDisplacement2D* pIDisplacement2D = dynamic_cast<IDisplacement2D*>(pIBaseClass);
+		if (!pIDisplacement2D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIDisplacement2D->SetChannel(eChannel);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_displacement2d_gettilestyleuv(Lib3MF_Displacement2D pDisplacement2D, eLib3MFTextureTileStyle * pTileStyleU, eLib3MFTextureTileStyle * pTileStyleV)
+{
+	IBase* pIBaseClass = (IBase *)pDisplacement2D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisplacement2D, "Displacement2D", "GetTileStyleUV");
+		}
+		if (!pTileStyleU)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (!pTileStyleV)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IDisplacement2D* pIDisplacement2D = dynamic_cast<IDisplacement2D*>(pIBaseClass);
+		if (!pIDisplacement2D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIDisplacement2D->GetTileStyleUV(*pTileStyleU, *pTileStyleV);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addEnumResult("TileStyleU", "TextureTileStyle", (Lib3MF_int32)(*pTileStyleU));
+			pJournalEntry->addEnumResult("TileStyleV", "TextureTileStyle", (Lib3MF_int32)(*pTileStyleV));
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_displacement2d_settilestyleuv(Lib3MF_Displacement2D pDisplacement2D, eLib3MFTextureTileStyle eTileStyleU, eLib3MFTextureTileStyle eTileStyleV)
+{
+	IBase* pIBaseClass = (IBase *)pDisplacement2D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisplacement2D, "Displacement2D", "SetTileStyleUV");
+			pJournalEntry->addEnumParameter("TileStyleU", "TextureTileStyle", (Lib3MF_int32)(eTileStyleU));
+			pJournalEntry->addEnumParameter("TileStyleV", "TextureTileStyle", (Lib3MF_int32)(eTileStyleV));
+		}
+		IDisplacement2D* pIDisplacement2D = dynamic_cast<IDisplacement2D*>(pIBaseClass);
+		if (!pIDisplacement2D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIDisplacement2D->SetTileStyleUV(eTileStyleU, eTileStyleV);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_displacement2d_getfilter(Lib3MF_Displacement2D pDisplacement2D, eLib3MFTextureFilter * pFilter)
+{
+	IBase* pIBaseClass = (IBase *)pDisplacement2D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisplacement2D, "Displacement2D", "GetFilter");
+		}
+		if (pFilter == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IDisplacement2D* pIDisplacement2D = dynamic_cast<IDisplacement2D*>(pIBaseClass);
+		if (!pIDisplacement2D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pFilter = pIDisplacement2D->GetFilter();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addEnumResult("Filter", "TextureFilter", (Lib3MF_int32)(*pFilter));
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_displacement2d_setfilter(Lib3MF_Displacement2D pDisplacement2D, eLib3MFTextureFilter eFilter)
+{
+	IBase* pIBaseClass = (IBase *)pDisplacement2D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisplacement2D, "Displacement2D", "SetFilter");
+			pJournalEntry->addEnumParameter("Filter", "TextureFilter", (Lib3MF_int32)(eFilter));
+		}
+		IDisplacement2D* pIDisplacement2D = dynamic_cast<IDisplacement2D*>(pIBaseClass);
+		if (!pIDisplacement2D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIDisplacement2D->SetFilter(eFilter);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for NormVectorGroup
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_normvectorgroup_getcount(Lib3MF_NormVectorGroup pNormVectorGroup, Lib3MF_uint32 * pCount)
+{
+	IBase* pIBaseClass = (IBase *)pNormVectorGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNormVectorGroup, "NormVectorGroup", "GetCount");
+		}
+		if (pCount == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		INormVectorGroup* pINormVectorGroup = dynamic_cast<INormVectorGroup*>(pIBaseClass);
+		if (!pINormVectorGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCount = pINormVectorGroup->GetCount();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("Count", *pCount);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_normvectorgroup_addvector(Lib3MF_NormVectorGroup pNormVectorGroup, const sLib3MFVector * pVector, Lib3MF_uint32 * pIndex)
+{
+	IBase* pIBaseClass = (IBase *)pNormVectorGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNormVectorGroup, "NormVectorGroup", "AddVector");
+		}
+		if (pIndex == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		INormVectorGroup* pINormVectorGroup = dynamic_cast<INormVectorGroup*>(pIBaseClass);
+		if (!pINormVectorGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pIndex = pINormVectorGroup->AddVector(*pVector);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("Index", *pIndex);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_normvectorgroup_getvector(Lib3MF_NormVectorGroup pNormVectorGroup, Lib3MF_uint32 nIndex, sLib3MFVector * pVector)
+{
+	IBase* pIBaseClass = (IBase *)pNormVectorGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNormVectorGroup, "NormVectorGroup", "GetVector");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if (pVector == nullptr)
+		throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		INormVectorGroup* pINormVectorGroup = dynamic_cast<INormVectorGroup*>(pIBaseClass);
+		if (!pINormVectorGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pVector = pINormVectorGroup->GetVector(nIndex);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_normvectorgroup_setvector(Lib3MF_NormVectorGroup pNormVectorGroup, Lib3MF_uint32 nIndex, const sLib3MFVector * pVector)
+{
+	IBase* pIBaseClass = (IBase *)pNormVectorGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pNormVectorGroup, "NormVectorGroup", "SetVector");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		INormVectorGroup* pINormVectorGroup = dynamic_cast<INormVectorGroup*>(pIBaseClass);
+		if (!pINormVectorGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pINormVectorGroup->SetVector(nIndex, *pVector);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for Disp2DGroup
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_disp2dgroup_getdisplacement2d(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_Displacement2D * pDisplacement2D)
+{
+	IBase* pIBaseClass = (IBase *)pDisp2DGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisp2DGroup, "Disp2DGroup", "GetDisplacement2D");
+		}
+		if (pDisplacement2D == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseDisplacement2D(nullptr);
+		IDisp2DGroup* pIDisp2DGroup = dynamic_cast<IDisp2DGroup*>(pIBaseClass);
+		if (!pIDisp2DGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseDisplacement2D = pIDisp2DGroup->GetDisplacement2D();
+
+		*pDisplacement2D = (IBase*)(pBaseDisplacement2D);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Displacement2D", *pDisplacement2D);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_disp2dgroup_getnormalvectorgroup(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_NormVectorGroup * pNormVectorGroup)
+{
+	IBase* pIBaseClass = (IBase *)pDisp2DGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisp2DGroup, "Disp2DGroup", "GetNormalVectorGroup");
+		}
+		if (pNormVectorGroup == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseNormVectorGroup(nullptr);
+		IDisp2DGroup* pIDisp2DGroup = dynamic_cast<IDisp2DGroup*>(pIBaseClass);
+		if (!pIDisp2DGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNormVectorGroup = pIDisp2DGroup->GetNormalVectorGroup();
+
+		*pNormVectorGroup = (IBase*)(pBaseNormVectorGroup);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("NormVectorGroup", *pNormVectorGroup);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_disp2dgroup_getheight(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_double * pHeight)
+{
+	IBase* pIBaseClass = (IBase *)pDisp2DGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisp2DGroup, "Disp2DGroup", "GetHeight");
+		}
+		if (pHeight == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IDisp2DGroup* pIDisp2DGroup = dynamic_cast<IDisp2DGroup*>(pIBaseClass);
+		if (!pIDisp2DGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pHeight = pIDisp2DGroup->GetHeight();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("Height", *pHeight);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_disp2dgroup_setheight(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_double dHeight)
+{
+	IBase* pIBaseClass = (IBase *)pDisp2DGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisp2DGroup, "Disp2DGroup", "SetHeight");
+			pJournalEntry->addDoubleParameter("Height", dHeight);
+		}
+		IDisp2DGroup* pIDisp2DGroup = dynamic_cast<IDisp2DGroup*>(pIBaseClass);
+		if (!pIDisp2DGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIDisp2DGroup->SetHeight(dHeight);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_disp2dgroup_getoffset(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_double * pOffset)
+{
+	IBase* pIBaseClass = (IBase *)pDisp2DGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisp2DGroup, "Disp2DGroup", "GetOffset");
+		}
+		if (pOffset == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IDisp2DGroup* pIDisp2DGroup = dynamic_cast<IDisp2DGroup*>(pIBaseClass);
+		if (!pIDisp2DGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pOffset = pIDisp2DGroup->GetOffset();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("Offset", *pOffset);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_disp2dgroup_setoffset(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_double dOffset)
+{
+	IBase* pIBaseClass = (IBase *)pDisp2DGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisp2DGroup, "Disp2DGroup", "SetOffset");
+			pJournalEntry->addDoubleParameter("Offset", dOffset);
+		}
+		IDisp2DGroup* pIDisp2DGroup = dynamic_cast<IDisp2DGroup*>(pIBaseClass);
+		if (!pIDisp2DGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIDisp2DGroup->SetOffset(dOffset);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_disp2dgroup_getcount(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_uint32 * pCount)
+{
+	IBase* pIBaseClass = (IBase *)pDisp2DGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisp2DGroup, "Disp2DGroup", "GetCount");
+		}
+		if (pCount == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IDisp2DGroup* pIDisp2DGroup = dynamic_cast<IDisp2DGroup*>(pIBaseClass);
+		if (!pIDisp2DGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCount = pIDisp2DGroup->GetCount();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("Count", *pCount);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_disp2dgroup_addcoordinate(Lib3MF_Disp2DGroup pDisp2DGroup, const sLib3MFDisplacement2DCoordinate * pCoordinate, Lib3MF_uint32 * pIndex)
+{
+	IBase* pIBaseClass = (IBase *)pDisp2DGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisp2DGroup, "Disp2DGroup", "AddCoordinate");
+		}
+		if (pIndex == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IDisp2DGroup* pIDisp2DGroup = dynamic_cast<IDisp2DGroup*>(pIBaseClass);
+		if (!pIDisp2DGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pIndex = pIDisp2DGroup->AddCoordinate(*pCoordinate);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("Index", *pIndex);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_disp2dgroup_getcoordinate(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_uint32 nIndex, sLib3MFDisplacement2DCoordinate * pCoordinate)
+{
+	IBase* pIBaseClass = (IBase *)pDisp2DGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisp2DGroup, "Disp2DGroup", "GetCoordinate");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if (pCoordinate == nullptr)
+		throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IDisp2DGroup* pIDisp2DGroup = dynamic_cast<IDisp2DGroup*>(pIBaseClass);
+		if (!pIDisp2DGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCoordinate = pIDisp2DGroup->GetCoordinate(nIndex);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_disp2dgroup_setcoordinate(Lib3MF_Disp2DGroup pDisp2DGroup, Lib3MF_uint32 nIndex, const sLib3MFDisplacement2DCoordinate * pCoordinate)
+{
+	IBase* pIBaseClass = (IBase *)pDisp2DGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pDisp2DGroup, "Disp2DGroup", "SetCoordinate");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		IDisp2DGroup* pIDisp2DGroup = dynamic_cast<IDisp2DGroup*>(pIBaseClass);
+		if (!pIDisp2DGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIDisp2DGroup->SetCoordinate(nIndex, *pCoordinate);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -22933,6 +24034,154 @@ Lib3MFResult lib3mf_model_getbooleanobjectbyid(Lib3MF_Model pModel, Lib3MF_uint3
 	}
 }
 
+Lib3MFResult lib3mf_model_getdisplacementmeshobjectbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_DisplacementMeshObject * pDisplacementMeshObjectInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetDisplacementMeshObjectByID");
+			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
+		}
+		if (pDisplacementMeshObjectInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseDisplacementMeshObjectInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseDisplacementMeshObjectInstance = pIModel->GetDisplacementMeshObjectByID(nUniqueResourceID);
+
+		*pDisplacementMeshObjectInstance = (IBase*)(pBaseDisplacementMeshObjectInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("DisplacementMeshObjectInstance", *pDisplacementMeshObjectInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_getdisplacement2dbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Displacement2D * pDisplacement2DInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetDisplacement2DByID");
+			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
+		}
+		if (pDisplacement2DInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseDisplacement2DInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseDisplacement2DInstance = pIModel->GetDisplacement2DByID(nUniqueResourceID);
+
+		*pDisplacement2DInstance = (IBase*)(pBaseDisplacement2DInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Displacement2DInstance", *pDisplacement2DInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_getnormvectorgroupbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_NormVectorGroup * pNormVectorGroupInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetNormVectorGroupByID");
+			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
+		}
+		if (pNormVectorGroupInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseNormVectorGroupInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNormVectorGroupInstance = pIModel->GetNormVectorGroupByID(nUniqueResourceID);
+
+		*pNormVectorGroupInstance = (IBase*)(pBaseNormVectorGroupInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("NormVectorGroupInstance", *pNormVectorGroupInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_getdisp2dgroupbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Disp2DGroup * pDisp2DGroupInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetDisp2DGroupByID");
+			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
+		}
+		if (pDisp2DGroupInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseDisp2DGroupInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseDisp2DGroupInstance = pIModel->GetDisp2DGroupByID(nUniqueResourceID);
+
+		*pDisp2DGroupInstance = (IBase*)(pBaseDisp2DGroupInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Disp2DGroupInstance", *pDisp2DGroupInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_model_getcolorgroupbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ColorGroup * pColorGroupInstance)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
@@ -23368,6 +24617,150 @@ Lib3MFResult lib3mf_model_getbooleanobjects(Lib3MF_Model pModel, Lib3MF_BooleanO
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pBaseResourceIterator = pIModel->GetBooleanObjects();
+
+		*pResourceIterator = (IBase*)(pBaseResourceIterator);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ResourceIterator", *pResourceIterator);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_getdisplacementmeshobjects(Lib3MF_Model pModel, Lib3MF_DisplacementMeshObjectIterator * pResourceIterator)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetDisplacementMeshObjects");
+		}
+		if (pResourceIterator == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResourceIterator(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResourceIterator = pIModel->GetDisplacementMeshObjects();
+
+		*pResourceIterator = (IBase*)(pBaseResourceIterator);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ResourceIterator", *pResourceIterator);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_getdisplacement2ds(Lib3MF_Model pModel, Lib3MF_Displacement2DIterator * pResourceIterator)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetDisplacement2Ds");
+		}
+		if (pResourceIterator == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResourceIterator(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResourceIterator = pIModel->GetDisplacement2Ds();
+
+		*pResourceIterator = (IBase*)(pBaseResourceIterator);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ResourceIterator", *pResourceIterator);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_getnormvectorgroups(Lib3MF_Model pModel, Lib3MF_NormVectorGroupIterator * pResourceIterator)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetNormVectorGroups");
+		}
+		if (pResourceIterator == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResourceIterator(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResourceIterator = pIModel->GetNormVectorGroups();
+
+		*pResourceIterator = (IBase*)(pBaseResourceIterator);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ResourceIterator", *pResourceIterator);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_getdisp2dgroups(Lib3MF_Model pModel, Lib3MF_Disp2DGroupIterator * pResourceIterator)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetDisp2DGroups");
+		}
+		if (pResourceIterator == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResourceIterator(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResourceIterator = pIModel->GetDisp2DGroups();
 
 		*pResourceIterator = (IBase*)(pBaseResourceIterator);
 		if (pJournalEntry.get() != nullptr) {
@@ -23841,6 +25234,170 @@ Lib3MFResult lib3mf_model_addbooleanobject(Lib3MF_Model pModel, Lib3MF_BooleanOb
 		*pBooleanObjectInstance = (IBase*)(pBaseBooleanObjectInstance);
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addHandleResult("BooleanObjectInstance", *pBooleanObjectInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_adddisplacementmeshobject(Lib3MF_Model pModel, Lib3MF_DisplacementMeshObject * pDisplacementMeshObjectInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddDisplacementMeshObject");
+		}
+		if (pDisplacementMeshObjectInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseDisplacementMeshObjectInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseDisplacementMeshObjectInstance = pIModel->AddDisplacementMeshObject();
+
+		*pDisplacementMeshObjectInstance = (IBase*)(pBaseDisplacementMeshObjectInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("DisplacementMeshObjectInstance", *pDisplacementMeshObjectInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_adddisplacement2d(Lib3MF_Model pModel, Lib3MF_Attachment pTextureAttachment, Lib3MF_Displacement2D * pDisplacement2DInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddDisplacement2D");
+			pJournalEntry->addHandleParameter("TextureAttachment", pTextureAttachment);
+		}
+		if (pDisplacement2DInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pIBaseClassTextureAttachment = (IBase *)pTextureAttachment;
+		IAttachment* pITextureAttachment = dynamic_cast<IAttachment*>(pIBaseClassTextureAttachment);
+		if (!pITextureAttachment)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IBase* pBaseDisplacement2DInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseDisplacement2DInstance = pIModel->AddDisplacement2D(pITextureAttachment);
+
+		*pDisplacement2DInstance = (IBase*)(pBaseDisplacement2DInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Displacement2DInstance", *pDisplacement2DInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_addnormvectorgroup(Lib3MF_Model pModel, Lib3MF_NormVectorGroup * pNormVectorGroupInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddNormVectorGroup");
+		}
+		if (pNormVectorGroupInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseNormVectorGroupInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseNormVectorGroupInstance = pIModel->AddNormVectorGroup();
+
+		*pNormVectorGroupInstance = (IBase*)(pBaseNormVectorGroupInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("NormVectorGroupInstance", *pNormVectorGroupInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_adddisp2dgroup(Lib3MF_Model pModel, Lib3MF_Displacement2D pDisplacement2D, Lib3MF_NormVectorGroup pNormalVectorGroup, Lib3MF_double dHeight, Lib3MF_double dOffset, Lib3MF_Disp2DGroup * pDisp2DGroupInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddDisp2DGroup");
+			pJournalEntry->addHandleParameter("Displacement2D", pDisplacement2D);
+			pJournalEntry->addHandleParameter("NormalVectorGroup", pNormalVectorGroup);
+			pJournalEntry->addDoubleParameter("Height", dHeight);
+			pJournalEntry->addDoubleParameter("Offset", dOffset);
+		}
+		if (pDisp2DGroupInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pIBaseClassDisplacement2D = (IBase *)pDisplacement2D;
+		IDisplacement2D* pIDisplacement2D = dynamic_cast<IDisplacement2D*>(pIBaseClassDisplacement2D);
+		if (!pIDisplacement2D)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IBase* pIBaseClassNormalVectorGroup = (IBase *)pNormalVectorGroup;
+		INormVectorGroup* pINormalVectorGroup = dynamic_cast<INormVectorGroup*>(pIBaseClassNormalVectorGroup);
+		if (!pINormalVectorGroup)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IBase* pBaseDisp2DGroupInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseDisp2DGroupInstance = pIModel->AddDisp2DGroup(pIDisplacement2D, pINormalVectorGroup, dHeight, dOffset);
+
+		*pDisp2DGroupInstance = (IBase*)(pBaseDisp2DGroupInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Disp2DGroupInstance", *pDisp2DGroupInstance);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -25149,6 +26706,14 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_componentsobjectiterator_getcurrentcomponentsobject;
 	if (sProcName == "lib3mf_booleanobjectiterator_getcurrentbooleanobject") 
 		*ppProcAddress = (void*) &lib3mf_booleanobjectiterator_getcurrentbooleanobject;
+	if (sProcName == "lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject") 
+		*ppProcAddress = (void*) &lib3mf_displacementmeshobjectiterator_getcurrentdisplacementmeshobject;
+	if (sProcName == "lib3mf_displacement2diterator_getcurrentdisplacement2d") 
+		*ppProcAddress = (void*) &lib3mf_displacement2diterator_getcurrentdisplacement2d;
+	if (sProcName == "lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup") 
+		*ppProcAddress = (void*) &lib3mf_normvectorgroupiterator_getcurrentnormvectorgroup;
+	if (sProcName == "lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup") 
+		*ppProcAddress = (void*) &lib3mf_disp2dgroupiterator_getcurrentdisp2dgroup;
 	if (sProcName == "lib3mf_texture2diterator_getcurrenttexture2d") 
 		*ppProcAddress = (void*) &lib3mf_texture2diterator_getcurrenttexture2d;
 	if (sProcName == "lib3mf_basematerialgroupiterator_getcurrentbasematerialgroup") 
@@ -25247,6 +26812,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_object_islevelsetobject;
 	if (sProcName == "lib3mf_object_isbooleanobject") 
 		*ppProcAddress = (void*) &lib3mf_object_isbooleanobject;
+	if (sProcName == "lib3mf_object_isdisplacementmeshobject") 
+		*ppProcAddress = (void*) &lib3mf_object_isdisplacementmeshobject;
 	if (sProcName == "lib3mf_object_isvalid") 
 		*ppProcAddress = (void*) &lib3mf_object_isvalid;
 	if (sProcName == "lib3mf_object_setattachmentasthumbnail") 
@@ -25329,6 +26896,14 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_meshobject_gettrianglesetcount;
 	if (sProcName == "lib3mf_meshobject_gettriangleset") 
 		*ppProcAddress = (void*) &lib3mf_meshobject_gettriangleset;
+	if (sProcName == "lib3mf_displacementmeshobject_hastriangledisplacement") 
+		*ppProcAddress = (void*) &lib3mf_displacementmeshobject_hastriangledisplacement;
+	if (sProcName == "lib3mf_displacementmeshobject_settriangledisplacement") 
+		*ppProcAddress = (void*) &lib3mf_displacementmeshobject_settriangledisplacement;
+	if (sProcName == "lib3mf_displacementmeshobject_gettriangledisplacement") 
+		*ppProcAddress = (void*) &lib3mf_displacementmeshobject_gettriangledisplacement;
+	if (sProcName == "lib3mf_displacementmeshobject_cleartriangledisplacement") 
+		*ppProcAddress = (void*) &lib3mf_displacementmeshobject_cleartriangledisplacement;
 	if (sProcName == "lib3mf_levelset_getfunction") 
 		*ppProcAddress = (void*) &lib3mf_levelset_getfunction;
 	if (sProcName == "lib3mf_levelset_setfunction") 
@@ -25387,7 +26962,7 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_booleanobject_addoperand;
 	if (sProcName == "lib3mf_booleanobject_getoperand") 
 		*ppProcAddress = (void*) &lib3mf_booleanobject_getoperand;
-	if (sProcName == "lib3mf_booleanobject_mergetomeshobject")
+	if (sProcName == "lib3mf_booleanobject_mergetomeshobject") 
 		*ppProcAddress = (void*) &lib3mf_booleanobject_mergetomeshobject;
 	if (sProcName == "lib3mf_beamlattice_getminlength") 
 		*ppProcAddress = (void*) &lib3mf_beamlattice_getminlength;
@@ -25653,6 +27228,50 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_attachment_writetobuffer;
 	if (sProcName == "lib3mf_attachment_readfrombuffer") 
 		*ppProcAddress = (void*) &lib3mf_attachment_readfrombuffer;
+	if (sProcName == "lib3mf_displacement2d_getattachment") 
+		*ppProcAddress = (void*) &lib3mf_displacement2d_getattachment;
+	if (sProcName == "lib3mf_displacement2d_setattachment") 
+		*ppProcAddress = (void*) &lib3mf_displacement2d_setattachment;
+	if (sProcName == "lib3mf_displacement2d_getchannel") 
+		*ppProcAddress = (void*) &lib3mf_displacement2d_getchannel;
+	if (sProcName == "lib3mf_displacement2d_setchannel") 
+		*ppProcAddress = (void*) &lib3mf_displacement2d_setchannel;
+	if (sProcName == "lib3mf_displacement2d_gettilestyleuv") 
+		*ppProcAddress = (void*) &lib3mf_displacement2d_gettilestyleuv;
+	if (sProcName == "lib3mf_displacement2d_settilestyleuv") 
+		*ppProcAddress = (void*) &lib3mf_displacement2d_settilestyleuv;
+	if (sProcName == "lib3mf_displacement2d_getfilter") 
+		*ppProcAddress = (void*) &lib3mf_displacement2d_getfilter;
+	if (sProcName == "lib3mf_displacement2d_setfilter") 
+		*ppProcAddress = (void*) &lib3mf_displacement2d_setfilter;
+	if (sProcName == "lib3mf_normvectorgroup_getcount") 
+		*ppProcAddress = (void*) &lib3mf_normvectorgroup_getcount;
+	if (sProcName == "lib3mf_normvectorgroup_addvector") 
+		*ppProcAddress = (void*) &lib3mf_normvectorgroup_addvector;
+	if (sProcName == "lib3mf_normvectorgroup_getvector") 
+		*ppProcAddress = (void*) &lib3mf_normvectorgroup_getvector;
+	if (sProcName == "lib3mf_normvectorgroup_setvector") 
+		*ppProcAddress = (void*) &lib3mf_normvectorgroup_setvector;
+	if (sProcName == "lib3mf_disp2dgroup_getdisplacement2d") 
+		*ppProcAddress = (void*) &lib3mf_disp2dgroup_getdisplacement2d;
+	if (sProcName == "lib3mf_disp2dgroup_getnormalvectorgroup") 
+		*ppProcAddress = (void*) &lib3mf_disp2dgroup_getnormalvectorgroup;
+	if (sProcName == "lib3mf_disp2dgroup_getheight") 
+		*ppProcAddress = (void*) &lib3mf_disp2dgroup_getheight;
+	if (sProcName == "lib3mf_disp2dgroup_setheight") 
+		*ppProcAddress = (void*) &lib3mf_disp2dgroup_setheight;
+	if (sProcName == "lib3mf_disp2dgroup_getoffset") 
+		*ppProcAddress = (void*) &lib3mf_disp2dgroup_getoffset;
+	if (sProcName == "lib3mf_disp2dgroup_setoffset") 
+		*ppProcAddress = (void*) &lib3mf_disp2dgroup_setoffset;
+	if (sProcName == "lib3mf_disp2dgroup_getcount") 
+		*ppProcAddress = (void*) &lib3mf_disp2dgroup_getcount;
+	if (sProcName == "lib3mf_disp2dgroup_addcoordinate") 
+		*ppProcAddress = (void*) &lib3mf_disp2dgroup_addcoordinate;
+	if (sProcName == "lib3mf_disp2dgroup_getcoordinate") 
+		*ppProcAddress = (void*) &lib3mf_disp2dgroup_getcoordinate;
+	if (sProcName == "lib3mf_disp2dgroup_setcoordinate") 
+		*ppProcAddress = (void*) &lib3mf_disp2dgroup_setcoordinate;
 	if (sProcName == "lib3mf_texture2d_getattachment") 
 		*ppProcAddress = (void*) &lib3mf_texture2d_getattachment;
 	if (sProcName == "lib3mf_texture2d_setattachment") 
@@ -26241,6 +27860,14 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_getcomponentsobjectbyid;
 	if (sProcName == "lib3mf_model_getbooleanobjectbyid") 
 		*ppProcAddress = (void*) &lib3mf_model_getbooleanobjectbyid;
+	if (sProcName == "lib3mf_model_getdisplacementmeshobjectbyid") 
+		*ppProcAddress = (void*) &lib3mf_model_getdisplacementmeshobjectbyid;
+	if (sProcName == "lib3mf_model_getdisplacement2dbyid") 
+		*ppProcAddress = (void*) &lib3mf_model_getdisplacement2dbyid;
+	if (sProcName == "lib3mf_model_getnormvectorgroupbyid") 
+		*ppProcAddress = (void*) &lib3mf_model_getnormvectorgroupbyid;
+	if (sProcName == "lib3mf_model_getdisp2dgroupbyid") 
+		*ppProcAddress = (void*) &lib3mf_model_getdisp2dgroupbyid;
 	if (sProcName == "lib3mf_model_getcolorgroupbyid") 
 		*ppProcAddress = (void*) &lib3mf_model_getcolorgroupbyid;
 	if (sProcName == "lib3mf_model_getslicestackbyid") 
@@ -26265,6 +27892,14 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_getcomponentsobjects;
 	if (sProcName == "lib3mf_model_getbooleanobjects") 
 		*ppProcAddress = (void*) &lib3mf_model_getbooleanobjects;
+	if (sProcName == "lib3mf_model_getdisplacementmeshobjects") 
+		*ppProcAddress = (void*) &lib3mf_model_getdisplacementmeshobjects;
+	if (sProcName == "lib3mf_model_getdisplacement2ds") 
+		*ppProcAddress = (void*) &lib3mf_model_getdisplacement2ds;
+	if (sProcName == "lib3mf_model_getnormvectorgroups") 
+		*ppProcAddress = (void*) &lib3mf_model_getnormvectorgroups;
+	if (sProcName == "lib3mf_model_getdisp2dgroups") 
+		*ppProcAddress = (void*) &lib3mf_model_getdisp2dgroups;
 	if (sProcName == "lib3mf_model_gettexture2ds") 
 		*ppProcAddress = (void*) &lib3mf_model_gettexture2ds;
 	if (sProcName == "lib3mf_model_getbasematerialgroups") 
@@ -26291,6 +27926,14 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_addcomponentsobject;
 	if (sProcName == "lib3mf_model_addbooleanobject") 
 		*ppProcAddress = (void*) &lib3mf_model_addbooleanobject;
+	if (sProcName == "lib3mf_model_adddisplacementmeshobject") 
+		*ppProcAddress = (void*) &lib3mf_model_adddisplacementmeshobject;
+	if (sProcName == "lib3mf_model_adddisplacement2d") 
+		*ppProcAddress = (void*) &lib3mf_model_adddisplacement2d;
+	if (sProcName == "lib3mf_model_addnormvectorgroup") 
+		*ppProcAddress = (void*) &lib3mf_model_addnormvectorgroup;
+	if (sProcName == "lib3mf_model_adddisp2dgroup") 
+		*ppProcAddress = (void*) &lib3mf_model_adddisp2dgroup;
 	if (sProcName == "lib3mf_model_addslicestack") 
 		*ppProcAddress = (void*) &lib3mf_model_addslicestack;
 	if (sProcName == "lib3mf_model_addtexture2dfromattachment") 

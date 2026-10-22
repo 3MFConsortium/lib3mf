@@ -300,6 +300,78 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFDisplacementMeshObjectIterator 
+**************************************************************************************************************************/
+class CLib3MFDisplacementMeshObjectIterator : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetCurrentDisplacementMeshObject(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFDisplacementMeshObjectIterator();
+	~CLib3MFDisplacementMeshObjectIterator();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFDisplacement2DIterator 
+**************************************************************************************************************************/
+class CLib3MFDisplacement2DIterator : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetCurrentDisplacement2D(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFDisplacement2DIterator();
+	~CLib3MFDisplacement2DIterator();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFNormVectorGroupIterator 
+**************************************************************************************************************************/
+class CLib3MFNormVectorGroupIterator : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetCurrentNormVectorGroup(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFNormVectorGroupIterator();
+	~CLib3MFNormVectorGroupIterator();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFDisp2DGroupIterator 
+**************************************************************************************************************************/
+class CLib3MFDisp2DGroupIterator : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetCurrentDisp2DGroup(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFDisp2DGroupIterator();
+	~CLib3MFDisp2DGroupIterator();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
  Class CLib3MFTexture2DIterator 
 **************************************************************************************************************************/
 class CLib3MFTexture2DIterator : public CLib3MFBaseClass {
@@ -559,6 +631,7 @@ private:
 	static void IsComponentsObject(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void IsLevelSetObject(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void IsBooleanObject(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void IsDisplacementMeshObject(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void IsValid(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetAttachmentAsThumbnail(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetThumbnailAttachment(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -621,6 +694,27 @@ private:
 public:
 	CLib3MFMeshObject();
 	~CLib3MFMeshObject();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFDisplacementMeshObject 
+**************************************************************************************************************************/
+class CLib3MFDisplacementMeshObject : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void HasTriangleDisplacement(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetTriangleDisplacement(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetTriangleDisplacement(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ClearTriangleDisplacement(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFDisplacementMeshObject();
+	~CLib3MFDisplacementMeshObject();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
@@ -1123,6 +1217,79 @@ private:
 public:
 	CLib3MFAttachment();
 	~CLib3MFAttachment();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFDisplacement2D 
+**************************************************************************************************************************/
+class CLib3MFDisplacement2D : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetAttachment(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetAttachment(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetChannel(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetChannel(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetTileStyleUV(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetTileStyleUV(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetFilter(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetFilter(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFDisplacement2D();
+	~CLib3MFDisplacement2D();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFNormVectorGroup 
+**************************************************************************************************************************/
+class CLib3MFNormVectorGroup : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetCount(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddVector(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetVector(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetVector(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFNormVectorGroup();
+	~CLib3MFNormVectorGroup();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFDisp2DGroup 
+**************************************************************************************************************************/
+class CLib3MFDisp2DGroup : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetDisplacement2D(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetNormalVectorGroup(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetHeight(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetHeight(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetOffset(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetOffset(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCount(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddCoordinate(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCoordinate(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetCoordinate(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFDisp2DGroup();
+	~CLib3MFDisp2DGroup();
 	
 	static void Init();
 	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
@@ -2705,6 +2872,10 @@ private:
 	static void GetMeshObjectByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetComponentsObjectByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetBooleanObjectByID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetDisplacementMeshObjectByID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetDisplacement2DByID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetNormVectorGroupByID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetDisp2DGroupByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetColorGroupByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSliceStackByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetLevelSetByID(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -2717,6 +2888,10 @@ private:
 	static void GetMeshObjects(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetComponentsObjects(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetBooleanObjects(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetDisplacementMeshObjects(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetDisplacement2Ds(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetNormVectorGroups(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetDisp2DGroups(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetTexture2Ds(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetBaseMaterialGroups(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetColorGroups(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -2730,6 +2905,10 @@ private:
 	static void AddMeshObject(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddComponentsObject(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddBooleanObject(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddDisplacementMeshObject(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddDisplacement2D(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddNormVectorGroup(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddDisp2DGroup(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddSliceStack(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddTexture2DFromAttachment(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddBaseMaterialGroup(const v8::FunctionCallbackInfo<v8::Value>& args);

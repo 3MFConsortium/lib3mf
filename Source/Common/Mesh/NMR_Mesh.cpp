@@ -337,7 +337,7 @@ namespace NMR {
 		return m_Nodes.getCount ();
 	}
 
-	nfUint32 CMesh::getFaceCount()
+	nfUint32 CMesh::getFaceCount() const
 	{
 		return m_Faces.getCount ();
 	}
