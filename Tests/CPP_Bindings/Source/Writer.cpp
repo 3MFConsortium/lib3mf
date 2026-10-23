@@ -33,6 +33,8 @@ UnitTest_Writer.cpp: Defines Unittests for the Writer classes
 #include "UnitTest_Utilities.h"
 #include "lib3mf_implicit.hpp"
 
+#include <cmath>
+
 namespace Lib3MF
 {
 	class Writer : public Lib3MFTest {
@@ -146,6 +148,147 @@ namespace Lib3MF
 		Writer::writer3MF->WriteToBuffer(bufferLargr);
 
 		ASSERT_TRUE(buffer.size() < bufferLargr.size());
+	}
+
+	TEST_F(Writer, 3MFVertexCoordinatesRoundTripAtPrecisionEleven)
+	{
+		const float distinguishingValue = 0.9940395355224609f;
+		std::vector<sPosition> vertices = {
+			fnCreateVertex(distinguishingValue, 0.0f, -0.0f),
+			fnCreateVertex(1.0f, 0.0f, 0.0f),
+			fnCreateVertex(0.0f, 1.0f, 0.0f)
+		};
+		std::vector<sTriangle> triangles = { fnCreateTriangle(0, 1, 2) };
+
+		auto mesh = model->AddMeshObject();
+		mesh->SetGeometry(vertices, triangles);
+		writer3MF->SetDecimalPrecision(11);
+
+		std::vector<Lib3MF_uint8> buffer;
+		writer3MF->WriteToBuffer(buffer);
+
+		auto readModel = wrapper->CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->ReadFromBuffer(buffer);
+		auto readMesh = readModel->GetMeshObjectByID(mesh->GetResourceID());
+		ASSERT_TRUE(readMesh);
+
+		std::vector<sPosition> readVertices;
+		readMesh->GetVertices(readVertices);
+		ASSERT_EQ(readVertices.size(), vertices.size());
+		EXPECT_EQ(readVertices[0].m_Coordinates[0], distinguishingValue);
+		EXPECT_TRUE(std::signbit(readVertices[0].m_Coordinates[2]));
+	}
+
+	TEST_F(Writer, 3MFPrecisionHandlesLargeScaledCoordinates)
+	{
+		std::vector<sPosition> vertices = {
+			fnCreateVertex(1000.0f, 0.0f, 0.0f),
+			fnCreateVertex(0.0f, 1.0f, 0.0f),
+			fnCreateVertex(0.0f, 0.0f, 1.0f)
+		};
+		std::vector<sTriangle> triangles = { fnCreateTriangle(0, 1, 2) };
+		auto mesh = model->AddMeshObject();
+		mesh->SetGeometry(vertices, triangles);
+		writer3MF->SetDecimalPrecision(16);
+
+		std::vector<Lib3MF_uint8> buffer;
+		writer3MF->WriteToBuffer(buffer);
+
+		auto readModel = wrapper->CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->ReadFromBuffer(buffer);
+		auto readMesh = readModel->GetMeshObjectByID(mesh->GetResourceID());
+		ASSERT_TRUE(readMesh);
+
+		std::vector<sPosition> readVertices;
+		readMesh->GetVertices(readVertices);
+		ASSERT_EQ(readVertices.size(), vertices.size());
+		EXPECT_EQ(readVertices[0].m_Coordinates[0], 1000.0f);
+	}
+
+	TEST_F(Writer, BeamLatticeRadiusRoundsAtRequestedPrecision)
+	{
+		std::vector<sPosition> vertices = {
+			fnCreateVertex(0.0f, 0.0f, 0.0f),
+			fnCreateVertex(1.0f, 0.0f, 0.0f),
+			fnCreateVertex(0.0f, 1.0f, 0.0f)
+		};
+		std::vector<sTriangle> triangles = { fnCreateTriangle(0, 1, 2) };
+		auto mesh = model->AddMeshObject();
+		mesh->SetGeometry(vertices, triangles);
+
+		sBeam beam = {};
+		beam.m_CapModes[0] = eBeamLatticeCapMode::HemiSphere;
+		beam.m_CapModes[1] = eBeamLatticeCapMode::Butt;
+		beam.m_Indices[0] = 0;
+		beam.m_Indices[1] = 1;
+		beam.m_Radii[0] = 1.2345678;
+		beam.m_Radii[1] = 1.2345678;
+		mesh->BeamLattice()->AddBeam(beam);
+		writer3MF->SetDecimalPrecision(6);
+
+		std::vector<Lib3MF_uint8> buffer;
+		writer3MF->WriteToBuffer(buffer);
+
+		auto readModel = wrapper->CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->ReadFromBuffer(buffer);
+		auto readMesh = readModel->GetMeshObjectByID(mesh->GetResourceID());
+		ASSERT_TRUE(readMesh);
+		auto readBeamLattice = readMesh->BeamLattice();
+		ASSERT_EQ(readBeamLattice->GetBeamCount(), 1u);
+		EXPECT_EQ(readBeamLattice->GetBeam(0).m_Radii[0], 1.234568);
+	}
+
+	TEST_F(Writer, BeamAndBallRadiiPreserveDoublePrecisionOnRead)
+	{
+		std::vector<sPosition> vertices = {
+			fnCreateVertex(0.0f, 0.0f, 0.0f),
+			fnCreateVertex(1.0f, 0.0f, 0.0f),
+			fnCreateVertex(0.0f, 1.0f, 0.0f)
+		};
+		std::vector<sTriangle> triangles = { fnCreateTriangle(0, 1, 2) };
+		auto mesh = model->AddMeshObject();
+		mesh->SetGeometry(vertices, triangles);
+
+		const double beamRadius1 = 1.23456789123;
+		const double beamRadius2 = 1.98765432123;
+		const double ballRadius = 2.3456789123;
+		auto beamLattice = mesh->BeamLattice();
+		beamLattice->SetBallOptions(eBeamLatticeBallMode::Mixed, 1.0);
+
+		sBeam beam = {};
+		beam.m_CapModes[0] = eBeamLatticeCapMode::HemiSphere;
+		beam.m_CapModes[1] = eBeamLatticeCapMode::Butt;
+		beam.m_Indices[0] = 0;
+		beam.m_Indices[1] = 1;
+		beam.m_Radii[0] = beamRadius1;
+		beam.m_Radii[1] = beamRadius2;
+		beamLattice->AddBeam(beam);
+
+		sBall ball = {};
+		ball.m_Index = 0;
+		ball.m_Radius = ballRadius;
+		beamLattice->AddBall(ball);
+		writer3MF->SetDecimalPrecision(12);
+
+		std::vector<Lib3MF_uint8> buffer;
+		writer3MF->WriteToBuffer(buffer);
+
+		auto readModel = wrapper->CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->ReadFromBuffer(buffer);
+		auto readMesh = readModel->GetMeshObjectByID(mesh->GetResourceID());
+		ASSERT_TRUE(readMesh);
+		auto readBeamLattice = readMesh->BeamLattice();
+		ASSERT_EQ(readBeamLattice->GetBeamCount(), 1u);
+		ASSERT_EQ(readBeamLattice->GetBallCount(), 1u);
+
+		const auto readBeam = readBeamLattice->GetBeam(0);
+		EXPECT_NEAR(readBeam.m_Radii[0], beamRadius1, 1e-12);
+		EXPECT_NEAR(readBeam.m_Radii[1], beamRadius2, 1e-12);
+		EXPECT_NEAR(readBeamLattice->GetBall(0).m_Radius, ballRadius, 1e-12);
 	}
 
 	TEST_F(Writer, STLCompare)

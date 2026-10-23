@@ -407,7 +407,7 @@ namespace NMR {
 
 			assertResourceIsInCurrentPath(pSliceStackResource->getPackageResourceID());
 			writeIntAttribute(XML_3MF_ATTRIBUTE_SLICESTACKID, pSliceStackResource->getPackageResourceID()->getModelResourceID());
-			writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICESTACKZBOTTOM, (float)pSliceStackResource->getZBottom());
+			writeDoubleAttribute(XML_3MF_ATTRIBUTE_SLICESTACKZBOTTOM, pSliceStackResource->getZBottom());
 
 
 			if (pSliceStackResource->getSliceRefCount() > 0) {
@@ -433,7 +433,7 @@ namespace NMR {
 					PSlice pSlice = pSliceStackResource->getSlice(nSliceIndex);
 					writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICE, XML_3MF_NAMESPACEPREFIX_SLICE);
 
-					writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEZTOP, nfFloat(pSlice->getTopZ()));
+					writeDoubleAttribute(XML_3MF_ATTRIBUTE_SLICEZTOP, pSlice->getTopZ());
 					if (pSlice->getVertexCount() >= 2) {
 						writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEVERTICES, XML_3MF_NAMESPACEPREFIX_SLICE);
 
@@ -997,8 +997,8 @@ namespace NMR {
 				m_pPropertyIndexMapping->registerPropertyID(nUniqueResourceID, nPropertyID, j);
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_TEX2COORD, XML_3MF_NAMESPACEPREFIX_MATERIAL);
-				writeFloatAttribute(XML_3MF_ATTRIBUTE_TEXTURE_U, (float)uvCoordinate.m_dU);
-				writeFloatAttribute(XML_3MF_ATTRIBUTE_TEXTURE_V, (float)uvCoordinate.m_dV);
+				writeDoubleAttribute(XML_3MF_ATTRIBUTE_TEXTURE_U, uvCoordinate.m_dU);
+				writeDoubleAttribute(XML_3MF_ATTRIBUTE_TEXTURE_V, uvCoordinate.m_dV);
 				writeEndElement();
 			}
 

@@ -122,14 +122,14 @@ namespace NMR
                              levelSet.getMeshBBoxOnly() ? "true" : "false");
         if(levelSet.getMinFeatureSize() != 0.0)
         {
-            writeFloatAttribute(XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_MIN_FEATURE_SIZE,
-                                float(levelSet.getMinFeatureSize()));
+            writeDoubleAttribute(XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_MIN_FEATURE_SIZE,
+                                 levelSet.getMinFeatureSize());
         }
 
         if(levelSet.getFallBackValue() != 0.0)
         {
-            writeFloatAttribute(XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_FALLBACK_VALUE,
-                                float(levelSet.getFallBackValue()));
+            writeDoubleAttribute(XML_3MF_ATTRIBUTE_BOUNDARY_SHAPE_FALLBACK_VALUE,
+                                 levelSet.getFallBackValue());
         }
                	
         auto pVolumeData = levelSet.getVolumeData();

@@ -34,8 +34,36 @@ ImplicitNodes.test.cpp: Defines unit tests for new implicit node types
 #include "UnitTest_Utilities.h"
 #include "lib3mf_implicit.hpp"
 
+#include <locale>
+
 namespace Lib3MF
 {
+    namespace
+    {
+        class CommaDecimalPoint : public std::numpunct<char>
+        {
+        protected:
+            char do_decimal_point() const override { return ','; }
+        };
+
+        class ScopedGlobalLocale
+        {
+        public:
+            explicit ScopedGlobalLocale(const std::locale& locale)
+                : m_previousLocale(std::locale::global(locale))
+            {
+            }
+
+            ~ScopedGlobalLocale()
+            {
+                std::locale::global(m_previousLocale);
+            }
+
+        private:
+            std::locale m_previousLocale;
+        };
+    }
+
     class ImplicitNodes : public ::testing::Test
     {
     protected:
@@ -630,6 +658,132 @@ namespace Lib3MF
             }
         }
         EXPECT_TRUE(foundNormalizeDistance);
+    }
+
+    TEST_F(ImplicitNodes, NumericNodesRoundTripIndependentOfLocale)
+    {
+        model = wrapper->CreateModel();
+        writer3MF = model->QueryWriter("3mf");
+
+        std::vector<sPosition> vertices = {
+            fnCreateVertex(0.0f, 0.0f, 0.0f),
+            fnCreateVertex(1.0f, 0.0f, 0.0f),
+            fnCreateVertex(0.0f, 1.0f, 0.0f)
+        };
+        std::vector<sTriangle> triangles = { fnCreateTriangle(0, 1, 2) };
+        auto mesh = model->AddMeshObject();
+        mesh->SetGeometry(vertices, triangles);
+
+        const Lib3MF_double value = 0.70710678118654757;
+        const Lib3MF_double vectorX = 0.12345678901234567;
+        const Lib3MF_double vectorY = -0.98765432109876543;
+        const Lib3MF_double matrixValue = 0.31415926535897931;
+        const Lib3MF_double accurateRange = 0.27182818284590452;
+        auto function = model->AddImplicitFunction();
+        function->SetDisplayName("high_precision_constant");
+        function->AddInput("pos", "position", Lib3MF::eImplicitPortType::Vector);
+
+        auto constantNode = function->AddConstantNode(
+            "constant", "high precision constant", "group_constant");
+        constantNode->SetConstant(value);
+
+        sVector vector = {};
+        vector.m_Coordinates[0] = vectorX;
+        vector.m_Coordinates[1] = vectorY;
+        vector.m_Coordinates[2] = 42.125;
+        auto vectorNode = function->AddConstVecNode(
+            "vector", "high precision vector", "group_vector");
+        vectorNode->SetVector(vector);
+
+        sMatrix4x4 matrix = {};
+        matrix.m_Field[0][0] = matrixValue;
+        matrix.m_Field[1][2] = -matrixValue;
+        matrix.m_Field[3][3] = 1.0;
+        auto matrixNode = function->AddConstMatNode(
+            "matrix", "high precision matrix", "group_matrix");
+        matrixNode->SetMatrix(matrix);
+
+        auto beamLatticeNode = function->AddBeamLatticeNode(
+            "beam_lattice", "beam lattice", "group_beam_lattice");
+        beamLatticeNode->SetAccurateRange(accurateRange);
+
+        auto output = function->AddOutput(
+            "shape", "constant field", Lib3MF::eImplicitPortType::Scalar);
+        function->AddLink(constantNode->GetOutputValue(), output);
+
+        auto levelSet = model->AddLevelSet();
+        levelSet->SetMesh(mesh);
+        levelSet->SetFunction(function.get());
+
+        std::vector<Lib3MF_uint8> buffer;
+        const std::locale commaLocale(std::locale::classic(), new CommaDecimalPoint);
+        {
+            ScopedGlobalLocale localeGuard(commaLocale);
+            writer3MF->WriteToBuffer(buffer);
+        }
+
+        const auto verifyReadModel = [&](const PModel& readModel)
+        {
+            auto functions = readModel->GetFunctions();
+            ASSERT_EQ(functions->Count(), 1u);
+            ASSERT_TRUE(functions->MoveNext());
+            auto readFunction = std::dynamic_pointer_cast<CImplicitFunction>(
+                functions->GetCurrentFunction());
+            ASSERT_NE(readFunction, nullptr);
+
+            bool foundConstant = false;
+            bool foundVector = false;
+            bool foundMatrix = false;
+            bool foundBeamLattice = false;
+            auto nodes = readFunction->GetNodes();
+            while (nodes->MoveNext())
+            {
+                auto readNode = nodes->GetCurrent();
+                if (auto readConstant = std::dynamic_pointer_cast<CConstantNode>(readNode))
+                {
+                    foundConstant = true;
+                    EXPECT_DOUBLE_EQ(readConstant->GetConstant(), value);
+                }
+                else if (auto readVector = std::dynamic_pointer_cast<CConstVecNode>(readNode))
+                {
+                    foundVector = true;
+                    const auto readCoordinates = readVector->GetVector();
+                    EXPECT_DOUBLE_EQ(readCoordinates.m_Coordinates[0], vectorX);
+                    EXPECT_DOUBLE_EQ(readCoordinates.m_Coordinates[1], vectorY);
+                    EXPECT_DOUBLE_EQ(readCoordinates.m_Coordinates[2], 42.125);
+                }
+                else if (auto readMatrix = std::dynamic_pointer_cast<CConstMatNode>(readNode))
+                {
+                    foundMatrix = true;
+                    const auto readMatrixValue = readMatrix->GetMatrix();
+                    EXPECT_DOUBLE_EQ(readMatrixValue.m_Field[0][0], matrixValue);
+                    EXPECT_DOUBLE_EQ(readMatrixValue.m_Field[1][2], -matrixValue);
+                    EXPECT_DOUBLE_EQ(readMatrixValue.m_Field[3][3], 1.0);
+                }
+                else if (auto readBeamLattice = std::dynamic_pointer_cast<CBeamLatticeNode>(readNode))
+                {
+                    foundBeamLattice = true;
+                    EXPECT_DOUBLE_EQ(readBeamLattice->GetAccurateRange(), accurateRange);
+                }
+            }
+            EXPECT_TRUE(foundConstant);
+            EXPECT_TRUE(foundVector);
+            EXPECT_TRUE(foundMatrix);
+            EXPECT_TRUE(foundBeamLattice);
+        };
+
+        auto readModel = wrapper->CreateModel();
+        auto reader = readModel->QueryReader("3mf");
+        reader->ReadFromBuffer(buffer);
+        verifyReadModel(readModel);
+
+        auto commaReadModel = wrapper->CreateModel();
+        auto commaReader = commaReadModel->QueryReader("3mf");
+        {
+            ScopedGlobalLocale localeGuard(commaLocale);
+            commaReader->ReadFromBuffer(buffer);
+        }
+        verifyReadModel(commaReadModel);
     }
 
     // ============================================================================

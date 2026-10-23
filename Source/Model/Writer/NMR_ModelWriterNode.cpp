@@ -35,6 +35,9 @@ This is the abstract base class for all 3MF model stream exporters.
 
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_Exception_Windows.h" 
+#include <iomanip>
+#include <limits>
+#include <locale>
 #include <sstream>
 
 namespace NMR {
@@ -103,15 +106,19 @@ namespace NMR {
 	void CModelWriterNode::writeFloatAttribute(_In_z_ const nfChar * pAttributeName, _In_ nfFloat fAttributeValue)
 	{
 		std::stringstream sStream;
-		sStream << fAttributeValue;
-		writeConstStringAttribute(pAttributeName, sStream.str().c_str());
+		sStream.imbue(std::locale::classic());
+		sStream << std::setprecision(std::numeric_limits<nfFloat>::max_digits10) << fAttributeValue;
+		const std::string sValue = sStream.str();
+		writeConstStringAttribute(pAttributeName, sValue.c_str());
 	}
 
 	void CModelWriterNode::writeDoubleAttribute(_In_z_ const nfChar* pAttributeName, _In_ nfDouble dAttributeValue)
 	{
 		std::stringstream sStream;
-		sStream << dAttributeValue;
-		writeConstStringAttribute(pAttributeName, sStream.str().c_str());
+		sStream.imbue(std::locale::classic());
+		sStream << std::setprecision(std::numeric_limits<nfDouble>::max_digits10) << dAttributeValue;
+		const std::string sValue = sStream.str();
+		writeConstStringAttribute(pAttributeName, sValue.c_str());
 	}
 
 	void CModelWriterNode::writeStartElement(_In_z_ const nfChar * pElementName)

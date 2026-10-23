@@ -41,14 +41,98 @@ This is the class for exporting the 3mf mesh node.
 #include "Common/3MF_ProgressMonitor.h"
 
 #include <cmath>
+#include <iomanip>
+#include <limits>
+#include <locale>
+#include <sstream>
+#include <string>
 
 #ifdef __GNUC__
 #include <stdio.h>
 #endif // __GNUC__
 
-#define MAX(a,b) (((a)>(b))?(a):(b))
-
 namespace NMR {
+	namespace {
+		void putFixedDecimal(_In_ nfDouble dValue, _In_ int nPosAfterDecPoint,
+			_In_ nfInt64 nPutDoubleFactor,
+			_Inout_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE>& line,
+			_Inout_ nfUint32& nBufferPos)
+		{
+			if (!std::isfinite(dValue))
+				throw CNMRException(NMR_ERROR_COULDNOTCONVERTNUMBER);
+
+			if (nBufferPos > line.size())
+				throw CNMRException(NMR_ERROR_COULDNOTCONVERTNUMBER);
+
+			const nfDouble dScaledValue = dValue * static_cast<nfDouble>(nPutDoubleFactor);
+			const nfDouble dInt64Limit = std::ldexp(1.0, std::numeric_limits<nfInt64>::digits);
+			const nfDouble dRoundedValue = std::isfinite(dScaledValue)
+				? std::round(dScaledValue)
+				: dScaledValue;
+
+			if (!std::isfinite(dRoundedValue) || dRoundedValue < -dInt64Limit || dRoundedValue >= dInt64Limit)
+			{
+				// Keep fixed decimal-place semantics without overflowing the scaled integer.
+				std::stringstream sStream;
+				sStream.imbue(std::locale::classic());
+				sStream << std::fixed << std::setprecision(nPosAfterDecPoint) << dValue;
+				const std::string sValue = sStream.str();
+				if (sValue.size() > line.size() - nBufferPos)
+					throw CNMRException(NMR_ERROR_COULDNOTCONVERTNUMBER);
+
+				for (const nfChar cValue : sValue)
+					line[nBufferPos++] = cValue;
+				return;
+			}
+
+			const nfInt64 nRoundedValue = static_cast<nfInt64>(dRoundedValue);
+			const nfBool bIsNegative = std::signbit(dValue);
+			const nfUint64 nAbsValue = nRoundedValue < 0
+				? static_cast<nfUint64>(-(nRoundedValue + 1)) + 1
+				: static_cast<nfUint64>(nRoundedValue);
+			nfUint32 nStart = nBufferPos;
+			int nCount = 0;
+
+			if (!nAbsValue)
+			{
+				if (bIsNegative)
+					line[nBufferPos++] = '-';
+				line[nBufferPos++] = '0';
+				return;
+			}
+			else
+			{
+				// Write the string in reverse order.
+				nfUint64 nRemainingValue = nAbsValue;
+				while (nRemainingValue || nCount < nPosAfterDecPoint)
+				{
+					line[nBufferPos++] = static_cast<nfChar>('0' + (nRemainingValue % 10));
+					nRemainingValue /= 10;
+					nCount++;
+					if (nCount == nPosAfterDecPoint)
+					{
+						line[nBufferPos++] = '.';
+						if (!nRemainingValue)
+							line[nBufferPos++] = '0';
+						nCount++;
+					}
+				}
+				if (bIsNegative)
+					line[nBufferPos++] = '-';
+			}
+
+			// Reverse the formatted number.
+			nfUint32 nEnd = nBufferPos - 1;
+			while (nStart < nEnd)
+			{
+				const nfChar cTemp = line[nStart];
+				line[nStart] = line[nEnd];
+				line[nEnd] = cTemp;
+				nStart++;
+				nEnd--;
+			}
+		}
+	}
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
 		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension, _In_ nfBool bWriteBeamLatticeBallsExtension, _In_ nfBool bWriteVolumetricExtension, _In_ nfBool bWriteTriangleSetExtension)
@@ -303,14 +387,14 @@ namespace NMR {
 				nfDouble dDefaultRadius = pMesh->getDefaultBeamRadius();
 				nfDouble dDefaultBallRadius = pMesh->getDefaultBallRadius();
 				nfBool bWriteBallsElement = nBallCount > 0;
-				writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_RADIUS, float(dDefaultRadius));
-				writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_MINLENGTH, float(pMesh->getBeamLatticeMinLength()));
+				writeDoubleAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_RADIUS, dDefaultRadius);
+				writeDoubleAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_MINLENGTH, pMesh->getBeamLatticeMinLength());
 				eModelBeamLatticeBallMode eBallMode = pMesh->getBeamLatticeBallMode();
 
 				if (eBallMode == eModelBeamLatticeBallMode::MODELBEAMLATTICEBALLMODE_ALL) {
 					if (dDefaultBallRadius > 0) {
 						writeStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_BALLMODE, ballModeToString(eBallMode));
-						writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_BALLRADIUS, float(dDefaultBallRadius));
+						writeDoubleAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_BALLRADIUS, dDefaultBallRadius);
 
 						// Check if any balls do not use dDefaultBallRadius
 						bWriteBallsElement = false;
@@ -329,7 +413,7 @@ namespace NMR {
 					if (eBallMode == eModelBeamLatticeBallMode::MODELBEAMLATTICEBALLMODE_MIXED) {
 						if (dDefaultBallRadius > 0) {
 							writeStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_BALLMODE, ballModeToString(eBallMode));
-							writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_BALLRADIUS, float(dDefaultBallRadius));
+							writeDoubleAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_BALLRADIUS, dDefaultBallRadius);
 						}
 						else {
 							throw CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE);
@@ -429,89 +513,11 @@ namespace NMR {
 	}
 
 	void CModelWriterNode100_Mesh::putFloat(_In_ const nfFloat fValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos) {
-		// Format float with "%.$ACCf" syntax where $ACC = m_snPosAfterDecPoint
-		nfInt64 nAbsValue = (nfInt64)(fValue * m_nPutDoubleFactor);
-		nAbsValue = MAX(nAbsValue, -nAbsValue);
-		nfBool bIsNegative = fValue < 0;
-
-		int nStart = nBufferPos;
-		int nCount = 0;
-
-		if (!nAbsValue) {
-			line[nBufferPos++] = '0';
-		}
-		else {
-			// Write the string in reverse order
-			while (nAbsValue || nCount < m_nPosAfterDecPoint) {
-				line[nBufferPos++] = '0' + (nAbsValue % 10);
-				nAbsValue /= 10;
-				nCount++;
-				if (nCount == m_nPosAfterDecPoint) {
-					line[nBufferPos++] = '.';
-					if (!nAbsValue) {
-						line[nBufferPos++] = '0';
-					}
-					nCount++;
-				}
-			}
-			if (bIsNegative) {
-				line[nBufferPos++] = '-';
-				nCount++;
-			}
-		}
-
-		// Reverse the float string
-		int nEnd = nBufferPos - 1;
-		while (nStart < nEnd) {
-			char temp = line[nStart];
-			line[nStart] = line[nEnd];
-			line[nEnd] = temp;
-			nStart++;
-			nEnd--;
-		}
+		putFixedDecimal(static_cast<nfDouble>(fValue), m_nPosAfterDecPoint, m_nPutDoubleFactor, line, nBufferPos);
 	}
 
 	void CModelWriterNode100_Mesh::putDouble(_In_ const nfDouble dValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos) {
-		// Format float with "%.$ACCf" syntax where $ACC = m_snPosAfterDecPoint
-		nfInt64 nAbsValue = (nfInt64)(dValue * m_nPutDoubleFactor);
-		nAbsValue = MAX(nAbsValue, -nAbsValue);
-		nfBool bIsNegative = dValue < 0;
-
-		int nStart = nBufferPos;
-		int nCount = 0;
-
-		if (!nAbsValue) {
-			line[nBufferPos++] = '0';
-		}
-		else {
-			// Write the string in reverse order
-			while (nAbsValue || nCount < m_nPosAfterDecPoint) {
-				line[nBufferPos++] = '0' + (nAbsValue % 10);
-				nAbsValue /= 10;
-				nCount++;
-				if (nCount == m_nPosAfterDecPoint) {
-					line[nBufferPos++] = '.';
-					if (!nAbsValue) {
-						line[nBufferPos++] = '0';
-					}
-					nCount++;
-				}
-			}
-			if (bIsNegative) {
-				line[nBufferPos++] = '-';
-				nCount++;
-			}
-		}
-
-		// Reverse the float string
-		int nEnd = nBufferPos - 1;
-		while (nStart < nEnd) {
-			char temp = line[nStart];
-			line[nStart] = line[nEnd];
-			line[nEnd] = temp;
-			nStart++;
-			nEnd--;
-		}
+		putFixedDecimal(dValue, m_nPosAfterDecPoint, m_nPutDoubleFactor, line, nBufferPos);
 	}
 
 	void CModelWriterNode100_Mesh::putVertexFloat(_In_ const nfFloat fValue)
