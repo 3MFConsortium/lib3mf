@@ -44,7 +44,8 @@ namespace NMR {
 
 	CModelToolpath::CModelToolpath(_In_ const ModelResourceID sID, _In_ CModel * pModel, double dUnitFactor, CUUID uuid, nfUint32 nBottomZ)
 		: CModelResource(sID, pModel), m_dUnitFactor (dUnitFactor), m_UUID (uuid), m_nBottomZ (nBottomZ), m_eToolpathType (Lib3MF::eToolpathType::Planar),
-		m_pProfileNameRegistry (std::make_shared<CModelToolpathProfileNameRegistry>())
+		m_pProfileNameRegistry (std::make_shared<CModelToolpathProfileNameRegistry>()),
+		m_bHasDefaultLaserIndex (false), m_nDefaultLaserIndex (0), m_bLaserReferenceChecks (false)
 	{
 	}
 
@@ -216,6 +217,190 @@ namespace NMR {
 		}
 
 		return nullptr;
+	}
+
+	PModelToolpathLaserSource CModelToolpath::addLaserSource(nfUint32 nLaserIndex, const std::string & sName)
+	{
+		if (m_LaserSourceMap.find(nLaserIndex) != m_LaserSourceMap.end())
+			throw CNMRException(NMR_ERROR_DUPLICATETOOLPATHLASERSOURCEINDEX, fnUint32ToString(nLaserIndex));
+		if (m_LaserSources.size() >= XML_3MF_MAXRESOURCECOUNT)
+			throw CNMRException(NMR_ERROR_INVALIDTOOLPATHLASERSOURCE, "too many laser sources");
+
+		auto pLaserSource = std::make_shared<CModelToolpathLaserSource>(nLaserIndex, sName);
+		m_LaserSources.push_back(pLaserSource);
+		m_LaserSourceMap.insert(std::make_pair(nLaserIndex, pLaserSource));
+
+		return pLaserSource;
+	}
+
+	nfUint32 CModelToolpath::getLaserSourceCount()
+	{
+		return (nfUint32)m_LaserSources.size();
+	}
+
+	PModelToolpathLaserSource CModelToolpath::getLaserSource(nfUint32 nIndex)
+	{
+		if (nIndex >= m_LaserSources.size())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		return m_LaserSources[nIndex];
+	}
+
+	PModelToolpathLaserSource CModelToolpath::findLaserSource(nfUint32 nLaserIndex)
+	{
+		auto iIterator = m_LaserSourceMap.find(nLaserIndex);
+		if (iIterator != m_LaserSourceMap.end())
+			return iIterator->second;
+
+		return nullptr;
+	}
+
+	void CModelToolpath::removeLaserSource(nfUint32 nLaserIndex)
+	{
+		auto iIterator = m_LaserSourceMap.find(nLaserIndex);
+		if (iIterator == m_LaserSourceMap.end())
+			throw CNMRException(NMR_ERROR_TOOLPATHLASERSOURCENOTFOUND, fnUint32ToString(nLaserIndex));
+
+		if (m_bHasDefaultLaserIndex && (m_nDefaultLaserIndex == nLaserIndex))
+			throw CNMRException(NMR_ERROR_TOOLPATHLASERSOURCEINUSE, "laser index " + fnUint32ToString(nLaserIndex) + " is the default");
+		for (auto pSyncGroup : m_SyncGroups) {
+			if (pSyncGroup->referencesLaserIndex(nLaserIndex))
+				throw CNMRException(NMR_ERROR_TOOLPATHLASERSOURCEINUSE, "laser index " + fnUint32ToString(nLaserIndex) + " is listed in sync group " + fnUint32ToString(pSyncGroup->getSyncGroupID()));
+		}
+
+		auto pLaserSource = iIterator->second;
+		m_LaserSourceMap.erase(iIterator);
+		m_LaserSources.erase(std::remove(m_LaserSources.begin(), m_LaserSources.end(), pLaserSource), m_LaserSources.end());
+	}
+
+	void CModelToolpath::clearLaserSources()
+	{
+		m_SyncGroups.clear();
+		m_SyncGroupMap.clear();
+		m_LaserSources.clear();
+		m_LaserSourceMap.clear();
+		m_bHasDefaultLaserIndex = false;
+		m_nDefaultLaserIndex = 0;
+	}
+
+	nfBool CModelToolpath::hasDefaultLaserIndex()
+	{
+		return m_bHasDefaultLaserIndex;
+	}
+
+	nfUint32 CModelToolpath::getDefaultLaserIndex()
+	{
+		if (!m_bHasDefaultLaserIndex)
+			throw CNMRException(NMR_ERROR_TOOLPATHLASERSOURCENOTFOUND, "no default laser index");
+		return m_nDefaultLaserIndex;
+	}
+
+	void CModelToolpath::setDefaultLaserIndex(nfUint32 nLaserIndex)
+	{
+		if (findLaserSource(nLaserIndex).get() == nullptr)
+			throw CNMRException(NMR_ERROR_TOOLPATHLASERSOURCENOTFOUND, fnUint32ToString(nLaserIndex));
+
+		m_nDefaultLaserIndex = nLaserIndex;
+		m_bHasDefaultLaserIndex = true;
+	}
+
+	void CModelToolpath::clearDefaultLaserIndex()
+	{
+		m_bHasDefaultLaserIndex = false;
+		m_nDefaultLaserIndex = 0;
+	}
+
+	void CModelToolpath::checkSyncGroupLaserIndices(const std::vector<nfUint32> & LaserIndices)
+	{
+		if (LaserIndices.empty())
+			throw CNMRException(NMR_ERROR_INVALIDTOOLPATHSYNCGROUP, "sync group must list at least one laser index");
+
+		for (nfUint32 nLaserIndex : LaserIndices) {
+			if (findLaserSource(nLaserIndex).get() == nullptr)
+				throw CNMRException(NMR_ERROR_TOOLPATHLASERSOURCENOTFOUND, fnUint32ToString(nLaserIndex));
+		}
+	}
+
+	PModelToolpathSyncGroup CModelToolpath::addSyncGroup(nfUint32 nSyncGroupID, const std::vector<nfUint32> & LaserIndices)
+	{
+		if (m_SyncGroupMap.find(nSyncGroupID) != m_SyncGroupMap.end())
+			throw CNMRException(NMR_ERROR_DUPLICATETOOLPATHSYNCGROUPID, fnUint32ToString(nSyncGroupID));
+		if (m_SyncGroups.size() >= XML_3MF_MAXRESOURCECOUNT)
+			throw CNMRException(NMR_ERROR_INVALIDTOOLPATHSYNCGROUP, "too many sync groups");
+		checkSyncGroupLaserIndices(LaserIndices);
+
+		auto pSyncGroup = std::make_shared<CModelToolpathSyncGroup>(nSyncGroupID, LaserIndices);
+		m_SyncGroups.push_back(pSyncGroup);
+		m_SyncGroupMap.insert(std::make_pair(nSyncGroupID, pSyncGroup));
+
+		return pSyncGroup;
+	}
+
+	nfUint32 CModelToolpath::getSyncGroupCount()
+	{
+		return (nfUint32)m_SyncGroups.size();
+	}
+
+	PModelToolpathSyncGroup CModelToolpath::getSyncGroup(nfUint32 nIndex)
+	{
+		if (nIndex >= m_SyncGroups.size())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		return m_SyncGroups[nIndex];
+	}
+
+	PModelToolpathSyncGroup CModelToolpath::findSyncGroup(nfUint32 nSyncGroupID)
+	{
+		auto iIterator = m_SyncGroupMap.find(nSyncGroupID);
+		if (iIterator != m_SyncGroupMap.end())
+			return iIterator->second;
+
+		return nullptr;
+	}
+
+	void CModelToolpath::removeSyncGroup(nfUint32 nSyncGroupID)
+	{
+		auto iIterator = m_SyncGroupMap.find(nSyncGroupID);
+		if (iIterator == m_SyncGroupMap.end())
+			throw CNMRException(NMR_ERROR_TOOLPATHSYNCGROUPNOTFOUND, fnUint32ToString(nSyncGroupID));
+
+		auto pSyncGroup = iIterator->second;
+		m_SyncGroupMap.erase(iIterator);
+		m_SyncGroups.erase(std::remove(m_SyncGroups.begin(), m_SyncGroups.end(), pSyncGroup), m_SyncGroups.end());
+	}
+
+	void CModelToolpath::setSyncGroupLaserIndices(nfUint32 nSyncGroupID, const std::vector<nfUint32> & LaserIndices)
+	{
+		auto pSyncGroup = findSyncGroup(nSyncGroupID);
+		if (pSyncGroup.get() == nullptr)
+			throw CNMRException(NMR_ERROR_TOOLPATHSYNCGROUPNOTFOUND, fnUint32ToString(nSyncGroupID));
+		checkSyncGroupLaserIndices(LaserIndices);
+
+		pSyncGroup->setLaserIndices(LaserIndices);
+	}
+
+	nfBool CModelToolpath::getLaserReferenceChecks()
+	{
+		return m_bLaserReferenceChecks;
+	}
+
+	void CModelToolpath::setLaserReferenceChecks(nfBool bActive)
+	{
+		m_bLaserReferenceChecks = bActive;
+	}
+
+	void CModelToolpath::checkSegmentLaserReferences(const TOOLPATHSEGMENTATTRIBUTES & standardAttributes)
+	{
+		if (!m_bLaserReferenceChecks)
+			return;
+
+		if ((standardAttributes.m_nFlags & TOOLPATHSEGMENTATTRIBUTE_HASLASERINDEX) && !m_LaserSources.empty()) {
+			if (findLaserSource(standardAttributes.m_nLaserIndex).get() == nullptr)
+				throw CNMRException(NMR_ERROR_TOOLPATHLASERSOURCENOTFOUND, "segment laserindex=" + fnUint32ToString(standardAttributes.m_nLaserIndex));
+		}
+
+		if (standardAttributes.m_nFlags & TOOLPATHSEGMENTATTRIBUTE_HASLASERSYNC) {
+			if (findSyncGroup(standardAttributes.m_nLaserSync).get() == nullptr)
+				throw CNMRException(NMR_ERROR_TOOLPATHSYNCGROUPNOTFOUND, "segment lasersync=" + fnUint32ToString(standardAttributes.m_nLaserSync));
+		}
 	}
 
 	uint32_t CModelToolpath::getCustomXMLDataCount()

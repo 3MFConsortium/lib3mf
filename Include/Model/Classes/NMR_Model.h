@@ -138,6 +138,9 @@ namespace NMR {
 		// Persistent source of model
 		PModelPersistentDataSource m_pPersistentDataSource;
 
+		// Toolpath layer relationships found in the package, as (source model part, target layer part) pairs.
+		std::set<std::pair<std::string, std::string>> m_ToolpathLayerRelationships;
+
 		std::vector<PModelResource> m_Resources;
 		ModelResourceID m_MaxResourceId = 0;
 
@@ -363,6 +366,10 @@ namespace NMR {
 		std::string getModelAttachmentPath(_In_ nfUint32 nIndex);
 		PModelAttachment findModelAttachment(_In_ std::string sPath);
 		void mergeModelAttachments(_In_ CModel * pSourceModel);
+
+		// Part names are compared case-insensitively, as OPC part names are.
+		void addToolpathLayerRelationship(_In_ const std::string & sSourcePartURI, _In_ const std::string & sTargetPartURI);
+		bool hasToolpathLayerRelationship(_In_ const std::string & sSourcePartURI, _In_ const std::string & sTargetPartURI);
 
 		// Custom Content Types
 		std::map<std::string, std::string> getCustomContentTypes();

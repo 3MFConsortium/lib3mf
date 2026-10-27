@@ -686,6 +686,16 @@
 			<param name="StrictModeActive" type="bool" pass="return"
 				description="returns flag whether strict mode is active or not." />
 		</method>
+		<method name="SetToolpathLaserReferenceChecks"
+			description="Activates (deactivates) the checks that toolpath laserindex values refer to a declared laser source and lasersync values to a declared sync group. Inactive by default. Unresolved profile laser indices are reported as warnings (errors in strict mode). Read toolpaths inherit the setting, which then applies to their layer data (see Toolpath.SetLaserReferenceChecks).">
+			<param name="ChecksActive" type="bool" pass="in"
+				description="flag whether the laser reference checks are active or not." />
+		</method>
+		<method name="GetToolpathLaserReferenceChecks"
+			description="Queries whether the toolpath laser reference checks are active or not.">
+			<param name="ChecksActive" type="bool" pass="return"
+				description="returns flag whether the laser reference checks are active or not." />
+		</method>
 		<method name="GetWarning"
 			description="Returns Warning and Error Information of the read process">
 			<param name="Index" type="uint32" pass="in"
@@ -4134,6 +4144,93 @@
 	</class>
 
 
+	<class name="ToolpathLaserSource" parent="Base" description="A laser scan field declared by a toolpath (lasersource).">
+
+		<method name="GetLaserIndex" description="Returns the laser index, which is unique within the toolpath and referenced by laserindex on profiles and segments.">
+			<param name="LaserIndex" type="uint32" pass="return" description="Laser index." />
+		</method>
+
+		<method name="GetName" description="Returns the human-readable name of the laser source.">
+			<param name="Name" type="string" pass="return" description="Name of the laser source." />
+		</method>
+
+		<method name="SetName" description="Sets the human-readable name of the laser source.">
+			<param name="Name" type="string" pass="in" description="Name of the laser source." />
+		</method>
+
+		<method name="HasBounds" description="Returns if the scan-field bounds are set.">
+			<param name="HasBounds" type="bool" pass="return" description="True if minx, maxx, miny and maxy are set." />
+		</method>
+
+		<method name="GetBounds" description="Returns the scan-field bounds in toolpath units. Fails if no bounds are set.">
+			<param name="MinX" type="int32" pass="out" description="Minimum X coordinate." />
+			<param name="MaxX" type="int32" pass="out" description="Maximum X coordinate." />
+			<param name="MinY" type="int32" pass="out" description="Minimum Y coordinate." />
+			<param name="MaxY" type="int32" pass="out" description="Maximum Y coordinate." />
+		</method>
+
+		<method name="SetBounds" description="Sets the scan-field bounds in toolpath units. Fails if MaxX is smaller than MinX or MaxY is smaller than MinY, or if an existing corner radius exceeds half of the shorter side of the new bounds.">
+			<param name="MinX" type="int32" pass="in" description="Minimum X coordinate." />
+			<param name="MaxX" type="int32" pass="in" description="Maximum X coordinate." />
+			<param name="MinY" type="int32" pass="in" description="Minimum Y coordinate." />
+			<param name="MaxY" type="int32" pass="in" description="Maximum Y coordinate." />
+		</method>
+
+		<method name="ClearBounds" description="Removes the scan-field bounds. Also removes the corner radius, which requires the bounds.">
+		</method>
+
+		<method name="HasCenter" description="Returns if the optical center is set.">
+			<param name="HasCenter" type="bool" pass="return" description="True if centerx and centery are set." />
+		</method>
+
+		<method name="GetCenter" description="Returns the optical center in toolpath units. Fails if no center is set.">
+			<param name="CenterX" type="int32" pass="out" description="X coordinate of the optical center." />
+			<param name="CenterY" type="int32" pass="out" description="Y coordinate of the optical center." />
+		</method>
+
+		<method name="SetCenter" description="Sets the optical center in toolpath units.">
+			<param name="CenterX" type="int32" pass="in" description="X coordinate of the optical center." />
+			<param name="CenterY" type="int32" pass="in" description="Y coordinate of the optical center." />
+		</method>
+
+		<method name="ClearCenter" description="Removes the optical center.">
+		</method>
+
+		<method name="HasCornerRadius" description="Returns if a corner radius is set.">
+			<param name="HasCornerRadius" type="bool" pass="return" description="True if a corner radius is set." />
+		</method>
+
+		<method name="GetCornerRadius" description="Returns the corner radius of the scan field in toolpath units. Fails if no corner radius is set.">
+			<param name="CornerRadius" type="uint32" pass="return" description="Corner radius." />
+		</method>
+
+		<method name="SetCornerRadius" description="Sets the corner radius of the scan field in toolpath units. Fails if no bounds are set, if the radius is 0, or if it exceeds half of the shorter side of the bounds.">
+			<param name="CornerRadius" type="uint32" pass="in" description="Corner radius." />
+		</method>
+
+		<method name="ClearCornerRadius" description="Removes the corner radius.">
+		</method>
+
+	</class>
+
+
+	<class name="ToolpathSyncGroup" parent="Base" description="A set of lasers that participate in a synchronization barrier (syncgroup).">
+
+		<method name="GetSyncGroupID" description="Returns the sync group id, which is unique within the toolpath and referenced by lasersync on segments.">
+			<param name="SyncGroupID" type="uint32" pass="return" description="Sync group id." />
+		</method>
+
+		<method name="GetLaserIndices" description="Returns the laser indices of the sync group.">
+			<param name="LaserIndices" type="basicarray" class="uint32" pass="out" description="Laser indices." />
+		</method>
+
+		<method name="SetLaserIndices" description="Sets the laser indices of the sync group. Fails if the list is empty or if a laser index is not declared by a laser source of the toolpath.">
+			<param name="LaserIndices" type="basicarray" class="uint32" pass="in" description="Laser indices." />
+		</method>
+
+	</class>
+
+
   <class name="ToolpathLayerReader" parent="Base">
 
   	<!-- Methods for accessing general layer metadata -->
@@ -4691,6 +4788,90 @@
 		<method name="GetProfileByUUID" description="Returns a profile of the toolpath by UUID. Fails if profile does not exist.">
 			<param name="ProfileUUID" type="string" pass="in" description="UUID string." />
 			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
+		</method>
+
+		<method name="GetLaserSourceCount" description="Retrieves the count of laser sources. A toolpath without laser sources is a single-laser toolpath.">
+			<param name="Count" type="uint32" pass="return" description="Returns the laser source count." />
+		</method>
+
+		<method name="GetLaserSource" description="Returns a laser source of the toolpath.">
+			<param name="Index" type="uint32" pass="in" description="Index of the laser source (0-based). MUST be smaller than the laser source count." />
+			<param name="LaserSource" type="handle" class="ToolpathLaserSource" pass="return" description="Returns the laser source." />
+		</method>
+
+		<method name="HasLaserSource" description="Returns if a laser source with a specific laser index is declared.">
+			<param name="LaserIndex" type="uint32" pass="in" description="Laser index." />
+			<param name="LaserSourceExists" type="bool" pass="return" description="Returns true if the laser source exists." />
+		</method>
+
+		<method name="FindLaserSource" description="Returns the laser source with a specific laser index. Fails if it does not exist.">
+			<param name="LaserIndex" type="uint32" pass="in" description="Laser index." />
+			<param name="LaserSource" type="handle" class="ToolpathLaserSource" pass="return" description="Returns the laser source." />
+		</method>
+
+		<method name="AddLaserSource" description="Adds a laser source. Fails if the laser index is already declared.">
+			<param name="LaserIndex" type="uint32" pass="in" description="Laser index. MUST be unique within the toolpath and at most 2147483647." />
+			<param name="Name" type="string" pass="in" description="Human-readable name of the laser source." />
+			<param name="LaserSource" type="handle" class="ToolpathLaserSource" pass="return" description="Returns the laser source." />
+		</method>
+
+		<method name="RemoveLaserSource" description="Removes a laser source. Fails if it does not exist, if it is the default laser source, or if it is listed in a sync group.">
+			<param name="LaserIndex" type="uint32" pass="in" description="Laser index." />
+		</method>
+
+		<method name="ClearLaserSources" description="Removes all laser sources, all sync groups and the default laser index.">
+		</method>
+
+		<method name="HasDefaultLaserIndex" description="Returns if a default laser index is set.">
+			<param name="HasDefault" type="bool" pass="return" description="Returns true if a default laser index is set." />
+		</method>
+
+		<method name="GetDefaultLaserIndex" description="Returns the laser index used when a profile or segment omits laserindex. Fails if no default is set.">
+			<param name="LaserIndex" type="uint32" pass="return" description="Default laser index." />
+		</method>
+
+		<method name="SetDefaultLaserIndex" description="Sets the laser index used when a profile or segment omits laserindex. Fails if the laser index is not declared.">
+			<param name="LaserIndex" type="uint32" pass="in" description="Default laser index." />
+		</method>
+
+		<method name="ClearDefaultLaserIndex" description="Removes the default laser index.">
+		</method>
+
+		<method name="GetSyncGroupCount" description="Retrieves the count of sync groups.">
+			<param name="Count" type="uint32" pass="return" description="Returns the sync group count." />
+		</method>
+
+		<method name="GetSyncGroup" description="Returns a sync group of the toolpath.">
+			<param name="Index" type="uint32" pass="in" description="Index of the sync group (0-based). MUST be smaller than the sync group count." />
+			<param name="SyncGroup" type="handle" class="ToolpathSyncGroup" pass="return" description="Returns the sync group." />
+		</method>
+
+		<method name="HasSyncGroup" description="Returns if a sync group with a specific id is declared.">
+			<param name="SyncGroupID" type="uint32" pass="in" description="Sync group id." />
+			<param name="SyncGroupExists" type="bool" pass="return" description="Returns true if the sync group exists." />
+		</method>
+
+		<method name="FindSyncGroup" description="Returns the sync group with a specific id. Fails if it does not exist.">
+			<param name="SyncGroupID" type="uint32" pass="in" description="Sync group id." />
+			<param name="SyncGroup" type="handle" class="ToolpathSyncGroup" pass="return" description="Returns the sync group." />
+		</method>
+
+		<method name="AddSyncGroup" description="Adds a sync group. Fails if the id is 0 or already declared, if the list is empty, or if a laser index is not declared.">
+			<param name="SyncGroupID" type="uint32" pass="in" description="Sync group id. MUST be positive, unique within the toolpath and at most 2147483647." />
+			<param name="LaserIndices" type="basicarray" class="uint32" pass="in" description="Laser indices of the sync group." />
+			<param name="SyncGroup" type="handle" class="ToolpathSyncGroup" pass="return" description="Returns the sync group." />
+		</method>
+
+		<method name="RemoveSyncGroup" description="Removes a sync group. Fails if it does not exist.">
+			<param name="SyncGroupID" type="uint32" pass="in" description="Sync group id." />
+		</method>
+
+		<method name="SetLaserReferenceChecks" description="Activates (deactivates) the laser reference checks for reading layer data. If active, ReadLayerData fails on a segment whose laserindex does not refer to a declared laser source (only if laser sources are declared) or whose lasersync does not refer to a declared sync group. Inactive by default; toolpaths read by a reader inherit the reader's setting.">
+			<param name="ChecksActive" type="bool" pass="in" description="flag whether the laser reference checks are active or not." />
+		</method>
+
+		<method name="GetLaserReferenceChecks" description="Queries whether the laser reference checks for reading layer data are active or not.">
+			<param name="ChecksActive" type="bool" pass="return" description="returns flag whether the laser reference checks are active or not." />
 		</method>
 		
 		<method name="GetCustomDataCount" description="Retrieves the count of custom data elements.">

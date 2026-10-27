@@ -35,6 +35,7 @@ NMR_ModelReaderNode_Toolpath1905_ToolpathResource.h covers the official 3MF Tool
 #include "Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathProfiles.h"
 #include "Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathLayers.h"
 #include "Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathData.h"
+#include "Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_LaserSources.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
@@ -46,7 +47,7 @@ NMR_ModelReaderNode_Toolpath1905_ToolpathResource.h covers the official 3MF Tool
 namespace NMR {
 
 	CModelReaderNode_Toolpath1905_ToolpathResource::CModelReaderNode_Toolpath1905_ToolpathResource (_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
-		: CModelReaderNode(pWarnings), m_nID (0), m_bHasID (false), m_dUnitFactor(1.0), m_bHasUnitFactor (false), m_eToolpathType (Lib3MF::eToolpathType::Planar), m_pModel (pModel)
+		: CModelReaderNode(pWarnings), m_nID (0), m_bHasID (false), m_dUnitFactor(1.0), m_bHasUnitFactor (false), m_eToolpathType (Lib3MF::eToolpathType::Planar), m_bHasLaserSources (false), m_pModel (pModel)
 	{
 	}
 	
@@ -144,6 +145,15 @@ namespace NMR {
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_TOOLPATHDATA) == 0) {
 
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Toolpath1905_ToolpathData>(
+					m_pModel, m_pToolpath.get(), m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_TOOLPATHLASERSOURCES) == 0) {
+				if (m_bHasLaserSources)
+					m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDTOOLPATHLASERSOURCE, "duplicate lasersources element"), mrwInvalidMandatoryValue);
+				m_bHasLaserSources = true;
+
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Toolpath1905_LaserSources>(
 					m_pModel, m_pToolpath.get(), m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}

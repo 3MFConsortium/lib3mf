@@ -1361,6 +1361,21 @@ namespace NMR {
 		}
 	}
 
+	void CModel::addToolpathLayerRelationship(_In_ const std::string & sSourcePartURI, _In_ const std::string & sTargetPartURI)
+	{
+		m_ToolpathLayerRelationships.insert(std::make_pair(
+			fnStringToLower(fnIncludeLeadingPathDelimiter(sSourcePartURI)),
+			fnStringToLower(fnIncludeLeadingPathDelimiter(sTargetPartURI))));
+	}
+
+	bool CModel::hasToolpathLayerRelationship(_In_ const std::string & sSourcePartURI, _In_ const std::string & sTargetPartURI)
+	{
+		auto key = std::make_pair(
+			fnStringToLower(fnIncludeLeadingPathDelimiter(sSourcePartURI)),
+			fnStringToLower(fnIncludeLeadingPathDelimiter(sTargetPartURI)));
+		return m_ToolpathLayerRelationships.find(key) != m_ToolpathLayerRelationships.end();
+	}
+
 	template <typename T>
 	void moveItemToBack(std::vector<T>& v, size_t itemIndex)
 	{

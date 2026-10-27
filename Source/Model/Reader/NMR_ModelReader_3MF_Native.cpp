@@ -84,6 +84,7 @@ namespace NMR {
 		extractTexturesFromRelationships(sTargetPartURIDir, pModelPart.get());
 		extractCustomDataFromRelationships(sTargetPartURIDir, pModelPart.get());
 		extractModelDataFromRelationships(sTargetPartURIDir, pModelPart.get());
+		extractToolpathLayerRelationships(sTargetPartURI, pModelPart.get());
 		
 		nfUint32 prodAttCount = model()->getProductionAttachmentCount();
 		for (nfUint32 i = 0; i < prodAttCount; i++)
@@ -93,6 +94,7 @@ namespace NMR {
 			POpcPackagePart pSubModelPart = pPackageReader->createPart(pathURI);
 			extractModelDataFromRelationships(sTargetPartURIDir, pSubModelPart.get());
 			extractTexturesFromRelationships(sTargetPartURIDir, pSubModelPart.get());
+			extractToolpathLayerRelationships(pathURI, pSubModelPart.get());
 		}
 
 		COpcPackageRelationship * pThumbnailRelation = pPackageReader->findRootRelation(PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE, true);
@@ -182,6 +184,12 @@ namespace NMR {
 				sURI = sTargetPartURIDir + sURI;
 
 			auto iRelationIterator = m_RelationsToRead.find(sRelationShipType);
+			if ((iRelationIterator == m_RelationsToRead.end()) && PACKAGE_ISTOOLPATHRELATIONSHIPTYPE(sRelationShipType)) {
+				// The ratified and the legacy toolpath layer relationship types are equivalent.
+				iRelationIterator = m_RelationsToRead.find(PACKAGE_TOOLPATH_RELATIONSHIP_TYPE);
+				if (iRelationIterator == m_RelationsToRead.end())
+					iRelationIterator = m_RelationsToRead.find(PACKAGE_TOOLPATH_RELATIONSHIP_TYPE_LEGACY1905);
+			}
 			if (iRelationIterator != m_RelationsToRead.end()) {
 				POpcPackagePart pPart = pPackageReader->createPart(sURI);
 				PImportStream pAttachmentStream = pPart->getImportStream();
@@ -216,6 +224,26 @@ namespace NMR {
 		}
 	}
 	
+	void CModelReader_3MF_Native::extractToolpathLayerRelationships(_In_ const std::string& sSourcePartURI, _In_ COpcPackagePart * pModelPart)
+	{
+		if (pModelPart == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		std::string sSourcePartURIDir = fnExtractFileDir(sSourcePartURI);
+
+		std::multimap<std::string, POpcPackageRelationship>& RelationShips = pModelPart->getRelationShips();
+		for (auto iIterator = RelationShips.begin(); iIterator != RelationShips.end(); iIterator++) {
+			auto theRelationShip = iIterator->second;
+			if (PACKAGE_ISTOOLPATHRELATIONSHIPTYPE(theRelationShip->getType())) {
+				std::string sURI = theRelationShip->getTargetPartURI();
+				if (!fnStartsWithPathDelimiter(sURI))
+					sURI = sSourcePartURIDir + sURI;
+
+				model()->addToolpathLayerRelationship(sSourcePartURI, sURI);
+			}
+		}
+	}
+
 	void CModelReader_3MF_Native::extractModelDataFromRelationships(_In_ std::string& sTargetPartURIDir, _In_ COpcPackagePart * pModelPart)
 	{
 		if (pModelPart == nullptr)

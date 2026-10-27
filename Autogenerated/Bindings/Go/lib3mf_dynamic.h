@@ -458,6 +458,24 @@ typedef Lib3MFResult (*PLib3MFReader_SetStrictModeActivePtr) (Lib3MF_Reader pRea
 typedef Lib3MFResult (*PLib3MFReader_GetStrictModeActivePtr) (Lib3MF_Reader pReader, bool * pStrictModeActive);
 
 /**
+* Activates (deactivates) the checks that toolpath laserindex values refer to a declared laser source and lasersync values to a declared sync group. Inactive by default. Unresolved profile laser indices are reported as warnings (errors in strict mode). Read toolpaths inherit the setting, which then applies to their layer data (see Toolpath.SetLaserReferenceChecks).
+*
+* @param[in] pReader - Reader instance.
+* @param[in] bChecksActive - flag whether the laser reference checks are active or not.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFReader_SetToolpathLaserReferenceChecksPtr) (Lib3MF_Reader pReader, bool bChecksActive);
+
+/**
+* Queries whether the toolpath laser reference checks are active or not.
+*
+* @param[in] pReader - Reader instance.
+* @param[out] pChecksActive - returns flag whether the laser reference checks are active or not.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFReader_GetToolpathLaserReferenceChecksPtr) (Lib3MF_Reader pReader, bool * pChecksActive);
+
+/**
 * Returns Warning and Error Information of the read process
 *
 * @param[in] pReader - Reader instance.
@@ -6226,6 +6244,186 @@ typedef Lib3MFResult (*PLib3MFToolpathProfile_ChangeModifierPtr) (Lib3MF_Toolpat
 typedef Lib3MFResult (*PLib3MFToolpathProfile_RemoveModifierPtr) (Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName);
 
 /*************************************************************************************************************************
+ Class definition for ToolpathLaserSource
+**************************************************************************************************************************/
+
+/**
+* Returns the laser index, which is unique within the toolpath and referenced by laserindex on profiles and segments.
+*
+* @param[in] pToolpathLaserSource - ToolpathLaserSource instance.
+* @param[out] pLaserIndex - Laser index.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLaserSource_GetLaserIndexPtr) (Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_uint32 * pLaserIndex);
+
+/**
+* Returns the human-readable name of the laser source.
+*
+* @param[in] pToolpathLaserSource - ToolpathLaserSource instance.
+* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameBuffer -  buffer of Name of the laser source., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLaserSource_GetNamePtr) (Lib3MF_ToolpathLaserSource pToolpathLaserSource, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
+
+/**
+* Sets the human-readable name of the laser source.
+*
+* @param[in] pToolpathLaserSource - ToolpathLaserSource instance.
+* @param[in] pName - Name of the laser source.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLaserSource_SetNamePtr) (Lib3MF_ToolpathLaserSource pToolpathLaserSource, const char * pName);
+
+/**
+* Returns if the scan-field bounds are set.
+*
+* @param[in] pToolpathLaserSource - ToolpathLaserSource instance.
+* @param[out] pHasBounds - True if minx, maxx, miny and maxy are set.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLaserSource_HasBoundsPtr) (Lib3MF_ToolpathLaserSource pToolpathLaserSource, bool * pHasBounds);
+
+/**
+* Returns the scan-field bounds in toolpath units. Fails if no bounds are set.
+*
+* @param[in] pToolpathLaserSource - ToolpathLaserSource instance.
+* @param[out] pMinX - Minimum X coordinate.
+* @param[out] pMaxX - Maximum X coordinate.
+* @param[out] pMinY - Minimum Y coordinate.
+* @param[out] pMaxY - Maximum Y coordinate.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLaserSource_GetBoundsPtr) (Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_int32 * pMinX, Lib3MF_int32 * pMaxX, Lib3MF_int32 * pMinY, Lib3MF_int32 * pMaxY);
+
+/**
+* Sets the scan-field bounds in toolpath units. Fails if MaxX is smaller than MinX or MaxY is smaller than MinY, or if an existing corner radius exceeds half of the shorter side of the new bounds.
+*
+* @param[in] pToolpathLaserSource - ToolpathLaserSource instance.
+* @param[in] nMinX - Minimum X coordinate.
+* @param[in] nMaxX - Maximum X coordinate.
+* @param[in] nMinY - Minimum Y coordinate.
+* @param[in] nMaxY - Maximum Y coordinate.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLaserSource_SetBoundsPtr) (Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_int32 nMinX, Lib3MF_int32 nMaxX, Lib3MF_int32 nMinY, Lib3MF_int32 nMaxY);
+
+/**
+* Removes the scan-field bounds. Also removes the corner radius, which requires the bounds.
+*
+* @param[in] pToolpathLaserSource - ToolpathLaserSource instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLaserSource_ClearBoundsPtr) (Lib3MF_ToolpathLaserSource pToolpathLaserSource);
+
+/**
+* Returns if the optical center is set.
+*
+* @param[in] pToolpathLaserSource - ToolpathLaserSource instance.
+* @param[out] pHasCenter - True if centerx and centery are set.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLaserSource_HasCenterPtr) (Lib3MF_ToolpathLaserSource pToolpathLaserSource, bool * pHasCenter);
+
+/**
+* Returns the optical center in toolpath units. Fails if no center is set.
+*
+* @param[in] pToolpathLaserSource - ToolpathLaserSource instance.
+* @param[out] pCenterX - X coordinate of the optical center.
+* @param[out] pCenterY - Y coordinate of the optical center.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLaserSource_GetCenterPtr) (Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_int32 * pCenterX, Lib3MF_int32 * pCenterY);
+
+/**
+* Sets the optical center in toolpath units.
+*
+* @param[in] pToolpathLaserSource - ToolpathLaserSource instance.
+* @param[in] nCenterX - X coordinate of the optical center.
+* @param[in] nCenterY - Y coordinate of the optical center.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLaserSource_SetCenterPtr) (Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_int32 nCenterX, Lib3MF_int32 nCenterY);
+
+/**
+* Removes the optical center.
+*
+* @param[in] pToolpathLaserSource - ToolpathLaserSource instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLaserSource_ClearCenterPtr) (Lib3MF_ToolpathLaserSource pToolpathLaserSource);
+
+/**
+* Returns if a corner radius is set.
+*
+* @param[in] pToolpathLaserSource - ToolpathLaserSource instance.
+* @param[out] pHasCornerRadius - True if a corner radius is set.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLaserSource_HasCornerRadiusPtr) (Lib3MF_ToolpathLaserSource pToolpathLaserSource, bool * pHasCornerRadius);
+
+/**
+* Returns the corner radius of the scan field in toolpath units. Fails if no corner radius is set.
+*
+* @param[in] pToolpathLaserSource - ToolpathLaserSource instance.
+* @param[out] pCornerRadius - Corner radius.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLaserSource_GetCornerRadiusPtr) (Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_uint32 * pCornerRadius);
+
+/**
+* Sets the corner radius of the scan field in toolpath units. Fails if no bounds are set, if the radius is 0, or if it exceeds half of the shorter side of the bounds.
+*
+* @param[in] pToolpathLaserSource - ToolpathLaserSource instance.
+* @param[in] nCornerRadius - Corner radius.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLaserSource_SetCornerRadiusPtr) (Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_uint32 nCornerRadius);
+
+/**
+* Removes the corner radius.
+*
+* @param[in] pToolpathLaserSource - ToolpathLaserSource instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLaserSource_ClearCornerRadiusPtr) (Lib3MF_ToolpathLaserSource pToolpathLaserSource);
+
+/*************************************************************************************************************************
+ Class definition for ToolpathSyncGroup
+**************************************************************************************************************************/
+
+/**
+* Returns the sync group id, which is unique within the toolpath and referenced by lasersync on segments.
+*
+* @param[in] pToolpathSyncGroup - ToolpathSyncGroup instance.
+* @param[out] pSyncGroupID - Sync group id.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathSyncGroup_GetSyncGroupIDPtr) (Lib3MF_ToolpathSyncGroup pToolpathSyncGroup, Lib3MF_uint32 * pSyncGroupID);
+
+/**
+* Returns the laser indices of the sync group.
+*
+* @param[in] pToolpathSyncGroup - ToolpathSyncGroup instance.
+* @param[in] nLaserIndicesBufferSize - Number of elements in buffer
+* @param[out] pLaserIndicesNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pLaserIndicesBuffer - uint32  buffer of Laser indices.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathSyncGroup_GetLaserIndicesPtr) (Lib3MF_ToolpathSyncGroup pToolpathSyncGroup, const Lib3MF_uint64 nLaserIndicesBufferSize, Lib3MF_uint64* pLaserIndicesNeededCount, Lib3MF_uint32 * pLaserIndicesBuffer);
+
+/**
+* Sets the laser indices of the sync group. Fails if the list is empty or if a laser index is not declared by a laser source of the toolpath.
+*
+* @param[in] pToolpathSyncGroup - ToolpathSyncGroup instance.
+* @param[in] nLaserIndicesBufferSize - Number of elements in buffer
+* @param[in] pLaserIndicesBuffer - uint32 buffer of Laser indices.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathSyncGroup_SetLaserIndicesPtr) (Lib3MF_ToolpathSyncGroup pToolpathSyncGroup, Lib3MF_uint64 nLaserIndicesBufferSize, const Lib3MF_uint32 * pLaserIndicesBuffer);
+
+/*************************************************************************************************************************
  Class definition for ToolpathLayerReader
 **************************************************************************************************************************/
 
@@ -7354,6 +7552,186 @@ typedef Lib3MFResult (*PLib3MFToolpath_GetProfileUUIDPtr) (Lib3MF_Toolpath pTool
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpath_GetProfileByUUIDPtr) (Lib3MF_Toolpath pToolpath, const char * pProfileUUID, Lib3MF_ToolpathProfile * pProfile);
+
+/**
+* Retrieves the count of laser sources. A toolpath without laser sources is a single-laser toolpath.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pCount - Returns the laser source count.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_GetLaserSourceCountPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount);
+
+/**
+* Returns a laser source of the toolpath.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nIndex - Index of the laser source (0-based). MUST be smaller than the laser source count.
+* @param[out] pLaserSource - Returns the laser source.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_GetLaserSourcePtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_ToolpathLaserSource * pLaserSource);
+
+/**
+* Returns if a laser source with a specific laser index is declared.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nLaserIndex - Laser index.
+* @param[out] pLaserSourceExists - Returns true if the laser source exists.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_HasLaserSourcePtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLaserIndex, bool * pLaserSourceExists);
+
+/**
+* Returns the laser source with a specific laser index. Fails if it does not exist.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nLaserIndex - Laser index.
+* @param[out] pLaserSource - Returns the laser source.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_FindLaserSourcePtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLaserIndex, Lib3MF_ToolpathLaserSource * pLaserSource);
+
+/**
+* Adds a laser source. Fails if the laser index is already declared.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nLaserIndex - Laser index. MUST be unique within the toolpath and at most 2147483647.
+* @param[in] pName - Human-readable name of the laser source.
+* @param[out] pLaserSource - Returns the laser source.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_AddLaserSourcePtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLaserIndex, const char * pName, Lib3MF_ToolpathLaserSource * pLaserSource);
+
+/**
+* Removes a laser source. Fails if it does not exist, if it is the default laser source, or if it is listed in a sync group.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nLaserIndex - Laser index.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_RemoveLaserSourcePtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLaserIndex);
+
+/**
+* Removes all laser sources, all sync groups and the default laser index.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_ClearLaserSourcesPtr) (Lib3MF_Toolpath pToolpath);
+
+/**
+* Returns if a default laser index is set.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pHasDefault - Returns true if a default laser index is set.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_HasDefaultLaserIndexPtr) (Lib3MF_Toolpath pToolpath, bool * pHasDefault);
+
+/**
+* Returns the laser index used when a profile or segment omits laserindex. Fails if no default is set.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pLaserIndex - Default laser index.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_GetDefaultLaserIndexPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pLaserIndex);
+
+/**
+* Sets the laser index used when a profile or segment omits laserindex. Fails if the laser index is not declared.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nLaserIndex - Default laser index.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_SetDefaultLaserIndexPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLaserIndex);
+
+/**
+* Removes the default laser index.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_ClearDefaultLaserIndexPtr) (Lib3MF_Toolpath pToolpath);
+
+/**
+* Retrieves the count of sync groups.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pCount - Returns the sync group count.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_GetSyncGroupCountPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount);
+
+/**
+* Returns a sync group of the toolpath.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nIndex - Index of the sync group (0-based). MUST be smaller than the sync group count.
+* @param[out] pSyncGroup - Returns the sync group.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_GetSyncGroupPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_ToolpathSyncGroup * pSyncGroup);
+
+/**
+* Returns if a sync group with a specific id is declared.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nSyncGroupID - Sync group id.
+* @param[out] pSyncGroupExists - Returns true if the sync group exists.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_HasSyncGroupPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nSyncGroupID, bool * pSyncGroupExists);
+
+/**
+* Returns the sync group with a specific id. Fails if it does not exist.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nSyncGroupID - Sync group id.
+* @param[out] pSyncGroup - Returns the sync group.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_FindSyncGroupPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nSyncGroupID, Lib3MF_ToolpathSyncGroup * pSyncGroup);
+
+/**
+* Adds a sync group. Fails if the id is 0 or already declared, if the list is empty, or if a laser index is not declared.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nSyncGroupID - Sync group id. MUST be positive, unique within the toolpath and at most 2147483647.
+* @param[in] nLaserIndicesBufferSize - Number of elements in buffer
+* @param[in] pLaserIndicesBuffer - uint32 buffer of Laser indices of the sync group.
+* @param[out] pSyncGroup - Returns the sync group.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_AddSyncGroupPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nSyncGroupID, Lib3MF_uint64 nLaserIndicesBufferSize, const Lib3MF_uint32 * pLaserIndicesBuffer, Lib3MF_ToolpathSyncGroup * pSyncGroup);
+
+/**
+* Removes a sync group. Fails if it does not exist.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] nSyncGroupID - Sync group id.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_RemoveSyncGroupPtr) (Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nSyncGroupID);
+
+/**
+* Activates (deactivates) the laser reference checks for reading layer data. If active, ReadLayerData fails on a segment whose laserindex does not refer to a declared laser source (only if laser sources are declared) or whose lasersync does not refer to a declared sync group. Inactive by default; toolpaths read by a reader inherit the reader's setting.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[in] bChecksActive - flag whether the laser reference checks are active or not.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_SetLaserReferenceChecksPtr) (Lib3MF_Toolpath pToolpath, bool bChecksActive);
+
+/**
+* Queries whether the laser reference checks for reading layer data are active or not.
+*
+* @param[in] pToolpath - Toolpath instance.
+* @param[out] pChecksActive - returns flag whether the laser reference checks are active or not.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpath_GetLaserReferenceChecksPtr) (Lib3MF_Toolpath pToolpath, bool * pChecksActive);
 
 /**
 * Retrieves the count of custom data elements.
@@ -9032,6 +9410,8 @@ typedef struct {
 	PLib3MFReader_RemoveSupportedCustomNamespacePtr m_Reader_RemoveSupportedCustomNamespace;
 	PLib3MFReader_SetStrictModeActivePtr m_Reader_SetStrictModeActive;
 	PLib3MFReader_GetStrictModeActivePtr m_Reader_GetStrictModeActive;
+	PLib3MFReader_SetToolpathLaserReferenceChecksPtr m_Reader_SetToolpathLaserReferenceChecks;
+	PLib3MFReader_GetToolpathLaserReferenceChecksPtr m_Reader_GetToolpathLaserReferenceChecks;
 	PLib3MFReader_GetWarningPtr m_Reader_GetWarning;
 	PLib3MFReader_GetWarningCountPtr m_Reader_GetWarningCount;
 	PLib3MFReader_AddKeyWrappingCallbackPtr m_Reader_AddKeyWrappingCallback;
@@ -9565,6 +9945,24 @@ typedef struct {
 	PLib3MFToolpathProfile_AddModifierPtr m_ToolpathProfile_AddModifier;
 	PLib3MFToolpathProfile_ChangeModifierPtr m_ToolpathProfile_ChangeModifier;
 	PLib3MFToolpathProfile_RemoveModifierPtr m_ToolpathProfile_RemoveModifier;
+	PLib3MFToolpathLaserSource_GetLaserIndexPtr m_ToolpathLaserSource_GetLaserIndex;
+	PLib3MFToolpathLaserSource_GetNamePtr m_ToolpathLaserSource_GetName;
+	PLib3MFToolpathLaserSource_SetNamePtr m_ToolpathLaserSource_SetName;
+	PLib3MFToolpathLaserSource_HasBoundsPtr m_ToolpathLaserSource_HasBounds;
+	PLib3MFToolpathLaserSource_GetBoundsPtr m_ToolpathLaserSource_GetBounds;
+	PLib3MFToolpathLaserSource_SetBoundsPtr m_ToolpathLaserSource_SetBounds;
+	PLib3MFToolpathLaserSource_ClearBoundsPtr m_ToolpathLaserSource_ClearBounds;
+	PLib3MFToolpathLaserSource_HasCenterPtr m_ToolpathLaserSource_HasCenter;
+	PLib3MFToolpathLaserSource_GetCenterPtr m_ToolpathLaserSource_GetCenter;
+	PLib3MFToolpathLaserSource_SetCenterPtr m_ToolpathLaserSource_SetCenter;
+	PLib3MFToolpathLaserSource_ClearCenterPtr m_ToolpathLaserSource_ClearCenter;
+	PLib3MFToolpathLaserSource_HasCornerRadiusPtr m_ToolpathLaserSource_HasCornerRadius;
+	PLib3MFToolpathLaserSource_GetCornerRadiusPtr m_ToolpathLaserSource_GetCornerRadius;
+	PLib3MFToolpathLaserSource_SetCornerRadiusPtr m_ToolpathLaserSource_SetCornerRadius;
+	PLib3MFToolpathLaserSource_ClearCornerRadiusPtr m_ToolpathLaserSource_ClearCornerRadius;
+	PLib3MFToolpathSyncGroup_GetSyncGroupIDPtr m_ToolpathSyncGroup_GetSyncGroupID;
+	PLib3MFToolpathSyncGroup_GetLaserIndicesPtr m_ToolpathSyncGroup_GetLaserIndices;
+	PLib3MFToolpathSyncGroup_SetLaserIndicesPtr m_ToolpathSyncGroup_SetLaserIndices;
 	PLib3MFToolpathLayerReader_GetLayerDataUUIDPtr m_ToolpathLayerReader_GetLayerDataUUID;
 	PLib3MFToolpathLayerReader_GetCustomDataCountPtr m_ToolpathLayerReader_GetCustomDataCount;
 	PLib3MFToolpathLayerReader_GetCustomDataPtr m_ToolpathLayerReader_GetCustomData;
@@ -9666,6 +10064,25 @@ typedef struct {
 	PLib3MFToolpath_GetProfilePtr m_Toolpath_GetProfile;
 	PLib3MFToolpath_GetProfileUUIDPtr m_Toolpath_GetProfileUUID;
 	PLib3MFToolpath_GetProfileByUUIDPtr m_Toolpath_GetProfileByUUID;
+	PLib3MFToolpath_GetLaserSourceCountPtr m_Toolpath_GetLaserSourceCount;
+	PLib3MFToolpath_GetLaserSourcePtr m_Toolpath_GetLaserSource;
+	PLib3MFToolpath_HasLaserSourcePtr m_Toolpath_HasLaserSource;
+	PLib3MFToolpath_FindLaserSourcePtr m_Toolpath_FindLaserSource;
+	PLib3MFToolpath_AddLaserSourcePtr m_Toolpath_AddLaserSource;
+	PLib3MFToolpath_RemoveLaserSourcePtr m_Toolpath_RemoveLaserSource;
+	PLib3MFToolpath_ClearLaserSourcesPtr m_Toolpath_ClearLaserSources;
+	PLib3MFToolpath_HasDefaultLaserIndexPtr m_Toolpath_HasDefaultLaserIndex;
+	PLib3MFToolpath_GetDefaultLaserIndexPtr m_Toolpath_GetDefaultLaserIndex;
+	PLib3MFToolpath_SetDefaultLaserIndexPtr m_Toolpath_SetDefaultLaserIndex;
+	PLib3MFToolpath_ClearDefaultLaserIndexPtr m_Toolpath_ClearDefaultLaserIndex;
+	PLib3MFToolpath_GetSyncGroupCountPtr m_Toolpath_GetSyncGroupCount;
+	PLib3MFToolpath_GetSyncGroupPtr m_Toolpath_GetSyncGroup;
+	PLib3MFToolpath_HasSyncGroupPtr m_Toolpath_HasSyncGroup;
+	PLib3MFToolpath_FindSyncGroupPtr m_Toolpath_FindSyncGroup;
+	PLib3MFToolpath_AddSyncGroupPtr m_Toolpath_AddSyncGroup;
+	PLib3MFToolpath_RemoveSyncGroupPtr m_Toolpath_RemoveSyncGroup;
+	PLib3MFToolpath_SetLaserReferenceChecksPtr m_Toolpath_SetLaserReferenceChecks;
+	PLib3MFToolpath_GetLaserReferenceChecksPtr m_Toolpath_GetLaserReferenceChecks;
 	PLib3MFToolpath_GetCustomDataCountPtr m_Toolpath_GetCustomDataCount;
 	PLib3MFToolpath_GetCustomDataPtr m_Toolpath_GetCustomData;
 	PLib3MFToolpath_GetCustomDataNamePtr m_Toolpath_GetCustomDataName;
@@ -9964,6 +10381,12 @@ Lib3MFResult CCall_lib3mf_reader_setstrictmodeactive(Lib3MFHandle libraryHandle,
 
 
 Lib3MFResult CCall_lib3mf_reader_getstrictmodeactive(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, bool * pStrictModeActive);
+
+
+Lib3MFResult CCall_lib3mf_reader_settoolpathlaserreferencechecks(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, bool bChecksActive);
+
+
+Lib3MFResult CCall_lib3mf_reader_gettoolpathlaserreferencechecks(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, bool * pChecksActive);
 
 
 Lib3MFResult CCall_lib3mf_reader_getwarning(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pErrorCode, const Lib3MF_uint32 nWarningBufferSize, Lib3MF_uint32* pWarningNeededChars, char * pWarningBuffer);
@@ -11565,6 +11988,60 @@ Lib3MFResult CCall_lib3mf_toolpathprofile_changemodifier(Lib3MFHandle libraryHan
 Lib3MFResult CCall_lib3mf_toolpathprofile_removemodifier(Lib3MFHandle libraryHandle, Lib3MF_ToolpathProfile pToolpathProfile, const char * pNameSpaceName, const char * pValueName);
 
 
+Lib3MFResult CCall_lib3mf_toolpathlasersource_getlaserindex(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_uint32 * pLaserIndex);
+
+
+Lib3MFResult CCall_lib3mf_toolpathlasersource_getname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLaserSource pToolpathLaserSource, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer);
+
+
+Lib3MFResult CCall_lib3mf_toolpathlasersource_setname(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLaserSource pToolpathLaserSource, const char * pName);
+
+
+Lib3MFResult CCall_lib3mf_toolpathlasersource_hasbounds(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLaserSource pToolpathLaserSource, bool * pHasBounds);
+
+
+Lib3MFResult CCall_lib3mf_toolpathlasersource_getbounds(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_int32 * pMinX, Lib3MF_int32 * pMaxX, Lib3MF_int32 * pMinY, Lib3MF_int32 * pMaxY);
+
+
+Lib3MFResult CCall_lib3mf_toolpathlasersource_setbounds(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_int32 nMinX, Lib3MF_int32 nMaxX, Lib3MF_int32 nMinY, Lib3MF_int32 nMaxY);
+
+
+Lib3MFResult CCall_lib3mf_toolpathlasersource_clearbounds(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLaserSource pToolpathLaserSource);
+
+
+Lib3MFResult CCall_lib3mf_toolpathlasersource_hascenter(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLaserSource pToolpathLaserSource, bool * pHasCenter);
+
+
+Lib3MFResult CCall_lib3mf_toolpathlasersource_getcenter(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_int32 * pCenterX, Lib3MF_int32 * pCenterY);
+
+
+Lib3MFResult CCall_lib3mf_toolpathlasersource_setcenter(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_int32 nCenterX, Lib3MF_int32 nCenterY);
+
+
+Lib3MFResult CCall_lib3mf_toolpathlasersource_clearcenter(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLaserSource pToolpathLaserSource);
+
+
+Lib3MFResult CCall_lib3mf_toolpathlasersource_hascornerradius(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLaserSource pToolpathLaserSource, bool * pHasCornerRadius);
+
+
+Lib3MFResult CCall_lib3mf_toolpathlasersource_getcornerradius(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_uint32 * pCornerRadius);
+
+
+Lib3MFResult CCall_lib3mf_toolpathlasersource_setcornerradius(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_uint32 nCornerRadius);
+
+
+Lib3MFResult CCall_lib3mf_toolpathlasersource_clearcornerradius(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLaserSource pToolpathLaserSource);
+
+
+Lib3MFResult CCall_lib3mf_toolpathsyncgroup_getsyncgroupid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathSyncGroup pToolpathSyncGroup, Lib3MF_uint32 * pSyncGroupID);
+
+
+Lib3MFResult CCall_lib3mf_toolpathsyncgroup_getlaserindices(Lib3MFHandle libraryHandle, Lib3MF_ToolpathSyncGroup pToolpathSyncGroup, const Lib3MF_uint64 nLaserIndicesBufferSize, Lib3MF_uint64* pLaserIndicesNeededCount, Lib3MF_uint32 * pLaserIndicesBuffer);
+
+
+Lib3MFResult CCall_lib3mf_toolpathsyncgroup_setlaserindices(Lib3MFHandle libraryHandle, Lib3MF_ToolpathSyncGroup pToolpathSyncGroup, Lib3MF_uint64 nLaserIndicesBufferSize, const Lib3MF_uint32 * pLaserIndicesBuffer);
+
+
 Lib3MFResult CCall_lib3mf_toolpathlayerreader_getlayerdatauuid(Lib3MFHandle libraryHandle, Lib3MF_ToolpathLayerReader pToolpathLayerReader, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer);
 
 
@@ -11866,6 +12343,63 @@ Lib3MFResult CCall_lib3mf_toolpath_getprofileuuid(Lib3MFHandle libraryHandle, Li
 
 
 Lib3MFResult CCall_lib3mf_toolpath_getprofilebyuuid(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, const char * pProfileUUID, Lib3MF_ToolpathProfile * pProfile);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getlasersourcecount(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getlasersource(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_ToolpathLaserSource * pLaserSource);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_haslasersource(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLaserIndex, bool * pLaserSourceExists);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_findlasersource(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLaserIndex, Lib3MF_ToolpathLaserSource * pLaserSource);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_addlasersource(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLaserIndex, const char * pName, Lib3MF_ToolpathLaserSource * pLaserSource);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_removelasersource(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLaserIndex);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_clearlasersources(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_hasdefaultlaserindex(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, bool * pHasDefault);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getdefaultlaserindex(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pLaserIndex);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_setdefaultlaserindex(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLaserIndex);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_cleardefaultlaserindex(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getsyncgroupcount(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getsyncgroup(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_ToolpathSyncGroup * pSyncGroup);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_hassyncgroup(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nSyncGroupID, bool * pSyncGroupExists);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_findsyncgroup(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nSyncGroupID, Lib3MF_ToolpathSyncGroup * pSyncGroup);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_addsyncgroup(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nSyncGroupID, Lib3MF_uint64 nLaserIndicesBufferSize, const Lib3MF_uint32 * pLaserIndicesBuffer, Lib3MF_ToolpathSyncGroup * pSyncGroup);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_removesyncgroup(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nSyncGroupID);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_setlaserreferencechecks(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, bool bChecksActive);
+
+
+Lib3MFResult CCall_lib3mf_toolpath_getlaserreferencechecks(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, bool * pChecksActive);
 
 
 Lib3MFResult CCall_lib3mf_toolpath_getcustomdatacount(Lib3MFHandle libraryHandle, Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount);

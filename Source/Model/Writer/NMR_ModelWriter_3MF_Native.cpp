@@ -195,6 +195,9 @@ namespace NMR {
 				
 				std::string sPath = fnIncludeLeadingPathDelimiter(pAttachment->getPathURI());
 				std::string sRelationShipType = pAttachment->getRelationShipType();
+				// The deprecated toolpath layer relationship type must not be produced by conforming writers.
+				if (sRelationShipType == PACKAGE_TOOLPATH_RELATIONSHIP_TYPE_LEGACY1905)
+					sRelationShipType = PACKAGE_TOOLPATH_RELATIONSHIP_TYPE;
 
 				if (pStream.get() == nullptr)
 					throw CNMRException(NMR_ERROR_INVALIDPARAM);

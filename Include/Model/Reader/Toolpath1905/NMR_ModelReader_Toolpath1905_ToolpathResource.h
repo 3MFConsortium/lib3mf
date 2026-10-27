@@ -52,6 +52,7 @@ namespace NMR {
 
 		std::string m_sUUID;
 		Lib3MF::eToolpathType m_eToolpathType;
+		nfBool m_bHasLaserSources;
 
 		PModelToolpath m_pToolpath;
 

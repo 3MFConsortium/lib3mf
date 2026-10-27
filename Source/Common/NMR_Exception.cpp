@@ -716,6 +716,17 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATETOOLPATHPROFILENAME: return "Toolpath profile name is not unique within the toolpath";
 		case NMR_ERROR_INVALIDSEGMENTATTRIBUTEVALUE: return "Invalid value of a standard toolpath segment attribute";
 		case NMR_ERROR_INVALIDTOOLPATHPROFILEVALUE: return "Invalid value of a standard toolpath profile attribute";
+		case NMR_ERROR_MISSINGTOOLPATHLAYERRELATIONSHIP: return "Toolpath layer part is not the target of a toolpath layer relationship from its model part";
+		case NMR_ERROR_INVALIDTOOLPATHLASERSOURCE: return "Invalid toolpath laser source declaration";
+		case NMR_ERROR_DUPLICATETOOLPATHLASERSOURCEINDEX: return "Toolpath laser source index is not unique within the toolpath";
+		case NMR_ERROR_TOOLPATHLASERSOURCENOTFOUND: return "Laser index does not reference a declared toolpath laser source";
+		case NMR_ERROR_INVALIDTOOLPATHLASERSOURCEBOUNDS: return "Invalid toolpath laser source scan-field bounds";
+		case NMR_ERROR_INVALIDTOOLPATHLASERSOURCECENTER: return "Invalid toolpath laser source optical center";
+		case NMR_ERROR_INVALIDTOOLPATHLASERSOURCECORNERRADIUS: return "Invalid toolpath laser source corner radius";
+		case NMR_ERROR_INVALIDTOOLPATHSYNCGROUP: return "Invalid toolpath sync group declaration";
+		case NMR_ERROR_DUPLICATETOOLPATHSYNCGROUPID: return "Toolpath sync group id is not unique within the toolpath";
+		case NMR_ERROR_TOOLPATHSYNCGROUPNOTFOUND: return "Sync group id does not reference a declared toolpath sync group";
+		case NMR_ERROR_TOOLPATHLASERSOURCEINUSE: return "Toolpath laser source is referenced by the default laser index or a sync group";
 
 		default:
 			return "unknown error";

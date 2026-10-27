@@ -199,6 +199,28 @@ public class Reader extends Base {
 	}
 
 	/**
+	 * Activates (deactivates) the checks that toolpath laserindex values refer to a declared laser source and lasersync values to a declared sync group. Inactive by default. Unresolved profile laser indices are reported as warnings (errors in strict mode). Read toolpaths inherit the setting, which then applies to their layer data (see Toolpath.SetLaserReferenceChecks).
+	 *
+	 * @param checksActive flag whether the laser reference checks are active or not.
+	 * @throws Lib3MFException
+	 */
+	public void setToolpathLaserReferenceChecks(boolean checksActive) throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_reader_settoolpathlaserreferencechecks.invokeInt(new java.lang.Object[]{mHandle, checksActive}));
+	}
+
+	/**
+	 * Queries whether the toolpath laser reference checks are active or not.
+	 *
+	 * @return returns flag whether the laser reference checks are active or not.
+	 * @throws Lib3MFException
+	 */
+	public boolean getToolpathLaserReferenceChecks() throws Lib3MFException {
+		Pointer bufferChecksActive = new Memory(1);
+		mWrapper.checkError(this, mWrapper.lib3mf_reader_gettoolpathlaserreferencechecks.invokeInt(new java.lang.Object[]{mHandle, bufferChecksActive}));
+		return bufferChecksActive.getByte(0) != 0;
+	}
+
+	/**
 	 * Returns Warning and Error Information of the read process
 	 *
 	 * @param index Index of the Warning. Valid values are 0 to WarningCount - 1

@@ -43,6 +43,7 @@ NMR_ModelReader_3MF.cpp implements the Model Reader Class for
 #include "Common/MeshImport/NMR_MeshImporter_STL.h"
 #include "Common/Platform/NMR_Platform.h"
 #include "Model/Classes/NMR_ModelAttachment.h" 
+#include "Model/Classes/NMR_ModelToolpath.h"
 
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceRefModel.h"
 #include "Model/Reader/NMR_ModelReader_InstructionElement.h"
@@ -55,6 +56,27 @@ namespace NMR {
 		: CModelReader(pModel)
 	{
 		// empty on purpose
+	}
+
+	static void checkToolpathProfileLaserReferences(_In_ CModelToolpath * pToolpath, _In_ PModelWarnings pWarnings)
+	{
+		if (pToolpath->getLaserSourceCount() == 0)
+			return;
+
+		nfUint32 nProfileCount = pToolpath->getProfileCount();
+		for (nfUint32 nProfileIndex = 0; nProfileIndex < nProfileCount; nProfileIndex++) {
+			auto pProfile = pToolpath->getProfile(nProfileIndex);
+			if (!pProfile->hasValue("", XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERINDEX))
+				continue;
+
+			// Values of the wrong type have already been reported by the profile reader.
+			std::string sLaserIndex = pProfile->getValue("", XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERINDEX);
+			if (!CModelToolpathProfile::isValidStandardValue(XML_3MF_ATTRIBUTE_TOOLPATHPROFILE_LASERINDEX, sLaserIndex))
+				continue;
+
+			if (pToolpath->findLaserSource(fnStringToUint32(sLaserIndex.c_str())).get() == nullptr)
+				pWarnings->addException(CNMRException(NMR_ERROR_TOOLPATHLASERSOURCENOTFOUND, "profile \"" + pProfile->getName() + "\" laserindex=" + sLaserIndex), mrwInvalidMandatoryValue);
+		}
 	}
 
 	void readProductionAttachmentModels(_In_ PModel pModel, _In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, const std::set<std::string> & supportedCustomNamespaces)
@@ -121,6 +143,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		nfBool bHasModel = false;
+		nfUint32 nFirstNewResource = model()->getResourceCount();
 
 		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READSTREAM);
 
@@ -181,6 +204,17 @@ namespace NMR {
 
 		if (!bHasModel)
 			throw CNMRException(NMR_ERROR_NOMODELNODE);
+
+		nfUint32 nResourceCount = model()->getResourceCount();
+		for (nfUint32 nResourceIndex = nFirstNewResource; nResourceIndex < nResourceCount; nResourceIndex++) {
+			auto pResource = model()->getResource(nResourceIndex);
+			auto pToolpath = dynamic_cast<CModelToolpath *> (pResource.get());
+			if (pToolpath != nullptr) {
+				pToolpath->setLaserReferenceChecks(m_bToolpathLaserReferenceChecks);
+				if (m_bToolpathLaserReferenceChecks)
+					checkToolpathProfileLaserReferences(pToolpath, warnings());
+			}
+		}
 
 		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_DONE);
 		monitor()->ReportProgressAndQueryCancelled(false);

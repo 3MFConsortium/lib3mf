@@ -48,6 +48,8 @@ This is the class for exporting the 3mf model stream root node.
 
 namespace NMR {
 
+	class CModelToolpath;
+
 	class CModelWriterNode100_Model : public CModelWriterNode_ModelBase {
 	protected:
 		nfUint32 m_nDecimalPrecision;
@@ -87,6 +89,7 @@ namespace NMR {
 		void writeBaseMaterial(
 			CModelBaseMaterialResource* pBaseMaterial);
 		void writeToolpaths();
+		void writeToolpathLaserSources(CModelToolpath * pToolpathResource);
 		void writeTextures2D();
 		void writeTexture2D(
 			CModelTexture2DResource* pTexture2D);

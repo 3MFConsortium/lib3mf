@@ -525,6 +525,8 @@ class FunctionTable:
 	lib3mf_reader_removesupportedcustomnamespace = None
 	lib3mf_reader_setstrictmodeactive = None
 	lib3mf_reader_getstrictmodeactive = None
+	lib3mf_reader_settoolpathlaserreferencechecks = None
+	lib3mf_reader_gettoolpathlaserreferencechecks = None
 	lib3mf_reader_getwarning = None
 	lib3mf_reader_getwarningcount = None
 	lib3mf_reader_addkeywrappingcallback = None
@@ -1058,6 +1060,24 @@ class FunctionTable:
 	lib3mf_toolpathprofile_addmodifier = None
 	lib3mf_toolpathprofile_changemodifier = None
 	lib3mf_toolpathprofile_removemodifier = None
+	lib3mf_toolpathlasersource_getlaserindex = None
+	lib3mf_toolpathlasersource_getname = None
+	lib3mf_toolpathlasersource_setname = None
+	lib3mf_toolpathlasersource_hasbounds = None
+	lib3mf_toolpathlasersource_getbounds = None
+	lib3mf_toolpathlasersource_setbounds = None
+	lib3mf_toolpathlasersource_clearbounds = None
+	lib3mf_toolpathlasersource_hascenter = None
+	lib3mf_toolpathlasersource_getcenter = None
+	lib3mf_toolpathlasersource_setcenter = None
+	lib3mf_toolpathlasersource_clearcenter = None
+	lib3mf_toolpathlasersource_hascornerradius = None
+	lib3mf_toolpathlasersource_getcornerradius = None
+	lib3mf_toolpathlasersource_setcornerradius = None
+	lib3mf_toolpathlasersource_clearcornerradius = None
+	lib3mf_toolpathsyncgroup_getsyncgroupid = None
+	lib3mf_toolpathsyncgroup_getlaserindices = None
+	lib3mf_toolpathsyncgroup_setlaserindices = None
 	lib3mf_toolpathlayerreader_getlayerdatauuid = None
 	lib3mf_toolpathlayerreader_getcustomdatacount = None
 	lib3mf_toolpathlayerreader_getcustomdata = None
@@ -1159,6 +1179,25 @@ class FunctionTable:
 	lib3mf_toolpath_getprofile = None
 	lib3mf_toolpath_getprofileuuid = None
 	lib3mf_toolpath_getprofilebyuuid = None
+	lib3mf_toolpath_getlasersourcecount = None
+	lib3mf_toolpath_getlasersource = None
+	lib3mf_toolpath_haslasersource = None
+	lib3mf_toolpath_findlasersource = None
+	lib3mf_toolpath_addlasersource = None
+	lib3mf_toolpath_removelasersource = None
+	lib3mf_toolpath_clearlasersources = None
+	lib3mf_toolpath_hasdefaultlaserindex = None
+	lib3mf_toolpath_getdefaultlaserindex = None
+	lib3mf_toolpath_setdefaultlaserindex = None
+	lib3mf_toolpath_cleardefaultlaserindex = None
+	lib3mf_toolpath_getsyncgroupcount = None
+	lib3mf_toolpath_getsyncgroup = None
+	lib3mf_toolpath_hassyncgroup = None
+	lib3mf_toolpath_findsyncgroup = None
+	lib3mf_toolpath_addsyncgroup = None
+	lib3mf_toolpath_removesyncgroup = None
+	lib3mf_toolpath_setlaserreferencechecks = None
+	lib3mf_toolpath_getlaserreferencechecks = None
 	lib3mf_toolpath_getcustomdatacount = None
 	lib3mf_toolpath_getcustomdata = None
 	lib3mf_toolpath_getcustomdataname = None
@@ -2162,6 +2201,18 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
 			self.lib.lib3mf_reader_getstrictmodeactive = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_reader_settoolpathlaserreferencechecks")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_bool)
+			self.lib.lib3mf_reader_settoolpathlaserreferencechecks = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_reader_gettoolpathlaserreferencechecks")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_reader_gettoolpathlaserreferencechecks = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_reader_getwarning")), methodAddress)
 			if err != 0:
@@ -5361,6 +5412,114 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
 			self.lib.lib3mf_toolpathprofile_removemodifier = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlasersource_getlaserindex")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlasersource_getlaserindex = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlasersource_getname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathlasersource_getname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlasersource_setname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_toolpathlasersource_setname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlasersource_hasbounds")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpathlasersource_hasbounds = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlasersource_getbounds")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_int32))
+			self.lib.lib3mf_toolpathlasersource_getbounds = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlasersource_setbounds")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_int32, ctypes.c_int32, ctypes.c_int32, ctypes.c_int32)
+			self.lib.lib3mf_toolpathlasersource_setbounds = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlasersource_clearbounds")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_toolpathlasersource_clearbounds = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlasersource_hascenter")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpathlasersource_hascenter = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlasersource_getcenter")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_int32))
+			self.lib.lib3mf_toolpathlasersource_getcenter = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlasersource_setcenter")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_int32, ctypes.c_int32)
+			self.lib.lib3mf_toolpathlasersource_setcenter = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlasersource_clearcenter")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_toolpathlasersource_clearcenter = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlasersource_hascornerradius")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpathlasersource_hascornerradius = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlasersource_getcornerradius")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlasersource_getcornerradius = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlasersource_setcornerradius")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_toolpathlasersource_setcornerradius = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlasersource_clearcornerradius")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_toolpathlasersource_clearcornerradius = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathsyncgroup_getsyncgroupid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathsyncgroup_getsyncgroupid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathsyncgroup_getlaserindices")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathsyncgroup_getlaserindices = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathsyncgroup_setlaserindices")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathsyncgroup_setlaserindices = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getlayerdatauuid")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -5966,6 +6125,120 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_toolpath_getprofilebyuuid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getlasersourcecount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpath_getlasersourcecount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getlasersource")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_getlasersource = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_haslasersource")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpath_haslasersource = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_findlasersource")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_findlasersource = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_addlasersource")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_addlasersource = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_removelasersource")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_toolpath_removelasersource = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_clearlasersources")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_toolpath_clearlasersources = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_hasdefaultlaserindex")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpath_hasdefaultlaserindex = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getdefaultlaserindex")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpath_getdefaultlaserindex = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_setdefaultlaserindex")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_toolpath_setdefaultlaserindex = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_cleardefaultlaserindex")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_toolpath_cleardefaultlaserindex = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getsyncgroupcount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpath_getsyncgroupcount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getsyncgroup")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_getsyncgroup = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_hassyncgroup")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpath_hassyncgroup = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_findsyncgroup")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_findsyncgroup = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_addsyncgroup")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32), ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_addsyncgroup = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_removesyncgroup")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_toolpath_removesyncgroup = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_setlaserreferencechecks")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_bool)
+			self.lib.lib3mf_toolpath_setlaserreferencechecks = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getlaserreferencechecks")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpath_getlaserreferencechecks = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getcustomdatacount")), methodAddress)
 			if err != 0:
@@ -7009,6 +7282,12 @@ class Wrapper:
 			
 			self.lib.lib3mf_reader_getstrictmodeactive.restype = ctypes.c_int32
 			self.lib.lib3mf_reader_getstrictmodeactive.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_reader_settoolpathlaserreferencechecks.restype = ctypes.c_int32
+			self.lib.lib3mf_reader_settoolpathlaserreferencechecks.argtypes = [ctypes.c_void_p, ctypes.c_bool]
+			
+			self.lib.lib3mf_reader_gettoolpathlaserreferencechecks.restype = ctypes.c_int32
+			self.lib.lib3mf_reader_gettoolpathlaserreferencechecks.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
 			
 			self.lib.lib3mf_reader_getwarning.restype = ctypes.c_int32
 			self.lib.lib3mf_reader_getwarning.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
@@ -8609,6 +8888,60 @@ class Wrapper:
 			self.lib.lib3mf_toolpathprofile_removemodifier.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathprofile_removemodifier.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
 			
+			self.lib.lib3mf_toolpathlasersource_getlaserindex.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlasersource_getlaserindex.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlasersource_getname.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlasersource_getname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathlasersource_setname.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlasersource_setname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathlasersource_hasbounds.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlasersource_hasbounds.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_toolpathlasersource_getbounds.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlasersource_getbounds.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_int32)]
+			
+			self.lib.lib3mf_toolpathlasersource_setbounds.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlasersource_setbounds.argtypes = [ctypes.c_void_p, ctypes.c_int32, ctypes.c_int32, ctypes.c_int32, ctypes.c_int32]
+			
+			self.lib.lib3mf_toolpathlasersource_clearbounds.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlasersource_clearbounds.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_toolpathlasersource_hascenter.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlasersource_hascenter.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_toolpathlasersource_getcenter.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlasersource_getcenter.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_int32)]
+			
+			self.lib.lib3mf_toolpathlasersource_setcenter.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlasersource_setcenter.argtypes = [ctypes.c_void_p, ctypes.c_int32, ctypes.c_int32]
+			
+			self.lib.lib3mf_toolpathlasersource_clearcenter.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlasersource_clearcenter.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_toolpathlasersource_hascornerradius.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlasersource_hascornerradius.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_toolpathlasersource_getcornerradius.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlasersource_getcornerradius.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlasersource_setcornerradius.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlasersource_setcornerradius.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_toolpathlasersource_clearcornerradius.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlasersource_clearcornerradius.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_toolpathsyncgroup_getsyncgroupid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathsyncgroup_getsyncgroupid.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathsyncgroup_getlaserindices.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathsyncgroup_getlaserindices.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathsyncgroup_setlaserindices.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathsyncgroup_setlaserindices.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32)]
+			
 			self.lib.lib3mf_toolpathlayerreader_getlayerdatauuid.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getlayerdatauuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
@@ -8911,6 +9244,63 @@ class Wrapper:
 			
 			self.lib.lib3mf_toolpath_getprofilebyuuid.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_getprofilebyuuid.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_getlasersourcecount.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getlasersourcecount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpath_getlasersource.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getlasersource.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_haslasersource.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_haslasersource.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_toolpath_findlasersource.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_findlasersource.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_addlasersource.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_addlasersource.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_removelasersource.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_removelasersource.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_toolpath_clearlasersources.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_clearlasersources.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_toolpath_hasdefaultlaserindex.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_hasdefaultlaserindex.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_toolpath_getdefaultlaserindex.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getdefaultlaserindex.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpath_setdefaultlaserindex.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_setdefaultlaserindex.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_toolpath_cleardefaultlaserindex.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_cleardefaultlaserindex.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_toolpath_getsyncgroupcount.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getsyncgroupcount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpath_getsyncgroup.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getsyncgroup.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_hassyncgroup.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_hassyncgroup.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_toolpath_findsyncgroup.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_findsyncgroup.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_addsyncgroup.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_addsyncgroup.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32), ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_removesyncgroup.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_removesyncgroup.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_toolpath_setlaserreferencechecks.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_setlaserreferencechecks.argtypes = [ctypes.c_void_p, ctypes.c_bool]
+			
+			self.lib.lib3mf_toolpath_getlaserreferencechecks.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getlaserreferencechecks.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
 			
 			self.lib.lib3mf_toolpath_getcustomdatacount.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpath_getcustomdatacount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
@@ -9777,6 +10167,10 @@ class Wrapper:
 				return Slice(handle, wrapper)
 			def getObjectById_C869620B90242CA7(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ToolpathProfile"
 				return ToolpathProfile(handle, wrapper)
+			def getObjectById_63062DB2D9CD5FF4(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLaserSource"
+				return ToolpathLaserSource(handle, wrapper)
+			def getObjectById_002A1BA83B876BEC(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ToolpathSyncGroup"
+				return ToolpathSyncGroup(handle, wrapper)
 			def getObjectById_28DD7D3718F0616E(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerReader"
 				return ToolpathLayerReader(handle, wrapper)
 			def getObjectById_28C0E70CC44F931A(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerData"
@@ -10121,6 +10515,17 @@ class Reader(Base):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_reader_getstrictmodeactive(self._handle, pStrictModeActive))
 		
 		return pStrictModeActive.value
+	
+	def SetToolpathLaserReferenceChecks(self, ChecksActive):
+		bChecksActive = ctypes.c_bool(ChecksActive)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_reader_settoolpathlaserreferencechecks(self._handle, bChecksActive))
+		
+	
+	def GetToolpathLaserReferenceChecks(self):
+		pChecksActive = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_reader_gettoolpathlaserreferencechecks(self._handle, pChecksActive))
+		
+		return pChecksActive.value
 	
 	def GetWarning(self, Index, ErrorCode = None):
 		nIndex = ctypes.c_uint32(Index)
@@ -15440,6 +15845,136 @@ class ToolpathProfile(Base):
 	
 
 
+''' Class Implementation for ToolpathLaserSource
+'''
+class ToolpathLaserSource(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def GetLaserIndex(self):
+		pLaserIndex = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_getlaserindex(self._handle, pLaserIndex))
+		
+		return pLaserIndex.value
+	
+	def GetName(self):
+		nNameBufferSize = ctypes.c_uint64(0)
+		nNameNeededChars = ctypes.c_uint64(0)
+		pNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_getname(self._handle, nNameBufferSize, nNameNeededChars, pNameBuffer))
+		nNameBufferSize = ctypes.c_uint64(nNameNeededChars.value)
+		pNameBuffer = (ctypes.c_char * (nNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_getname(self._handle, nNameBufferSize, nNameNeededChars, pNameBuffer))
+		
+		return pNameBuffer.value.decode()
+	
+	def SetName(self, Name):
+		pName = ctypes.c_char_p(str.encode(Name))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_setname(self._handle, pName))
+		
+	
+	def HasBounds(self):
+		pHasBounds = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_hasbounds(self._handle, pHasBounds))
+		
+		return pHasBounds.value
+	
+	def GetBounds(self, MinX = None, MaxX = None, MinY = None, MaxY = None):
+		pMinX = ctypes.c_int32(MinX if MinX is not None else 0)
+		pMaxX = ctypes.c_int32(MaxX if MaxX is not None else 0)
+		pMinY = ctypes.c_int32(MinY if MinY is not None else 0)
+		pMaxY = ctypes.c_int32(MaxY if MaxY is not None else 0)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_getbounds(self._handle, pMinX, pMaxX, pMinY, pMaxY))
+		
+		return pMinX.value, pMaxX.value, pMinY.value, pMaxY.value
+	
+	def SetBounds(self, MinX, MaxX, MinY, MaxY):
+		nMinX = ctypes.c_int32(MinX)
+		nMaxX = ctypes.c_int32(MaxX)
+		nMinY = ctypes.c_int32(MinY)
+		nMaxY = ctypes.c_int32(MaxY)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_setbounds(self._handle, nMinX, nMaxX, nMinY, nMaxY))
+		
+	
+	def ClearBounds(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_clearbounds(self._handle))
+		
+	
+	def HasCenter(self):
+		pHasCenter = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_hascenter(self._handle, pHasCenter))
+		
+		return pHasCenter.value
+	
+	def GetCenter(self, CenterX = None, CenterY = None):
+		pCenterX = ctypes.c_int32(CenterX if CenterX is not None else 0)
+		pCenterY = ctypes.c_int32(CenterY if CenterY is not None else 0)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_getcenter(self._handle, pCenterX, pCenterY))
+		
+		return pCenterX.value, pCenterY.value
+	
+	def SetCenter(self, CenterX, CenterY):
+		nCenterX = ctypes.c_int32(CenterX)
+		nCenterY = ctypes.c_int32(CenterY)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_setcenter(self._handle, nCenterX, nCenterY))
+		
+	
+	def ClearCenter(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_clearcenter(self._handle))
+		
+	
+	def HasCornerRadius(self):
+		pHasCornerRadius = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_hascornerradius(self._handle, pHasCornerRadius))
+		
+		return pHasCornerRadius.value
+	
+	def GetCornerRadius(self):
+		pCornerRadius = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_getcornerradius(self._handle, pCornerRadius))
+		
+		return pCornerRadius.value
+	
+	def SetCornerRadius(self, CornerRadius):
+		nCornerRadius = ctypes.c_uint32(CornerRadius)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_setcornerradius(self._handle, nCornerRadius))
+		
+	
+	def ClearCornerRadius(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlasersource_clearcornerradius(self._handle))
+		
+	
+
+
+''' Class Implementation for ToolpathSyncGroup
+'''
+class ToolpathSyncGroup(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def GetSyncGroupID(self):
+		pSyncGroupID = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathsyncgroup_getsyncgroupid(self._handle, pSyncGroupID))
+		
+		return pSyncGroupID.value
+	
+	def GetLaserIndices(self, LaserIndices = None):
+		nLaserIndicesCount = ctypes.c_uint64(len(LaserIndices) if LaserIndices else 0)
+		nLaserIndicesNeededCount = ctypes.c_uint64(0)
+		pLaserIndicesBuffer = (ctypes.c_uint32*(len(LaserIndices) if LaserIndices else 0))(*LaserIndices if LaserIndices else [])
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathsyncgroup_getlaserindices(self._handle, nLaserIndicesCount, nLaserIndicesNeededCount, pLaserIndicesBuffer))
+		nLaserIndicesCount = ctypes.c_uint64(nLaserIndicesNeededCount.value)
+		pLaserIndicesBuffer = (ctypes.c_uint32 * nLaserIndicesNeededCount.value)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathsyncgroup_getlaserindices(self._handle, nLaserIndicesCount, nLaserIndicesNeededCount, pLaserIndicesBuffer))
+		
+		return list(pLaserIndicesBuffer)
+	
+	def SetLaserIndices(self, LaserIndices):
+		nLaserIndicesCount = ctypes.c_uint64(len(LaserIndices))
+		pLaserIndicesBuffer = (ctypes.c_uint32*len(LaserIndices))(*LaserIndices)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathsyncgroup_setlaserindices(self._handle, nLaserIndicesCount, pLaserIndicesBuffer))
+		
+	
+
+
 ''' Class Implementation for ToolpathLayerReader
 '''
 class ToolpathLayerReader(Base):
@@ -16373,6 +16908,147 @@ class Toolpath(Resource):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return ProfileObject
+	
+	def GetLaserSourceCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getlasersourcecount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def GetLaserSource(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		LaserSourceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getlasersource(self._handle, nIndex, LaserSourceHandle))
+		if LaserSourceHandle:
+			LaserSourceObject = self._wrapper._polymorphicFactory(LaserSourceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return LaserSourceObject
+	
+	def HasLaserSource(self, LaserIndex):
+		nLaserIndex = ctypes.c_uint32(LaserIndex)
+		pLaserSourceExists = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_haslasersource(self._handle, nLaserIndex, pLaserSourceExists))
+		
+		return pLaserSourceExists.value
+	
+	def FindLaserSource(self, LaserIndex):
+		nLaserIndex = ctypes.c_uint32(LaserIndex)
+		LaserSourceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_findlasersource(self._handle, nLaserIndex, LaserSourceHandle))
+		if LaserSourceHandle:
+			LaserSourceObject = self._wrapper._polymorphicFactory(LaserSourceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return LaserSourceObject
+	
+	def AddLaserSource(self, LaserIndex, Name):
+		nLaserIndex = ctypes.c_uint32(LaserIndex)
+		pName = ctypes.c_char_p(str.encode(Name))
+		LaserSourceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_addlasersource(self._handle, nLaserIndex, pName, LaserSourceHandle))
+		if LaserSourceHandle:
+			LaserSourceObject = self._wrapper._polymorphicFactory(LaserSourceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return LaserSourceObject
+	
+	def RemoveLaserSource(self, LaserIndex):
+		nLaserIndex = ctypes.c_uint32(LaserIndex)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_removelasersource(self._handle, nLaserIndex))
+		
+	
+	def ClearLaserSources(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_clearlasersources(self._handle))
+		
+	
+	def HasDefaultLaserIndex(self):
+		pHasDefault = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_hasdefaultlaserindex(self._handle, pHasDefault))
+		
+		return pHasDefault.value
+	
+	def GetDefaultLaserIndex(self):
+		pLaserIndex = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getdefaultlaserindex(self._handle, pLaserIndex))
+		
+		return pLaserIndex.value
+	
+	def SetDefaultLaserIndex(self, LaserIndex):
+		nLaserIndex = ctypes.c_uint32(LaserIndex)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_setdefaultlaserindex(self._handle, nLaserIndex))
+		
+	
+	def ClearDefaultLaserIndex(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_cleardefaultlaserindex(self._handle))
+		
+	
+	def GetSyncGroupCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getsyncgroupcount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def GetSyncGroup(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		SyncGroupHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getsyncgroup(self._handle, nIndex, SyncGroupHandle))
+		if SyncGroupHandle:
+			SyncGroupObject = self._wrapper._polymorphicFactory(SyncGroupHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return SyncGroupObject
+	
+	def HasSyncGroup(self, SyncGroupID):
+		nSyncGroupID = ctypes.c_uint32(SyncGroupID)
+		pSyncGroupExists = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_hassyncgroup(self._handle, nSyncGroupID, pSyncGroupExists))
+		
+		return pSyncGroupExists.value
+	
+	def FindSyncGroup(self, SyncGroupID):
+		nSyncGroupID = ctypes.c_uint32(SyncGroupID)
+		SyncGroupHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_findsyncgroup(self._handle, nSyncGroupID, SyncGroupHandle))
+		if SyncGroupHandle:
+			SyncGroupObject = self._wrapper._polymorphicFactory(SyncGroupHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return SyncGroupObject
+	
+	def AddSyncGroup(self, SyncGroupID, LaserIndices):
+		nSyncGroupID = ctypes.c_uint32(SyncGroupID)
+		nLaserIndicesCount = ctypes.c_uint64(len(LaserIndices))
+		pLaserIndicesBuffer = (ctypes.c_uint32*len(LaserIndices))(*LaserIndices)
+		SyncGroupHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_addsyncgroup(self._handle, nSyncGroupID, nLaserIndicesCount, pLaserIndicesBuffer, SyncGroupHandle))
+		if SyncGroupHandle:
+			SyncGroupObject = self._wrapper._polymorphicFactory(SyncGroupHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return SyncGroupObject
+	
+	def RemoveSyncGroup(self, SyncGroupID):
+		nSyncGroupID = ctypes.c_uint32(SyncGroupID)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_removesyncgroup(self._handle, nSyncGroupID))
+		
+	
+	def SetLaserReferenceChecks(self, ChecksActive):
+		bChecksActive = ctypes.c_bool(ChecksActive)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_setlaserreferencechecks(self._handle, bChecksActive))
+		
+	
+	def GetLaserReferenceChecks(self):
+		pChecksActive = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getlaserreferencechecks(self._handle, pChecksActive))
+		
+		return pChecksActive.value
 	
 	def GetCustomDataCount(self):
 		pCount = ctypes.c_uint32()

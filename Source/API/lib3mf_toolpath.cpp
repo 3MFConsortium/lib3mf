@@ -30,6 +30,7 @@ Abstract: This is a stub class definition of CToolpath
 
 #include "lib3mf_toolpath.hpp"
 #include "lib3mf_toolpathprofile.hpp"
+#include "lib3mf_toolpathlasersource.hpp"
 #include "lib3mf_toolpathlayerdata.hpp"
 #include "lib3mf_attachment.hpp"
 #include "lib3mf_interfaceexception.hpp"
@@ -40,6 +41,7 @@ Abstract: This is a stub class definition of CToolpath
 #include "lib3mf_toolpathviewable.hpp"
 
 #include "Common/NMR_Exception.h"
+#include "Common/NMR_StringUtils.h"
 
 // Include custom headers here.
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
@@ -134,6 +136,113 @@ IToolpathProfile* CToolpath::GetProfileByUUID(const std::string& sProfileUUID)
 	auto pProfile = m_pToolpath->getProfileByUUID(sProfileUUID);
 
 	return new CToolpathProfile(pProfile);
+}
+
+Lib3MF_uint32 CToolpath::GetLaserSourceCount()
+{
+	return m_pToolpath->getLaserSourceCount();
+}
+
+IToolpathLaserSource* CToolpath::GetLaserSource(const Lib3MF_uint32 nIndex)
+{
+	return new CToolpathLaserSource(m_pToolpath->getLaserSource(nIndex));
+}
+
+bool CToolpath::HasLaserSource(const Lib3MF_uint32 nLaserIndex)
+{
+	return m_pToolpath->findLaserSource(nLaserIndex).get() != nullptr;
+}
+
+IToolpathLaserSource* CToolpath::FindLaserSource(const Lib3MF_uint32 nLaserIndex)
+{
+	auto pLaserSource = m_pToolpath->findLaserSource(nLaserIndex);
+	if (pLaserSource.get() == nullptr)
+		throw NMR::CNMRException(NMR_ERROR_TOOLPATHLASERSOURCENOTFOUND, NMR::fnUint32ToString(nLaserIndex));
+
+	return new CToolpathLaserSource(pLaserSource);
+}
+
+IToolpathLaserSource* CToolpath::AddLaserSource(const Lib3MF_uint32 nLaserIndex, const std::string& sName)
+{
+	return new CToolpathLaserSource(m_pToolpath->addLaserSource(nLaserIndex, sName));
+}
+
+void CToolpath::RemoveLaserSource(const Lib3MF_uint32 nLaserIndex)
+{
+	m_pToolpath->removeLaserSource(nLaserIndex);
+}
+
+void CToolpath::ClearLaserSources()
+{
+	m_pToolpath->clearLaserSources();
+}
+
+bool CToolpath::HasDefaultLaserIndex()
+{
+	return m_pToolpath->hasDefaultLaserIndex();
+}
+
+Lib3MF_uint32 CToolpath::GetDefaultLaserIndex()
+{
+	return m_pToolpath->getDefaultLaserIndex();
+}
+
+void CToolpath::SetDefaultLaserIndex(const Lib3MF_uint32 nLaserIndex)
+{
+	m_pToolpath->setDefaultLaserIndex(nLaserIndex);
+}
+
+void CToolpath::ClearDefaultLaserIndex()
+{
+	m_pToolpath->clearDefaultLaserIndex();
+}
+
+Lib3MF_uint32 CToolpath::GetSyncGroupCount()
+{
+	return m_pToolpath->getSyncGroupCount();
+}
+
+IToolpathSyncGroup* CToolpath::GetSyncGroup(const Lib3MF_uint32 nIndex)
+{
+	return new CToolpathSyncGroup(m_pToolpath, m_pToolpath->getSyncGroup(nIndex));
+}
+
+bool CToolpath::HasSyncGroup(const Lib3MF_uint32 nSyncGroupID)
+{
+	return m_pToolpath->findSyncGroup(nSyncGroupID).get() != nullptr;
+}
+
+IToolpathSyncGroup* CToolpath::FindSyncGroup(const Lib3MF_uint32 nSyncGroupID)
+{
+	auto pSyncGroup = m_pToolpath->findSyncGroup(nSyncGroupID);
+	if (pSyncGroup.get() == nullptr)
+		throw NMR::CNMRException(NMR_ERROR_TOOLPATHSYNCGROUPNOTFOUND, NMR::fnUint32ToString(nSyncGroupID));
+
+	return new CToolpathSyncGroup(m_pToolpath, pSyncGroup);
+}
+
+IToolpathSyncGroup* CToolpath::AddSyncGroup(const Lib3MF_uint32 nSyncGroupID, const Lib3MF_uint64 nLaserIndicesBufferSize, const Lib3MF_uint32* pLaserIndicesBuffer)
+{
+	if ((nLaserIndicesBufferSize > 0) && (pLaserIndicesBuffer == nullptr))
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	std::vector<NMR::nfUint32> LaserIndices(pLaserIndicesBuffer, pLaserIndicesBuffer + nLaserIndicesBufferSize);
+	return new CToolpathSyncGroup(m_pToolpath, m_pToolpath->addSyncGroup(nSyncGroupID, LaserIndices));
+}
+
+void CToolpath::RemoveSyncGroup(const Lib3MF_uint32 nSyncGroupID)
+{
+	m_pToolpath->removeSyncGroup(nSyncGroupID);
+}
+
+void CToolpath::SetLaserReferenceChecks(const bool bChecksActive)
+{
+	m_pToolpath->setLaserReferenceChecks(bChecksActive);
+}
+
+bool CToolpath::GetLaserReferenceChecks()
+{
+	return m_pToolpath->getLaserReferenceChecks();
 }
 
 IToolpathLayerData* CToolpath::AddLayer(const Lib3MF_uint32 nZMax, const std::string& sPath, IWriter* pModelWriter)

@@ -106,6 +106,44 @@ public:
 
 	IToolpathProfile * GetProfileByUUID(const std::string & sProfileUUID) override;
 
+	Lib3MF_uint32 GetLaserSourceCount() override;
+
+	IToolpathLaserSource * GetLaserSource(const Lib3MF_uint32 nIndex) override;
+
+	bool HasLaserSource(const Lib3MF_uint32 nLaserIndex) override;
+
+	IToolpathLaserSource * FindLaserSource(const Lib3MF_uint32 nLaserIndex) override;
+
+	IToolpathLaserSource * AddLaserSource(const Lib3MF_uint32 nLaserIndex, const std::string & sName) override;
+
+	void RemoveLaserSource(const Lib3MF_uint32 nLaserIndex) override;
+
+	void ClearLaserSources() override;
+
+	bool HasDefaultLaserIndex() override;
+
+	Lib3MF_uint32 GetDefaultLaserIndex() override;
+
+	void SetDefaultLaserIndex(const Lib3MF_uint32 nLaserIndex) override;
+
+	void ClearDefaultLaserIndex() override;
+
+	Lib3MF_uint32 GetSyncGroupCount() override;
+
+	IToolpathSyncGroup * GetSyncGroup(const Lib3MF_uint32 nIndex) override;
+
+	bool HasSyncGroup(const Lib3MF_uint32 nSyncGroupID) override;
+
+	IToolpathSyncGroup * FindSyncGroup(const Lib3MF_uint32 nSyncGroupID) override;
+
+	IToolpathSyncGroup * AddSyncGroup(const Lib3MF_uint32 nSyncGroupID, const Lib3MF_uint64 nLaserIndicesBufferSize, const Lib3MF_uint32 * pLaserIndicesBuffer) override;
+
+	void RemoveSyncGroup(const Lib3MF_uint32 nSyncGroupID) override;
+
+	void SetLaserReferenceChecks(const bool bChecksActive) override;
+
+	bool GetLaserReferenceChecks() override;
+
 	Lib3MF_uint32 GetCustomDataCount() override;
 
 	ICustomDOMTree* GetCustomData(const Lib3MF_uint32 nIndex) override;

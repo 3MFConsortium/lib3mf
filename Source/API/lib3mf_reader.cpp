@@ -206,6 +206,16 @@ bool CReader::GetStrictModeActive ()
 	return reader().warnings()->getCriticalWarningLevel() == NMR::mrwInvalidOptionalValue;
 }
 
+void CReader::SetToolpathLaserReferenceChecks (const bool bChecksActive)
+{
+	reader().setToolpathLaserReferenceChecks(bChecksActive);
+}
+
+bool CReader::GetToolpathLaserReferenceChecks ()
+{
+	return reader().getToolpathLaserReferenceChecks();
+}
+
 std::string CReader::GetWarning (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode)
 {
 	auto warning = reader().warnings()->getWarning(nIndex);

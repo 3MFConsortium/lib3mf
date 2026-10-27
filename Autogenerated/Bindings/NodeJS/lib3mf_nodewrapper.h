@@ -185,6 +185,8 @@ private:
 	static void RemoveSupportedCustomNamespace(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetStrictModeActive(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetStrictModeActive(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetToolpathLaserReferenceChecks(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetToolpathLaserReferenceChecks(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetWarning(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetWarningCount(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddKeyWrappingCallback(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -2599,6 +2601,58 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFToolpathLaserSource 
+**************************************************************************************************************************/
+class CLib3MFToolpathLaserSource : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetLaserIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetName(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasBounds(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetBounds(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetBounds(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ClearBounds(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasCenter(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCenter(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetCenter(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ClearCenter(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasCornerRadius(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCornerRadius(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetCornerRadius(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ClearCornerRadius(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFToolpathLaserSource();
+	~CLib3MFToolpathLaserSource();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFToolpathSyncGroup 
+**************************************************************************************************************************/
+class CLib3MFToolpathSyncGroup : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void GetSyncGroupID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetLaserIndices(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetLaserIndices(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFToolpathSyncGroup();
+	~CLib3MFToolpathSyncGroup();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
  Class CLib3MFToolpathLayerReader 
 **************************************************************************************************************************/
 class CLib3MFToolpathLayerReader : public CLib3MFBaseClass {
@@ -2757,6 +2811,25 @@ private:
 	static void GetProfile(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetProfileUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetProfileByUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetLaserSourceCount(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetLaserSource(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasLaserSource(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindLaserSource(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddLaserSource(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RemoveLaserSource(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ClearLaserSources(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasDefaultLaserIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetDefaultLaserIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetDefaultLaserIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ClearDefaultLaserIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSyncGroupCount(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSyncGroup(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasSyncGroup(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void FindSyncGroup(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddSyncGroup(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RemoveSyncGroup(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetLaserReferenceChecks(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetLaserReferenceChecks(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetCustomDataCount(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetCustomDataName(const v8::FunctionCallbackInfo<v8::Value>& args);

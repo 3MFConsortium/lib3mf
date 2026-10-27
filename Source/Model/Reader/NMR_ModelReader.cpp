@@ -43,7 +43,7 @@ A model reader reads in a model file and generates an in-memory representation o
 namespace NMR {
 
 	CModelReader::CModelReader(_In_ PModel pModel)
-		:CModelContext(pModel)
+		:CModelContext(pModel), m_bToolpathLaserReferenceChecks (false)
 	{
 	}
 
@@ -90,6 +90,16 @@ namespace NMR {
 	void CModelReader::removeSupportedCustomNamespace(const std::string& sNameSpace)
 	{
 		m_SupportedCustomNamespaces.erase(sNameSpace);
+	}
+
+	void CModelReader::setToolpathLaserReferenceChecks(nfBool bActive)
+	{
+		m_bToolpathLaserReferenceChecks = bActive;
+	}
+
+	nfBool CModelReader::getToolpathLaserReferenceChecks()
+	{
+		return m_bToolpathLaserReferenceChecks;
 	}
 
 

@@ -75,6 +75,7 @@ These are given by the 3MF Standard
 #define PACKAGE_TOOLPATH_RELATIONSHIP_TYPE "http://schemas.3mf.io/3dmanufacturing/toolpath/2026/03/layer"
 // Legacy toolpath layer relationship type (Microsoft namespace, 2019/05). Kept for backward-compatible reading.
 #define PACKAGE_TOOLPATH_RELATIONSHIP_TYPE_LEGACY1905 "http://schemas.microsoft.com/3dmanufacturing/2019/05/toolpath"
+#define PACKAGE_ISTOOLPATHRELATIONSHIPTYPE(type) (((type) == PACKAGE_TOOLPATH_RELATIONSHIP_TYPE) || ((type) == PACKAGE_TOOLPATH_RELATIONSHIP_TYPE_LEGACY1905))
 #define PACKAGE_BINARY_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/binary"
 #define PACKAGE_BINARYINDEX_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/binaryindex"
 
@@ -486,6 +487,24 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_TOOLPATHLAYER "toolpathlayer"
 #define XML_3MF_ELEMENT_TOOLPATHDATA "toolpathdata"
 #define XML_3MF_ELEMENT_TOOLPATHPROFILEMODIFIER "modifier"
+#define XML_3MF_ELEMENT_TOOLPATHLASERSOURCES "lasersources"
+#define XML_3MF_ELEMENT_TOOLPATHLASERSOURCE "lasersource"
+#define XML_3MF_ELEMENT_TOOLPATHSYNCGROUP "syncgroup"
+
+#define XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCES_DEFAULT "default"
+#define XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_INDEX "index"
+#define XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_NAME "name"
+#define XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_MINX "minx"
+#define XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_MAXX "maxx"
+#define XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_MINY "miny"
+#define XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_MAXY "maxy"
+#define XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_CENTERX "centerx"
+#define XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_CENTERY "centery"
+#define XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_CORNERRADIUS "cornerradius"
+#define XML_3MF_ATTRIBUTE_TOOLPATHSYNCGROUP_ID "id"
+#define XML_3MF_ATTRIBUTE_TOOLPATHSYNCGROUP_LASERS "lasers"
+// Upper bound of ST_NonNegativeInteger / ST_PositiveInteger
+#define XML_3MF_MAXTOOLPATHLASERINDEX 2147483647
 
 #define XML_3MF_ATTRIBUTE_TOOLPATH_ID                 "id"
 #define XML_3MF_ATTRIBUTE_TOOLPATH_UUID               "uuid"

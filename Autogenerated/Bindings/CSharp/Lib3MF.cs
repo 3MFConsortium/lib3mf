@@ -1047,6 +1047,12 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_getstrictmodeactive", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Reader_GetStrictModeActive (IntPtr Handle, out Byte AStrictModeActive);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_settoolpathlaserreferencechecks", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Reader_SetToolpathLaserReferenceChecks (IntPtr Handle, Byte AChecksActive);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_gettoolpathlaserreferencechecks", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Reader_GetToolpathLaserReferenceChecks (IntPtr Handle, out Byte AChecksActive);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_getwarning", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Reader_GetWarning (IntPtr Handle, UInt32 AIndex, out UInt32 AErrorCode, UInt32 sizeWarning, out UInt32 neededWarning, IntPtr dataWarning);
 
@@ -2646,6 +2652,60 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_removemodifier", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathProfile_RemoveModifier (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlasersource_getlaserindex", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLaserSource_GetLaserIndex (IntPtr Handle, out UInt32 ALaserIndex);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlasersource_getname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLaserSource_GetName (IntPtr Handle, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlasersource_setname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLaserSource_SetName (IntPtr Handle, byte[] AName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlasersource_hasbounds", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLaserSource_HasBounds (IntPtr Handle, out Byte AHasBounds);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlasersource_getbounds", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLaserSource_GetBounds (IntPtr Handle, out Int32 AMinX, out Int32 AMaxX, out Int32 AMinY, out Int32 AMaxY);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlasersource_setbounds", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLaserSource_SetBounds (IntPtr Handle, Int32 AMinX, Int32 AMaxX, Int32 AMinY, Int32 AMaxY);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlasersource_clearbounds", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLaserSource_ClearBounds (IntPtr Handle);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlasersource_hascenter", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLaserSource_HasCenter (IntPtr Handle, out Byte AHasCenter);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlasersource_getcenter", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLaserSource_GetCenter (IntPtr Handle, out Int32 ACenterX, out Int32 ACenterY);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlasersource_setcenter", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLaserSource_SetCenter (IntPtr Handle, Int32 ACenterX, Int32 ACenterY);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlasersource_clearcenter", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLaserSource_ClearCenter (IntPtr Handle);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlasersource_hascornerradius", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLaserSource_HasCornerRadius (IntPtr Handle, out Byte AHasCornerRadius);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlasersource_getcornerradius", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLaserSource_GetCornerRadius (IntPtr Handle, out UInt32 ACornerRadius);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlasersource_setcornerradius", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLaserSource_SetCornerRadius (IntPtr Handle, UInt32 ACornerRadius);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlasersource_clearcornerradius", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLaserSource_ClearCornerRadius (IntPtr Handle);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathsyncgroup_getsyncgroupid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathSyncGroup_GetSyncGroupID (IntPtr Handle, out UInt32 ASyncGroupID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathsyncgroup_getlaserindices", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathSyncGroup_GetLaserIndices (IntPtr Handle, UInt64 sizeLaserIndices, out UInt64 neededLaserIndices, IntPtr dataLaserIndices);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathsyncgroup_setlaserindices", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathSyncGroup_SetLaserIndices (IntPtr Handle, UInt64 sizeLaserIndices, IntPtr dataLaserIndices);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getlayerdatauuid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ToolpathLayerReader_GetLayerDataUUID (IntPtr Handle, UInt32 sizeUUID, out UInt32 neededUUID, IntPtr dataUUID);
 
@@ -2948,6 +3008,63 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getprofilebyuuid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_GetProfileByUUID (IntPtr Handle, byte[] AProfileUUID, out IntPtr AProfile);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getlasersourcecount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetLaserSourceCount (IntPtr Handle, out UInt32 ACount);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getlasersource", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetLaserSource (IntPtr Handle, UInt32 AIndex, out IntPtr ALaserSource);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_haslasersource", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_HasLaserSource (IntPtr Handle, UInt32 ALaserIndex, out Byte ALaserSourceExists);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_findlasersource", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_FindLaserSource (IntPtr Handle, UInt32 ALaserIndex, out IntPtr ALaserSource);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_addlasersource", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_AddLaserSource (IntPtr Handle, UInt32 ALaserIndex, byte[] AName, out IntPtr ALaserSource);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_removelasersource", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_RemoveLaserSource (IntPtr Handle, UInt32 ALaserIndex);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_clearlasersources", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_ClearLaserSources (IntPtr Handle);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_hasdefaultlaserindex", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_HasDefaultLaserIndex (IntPtr Handle, out Byte AHasDefault);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getdefaultlaserindex", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetDefaultLaserIndex (IntPtr Handle, out UInt32 ALaserIndex);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_setdefaultlaserindex", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_SetDefaultLaserIndex (IntPtr Handle, UInt32 ALaserIndex);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_cleardefaultlaserindex", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_ClearDefaultLaserIndex (IntPtr Handle);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getsyncgroupcount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetSyncGroupCount (IntPtr Handle, out UInt32 ACount);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getsyncgroup", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetSyncGroup (IntPtr Handle, UInt32 AIndex, out IntPtr ASyncGroup);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_hassyncgroup", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_HasSyncGroup (IntPtr Handle, UInt32 ASyncGroupID, out Byte ASyncGroupExists);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_findsyncgroup", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_FindSyncGroup (IntPtr Handle, UInt32 ASyncGroupID, out IntPtr ASyncGroup);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_addsyncgroup", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_AddSyncGroup (IntPtr Handle, UInt32 ASyncGroupID, UInt64 sizeLaserIndices, IntPtr dataLaserIndices, out IntPtr ASyncGroup);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_removesyncgroup", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_RemoveSyncGroup (IntPtr Handle, UInt32 ASyncGroupID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_setlaserreferencechecks", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_SetLaserReferenceChecks (IntPtr Handle, Byte AChecksActive);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getlaserreferencechecks", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetLaserReferenceChecks (IntPtr Handle, out Byte AChecksActive);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getcustomdatacount", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Toolpath_GetCustomDataCount (IntPtr Handle, out UInt32 ACount);
@@ -4022,6 +4139,8 @@ namespace Lib3MF {
 					case 0xA7D21BD364910860: Object = new CBuildItemIterator(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BuildItemIterator"
 					case 0x2198BCF4D8DF9C40: Object = new CSlice(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Slice"
 					case 0xC869620B90242CA7: Object = new CToolpathProfile(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathProfile"
+					case 0x63062DB2D9CD5FF4: Object = new CToolpathLaserSource(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLaserSource"
+					case 0x002A1BA83B876BEC: Object = new CToolpathSyncGroup(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathSyncGroup"
 					case 0x28DD7D3718F0616E: Object = new CToolpathLayerReader(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerReader"
 					case 0x28C0E70CC44F931A: Object = new CToolpathLayerData(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLayerData"
 					case 0xDA8671731DE85377: Object = new CToolpathViewable(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathViewable"
@@ -4447,6 +4566,20 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Reader_GetStrictModeActive (Handle, out resultStrictModeActive));
 			return (resultStrictModeActive != 0);
+		}
+
+		public void SetToolpathLaserReferenceChecks (bool AChecksActive)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Reader_SetToolpathLaserReferenceChecks (Handle, (Byte)( AChecksActive ? 1 : 0 )));
+		}
+
+		public bool GetToolpathLaserReferenceChecks ()
+		{
+			Byte resultChecksActive = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Reader_GetToolpathLaserReferenceChecks (Handle, out resultChecksActive));
+			return (resultChecksActive != 0);
 		}
 
 		public String GetWarning (UInt32 AIndex, out UInt32 AErrorCode)
@@ -10200,6 +10333,160 @@ namespace Lib3MF {
 
 	}
 
+	public class CToolpathLaserSource : CBase
+	{
+		public CToolpathLaserSource (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public UInt32 GetLaserIndex ()
+		{
+			UInt32 resultLaserIndex = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_GetLaserIndex (Handle, out resultLaserIndex));
+			return resultLaserIndex;
+		}
+
+		public String GetName ()
+		{
+			UInt32 sizeName = 0;
+			UInt32 neededName = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_GetName (Handle, sizeName, out neededName, IntPtr.Zero));
+			sizeName = neededName;
+			byte[] bytesName = new byte[sizeName];
+			GCHandle dataName = GCHandle.Alloc(bytesName, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_GetName (Handle, sizeName, out neededName, dataName.AddrOfPinnedObject()));
+			dataName.Free();
+			return Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
+		}
+
+		public void SetName (String AName)
+		{
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_SetName (Handle, byteName));
+		}
+
+		public bool HasBounds ()
+		{
+			Byte resultHasBounds = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_HasBounds (Handle, out resultHasBounds));
+			return (resultHasBounds != 0);
+		}
+
+		public void GetBounds (out Int32 AMinX, out Int32 AMaxX, out Int32 AMinY, out Int32 AMaxY)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_GetBounds (Handle, out AMinX, out AMaxX, out AMinY, out AMaxY));
+		}
+
+		public void SetBounds (Int32 AMinX, Int32 AMaxX, Int32 AMinY, Int32 AMaxY)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_SetBounds (Handle, AMinX, AMaxX, AMinY, AMaxY));
+		}
+
+		public void ClearBounds ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_ClearBounds (Handle));
+		}
+
+		public bool HasCenter ()
+		{
+			Byte resultHasCenter = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_HasCenter (Handle, out resultHasCenter));
+			return (resultHasCenter != 0);
+		}
+
+		public void GetCenter (out Int32 ACenterX, out Int32 ACenterY)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_GetCenter (Handle, out ACenterX, out ACenterY));
+		}
+
+		public void SetCenter (Int32 ACenterX, Int32 ACenterY)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_SetCenter (Handle, ACenterX, ACenterY));
+		}
+
+		public void ClearCenter ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_ClearCenter (Handle));
+		}
+
+		public bool HasCornerRadius ()
+		{
+			Byte resultHasCornerRadius = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_HasCornerRadius (Handle, out resultHasCornerRadius));
+			return (resultHasCornerRadius != 0);
+		}
+
+		public UInt32 GetCornerRadius ()
+		{
+			UInt32 resultCornerRadius = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_GetCornerRadius (Handle, out resultCornerRadius));
+			return resultCornerRadius;
+		}
+
+		public void SetCornerRadius (UInt32 ACornerRadius)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_SetCornerRadius (Handle, ACornerRadius));
+		}
+
+		public void ClearCornerRadius ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLaserSource_ClearCornerRadius (Handle));
+		}
+
+	}
+
+	public class CToolpathSyncGroup : CBase
+	{
+		public CToolpathSyncGroup (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public UInt32 GetSyncGroupID ()
+		{
+			UInt32 resultSyncGroupID = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathSyncGroup_GetSyncGroupID (Handle, out resultSyncGroupID));
+			return resultSyncGroupID;
+		}
+
+		public void GetLaserIndices (out UInt32[] ALaserIndices)
+		{
+			UInt64 sizeLaserIndices = 0;
+			UInt64 neededLaserIndices = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathSyncGroup_GetLaserIndices (Handle, sizeLaserIndices, out neededLaserIndices, IntPtr.Zero));
+			sizeLaserIndices = neededLaserIndices;
+			ALaserIndices = new UInt32[sizeLaserIndices];
+			GCHandle dataLaserIndices = GCHandle.Alloc(ALaserIndices, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathSyncGroup_GetLaserIndices (Handle, sizeLaserIndices, out neededLaserIndices, dataLaserIndices.AddrOfPinnedObject()));
+			dataLaserIndices.Free();
+		}
+
+		public void SetLaserIndices (UInt32[] ALaserIndices)
+		{
+			GCHandle dataLaserIndices = GCHandle.Alloc(ALaserIndices, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathSyncGroup_SetLaserIndices (Handle, (UInt64) ALaserIndices.Length, dataLaserIndices.AddrOfPinnedObject()));
+			dataLaserIndices.Free ();
+		}
+
+	}
+
 	public class CToolpathLayerReader : CBase
 	{
 		public CToolpathLayerReader (IntPtr NewHandle) : base (NewHandle)
@@ -11297,6 +11584,149 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Toolpath_GetProfileByUUID (Handle, byteProfileUUID, out newProfile));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathProfile>(newProfile);
+		}
+
+		public UInt32 GetLaserSourceCount ()
+		{
+			UInt32 resultCount = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetLaserSourceCount (Handle, out resultCount));
+			return resultCount;
+		}
+
+		public CToolpathLaserSource GetLaserSource (UInt32 AIndex)
+		{
+			IntPtr newLaserSource = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetLaserSource (Handle, AIndex, out newLaserSource));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathLaserSource>(newLaserSource);
+		}
+
+		public bool HasLaserSource (UInt32 ALaserIndex)
+		{
+			Byte resultLaserSourceExists = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_HasLaserSource (Handle, ALaserIndex, out resultLaserSourceExists));
+			return (resultLaserSourceExists != 0);
+		}
+
+		public CToolpathLaserSource FindLaserSource (UInt32 ALaserIndex)
+		{
+			IntPtr newLaserSource = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_FindLaserSource (Handle, ALaserIndex, out newLaserSource));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathLaserSource>(newLaserSource);
+		}
+
+		public CToolpathLaserSource AddLaserSource (UInt32 ALaserIndex, String AName)
+		{
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+			IntPtr newLaserSource = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_AddLaserSource (Handle, ALaserIndex, byteName, out newLaserSource));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathLaserSource>(newLaserSource);
+		}
+
+		public void RemoveLaserSource (UInt32 ALaserIndex)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_RemoveLaserSource (Handle, ALaserIndex));
+		}
+
+		public void ClearLaserSources ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_ClearLaserSources (Handle));
+		}
+
+		public bool HasDefaultLaserIndex ()
+		{
+			Byte resultHasDefault = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_HasDefaultLaserIndex (Handle, out resultHasDefault));
+			return (resultHasDefault != 0);
+		}
+
+		public UInt32 GetDefaultLaserIndex ()
+		{
+			UInt32 resultLaserIndex = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetDefaultLaserIndex (Handle, out resultLaserIndex));
+			return resultLaserIndex;
+		}
+
+		public void SetDefaultLaserIndex (UInt32 ALaserIndex)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_SetDefaultLaserIndex (Handle, ALaserIndex));
+		}
+
+		public void ClearDefaultLaserIndex ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_ClearDefaultLaserIndex (Handle));
+		}
+
+		public UInt32 GetSyncGroupCount ()
+		{
+			UInt32 resultCount = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetSyncGroupCount (Handle, out resultCount));
+			return resultCount;
+		}
+
+		public CToolpathSyncGroup GetSyncGroup (UInt32 AIndex)
+		{
+			IntPtr newSyncGroup = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetSyncGroup (Handle, AIndex, out newSyncGroup));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathSyncGroup>(newSyncGroup);
+		}
+
+		public bool HasSyncGroup (UInt32 ASyncGroupID)
+		{
+			Byte resultSyncGroupExists = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_HasSyncGroup (Handle, ASyncGroupID, out resultSyncGroupExists));
+			return (resultSyncGroupExists != 0);
+		}
+
+		public CToolpathSyncGroup FindSyncGroup (UInt32 ASyncGroupID)
+		{
+			IntPtr newSyncGroup = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_FindSyncGroup (Handle, ASyncGroupID, out newSyncGroup));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathSyncGroup>(newSyncGroup);
+		}
+
+		public CToolpathSyncGroup AddSyncGroup (UInt32 ASyncGroupID, UInt32[] ALaserIndices)
+		{
+			GCHandle dataLaserIndices = GCHandle.Alloc(ALaserIndices, GCHandleType.Pinned);
+			IntPtr newSyncGroup = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_AddSyncGroup (Handle, ASyncGroupID, (UInt64) ALaserIndices.Length, dataLaserIndices.AddrOfPinnedObject(), out newSyncGroup));
+			dataLaserIndices.Free ();
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CToolpathSyncGroup>(newSyncGroup);
+		}
+
+		public void RemoveSyncGroup (UInt32 ASyncGroupID)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_RemoveSyncGroup (Handle, ASyncGroupID));
+		}
+
+		public void SetLaserReferenceChecks (bool AChecksActive)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_SetLaserReferenceChecks (Handle, (Byte)( AChecksActive ? 1 : 0 )));
+		}
+
+		public bool GetLaserReferenceChecks ()
+		{
+			Byte resultChecksActive = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetLaserReferenceChecks (Handle, out resultChecksActive));
+			return (resultChecksActive != 0);
 		}
 
 		public UInt32 GetCustomDataCount ()

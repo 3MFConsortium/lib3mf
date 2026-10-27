@@ -51,6 +51,7 @@ namespace NMR {
 		std::string m_sPrintTicketContentType;
 		std::set<std::string> m_RelationsToRead;
 		std::set<std::string> m_SupportedCustomNamespaces;
+		nfBool m_bToolpathLaserReferenceChecks;
 
 
 		void readFromMeshImporter(_In_ CMeshImporter * pImporter);
@@ -66,6 +67,11 @@ namespace NMR {
 		void removeRelationToRead(_In_ std::string sRelationShipType);
 		void addSupportedCustomNamespace(const std::string& sNameSpace);
 		void removeSupportedCustomNamespace(const std::string& sNameSpace);
+
+		// Checks that toolpath laserindex/lasersync values refer to declared laser sources and sync groups (4.5).
+		// Off by default. Read toolpaths inherit the setting for their layer data.
+		void setToolpathLaserReferenceChecks(nfBool bActive);
+		nfBool getToolpathLaserReferenceChecks();
 
 	};
 

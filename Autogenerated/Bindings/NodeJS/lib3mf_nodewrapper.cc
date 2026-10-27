@@ -156,6 +156,8 @@ Persistent<Function> CLib3MFBuildItem::constructor;
 Persistent<Function> CLib3MFBuildItemIterator::constructor;
 Persistent<Function> CLib3MFSlice::constructor;
 Persistent<Function> CLib3MFToolpathProfile::constructor;
+Persistent<Function> CLib3MFToolpathLaserSource::constructor;
+Persistent<Function> CLib3MFToolpathSyncGroup::constructor;
 Persistent<Function> CLib3MFToolpathLayerReader::constructor;
 Persistent<Function> CLib3MFToolpathLayerData::constructor;
 Persistent<Function> CLib3MFToolpathViewable::constructor;
@@ -2895,6 +2897,8 @@ void CLib3MFReader::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveSupportedCustomNamespace", RemoveSupportedCustomNamespace);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetStrictModeActive", SetStrictModeActive);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetStrictModeActive", GetStrictModeActive);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetToolpathLaserReferenceChecks", SetToolpathLaserReferenceChecks);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetToolpathLaserReferenceChecks", GetToolpathLaserReferenceChecks);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetWarning", GetWarning);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetWarningCount", GetWarningCount);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddKeyWrappingCallback", AddKeyWrappingCallback);
@@ -3202,6 +3206,52 @@ void CLib3MFReader::GetStrictModeActive(const FunctionCallbackInfo<Value>& args)
         Lib3MFResult errorCode = wrapperTable->m_Reader_GetStrictModeActive(instanceHandle, &bReturnStrictModeActive);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(Boolean::New(isolate, bReturnStrictModeActive));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFReader::SetToolpathLaserReferenceChecks(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsBoolean()) {
+            throw std::runtime_error("Expected bool parameter 0 (ChecksActive)");
+        }
+        bool bChecksActive = args[0]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetToolpathLaserReferenceChecks.");
+        if (wrapperTable->m_Reader_SetToolpathLaserReferenceChecks == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Reader::SetToolpathLaserReferenceChecks.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Reader_SetToolpathLaserReferenceChecks(instanceHandle, bChecksActive);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFReader::GetToolpathLaserReferenceChecks(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        bool bReturnChecksActive = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetToolpathLaserReferenceChecks.");
+        if (wrapperTable->m_Reader_GetToolpathLaserReferenceChecks == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Reader::GetToolpathLaserReferenceChecks.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Reader_GetToolpathLaserReferenceChecks(instanceHandle, &bReturnChecksActive);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnChecksActive));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
@@ -24023,6 +24073,562 @@ void CLib3MFToolpathProfile::RemoveModifier(const FunctionCallbackInfo<Value>& a
 }
 
 /*************************************************************************************************************************
+ Class CLib3MFToolpathLaserSource Implementation
+**************************************************************************************************************************/
+
+CLib3MFToolpathLaserSource::CLib3MFToolpathLaserSource()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFToolpathLaserSource::~CLib3MFToolpathLaserSource()
+{
+}
+
+void CLib3MFToolpathLaserSource::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFToolpathLaserSource"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLaserIndex", GetLaserIndex);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetName", GetName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetName", SetName);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasBounds", HasBounds);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetBounds", GetBounds);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetBounds", SetBounds);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearBounds", ClearBounds);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasCenter", HasCenter);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCenter", GetCenter);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetCenter", SetCenter);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearCenter", ClearCenter);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasCornerRadius", HasCornerRadius);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCornerRadius", GetCornerRadius);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetCornerRadius", SetCornerRadius);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearCornerRadius", ClearCornerRadius);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFToolpathLaserSource::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFToolpathLaserSource * toolpathlasersourceInstance = new CLib3MFToolpathLaserSource();
+				toolpathlasersourceInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFToolpathLaserSource: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFToolpathLaserSource::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFToolpathLaserSource::GetLaserIndex(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnLaserIndex = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLaserIndex.");
+        if (wrapperTable->m_ToolpathLaserSource_GetLaserIndex == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLaserSource::GetLaserIndex.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLaserSource_GetLaserIndex(instanceHandle, &nReturnLaserIndex);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnLaserIndex));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLaserSource::GetName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededName = 0;
+        unsigned int bytesWrittenName = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetName.");
+        if (wrapperTable->m_ToolpathLaserSource_GetName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLaserSource::GetName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_ToolpathLaserSource_GetName(instanceHandle, 0, &bytesNeededName, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferName;
+        bufferName.resize(bytesNeededName);
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLaserSource_GetName(instanceHandle, bytesNeededName, &bytesWrittenName, &bufferName[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferName[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLaserSource::SetName(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (Name)");
+        }
+        v8::String::Utf8Value sutf8Name(isolate, args[0]);
+        std::string sName = *sutf8Name;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetName.");
+        if (wrapperTable->m_ToolpathLaserSource_SetName == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLaserSource::SetName.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLaserSource_SetName(instanceHandle, sName.c_str());
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLaserSource::HasBounds(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        bool bReturnHasBounds = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasBounds.");
+        if (wrapperTable->m_ToolpathLaserSource_HasBounds == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLaserSource::HasBounds.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLaserSource_HasBounds(instanceHandle, &bReturnHasBounds);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasBounds));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLaserSource::GetBounds(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Local<Object> outObject = Object::New(isolate);
+         int nReturnMinX = 0;
+         int nReturnMaxX = 0;
+         int nReturnMinY = 0;
+         int nReturnMaxY = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetBounds.");
+        if (wrapperTable->m_ToolpathLaserSource_GetBounds == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLaserSource::GetBounds.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLaserSource_GetBounds(instanceHandle, &nReturnMinX, &nReturnMaxX, &nReturnMinY, &nReturnMaxY);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "MinX"), Integer::New(isolate, nReturnMinX));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "MaxX"), Integer::New(isolate, nReturnMaxX));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "MinY"), Integer::New(isolate, nReturnMinY));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "MaxY"), Integer::New(isolate, nReturnMaxY));
+        args.GetReturnValue().Set(outObject);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLaserSource::SetBounds(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsInt32()) {
+            throw std::runtime_error("Expected int32 parameter 0 (MinX)");
+        }
+        if (!args[1]->IsInt32()) {
+            throw std::runtime_error("Expected int32 parameter 1 (MaxX)");
+        }
+        if (!args[2]->IsInt32()) {
+            throw std::runtime_error("Expected int32 parameter 2 (MinY)");
+        }
+        if (!args[3]->IsInt32()) {
+            throw std::runtime_error("Expected int32 parameter 3 (MaxY)");
+        }
+         int nMinX = (int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+         int nMaxX = (int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+         int nMinY = (int) args[2]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+         int nMaxY = (int) args[3]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetBounds.");
+        if (wrapperTable->m_ToolpathLaserSource_SetBounds == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLaserSource::SetBounds.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLaserSource_SetBounds(instanceHandle, nMinX, nMaxX, nMinY, nMaxY);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLaserSource::ClearBounds(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ClearBounds.");
+        if (wrapperTable->m_ToolpathLaserSource_ClearBounds == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLaserSource::ClearBounds.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLaserSource_ClearBounds(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLaserSource::HasCenter(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        bool bReturnHasCenter = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasCenter.");
+        if (wrapperTable->m_ToolpathLaserSource_HasCenter == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLaserSource::HasCenter.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLaserSource_HasCenter(instanceHandle, &bReturnHasCenter);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasCenter));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLaserSource::GetCenter(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Local<Object> outObject = Object::New(isolate);
+         int nReturnCenterX = 0;
+         int nReturnCenterY = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCenter.");
+        if (wrapperTable->m_ToolpathLaserSource_GetCenter == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLaserSource::GetCenter.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLaserSource_GetCenter(instanceHandle, &nReturnCenterX, &nReturnCenterY);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "CenterX"), Integer::New(isolate, nReturnCenterX));
+        outObject->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate, "CenterY"), Integer::New(isolate, nReturnCenterY));
+        args.GetReturnValue().Set(outObject);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLaserSource::SetCenter(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsInt32()) {
+            throw std::runtime_error("Expected int32 parameter 0 (CenterX)");
+        }
+        if (!args[1]->IsInt32()) {
+            throw std::runtime_error("Expected int32 parameter 1 (CenterY)");
+        }
+         int nCenterX = (int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+         int nCenterY = (int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetCenter.");
+        if (wrapperTable->m_ToolpathLaserSource_SetCenter == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLaserSource::SetCenter.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLaserSource_SetCenter(instanceHandle, nCenterX, nCenterY);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLaserSource::ClearCenter(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ClearCenter.");
+        if (wrapperTable->m_ToolpathLaserSource_ClearCenter == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLaserSource::ClearCenter.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLaserSource_ClearCenter(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLaserSource::HasCornerRadius(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        bool bReturnHasCornerRadius = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasCornerRadius.");
+        if (wrapperTable->m_ToolpathLaserSource_HasCornerRadius == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLaserSource::HasCornerRadius.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLaserSource_HasCornerRadius(instanceHandle, &bReturnHasCornerRadius);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasCornerRadius));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLaserSource::GetCornerRadius(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnCornerRadius = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCornerRadius.");
+        if (wrapperTable->m_ToolpathLaserSource_GetCornerRadius == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLaserSource::GetCornerRadius.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLaserSource_GetCornerRadius(instanceHandle, &nReturnCornerRadius);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnCornerRadius));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLaserSource::SetCornerRadius(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (CornerRadius)");
+        }
+        unsigned int nCornerRadius = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetCornerRadius.");
+        if (wrapperTable->m_ToolpathLaserSource_SetCornerRadius == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLaserSource::SetCornerRadius.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLaserSource_SetCornerRadius(instanceHandle, nCornerRadius);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLaserSource::ClearCornerRadius(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ClearCornerRadius.");
+        if (wrapperTable->m_ToolpathLaserSource_ClearCornerRadius == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLaserSource::ClearCornerRadius.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLaserSource_ClearCornerRadius(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFToolpathSyncGroup Implementation
+**************************************************************************************************************************/
+
+CLib3MFToolpathSyncGroup::CLib3MFToolpathSyncGroup()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFToolpathSyncGroup::~CLib3MFToolpathSyncGroup()
+{
+}
+
+void CLib3MFToolpathSyncGroup::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFToolpathSyncGroup"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSyncGroupID", GetSyncGroupID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLaserIndices", GetLaserIndices);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetLaserIndices", SetLaserIndices);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFToolpathSyncGroup::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFToolpathSyncGroup * toolpathsyncgroupInstance = new CLib3MFToolpathSyncGroup();
+				toolpathsyncgroupInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFToolpathSyncGroup: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFToolpathSyncGroup::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFToolpathSyncGroup::GetSyncGroupID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnSyncGroupID = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSyncGroupID.");
+        if (wrapperTable->m_ToolpathSyncGroup_GetSyncGroupID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathSyncGroup::GetSyncGroupID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathSyncGroup_GetSyncGroupID(instanceHandle, &nReturnSyncGroupID);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnSyncGroupID));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathSyncGroup::GetLaserIndices(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLaserIndices.");
+        if (wrapperTable->m_ToolpathSyncGroup_GetLaserIndices == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathSyncGroup::GetLaserIndices.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathSyncGroup_GetLaserIndices(instanceHandle, 0, nullptr, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathSyncGroup::SetLaserIndices(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetLaserIndices.");
+        if (wrapperTable->m_ToolpathSyncGroup_SetLaserIndices == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathSyncGroup::SetLaserIndices.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathSyncGroup_SetLaserIndices(instanceHandle, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
  Class CLib3MFToolpathLayerReader Implementation
 **************************************************************************************************************************/
 
@@ -26468,6 +27074,25 @@ void CLib3MFToolpath::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfile", GetProfile);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfileUUID", GetProfileUUID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetProfileByUUID", GetProfileByUUID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLaserSourceCount", GetLaserSourceCount);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLaserSource", GetLaserSource);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasLaserSource", HasLaserSource);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "FindLaserSource", FindLaserSource);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddLaserSource", AddLaserSource);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveLaserSource", RemoveLaserSource);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearLaserSources", ClearLaserSources);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasDefaultLaserIndex", HasDefaultLaserIndex);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetDefaultLaserIndex", GetDefaultLaserIndex);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetDefaultLaserIndex", SetDefaultLaserIndex);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ClearDefaultLaserIndex", ClearDefaultLaserIndex);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSyncGroupCount", GetSyncGroupCount);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSyncGroup", GetSyncGroup);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasSyncGroup", HasSyncGroup);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "FindSyncGroup", FindSyncGroup);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddSyncGroup", AddSyncGroup);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveSyncGroup", RemoveSyncGroup);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetLaserReferenceChecks", SetLaserReferenceChecks);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLaserReferenceChecks", GetLaserReferenceChecks);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomDataCount", GetCustomDataCount);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomData", GetCustomData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomDataName", GetCustomDataName);
@@ -27079,6 +27704,471 @@ void CLib3MFToolpath::GetProfileByUUID(const FunctionCallbackInfo<Value>& args)
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjProfile = CLib3MFToolpathProfile::NewInstance(args.Holder(), hReturnProfile);
         args.GetReturnValue().Set(instanceObjProfile);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::GetLaserSourceCount(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnCount = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLaserSourceCount.");
+        if (wrapperTable->m_Toolpath_GetLaserSourceCount == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetLaserSourceCount.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetLaserSourceCount(instanceHandle, &nReturnCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnCount));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::GetLaserSource(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnLaserSource = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLaserSource.");
+        if (wrapperTable->m_Toolpath_GetLaserSource == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetLaserSource.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetLaserSource(instanceHandle, nIndex, &hReturnLaserSource);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjLaserSource = CLib3MFToolpathLaserSource::NewInstance(args.Holder(), hReturnLaserSource);
+        args.GetReturnValue().Set(instanceObjLaserSource);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::HasLaserSource(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (LaserIndex)");
+        }
+        unsigned int nLaserIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        bool bReturnLaserSourceExists = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasLaserSource.");
+        if (wrapperTable->m_Toolpath_HasLaserSource == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::HasLaserSource.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_HasLaserSource(instanceHandle, nLaserIndex, &bReturnLaserSourceExists);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnLaserSourceExists));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::FindLaserSource(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (LaserIndex)");
+        }
+        unsigned int nLaserIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnLaserSource = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindLaserSource.");
+        if (wrapperTable->m_Toolpath_FindLaserSource == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::FindLaserSource.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_FindLaserSource(instanceHandle, nLaserIndex, &hReturnLaserSource);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjLaserSource = CLib3MFToolpathLaserSource::NewInstance(args.Holder(), hReturnLaserSource);
+        args.GetReturnValue().Set(instanceObjLaserSource);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::AddLaserSource(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (LaserIndex)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (Name)");
+        }
+        unsigned int nLaserIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        v8::String::Utf8Value sutf8Name(isolate, args[1]);
+        std::string sName = *sutf8Name;
+        Lib3MFHandle hReturnLaserSource = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddLaserSource.");
+        if (wrapperTable->m_Toolpath_AddLaserSource == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::AddLaserSource.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_AddLaserSource(instanceHandle, nLaserIndex, sName.c_str(), &hReturnLaserSource);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjLaserSource = CLib3MFToolpathLaserSource::NewInstance(args.Holder(), hReturnLaserSource);
+        args.GetReturnValue().Set(instanceObjLaserSource);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::RemoveLaserSource(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (LaserIndex)");
+        }
+        unsigned int nLaserIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method RemoveLaserSource.");
+        if (wrapperTable->m_Toolpath_RemoveLaserSource == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::RemoveLaserSource.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_RemoveLaserSource(instanceHandle, nLaserIndex);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::ClearLaserSources(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ClearLaserSources.");
+        if (wrapperTable->m_Toolpath_ClearLaserSources == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::ClearLaserSources.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_ClearLaserSources(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::HasDefaultLaserIndex(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        bool bReturnHasDefault = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasDefaultLaserIndex.");
+        if (wrapperTable->m_Toolpath_HasDefaultLaserIndex == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::HasDefaultLaserIndex.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_HasDefaultLaserIndex(instanceHandle, &bReturnHasDefault);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasDefault));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::GetDefaultLaserIndex(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnLaserIndex = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetDefaultLaserIndex.");
+        if (wrapperTable->m_Toolpath_GetDefaultLaserIndex == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetDefaultLaserIndex.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetDefaultLaserIndex(instanceHandle, &nReturnLaserIndex);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnLaserIndex));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::SetDefaultLaserIndex(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (LaserIndex)");
+        }
+        unsigned int nLaserIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetDefaultLaserIndex.");
+        if (wrapperTable->m_Toolpath_SetDefaultLaserIndex == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::SetDefaultLaserIndex.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_SetDefaultLaserIndex(instanceHandle, nLaserIndex);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::ClearDefaultLaserIndex(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ClearDefaultLaserIndex.");
+        if (wrapperTable->m_Toolpath_ClearDefaultLaserIndex == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::ClearDefaultLaserIndex.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_ClearDefaultLaserIndex(instanceHandle);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::GetSyncGroupCount(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int nReturnCount = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSyncGroupCount.");
+        if (wrapperTable->m_Toolpath_GetSyncGroupCount == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetSyncGroupCount.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetSyncGroupCount(instanceHandle, &nReturnCount);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Integer::NewFromUnsigned(isolate, nReturnCount));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::GetSyncGroup(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnSyncGroup = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSyncGroup.");
+        if (wrapperTable->m_Toolpath_GetSyncGroup == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetSyncGroup.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetSyncGroup(instanceHandle, nIndex, &hReturnSyncGroup);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjSyncGroup = CLib3MFToolpathSyncGroup::NewInstance(args.Holder(), hReturnSyncGroup);
+        args.GetReturnValue().Set(instanceObjSyncGroup);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::HasSyncGroup(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SyncGroupID)");
+        }
+        unsigned int nSyncGroupID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        bool bReturnSyncGroupExists = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasSyncGroup.");
+        if (wrapperTable->m_Toolpath_HasSyncGroup == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::HasSyncGroup.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_HasSyncGroup(instanceHandle, nSyncGroupID, &bReturnSyncGroupExists);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnSyncGroupExists));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::FindSyncGroup(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SyncGroupID)");
+        }
+        unsigned int nSyncGroupID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnSyncGroup = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method FindSyncGroup.");
+        if (wrapperTable->m_Toolpath_FindSyncGroup == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::FindSyncGroup.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_FindSyncGroup(instanceHandle, nSyncGroupID, &hReturnSyncGroup);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjSyncGroup = CLib3MFToolpathSyncGroup::NewInstance(args.Holder(), hReturnSyncGroup);
+        args.GetReturnValue().Set(instanceObjSyncGroup);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::AddSyncGroup(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SyncGroupID)");
+        }
+        unsigned int nSyncGroupID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnSyncGroup = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddSyncGroup.");
+        if (wrapperTable->m_Toolpath_AddSyncGroup == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::AddSyncGroup.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_AddSyncGroup(instanceHandle, nSyncGroupID, 0, nullptr, &hReturnSyncGroup);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjSyncGroup = CLib3MFToolpathSyncGroup::NewInstance(args.Holder(), hReturnSyncGroup);
+        args.GetReturnValue().Set(instanceObjSyncGroup);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::RemoveSyncGroup(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SyncGroupID)");
+        }
+        unsigned int nSyncGroupID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method RemoveSyncGroup.");
+        if (wrapperTable->m_Toolpath_RemoveSyncGroup == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::RemoveSyncGroup.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_RemoveSyncGroup(instanceHandle, nSyncGroupID);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::SetLaserReferenceChecks(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsBoolean()) {
+            throw std::runtime_error("Expected bool parameter 0 (ChecksActive)");
+        }
+        bool bChecksActive = args[0]->BooleanValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetLaserReferenceChecks.");
+        if (wrapperTable->m_Toolpath_SetLaserReferenceChecks == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::SetLaserReferenceChecks.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_SetLaserReferenceChecks(instanceHandle, bChecksActive);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpath::GetLaserReferenceChecks(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        bool bReturnChecksActive = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLaserReferenceChecks.");
+        if (wrapperTable->m_Toolpath_GetLaserReferenceChecks == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Toolpath::GetLaserReferenceChecks.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Toolpath_GetLaserReferenceChecks(instanceHandle, &bReturnChecksActive);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnChecksActive));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

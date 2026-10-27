@@ -89,6 +89,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Reader_RemoveSupportedCustomNamespace = NULL;
 	pWrapperTable->m_Reader_SetStrictModeActive = NULL;
 	pWrapperTable->m_Reader_GetStrictModeActive = NULL;
+	pWrapperTable->m_Reader_SetToolpathLaserReferenceChecks = NULL;
+	pWrapperTable->m_Reader_GetToolpathLaserReferenceChecks = NULL;
 	pWrapperTable->m_Reader_GetWarning = NULL;
 	pWrapperTable->m_Reader_GetWarningCount = NULL;
 	pWrapperTable->m_Reader_AddKeyWrappingCallback = NULL;
@@ -622,6 +624,24 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ToolpathProfile_AddModifier = NULL;
 	pWrapperTable->m_ToolpathProfile_ChangeModifier = NULL;
 	pWrapperTable->m_ToolpathProfile_RemoveModifier = NULL;
+	pWrapperTable->m_ToolpathLaserSource_GetLaserIndex = NULL;
+	pWrapperTable->m_ToolpathLaserSource_GetName = NULL;
+	pWrapperTable->m_ToolpathLaserSource_SetName = NULL;
+	pWrapperTable->m_ToolpathLaserSource_HasBounds = NULL;
+	pWrapperTable->m_ToolpathLaserSource_GetBounds = NULL;
+	pWrapperTable->m_ToolpathLaserSource_SetBounds = NULL;
+	pWrapperTable->m_ToolpathLaserSource_ClearBounds = NULL;
+	pWrapperTable->m_ToolpathLaserSource_HasCenter = NULL;
+	pWrapperTable->m_ToolpathLaserSource_GetCenter = NULL;
+	pWrapperTable->m_ToolpathLaserSource_SetCenter = NULL;
+	pWrapperTable->m_ToolpathLaserSource_ClearCenter = NULL;
+	pWrapperTable->m_ToolpathLaserSource_HasCornerRadius = NULL;
+	pWrapperTable->m_ToolpathLaserSource_GetCornerRadius = NULL;
+	pWrapperTable->m_ToolpathLaserSource_SetCornerRadius = NULL;
+	pWrapperTable->m_ToolpathLaserSource_ClearCornerRadius = NULL;
+	pWrapperTable->m_ToolpathSyncGroup_GetSyncGroupID = NULL;
+	pWrapperTable->m_ToolpathSyncGroup_GetLaserIndices = NULL;
+	pWrapperTable->m_ToolpathSyncGroup_SetLaserIndices = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetLayerDataUUID = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetCustomDataCount = NULL;
 	pWrapperTable->m_ToolpathLayerReader_GetCustomData = NULL;
@@ -723,6 +743,25 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Toolpath_GetProfile = NULL;
 	pWrapperTable->m_Toolpath_GetProfileUUID = NULL;
 	pWrapperTable->m_Toolpath_GetProfileByUUID = NULL;
+	pWrapperTable->m_Toolpath_GetLaserSourceCount = NULL;
+	pWrapperTable->m_Toolpath_GetLaserSource = NULL;
+	pWrapperTable->m_Toolpath_HasLaserSource = NULL;
+	pWrapperTable->m_Toolpath_FindLaserSource = NULL;
+	pWrapperTable->m_Toolpath_AddLaserSource = NULL;
+	pWrapperTable->m_Toolpath_RemoveLaserSource = NULL;
+	pWrapperTable->m_Toolpath_ClearLaserSources = NULL;
+	pWrapperTable->m_Toolpath_HasDefaultLaserIndex = NULL;
+	pWrapperTable->m_Toolpath_GetDefaultLaserIndex = NULL;
+	pWrapperTable->m_Toolpath_SetDefaultLaserIndex = NULL;
+	pWrapperTable->m_Toolpath_ClearDefaultLaserIndex = NULL;
+	pWrapperTable->m_Toolpath_GetSyncGroupCount = NULL;
+	pWrapperTable->m_Toolpath_GetSyncGroup = NULL;
+	pWrapperTable->m_Toolpath_HasSyncGroup = NULL;
+	pWrapperTable->m_Toolpath_FindSyncGroup = NULL;
+	pWrapperTable->m_Toolpath_AddSyncGroup = NULL;
+	pWrapperTable->m_Toolpath_RemoveSyncGroup = NULL;
+	pWrapperTable->m_Toolpath_SetLaserReferenceChecks = NULL;
+	pWrapperTable->m_Toolpath_GetLaserReferenceChecks = NULL;
 	pWrapperTable->m_Toolpath_GetCustomDataCount = NULL;
 	pWrapperTable->m_Toolpath_GetCustomData = NULL;
 	pWrapperTable->m_Toolpath_GetCustomDataName = NULL;
@@ -1306,6 +1345,24 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Reader_GetStrictModeActive == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Reader_SetToolpathLaserReferenceChecks = (PLib3MFReader_SetToolpathLaserReferenceChecksPtr) GetProcAddress(hLibrary, "lib3mf_reader_settoolpathlaserreferencechecks");
+	#else // _WIN32
+	pWrapperTable->m_Reader_SetToolpathLaserReferenceChecks = (PLib3MFReader_SetToolpathLaserReferenceChecksPtr) dlsym(hLibrary, "lib3mf_reader_settoolpathlaserreferencechecks");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Reader_SetToolpathLaserReferenceChecks == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Reader_GetToolpathLaserReferenceChecks = (PLib3MFReader_GetToolpathLaserReferenceChecksPtr) GetProcAddress(hLibrary, "lib3mf_reader_gettoolpathlaserreferencechecks");
+	#else // _WIN32
+	pWrapperTable->m_Reader_GetToolpathLaserReferenceChecks = (PLib3MFReader_GetToolpathLaserReferenceChecksPtr) dlsym(hLibrary, "lib3mf_reader_gettoolpathlaserreferencechecks");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Reader_GetToolpathLaserReferenceChecks == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -6106,6 +6163,168 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLaserSource_GetLaserIndex = (PLib3MFToolpathLaserSource_GetLaserIndexPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlasersource_getlaserindex");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLaserSource_GetLaserIndex = (PLib3MFToolpathLaserSource_GetLaserIndexPtr) dlsym(hLibrary, "lib3mf_toolpathlasersource_getlaserindex");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLaserSource_GetLaserIndex == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLaserSource_GetName = (PLib3MFToolpathLaserSource_GetNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlasersource_getname");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLaserSource_GetName = (PLib3MFToolpathLaserSource_GetNamePtr) dlsym(hLibrary, "lib3mf_toolpathlasersource_getname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLaserSource_GetName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLaserSource_SetName = (PLib3MFToolpathLaserSource_SetNamePtr) GetProcAddress(hLibrary, "lib3mf_toolpathlasersource_setname");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLaserSource_SetName = (PLib3MFToolpathLaserSource_SetNamePtr) dlsym(hLibrary, "lib3mf_toolpathlasersource_setname");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLaserSource_SetName == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLaserSource_HasBounds = (PLib3MFToolpathLaserSource_HasBoundsPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlasersource_hasbounds");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLaserSource_HasBounds = (PLib3MFToolpathLaserSource_HasBoundsPtr) dlsym(hLibrary, "lib3mf_toolpathlasersource_hasbounds");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLaserSource_HasBounds == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLaserSource_GetBounds = (PLib3MFToolpathLaserSource_GetBoundsPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlasersource_getbounds");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLaserSource_GetBounds = (PLib3MFToolpathLaserSource_GetBoundsPtr) dlsym(hLibrary, "lib3mf_toolpathlasersource_getbounds");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLaserSource_GetBounds == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLaserSource_SetBounds = (PLib3MFToolpathLaserSource_SetBoundsPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlasersource_setbounds");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLaserSource_SetBounds = (PLib3MFToolpathLaserSource_SetBoundsPtr) dlsym(hLibrary, "lib3mf_toolpathlasersource_setbounds");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLaserSource_SetBounds == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLaserSource_ClearBounds = (PLib3MFToolpathLaserSource_ClearBoundsPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlasersource_clearbounds");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLaserSource_ClearBounds = (PLib3MFToolpathLaserSource_ClearBoundsPtr) dlsym(hLibrary, "lib3mf_toolpathlasersource_clearbounds");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLaserSource_ClearBounds == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLaserSource_HasCenter = (PLib3MFToolpathLaserSource_HasCenterPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlasersource_hascenter");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLaserSource_HasCenter = (PLib3MFToolpathLaserSource_HasCenterPtr) dlsym(hLibrary, "lib3mf_toolpathlasersource_hascenter");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLaserSource_HasCenter == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLaserSource_GetCenter = (PLib3MFToolpathLaserSource_GetCenterPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlasersource_getcenter");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLaserSource_GetCenter = (PLib3MFToolpathLaserSource_GetCenterPtr) dlsym(hLibrary, "lib3mf_toolpathlasersource_getcenter");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLaserSource_GetCenter == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLaserSource_SetCenter = (PLib3MFToolpathLaserSource_SetCenterPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlasersource_setcenter");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLaserSource_SetCenter = (PLib3MFToolpathLaserSource_SetCenterPtr) dlsym(hLibrary, "lib3mf_toolpathlasersource_setcenter");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLaserSource_SetCenter == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLaserSource_ClearCenter = (PLib3MFToolpathLaserSource_ClearCenterPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlasersource_clearcenter");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLaserSource_ClearCenter = (PLib3MFToolpathLaserSource_ClearCenterPtr) dlsym(hLibrary, "lib3mf_toolpathlasersource_clearcenter");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLaserSource_ClearCenter == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLaserSource_HasCornerRadius = (PLib3MFToolpathLaserSource_HasCornerRadiusPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlasersource_hascornerradius");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLaserSource_HasCornerRadius = (PLib3MFToolpathLaserSource_HasCornerRadiusPtr) dlsym(hLibrary, "lib3mf_toolpathlasersource_hascornerradius");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLaserSource_HasCornerRadius == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLaserSource_GetCornerRadius = (PLib3MFToolpathLaserSource_GetCornerRadiusPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlasersource_getcornerradius");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLaserSource_GetCornerRadius = (PLib3MFToolpathLaserSource_GetCornerRadiusPtr) dlsym(hLibrary, "lib3mf_toolpathlasersource_getcornerradius");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLaserSource_GetCornerRadius == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLaserSource_SetCornerRadius = (PLib3MFToolpathLaserSource_SetCornerRadiusPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlasersource_setcornerradius");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLaserSource_SetCornerRadius = (PLib3MFToolpathLaserSource_SetCornerRadiusPtr) dlsym(hLibrary, "lib3mf_toolpathlasersource_setcornerradius");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLaserSource_SetCornerRadius == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathLaserSource_ClearCornerRadius = (PLib3MFToolpathLaserSource_ClearCornerRadiusPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlasersource_clearcornerradius");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathLaserSource_ClearCornerRadius = (PLib3MFToolpathLaserSource_ClearCornerRadiusPtr) dlsym(hLibrary, "lib3mf_toolpathlasersource_clearcornerradius");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathLaserSource_ClearCornerRadius == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathSyncGroup_GetSyncGroupID = (PLib3MFToolpathSyncGroup_GetSyncGroupIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathsyncgroup_getsyncgroupid");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathSyncGroup_GetSyncGroupID = (PLib3MFToolpathSyncGroup_GetSyncGroupIDPtr) dlsym(hLibrary, "lib3mf_toolpathsyncgroup_getsyncgroupid");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathSyncGroup_GetSyncGroupID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathSyncGroup_GetLaserIndices = (PLib3MFToolpathSyncGroup_GetLaserIndicesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathsyncgroup_getlaserindices");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathSyncGroup_GetLaserIndices = (PLib3MFToolpathSyncGroup_GetLaserIndicesPtr) dlsym(hLibrary, "lib3mf_toolpathsyncgroup_getlaserindices");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathSyncGroup_GetLaserIndices == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ToolpathSyncGroup_SetLaserIndices = (PLib3MFToolpathSyncGroup_SetLaserIndicesPtr) GetProcAddress(hLibrary, "lib3mf_toolpathsyncgroup_setlaserindices");
+	#else // _WIN32
+	pWrapperTable->m_ToolpathSyncGroup_SetLaserIndices = (PLib3MFToolpathSyncGroup_SetLaserIndicesPtr) dlsym(hLibrary, "lib3mf_toolpathsyncgroup_setlaserindices");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ToolpathSyncGroup_SetLaserIndices == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_ToolpathLayerReader_GetLayerDataUUID = (PLib3MFToolpathLayerReader_GetLayerDataUUIDPtr) GetProcAddress(hLibrary, "lib3mf_toolpathlayerreader_getlayerdatauuid");
 	#else // _WIN32
 	pWrapperTable->m_ToolpathLayerReader_GetLayerDataUUID = (PLib3MFToolpathLayerReader_GetLayerDataUUIDPtr) dlsym(hLibrary, "lib3mf_toolpathlayerreader_getlayerdatauuid");
@@ -7012,6 +7231,177 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Toolpath_GetProfileByUUID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_GetLaserSourceCount = (PLib3MFToolpath_GetLaserSourceCountPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getlasersourcecount");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_GetLaserSourceCount = (PLib3MFToolpath_GetLaserSourceCountPtr) dlsym(hLibrary, "lib3mf_toolpath_getlasersourcecount");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_GetLaserSourceCount == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_GetLaserSource = (PLib3MFToolpath_GetLaserSourcePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getlasersource");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_GetLaserSource = (PLib3MFToolpath_GetLaserSourcePtr) dlsym(hLibrary, "lib3mf_toolpath_getlasersource");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_GetLaserSource == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_HasLaserSource = (PLib3MFToolpath_HasLaserSourcePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_haslasersource");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_HasLaserSource = (PLib3MFToolpath_HasLaserSourcePtr) dlsym(hLibrary, "lib3mf_toolpath_haslasersource");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_HasLaserSource == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_FindLaserSource = (PLib3MFToolpath_FindLaserSourcePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_findlasersource");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_FindLaserSource = (PLib3MFToolpath_FindLaserSourcePtr) dlsym(hLibrary, "lib3mf_toolpath_findlasersource");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_FindLaserSource == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_AddLaserSource = (PLib3MFToolpath_AddLaserSourcePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_addlasersource");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_AddLaserSource = (PLib3MFToolpath_AddLaserSourcePtr) dlsym(hLibrary, "lib3mf_toolpath_addlasersource");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_AddLaserSource == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_RemoveLaserSource = (PLib3MFToolpath_RemoveLaserSourcePtr) GetProcAddress(hLibrary, "lib3mf_toolpath_removelasersource");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_RemoveLaserSource = (PLib3MFToolpath_RemoveLaserSourcePtr) dlsym(hLibrary, "lib3mf_toolpath_removelasersource");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_RemoveLaserSource == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_ClearLaserSources = (PLib3MFToolpath_ClearLaserSourcesPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_clearlasersources");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_ClearLaserSources = (PLib3MFToolpath_ClearLaserSourcesPtr) dlsym(hLibrary, "lib3mf_toolpath_clearlasersources");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_ClearLaserSources == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_HasDefaultLaserIndex = (PLib3MFToolpath_HasDefaultLaserIndexPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_hasdefaultlaserindex");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_HasDefaultLaserIndex = (PLib3MFToolpath_HasDefaultLaserIndexPtr) dlsym(hLibrary, "lib3mf_toolpath_hasdefaultlaserindex");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_HasDefaultLaserIndex == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_GetDefaultLaserIndex = (PLib3MFToolpath_GetDefaultLaserIndexPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getdefaultlaserindex");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_GetDefaultLaserIndex = (PLib3MFToolpath_GetDefaultLaserIndexPtr) dlsym(hLibrary, "lib3mf_toolpath_getdefaultlaserindex");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_GetDefaultLaserIndex == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_SetDefaultLaserIndex = (PLib3MFToolpath_SetDefaultLaserIndexPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_setdefaultlaserindex");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_SetDefaultLaserIndex = (PLib3MFToolpath_SetDefaultLaserIndexPtr) dlsym(hLibrary, "lib3mf_toolpath_setdefaultlaserindex");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_SetDefaultLaserIndex == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_ClearDefaultLaserIndex = (PLib3MFToolpath_ClearDefaultLaserIndexPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_cleardefaultlaserindex");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_ClearDefaultLaserIndex = (PLib3MFToolpath_ClearDefaultLaserIndexPtr) dlsym(hLibrary, "lib3mf_toolpath_cleardefaultlaserindex");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_ClearDefaultLaserIndex == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_GetSyncGroupCount = (PLib3MFToolpath_GetSyncGroupCountPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getsyncgroupcount");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_GetSyncGroupCount = (PLib3MFToolpath_GetSyncGroupCountPtr) dlsym(hLibrary, "lib3mf_toolpath_getsyncgroupcount");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_GetSyncGroupCount == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_GetSyncGroup = (PLib3MFToolpath_GetSyncGroupPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getsyncgroup");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_GetSyncGroup = (PLib3MFToolpath_GetSyncGroupPtr) dlsym(hLibrary, "lib3mf_toolpath_getsyncgroup");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_GetSyncGroup == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_HasSyncGroup = (PLib3MFToolpath_HasSyncGroupPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_hassyncgroup");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_HasSyncGroup = (PLib3MFToolpath_HasSyncGroupPtr) dlsym(hLibrary, "lib3mf_toolpath_hassyncgroup");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_HasSyncGroup == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_FindSyncGroup = (PLib3MFToolpath_FindSyncGroupPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_findsyncgroup");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_FindSyncGroup = (PLib3MFToolpath_FindSyncGroupPtr) dlsym(hLibrary, "lib3mf_toolpath_findsyncgroup");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_FindSyncGroup == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_AddSyncGroup = (PLib3MFToolpath_AddSyncGroupPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_addsyncgroup");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_AddSyncGroup = (PLib3MFToolpath_AddSyncGroupPtr) dlsym(hLibrary, "lib3mf_toolpath_addsyncgroup");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_AddSyncGroup == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_RemoveSyncGroup = (PLib3MFToolpath_RemoveSyncGroupPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_removesyncgroup");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_RemoveSyncGroup = (PLib3MFToolpath_RemoveSyncGroupPtr) dlsym(hLibrary, "lib3mf_toolpath_removesyncgroup");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_RemoveSyncGroup == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_SetLaserReferenceChecks = (PLib3MFToolpath_SetLaserReferenceChecksPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_setlaserreferencechecks");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_SetLaserReferenceChecks = (PLib3MFToolpath_SetLaserReferenceChecksPtr) dlsym(hLibrary, "lib3mf_toolpath_setlaserreferencechecks");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_SetLaserReferenceChecks == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Toolpath_GetLaserReferenceChecks = (PLib3MFToolpath_GetLaserReferenceChecksPtr) GetProcAddress(hLibrary, "lib3mf_toolpath_getlaserreferencechecks");
+	#else // _WIN32
+	pWrapperTable->m_Toolpath_GetLaserReferenceChecks = (PLib3MFToolpath_GetLaserReferenceChecksPtr) dlsym(hLibrary, "lib3mf_toolpath_getlaserreferencechecks");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Toolpath_GetLaserReferenceChecks == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

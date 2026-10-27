@@ -166,6 +166,8 @@ class IBuildItem;
 class IBuildItemIterator;
 class ISlice;
 class IToolpathProfile;
+class IToolpathLaserSource;
+class IToolpathSyncGroup;
 class IToolpathLayerReader;
 class IToolpathLayerData;
 class IToolpathViewable;
@@ -767,6 +769,18 @@ public:
 	* @return returns flag whether strict mode is active or not.
 	*/
 	virtual bool GetStrictModeActive() = 0;
+
+	/**
+	* IReader::SetToolpathLaserReferenceChecks - Activates (deactivates) the checks that toolpath laserindex values refer to a declared laser source and lasersync values to a declared sync group. Inactive by default. Unresolved profile laser indices are reported as warnings (errors in strict mode). Read toolpaths inherit the setting, which then applies to their layer data (see Toolpath.SetLaserReferenceChecks).
+	* @param[in] bChecksActive - flag whether the laser reference checks are active or not.
+	*/
+	virtual void SetToolpathLaserReferenceChecks(const bool bChecksActive) = 0;
+
+	/**
+	* IReader::GetToolpathLaserReferenceChecks - Queries whether the toolpath laser reference checks are active or not.
+	* @return returns flag whether the laser reference checks are active or not.
+	*/
+	virtual bool GetToolpathLaserReferenceChecks() = 0;
 
 	/**
 	* IReader::GetWarning - Returns Warning and Error Information of the read process
@@ -6607,6 +6621,162 @@ typedef IBaseSharedPtr<IToolpathProfile> PIToolpathProfile;
 
 
 /*************************************************************************************************************************
+ Class interface for ToolpathLaserSource 
+**************************************************************************************************************************/
+
+class IToolpathLaserSource : public virtual IBase {
+public:
+	/**
+	* IToolpathLaserSource::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x63062DB2D9CD5FF4UL; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLaserSource"
+	}
+
+	/**
+	* IToolpathLaserSource::GetLaserIndex - Returns the laser index, which is unique within the toolpath and referenced by laserindex on profiles and segments.
+	* @return Laser index.
+	*/
+	virtual Lib3MF_uint32 GetLaserIndex() = 0;
+
+	/**
+	* IToolpathLaserSource::GetName - Returns the human-readable name of the laser source.
+	* @return Name of the laser source.
+	*/
+	virtual std::string GetName() = 0;
+
+	/**
+	* IToolpathLaserSource::SetName - Sets the human-readable name of the laser source.
+	* @param[in] sName - Name of the laser source.
+	*/
+	virtual void SetName(const std::string & sName) = 0;
+
+	/**
+	* IToolpathLaserSource::HasBounds - Returns if the scan-field bounds are set.
+	* @return True if minx, maxx, miny and maxy are set.
+	*/
+	virtual bool HasBounds() = 0;
+
+	/**
+	* IToolpathLaserSource::GetBounds - Returns the scan-field bounds in toolpath units. Fails if no bounds are set.
+	* @param[out] nMinX - Minimum X coordinate.
+	* @param[out] nMaxX - Maximum X coordinate.
+	* @param[out] nMinY - Minimum Y coordinate.
+	* @param[out] nMaxY - Maximum Y coordinate.
+	*/
+	virtual void GetBounds(Lib3MF_int32 & nMinX, Lib3MF_int32 & nMaxX, Lib3MF_int32 & nMinY, Lib3MF_int32 & nMaxY) = 0;
+
+	/**
+	* IToolpathLaserSource::SetBounds - Sets the scan-field bounds in toolpath units. Fails if MaxX is smaller than MinX or MaxY is smaller than MinY, or if an existing corner radius exceeds half of the shorter side of the new bounds.
+	* @param[in] nMinX - Minimum X coordinate.
+	* @param[in] nMaxX - Maximum X coordinate.
+	* @param[in] nMinY - Minimum Y coordinate.
+	* @param[in] nMaxY - Maximum Y coordinate.
+	*/
+	virtual void SetBounds(const Lib3MF_int32 nMinX, const Lib3MF_int32 nMaxX, const Lib3MF_int32 nMinY, const Lib3MF_int32 nMaxY) = 0;
+
+	/**
+	* IToolpathLaserSource::ClearBounds - Removes the scan-field bounds. Also removes the corner radius, which requires the bounds.
+	*/
+	virtual void ClearBounds() = 0;
+
+	/**
+	* IToolpathLaserSource::HasCenter - Returns if the optical center is set.
+	* @return True if centerx and centery are set.
+	*/
+	virtual bool HasCenter() = 0;
+
+	/**
+	* IToolpathLaserSource::GetCenter - Returns the optical center in toolpath units. Fails if no center is set.
+	* @param[out] nCenterX - X coordinate of the optical center.
+	* @param[out] nCenterY - Y coordinate of the optical center.
+	*/
+	virtual void GetCenter(Lib3MF_int32 & nCenterX, Lib3MF_int32 & nCenterY) = 0;
+
+	/**
+	* IToolpathLaserSource::SetCenter - Sets the optical center in toolpath units.
+	* @param[in] nCenterX - X coordinate of the optical center.
+	* @param[in] nCenterY - Y coordinate of the optical center.
+	*/
+	virtual void SetCenter(const Lib3MF_int32 nCenterX, const Lib3MF_int32 nCenterY) = 0;
+
+	/**
+	* IToolpathLaserSource::ClearCenter - Removes the optical center.
+	*/
+	virtual void ClearCenter() = 0;
+
+	/**
+	* IToolpathLaserSource::HasCornerRadius - Returns if a corner radius is set.
+	* @return True if a corner radius is set.
+	*/
+	virtual bool HasCornerRadius() = 0;
+
+	/**
+	* IToolpathLaserSource::GetCornerRadius - Returns the corner radius of the scan field in toolpath units. Fails if no corner radius is set.
+	* @return Corner radius.
+	*/
+	virtual Lib3MF_uint32 GetCornerRadius() = 0;
+
+	/**
+	* IToolpathLaserSource::SetCornerRadius - Sets the corner radius of the scan field in toolpath units. Fails if no bounds are set, if the radius is 0, or if it exceeds half of the shorter side of the bounds.
+	* @param[in] nCornerRadius - Corner radius.
+	*/
+	virtual void SetCornerRadius(const Lib3MF_uint32 nCornerRadius) = 0;
+
+	/**
+	* IToolpathLaserSource::ClearCornerRadius - Removes the corner radius.
+	*/
+	virtual void ClearCornerRadius() = 0;
+
+};
+
+typedef IBaseSharedPtr<IToolpathLaserSource> PIToolpathLaserSource;
+
+
+/*************************************************************************************************************************
+ Class interface for ToolpathSyncGroup 
+**************************************************************************************************************************/
+
+class IToolpathSyncGroup : public virtual IBase {
+public:
+	/**
+	* IToolpathSyncGroup::ClassTypeId - Get Class Type Id
+	* @return Class type as a 64 bits integer
+	*/
+	Lib3MF_uint64 ClassTypeId() override
+	{
+		return 0x2A1BA83B876BECUL; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathSyncGroup"
+	}
+
+	/**
+	* IToolpathSyncGroup::GetSyncGroupID - Returns the sync group id, which is unique within the toolpath and referenced by lasersync on segments.
+	* @return Sync group id.
+	*/
+	virtual Lib3MF_uint32 GetSyncGroupID() = 0;
+
+	/**
+	* IToolpathSyncGroup::GetLaserIndices - Returns the laser indices of the sync group.
+	* @param[in] nLaserIndicesBufferSize - Number of elements in buffer
+	* @param[out] pLaserIndicesNeededCount - will be filled with the count of the written structs, or needed buffer size.
+	* @param[out] pLaserIndicesBuffer - uint32 buffer of Laser indices.
+	*/
+	virtual void GetLaserIndices(Lib3MF_uint64 nLaserIndicesBufferSize, Lib3MF_uint64* pLaserIndicesNeededCount, Lib3MF_uint32 * pLaserIndicesBuffer) = 0;
+
+	/**
+	* IToolpathSyncGroup::SetLaserIndices - Sets the laser indices of the sync group. Fails if the list is empty or if a laser index is not declared by a laser source of the toolpath.
+	* @param[in] nLaserIndicesBufferSize - Number of elements in buffer
+	* @param[in] pLaserIndicesBuffer - Laser indices.
+	*/
+	virtual void SetLaserIndices(const Lib3MF_uint64 nLaserIndicesBufferSize, const Lib3MF_uint32 * pLaserIndicesBuffer) = 0;
+
+};
+
+typedef IBaseSharedPtr<IToolpathSyncGroup> PIToolpathSyncGroup;
+
+
+/*************************************************************************************************************************
  Class interface for ToolpathLayerReader 
 **************************************************************************************************************************/
 
@@ -7463,6 +7633,129 @@ public:
 	* @return Returns the profile.
 	*/
 	virtual IToolpathProfile * GetProfileByUUID(const std::string & sProfileUUID) = 0;
+
+	/**
+	* IToolpath::GetLaserSourceCount - Retrieves the count of laser sources. A toolpath without laser sources is a single-laser toolpath.
+	* @return Returns the laser source count.
+	*/
+	virtual Lib3MF_uint32 GetLaserSourceCount() = 0;
+
+	/**
+	* IToolpath::GetLaserSource - Returns a laser source of the toolpath.
+	* @param[in] nIndex - Index of the laser source (0-based). MUST be smaller than the laser source count.
+	* @return Returns the laser source.
+	*/
+	virtual IToolpathLaserSource * GetLaserSource(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpath::HasLaserSource - Returns if a laser source with a specific laser index is declared.
+	* @param[in] nLaserIndex - Laser index.
+	* @return Returns true if the laser source exists.
+	*/
+	virtual bool HasLaserSource(const Lib3MF_uint32 nLaserIndex) = 0;
+
+	/**
+	* IToolpath::FindLaserSource - Returns the laser source with a specific laser index. Fails if it does not exist.
+	* @param[in] nLaserIndex - Laser index.
+	* @return Returns the laser source.
+	*/
+	virtual IToolpathLaserSource * FindLaserSource(const Lib3MF_uint32 nLaserIndex) = 0;
+
+	/**
+	* IToolpath::AddLaserSource - Adds a laser source. Fails if the laser index is already declared.
+	* @param[in] nLaserIndex - Laser index. MUST be unique within the toolpath and at most 2147483647.
+	* @param[in] sName - Human-readable name of the laser source.
+	* @return Returns the laser source.
+	*/
+	virtual IToolpathLaserSource * AddLaserSource(const Lib3MF_uint32 nLaserIndex, const std::string & sName) = 0;
+
+	/**
+	* IToolpath::RemoveLaserSource - Removes a laser source. Fails if it does not exist, if it is the default laser source, or if it is listed in a sync group.
+	* @param[in] nLaserIndex - Laser index.
+	*/
+	virtual void RemoveLaserSource(const Lib3MF_uint32 nLaserIndex) = 0;
+
+	/**
+	* IToolpath::ClearLaserSources - Removes all laser sources, all sync groups and the default laser index.
+	*/
+	virtual void ClearLaserSources() = 0;
+
+	/**
+	* IToolpath::HasDefaultLaserIndex - Returns if a default laser index is set.
+	* @return Returns true if a default laser index is set.
+	*/
+	virtual bool HasDefaultLaserIndex() = 0;
+
+	/**
+	* IToolpath::GetDefaultLaserIndex - Returns the laser index used when a profile or segment omits laserindex. Fails if no default is set.
+	* @return Default laser index.
+	*/
+	virtual Lib3MF_uint32 GetDefaultLaserIndex() = 0;
+
+	/**
+	* IToolpath::SetDefaultLaserIndex - Sets the laser index used when a profile or segment omits laserindex. Fails if the laser index is not declared.
+	* @param[in] nLaserIndex - Default laser index.
+	*/
+	virtual void SetDefaultLaserIndex(const Lib3MF_uint32 nLaserIndex) = 0;
+
+	/**
+	* IToolpath::ClearDefaultLaserIndex - Removes the default laser index.
+	*/
+	virtual void ClearDefaultLaserIndex() = 0;
+
+	/**
+	* IToolpath::GetSyncGroupCount - Retrieves the count of sync groups.
+	* @return Returns the sync group count.
+	*/
+	virtual Lib3MF_uint32 GetSyncGroupCount() = 0;
+
+	/**
+	* IToolpath::GetSyncGroup - Returns a sync group of the toolpath.
+	* @param[in] nIndex - Index of the sync group (0-based). MUST be smaller than the sync group count.
+	* @return Returns the sync group.
+	*/
+	virtual IToolpathSyncGroup * GetSyncGroup(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpath::HasSyncGroup - Returns if a sync group with a specific id is declared.
+	* @param[in] nSyncGroupID - Sync group id.
+	* @return Returns true if the sync group exists.
+	*/
+	virtual bool HasSyncGroup(const Lib3MF_uint32 nSyncGroupID) = 0;
+
+	/**
+	* IToolpath::FindSyncGroup - Returns the sync group with a specific id. Fails if it does not exist.
+	* @param[in] nSyncGroupID - Sync group id.
+	* @return Returns the sync group.
+	*/
+	virtual IToolpathSyncGroup * FindSyncGroup(const Lib3MF_uint32 nSyncGroupID) = 0;
+
+	/**
+	* IToolpath::AddSyncGroup - Adds a sync group. Fails if the id is 0 or already declared, if the list is empty, or if a laser index is not declared.
+	* @param[in] nSyncGroupID - Sync group id. MUST be positive, unique within the toolpath and at most 2147483647.
+	* @param[in] nLaserIndicesBufferSize - Number of elements in buffer
+	* @param[in] pLaserIndicesBuffer - Laser indices of the sync group.
+	* @return Returns the sync group.
+	*/
+	virtual IToolpathSyncGroup * AddSyncGroup(const Lib3MF_uint32 nSyncGroupID, const Lib3MF_uint64 nLaserIndicesBufferSize, const Lib3MF_uint32 * pLaserIndicesBuffer) = 0;
+
+	/**
+	* IToolpath::RemoveSyncGroup - Removes a sync group. Fails if it does not exist.
+	* @param[in] nSyncGroupID - Sync group id.
+	*/
+	virtual void RemoveSyncGroup(const Lib3MF_uint32 nSyncGroupID) = 0;
+
+	/**
+	* IToolpath::SetLaserReferenceChecks - Activates (deactivates) the laser reference checks for reading layer data. If active, ReadLayerData fails on a segment whose laserindex does not refer to a declared laser source (only if laser sources are declared) or whose lasersync does not refer to a declared sync group. Inactive by default; toolpaths read by a reader inherit the reader's setting.
+	* @param[in] bChecksActive - flag whether the laser reference checks are active or not.
+	*/
+	virtual void SetLaserReferenceChecks(const bool bChecksActive) = 0;
+
+	/**
+	* IToolpath::GetLaserReferenceChecks - Queries whether the laser reference checks for reading layer data are active or not.
+	* @return returns flag whether the laser reference checks are active or not.
+	*/
+	virtual bool GetLaserReferenceChecks() = 0;
 
 	/**
 	* IToolpath::GetCustomDataCount - Retrieves the count of custom data elements.

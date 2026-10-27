@@ -116,6 +116,16 @@ namespace NMR {
 		}
 			
 		if (!bIgnoreLayer) {
+			if (m_pModel != nullptr) {
+				std::string sSourcePartURI = m_pModel->currentPath();
+				std::string sLayerPartURI = m_sPath;
+				if (!fnStartsWithPathDelimiter(sLayerPartURI))
+					sLayerPartURI = fnExtractFileDir(sSourcePartURI) + sLayerPartURI;
+
+				if (!m_pModel->hasToolpathLayerRelationship(sSourcePartURI, sLayerPartURI))
+					m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGTOOLPATHLAYERRELATIONSHIP, m_sPath), mrwMissingMandatoryValue);
+			}
+
 			pToolpath->addLayer(m_sPath, m_nZTop);
 		}
 	}

@@ -39,8 +39,9 @@ NMR_ModelToolpath.h defines the Model Toolpath.
 #include "Model/Classes/NMR_ModelResource.h" 
 #include "Model/Classes/NMR_ModelToolpathLayer.h" 
 #include "Model/Classes/NMR_CustomXMLTree.h"  
-#include "Model/Classes/NMR_ModelToolpathProfile.h" 
-#include "Model/Classes/NMR_Model.h"  
+#include "Model/Classes/NMR_ModelToolpathProfile.h"
+#include "Model/Classes/NMR_ModelToolpathLaserSource.h"
+#include "Model/Classes/NMR_Model.h"
 #include <vector>
 #include "Common/Platform/NMR_ImportStream.h"  
 #include <memory>
@@ -85,7 +86,17 @@ namespace NMR {
 		std::map<std::string, PModelToolpathProfile> m_ProfileMap;
 		PModelToolpathProfileNameRegistry m_pProfileNameRegistry;
 
+		std::vector<PModelToolpathLaserSource> m_LaserSources;
+		std::map<nfUint32, PModelToolpathLaserSource> m_LaserSourceMap;
+		std::vector<PModelToolpathSyncGroup> m_SyncGroups;
+		std::map<nfUint32, PModelToolpathSyncGroup> m_SyncGroupMap;
+		nfBool m_bHasDefaultLaserIndex;
+		nfUint32 m_nDefaultLaserIndex;
+		nfBool m_bLaserReferenceChecks;
+
 		std::vector<PCustomXMLTree> m_CustomXMLData;
+
+		void checkSyncGroupLaserIndices(const std::vector<nfUint32> & LaserIndices);
 
 	public:
 		CModelToolpath() = delete;
@@ -116,6 +127,39 @@ namespace NMR {
 		nfUint32 getProfileCount();
 		PModelToolpathProfile getProfile(nfUint32 nIndex);
 		PModelToolpathProfile getProfileByUUID(std::string sUUID);
+
+		// Laser sources (4.5). Fails if the laser index is already declared.
+		PModelToolpathLaserSource addLaserSource(nfUint32 nLaserIndex, const std::string & sName);
+		nfUint32 getLaserSourceCount();
+		PModelToolpathLaserSource getLaserSource(nfUint32 nIndex);
+		// Returns nullptr if the laser index is not declared.
+		PModelToolpathLaserSource findLaserSource(nfUint32 nLaserIndex);
+		// Fails if the laser source is the default or is listed in a sync group.
+		void removeLaserSource(nfUint32 nLaserIndex);
+		// Removes all laser sources, sync groups and the default laser index.
+		void clearLaserSources();
+
+		nfBool hasDefaultLaserIndex();
+		nfUint32 getDefaultLaserIndex();
+		// Fails if the laser index is not declared.
+		void setDefaultLaserIndex(nfUint32 nLaserIndex);
+		void clearDefaultLaserIndex();
+
+		// Sync groups. Fails if the id is 0 or already declared, if the list is empty,
+		// or if a listed laser index is not declared.
+		PModelToolpathSyncGroup addSyncGroup(nfUint32 nSyncGroupID, const std::vector<nfUint32> & LaserIndices);
+		nfUint32 getSyncGroupCount();
+		PModelToolpathSyncGroup getSyncGroup(nfUint32 nIndex);
+		// Returns nullptr if the sync group id is not declared.
+		PModelToolpathSyncGroup findSyncGroup(nfUint32 nSyncGroupID);
+		void removeSyncGroup(nfUint32 nSyncGroupID);
+		void setSyncGroupLaserIndices(nfUint32 nSyncGroupID, const std::vector<nfUint32> & LaserIndices);
+
+		// If active, reading layer data fails on a segment laserindex that does not refer to a declared
+		// laser source (only if laser sources are declared) or a lasersync that does not refer to a declared sync group.
+		nfBool getLaserReferenceChecks();
+		void setLaserReferenceChecks(nfBool bActive);
+		void checkSegmentLaserReferences(const TOOLPATHSEGMENTATTRIBUTES & standardAttributes);
 
 		double getUnitFactor ();
 		CUUID getUUID ();

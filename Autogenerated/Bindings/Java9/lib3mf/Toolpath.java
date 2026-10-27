@@ -406,6 +406,274 @@ public class Toolpath extends Resource {
 	}
 
 	/**
+	 * Retrieves the count of laser sources. A toolpath without laser sources is a single-laser toolpath.
+	 *
+	 * @return Returns the laser source count.
+	 * @throws Lib3MFException
+	 */
+	public int getLaserSourceCount() throws Lib3MFException {
+		Pointer bufferCount = new Memory(4);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_getlasersourcecount.invokeInt(new java.lang.Object[]{mHandle, bufferCount}));
+		return bufferCount.getInt(0);
+	}
+
+	/**
+	 * Returns a laser source of the toolpath.
+	 *
+	 * @param index Index of the laser source (0-based). MUST be smaller than the laser source count.
+	 * @return Returns the laser source.
+	 * @throws Lib3MFException
+	 */
+	public ToolpathLaserSource getLaserSource(int index) throws Lib3MFException {
+		Pointer bufferLaserSource = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_getlasersource.invokeInt(new java.lang.Object[]{mHandle, index, bufferLaserSource}));
+		Pointer valueLaserSource = bufferLaserSource.getPointer(0);
+		ToolpathLaserSource laserSource = null;
+		if (valueLaserSource == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "LaserSource was a null pointer");
+		}
+		laserSource = mWrapper.PolymorphicFactory(valueLaserSource, ToolpathLaserSource.class);
+		return laserSource;
+	}
+
+	/**
+	 * Returns if a laser source with a specific laser index is declared.
+	 *
+	 * @param laserIndex Laser index.
+	 * @return Returns true if the laser source exists.
+	 * @throws Lib3MFException
+	 */
+	public boolean hasLaserSource(int laserIndex) throws Lib3MFException {
+		Pointer bufferLaserSourceExists = new Memory(1);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_haslasersource.invokeInt(new java.lang.Object[]{mHandle, laserIndex, bufferLaserSourceExists}));
+		return bufferLaserSourceExists.getByte(0) != 0;
+	}
+
+	/**
+	 * Returns the laser source with a specific laser index. Fails if it does not exist.
+	 *
+	 * @param laserIndex Laser index.
+	 * @return Returns the laser source.
+	 * @throws Lib3MFException
+	 */
+	public ToolpathLaserSource findLaserSource(int laserIndex) throws Lib3MFException {
+		Pointer bufferLaserSource = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_findlasersource.invokeInt(new java.lang.Object[]{mHandle, laserIndex, bufferLaserSource}));
+		Pointer valueLaserSource = bufferLaserSource.getPointer(0);
+		ToolpathLaserSource laserSource = null;
+		if (valueLaserSource == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "LaserSource was a null pointer");
+		}
+		laserSource = mWrapper.PolymorphicFactory(valueLaserSource, ToolpathLaserSource.class);
+		return laserSource;
+	}
+
+	/**
+	 * Adds a laser source. Fails if the laser index is already declared.
+	 *
+	 * @param laserIndex Laser index. MUST be unique within the toolpath and at most 2147483647.
+	 * @param name Human-readable name of the laser source.
+	 * @return Returns the laser source.
+	 * @throws Lib3MFException
+	 */
+	public ToolpathLaserSource addLaserSource(int laserIndex, String name) throws Lib3MFException {
+		byte[] bytesName = name.getBytes(StandardCharsets.UTF_8);
+		Memory bufferName = new Memory(bytesName.length + 1);
+		bufferName.write(0, bytesName, 0, bytesName.length);
+		bufferName.setByte(bytesName.length, (byte)0);
+		Pointer bufferLaserSource = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_addlasersource.invokeInt(new java.lang.Object[]{mHandle, laserIndex, bufferName, bufferLaserSource}));
+		Pointer valueLaserSource = bufferLaserSource.getPointer(0);
+		ToolpathLaserSource laserSource = null;
+		if (valueLaserSource == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "LaserSource was a null pointer");
+		}
+		laserSource = mWrapper.PolymorphicFactory(valueLaserSource, ToolpathLaserSource.class);
+		return laserSource;
+	}
+
+	/**
+	 * Removes a laser source. Fails if it does not exist, if it is the default laser source, or if it is listed in a sync group.
+	 *
+	 * @param laserIndex Laser index.
+	 * @throws Lib3MFException
+	 */
+	public void removeLaserSource(int laserIndex) throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_removelasersource.invokeInt(new java.lang.Object[]{mHandle, laserIndex}));
+	}
+
+	/**
+	 * Removes all laser sources, all sync groups and the default laser index.
+	 *
+	 * @throws Lib3MFException
+	 */
+	public void clearLaserSources() throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_clearlasersources.invokeInt(new java.lang.Object[]{mHandle}));
+	}
+
+	/**
+	 * Returns if a default laser index is set.
+	 *
+	 * @return Returns true if a default laser index is set.
+	 * @throws Lib3MFException
+	 */
+	public boolean hasDefaultLaserIndex() throws Lib3MFException {
+		Pointer bufferHasDefault = new Memory(1);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_hasdefaultlaserindex.invokeInt(new java.lang.Object[]{mHandle, bufferHasDefault}));
+		return bufferHasDefault.getByte(0) != 0;
+	}
+
+	/**
+	 * Returns the laser index used when a profile or segment omits laserindex. Fails if no default is set.
+	 *
+	 * @return Default laser index.
+	 * @throws Lib3MFException
+	 */
+	public int getDefaultLaserIndex() throws Lib3MFException {
+		Pointer bufferLaserIndex = new Memory(4);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_getdefaultlaserindex.invokeInt(new java.lang.Object[]{mHandle, bufferLaserIndex}));
+		return bufferLaserIndex.getInt(0);
+	}
+
+	/**
+	 * Sets the laser index used when a profile or segment omits laserindex. Fails if the laser index is not declared.
+	 *
+	 * @param laserIndex Default laser index.
+	 * @throws Lib3MFException
+	 */
+	public void setDefaultLaserIndex(int laserIndex) throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_setdefaultlaserindex.invokeInt(new java.lang.Object[]{mHandle, laserIndex}));
+	}
+
+	/**
+	 * Removes the default laser index.
+	 *
+	 * @throws Lib3MFException
+	 */
+	public void clearDefaultLaserIndex() throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_cleardefaultlaserindex.invokeInt(new java.lang.Object[]{mHandle}));
+	}
+
+	/**
+	 * Retrieves the count of sync groups.
+	 *
+	 * @return Returns the sync group count.
+	 * @throws Lib3MFException
+	 */
+	public int getSyncGroupCount() throws Lib3MFException {
+		Pointer bufferCount = new Memory(4);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_getsyncgroupcount.invokeInt(new java.lang.Object[]{mHandle, bufferCount}));
+		return bufferCount.getInt(0);
+	}
+
+	/**
+	 * Returns a sync group of the toolpath.
+	 *
+	 * @param index Index of the sync group (0-based). MUST be smaller than the sync group count.
+	 * @return Returns the sync group.
+	 * @throws Lib3MFException
+	 */
+	public ToolpathSyncGroup getSyncGroup(int index) throws Lib3MFException {
+		Pointer bufferSyncGroup = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_getsyncgroup.invokeInt(new java.lang.Object[]{mHandle, index, bufferSyncGroup}));
+		Pointer valueSyncGroup = bufferSyncGroup.getPointer(0);
+		ToolpathSyncGroup syncGroup = null;
+		if (valueSyncGroup == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "SyncGroup was a null pointer");
+		}
+		syncGroup = mWrapper.PolymorphicFactory(valueSyncGroup, ToolpathSyncGroup.class);
+		return syncGroup;
+	}
+
+	/**
+	 * Returns if a sync group with a specific id is declared.
+	 *
+	 * @param syncGroupID Sync group id.
+	 * @return Returns true if the sync group exists.
+	 * @throws Lib3MFException
+	 */
+	public boolean hasSyncGroup(int syncGroupID) throws Lib3MFException {
+		Pointer bufferSyncGroupExists = new Memory(1);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_hassyncgroup.invokeInt(new java.lang.Object[]{mHandle, syncGroupID, bufferSyncGroupExists}));
+		return bufferSyncGroupExists.getByte(0) != 0;
+	}
+
+	/**
+	 * Returns the sync group with a specific id. Fails if it does not exist.
+	 *
+	 * @param syncGroupID Sync group id.
+	 * @return Returns the sync group.
+	 * @throws Lib3MFException
+	 */
+	public ToolpathSyncGroup findSyncGroup(int syncGroupID) throws Lib3MFException {
+		Pointer bufferSyncGroup = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_findsyncgroup.invokeInt(new java.lang.Object[]{mHandle, syncGroupID, bufferSyncGroup}));
+		Pointer valueSyncGroup = bufferSyncGroup.getPointer(0);
+		ToolpathSyncGroup syncGroup = null;
+		if (valueSyncGroup == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "SyncGroup was a null pointer");
+		}
+		syncGroup = mWrapper.PolymorphicFactory(valueSyncGroup, ToolpathSyncGroup.class);
+		return syncGroup;
+	}
+
+	/**
+	 * Adds a sync group. Fails if the id is 0 or already declared, if the list is empty, or if a laser index is not declared.
+	 *
+	 * @param syncGroupID Sync group id. MUST be positive, unique within the toolpath and at most 2147483647.
+	 * @param laserIndices Laser indices of the sync group.
+	 * @return Returns the sync group.
+	 * @throws Lib3MFException
+	 */
+	public ToolpathSyncGroup addSyncGroup(int syncGroupID, int[] laserIndices) throws Lib3MFException {
+		Pointer bufferLaserIndices = new Memory(Math.max(1, 4 * laserIndices.length));
+		for (int i = 0; i < laserIndices.length; i++) {
+		  bufferLaserIndices.setInt(4 * i, laserIndices[i]);
+		}
+		Pointer bufferSyncGroup = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_addsyncgroup.invokeInt(new java.lang.Object[]{mHandle, syncGroupID, (long) laserIndices.length, bufferLaserIndices, bufferSyncGroup}));
+		Pointer valueSyncGroup = bufferSyncGroup.getPointer(0);
+		ToolpathSyncGroup syncGroup = null;
+		if (valueSyncGroup == Pointer.NULL) {
+		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "SyncGroup was a null pointer");
+		}
+		syncGroup = mWrapper.PolymorphicFactory(valueSyncGroup, ToolpathSyncGroup.class);
+		return syncGroup;
+	}
+
+	/**
+	 * Removes a sync group. Fails if it does not exist.
+	 *
+	 * @param syncGroupID Sync group id.
+	 * @throws Lib3MFException
+	 */
+	public void removeSyncGroup(int syncGroupID) throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_removesyncgroup.invokeInt(new java.lang.Object[]{mHandle, syncGroupID}));
+	}
+
+	/**
+	 * Activates (deactivates) the laser reference checks for reading layer data. If active, ReadLayerData fails on a segment whose laserindex does not refer to a declared laser source (only if laser sources are declared) or whose lasersync does not refer to a declared sync group. Inactive by default; toolpaths read by a reader inherit the reader's setting.
+	 *
+	 * @param checksActive flag whether the laser reference checks are active or not.
+	 * @throws Lib3MFException
+	 */
+	public void setLaserReferenceChecks(boolean checksActive) throws Lib3MFException {
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_setlaserreferencechecks.invokeInt(new java.lang.Object[]{mHandle, checksActive}));
+	}
+
+	/**
+	 * Queries whether the laser reference checks for reading layer data are active or not.
+	 *
+	 * @return returns flag whether the laser reference checks are active or not.
+	 * @throws Lib3MFException
+	 */
+	public boolean getLaserReferenceChecks() throws Lib3MFException {
+		Pointer bufferChecksActive = new Memory(1);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpath_getlaserreferencechecks.invokeInt(new java.lang.Object[]{mHandle, bufferChecksActive}));
+		return bufferChecksActive.getByte(0) != 0;
+	}
+
+	/**
 	 * Retrieves the count of custom data elements.
 	 *
 	 * @return Count

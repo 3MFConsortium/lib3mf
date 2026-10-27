@@ -1349,6 +1349,25 @@ func (inst Reader) GetStrictModeActive() (bool, error) {
 	return bool(strictModeActive), nil
 }
 
+// SetToolpathLaserReferenceChecks activates (deactivates) the checks that toolpath laserindex values refer to a declared laser source and lasersync values to a declared sync group. Inactive by default. Unresolved profile laser indices are reported as warnings (errors in strict mode). Read toolpaths inherit the setting, which then applies to their layer data (see Toolpath.SetLaserReferenceChecks).
+func (inst Reader) SetToolpathLaserReferenceChecks(checksActive bool) error {
+	ret := C.CCall_lib3mf_reader_settoolpathlaserreferencechecks(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(checksActive))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetToolpathLaserReferenceChecks queries whether the toolpath laser reference checks are active or not.
+func (inst Reader) GetToolpathLaserReferenceChecks() (bool, error) {
+	var checksActive C.bool
+	ret := C.CCall_lib3mf_reader_gettoolpathlaserreferencechecks(inst.wrapperRef.LibraryHandle, inst.Ref, &checksActive)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(checksActive), nil
+}
+
 // GetWarning returns Warning and Error Information of the read process.
 func (inst Reader) GetWarning(index uint32) (uint32, string, error) {
 	var errorCode C.uint32_t
@@ -8178,6 +8197,216 @@ func (inst ToolpathProfile) RemoveModifier(nameSpaceName string, valueName strin
 }
 
 
+// ToolpathLaserSource represents a Lib3MF class.
+type ToolpathLaserSource struct {
+	Base
+}
+
+func (wrapper Wrapper) NewToolpathLaserSource(r ref) ToolpathLaserSource {
+	return ToolpathLaserSource{wrapper.NewBase(r)}
+}
+
+// GetLaserIndex returns the laser index, which is unique within the toolpath and referenced by laserindex on profiles and segments.
+func (inst ToolpathLaserSource) GetLaserIndex() (uint32, error) {
+	var laserIndex C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlasersource_getlaserindex(inst.wrapperRef.LibraryHandle, inst.Ref, &laserIndex)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(laserIndex), nil
+}
+
+// GetName returns the human-readable name of the laser source.
+func (inst ToolpathLaserSource) GetName() (string, error) {
+	var neededforname C.uint32_t
+	var filledinname C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlasersource_getname(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforname, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizename := neededforname
+	buffername := make([]byte, bufferSizename)
+	ret = C.CCall_lib3mf_toolpathlasersource_getname(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizename, &filledinname, (*C.char)(unsafe.Pointer(&buffername[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffername[:(filledinname-1)]), nil
+}
+
+// SetName sets the human-readable name of the laser source.
+func (inst ToolpathLaserSource) SetName(name string) error {
+	ret := C.CCall_lib3mf_toolpathlasersource_setname(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(name)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// HasBounds returns if the scan-field bounds are set.
+func (inst ToolpathLaserSource) HasBounds() (bool, error) {
+	var hasBounds C.bool
+	ret := C.CCall_lib3mf_toolpathlasersource_hasbounds(inst.wrapperRef.LibraryHandle, inst.Ref, &hasBounds)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(hasBounds), nil
+}
+
+// GetBounds returns the scan-field bounds in toolpath units. Fails if no bounds are set.
+func (inst ToolpathLaserSource) GetBounds() (int32, int32, int32, int32, error) {
+	var minX C.int32_t
+	var maxX C.int32_t
+	var minY C.int32_t
+	var maxY C.int32_t
+	ret := C.CCall_lib3mf_toolpathlasersource_getbounds(inst.wrapperRef.LibraryHandle, inst.Ref, &minX, &maxX, &minY, &maxY)
+	if ret != 0 {
+		return 0, 0, 0, 0, makeError(uint32(ret))
+	}
+	return int32(minX), int32(maxX), int32(minY), int32(maxY), nil
+}
+
+// SetBounds sets the scan-field bounds in toolpath units. Fails if MaxX is smaller than MinX or MaxY is smaller than MinY, or if an existing corner radius exceeds half of the shorter side of the new bounds.
+func (inst ToolpathLaserSource) SetBounds(minX int32, maxX int32, minY int32, maxY int32) error {
+	ret := C.CCall_lib3mf_toolpathlasersource_setbounds(inst.wrapperRef.LibraryHandle, inst.Ref, C.int32_t(minX), C.int32_t(maxX), C.int32_t(minY), C.int32_t(maxY))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// ClearBounds removes the scan-field bounds. Also removes the corner radius, which requires the bounds.
+func (inst ToolpathLaserSource) ClearBounds() error {
+	ret := C.CCall_lib3mf_toolpathlasersource_clearbounds(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// HasCenter returns if the optical center is set.
+func (inst ToolpathLaserSource) HasCenter() (bool, error) {
+	var hasCenter C.bool
+	ret := C.CCall_lib3mf_toolpathlasersource_hascenter(inst.wrapperRef.LibraryHandle, inst.Ref, &hasCenter)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(hasCenter), nil
+}
+
+// GetCenter returns the optical center in toolpath units. Fails if no center is set.
+func (inst ToolpathLaserSource) GetCenter() (int32, int32, error) {
+	var centerX C.int32_t
+	var centerY C.int32_t
+	ret := C.CCall_lib3mf_toolpathlasersource_getcenter(inst.wrapperRef.LibraryHandle, inst.Ref, &centerX, &centerY)
+	if ret != 0 {
+		return 0, 0, makeError(uint32(ret))
+	}
+	return int32(centerX), int32(centerY), nil
+}
+
+// SetCenter sets the optical center in toolpath units.
+func (inst ToolpathLaserSource) SetCenter(centerX int32, centerY int32) error {
+	ret := C.CCall_lib3mf_toolpathlasersource_setcenter(inst.wrapperRef.LibraryHandle, inst.Ref, C.int32_t(centerX), C.int32_t(centerY))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// ClearCenter removes the optical center.
+func (inst ToolpathLaserSource) ClearCenter() error {
+	ret := C.CCall_lib3mf_toolpathlasersource_clearcenter(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// HasCornerRadius returns if a corner radius is set.
+func (inst ToolpathLaserSource) HasCornerRadius() (bool, error) {
+	var hasCornerRadius C.bool
+	ret := C.CCall_lib3mf_toolpathlasersource_hascornerradius(inst.wrapperRef.LibraryHandle, inst.Ref, &hasCornerRadius)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(hasCornerRadius), nil
+}
+
+// GetCornerRadius returns the corner radius of the scan field in toolpath units. Fails if no corner radius is set.
+func (inst ToolpathLaserSource) GetCornerRadius() (uint32, error) {
+	var cornerRadius C.uint32_t
+	ret := C.CCall_lib3mf_toolpathlasersource_getcornerradius(inst.wrapperRef.LibraryHandle, inst.Ref, &cornerRadius)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(cornerRadius), nil
+}
+
+// SetCornerRadius sets the corner radius of the scan field in toolpath units. Fails if no bounds are set, if the radius is 0, or if it exceeds half of the shorter side of the bounds.
+func (inst ToolpathLaserSource) SetCornerRadius(cornerRadius uint32) error {
+	ret := C.CCall_lib3mf_toolpathlasersource_setcornerradius(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(cornerRadius))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// ClearCornerRadius removes the corner radius.
+func (inst ToolpathLaserSource) ClearCornerRadius() error {
+	ret := C.CCall_lib3mf_toolpathlasersource_clearcornerradius(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
+// ToolpathSyncGroup represents a Lib3MF class.
+type ToolpathSyncGroup struct {
+	Base
+}
+
+func (wrapper Wrapper) NewToolpathSyncGroup(r ref) ToolpathSyncGroup {
+	return ToolpathSyncGroup{wrapper.NewBase(r)}
+}
+
+// GetSyncGroupID returns the sync group id, which is unique within the toolpath and referenced by lasersync on segments.
+func (inst ToolpathSyncGroup) GetSyncGroupID() (uint32, error) {
+	var syncGroupID C.uint32_t
+	ret := C.CCall_lib3mf_toolpathsyncgroup_getsyncgroupid(inst.wrapperRef.LibraryHandle, inst.Ref, &syncGroupID)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(syncGroupID), nil
+}
+
+// GetLaserIndices returns the laser indices of the sync group.
+func (inst ToolpathSyncGroup) GetLaserIndices(laserIndices []uint32) ([]uint32, error) {
+	var neededforlaserIndices C.uint64_t
+	ret := C.CCall_lib3mf_toolpathsyncgroup_getlaserindices(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforlaserIndices, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(laserIndices) < int(neededforlaserIndices) {
+	 laserIndices = append(laserIndices, make([]uint32, int(neededforlaserIndices)-len(laserIndices))...)
+	}
+	ret = C.CCall_lib3mf_toolpathsyncgroup_getlaserindices(inst.wrapperRef.LibraryHandle, inst.Ref, neededforlaserIndices, nil, (*C.uint32_t)(unsafe.Pointer(&laserIndices[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return laserIndices[:int(neededforlaserIndices)], nil
+}
+
+// SetLaserIndices sets the laser indices of the sync group. Fails if the list is empty or if a laser index is not declared by a laser source of the toolpath.
+func (inst ToolpathSyncGroup) SetLaserIndices(laserIndices []uint32) error {
+	ret := C.CCall_lib3mf_toolpathsyncgroup_setlaserindices(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(len(laserIndices)), (*C.uint32_t)(unsafe.Pointer(&laserIndices[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+
 // ToolpathLayerReader represents a Lib3MF class.
 type ToolpathLayerReader struct {
 	Base
@@ -9364,6 +9593,190 @@ func (inst Toolpath) GetProfileByUUID(profileUUID string) (ToolpathProfile, erro
 		return ToolpathProfile{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewToolpathProfile(profile), nil
+}
+
+// GetLaserSourceCount retrieves the count of laser sources. A toolpath without laser sources is a single-laser toolpath.
+func (inst Toolpath) GetLaserSourceCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getlasersourcecount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// GetLaserSource returns a laser source of the toolpath.
+func (inst Toolpath) GetLaserSource(index uint32) (ToolpathLaserSource, error) {
+	var laserSource ref
+	ret := C.CCall_lib3mf_toolpath_getlasersource(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &laserSource)
+	if ret != 0 {
+		return ToolpathLaserSource{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathLaserSource(laserSource), nil
+}
+
+// HasLaserSource returns if a laser source with a specific laser index is declared.
+func (inst Toolpath) HasLaserSource(laserIndex uint32) (bool, error) {
+	var laserSourceExists C.bool
+	ret := C.CCall_lib3mf_toolpath_haslasersource(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(laserIndex), &laserSourceExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(laserSourceExists), nil
+}
+
+// FindLaserSource returns the laser source with a specific laser index. Fails if it does not exist.
+func (inst Toolpath) FindLaserSource(laserIndex uint32) (ToolpathLaserSource, error) {
+	var laserSource ref
+	ret := C.CCall_lib3mf_toolpath_findlasersource(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(laserIndex), &laserSource)
+	if ret != 0 {
+		return ToolpathLaserSource{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathLaserSource(laserSource), nil
+}
+
+// AddLaserSource adds a laser source. Fails if the laser index is already declared.
+func (inst Toolpath) AddLaserSource(laserIndex uint32, name string) (ToolpathLaserSource, error) {
+	var laserSource ref
+	ret := C.CCall_lib3mf_toolpath_addlasersource(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(laserIndex), (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &laserSource)
+	if ret != 0 {
+		return ToolpathLaserSource{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathLaserSource(laserSource), nil
+}
+
+// RemoveLaserSource removes a laser source. Fails if it does not exist, if it is the default laser source, or if it is listed in a sync group.
+func (inst Toolpath) RemoveLaserSource(laserIndex uint32) error {
+	ret := C.CCall_lib3mf_toolpath_removelasersource(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(laserIndex))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// ClearLaserSources removes all laser sources, all sync groups and the default laser index.
+func (inst Toolpath) ClearLaserSources() error {
+	ret := C.CCall_lib3mf_toolpath_clearlasersources(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// HasDefaultLaserIndex returns if a default laser index is set.
+func (inst Toolpath) HasDefaultLaserIndex() (bool, error) {
+	var hasDefault C.bool
+	ret := C.CCall_lib3mf_toolpath_hasdefaultlaserindex(inst.wrapperRef.LibraryHandle, inst.Ref, &hasDefault)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(hasDefault), nil
+}
+
+// GetDefaultLaserIndex returns the laser index used when a profile or segment omits laserindex. Fails if no default is set.
+func (inst Toolpath) GetDefaultLaserIndex() (uint32, error) {
+	var laserIndex C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getdefaultlaserindex(inst.wrapperRef.LibraryHandle, inst.Ref, &laserIndex)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(laserIndex), nil
+}
+
+// SetDefaultLaserIndex sets the laser index used when a profile or segment omits laserindex. Fails if the laser index is not declared.
+func (inst Toolpath) SetDefaultLaserIndex(laserIndex uint32) error {
+	ret := C.CCall_lib3mf_toolpath_setdefaultlaserindex(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(laserIndex))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// ClearDefaultLaserIndex removes the default laser index.
+func (inst Toolpath) ClearDefaultLaserIndex() error {
+	ret := C.CCall_lib3mf_toolpath_cleardefaultlaserindex(inst.wrapperRef.LibraryHandle, inst.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetSyncGroupCount retrieves the count of sync groups.
+func (inst Toolpath) GetSyncGroupCount() (uint32, error) {
+	var count C.uint32_t
+	ret := C.CCall_lib3mf_toolpath_getsyncgroupcount(inst.wrapperRef.LibraryHandle, inst.Ref, &count)
+	if ret != 0 {
+		return 0, makeError(uint32(ret))
+	}
+	return uint32(count), nil
+}
+
+// GetSyncGroup returns a sync group of the toolpath.
+func (inst Toolpath) GetSyncGroup(index uint32) (ToolpathSyncGroup, error) {
+	var syncGroup ref
+	ret := C.CCall_lib3mf_toolpath_getsyncgroup(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(index), &syncGroup)
+	if ret != 0 {
+		return ToolpathSyncGroup{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathSyncGroup(syncGroup), nil
+}
+
+// HasSyncGroup returns if a sync group with a specific id is declared.
+func (inst Toolpath) HasSyncGroup(syncGroupID uint32) (bool, error) {
+	var syncGroupExists C.bool
+	ret := C.CCall_lib3mf_toolpath_hassyncgroup(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(syncGroupID), &syncGroupExists)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(syncGroupExists), nil
+}
+
+// FindSyncGroup returns the sync group with a specific id. Fails if it does not exist.
+func (inst Toolpath) FindSyncGroup(syncGroupID uint32) (ToolpathSyncGroup, error) {
+	var syncGroup ref
+	ret := C.CCall_lib3mf_toolpath_findsyncgroup(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(syncGroupID), &syncGroup)
+	if ret != 0 {
+		return ToolpathSyncGroup{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathSyncGroup(syncGroup), nil
+}
+
+// AddSyncGroup adds a sync group. Fails if the id is 0 or already declared, if the list is empty, or if a laser index is not declared.
+func (inst Toolpath) AddSyncGroup(syncGroupID uint32, laserIndices []uint32) (ToolpathSyncGroup, error) {
+	var syncGroup ref
+	ret := C.CCall_lib3mf_toolpath_addsyncgroup(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(syncGroupID), C.uint64_t(len(laserIndices)), (*C.uint32_t)(unsafe.Pointer(&laserIndices[0])), &syncGroup)
+	if ret != 0 {
+		return ToolpathSyncGroup{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewToolpathSyncGroup(syncGroup), nil
+}
+
+// RemoveSyncGroup removes a sync group. Fails if it does not exist.
+func (inst Toolpath) RemoveSyncGroup(syncGroupID uint32) error {
+	ret := C.CCall_lib3mf_toolpath_removesyncgroup(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(syncGroupID))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// SetLaserReferenceChecks activates (deactivates) the laser reference checks for reading layer data. If active, ReadLayerData fails on a segment whose laserindex does not refer to a declared laser source (only if laser sources are declared) or whose lasersync does not refer to a declared sync group. Inactive by default; toolpaths read by a reader inherit the reader's setting.
+func (inst Toolpath) SetLaserReferenceChecks(checksActive bool) error {
+	ret := C.CCall_lib3mf_toolpath_setlaserreferencechecks(inst.wrapperRef.LibraryHandle, inst.Ref, C.bool(checksActive))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetLaserReferenceChecks queries whether the laser reference checks for reading layer data are active or not.
+func (inst Toolpath) GetLaserReferenceChecks() (bool, error) {
+	var checksActive C.bool
+	ret := C.CCall_lib3mf_toolpath_getlaserreferencechecks(inst.wrapperRef.LibraryHandle, inst.Ref, &checksActive)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(checksActive), nil
 }
 
 // GetCustomDataCount retrieves the count of custom data elements.

@@ -102,6 +102,10 @@ public:
 
 	bool GetStrictModeActive ();
 
+	void SetToolpathLaserReferenceChecks (const bool bChecksActive);
+
+	bool GetToolpathLaserReferenceChecks ();
+
 	std::string GetWarning (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode);
 
 	Lib3MF_uint32 GetWarningCount ();

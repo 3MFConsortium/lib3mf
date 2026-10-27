@@ -1323,6 +1323,8 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_reader_removesupportedcustomnamespace;
 	protected com.sun.jna.Function lib3mf_reader_setstrictmodeactive;
 	protected com.sun.jna.Function lib3mf_reader_getstrictmodeactive;
+	protected com.sun.jna.Function lib3mf_reader_settoolpathlaserreferencechecks;
+	protected com.sun.jna.Function lib3mf_reader_gettoolpathlaserreferencechecks;
 	protected com.sun.jna.Function lib3mf_reader_getwarning;
 	protected com.sun.jna.Function lib3mf_reader_getwarningcount;
 	protected com.sun.jna.Function lib3mf_reader_addkeywrappingcallback;
@@ -1856,6 +1858,24 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_toolpathprofile_addmodifier;
 	protected com.sun.jna.Function lib3mf_toolpathprofile_changemodifier;
 	protected com.sun.jna.Function lib3mf_toolpathprofile_removemodifier;
+	protected com.sun.jna.Function lib3mf_toolpathlasersource_getlaserindex;
+	protected com.sun.jna.Function lib3mf_toolpathlasersource_getname;
+	protected com.sun.jna.Function lib3mf_toolpathlasersource_setname;
+	protected com.sun.jna.Function lib3mf_toolpathlasersource_hasbounds;
+	protected com.sun.jna.Function lib3mf_toolpathlasersource_getbounds;
+	protected com.sun.jna.Function lib3mf_toolpathlasersource_setbounds;
+	protected com.sun.jna.Function lib3mf_toolpathlasersource_clearbounds;
+	protected com.sun.jna.Function lib3mf_toolpathlasersource_hascenter;
+	protected com.sun.jna.Function lib3mf_toolpathlasersource_getcenter;
+	protected com.sun.jna.Function lib3mf_toolpathlasersource_setcenter;
+	protected com.sun.jna.Function lib3mf_toolpathlasersource_clearcenter;
+	protected com.sun.jna.Function lib3mf_toolpathlasersource_hascornerradius;
+	protected com.sun.jna.Function lib3mf_toolpathlasersource_getcornerradius;
+	protected com.sun.jna.Function lib3mf_toolpathlasersource_setcornerradius;
+	protected com.sun.jna.Function lib3mf_toolpathlasersource_clearcornerradius;
+	protected com.sun.jna.Function lib3mf_toolpathsyncgroup_getsyncgroupid;
+	protected com.sun.jna.Function lib3mf_toolpathsyncgroup_getlaserindices;
+	protected com.sun.jna.Function lib3mf_toolpathsyncgroup_setlaserindices;
 	protected com.sun.jna.Function lib3mf_toolpathlayerreader_getlayerdatauuid;
 	protected com.sun.jna.Function lib3mf_toolpathlayerreader_getcustomdatacount;
 	protected com.sun.jna.Function lib3mf_toolpathlayerreader_getcustomdata;
@@ -1957,6 +1977,25 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_toolpath_getprofile;
 	protected com.sun.jna.Function lib3mf_toolpath_getprofileuuid;
 	protected com.sun.jna.Function lib3mf_toolpath_getprofilebyuuid;
+	protected com.sun.jna.Function lib3mf_toolpath_getlasersourcecount;
+	protected com.sun.jna.Function lib3mf_toolpath_getlasersource;
+	protected com.sun.jna.Function lib3mf_toolpath_haslasersource;
+	protected com.sun.jna.Function lib3mf_toolpath_findlasersource;
+	protected com.sun.jna.Function lib3mf_toolpath_addlasersource;
+	protected com.sun.jna.Function lib3mf_toolpath_removelasersource;
+	protected com.sun.jna.Function lib3mf_toolpath_clearlasersources;
+	protected com.sun.jna.Function lib3mf_toolpath_hasdefaultlaserindex;
+	protected com.sun.jna.Function lib3mf_toolpath_getdefaultlaserindex;
+	protected com.sun.jna.Function lib3mf_toolpath_setdefaultlaserindex;
+	protected com.sun.jna.Function lib3mf_toolpath_cleardefaultlaserindex;
+	protected com.sun.jna.Function lib3mf_toolpath_getsyncgroupcount;
+	protected com.sun.jna.Function lib3mf_toolpath_getsyncgroup;
+	protected com.sun.jna.Function lib3mf_toolpath_hassyncgroup;
+	protected com.sun.jna.Function lib3mf_toolpath_findsyncgroup;
+	protected com.sun.jna.Function lib3mf_toolpath_addsyncgroup;
+	protected com.sun.jna.Function lib3mf_toolpath_removesyncgroup;
+	protected com.sun.jna.Function lib3mf_toolpath_setlaserreferencechecks;
+	protected com.sun.jna.Function lib3mf_toolpath_getlaserreferencechecks;
 	protected com.sun.jna.Function lib3mf_toolpath_getcustomdatacount;
 	protected com.sun.jna.Function lib3mf_toolpath_getcustomdata;
 	protected com.sun.jna.Function lib3mf_toolpath_getcustomdataname;
@@ -2165,6 +2204,8 @@ public class Lib3MFWrapper {
 		lib3mf_reader_removesupportedcustomnamespace = mLibrary.getFunction("lib3mf_reader_removesupportedcustomnamespace");
 		lib3mf_reader_setstrictmodeactive = mLibrary.getFunction("lib3mf_reader_setstrictmodeactive");
 		lib3mf_reader_getstrictmodeactive = mLibrary.getFunction("lib3mf_reader_getstrictmodeactive");
+		lib3mf_reader_settoolpathlaserreferencechecks = mLibrary.getFunction("lib3mf_reader_settoolpathlaserreferencechecks");
+		lib3mf_reader_gettoolpathlaserreferencechecks = mLibrary.getFunction("lib3mf_reader_gettoolpathlaserreferencechecks");
 		lib3mf_reader_getwarning = mLibrary.getFunction("lib3mf_reader_getwarning");
 		lib3mf_reader_getwarningcount = mLibrary.getFunction("lib3mf_reader_getwarningcount");
 		lib3mf_reader_addkeywrappingcallback = mLibrary.getFunction("lib3mf_reader_addkeywrappingcallback");
@@ -2698,6 +2739,24 @@ public class Lib3MFWrapper {
 		lib3mf_toolpathprofile_addmodifier = mLibrary.getFunction("lib3mf_toolpathprofile_addmodifier");
 		lib3mf_toolpathprofile_changemodifier = mLibrary.getFunction("lib3mf_toolpathprofile_changemodifier");
 		lib3mf_toolpathprofile_removemodifier = mLibrary.getFunction("lib3mf_toolpathprofile_removemodifier");
+		lib3mf_toolpathlasersource_getlaserindex = mLibrary.getFunction("lib3mf_toolpathlasersource_getlaserindex");
+		lib3mf_toolpathlasersource_getname = mLibrary.getFunction("lib3mf_toolpathlasersource_getname");
+		lib3mf_toolpathlasersource_setname = mLibrary.getFunction("lib3mf_toolpathlasersource_setname");
+		lib3mf_toolpathlasersource_hasbounds = mLibrary.getFunction("lib3mf_toolpathlasersource_hasbounds");
+		lib3mf_toolpathlasersource_getbounds = mLibrary.getFunction("lib3mf_toolpathlasersource_getbounds");
+		lib3mf_toolpathlasersource_setbounds = mLibrary.getFunction("lib3mf_toolpathlasersource_setbounds");
+		lib3mf_toolpathlasersource_clearbounds = mLibrary.getFunction("lib3mf_toolpathlasersource_clearbounds");
+		lib3mf_toolpathlasersource_hascenter = mLibrary.getFunction("lib3mf_toolpathlasersource_hascenter");
+		lib3mf_toolpathlasersource_getcenter = mLibrary.getFunction("lib3mf_toolpathlasersource_getcenter");
+		lib3mf_toolpathlasersource_setcenter = mLibrary.getFunction("lib3mf_toolpathlasersource_setcenter");
+		lib3mf_toolpathlasersource_clearcenter = mLibrary.getFunction("lib3mf_toolpathlasersource_clearcenter");
+		lib3mf_toolpathlasersource_hascornerradius = mLibrary.getFunction("lib3mf_toolpathlasersource_hascornerradius");
+		lib3mf_toolpathlasersource_getcornerradius = mLibrary.getFunction("lib3mf_toolpathlasersource_getcornerradius");
+		lib3mf_toolpathlasersource_setcornerradius = mLibrary.getFunction("lib3mf_toolpathlasersource_setcornerradius");
+		lib3mf_toolpathlasersource_clearcornerradius = mLibrary.getFunction("lib3mf_toolpathlasersource_clearcornerradius");
+		lib3mf_toolpathsyncgroup_getsyncgroupid = mLibrary.getFunction("lib3mf_toolpathsyncgroup_getsyncgroupid");
+		lib3mf_toolpathsyncgroup_getlaserindices = mLibrary.getFunction("lib3mf_toolpathsyncgroup_getlaserindices");
+		lib3mf_toolpathsyncgroup_setlaserindices = mLibrary.getFunction("lib3mf_toolpathsyncgroup_setlaserindices");
 		lib3mf_toolpathlayerreader_getlayerdatauuid = mLibrary.getFunction("lib3mf_toolpathlayerreader_getlayerdatauuid");
 		lib3mf_toolpathlayerreader_getcustomdatacount = mLibrary.getFunction("lib3mf_toolpathlayerreader_getcustomdatacount");
 		lib3mf_toolpathlayerreader_getcustomdata = mLibrary.getFunction("lib3mf_toolpathlayerreader_getcustomdata");
@@ -2799,6 +2858,25 @@ public class Lib3MFWrapper {
 		lib3mf_toolpath_getprofile = mLibrary.getFunction("lib3mf_toolpath_getprofile");
 		lib3mf_toolpath_getprofileuuid = mLibrary.getFunction("lib3mf_toolpath_getprofileuuid");
 		lib3mf_toolpath_getprofilebyuuid = mLibrary.getFunction("lib3mf_toolpath_getprofilebyuuid");
+		lib3mf_toolpath_getlasersourcecount = mLibrary.getFunction("lib3mf_toolpath_getlasersourcecount");
+		lib3mf_toolpath_getlasersource = mLibrary.getFunction("lib3mf_toolpath_getlasersource");
+		lib3mf_toolpath_haslasersource = mLibrary.getFunction("lib3mf_toolpath_haslasersource");
+		lib3mf_toolpath_findlasersource = mLibrary.getFunction("lib3mf_toolpath_findlasersource");
+		lib3mf_toolpath_addlasersource = mLibrary.getFunction("lib3mf_toolpath_addlasersource");
+		lib3mf_toolpath_removelasersource = mLibrary.getFunction("lib3mf_toolpath_removelasersource");
+		lib3mf_toolpath_clearlasersources = mLibrary.getFunction("lib3mf_toolpath_clearlasersources");
+		lib3mf_toolpath_hasdefaultlaserindex = mLibrary.getFunction("lib3mf_toolpath_hasdefaultlaserindex");
+		lib3mf_toolpath_getdefaultlaserindex = mLibrary.getFunction("lib3mf_toolpath_getdefaultlaserindex");
+		lib3mf_toolpath_setdefaultlaserindex = mLibrary.getFunction("lib3mf_toolpath_setdefaultlaserindex");
+		lib3mf_toolpath_cleardefaultlaserindex = mLibrary.getFunction("lib3mf_toolpath_cleardefaultlaserindex");
+		lib3mf_toolpath_getsyncgroupcount = mLibrary.getFunction("lib3mf_toolpath_getsyncgroupcount");
+		lib3mf_toolpath_getsyncgroup = mLibrary.getFunction("lib3mf_toolpath_getsyncgroup");
+		lib3mf_toolpath_hassyncgroup = mLibrary.getFunction("lib3mf_toolpath_hassyncgroup");
+		lib3mf_toolpath_findsyncgroup = mLibrary.getFunction("lib3mf_toolpath_findsyncgroup");
+		lib3mf_toolpath_addsyncgroup = mLibrary.getFunction("lib3mf_toolpath_addsyncgroup");
+		lib3mf_toolpath_removesyncgroup = mLibrary.getFunction("lib3mf_toolpath_removesyncgroup");
+		lib3mf_toolpath_setlaserreferencechecks = mLibrary.getFunction("lib3mf_toolpath_setlaserreferencechecks");
+		lib3mf_toolpath_getlaserreferencechecks = mLibrary.getFunction("lib3mf_toolpath_getlaserreferencechecks");
 		lib3mf_toolpath_getcustomdatacount = mLibrary.getFunction("lib3mf_toolpath_getcustomdatacount");
 		lib3mf_toolpath_getcustomdata = mLibrary.getFunction("lib3mf_toolpath_getcustomdata");
 		lib3mf_toolpath_getcustomdataname = mLibrary.getFunction("lib3mf_toolpath_getcustomdataname");
@@ -3006,6 +3084,8 @@ public class Lib3MFWrapper {
 		lib3mf_reader_removesupportedcustomnamespace = loadFunctionByLookup(lookupMethod, "lib3mf_reader_removesupportedcustomnamespace");
 		lib3mf_reader_setstrictmodeactive = loadFunctionByLookup(lookupMethod, "lib3mf_reader_setstrictmodeactive");
 		lib3mf_reader_getstrictmodeactive = loadFunctionByLookup(lookupMethod, "lib3mf_reader_getstrictmodeactive");
+		lib3mf_reader_settoolpathlaserreferencechecks = loadFunctionByLookup(lookupMethod, "lib3mf_reader_settoolpathlaserreferencechecks");
+		lib3mf_reader_gettoolpathlaserreferencechecks = loadFunctionByLookup(lookupMethod, "lib3mf_reader_gettoolpathlaserreferencechecks");
 		lib3mf_reader_getwarning = loadFunctionByLookup(lookupMethod, "lib3mf_reader_getwarning");
 		lib3mf_reader_getwarningcount = loadFunctionByLookup(lookupMethod, "lib3mf_reader_getwarningcount");
 		lib3mf_reader_addkeywrappingcallback = loadFunctionByLookup(lookupMethod, "lib3mf_reader_addkeywrappingcallback");
@@ -3539,6 +3619,24 @@ public class Lib3MFWrapper {
 		lib3mf_toolpathprofile_addmodifier = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathprofile_addmodifier");
 		lib3mf_toolpathprofile_changemodifier = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathprofile_changemodifier");
 		lib3mf_toolpathprofile_removemodifier = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathprofile_removemodifier");
+		lib3mf_toolpathlasersource_getlaserindex = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlasersource_getlaserindex");
+		lib3mf_toolpathlasersource_getname = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlasersource_getname");
+		lib3mf_toolpathlasersource_setname = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlasersource_setname");
+		lib3mf_toolpathlasersource_hasbounds = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlasersource_hasbounds");
+		lib3mf_toolpathlasersource_getbounds = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlasersource_getbounds");
+		lib3mf_toolpathlasersource_setbounds = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlasersource_setbounds");
+		lib3mf_toolpathlasersource_clearbounds = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlasersource_clearbounds");
+		lib3mf_toolpathlasersource_hascenter = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlasersource_hascenter");
+		lib3mf_toolpathlasersource_getcenter = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlasersource_getcenter");
+		lib3mf_toolpathlasersource_setcenter = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlasersource_setcenter");
+		lib3mf_toolpathlasersource_clearcenter = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlasersource_clearcenter");
+		lib3mf_toolpathlasersource_hascornerradius = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlasersource_hascornerradius");
+		lib3mf_toolpathlasersource_getcornerradius = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlasersource_getcornerradius");
+		lib3mf_toolpathlasersource_setcornerradius = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlasersource_setcornerradius");
+		lib3mf_toolpathlasersource_clearcornerradius = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlasersource_clearcornerradius");
+		lib3mf_toolpathsyncgroup_getsyncgroupid = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathsyncgroup_getsyncgroupid");
+		lib3mf_toolpathsyncgroup_getlaserindices = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathsyncgroup_getlaserindices");
+		lib3mf_toolpathsyncgroup_setlaserindices = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathsyncgroup_setlaserindices");
 		lib3mf_toolpathlayerreader_getlayerdatauuid = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlayerreader_getlayerdatauuid");
 		lib3mf_toolpathlayerreader_getcustomdatacount = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlayerreader_getcustomdatacount");
 		lib3mf_toolpathlayerreader_getcustomdata = loadFunctionByLookup(lookupMethod, "lib3mf_toolpathlayerreader_getcustomdata");
@@ -3640,6 +3738,25 @@ public class Lib3MFWrapper {
 		lib3mf_toolpath_getprofile = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getprofile");
 		lib3mf_toolpath_getprofileuuid = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getprofileuuid");
 		lib3mf_toolpath_getprofilebyuuid = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getprofilebyuuid");
+		lib3mf_toolpath_getlasersourcecount = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getlasersourcecount");
+		lib3mf_toolpath_getlasersource = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getlasersource");
+		lib3mf_toolpath_haslasersource = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_haslasersource");
+		lib3mf_toolpath_findlasersource = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_findlasersource");
+		lib3mf_toolpath_addlasersource = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_addlasersource");
+		lib3mf_toolpath_removelasersource = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_removelasersource");
+		lib3mf_toolpath_clearlasersources = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_clearlasersources");
+		lib3mf_toolpath_hasdefaultlaserindex = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_hasdefaultlaserindex");
+		lib3mf_toolpath_getdefaultlaserindex = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getdefaultlaserindex");
+		lib3mf_toolpath_setdefaultlaserindex = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_setdefaultlaserindex");
+		lib3mf_toolpath_cleardefaultlaserindex = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_cleardefaultlaserindex");
+		lib3mf_toolpath_getsyncgroupcount = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getsyncgroupcount");
+		lib3mf_toolpath_getsyncgroup = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getsyncgroup");
+		lib3mf_toolpath_hassyncgroup = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_hassyncgroup");
+		lib3mf_toolpath_findsyncgroup = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_findsyncgroup");
+		lib3mf_toolpath_addsyncgroup = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_addsyncgroup");
+		lib3mf_toolpath_removesyncgroup = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_removesyncgroup");
+		lib3mf_toolpath_setlaserreferencechecks = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_setlaserreferencechecks");
+		lib3mf_toolpath_getlaserreferencechecks = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getlaserreferencechecks");
 		lib3mf_toolpath_getcustomdatacount = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getcustomdatacount");
 		lib3mf_toolpath_getcustomdata = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getcustomdata");
 		lib3mf_toolpath_getcustomdataname = loadFunctionByLookup(lookupMethod, "lib3mf_toolpath_getcustomdataname");
@@ -4296,6 +4413,11 @@ public class Lib3MFWrapper {
 		   int msbId = (int)(classTypeId >> 32); 
 		   int lsbId = (int)classTypeId; 
 			switch(msbId) {
+				case 0x002A1BA8: 
+					switch(lsbId) {
+						case 0x3B876BEC: obj = (T)(new ToolpathSyncGroup(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathSyncGroup"
+					}
+				break;
 				case 0x0070021D: 
 					switch(lsbId) {
 						case 0x73AA89FD: obj = (T)(new LogNode(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::LogNode"
@@ -4544,6 +4666,11 @@ public class Lib3MFWrapper {
 				case 0x627E2116: 
 					switch(lsbId) {
 						case 0x53E11D93: obj = (T)(new CeilNode(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::CeilNode"
+					}
+				break;
+				case 0x63062DB2: 
+					switch(lsbId) {
+						case 0xD9CD5FF4: obj = (T)(new ToolpathLaserSource(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::ToolpathLaserSource"
 					}
 				break;
 				case 0x63B3B461: 

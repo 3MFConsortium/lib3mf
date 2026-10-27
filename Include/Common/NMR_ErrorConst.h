@@ -2099,4 +2099,37 @@ Toolpath errors (0xBXXX)
 // Invalid value of a standard toolpath profile attribute
 #define NMR_ERROR_INVALIDTOOLPATHPROFILEVALUE 0xB063
 
+// Toolpath layer part is not the target of a toolpath layer relationship from its model part
+#define NMR_ERROR_MISSINGTOOLPATHLAYERRELATIONSHIP 0xB064
+
+// Invalid toolpath laser source declaration
+#define NMR_ERROR_INVALIDTOOLPATHLASERSOURCE 0xB065
+
+// Toolpath laser source index is not unique within the toolpath
+#define NMR_ERROR_DUPLICATETOOLPATHLASERSOURCEINDEX 0xB066
+
+// Laser index does not reference a declared toolpath laser source
+#define NMR_ERROR_TOOLPATHLASERSOURCENOTFOUND 0xB067
+
+// Invalid toolpath laser source scan-field bounds
+#define NMR_ERROR_INVALIDTOOLPATHLASERSOURCEBOUNDS 0xB068
+
+// Invalid toolpath laser source optical center
+#define NMR_ERROR_INVALIDTOOLPATHLASERSOURCECENTER 0xB069
+
+// Invalid toolpath laser source corner radius
+#define NMR_ERROR_INVALIDTOOLPATHLASERSOURCECORNERRADIUS 0xB06A
+
+// Invalid toolpath sync group declaration
+#define NMR_ERROR_INVALIDTOOLPATHSYNCGROUP 0xB06B
+
+// Toolpath sync group id is not unique within the toolpath
+#define NMR_ERROR_DUPLICATETOOLPATHSYNCGROUPID 0xB06C
+
+// Sync group id does not reference a declared toolpath sync group
+#define NMR_ERROR_TOOLPATHSYNCGROUPNOTFOUND 0xB06D
+
+// Toolpath laser source is referenced by the default laser index or a sync group
+#define NMR_ERROR_TOOLPATHLASERSOURCEINUSE 0xB06E
+
 #endif // __NMR_ERRORCONST

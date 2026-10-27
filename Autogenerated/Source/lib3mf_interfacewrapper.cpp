@@ -1601,6 +1601,72 @@ Lib3MFResult lib3mf_reader_getstrictmodeactive(Lib3MF_Reader pReader, bool * pSt
 	}
 }
 
+Lib3MFResult lib3mf_reader_settoolpathlaserreferencechecks(Lib3MF_Reader pReader, bool bChecksActive)
+{
+	IBase* pIBaseClass = (IBase *)pReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pReader, "Reader", "SetToolpathLaserReferenceChecks");
+			pJournalEntry->addBooleanParameter("ChecksActive", bChecksActive);
+		}
+		IReader* pIReader = dynamic_cast<IReader*>(pIBaseClass);
+		if (!pIReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIReader->SetToolpathLaserReferenceChecks(bChecksActive);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_reader_gettoolpathlaserreferencechecks(Lib3MF_Reader pReader, bool * pChecksActive)
+{
+	IBase* pIBaseClass = (IBase *)pReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pReader, "Reader", "GetToolpathLaserReferenceChecks");
+		}
+		if (pChecksActive == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IReader* pIReader = dynamic_cast<IReader*>(pIBaseClass);
+		if (!pIReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pChecksActive = pIReader->GetToolpathLaserReferenceChecks();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("ChecksActive", *pChecksActive);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_reader_getwarning(Lib3MF_Reader pReader, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pErrorCode, const Lib3MF_uint32 nWarningBufferSize, Lib3MF_uint32* pWarningNeededChars, char * pWarningBuffer)
 {
 	IBase* pIBaseClass = (IBase *)pReader;
@@ -22612,6 +22678,648 @@ Lib3MFResult lib3mf_toolpathprofile_removemodifier(Lib3MF_ToolpathProfile pToolp
 
 
 /*************************************************************************************************************************
+ Class implementation for ToolpathLaserSource
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_toolpathlasersource_getlaserindex(Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_uint32 * pLaserIndex)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLaserSource;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLaserSource, "ToolpathLaserSource", "GetLaserIndex");
+		}
+		if (pLaserIndex == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLaserSource* pIToolpathLaserSource = dynamic_cast<IToolpathLaserSource*>(pIBaseClass);
+		if (!pIToolpathLaserSource)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pLaserIndex = pIToolpathLaserSource->GetLaserIndex();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("LaserIndex", *pLaserIndex);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlasersource_getname(Lib3MF_ToolpathLaserSource pToolpathLaserSource, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLaserSource;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLaserSource, "ToolpathLaserSource", "GetName");
+		}
+		if ( (!pNameBuffer) && !(pNameNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName("");
+		IToolpathLaserSource* pIToolpathLaserSource = dynamic_cast<IToolpathLaserSource*>(pIBaseClass);
+		if (!pIToolpathLaserSource)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pNameBuffer == nullptr);
+		if (isCacheCall) {
+			sName = pIToolpathLaserSource->GetName();
+
+			pIToolpathLaserSource->_setCache (new ParameterCache_1<std::string> (sName));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIToolpathLaserSource->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sName);
+			pIToolpathLaserSource->_setCache (nullptr);
+		}
+		
+		if (pNameNeededChars)
+			*pNameNeededChars = (Lib3MF_uint32) (sName.size()+1);
+		if (pNameBuffer) {
+			if (sName.size() >= nNameBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iName = 0; iName < sName.size(); iName++)
+				pNameBuffer[iName] = sName[iName];
+			pNameBuffer[sName.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Name", sName.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlasersource_setname(Lib3MF_ToolpathLaserSource pToolpathLaserSource, const char * pName)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLaserSource;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLaserSource, "ToolpathLaserSource", "SetName");
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		IToolpathLaserSource* pIToolpathLaserSource = dynamic_cast<IToolpathLaserSource*>(pIBaseClass);
+		if (!pIToolpathLaserSource)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLaserSource->SetName(sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlasersource_hasbounds(Lib3MF_ToolpathLaserSource pToolpathLaserSource, bool * pHasBounds)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLaserSource;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLaserSource, "ToolpathLaserSource", "HasBounds");
+		}
+		if (pHasBounds == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLaserSource* pIToolpathLaserSource = dynamic_cast<IToolpathLaserSource*>(pIBaseClass);
+		if (!pIToolpathLaserSource)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pHasBounds = pIToolpathLaserSource->HasBounds();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasBounds", *pHasBounds);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlasersource_getbounds(Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_int32 * pMinX, Lib3MF_int32 * pMaxX, Lib3MF_int32 * pMinY, Lib3MF_int32 * pMaxY)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLaserSource;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLaserSource, "ToolpathLaserSource", "GetBounds");
+		}
+		if (!pMinX)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (!pMaxX)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (!pMinY)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (!pMaxY)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLaserSource* pIToolpathLaserSource = dynamic_cast<IToolpathLaserSource*>(pIBaseClass);
+		if (!pIToolpathLaserSource)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLaserSource->GetBounds(*pMinX, *pMaxX, *pMinY, *pMaxY);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addInt32Result("MinX", *pMinX);
+			pJournalEntry->addInt32Result("MaxX", *pMaxX);
+			pJournalEntry->addInt32Result("MinY", *pMinY);
+			pJournalEntry->addInt32Result("MaxY", *pMaxY);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlasersource_setbounds(Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_int32 nMinX, Lib3MF_int32 nMaxX, Lib3MF_int32 nMinY, Lib3MF_int32 nMaxY)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLaserSource;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLaserSource, "ToolpathLaserSource", "SetBounds");
+			pJournalEntry->addInt32Parameter("MinX", nMinX);
+			pJournalEntry->addInt32Parameter("MaxX", nMaxX);
+			pJournalEntry->addInt32Parameter("MinY", nMinY);
+			pJournalEntry->addInt32Parameter("MaxY", nMaxY);
+		}
+		IToolpathLaserSource* pIToolpathLaserSource = dynamic_cast<IToolpathLaserSource*>(pIBaseClass);
+		if (!pIToolpathLaserSource)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLaserSource->SetBounds(nMinX, nMaxX, nMinY, nMaxY);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlasersource_clearbounds(Lib3MF_ToolpathLaserSource pToolpathLaserSource)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLaserSource;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLaserSource, "ToolpathLaserSource", "ClearBounds");
+		}
+		IToolpathLaserSource* pIToolpathLaserSource = dynamic_cast<IToolpathLaserSource*>(pIBaseClass);
+		if (!pIToolpathLaserSource)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLaserSource->ClearBounds();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlasersource_hascenter(Lib3MF_ToolpathLaserSource pToolpathLaserSource, bool * pHasCenter)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLaserSource;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLaserSource, "ToolpathLaserSource", "HasCenter");
+		}
+		if (pHasCenter == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLaserSource* pIToolpathLaserSource = dynamic_cast<IToolpathLaserSource*>(pIBaseClass);
+		if (!pIToolpathLaserSource)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pHasCenter = pIToolpathLaserSource->HasCenter();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasCenter", *pHasCenter);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlasersource_getcenter(Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_int32 * pCenterX, Lib3MF_int32 * pCenterY)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLaserSource;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLaserSource, "ToolpathLaserSource", "GetCenter");
+		}
+		if (!pCenterX)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (!pCenterY)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLaserSource* pIToolpathLaserSource = dynamic_cast<IToolpathLaserSource*>(pIBaseClass);
+		if (!pIToolpathLaserSource)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLaserSource->GetCenter(*pCenterX, *pCenterY);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addInt32Result("CenterX", *pCenterX);
+			pJournalEntry->addInt32Result("CenterY", *pCenterY);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlasersource_setcenter(Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_int32 nCenterX, Lib3MF_int32 nCenterY)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLaserSource;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLaserSource, "ToolpathLaserSource", "SetCenter");
+			pJournalEntry->addInt32Parameter("CenterX", nCenterX);
+			pJournalEntry->addInt32Parameter("CenterY", nCenterY);
+		}
+		IToolpathLaserSource* pIToolpathLaserSource = dynamic_cast<IToolpathLaserSource*>(pIBaseClass);
+		if (!pIToolpathLaserSource)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLaserSource->SetCenter(nCenterX, nCenterY);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlasersource_clearcenter(Lib3MF_ToolpathLaserSource pToolpathLaserSource)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLaserSource;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLaserSource, "ToolpathLaserSource", "ClearCenter");
+		}
+		IToolpathLaserSource* pIToolpathLaserSource = dynamic_cast<IToolpathLaserSource*>(pIBaseClass);
+		if (!pIToolpathLaserSource)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLaserSource->ClearCenter();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlasersource_hascornerradius(Lib3MF_ToolpathLaserSource pToolpathLaserSource, bool * pHasCornerRadius)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLaserSource;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLaserSource, "ToolpathLaserSource", "HasCornerRadius");
+		}
+		if (pHasCornerRadius == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLaserSource* pIToolpathLaserSource = dynamic_cast<IToolpathLaserSource*>(pIBaseClass);
+		if (!pIToolpathLaserSource)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pHasCornerRadius = pIToolpathLaserSource->HasCornerRadius();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasCornerRadius", *pHasCornerRadius);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlasersource_getcornerradius(Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_uint32 * pCornerRadius)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLaserSource;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLaserSource, "ToolpathLaserSource", "GetCornerRadius");
+		}
+		if (pCornerRadius == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathLaserSource* pIToolpathLaserSource = dynamic_cast<IToolpathLaserSource*>(pIBaseClass);
+		if (!pIToolpathLaserSource)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCornerRadius = pIToolpathLaserSource->GetCornerRadius();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("CornerRadius", *pCornerRadius);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlasersource_setcornerradius(Lib3MF_ToolpathLaserSource pToolpathLaserSource, Lib3MF_uint32 nCornerRadius)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLaserSource;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLaserSource, "ToolpathLaserSource", "SetCornerRadius");
+			pJournalEntry->addUInt32Parameter("CornerRadius", nCornerRadius);
+		}
+		IToolpathLaserSource* pIToolpathLaserSource = dynamic_cast<IToolpathLaserSource*>(pIBaseClass);
+		if (!pIToolpathLaserSource)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLaserSource->SetCornerRadius(nCornerRadius);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathlasersource_clearcornerradius(Lib3MF_ToolpathLaserSource pToolpathLaserSource)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathLaserSource;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathLaserSource, "ToolpathLaserSource", "ClearCornerRadius");
+		}
+		IToolpathLaserSource* pIToolpathLaserSource = dynamic_cast<IToolpathLaserSource*>(pIBaseClass);
+		if (!pIToolpathLaserSource)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathLaserSource->ClearCornerRadius();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for ToolpathSyncGroup
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_toolpathsyncgroup_getsyncgroupid(Lib3MF_ToolpathSyncGroup pToolpathSyncGroup, Lib3MF_uint32 * pSyncGroupID)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathSyncGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathSyncGroup, "ToolpathSyncGroup", "GetSyncGroupID");
+		}
+		if (pSyncGroupID == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathSyncGroup* pIToolpathSyncGroup = dynamic_cast<IToolpathSyncGroup*>(pIBaseClass);
+		if (!pIToolpathSyncGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pSyncGroupID = pIToolpathSyncGroup->GetSyncGroupID();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("SyncGroupID", *pSyncGroupID);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathsyncgroup_getlaserindices(Lib3MF_ToolpathSyncGroup pToolpathSyncGroup, const Lib3MF_uint64 nLaserIndicesBufferSize, Lib3MF_uint64* pLaserIndicesNeededCount, Lib3MF_uint32 * pLaserIndicesBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathSyncGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathSyncGroup, "ToolpathSyncGroup", "GetLaserIndices");
+		}
+		if ((!pLaserIndicesBuffer) && !(pLaserIndicesNeededCount))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathSyncGroup* pIToolpathSyncGroup = dynamic_cast<IToolpathSyncGroup*>(pIBaseClass);
+		if (!pIToolpathSyncGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathSyncGroup->GetLaserIndices(nLaserIndicesBufferSize, pLaserIndicesNeededCount, pLaserIndicesBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpathsyncgroup_setlaserindices(Lib3MF_ToolpathSyncGroup pToolpathSyncGroup, Lib3MF_uint64 nLaserIndicesBufferSize, const Lib3MF_uint32 * pLaserIndicesBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pToolpathSyncGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpathSyncGroup, "ToolpathSyncGroup", "SetLaserIndices");
+		}
+		if ( (!pLaserIndicesBuffer) && (nLaserIndicesBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpathSyncGroup* pIToolpathSyncGroup = dynamic_cast<IToolpathSyncGroup*>(pIBaseClass);
+		if (!pIToolpathSyncGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpathSyncGroup->SetLaserIndices(nLaserIndicesBufferSize, pLaserIndicesBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
  Class implementation for ToolpathLayerReader
 **************************************************************************************************************************/
 Lib3MFResult lib3mf_toolpathlayerreader_getlayerdatauuid(Lib3MF_ToolpathLayerReader pToolpathLayerReader, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer)
@@ -26544,6 +27252,664 @@ Lib3MFResult lib3mf_toolpath_getprofilebyuuid(Lib3MF_Toolpath pToolpath, const c
 		*pProfile = (IBase*)(pBaseProfile);
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addHandleResult("Profile", *pProfile);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_getlasersourcecount(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "GetLaserSourceCount");
+		}
+		if (pCount == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCount = pIToolpath->GetLaserSourceCount();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("Count", *pCount);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_getlasersource(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_ToolpathLaserSource * pLaserSource)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "GetLaserSource");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if (pLaserSource == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseLaserSource(nullptr);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseLaserSource = pIToolpath->GetLaserSource(nIndex);
+
+		*pLaserSource = (IBase*)(pBaseLaserSource);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("LaserSource", *pLaserSource);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_haslasersource(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLaserIndex, bool * pLaserSourceExists)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "HasLaserSource");
+			pJournalEntry->addUInt32Parameter("LaserIndex", nLaserIndex);
+		}
+		if (pLaserSourceExists == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pLaserSourceExists = pIToolpath->HasLaserSource(nLaserIndex);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("LaserSourceExists", *pLaserSourceExists);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_findlasersource(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLaserIndex, Lib3MF_ToolpathLaserSource * pLaserSource)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "FindLaserSource");
+			pJournalEntry->addUInt32Parameter("LaserIndex", nLaserIndex);
+		}
+		if (pLaserSource == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseLaserSource(nullptr);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseLaserSource = pIToolpath->FindLaserSource(nLaserIndex);
+
+		*pLaserSource = (IBase*)(pBaseLaserSource);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("LaserSource", *pLaserSource);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_addlasersource(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLaserIndex, const char * pName, Lib3MF_ToolpathLaserSource * pLaserSource)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "AddLaserSource");
+			pJournalEntry->addUInt32Parameter("LaserIndex", nLaserIndex);
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pLaserSource == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		IBase* pBaseLaserSource(nullptr);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseLaserSource = pIToolpath->AddLaserSource(nLaserIndex, sName);
+
+		*pLaserSource = (IBase*)(pBaseLaserSource);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("LaserSource", *pLaserSource);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_removelasersource(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLaserIndex)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "RemoveLaserSource");
+			pJournalEntry->addUInt32Parameter("LaserIndex", nLaserIndex);
+		}
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpath->RemoveLaserSource(nLaserIndex);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_clearlasersources(Lib3MF_Toolpath pToolpath)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "ClearLaserSources");
+		}
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpath->ClearLaserSources();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_hasdefaultlaserindex(Lib3MF_Toolpath pToolpath, bool * pHasDefault)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "HasDefaultLaserIndex");
+		}
+		if (pHasDefault == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pHasDefault = pIToolpath->HasDefaultLaserIndex();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasDefault", *pHasDefault);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_getdefaultlaserindex(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pLaserIndex)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "GetDefaultLaserIndex");
+		}
+		if (pLaserIndex == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pLaserIndex = pIToolpath->GetDefaultLaserIndex();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("LaserIndex", *pLaserIndex);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_setdefaultlaserindex(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nLaserIndex)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "SetDefaultLaserIndex");
+			pJournalEntry->addUInt32Parameter("LaserIndex", nLaserIndex);
+		}
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpath->SetDefaultLaserIndex(nLaserIndex);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_cleardefaultlaserindex(Lib3MF_Toolpath pToolpath)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "ClearDefaultLaserIndex");
+		}
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpath->ClearDefaultLaserIndex();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_getsyncgroupcount(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 * pCount)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "GetSyncGroupCount");
+		}
+		if (pCount == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pCount = pIToolpath->GetSyncGroupCount();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("Count", *pCount);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_getsyncgroup(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nIndex, Lib3MF_ToolpathSyncGroup * pSyncGroup)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "GetSyncGroup");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if (pSyncGroup == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseSyncGroup(nullptr);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseSyncGroup = pIToolpath->GetSyncGroup(nIndex);
+
+		*pSyncGroup = (IBase*)(pBaseSyncGroup);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("SyncGroup", *pSyncGroup);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_hassyncgroup(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nSyncGroupID, bool * pSyncGroupExists)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "HasSyncGroup");
+			pJournalEntry->addUInt32Parameter("SyncGroupID", nSyncGroupID);
+		}
+		if (pSyncGroupExists == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pSyncGroupExists = pIToolpath->HasSyncGroup(nSyncGroupID);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("SyncGroupExists", *pSyncGroupExists);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_findsyncgroup(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nSyncGroupID, Lib3MF_ToolpathSyncGroup * pSyncGroup)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "FindSyncGroup");
+			pJournalEntry->addUInt32Parameter("SyncGroupID", nSyncGroupID);
+		}
+		if (pSyncGroup == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseSyncGroup(nullptr);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseSyncGroup = pIToolpath->FindSyncGroup(nSyncGroupID);
+
+		*pSyncGroup = (IBase*)(pBaseSyncGroup);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("SyncGroup", *pSyncGroup);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_addsyncgroup(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nSyncGroupID, Lib3MF_uint64 nLaserIndicesBufferSize, const Lib3MF_uint32 * pLaserIndicesBuffer, Lib3MF_ToolpathSyncGroup * pSyncGroup)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "AddSyncGroup");
+			pJournalEntry->addUInt32Parameter("SyncGroupID", nSyncGroupID);
+		}
+		if ( (!pLaserIndicesBuffer) && (nLaserIndicesBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pSyncGroup == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseSyncGroup(nullptr);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseSyncGroup = pIToolpath->AddSyncGroup(nSyncGroupID, nLaserIndicesBufferSize, pLaserIndicesBuffer);
+
+		*pSyncGroup = (IBase*)(pBaseSyncGroup);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("SyncGroup", *pSyncGroup);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_removesyncgroup(Lib3MF_Toolpath pToolpath, Lib3MF_uint32 nSyncGroupID)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "RemoveSyncGroup");
+			pJournalEntry->addUInt32Parameter("SyncGroupID", nSyncGroupID);
+		}
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpath->RemoveSyncGroup(nSyncGroupID);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_setlaserreferencechecks(Lib3MF_Toolpath pToolpath, bool bChecksActive)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "SetLaserReferenceChecks");
+			pJournalEntry->addBooleanParameter("ChecksActive", bChecksActive);
+		}
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIToolpath->SetLaserReferenceChecks(bChecksActive);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_toolpath_getlaserreferencechecks(Lib3MF_Toolpath pToolpath, bool * pChecksActive)
+{
+	IBase* pIBaseClass = (IBase *)pToolpath;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pToolpath, "Toolpath", "GetLaserReferenceChecks");
+		}
+		if (pChecksActive == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IToolpath* pIToolpath = dynamic_cast<IToolpath*>(pIBaseClass);
+		if (!pIToolpath)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pChecksActive = pIToolpath->GetLaserReferenceChecks();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("ChecksActive", *pChecksActive);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -32165,6 +33531,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_reader_setstrictmodeactive;
 	if (sProcName == "lib3mf_reader_getstrictmodeactive") 
 		*ppProcAddress = (void*) &lib3mf_reader_getstrictmodeactive;
+	if (sProcName == "lib3mf_reader_settoolpathlaserreferencechecks") 
+		*ppProcAddress = (void*) &lib3mf_reader_settoolpathlaserreferencechecks;
+	if (sProcName == "lib3mf_reader_gettoolpathlaserreferencechecks") 
+		*ppProcAddress = (void*) &lib3mf_reader_gettoolpathlaserreferencechecks;
 	if (sProcName == "lib3mf_reader_getwarning") 
 		*ppProcAddress = (void*) &lib3mf_reader_getwarning;
 	if (sProcName == "lib3mf_reader_getwarningcount") 
@@ -33231,6 +34601,42 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpathprofile_changemodifier;
 	if (sProcName == "lib3mf_toolpathprofile_removemodifier") 
 		*ppProcAddress = (void*) &lib3mf_toolpathprofile_removemodifier;
+	if (sProcName == "lib3mf_toolpathlasersource_getlaserindex") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlasersource_getlaserindex;
+	if (sProcName == "lib3mf_toolpathlasersource_getname") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlasersource_getname;
+	if (sProcName == "lib3mf_toolpathlasersource_setname") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlasersource_setname;
+	if (sProcName == "lib3mf_toolpathlasersource_hasbounds") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlasersource_hasbounds;
+	if (sProcName == "lib3mf_toolpathlasersource_getbounds") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlasersource_getbounds;
+	if (sProcName == "lib3mf_toolpathlasersource_setbounds") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlasersource_setbounds;
+	if (sProcName == "lib3mf_toolpathlasersource_clearbounds") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlasersource_clearbounds;
+	if (sProcName == "lib3mf_toolpathlasersource_hascenter") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlasersource_hascenter;
+	if (sProcName == "lib3mf_toolpathlasersource_getcenter") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlasersource_getcenter;
+	if (sProcName == "lib3mf_toolpathlasersource_setcenter") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlasersource_setcenter;
+	if (sProcName == "lib3mf_toolpathlasersource_clearcenter") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlasersource_clearcenter;
+	if (sProcName == "lib3mf_toolpathlasersource_hascornerradius") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlasersource_hascornerradius;
+	if (sProcName == "lib3mf_toolpathlasersource_getcornerradius") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlasersource_getcornerradius;
+	if (sProcName == "lib3mf_toolpathlasersource_setcornerradius") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlasersource_setcornerradius;
+	if (sProcName == "lib3mf_toolpathlasersource_clearcornerradius") 
+		*ppProcAddress = (void*) &lib3mf_toolpathlasersource_clearcornerradius;
+	if (sProcName == "lib3mf_toolpathsyncgroup_getsyncgroupid") 
+		*ppProcAddress = (void*) &lib3mf_toolpathsyncgroup_getsyncgroupid;
+	if (sProcName == "lib3mf_toolpathsyncgroup_getlaserindices") 
+		*ppProcAddress = (void*) &lib3mf_toolpathsyncgroup_getlaserindices;
+	if (sProcName == "lib3mf_toolpathsyncgroup_setlaserindices") 
+		*ppProcAddress = (void*) &lib3mf_toolpathsyncgroup_setlaserindices;
 	if (sProcName == "lib3mf_toolpathlayerreader_getlayerdatauuid") 
 		*ppProcAddress = (void*) &lib3mf_toolpathlayerreader_getlayerdatauuid;
 	if (sProcName == "lib3mf_toolpathlayerreader_getcustomdatacount") 
@@ -33433,6 +34839,44 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_toolpath_getprofileuuid;
 	if (sProcName == "lib3mf_toolpath_getprofilebyuuid") 
 		*ppProcAddress = (void*) &lib3mf_toolpath_getprofilebyuuid;
+	if (sProcName == "lib3mf_toolpath_getlasersourcecount") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_getlasersourcecount;
+	if (sProcName == "lib3mf_toolpath_getlasersource") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_getlasersource;
+	if (sProcName == "lib3mf_toolpath_haslasersource") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_haslasersource;
+	if (sProcName == "lib3mf_toolpath_findlasersource") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_findlasersource;
+	if (sProcName == "lib3mf_toolpath_addlasersource") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_addlasersource;
+	if (sProcName == "lib3mf_toolpath_removelasersource") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_removelasersource;
+	if (sProcName == "lib3mf_toolpath_clearlasersources") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_clearlasersources;
+	if (sProcName == "lib3mf_toolpath_hasdefaultlaserindex") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_hasdefaultlaserindex;
+	if (sProcName == "lib3mf_toolpath_getdefaultlaserindex") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_getdefaultlaserindex;
+	if (sProcName == "lib3mf_toolpath_setdefaultlaserindex") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_setdefaultlaserindex;
+	if (sProcName == "lib3mf_toolpath_cleardefaultlaserindex") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_cleardefaultlaserindex;
+	if (sProcName == "lib3mf_toolpath_getsyncgroupcount") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_getsyncgroupcount;
+	if (sProcName == "lib3mf_toolpath_getsyncgroup") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_getsyncgroup;
+	if (sProcName == "lib3mf_toolpath_hassyncgroup") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_hassyncgroup;
+	if (sProcName == "lib3mf_toolpath_findsyncgroup") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_findsyncgroup;
+	if (sProcName == "lib3mf_toolpath_addsyncgroup") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_addsyncgroup;
+	if (sProcName == "lib3mf_toolpath_removesyncgroup") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_removesyncgroup;
+	if (sProcName == "lib3mf_toolpath_setlaserreferencechecks") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_setlaserreferencechecks;
+	if (sProcName == "lib3mf_toolpath_getlaserreferencechecks") 
+		*ppProcAddress = (void*) &lib3mf_toolpath_getlaserreferencechecks;
 	if (sProcName == "lib3mf_toolpath_getcustomdatacount") 
 		*ppProcAddress = (void*) &lib3mf_toolpath_getcustomdatacount;
 	if (sProcName == "lib3mf_toolpath_getcustomdata") 

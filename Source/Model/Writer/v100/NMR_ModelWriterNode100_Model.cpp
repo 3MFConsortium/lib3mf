@@ -1322,6 +1322,67 @@ namespace NMR {
 
 	}
 
+	void CModelWriterNode100_Model::writeToolpathLaserSources(CModelToolpath * pToolpathResource)
+	{
+		__NMRASSERT(pToolpathResource);
+
+		nfUint32 nLaserSourceCount = pToolpathResource->getLaserSourceCount();
+		if (nLaserSourceCount == 0)
+			return;
+
+		writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHLASERSOURCES, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+		if (pToolpathResource->hasDefaultLaserIndex())
+			writeUintAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCES_DEFAULT, pToolpathResource->getDefaultLaserIndex());
+
+		for (nfUint32 nLaserSourceIndex = 0; nLaserSourceIndex < nLaserSourceCount; nLaserSourceIndex++) {
+			auto pLaserSource = pToolpathResource->getLaserSource(nLaserSourceIndex);
+
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHLASERSOURCE, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+			writeUintAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_INDEX, pLaserSource->getLaserIndex());
+			writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_NAME, pLaserSource->getName());
+
+			if (pLaserSource->hasBounds()) {
+				nfInt32 nMinX, nMaxX, nMinY, nMaxY;
+				pLaserSource->getBounds(nMinX, nMaxX, nMinY, nMaxY);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_MINX, nMinX);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_MAXX, nMaxX);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_MINY, nMinY);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_MAXY, nMaxY);
+			}
+
+			if (pLaserSource->hasCenter()) {
+				nfInt32 nCenterX, nCenterY;
+				pLaserSource->getCenter(nCenterX, nCenterY);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_CENTERX, nCenterX);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_CENTERY, nCenterY);
+			}
+
+			if (pLaserSource->hasCornerRadius())
+				writeUintAttribute(XML_3MF_ATTRIBUTE_TOOLPATHLASERSOURCE_CORNERRADIUS, pLaserSource->getCornerRadius());
+
+			writeEndElement();
+		}
+
+		nfUint32 nSyncGroupCount = pToolpathResource->getSyncGroupCount();
+		for (nfUint32 nSyncGroupIndex = 0; nSyncGroupIndex < nSyncGroupCount; nSyncGroupIndex++) {
+			auto pSyncGroup = pToolpathResource->getSyncGroup(nSyncGroupIndex);
+
+			std::string sLasers;
+			for (nfUint32 nLaserIndex : pSyncGroup->getLaserIndices()) {
+				if (!sLasers.empty())
+					sLasers += " ";
+				sLasers += fnUint32ToString(nLaserIndex);
+			}
+
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHSYNCGROUP, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+			writeUintAttribute(XML_3MF_ATTRIBUTE_TOOLPATHSYNCGROUP_ID, pSyncGroup->getSyncGroupID());
+			writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATHSYNCGROUP_LASERS, sLasers);
+			writeEndElement();
+		}
+
+		writeFullEndElement();
+	}
+
 	void CModelWriterNode100_Model::writeToolpaths()
 	{
 		nfUint32 nCount = m_pModel->getResourceCount();
@@ -1343,22 +1404,7 @@ namespace NMR {
 				if (eToolpathType != Lib3MF::eToolpathType::Planar)
 					writeStringAttribute(XML_3MF_ATTRIBUTE_TOOLPATH_TOOLPATHTYPE, CModelToolpath::toolpathTypeToString(eToolpathType));
 
-				uint32_t nXMLDataCount = pToolpathResource->getCustomXMLDataCount();
-				if (nXMLDataCount > 0) {
-					writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHDATA, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
-
-					for (uint32_t nXMLDataIndex = 0; nXMLDataIndex < nXMLDataCount; nXMLDataIndex++) {
-						auto pXMLData = pToolpathResource->getCustomXMLData(nXMLDataIndex);
-
-						std::string sNameSpacePrefix;
-						if (m_pXMLWriter->GetNamespacePrefix(pXMLData->getNameSpace(), sNameSpacePrefix)) {
-							writeCustomToolpathXMLNode (pXMLData->getRootNode (), sNameSpacePrefix);
-						}
-						
-					}
-
-					writeFullEndElement();
-				}
+				writeToolpathLaserSources(pToolpathResource);
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHPROFILES, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
 				nfUint32 nProfileCount = pToolpathResource->getProfileCount();
@@ -1449,6 +1495,23 @@ namespace NMR {
 
 
 				writeFullEndElement();
+
+				uint32_t nXMLDataCount = pToolpathResource->getCustomXMLDataCount();
+				if (nXMLDataCount > 0) {
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_TOOLPATHDATA, XML_3MF_NAMESPACEPREFIX_TOOLPATH);
+
+					for (uint32_t nXMLDataIndex = 0; nXMLDataIndex < nXMLDataCount; nXMLDataIndex++) {
+						auto pXMLData = pToolpathResource->getCustomXMLData(nXMLDataIndex);
+
+						std::string sNameSpacePrefix;
+						if (m_pXMLWriter->GetNamespacePrefix(pXMLData->getNameSpace(), sNameSpacePrefix)) {
+							writeCustomToolpathXMLNode (pXMLData->getRootNode (), sNameSpacePrefix);
+						}
+						
+					}
+
+					writeFullEndElement();
+				}
 
 				writeFullEndElement();
 

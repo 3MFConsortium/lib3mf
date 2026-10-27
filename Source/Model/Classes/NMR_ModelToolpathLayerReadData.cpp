@@ -67,6 +67,8 @@ namespace NMR {
 		if (m_pCurrentSegment != nullptr)
 			throw CNMRException(NMR_ERROR_LAYERSEGMENTALREADYOPEN);
 
+		m_pModelToolpath->checkSegmentLaserReferences(standardAttributes);
+
 		m_pCurrentSegment = m_Segments.allocData();
 		m_pCurrentSegment->m_eType = eType;
 		m_pCurrentSegment->m_nFlags = 0;
