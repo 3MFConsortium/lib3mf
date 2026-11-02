@@ -219,30 +219,6 @@ namespace NMR {
 			}
 		}
 
-
-		// Write Binary Streams
-		for (auto iBinaryIter : m_BinaryWriterUUIDMap) {
-
-			auto pBinaryWriter = iBinaryIter.second.second;
-
-			if (!pBinaryWriter->isEmpty()) {
-				pBinaryWriter->finishWriting();
-				POpcPackagePart pBinaryPart = m_pPackageWriter->addUncompressedPart(pBinaryWriter->getBinaryPath ());
-				pModelPart->addRelationship("binary" + iBinaryIter.first, PACKAGE_BINARY_RELATIONSHIP_TYPE, pBinaryPart->getURI());
-				pBinaryWriter->copyBinaryToStream(pBinaryPart->getExportStream());
-
-				POpcPackagePart pIndexPart = m_pPackageWriter->addPart(pBinaryWriter->getIndexPath ());
-				pModelPart->addRelationship("binaryindex" + iBinaryIter.first, PACKAGE_BINARYINDEX_RELATIONSHIP_TYPE, pIndexPart->getURI());
-
-				pIndexPart->addRelationship("binary" + iBinaryIter.first, PACKAGE_BINARY_RELATIONSHIP_TYPE, pBinaryPart->getURI());				
-				pBinaryWriter->writeIndexXML(pIndexPart->getExportStream());
-				
-
-			}
-
-		}
-
-
 		// Write Additional Attachments that are not part of the model
 		for (auto iAttachmentIter : m_AdditionalAttachments) {
 			CUUID uuid;

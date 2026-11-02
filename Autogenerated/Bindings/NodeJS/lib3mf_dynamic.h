@@ -54,88 +54,6 @@ Interface version: 2.4.0
 typedef Lib3MFResult (*PLib3MFBase_ClassTypeIdPtr) (Lib3MF_Base pBase, Lib3MF_uint64 * pClassTypeId);
 
 /*************************************************************************************************************************
- Class definition for BinaryStream
-**************************************************************************************************************************/
-
-/**
-* Retrieves an binary streams package path for the binary data.
-*
-* @param[in] pBinaryStream - BinaryStream instance.
-* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
-* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-* @param[out] pPathBuffer -  buffer of binary streams package binary path., may be NULL
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFBinaryStream_GetBinaryPathPtr) (Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer);
-
-/**
-* Retrieves an binary streams package path for the index data.
-*
-* @param[in] pBinaryStream - BinaryStream instance.
-* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
-* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-* @param[out] pPathBuffer -  buffer of binary streams package index path., may be NULL
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFBinaryStream_GetIndexPathPtr) (Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer);
-
-/**
-* Retrieves an binary streams uuid.
-*
-* @param[in] pBinaryStream - BinaryStream instance.
-* @param[in] nUUIDBufferSize - size of the buffer (including trailing 0)
-* @param[out] pUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-* @param[out] pUUIDBuffer -  buffer of binary streams uuid, may be NULL
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFBinaryStream_GetUUIDPtr) (Lib3MF_BinaryStream pBinaryStream, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer);
-
-/**
-* Sets the float compression mode to raw. All subsequent writes will adhere to this mode.
-*
-* @param[in] pBinaryStream - BinaryStream instance.
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFBinaryStream_DisableDiscretizedArrayCompressionPtr) (Lib3MF_BinaryStream pBinaryStream);
-
-/**
-* Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
-*
-* @param[in] pBinaryStream - BinaryStream instance.
-* @param[in] dUnits - Unit factor to use for quantization.
-* @param[in] ePredictionType - Prediction type to use for arrays.
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFBinaryStream_EnableDiscretizedArrayCompressionPtr) (Lib3MF_BinaryStream pBinaryStream, Lib3MF_double dUnits, eLib3MFBinaryStreamPredictionType ePredictionType);
-
-/**
-* Switches to fast LZ4 compression mode.
-*
-* @param[in] pBinaryStream - BinaryStream instance.
-* @param[in] nCompressionLevel - Compression level (2-12).
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFBinaryStream_EnableLZ4Ptr) (Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nCompressionLevel);
-
-/**
-* Switches to ZLib compression mode.
-*
-* @param[in] pBinaryStream - BinaryStream instance.
-* @param[in] nCompressionLevel - Compression level (0-9).
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFBinaryStream_EnableZLibPtr) (Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nCompressionLevel);
-
-/**
-* Switches to ZStd compression mode.
-*
-* @param[in] pBinaryStream - BinaryStream instance.
-* @param[in] nCompressionLevel - Compression level.
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFBinaryStream_EnableZstdPtr) (Lib3MF_BinaryStream pBinaryStream, Lib3MF_uint32 nCompressionLevel);
-
-/*************************************************************************************************************************
  Class definition for Writer
 **************************************************************************************************************************/
 
@@ -267,27 +185,6 @@ typedef Lib3MFResult (*PLib3MFWriter_AddKeyWrappingCallbackPtr) (Lib3MF_Writer p
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFWriter_SetContentEncryptionCallbackPtr) (Lib3MF_Writer pWriter, Lib3MFContentEncryptionCallback pTheCallback, Lib3MF_pvoid pUserData);
-
-/**
-* Creates a binary stream object. Only applicable for 3MF Writers.
-*
-* @param[in] pWriter - Writer instance.
-* @param[in] pIndexPath - Package path to write the index into
-* @param[in] pBinaryPath - Package path to write raw binary data into
-* @param[out] pBinaryStream - Returns a package path.
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFWriter_CreateBinaryStreamPtr) (Lib3MF_Writer pWriter, const char * pIndexPath, const char * pBinaryPath, Lib3MF_BinaryStream * pBinaryStream);
-
-/**
-* Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
-*
-* @param[in] pWriter - Writer instance.
-* @param[in] pInstance - Object instance to assign Binary stream to.
-* @param[in] pBinaryStream - Binary stream object to use for this layer.
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFWriter_AssignBinaryStreamPtr) (Lib3MF_Writer pWriter, Lib3MF_Base pInstance, Lib3MF_BinaryStream pBinaryStream);
 
 /**
 * Registers a custom 3MF Namespace. Fails if Prefix is already registered. The namespace will not be required by default.
@@ -9370,14 +9267,6 @@ typedef Lib3MFResult (*PLib3MFGetTranslationTransformPtr) (Lib3MF_single fVector
 typedef struct {
 	void * m_LibraryHandle;
 	PLib3MFBase_ClassTypeIdPtr m_Base_ClassTypeId;
-	PLib3MFBinaryStream_GetBinaryPathPtr m_BinaryStream_GetBinaryPath;
-	PLib3MFBinaryStream_GetIndexPathPtr m_BinaryStream_GetIndexPath;
-	PLib3MFBinaryStream_GetUUIDPtr m_BinaryStream_GetUUID;
-	PLib3MFBinaryStream_DisableDiscretizedArrayCompressionPtr m_BinaryStream_DisableDiscretizedArrayCompression;
-	PLib3MFBinaryStream_EnableDiscretizedArrayCompressionPtr m_BinaryStream_EnableDiscretizedArrayCompression;
-	PLib3MFBinaryStream_EnableLZ4Ptr m_BinaryStream_EnableLZ4;
-	PLib3MFBinaryStream_EnableZLibPtr m_BinaryStream_EnableZLib;
-	PLib3MFBinaryStream_EnableZstdPtr m_BinaryStream_EnableZstd;
 	PLib3MFWriter_WriteToFilePtr m_Writer_WriteToFile;
 	PLib3MFWriter_GetStreamSizePtr m_Writer_GetStreamSize;
 	PLib3MFWriter_WriteToBufferPtr m_Writer_WriteToBuffer;
@@ -9391,8 +9280,6 @@ typedef struct {
 	PLib3MFWriter_GetWarningCountPtr m_Writer_GetWarningCount;
 	PLib3MFWriter_AddKeyWrappingCallbackPtr m_Writer_AddKeyWrappingCallback;
 	PLib3MFWriter_SetContentEncryptionCallbackPtr m_Writer_SetContentEncryptionCallback;
-	PLib3MFWriter_CreateBinaryStreamPtr m_Writer_CreateBinaryStream;
-	PLib3MFWriter_AssignBinaryStreamPtr m_Writer_AssignBinaryStream;
 	PLib3MFWriter_RegisterCustomNamespacePtr m_Writer_RegisterCustomNamespace;
 	PLib3MFWriter_SetCustomNamespaceRequiredPtr m_Writer_SetCustomNamespaceRequired;
 	PLib3MFWriter_GetCustomNamespaceRequiredPtr m_Writer_GetCustomNamespaceRequired;

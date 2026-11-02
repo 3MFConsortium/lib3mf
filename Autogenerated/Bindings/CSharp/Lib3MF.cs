@@ -485,11 +485,6 @@ namespace Lib3MF {
 		All = 2
 	};
 
-	public enum eBinaryStreamPredictionType {
-		NoPrediction = 0,
-		DeltaPrediction = 1
-	};
-
 	public enum eProgressIdentifier {
 		QUERYCANCELED = 0,
 		DONE = 1,
@@ -927,30 +922,6 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_base_classtypeid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Base_ClassTypeId (IntPtr Handle, out UInt64 AClassTypeId);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_getbinarypath", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BinaryStream_GetBinaryPath (IntPtr Handle, UInt32 sizePath, out UInt32 neededPath, IntPtr dataPath);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_getindexpath", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BinaryStream_GetIndexPath (IntPtr Handle, UInt32 sizePath, out UInt32 neededPath, IntPtr dataPath);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_getuuid", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BinaryStream_GetUUID (IntPtr Handle, UInt32 sizeUUID, out UInt32 neededUUID, IntPtr dataUUID);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_disablediscretizedarraycompression", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BinaryStream_DisableDiscretizedArrayCompression (IntPtr Handle);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_enablediscretizedarraycompression", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BinaryStream_EnableDiscretizedArrayCompression (IntPtr Handle, Double AUnits, Int32 APredictionType);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_enablelz4", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BinaryStream_EnableLZ4 (IntPtr Handle, UInt32 ACompressionLevel);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_enablezlib", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BinaryStream_EnableZLib (IntPtr Handle, UInt32 ACompressionLevel);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_binarystream_enablezstd", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 BinaryStream_EnableZstd (IntPtr Handle, UInt32 ACompressionLevel);
-
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_writetofile", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Writer_WriteToFile (IntPtr Handle, byte[] AFilename);
 
@@ -989,12 +960,6 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_setcontentencryptioncallback", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Writer_SetContentEncryptionCallback (IntPtr Handle, IntPtr ATheCallback, UInt64 AUserData);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_createbinarystream", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Writer_CreateBinaryStream (IntPtr Handle, byte[] AIndexPath, byte[] ABinaryPath, out IntPtr ABinaryStream);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_assignbinarystream", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Writer_AssignBinaryStream (IntPtr Handle, IntPtr AInstance, IntPtr ABinaryStream);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_registercustomnamespace", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Writer_RegisterCustomNamespace (IntPtr Handle, byte[] APrefix, byte[] ANameSpace);
@@ -4025,7 +3990,6 @@ namespace Lib3MF {
 					ThrowError (IntPtr.Zero, errorCode);
 				switch (resultClassTypeId) {
 					case 0x856632D0BAF1D8B7: Object = new CBase(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Base"
-					case 0xA0EB26254C981E1A: Object = new CBinaryStream(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::BinaryStream"
 					case 0xE76F642F363FD7E9: Object = new CWriter(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Writer"
 					case 0xBE46884397CE1319: Object = new CPersistentReaderSource(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
 					case 0x2D86831DA59FBE72: Object = new CReader(Handle) as T; break; // First 64 bits of SHA1 of a string: "Lib3MF::Reader"
@@ -4216,87 +4180,6 @@ namespace Lib3MF {
 
 	}
 
-	public class CBinaryStream : CBase
-	{
-		public CBinaryStream (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public String GetBinaryPath ()
-		{
-			UInt32 sizePath = 0;
-			UInt32 neededPath = 0;
-			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetBinaryPath (Handle, sizePath, out neededPath, IntPtr.Zero));
-			sizePath = neededPath;
-			byte[] bytesPath = new byte[sizePath];
-			GCHandle dataPath = GCHandle.Alloc(bytesPath, GCHandleType.Pinned);
-
-			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetBinaryPath (Handle, sizePath, out neededPath, dataPath.AddrOfPinnedObject()));
-			dataPath.Free();
-			return Encoding.UTF8.GetString(bytesPath).TrimEnd(char.MinValue);
-		}
-
-		public String GetIndexPath ()
-		{
-			UInt32 sizePath = 0;
-			UInt32 neededPath = 0;
-			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetIndexPath (Handle, sizePath, out neededPath, IntPtr.Zero));
-			sizePath = neededPath;
-			byte[] bytesPath = new byte[sizePath];
-			GCHandle dataPath = GCHandle.Alloc(bytesPath, GCHandleType.Pinned);
-
-			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetIndexPath (Handle, sizePath, out neededPath, dataPath.AddrOfPinnedObject()));
-			dataPath.Free();
-			return Encoding.UTF8.GetString(bytesPath).TrimEnd(char.MinValue);
-		}
-
-		public String GetUUID ()
-		{
-			UInt32 sizeUUID = 0;
-			UInt32 neededUUID = 0;
-			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetUUID (Handle, sizeUUID, out neededUUID, IntPtr.Zero));
-			sizeUUID = neededUUID;
-			byte[] bytesUUID = new byte[sizeUUID];
-			GCHandle dataUUID = GCHandle.Alloc(bytesUUID, GCHandleType.Pinned);
-
-			CheckError(Internal.Lib3MFWrapper.BinaryStream_GetUUID (Handle, sizeUUID, out neededUUID, dataUUID.AddrOfPinnedObject()));
-			dataUUID.Free();
-			return Encoding.UTF8.GetString(bytesUUID).TrimEnd(char.MinValue);
-		}
-
-		public void DisableDiscretizedArrayCompression ()
-		{
-
-			CheckError(Internal.Lib3MFWrapper.BinaryStream_DisableDiscretizedArrayCompression (Handle));
-		}
-
-		public void EnableDiscretizedArrayCompression (Double AUnits, eBinaryStreamPredictionType APredictionType)
-		{
-			Int32 enumPredictionType = (Int32) APredictionType;
-
-			CheckError(Internal.Lib3MFWrapper.BinaryStream_EnableDiscretizedArrayCompression (Handle, AUnits, enumPredictionType));
-		}
-
-		public void EnableLZ4 (UInt32 ACompressionLevel)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.BinaryStream_EnableLZ4 (Handle, ACompressionLevel));
-		}
-
-		public void EnableZLib (UInt32 ACompressionLevel)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.BinaryStream_EnableZLib (Handle, ACompressionLevel));
-		}
-
-		public void EnableZstd (UInt32 ACompressionLevel)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.BinaryStream_EnableZstd (Handle, ACompressionLevel));
-		}
-
-	}
-
 	public class CWriter : CBase
 	{
 		public CWriter (IntPtr NewHandle) : base (NewHandle)
@@ -4404,28 +4287,6 @@ namespace Lib3MF {
 		{
 
 			CheckError(Internal.Lib3MFWrapper.Writer_SetContentEncryptionCallback (Handle, ATheCallback, AUserData));
-		}
-
-		public CBinaryStream CreateBinaryStream (String AIndexPath, String ABinaryPath)
-		{
-			byte[] byteIndexPath = Encoding.UTF8.GetBytes(AIndexPath + char.MinValue);
-			byte[] byteBinaryPath = Encoding.UTF8.GetBytes(ABinaryPath + char.MinValue);
-			IntPtr newBinaryStream = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Writer_CreateBinaryStream (Handle, byteIndexPath, byteBinaryPath, out newBinaryStream));
-			return Internal.Lib3MFWrapper.PolymorphicFactory<CBinaryStream>(newBinaryStream);
-		}
-
-		public void AssignBinaryStream (CBase AInstance, CBinaryStream ABinaryStream)
-		{
-			IntPtr AInstanceHandle = IntPtr.Zero;
-			if (AInstance != null)
-				AInstanceHandle = AInstance.GetHandle();
-			IntPtr ABinaryStreamHandle = IntPtr.Zero;
-			if (ABinaryStream != null)
-				ABinaryStreamHandle = ABinaryStream.GetHandle();
-
-			CheckError(Internal.Lib3MFWrapper.Writer_AssignBinaryStream (Handle, AInstanceHandle, ABinaryStreamHandle));
 		}
 
 		public void RegisterCustomNamespace (String APrefix, String ANameSpace)

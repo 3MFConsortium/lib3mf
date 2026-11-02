@@ -160,14 +160,6 @@ const (
 	BeamLatticeBallMode_All = 2
 )
 
-// BinaryStreamPredictionType represents a Lib3MF enum.
-type BinaryStreamPredictionType int
-
-const (
-	BinaryStreamPredictionType_NoPrediction = 0
-	BinaryStreamPredictionType_DeltaPrediction = 1
-)
-
 // ProgressIdentifier represents a Lib3MF enum.
 type ProgressIdentifier int
 
@@ -892,112 +884,6 @@ func (inst Base) ClassTypeId() (uint64, error) {
 }
 
 
-// BinaryStream represents a Lib3MF class.
-type BinaryStream struct {
-	Base
-}
-
-func (wrapper Wrapper) NewBinaryStream(r ref) BinaryStream {
-	return BinaryStream{wrapper.NewBase(r)}
-}
-
-// GetBinaryPath retrieves an binary streams package path for the binary data.
-func (inst BinaryStream) GetBinaryPath() (string, error) {
-	var neededforpath C.uint32_t
-	var filledinpath C.uint32_t
-	ret := C.CCall_lib3mf_binarystream_getbinarypath(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforpath, nil)
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	bufferSizepath := neededforpath
-	bufferpath := make([]byte, bufferSizepath)
-	ret = C.CCall_lib3mf_binarystream_getbinarypath(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizepath, &filledinpath, (*C.char)(unsafe.Pointer(&bufferpath[0])))
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	return string(bufferpath[:(filledinpath-1)]), nil
-}
-
-// GetIndexPath retrieves an binary streams package path for the index data.
-func (inst BinaryStream) GetIndexPath() (string, error) {
-	var neededforpath C.uint32_t
-	var filledinpath C.uint32_t
-	ret := C.CCall_lib3mf_binarystream_getindexpath(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforpath, nil)
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	bufferSizepath := neededforpath
-	bufferpath := make([]byte, bufferSizepath)
-	ret = C.CCall_lib3mf_binarystream_getindexpath(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizepath, &filledinpath, (*C.char)(unsafe.Pointer(&bufferpath[0])))
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	return string(bufferpath[:(filledinpath-1)]), nil
-}
-
-// GetUUID retrieves an binary streams uuid.
-func (inst BinaryStream) GetUUID() (string, error) {
-	var neededforuUID C.uint32_t
-	var filledinuUID C.uint32_t
-	ret := C.CCall_lib3mf_binarystream_getuuid(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforuUID, nil)
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	bufferSizeuUID := neededforuUID
-	bufferuUID := make([]byte, bufferSizeuUID)
-	ret = C.CCall_lib3mf_binarystream_getuuid(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizeuUID, &filledinuUID, (*C.char)(unsafe.Pointer(&bufferuUID[0])))
-	if ret != 0 {
-		return "", makeError(uint32(ret))
-	}
-	return string(bufferuUID[:(filledinuUID-1)]), nil
-}
-
-// DisableDiscretizedArrayCompression sets the float compression mode to raw. All subsequent writes will adhere to this mode.
-func (inst BinaryStream) DisableDiscretizedArrayCompression() error {
-	ret := C.CCall_lib3mf_binarystream_disablediscretizedarraycompression(inst.wrapperRef.LibraryHandle, inst.Ref)
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
-}
-
-// EnableDiscretizedArrayCompression sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
-func (inst BinaryStream) EnableDiscretizedArrayCompression(units float64, predictionType BinaryStreamPredictionType) error {
-	ret := C.CCall_lib3mf_binarystream_enablediscretizedarraycompression(inst.wrapperRef.LibraryHandle, inst.Ref, C.double(units), C.eLib3MFBinaryStreamPredictionType(predictionType))
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
-}
-
-// EnableLZ4 switches to fast LZ4 compression mode.
-func (inst BinaryStream) EnableLZ4(compressionLevel uint32) error {
-	ret := C.CCall_lib3mf_binarystream_enablelz4(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(compressionLevel))
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
-}
-
-// EnableZLib switches to ZLib compression mode.
-func (inst BinaryStream) EnableZLib(compressionLevel uint32) error {
-	ret := C.CCall_lib3mf_binarystream_enablezlib(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(compressionLevel))
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
-}
-
-// EnableZstd switches to ZStd compression mode.
-func (inst BinaryStream) EnableZstd(compressionLevel uint32) error {
-	ret := C.CCall_lib3mf_binarystream_enablezstd(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(compressionLevel))
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
-	return nil
-}
-
-
 // Writer represents a Lib3MF class.
 type Writer struct {
 	Base
@@ -1147,25 +1033,6 @@ func (inst Writer) SetContentEncryptionCallback(theCallback ContentEncryptionCal
 		return makeError(uint32(ret))
 	}
 	contentEncryptionCallbackFunc = theCallback
-	return nil
-}
-
-// CreateBinaryStream creates a binary stream object. Only applicable for 3MF Writers.
-func (inst Writer) CreateBinaryStream(indexPath string, binaryPath string) (BinaryStream, error) {
-	var binaryStream ref
-	ret := C.CCall_lib3mf_writer_createbinarystream(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(indexPath)[0])), (*C.char)(unsafe.Pointer(&[]byte(binaryPath)[0])), &binaryStream)
-	if ret != 0 {
-		return BinaryStream{}, makeError(uint32(ret))
-	}
-	return inst.wrapperRef.NewBinaryStream(binaryStream), nil
-}
-
-// AssignBinaryStream sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
-func (inst Writer) AssignBinaryStream(instance Base, binaryStream BinaryStream) error {
-	ret := C.CCall_lib3mf_writer_assignbinarystream(inst.wrapperRef.LibraryHandle, inst.Ref, instance.Ref, binaryStream.Ref)
-	if ret != 0 {
-		return makeError(uint32(ret))
-	}
 	return nil
 }
 

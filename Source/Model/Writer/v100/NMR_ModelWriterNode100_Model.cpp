@@ -72,7 +72,7 @@ namespace NMR {
 
 	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
 		_In_ PModelWarnings pWarnings, _In_ nfUint32 nDecimalPrecision, nfBool bWritesRootModel) : CModelWriterNode_ModelBase(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision),
-		m_pWarnings (pWarnings), m_bWriteBinaryExtension (false)
+		m_pWarnings (pWarnings)
 	{
 		if (pWarnings.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -216,10 +216,6 @@ namespace NMR {
 					sRequiredExtensions = sRequiredExtensions + " ";
 				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_IMPLICIT;
 			}
-		}
-
-		if (m_bWriteBinaryExtension) {
-			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_NAMESPACE_BINARYSPEC);
 		}
 
 		if (m_bWriteCustomNamespaces) {
@@ -636,19 +632,9 @@ namespace NMR {
 
 		writeMetaDataGroup(object.metaDataGroup());
 
-			if (pMeshObject) {
-
-				CChunkedBinaryStreamWriter* pMeshBinaryWriter = nullptr;
-				std::string sMeshBinaryPath;
-
-				auto iBinaryIter = m_BinaryStreamWriters.find(pMeshObject->uuid()->toString());
-				if (iBinaryIter != m_BinaryStreamWriters.end()) {
-					sMeshBinaryPath = iBinaryIter->second.first;
-					pMeshBinaryWriter = iBinaryIter->second.second;
-				}
-
-				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
-					m_pPropertyIndexMapping, m_nDecimalPrecision, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension, m_bWriteVolumetricExtension, m_bWriteTriangleSetExtension, pMeshBinaryWriter);
+		if (pMeshObject) {
+			CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
+				m_pPropertyIndexMapping, m_nDecimalPrecision, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension, m_bWriteVolumetricExtension, m_bWriteTriangleSetExtension);
 
 			ModelWriter_Mesh.writeToXML();
 		}
@@ -1276,18 +1262,6 @@ namespace NMR {
 		}
 
 		writeFullEndElement();
-	}
-
-	void CModelWriterNode100_Model::registerStreamWriter(const std::string& sInstanceUUID, const std::string& sPath, CChunkedBinaryStreamWriter* pBinaryStreamWriter)
-	{
-		if (pBinaryStreamWriter == nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		m_BinaryStreamWriters.insert(std::make_pair(sInstanceUUID, std::make_pair(sPath, pBinaryStreamWriter)));
-	}
-
-	void CModelWriterNode100_Model::setWriteBinaryExtension(bool bWriteBinaryExtension)
-	{
-		m_bWriteBinaryExtension = bWriteBinaryExtension;
 	}
 
 	void CModelWriterNode100_Model::registerCustomNamespace(const std::string& sPrefix, const std::string& sNamespace, bool bIsRequiredNamespace, bool bFailIfExisting)

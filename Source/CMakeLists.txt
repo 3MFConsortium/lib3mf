@@ -8,17 +8,9 @@ if (USE_INCLUDED_LIBZIP)
   endif()
 endif()
 
-
 if (USE_INCLUDED_ZLIB)
   file(GLOB ZLIB_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Libraries/zlib/Source/*.c")
 endif()
-
-
-file(GLOB LZ4_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Libraries/lz4/*.c")
-
-file(GLOB ZSTD_FILES_COMMON RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Libraries/zstd/common/*.c")
-file(GLOB ZSTD_FILES_COMPRESS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Libraries/zstd/compress/*.c")
-file(GLOB ZSTD_FILES_DECOMPRESS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Libraries/zstd/decompress/*.c")
 
 file (GLOB CPPBASE64_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Libraries/cpp-base64/Source/*.cpp")
 
@@ -37,10 +29,6 @@ file(GLOB_RECURSE SOURCES LIST_DIRECTORIES false CONFIGURE_DEPENDS Source/*.cpp)
 set(SRCS_COMMON
 ${SRCS_PLATFORM}
 ${ZLIB_FILES}
-${LZ4_FILES}
-${ZSTD_FILES_COMMON}
-${ZSTD_FILES_COMPRESS}
-${ZSTD_FILES_DECOMPRESS}
 ${CPPBASE64_FILES}
 ${SOURCES}
 Source/API/lib3mf.cpp
@@ -51,7 +39,6 @@ Source/API/lib3mf_basematerialgroup.cpp
 Source/API/lib3mf_basematerialgroupiterator.cpp
 Source/API/lib3mf_beamlattice.cpp
 Source/API/lib3mf_beamset.cpp
-Source/API/lib3mf_binarystream.cpp
 Source/API/lib3mf_builditem.cpp
 Source/API/lib3mf_builditemiterator.cpp
 Source/API/lib3mf_colorgroup.cpp
@@ -101,9 +88,6 @@ Source/API/lib3mf_toolpathlasersource.cpp
 Source/API/lib3mf_writer.cpp
 Source/API/lib3mf_utils.cpp
 Source/Common/3MF_ProgressMonitor.cpp
-Source/Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamCollection.cpp
-Source/Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamReader.cpp
-Source/Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.cpp
 Source/Common/Math/NMR_Matrix.cpp
 Source/Common/Math/NMR_PairMatchingTree.cpp
 Source/Common/Math/NMR_Vector.cpp
@@ -293,8 +277,6 @@ Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Profile.cpp
 Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Profiles.cpp
 Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Segment.cpp
 Source/Model/ToolpathReader/NMR_ToolpathReaderNode_Segments.cpp
-Source/Model/ToolpathReader/NMR_ToolpathReaderNode_ZHatch.cpp
-Source/Model/ToolpathReader/NMR_ToolpathReaderNode_ZPoint.cpp
 Source/Model/Writer/NMR_KeyStoreOpcPackageWriter.cpp
 Source/Model/Writer/NMR_ModelWriter.cpp
 Source/Model/Writer/NMR_ModelWriterNode.cpp

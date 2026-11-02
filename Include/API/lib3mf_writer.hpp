@@ -114,10 +114,6 @@ public:
 
 	NMR::PModelWriter getModelWriter ();
 
-	IBinaryStream* CreateBinaryStream(const std::string& sIndexPath, const std::string& sBinaryPath);
-
-	void AssignBinaryStream(IBase* pInstance, IBinaryStream* pBinaryStream);
-
 	void RegisterCustomNamespace(const std::string& sPrefix, const std::string& sNameSpace) override;
 	
 	void SetCustomNamespaceRequired(const std::string& sNameSpace, const bool bShallBeRequired) override;

@@ -58,7 +58,6 @@ namespace Lib3MF {
 **************************************************************************************************************************/
 class CWrapper;
 class CBase;
-class CBinaryStream;
 class CWriter;
 class CPersistentReaderSource;
 class CReader;
@@ -193,7 +192,6 @@ class CModel;
 **************************************************************************************************************************/
 typedef CWrapper CLib3MFWrapper;
 typedef CBase CLib3MFBase;
-typedef CBinaryStream CLib3MFBinaryStream;
 typedef CWriter CLib3MFWriter;
 typedef CPersistentReaderSource CLib3MFPersistentReaderSource;
 typedef CReader CLib3MFReader;
@@ -328,7 +326,6 @@ typedef CModel CLib3MFModel;
 **************************************************************************************************************************/
 typedef std::shared_ptr<CWrapper> PWrapper;
 typedef std::shared_ptr<CBase> PBase;
-typedef std::shared_ptr<CBinaryStream> PBinaryStream;
 typedef std::shared_ptr<CWriter> PWriter;
 typedef std::shared_ptr<CPersistentReaderSource> PPersistentReaderSource;
 typedef std::shared_ptr<CReader> PReader;
@@ -463,7 +460,6 @@ typedef std::shared_ptr<CModel> PModel;
 **************************************************************************************************************************/
 typedef PWrapper PLib3MFWrapper;
 typedef PBase PLib3MFBase;
-typedef PBinaryStream PLib3MFBinaryStream;
 typedef PWriter PLib3MFWriter;
 typedef PPersistentReaderSource PLib3MFPersistentReaderSource;
 typedef PReader PLib3MFReader;
@@ -932,7 +928,6 @@ private:
 	}
 
 	friend class CBase;
-	friend class CBinaryStream;
 	friend class CWriter;
 	friend class CPersistentReaderSource;
 	friend class CReader;
@@ -1125,30 +1120,6 @@ protected:
 };
 	
 /*************************************************************************************************************************
- Class CBinaryStream 
-**************************************************************************************************************************/
-class CBinaryStream : public CBase {
-public:
-	
-	/**
-	* CBinaryStream::CBinaryStream - Constructor for BinaryStream class.
-	*/
-	CBinaryStream(CWrapper* pWrapper, Lib3MFHandle pHandle)
-		: CBase(pWrapper, pHandle)
-	{
-	}
-	
-	inline std::string GetBinaryPath();
-	inline std::string GetIndexPath();
-	inline std::string GetUUID();
-	inline void DisableDiscretizedArrayCompression();
-	inline void EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const eBinaryStreamPredictionType ePredictionType);
-	inline void EnableLZ4(const Lib3MF_uint32 nCompressionLevel);
-	inline void EnableZLib(const Lib3MF_uint32 nCompressionLevel);
-	inline void EnableZstd(const Lib3MF_uint32 nCompressionLevel);
-};
-	
-/*************************************************************************************************************************
  Class CWriter 
 **************************************************************************************************************************/
 class CWriter : public CBase {
@@ -1175,8 +1146,6 @@ public:
 	inline Lib3MF_uint32 GetWarningCount();
 	inline void AddKeyWrappingCallback(const std::string & sConsumerID, const KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline void SetContentEncryptionCallback(const ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData);
-	inline PBinaryStream CreateBinaryStream(const std::string & sIndexPath, const std::string & sBinaryPath);
-	inline void AssignBinaryStream(classParam<CBase> pInstance, classParam<CBinaryStream> pBinaryStream);
 	inline void RegisterCustomNamespace(const std::string & sPrefix, const std::string & sNameSpace);
 	inline void SetCustomNamespaceRequired(const std::string & sPrefix, const bool bShallBeRequired);
 	inline bool GetCustomNamespaceRequired(const std::string & sPrefix);
@@ -4061,7 +4030,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	CheckError(nullptr, lib3mf_base_classtypeid(pHandle, &resultClassTypeId));
 	switch(resultClassTypeId) {
 		case 0x856632D0BAF1D8B7UL: return new CBase(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Base"
-		case 0xA0EB26254C981E1AUL: return new CBinaryStream(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::BinaryStream"
 		case 0xE76F642F363FD7E9UL: return new CWriter(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Writer"
 		case 0xBE46884397CE1319UL: return new CPersistentReaderSource(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
 		case 0x2D86831DA59FBE72UL: return new CReader(this, pHandle); break; // First 64 bits of SHA1 of a string: "Lib3MF::Reader"
@@ -4488,100 +4456,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
-	 * Method definitions for class CBinaryStream
-	 */
-	
-	/**
-	* CBinaryStream::GetBinaryPath - Retrieves an binary streams package path for the binary data.
-	* @return binary streams package binary path.
-	*/
-	std::string CBinaryStream::GetBinaryPath()
-	{
-		Lib3MF_uint32 bytesNeededPath = 0;
-		Lib3MF_uint32 bytesWrittenPath = 0;
-		CheckError(lib3mf_binarystream_getbinarypath(m_pHandle, 0, &bytesNeededPath, nullptr));
-		std::vector<char> bufferPath(bytesNeededPath);
-		CheckError(lib3mf_binarystream_getbinarypath(m_pHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
-		
-		return std::string(&bufferPath[0]);
-	}
-	
-	/**
-	* CBinaryStream::GetIndexPath - Retrieves an binary streams package path for the index data.
-	* @return binary streams package index path.
-	*/
-	std::string CBinaryStream::GetIndexPath()
-	{
-		Lib3MF_uint32 bytesNeededPath = 0;
-		Lib3MF_uint32 bytesWrittenPath = 0;
-		CheckError(lib3mf_binarystream_getindexpath(m_pHandle, 0, &bytesNeededPath, nullptr));
-		std::vector<char> bufferPath(bytesNeededPath);
-		CheckError(lib3mf_binarystream_getindexpath(m_pHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
-		
-		return std::string(&bufferPath[0]);
-	}
-	
-	/**
-	* CBinaryStream::GetUUID - Retrieves an binary streams uuid.
-	* @return binary streams uuid
-	*/
-	std::string CBinaryStream::GetUUID()
-	{
-		Lib3MF_uint32 bytesNeededUUID = 0;
-		Lib3MF_uint32 bytesWrittenUUID = 0;
-		CheckError(lib3mf_binarystream_getuuid(m_pHandle, 0, &bytesNeededUUID, nullptr));
-		std::vector<char> bufferUUID(bytesNeededUUID);
-		CheckError(lib3mf_binarystream_getuuid(m_pHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]));
-		
-		return std::string(&bufferUUID[0]);
-	}
-	
-	/**
-	* CBinaryStream::DisableDiscretizedArrayCompression - Sets the float compression mode to raw. All subsequent writes will adhere to this mode.
-	*/
-	void CBinaryStream::DisableDiscretizedArrayCompression()
-	{
-		CheckError(lib3mf_binarystream_disablediscretizedarraycompression(m_pHandle));
-	}
-	
-	/**
-	* CBinaryStream::EnableDiscretizedArrayCompression - Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
-	* @param[in] dUnits - Unit factor to use for quantization.
-	* @param[in] ePredictionType - Prediction type to use for arrays.
-	*/
-	void CBinaryStream::EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const eBinaryStreamPredictionType ePredictionType)
-	{
-		CheckError(lib3mf_binarystream_enablediscretizedarraycompression(m_pHandle, dUnits, ePredictionType));
-	}
-	
-	/**
-	* CBinaryStream::EnableLZ4 - Switches to fast LZ4 compression mode.
-	* @param[in] nCompressionLevel - Compression level (2-12).
-	*/
-	void CBinaryStream::EnableLZ4(const Lib3MF_uint32 nCompressionLevel)
-	{
-		CheckError(lib3mf_binarystream_enablelz4(m_pHandle, nCompressionLevel));
-	}
-	
-	/**
-	* CBinaryStream::EnableZLib - Switches to ZLib compression mode.
-	* @param[in] nCompressionLevel - Compression level (0-9).
-	*/
-	void CBinaryStream::EnableZLib(const Lib3MF_uint32 nCompressionLevel)
-	{
-		CheckError(lib3mf_binarystream_enablezlib(m_pHandle, nCompressionLevel));
-	}
-	
-	/**
-	* CBinaryStream::EnableZstd - Switches to ZStd compression mode.
-	* @param[in] nCompressionLevel - Compression level.
-	*/
-	void CBinaryStream::EnableZstd(const Lib3MF_uint32 nCompressionLevel)
-	{
-		CheckError(lib3mf_binarystream_enablezstd(m_pHandle, nCompressionLevel));
-	}
-	
-	/**
 	 * Method definitions for class CWriter
 	 */
 	
@@ -4730,35 +4604,6 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	void CWriter::SetContentEncryptionCallback(const ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData)
 	{
 		CheckError(lib3mf_writer_setcontentencryptioncallback(m_pHandle, pTheCallback, pUserData));
-	}
-	
-	/**
-	* CWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MF Writers.
-	* @param[in] sIndexPath - Package path to write the index into
-	* @param[in] sBinaryPath - Package path to write raw binary data into
-	* @return Returns a package path.
-	*/
-	PBinaryStream CWriter::CreateBinaryStream(const std::string & sIndexPath, const std::string & sBinaryPath)
-	{
-		Lib3MFHandle hBinaryStream = (Lib3MFHandle)nullptr;
-		CheckError(lib3mf_writer_createbinarystream(m_pHandle, sIndexPath.c_str(), sBinaryPath.c_str(), &hBinaryStream));
-		
-		if (!hBinaryStream) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::shared_ptr<CBinaryStream>(dynamic_cast<CBinaryStream*>(m_pWrapper->polymorphicFactory(hBinaryStream)));
-	}
-	
-	/**
-	* CWriter::AssignBinaryStream - Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
-	* @param[in] pInstance - Object instance to assign Binary stream to.
-	* @param[in] pBinaryStream - Binary stream object to use for this layer.
-	*/
-	void CWriter::AssignBinaryStream(classParam<CBase> pInstance, classParam<CBinaryStream> pBinaryStream)
-	{
-		Lib3MFHandle hInstance = pInstance.GetHandle();
-		Lib3MFHandle hBinaryStream = pBinaryStream.GetHandle();
-		CheckError(lib3mf_writer_assignbinarystream(m_pHandle, hInstance, hBinaryStream));
 	}
 	
 	/**

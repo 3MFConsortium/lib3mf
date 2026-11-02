@@ -350,7 +350,7 @@ IToolpathLayerReader* CToolpath::ReadLayerData(const Lib3MF_uint32 nIndex)
 			throw NMR::CNMRException(NMR_ERROR_INVALIDMODELATTACHMENT);
 	}
 
-	auto pReader = std::make_shared<NMR::CToolpathReader>(m_pToolpath, true);
+	auto pReader = std::make_shared<NMR::CToolpathReader>(m_pToolpath);
 	auto pReadData = pReader->getReadData();
 	for (auto iIter : m_RegisteredSegmentAttributes) {
 		pReadData->registerCustomSegmentAttribute(iIter.first.first, iIter.first.second, iIter.second);

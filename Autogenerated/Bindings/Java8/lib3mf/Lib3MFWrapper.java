@@ -168,14 +168,6 @@ public class Lib3MFWrapper {
 		eAll
 	}
 
-	public static final int BINARYSTREAMPREDICTIONTYPE_NOPREDICTION = 0;
-	public static final int BINARYSTREAMPREDICTIONTYPE_DELTAPREDICTION = 1;
-
-	public enum BinaryStreamPredictionType {
-		eNoPrediction,
-		eDeltaPrediction
-	}
-
 	public static final int PROGRESSIDENTIFIER_QUERYCANCELED = 0;
 	public static final int PROGRESSIDENTIFIER_DONE = 1;
 	public static final int PROGRESSIDENTIFIER_CLEANUP = 2;
@@ -725,22 +717,6 @@ public class Lib3MFWrapper {
 			}
 		}
 
-		public static int convertBinaryStreamPredictionTypeToConst (BinaryStreamPredictionType value) throws Lib3MFException {
-			switch (value) {
-				case eNoPrediction: return BINARYSTREAMPREDICTIONTYPE_NOPREDICTION;
-				case eDeltaPrediction: return BINARYSTREAMPREDICTIONTYPE_DELTAPREDICTION;
-				default: throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "Unknown enum value : " + value);
-			}
-		}
-
-		public static BinaryStreamPredictionType convertConstToBinaryStreamPredictionType (int value) throws Lib3MFException {
-			switch (value) {
-				case BINARYSTREAMPREDICTIONTYPE_NOPREDICTION: return BinaryStreamPredictionType.eNoPrediction;
-				case BINARYSTREAMPREDICTIONTYPE_DELTAPREDICTION: return BinaryStreamPredictionType.eDeltaPrediction;
-				default: throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "Unknown enum const : " + value);
-			}
-		}
-
 		public static int convertProgressIdentifierToConst (ProgressIdentifier value) throws Lib3MFException {
 			switch (value) {
 				case eQUERYCANCELED: return PROGRESSIDENTIFIER_QUERYCANCELED;
@@ -1283,14 +1259,6 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_getscaletransform;
 	protected com.sun.jna.Function lib3mf_gettranslationtransform;
 	protected com.sun.jna.Function lib3mf_base_classtypeid;
-	protected com.sun.jna.Function lib3mf_binarystream_getbinarypath;
-	protected com.sun.jna.Function lib3mf_binarystream_getindexpath;
-	protected com.sun.jna.Function lib3mf_binarystream_getuuid;
-	protected com.sun.jna.Function lib3mf_binarystream_disablediscretizedarraycompression;
-	protected com.sun.jna.Function lib3mf_binarystream_enablediscretizedarraycompression;
-	protected com.sun.jna.Function lib3mf_binarystream_enablelz4;
-	protected com.sun.jna.Function lib3mf_binarystream_enablezlib;
-	protected com.sun.jna.Function lib3mf_binarystream_enablezstd;
 	protected com.sun.jna.Function lib3mf_writer_writetofile;
 	protected com.sun.jna.Function lib3mf_writer_getstreamsize;
 	protected com.sun.jna.Function lib3mf_writer_writetobuffer;
@@ -1304,8 +1272,6 @@ public class Lib3MFWrapper {
 	protected com.sun.jna.Function lib3mf_writer_getwarningcount;
 	protected com.sun.jna.Function lib3mf_writer_addkeywrappingcallback;
 	protected com.sun.jna.Function lib3mf_writer_setcontentencryptioncallback;
-	protected com.sun.jna.Function lib3mf_writer_createbinarystream;
-	protected com.sun.jna.Function lib3mf_writer_assignbinarystream;
 	protected com.sun.jna.Function lib3mf_writer_registercustomnamespace;
 	protected com.sun.jna.Function lib3mf_writer_setcustomnamespacerequired;
 	protected com.sun.jna.Function lib3mf_writer_getcustomnamespacerequired;
@@ -2164,14 +2130,6 @@ public class Lib3MFWrapper {
 		lib3mf_getscaletransform = mLibrary.getFunction("lib3mf_getscaletransform");
 		lib3mf_gettranslationtransform = mLibrary.getFunction("lib3mf_gettranslationtransform");
 		lib3mf_base_classtypeid = mLibrary.getFunction("lib3mf_base_classtypeid");
-		lib3mf_binarystream_getbinarypath = mLibrary.getFunction("lib3mf_binarystream_getbinarypath");
-		lib3mf_binarystream_getindexpath = mLibrary.getFunction("lib3mf_binarystream_getindexpath");
-		lib3mf_binarystream_getuuid = mLibrary.getFunction("lib3mf_binarystream_getuuid");
-		lib3mf_binarystream_disablediscretizedarraycompression = mLibrary.getFunction("lib3mf_binarystream_disablediscretizedarraycompression");
-		lib3mf_binarystream_enablediscretizedarraycompression = mLibrary.getFunction("lib3mf_binarystream_enablediscretizedarraycompression");
-		lib3mf_binarystream_enablelz4 = mLibrary.getFunction("lib3mf_binarystream_enablelz4");
-		lib3mf_binarystream_enablezlib = mLibrary.getFunction("lib3mf_binarystream_enablezlib");
-		lib3mf_binarystream_enablezstd = mLibrary.getFunction("lib3mf_binarystream_enablezstd");
 		lib3mf_writer_writetofile = mLibrary.getFunction("lib3mf_writer_writetofile");
 		lib3mf_writer_getstreamsize = mLibrary.getFunction("lib3mf_writer_getstreamsize");
 		lib3mf_writer_writetobuffer = mLibrary.getFunction("lib3mf_writer_writetobuffer");
@@ -2185,8 +2143,6 @@ public class Lib3MFWrapper {
 		lib3mf_writer_getwarningcount = mLibrary.getFunction("lib3mf_writer_getwarningcount");
 		lib3mf_writer_addkeywrappingcallback = mLibrary.getFunction("lib3mf_writer_addkeywrappingcallback");
 		lib3mf_writer_setcontentencryptioncallback = mLibrary.getFunction("lib3mf_writer_setcontentencryptioncallback");
-		lib3mf_writer_createbinarystream = mLibrary.getFunction("lib3mf_writer_createbinarystream");
-		lib3mf_writer_assignbinarystream = mLibrary.getFunction("lib3mf_writer_assignbinarystream");
 		lib3mf_writer_registercustomnamespace = mLibrary.getFunction("lib3mf_writer_registercustomnamespace");
 		lib3mf_writer_setcustomnamespacerequired = mLibrary.getFunction("lib3mf_writer_setcustomnamespacerequired");
 		lib3mf_writer_getcustomnamespacerequired = mLibrary.getFunction("lib3mf_writer_getcustomnamespacerequired");
@@ -3044,14 +3000,6 @@ public class Lib3MFWrapper {
 		lib3mf_getscaletransform = loadFunctionByLookup(lookupMethod, "lib3mf_getscaletransform");
 		lib3mf_gettranslationtransform = loadFunctionByLookup(lookupMethod, "lib3mf_gettranslationtransform");
 		lib3mf_base_classtypeid = loadFunctionByLookup(lookupMethod, "lib3mf_base_classtypeid");
-		lib3mf_binarystream_getbinarypath = loadFunctionByLookup(lookupMethod, "lib3mf_binarystream_getbinarypath");
-		lib3mf_binarystream_getindexpath = loadFunctionByLookup(lookupMethod, "lib3mf_binarystream_getindexpath");
-		lib3mf_binarystream_getuuid = loadFunctionByLookup(lookupMethod, "lib3mf_binarystream_getuuid");
-		lib3mf_binarystream_disablediscretizedarraycompression = loadFunctionByLookup(lookupMethod, "lib3mf_binarystream_disablediscretizedarraycompression");
-		lib3mf_binarystream_enablediscretizedarraycompression = loadFunctionByLookup(lookupMethod, "lib3mf_binarystream_enablediscretizedarraycompression");
-		lib3mf_binarystream_enablelz4 = loadFunctionByLookup(lookupMethod, "lib3mf_binarystream_enablelz4");
-		lib3mf_binarystream_enablezlib = loadFunctionByLookup(lookupMethod, "lib3mf_binarystream_enablezlib");
-		lib3mf_binarystream_enablezstd = loadFunctionByLookup(lookupMethod, "lib3mf_binarystream_enablezstd");
 		lib3mf_writer_writetofile = loadFunctionByLookup(lookupMethod, "lib3mf_writer_writetofile");
 		lib3mf_writer_getstreamsize = loadFunctionByLookup(lookupMethod, "lib3mf_writer_getstreamsize");
 		lib3mf_writer_writetobuffer = loadFunctionByLookup(lookupMethod, "lib3mf_writer_writetobuffer");
@@ -3065,8 +3013,6 @@ public class Lib3MFWrapper {
 		lib3mf_writer_getwarningcount = loadFunctionByLookup(lookupMethod, "lib3mf_writer_getwarningcount");
 		lib3mf_writer_addkeywrappingcallback = loadFunctionByLookup(lookupMethod, "lib3mf_writer_addkeywrappingcallback");
 		lib3mf_writer_setcontentencryptioncallback = loadFunctionByLookup(lookupMethod, "lib3mf_writer_setcontentencryptioncallback");
-		lib3mf_writer_createbinarystream = loadFunctionByLookup(lookupMethod, "lib3mf_writer_createbinarystream");
-		lib3mf_writer_assignbinarystream = loadFunctionByLookup(lookupMethod, "lib3mf_writer_assignbinarystream");
 		lib3mf_writer_registercustomnamespace = loadFunctionByLookup(lookupMethod, "lib3mf_writer_registercustomnamespace");
 		lib3mf_writer_setcustomnamespacerequired = loadFunctionByLookup(lookupMethod, "lib3mf_writer_setcustomnamespacerequired");
 		lib3mf_writer_getcustomnamespacerequired = loadFunctionByLookup(lookupMethod, "lib3mf_writer_getcustomnamespacerequired");
@@ -4806,11 +4752,6 @@ public class Lib3MFWrapper {
 				case 0xA0C005C0: 
 					switch(lsbId) {
 						case 0x35D5371D: obj = (T)(new LevelSetIterator(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::LevelSetIterator"
-					}
-				break;
-				case 0xA0EB2625: 
-					switch(lsbId) {
-						case 0x4C981E1A: obj = (T)(new BinaryStream(this, handle)); break; // First 64 bits of SHA1 of a string: "Lib3MF::BinaryStream"
 					}
 				break;
 				case 0xA3C27CF5: 

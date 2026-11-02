@@ -76,8 +76,6 @@ These are given by the 3MF Standard
 // Legacy toolpath layer relationship type (Microsoft namespace, 2019/05). Kept for backward-compatible reading.
 #define PACKAGE_TOOLPATH_RELATIONSHIP_TYPE_LEGACY1905 "http://schemas.microsoft.com/3dmanufacturing/2019/05/toolpath"
 #define PACKAGE_ISTOOLPATHRELATIONSHIPTYPE(type) (((type) == PACKAGE_TOOLPATH_RELATIONSHIP_TYPE) || ((type) == PACKAGE_TOOLPATH_RELATIONSHIP_TYPE_LEGACY1905))
-#define PACKAGE_BINARY_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/binary"
-#define PACKAGE_BINARYINDEX_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/05/binaryindex"
 
 
 #define XML_3MF_NAMESPACE_XML "http://www.w3.org/XML/1998/namespace"
@@ -100,7 +98,6 @@ These are given by the 3MF Standard
 // Returns true if the given namespace URI is a recognized toolpath namespace (current or legacy).
 // Used by readers so that both new (3mf.io/2026/03) and old (microsoft/2019/05) packages can be parsed.
 #define XML_3MF_ISTOOLPATHNAMESPACE(ns) ((strcmp((ns), XML_3MF_NAMESPACE_TOOLPATHSPEC) == 0) || (strcmp((ns), XML_3MF_NAMESPACE_TOOLPATHSPEC_LEGACY1905) == 0))
-#define XML_3MF_NAMESPACE_BINARYSPEC "http://schemas.microsoft.com/3dmanufacturing/binary/2023/05"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
@@ -111,7 +108,6 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACEPREFIX_IMPLICIT "i"
 #define XML_3MF_NAMESPACEPREFIX_TRIANGLESETS "t"
 #define XML_3MF_NAMESPACEPREFIX_TOOLPATH "tp"
-#define XML_3MF_NAMESPACEPREFIX_BINARY "bin"
 
 #define XML_3MF_ATTRIBUTE_XMLNS                     "xmlns"
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                "xml"
@@ -187,7 +183,6 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_TRIANGLE_P1               "p1"
 #define XML_3MF_ATTRIBUTE_TRIANGLE_P2               "p2"
 #define XML_3MF_ATTRIBUTE_TRIANGLE_P3               "p3"
-#define XML_3MF_ATTRIBUTE_MESH_BINARYSOURCE         "source"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_V1            "v1"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_V2            "v2"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_NAME          "name"
@@ -555,7 +550,6 @@ These are given by the 3MF Standard
 #define XML_3MF_TOOLPATHATTRIBUTE_ID "id"
 #define XML_3MF_TOOLPATHATTRIBUTE_UUID "uuid"
 #define XML_3MF_TOOLPATHATTRIBUTE_TYPE "type"
-#define XML_3MF_TOOLPATHATTRIBUTE_BINARYSOURCE "source"
 #define XML_3MF_TOOLPATHATTRIBUTE_PARTID "partid"
 #define XML_3MF_TOOLPATHATTRIBUTE_PROFILEID "profileid"
 #define XML_3MF_TOOLPATHATTRIBUTE_LASERINDEX "laserindex"

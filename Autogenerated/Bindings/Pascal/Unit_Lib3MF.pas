@@ -229,11 +229,6 @@ type
 		eBeamLatticeBallModeAll
 	);
 
-	TLib3MFBinaryStreamPredictionType = (
-		eBinaryStreamPredictionTypeNoPrediction,
-		eBinaryStreamPredictionTypeDeltaPrediction
-	);
-
 	TLib3MFProgressIdentifier = (
 		eProgressIdentifierQUERYCANCELED,
 		eProgressIdentifierDONE,
@@ -583,7 +578,6 @@ type
 type
 	TLib3MFWrapper = class;
 	TLib3MFBase = class;
-	TLib3MFBinaryStream = class;
 	TLib3MFWriter = class;
 	TLib3MFPersistentReaderSource = class;
 	TLib3MFReader = class;
@@ -729,89 +723,6 @@ type
 	
 
 (*************************************************************************************************************************
- Function type definitions for BinaryStream
-**************************************************************************************************************************)
-
-	(**
-	* Retrieves an binary streams package path for the binary data.
-	*
-	* @param[in] pBinaryStream - BinaryStream instance.
-	* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pPathBuffer -  buffer of binary streams package binary path., may be NULL
-	* @return error code or 0 (success)
-	*)
-	TLib3MFBinaryStream_GetBinaryPathFunc = function(pBinaryStream: TLib3MFHandle; const nPathBufferSize: Cardinal; out pPathNeededChars: Cardinal; pPathBuffer: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves an binary streams package path for the index data.
-	*
-	* @param[in] pBinaryStream - BinaryStream instance.
-	* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pPathBuffer -  buffer of binary streams package index path., may be NULL
-	* @return error code or 0 (success)
-	*)
-	TLib3MFBinaryStream_GetIndexPathFunc = function(pBinaryStream: TLib3MFHandle; const nPathBufferSize: Cardinal; out pPathNeededChars: Cardinal; pPathBuffer: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves an binary streams uuid.
-	*
-	* @param[in] pBinaryStream - BinaryStream instance.
-	* @param[in] nUUIDBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pUUIDBuffer -  buffer of binary streams uuid, may be NULL
-	* @return error code or 0 (success)
-	*)
-	TLib3MFBinaryStream_GetUUIDFunc = function(pBinaryStream: TLib3MFHandle; const nUUIDBufferSize: Cardinal; out pUUIDNeededChars: Cardinal; pUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the float compression mode to raw. All subsequent writes will adhere to this mode.
-	*
-	* @param[in] pBinaryStream - BinaryStream instance.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc = function(pBinaryStream: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
-	*
-	* @param[in] pBinaryStream - BinaryStream instance.
-	* @param[in] dUnits - Unit factor to use for quantization.
-	* @param[in] ePredictionType - Prediction type to use for arrays.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc = function(pBinaryStream: TLib3MFHandle; const dUnits: Double; const ePredictionType: Integer): TLib3MFResult; cdecl;
-	
-	(**
-	* Switches to fast LZ4 compression mode.
-	*
-	* @param[in] pBinaryStream - BinaryStream instance.
-	* @param[in] nCompressionLevel - Compression level (2-12).
-	* @return error code or 0 (success)
-	*)
-	TLib3MFBinaryStream_EnableLZ4Func = function(pBinaryStream: TLib3MFHandle; const nCompressionLevel: Cardinal): TLib3MFResult; cdecl;
-	
-	(**
-	* Switches to ZLib compression mode.
-	*
-	* @param[in] pBinaryStream - BinaryStream instance.
-	* @param[in] nCompressionLevel - Compression level (0-9).
-	* @return error code or 0 (success)
-	*)
-	TLib3MFBinaryStream_EnableZLibFunc = function(pBinaryStream: TLib3MFHandle; const nCompressionLevel: Cardinal): TLib3MFResult; cdecl;
-	
-	(**
-	* Switches to ZStd compression mode.
-	*
-	* @param[in] pBinaryStream - BinaryStream instance.
-	* @param[in] nCompressionLevel - Compression level.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFBinaryStream_EnableZstdFunc = function(pBinaryStream: TLib3MFHandle; const nCompressionLevel: Cardinal): TLib3MFResult; cdecl;
-	
-
-(*************************************************************************************************************************
  Function type definitions for Writer
 **************************************************************************************************************************)
 
@@ -943,27 +854,6 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFWriter_SetContentEncryptionCallbackFunc = function(pWriter: TLib3MFHandle; const pTheCallback: PLib3MF_ContentEncryptionCallback; const pUserData: Pointer): TLib3MFResult; cdecl;
-	
-	(**
-	* Creates a binary stream object. Only applicable for 3MF Writers.
-	*
-	* @param[in] pWriter - Writer instance.
-	* @param[in] pIndexPath - Package path to write the index into
-	* @param[in] pBinaryPath - Package path to write raw binary data into
-	* @param[out] pBinaryStream - Returns a package path.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFWriter_CreateBinaryStreamFunc = function(pWriter: TLib3MFHandle; const pIndexPath: PAnsiChar; const pBinaryPath: PAnsiChar; out pBinaryStream: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
-	*
-	* @param[in] pWriter - Writer instance.
-	* @param[in] pInstance - Object instance to assign Binary stream to.
-	* @param[in] pBinaryStream - Binary stream object to use for this layer.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFWriter_AssignBinaryStreamFunc = function(pWriter: TLib3MFHandle; const pInstance: TLib3MFHandle; const pBinaryStream: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Registers a custom 3MF Namespace. Fails if Prefix is already registered. The namespace will not be required by default.
@@ -10205,25 +10095,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
- Class definition for BinaryStream
-**************************************************************************************************************************)
-
-	TLib3MFBinaryStream = class(TLib3MFBase)
-	public
-		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
-		destructor Destroy; override;
-		function GetBinaryPath(): String;
-		function GetIndexPath(): String;
-		function GetUUID(): String;
-		procedure DisableDiscretizedArrayCompression();
-		procedure EnableDiscretizedArrayCompression(const AUnits: Double; const APredictionType: TLib3MFBinaryStreamPredictionType);
-		procedure EnableLZ4(const ACompressionLevel: Cardinal);
-		procedure EnableZLib(const ACompressionLevel: Cardinal);
-		procedure EnableZstd(const ACompressionLevel: Cardinal);
-	end;
-
-
-(*************************************************************************************************************************
  Class definition for Writer
 **************************************************************************************************************************)
 
@@ -10244,8 +10115,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetWarningCount(): Cardinal;
 		procedure AddKeyWrappingCallback(const AConsumerID: String; const ATheCallback: PLib3MF_KeyWrappingCallback; const AUserData: Pointer);
 		procedure SetContentEncryptionCallback(const ATheCallback: PLib3MF_ContentEncryptionCallback; const AUserData: Pointer);
-		function CreateBinaryStream(const AIndexPath: String; const ABinaryPath: String): TLib3MFBinaryStream;
-		procedure AssignBinaryStream(const AInstance: TLib3MFBase; const ABinaryStream: TLib3MFBinaryStream);
 		procedure RegisterCustomNamespace(const APrefix: String; const ANameSpace: String);
 		procedure SetCustomNamespaceRequired(const APrefix: String; const AShallBeRequired: Boolean);
 		function GetCustomNamespaceRequired(const APrefix: String): Boolean;
@@ -12486,14 +12355,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	private
 		FModule: HMODULE;
 		FLib3MFBase_ClassTypeIdFunc: TLib3MFBase_ClassTypeIdFunc;
-		FLib3MFBinaryStream_GetBinaryPathFunc: TLib3MFBinaryStream_GetBinaryPathFunc;
-		FLib3MFBinaryStream_GetIndexPathFunc: TLib3MFBinaryStream_GetIndexPathFunc;
-		FLib3MFBinaryStream_GetUUIDFunc: TLib3MFBinaryStream_GetUUIDFunc;
-		FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc;
-		FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc;
-		FLib3MFBinaryStream_EnableLZ4Func: TLib3MFBinaryStream_EnableLZ4Func;
-		FLib3MFBinaryStream_EnableZLibFunc: TLib3MFBinaryStream_EnableZLibFunc;
-		FLib3MFBinaryStream_EnableZstdFunc: TLib3MFBinaryStream_EnableZstdFunc;
 		FLib3MFWriter_WriteToFileFunc: TLib3MFWriter_WriteToFileFunc;
 		FLib3MFWriter_GetStreamSizeFunc: TLib3MFWriter_GetStreamSizeFunc;
 		FLib3MFWriter_WriteToBufferFunc: TLib3MFWriter_WriteToBufferFunc;
@@ -12507,8 +12368,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFWriter_GetWarningCountFunc: TLib3MFWriter_GetWarningCountFunc;
 		FLib3MFWriter_AddKeyWrappingCallbackFunc: TLib3MFWriter_AddKeyWrappingCallbackFunc;
 		FLib3MFWriter_SetContentEncryptionCallbackFunc: TLib3MFWriter_SetContentEncryptionCallbackFunc;
-		FLib3MFWriter_CreateBinaryStreamFunc: TLib3MFWriter_CreateBinaryStreamFunc;
-		FLib3MFWriter_AssignBinaryStreamFunc: TLib3MFWriter_AssignBinaryStreamFunc;
 		FLib3MFWriter_RegisterCustomNamespaceFunc: TLib3MFWriter_RegisterCustomNamespaceFunc;
 		FLib3MFWriter_SetCustomNamespaceRequiredFunc: TLib3MFWriter_SetCustomNamespaceRequiredFunc;
 		FLib3MFWriter_GetCustomNamespaceRequiredFunc: TLib3MFWriter_GetCustomNamespaceRequiredFunc;
@@ -13372,14 +13231,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 	protected
 		property Lib3MFBase_ClassTypeIdFunc: TLib3MFBase_ClassTypeIdFunc read FLib3MFBase_ClassTypeIdFunc;
-		property Lib3MFBinaryStream_GetBinaryPathFunc: TLib3MFBinaryStream_GetBinaryPathFunc read FLib3MFBinaryStream_GetBinaryPathFunc;
-		property Lib3MFBinaryStream_GetIndexPathFunc: TLib3MFBinaryStream_GetIndexPathFunc read FLib3MFBinaryStream_GetIndexPathFunc;
-		property Lib3MFBinaryStream_GetUUIDFunc: TLib3MFBinaryStream_GetUUIDFunc read FLib3MFBinaryStream_GetUUIDFunc;
-		property Lib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc read FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc;
-		property Lib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc: TLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc read FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc;
-		property Lib3MFBinaryStream_EnableLZ4Func: TLib3MFBinaryStream_EnableLZ4Func read FLib3MFBinaryStream_EnableLZ4Func;
-		property Lib3MFBinaryStream_EnableZLibFunc: TLib3MFBinaryStream_EnableZLibFunc read FLib3MFBinaryStream_EnableZLibFunc;
-		property Lib3MFBinaryStream_EnableZstdFunc: TLib3MFBinaryStream_EnableZstdFunc read FLib3MFBinaryStream_EnableZstdFunc;
 		property Lib3MFWriter_WriteToFileFunc: TLib3MFWriter_WriteToFileFunc read FLib3MFWriter_WriteToFileFunc;
 		property Lib3MFWriter_GetStreamSizeFunc: TLib3MFWriter_GetStreamSizeFunc read FLib3MFWriter_GetStreamSizeFunc;
 		property Lib3MFWriter_WriteToBufferFunc: TLib3MFWriter_WriteToBufferFunc read FLib3MFWriter_WriteToBufferFunc;
@@ -13393,8 +13244,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFWriter_GetWarningCountFunc: TLib3MFWriter_GetWarningCountFunc read FLib3MFWriter_GetWarningCountFunc;
 		property Lib3MFWriter_AddKeyWrappingCallbackFunc: TLib3MFWriter_AddKeyWrappingCallbackFunc read FLib3MFWriter_AddKeyWrappingCallbackFunc;
 		property Lib3MFWriter_SetContentEncryptionCallbackFunc: TLib3MFWriter_SetContentEncryptionCallbackFunc read FLib3MFWriter_SetContentEncryptionCallbackFunc;
-		property Lib3MFWriter_CreateBinaryStreamFunc: TLib3MFWriter_CreateBinaryStreamFunc read FLib3MFWriter_CreateBinaryStreamFunc;
-		property Lib3MFWriter_AssignBinaryStreamFunc: TLib3MFWriter_AssignBinaryStreamFunc read FLib3MFWriter_AssignBinaryStreamFunc;
 		property Lib3MFWriter_RegisterCustomNamespaceFunc: TLib3MFWriter_RegisterCustomNamespaceFunc read FLib3MFWriter_RegisterCustomNamespaceFunc;
 		property Lib3MFWriter_SetCustomNamespaceRequiredFunc: TLib3MFWriter_SetCustomNamespaceRequiredFunc read FLib3MFWriter_SetCustomNamespaceRequiredFunc;
 		property Lib3MFWriter_GetCustomNamespaceRequiredFunc: TLib3MFWriter_GetCustomNamespaceRequiredFunc read FLib3MFWriter_GetCustomNamespaceRequiredFunc;
@@ -14277,7 +14126,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		class function Make(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): _T; static;
 	end;
 	function TLib3MFPolymorphicFactoryMakeBase(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBase;
-	function TLib3MFPolymorphicFactoryMakeBinaryStream(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBinaryStream;
 	function TLib3MFPolymorphicFactoryMakeWriter(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFWriter;
 	function TLib3MFPolymorphicFactoryMakePersistentReaderSource(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFPersistentReaderSource;
 	function TLib3MFPolymorphicFactoryMakeReader(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFReader;
@@ -14432,8 +14280,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function convertConstToBeamLatticeClipMode(const AValue: Integer): TLib3MFBeamLatticeClipMode;
 	function convertBeamLatticeBallModeToConst(const AValue: TLib3MFBeamLatticeBallMode): Integer;
 	function convertConstToBeamLatticeBallMode(const AValue: Integer): TLib3MFBeamLatticeBallMode;
-	function convertBinaryStreamPredictionTypeToConst(const AValue: TLib3MFBinaryStreamPredictionType): Integer;
-	function convertConstToBinaryStreamPredictionType(const AValue: Integer): TLib3MFBinaryStreamPredictionType;
 	function convertProgressIdentifierToConst(const AValue: TLib3MFProgressIdentifier): Integer;
 	function convertConstToProgressIdentifier(const AValue: Integer): TLib3MFProgressIdentifier;
 	function convertBlendMethodToConst(const AValue: TLib3MFBlendMethod): Integer;
@@ -14741,27 +14587,6 @@ implementation
 			0: Result := eBeamLatticeBallModeBeamLatticeBallModeNone;
 			1: Result := eBeamLatticeBallModeMixed;
 			2: Result := eBeamLatticeBallModeAll;
-			else 
-				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
-		end;
-	end;
-	
-	
-	function convertBinaryStreamPredictionTypeToConst(const AValue: TLib3MFBinaryStreamPredictionType): Integer;
-	begin
-		case AValue of
-			eBinaryStreamPredictionTypeNoPrediction: Result := 0;
-			eBinaryStreamPredictionTypeDeltaPrediction: Result := 1;
-			else 
-				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
-		end;
-	end;
-	
-	function convertConstToBinaryStreamPredictionType(const AValue: Integer): TLib3MFBinaryStreamPredictionType;
-	begin
-		case AValue of
-			0: Result := eBinaryStreamPredictionTypeNoPrediction;
-			1: Result := eBinaryStreamPredictionTypeDeltaPrediction;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -15358,7 +15183,6 @@ implementation
 		Wrapper.CheckError(nil, Wrapper.Lib3MFBase_ClassTypeIdFunc(handle, ClassTypeId));
 		case (ClassTypeId) of
 			QWord($856632D0BAF1D8B7): begin Obj := TLIB3MFBase.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Base"
-			QWord($A0EB26254C981E1A): begin Obj := TLIB3MFBinaryStream.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::BinaryStream"
 			QWord($E76F642F363FD7E9): begin Obj := TLIB3MFWriter.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Writer"
 			QWord($BE46884397CE1319): begin Obj := TLIB3MFPersistentReaderSource.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
 			QWord($2D86831DA59FBE72): begin Obj := TLIB3MFReader.Create(Wrapper, Handle); if Obj.inheritsFrom(_T) then Result := Obj as _T; end; // First 64 bits of SHA1 of a string: "Lib3MF::Reader"
@@ -15493,10 +15317,6 @@ implementation
 	function TLib3MFPolymorphicFactoryMakeBase(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBase;
 	begin
 		Result := TLib3MFPolymorphicFactory<TLIB3MFBase, TLIB3MFBase>.Make(Wrapper, Handle);
-	end;
-	function TLib3MFPolymorphicFactoryMakeBinaryStream(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFBinaryStream;
-	begin
-		Result := TLib3MFPolymorphicFactory<TLIB3MFBinaryStream, TLIB3MFBinaryStream>.Make(Wrapper, Handle);
 	end;
 	function TLib3MFPolymorphicFactoryMakeWriter(Wrapper: TLib3MFWrapper; Handle: TLib3MFHandle): TLIB3MFWriter;
 	begin
@@ -16134,87 +15954,6 @@ implementation
 	end;
 
 (*************************************************************************************************************************
- Class implementation for BinaryStream
-**************************************************************************************************************************)
-
-	constructor TLib3MFBinaryStream.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
-	begin
-		inherited Create(AWrapper, AHandle);
-	end;
-
-	destructor TLib3MFBinaryStream.Destroy;
-	begin
-		inherited;
-	end;
-
-	function TLib3MFBinaryStream.GetBinaryPath(): String;
-	var
-		bytesNeededPath: Cardinal;
-		bytesWrittenPath: Cardinal;
-		bufferPath: array of Char;
-	begin
-		bytesNeededPath:= 0;
-		bytesWrittenPath:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetBinaryPathFunc(FHandle, 0, bytesNeededPath, nil));
-		SetLength(bufferPath, bytesNeededPath);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetBinaryPathFunc(FHandle, bytesNeededPath, bytesWrittenPath, @bufferPath[0]));
-		Result := StrPas(@bufferPath[0]);
-	end;
-
-	function TLib3MFBinaryStream.GetIndexPath(): String;
-	var
-		bytesNeededPath: Cardinal;
-		bytesWrittenPath: Cardinal;
-		bufferPath: array of Char;
-	begin
-		bytesNeededPath:= 0;
-		bytesWrittenPath:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetIndexPathFunc(FHandle, 0, bytesNeededPath, nil));
-		SetLength(bufferPath, bytesNeededPath);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetIndexPathFunc(FHandle, bytesNeededPath, bytesWrittenPath, @bufferPath[0]));
-		Result := StrPas(@bufferPath[0]);
-	end;
-
-	function TLib3MFBinaryStream.GetUUID(): String;
-	var
-		bytesNeededUUID: Cardinal;
-		bytesWrittenUUID: Cardinal;
-		bufferUUID: array of Char;
-	begin
-		bytesNeededUUID:= 0;
-		bytesWrittenUUID:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetUUIDFunc(FHandle, 0, bytesNeededUUID, nil));
-		SetLength(bufferUUID, bytesNeededUUID);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_GetUUIDFunc(FHandle, bytesNeededUUID, bytesWrittenUUID, @bufferUUID[0]));
-		Result := StrPas(@bufferUUID[0]);
-	end;
-
-	procedure TLib3MFBinaryStream.DisableDiscretizedArrayCompression();
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc(FHandle));
-	end;
-
-	procedure TLib3MFBinaryStream.EnableDiscretizedArrayCompression(const AUnits: Double; const APredictionType: TLib3MFBinaryStreamPredictionType);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc(FHandle, AUnits, convertBinaryStreamPredictionTypeToConst(APredictionType)));
-	end;
-
-	procedure TLib3MFBinaryStream.EnableLZ4(const ACompressionLevel: Cardinal);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_EnableLZ4Func(FHandle, ACompressionLevel));
-	end;
-
-	procedure TLib3MFBinaryStream.EnableZLib(const ACompressionLevel: Cardinal);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_EnableZLibFunc(FHandle, ACompressionLevel));
-	end;
-
-	procedure TLib3MFBinaryStream.EnableZstd(const ACompressionLevel: Cardinal);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFBinaryStream_EnableZstdFunc(FHandle, ACompressionLevel));
-	end;
-
-(*************************************************************************************************************************
  Class implementation for Writer
 **************************************************************************************************************************)
 
@@ -16321,33 +16060,6 @@ implementation
 		if not Assigned(ATheCallback) then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheCallback is a nil value.');
 		FWrapper.CheckError(Self, FWrapper.Lib3MFWriter_SetContentEncryptionCallbackFunc(FHandle, ATheCallback, AUserData));
-	end;
-
-	function TLib3MFWriter.CreateBinaryStream(const AIndexPath: String; const ABinaryPath: String): TLib3MFBinaryStream;
-	var
-		HBinaryStream: TLib3MFHandle;
-	begin
-		Result := nil;
-		HBinaryStream := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFWriter_CreateBinaryStreamFunc(FHandle, PAnsiChar(AIndexPath), PAnsiChar(ABinaryPath), HBinaryStream));
-		if Assigned(HBinaryStream) then
-			Result := TLib3MFPolymorphicFactory<TLib3MFBinaryStream, TLib3MFBinaryStream>.Make(FWrapper, HBinaryStream);
-	end;
-
-	procedure TLib3MFWriter.AssignBinaryStream(const AInstance: TLib3MFBase; const ABinaryStream: TLib3MFBinaryStream);
-	var
-		AInstanceHandle: TLib3MFHandle;
-		ABinaryStreamHandle: TLib3MFHandle;
-	begin
-		if Assigned(AInstance) then
-		AInstanceHandle := AInstance.TheHandle
-		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AInstance is a nil value.');
-		if Assigned(ABinaryStream) then
-		ABinaryStreamHandle := ABinaryStream.TheHandle
-		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ABinaryStream is a nil value.');
-		FWrapper.CheckError(Self, FWrapper.Lib3MFWriter_AssignBinaryStreamFunc(FHandle, AInstanceHandle, ABinaryStreamHandle));
 	end;
 
 	procedure TLib3MFWriter.RegisterCustomNamespace(const APrefix: String; const ANameSpace: String);
@@ -26218,14 +25930,6 @@ implementation
 			raise ELib3MFException.Create(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 
 		FLib3MFBase_ClassTypeIdFunc := LoadFunction('lib3mf_base_classtypeid');
-		FLib3MFBinaryStream_GetBinaryPathFunc := LoadFunction('lib3mf_binarystream_getbinarypath');
-		FLib3MFBinaryStream_GetIndexPathFunc := LoadFunction('lib3mf_binarystream_getindexpath');
-		FLib3MFBinaryStream_GetUUIDFunc := LoadFunction('lib3mf_binarystream_getuuid');
-		FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc := LoadFunction('lib3mf_binarystream_disablediscretizedarraycompression');
-		FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc := LoadFunction('lib3mf_binarystream_enablediscretizedarraycompression');
-		FLib3MFBinaryStream_EnableLZ4Func := LoadFunction('lib3mf_binarystream_enablelz4');
-		FLib3MFBinaryStream_EnableZLibFunc := LoadFunction('lib3mf_binarystream_enablezlib');
-		FLib3MFBinaryStream_EnableZstdFunc := LoadFunction('lib3mf_binarystream_enablezstd');
 		FLib3MFWriter_WriteToFileFunc := LoadFunction('lib3mf_writer_writetofile');
 		FLib3MFWriter_GetStreamSizeFunc := LoadFunction('lib3mf_writer_getstreamsize');
 		FLib3MFWriter_WriteToBufferFunc := LoadFunction('lib3mf_writer_writetobuffer');
@@ -26239,8 +25943,6 @@ implementation
 		FLib3MFWriter_GetWarningCountFunc := LoadFunction('lib3mf_writer_getwarningcount');
 		FLib3MFWriter_AddKeyWrappingCallbackFunc := LoadFunction('lib3mf_writer_addkeywrappingcallback');
 		FLib3MFWriter_SetContentEncryptionCallbackFunc := LoadFunction('lib3mf_writer_setcontentencryptioncallback');
-		FLib3MFWriter_CreateBinaryStreamFunc := LoadFunction('lib3mf_writer_createbinarystream');
-		FLib3MFWriter_AssignBinaryStreamFunc := LoadFunction('lib3mf_writer_assignbinarystream');
 		FLib3MFWriter_RegisterCustomNamespaceFunc := LoadFunction('lib3mf_writer_registercustomnamespace');
 		FLib3MFWriter_SetCustomNamespaceRequiredFunc := LoadFunction('lib3mf_writer_setcustomnamespacerequired');
 		FLib3MFWriter_GetCustomNamespaceRequiredFunc := LoadFunction('lib3mf_writer_getcustomnamespacerequired');
@@ -27107,30 +26809,6 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_base_classtypeid'), @FLib3MFBase_ClassTypeIdFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_getbinarypath'), @FLib3MFBinaryStream_GetBinaryPathFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_getindexpath'), @FLib3MFBinaryStream_GetIndexPathFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_getuuid'), @FLib3MFBinaryStream_GetUUIDFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_disablediscretizedarraycompression'), @FLib3MFBinaryStream_DisableDiscretizedArrayCompressionFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_enablediscretizedarraycompression'), @FLib3MFBinaryStream_EnableDiscretizedArrayCompressionFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_enablelz4'), @FLib3MFBinaryStream_EnableLZ4Func);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_enablezlib'), @FLib3MFBinaryStream_EnableZLibFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_binarystream_enablezstd'), @FLib3MFBinaryStream_EnableZstdFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_writetofile'), @FLib3MFWriter_WriteToFileFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -27168,12 +26846,6 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_setcontentencryptioncallback'), @FLib3MFWriter_SetContentEncryptionCallbackFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_createbinarystream'), @FLib3MFWriter_CreateBinaryStreamFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_assignbinarystream'), @FLib3MFWriter_AssignBinaryStreamFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_registercustomnamespace'), @FLib3MFWriter_RegisterCustomNamespaceFunc);

@@ -138,20 +138,12 @@ namespace NMR {
 		pXMLWriter->WriteStartDocument();
 
 		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, monitor(), warnings(), GetDecimalPrecision(), true);
-		ModelNode.setWriteBinaryExtension(m_bAllowBinaryStreams);
 
 		for (auto iIter : m_CustomNameSpacePrefixMap) {
 			std::string sPrefix = iIter.second->getPrefix();
 			std::string sNameSpace = iIter.second->getNamespace ();
 			bool bIsRequired = iIter.second->getIsRequired();
 			ModelNode.registerCustomNamespace(sPrefix, sNameSpace, bIsRequired, false);
-		}
-
-		for (auto iAssignmentIter : m_BinaryWriterAssignmentMap) {
-			auto iBinaryIter = m_BinaryWriterUUIDMap.find(iAssignmentIter.second);
-			if (iBinaryIter != m_BinaryWriterUUIDMap.end()) {
-				ModelNode.registerStreamWriter(iAssignmentIter.first, iBinaryIter->second.first, iBinaryIter->second.second.get());
-			}
 		}
 
 		ModelNode.writeToXML();

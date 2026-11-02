@@ -49,8 +49,6 @@ NMR_ModelToolpath.h defines the Model Toolpath Layer Data.
 #include <map>
 #include <string>
 
-#include "Common/ChunkedBinaryStream/NMR_ChunkedBinaryStreamWriter.h"
-
 #define TOOLPATHWRITER_MINFACTORRANGE 1
 #define TOOLPATHWRITER_MAXFACTORRANGE (1024 * 1024 * 1024)
 
@@ -85,8 +83,6 @@ namespace NMR {
 		std::map<std::pair<std::string, std::string>, std::string> m_CustomSegmentAttributes;
 		std::map<std::string, std::string> m_NameSpaceToPrefixMap;
 		std::map<std::string, PModelWriter_CustomNameSpace> m_PrefixToNameSpaceMap;
-
-		NMR::CChunkedBinaryStreamWriter * getStreamWriter(std::string & sPath);
 
 		NMR::PImportStream createStream();
 

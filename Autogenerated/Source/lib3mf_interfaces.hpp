@@ -52,7 +52,6 @@ namespace Impl {
  Forward declarations of class interfaces
 */
 class IBase;
-class IBinaryStream;
 class IWriter;
 class IPersistentReaderSource;
 class IReader;
@@ -436,74 +435,6 @@ typedef IBaseSharedPtr<IBase> PIBase;
 
 
 /*************************************************************************************************************************
- Class interface for BinaryStream 
-**************************************************************************************************************************/
-
-class IBinaryStream : public virtual IBase {
-public:
-	/**
-	* IBinaryStream::ClassTypeId - Get Class Type Id
-	* @return Class type as a 64 bits integer
-	*/
-	Lib3MF_uint64 ClassTypeId() override
-	{
-		return 0xA0EB26254C981E1AUL; // First 64 bits of SHA1 of a string: "Lib3MF::BinaryStream"
-	}
-
-	/**
-	* IBinaryStream::GetBinaryPath - Retrieves an binary streams package path for the binary data.
-	* @return binary streams package binary path.
-	*/
-	virtual std::string GetBinaryPath() = 0;
-
-	/**
-	* IBinaryStream::GetIndexPath - Retrieves an binary streams package path for the index data.
-	* @return binary streams package index path.
-	*/
-	virtual std::string GetIndexPath() = 0;
-
-	/**
-	* IBinaryStream::GetUUID - Retrieves an binary streams uuid.
-	* @return binary streams uuid
-	*/
-	virtual std::string GetUUID() = 0;
-
-	/**
-	* IBinaryStream::DisableDiscretizedArrayCompression - Sets the float compression mode to raw. All subsequent writes will adhere to this mode.
-	*/
-	virtual void DisableDiscretizedArrayCompression() = 0;
-
-	/**
-	* IBinaryStream::EnableDiscretizedArrayCompression - Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.
-	* @param[in] dUnits - Unit factor to use for quantization.
-	* @param[in] ePredictionType - Prediction type to use for arrays.
-	*/
-	virtual void EnableDiscretizedArrayCompression(const Lib3MF_double dUnits, const Lib3MF::eBinaryStreamPredictionType ePredictionType) = 0;
-
-	/**
-	* IBinaryStream::EnableLZ4 - Switches to fast LZ4 compression mode.
-	* @param[in] nCompressionLevel - Compression level (2-12).
-	*/
-	virtual void EnableLZ4(const Lib3MF_uint32 nCompressionLevel) = 0;
-
-	/**
-	* IBinaryStream::EnableZLib - Switches to ZLib compression mode.
-	* @param[in] nCompressionLevel - Compression level (0-9).
-	*/
-	virtual void EnableZLib(const Lib3MF_uint32 nCompressionLevel) = 0;
-
-	/**
-	* IBinaryStream::EnableZstd - Switches to ZStd compression mode.
-	* @param[in] nCompressionLevel - Compression level.
-	*/
-	virtual void EnableZstd(const Lib3MF_uint32 nCompressionLevel) = 0;
-
-};
-
-typedef IBaseSharedPtr<IBinaryStream> PIBinaryStream;
-
-
-/*************************************************************************************************************************
  Class interface for Writer 
 **************************************************************************************************************************/
 
@@ -605,21 +536,6 @@ public:
 	* @param[in] nUserData - Userdata that is passed to the callback function
 	*/
 	virtual void SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData) = 0;
-
-	/**
-	* IWriter::CreateBinaryStream - Creates a binary stream object. Only applicable for 3MF Writers.
-	* @param[in] sIndexPath - Package path to write the index into
-	* @param[in] sBinaryPath - Package path to write raw binary data into
-	* @return Returns a package path.
-	*/
-	virtual IBinaryStream * CreateBinaryStream(const std::string & sIndexPath, const std::string & sBinaryPath) = 0;
-
-	/**
-	* IWriter::AssignBinaryStream - Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
-	* @param[in] pInstance - Object instance to assign Binary stream to.
-	* @param[in] pBinaryStream - Binary stream object to use for this layer.
-	*/
-	virtual void AssignBinaryStream(IBase* pInstance, IBinaryStream* pBinaryStream) = 0;
 
 	/**
 	* IWriter::RegisterCustomNamespace - Registers a custom 3MF Namespace. Fails if Prefix is already registered. The namespace will not be required by default.

@@ -71,9 +71,7 @@ namespace NMR {
 		nfBool m_bWriteCustomNamespaces;
 		nfBool m_bWriteVolumetricExtension;
         nfBool m_bWriteImplicitExtension;        
-		nfBool m_bWriteBinaryExtension;
 
-		std::map<std::string, std::pair<std::string, CChunkedBinaryStreamWriter*>> m_BinaryStreamWriters;
 		std::set<std::string> m_RequiredExtensionPrefixes;
 
 		void writeModelMetaData();
@@ -130,9 +128,6 @@ namespace NMR {
 		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, _In_ PModelWarnings pWarnings, _In_ nfUint32 nDecimalPrecision, _In_ nfBool bWritesRootModel);
 		
 		virtual void writeToXML();
-
-		void registerStreamWriter(const std::string& sInstanceUUID, const std::string& sPath, CChunkedBinaryStreamWriter* pBinaryStreamWriter);
-		void setWriteBinaryExtension(bool bWriteBinaryExtension);
 
 		void registerCustomNamespace (const std::string & sPrefix, const std::string & sNamespace, bool bIsRequiredNamespace, bool bFailIfExisting);
 

@@ -225,11 +225,6 @@
 		<option name="All" value="2" />
 	</enum>
 	
-	<enum name="BinaryStreamPredictionType">
-		<option name="NoPrediction" value="0"/>
-		<option name="DeltaPrediction" value="1"/>
-	</enum>
-	
 
 	<enum name="ProgressIdentifier">
 		<option name="QUERYCANCELED" value="0" />
@@ -462,42 +457,6 @@
 	</class>
 
 
-	<class name="BinaryStream" parent="Base">  
-		<method name="GetBinaryPath" description = "Retrieves an binary streams package path for the binary data.">
-			<param name="Path" type="string" pass="return" description="binary streams package binary path." />
-		</method>
-
-		<method name="GetIndexPath" description = "Retrieves an binary streams package path for the index data.">
-			<param name="Path" type="string" pass="return" description="binary streams package index path." />
-		</method>
-		
-		<method name="GetUUID" description = "Retrieves an binary streams uuid.">
-			<param name="UUID" type="string" pass="return" description="binary streams uuid" />
-		</method>
-
-		<method name="DisableDiscretizedArrayCompression" description="Sets the float compression mode to raw. All subsequent writes will adhere to this mode.">
-		</method>
-		
-		<method name="EnableDiscretizedArrayCompression" description="Sets the compression mode to a quantized array. All subsequent writes will adhere to this mode.">
-			<param name="Units" type="double" pass="in" description="Unit factor to use for quantization." />
-			<param name="PredictionType" type="enum" class="BinaryStreamPredictionType" pass="in" description="Prediction type to use for arrays." />			
-		</method>
-		
-		<method name="EnableLZ4" description="Switches to fast LZ4 compression mode.">
-			<param name="CompressionLevel" type="uint32" pass="in" description="Compression level (2-12)." />
-		</method>
-		
-		<method name="EnableZLib" description="Switches to ZLib compression mode.">
-			<param name="CompressionLevel" type="uint32" pass="in" description="Compression level (0-9)." />
-		</method>
-		
-		<method name="EnableZstd" description="Switches to ZStd compression mode.">
-			<param name="CompressionLevel" type="uint32" pass="in" description="Compression level." />				
-		</method>
-		
-	</class>
-
-
 	<class name="Writer" parent="Base">
 		<method name="WriteToFile"
 			description="Writes out the model as file. The file type is specified by the Model Writer class.">
@@ -575,17 +534,6 @@
 				pass="in" description="The callback used to encrypt content" />
 			<param name="UserData" type="pointer" pass="in"
 				description="Userdata that is passed to the callback function" />
-		</method>
-		
-		<method name="CreateBinaryStream" description = "Creates a binary stream object. Only applicable for 3MF Writers.">
-			<param name="IndexPath" type="string" pass="in" description="Package path to write the index into" />
-			<param name="BinaryPath" type="string" pass="in" description="Package path to write raw binary data into" />
-			<param name="BinaryStream" type="class" class="BinaryStream" pass="return" description="Returns a package path." />
-		</method>
-		
-		<method name="AssignBinaryStream" description="Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.">
-			<param name="Instance" type="class" class="Base" pass="in" description="Object instance to assign Binary stream to." />
-			<param name="BinaryStream" type="class" class="BinaryStream" pass="in" description="Binary stream object to use for this layer." />
 		</method>
 		
 		<method name="RegisterCustomNamespace" description = "Registers a custom 3MF Namespace. Fails if Prefix is already registered. The namespace will not be required by default.">

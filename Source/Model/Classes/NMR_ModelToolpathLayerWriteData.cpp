@@ -64,10 +64,6 @@ namespace NMR {
 		m_pXmlWriter = std::make_shared<NMR::CXmlWriter_Native>(m_pExportStream);
 		m_pXmlWriter->WriteStartDocument();
 		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_LAYER, XML_3MF_NAMESPACE_TOOLPATHSPEC);
-		m_pXmlWriter->WriteAttributeString(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_BINARY, nullptr, XML_3MF_NAMESPACE_BINARYSPEC);
-
-		if (m_PrefixToNameSpaceMap.find(XML_3MF_NAMESPACEPREFIX_BINARY) != m_PrefixToNameSpaceMap.end())
-			throw CNMRException(NMR_ERROR_NAMESPACEPREFIXISRESERVED);
 
 		for (auto iIter : m_PrefixToNameSpaceMap) {
 			std::string sPrefix = iIter.second->getPrefix();
@@ -134,9 +130,6 @@ namespace NMR {
 	{
 		uint32_t nTotalSubinterpolations = 0;
 
-		std::string sPath;
-		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
-
 		if (pX1Buffer == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if (pY1Buffer == nullptr)
@@ -155,280 +148,169 @@ namespace NMR {
 
 		writeSegmentStartElement(XML_3MF_TOOLPATHTYPE_HATCH, nProfileID, nPartID);
 
-		if (pStreamWriter != nullptr) {
-			uint32_t binaryKeyX1 = pStreamWriter->addIntArray(pX1Buffer, nHatchCount, eChunkedBinaryPredictionType::eptDeltaPredicition);
-			uint32_t binaryKeyY1 = pStreamWriter->addIntArray(pY1Buffer, nHatchCount, eChunkedBinaryPredictionType::eptDeltaPredicition);
-			uint32_t binaryKeyX2 = pStreamWriter->addIntArray(pX2Buffer, nHatchCount, eChunkedBinaryPredictionType::eptDeltaPredicition);
-			uint32_t binaryKeyY2 = pStreamWriter->addIntArray(pY2Buffer, nHatchCount, eChunkedBinaryPredictionType::eptDeltaPredicition);
-			uint32_t binaryKeyTags = 0;
-			if (pTagBuffer != nullptr)
-				binaryKeyTags = pStreamWriter->addIntArray(pTagBuffer, nHatchCount, eChunkedBinaryPredictionType::eptDeltaPredicition);
+		// TODO: make fast!
+		uint32_t nIndex;
+		for (nIndex = 0; nIndex < nHatchCount; nIndex++) {
+			std::string sX1 = std::to_string(pX1Buffer[nIndex]);
+			std::string sY1 = std::to_string(pY1Buffer[nIndex]);
+			std::string sX2 = std::to_string(pX2Buffer[nIndex]);
+			std::string sY2 = std::to_string(pY2Buffer[nIndex]);
 
-			std::string sKeyX1 = std::to_string(binaryKeyX1);
-			std::string sKeyY1 = std::to_string(binaryKeyY1);
-			std::string sKeyX2 = std::to_string(binaryKeyX2);
-			std::string sKeyY2 = std::to_string(binaryKeyY2);
+			m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_HATCH, nullptr);
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X1, nullptr, sX1.c_str());
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sY1.c_str());
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X2, nullptr, sX2.c_str());
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y2, nullptr, sY2.c_str());
 
-			m_pXmlWriter->WriteStartElement(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHELEMENT_HATCH, nullptr);
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_X1, nullptr, sKeyX1.c_str());
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sKeyY1.c_str());
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_X2, nullptr, sKeyX2.c_str());
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_Y2, nullptr, sKeyY2.c_str());
-
-			if (binaryKeyTags != 0) {
-				std::string sKeyTags = std::to_string(binaryKeyTags);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_TAG, nullptr, sKeyTags.c_str());
+			if (pTagBuffer != nullptr) {
+				int32_t nTag = pTagBuffer[nIndex];
+				if (nTag != 0) {
+					std::string sTag = std::to_string(nTag);
+					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TAG, nullptr, sTag.c_str());
+				}
 			}
-
-			uint32_t binaryKeyTag = 0;
-			uint32_t binaryKeyScalingF = 0;
-			uint32_t binaryKeyScalingG = 0;
-			uint32_t binaryKeyScalingH = 0;
-			uint32_t binaryKeyScalingF1 = 0;
-			uint32_t binaryKeyScalingG1 = 0;
-			uint32_t binaryKeyScalingH1 = 0;
-			uint32_t binaryKeyScalingF2 = 0;
-			uint32_t binaryKeyScalingG2 = 0;
-			uint32_t binaryKeyScalingH2 = 0;
 
 			if (pScalingDataF1Buffer != nullptr) {
 
+				double dScalingValueF1 = pScalingDataF1Buffer[nIndex];
+				double dScalingValueF2 = dScalingValueF1;
+
 				if (pScalingDataF2Buffer != nullptr) {
+					dScalingValueF2 = pScalingDataF2Buffer[nIndex];
+				}
 
-					
-					if (pScalingDataF1Buffer == pScalingDataF2Buffer) {
-						binaryKeyScalingF = pStreamWriter->addDoubleArray(pScalingDataF1Buffer, nHatchCount, eChunkedBinaryPredictionType::eptDeltaPredicition, dDiscretizationUnits);
+				if (abs (dScalingValueF1 - dScalingValueF2) < dDiscretizationUnits) {
+					if (abs (dScalingValueF1) > dDiscretizationUnits) {
+						std::string sScalingValueF = std::to_string(dScalingValueF1);
+						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sScalingValueF.c_str());
 					}
-					else {
-						binaryKeyScalingF1 = pStreamWriter->addDoubleArray(pScalingDataF1Buffer, nHatchCount, eChunkedBinaryPredictionType::eptDeltaPredicition, dDiscretizationUnits);
-						binaryKeyScalingF2 = pStreamWriter->addDoubleArray(pScalingDataF2Buffer, nHatchCount, eChunkedBinaryPredictionType::eptDeltaPredicition, dDiscretizationUnits);
-					}
-
 				}
 				else {
-					binaryKeyScalingF = pStreamWriter->addDoubleArray(pScalingDataF1Buffer, nHatchCount, eChunkedBinaryPredictionType::eptDeltaPredicition, dDiscretizationUnits);
+					std::string sScalingValueF1 = std::to_string(dScalingValueF1);
+					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF1, nullptr, sScalingValueF1.c_str());
+
+					std::string sScalingValueF2 = std::to_string(dScalingValueF2);
+					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF2, nullptr, sScalingValueF2.c_str());
+
 				}
+
+
 			}
 			else {
-				if (pScalingDataF2Buffer != nullptr) 
+				if (pScalingDataF2Buffer != nullptr) {
 					throw CNMRException(NMR_ERROR_TOOLPATH_INVALIDPROFILESCALINGBUFFER);
-			}
-						
-						
+				}
 
-			if (binaryKeyTag != 0) {
-				std::string sKeyTag = std::to_string(binaryKeyTag);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_TAG, nullptr, sKeyTag.c_str());
-			}
-			if (binaryKeyScalingF != 0) {
-				std::string sKeyScalingF = std::to_string(binaryKeyScalingF);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sKeyScalingF.c_str());
-			}
-			if (binaryKeyScalingG != 0) {
-				std::string sKeyScalingG = std::to_string(binaryKeyScalingG);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG, nullptr, sKeyScalingG.c_str());
-			}
-			if (binaryKeyScalingH != 0) {
-				std::string sKeyScalingH = std::to_string(binaryKeyScalingH);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH, nullptr, sKeyScalingH.c_str());
 			}
 
-			if (binaryKeyScalingF1 != 0) {
-				std::string sKeyScalingF1 = std::to_string(binaryKeyScalingF1);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF1, nullptr, sKeyScalingF1.c_str());
+
+			/*
+				if (pScalingDataG1Buffer != nullptr) {
+
+				int32_t nScalingValueG1 = pScalingDataG1Buffer[nIndex];
+				int32_t nScalingValueG2 = nScalingValueG1;
+
+				if (pScalingDataG2Buffer != nullptr) {
+					nScalingValueG2 = pScalingDataG2Buffer[nIndex];
+				}
+
+				if (nScalingValueG1 == nScalingValueG2) {
+					if (nScalingValueG1 != 0) {
+						std::string sScalingValueG = std::to_string(nScalingValueG1);
+						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG, nullptr, sScalingValueG.c_str());
+					}
+				}
+				else {
+					if (nScalingValueG1 != 0) {
+						std::string sScalingValueG1 = std::to_string(nScalingValueG1);
+						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG1, nullptr, sScalingValueG1.c_str());
+					}
+					if (nScalingValueG2 != 0) {
+						std::string sScalingValueG2 = std::to_string(nScalingValueG2);
+						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG2, nullptr, sScalingValueG2.c_str());
+					}
+
+				}
+
+
 			}
-			if (binaryKeyScalingG1 != 0) {
-				std::string sKeyScalingG1 = std::to_string(binaryKeyScalingG1);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG1, nullptr, sKeyScalingG1.c_str());
-			}
-			if (binaryKeyScalingH1 != 0) {
-				std::string sKeyScalingH1 = std::to_string(binaryKeyScalingH1);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH1, nullptr, sKeyScalingH1.c_str());
+			else {				
+				if (pScalingDataG2Buffer != nullptr) {
+					throw CNMRException(NMR_ERROR_TOOLPATH_INVALIDPROFILESCALINGBUFFER);
+				}
+
 			}
 
-			if (binaryKeyScalingF2 != 0) {
-				std::string sKeyScalingF2 = std::to_string(binaryKeyScalingF2);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF2, nullptr, sKeyScalingF2.c_str());
+
+			if (pScalingDataH1Buffer != nullptr) {
+
+				int32_t nScalingValueH1 = pScalingDataH1Buffer[nIndex];
+				int32_t nScalingValueH2 = nScalingValueH1;
+
+				if (pScalingDataH2Buffer != nullptr) {
+					nScalingValueH2 = pScalingDataH2Buffer[nIndex];
+				}
+
+				if (nScalingValueH1 == nScalingValueH2) {
+					if (nScalingValueH1 != 0) {
+						std::string sScalingValueH = std::to_string(nScalingValueH1);
+						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH, nullptr, sScalingValueH.c_str());
+					}
+				}
+				else {
+					if (nScalingValueH1 != 0) {
+						std::string sScalingValueH1 = std::to_string(nScalingValueH1);
+						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH1, nullptr, sScalingValueH1.c_str());
+					}
+					if (nScalingValueH2 != 0) {
+
+
+						std::string sScalingValueH2 = std::to_string(nScalingValueH2);
+						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH2, nullptr, sScalingValueH2.c_str());
+					}
+
+				}
+
+
 			}
-			if (binaryKeyScalingG2 != 0) {
-				std::string sKeyScalingG2 = std::to_string(binaryKeyScalingG2);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG2, nullptr, sKeyScalingG2.c_str());
+			else {
+				if (pScalingDataH2Buffer != nullptr) {
+					throw CNMRException(NMR_ERROR_TOOLPATH_INVALIDPROFILESCALINGBUFFER);
+				}
+
+			} */
+
+			if (pSubinterpolationCountBuffer != nullptr) {
+
+				uint32_t nSubinterpolationCount = pSubinterpolationCountBuffer[nIndex];
+				if ((nSubinterpolationCount > 0) && (pOverrideInterpolationDataBuffer == nullptr))
+					throw CNMRException(NMR_ERROR_TOOLPATH_NOSUBINTERPOLATIONINFORMATION);
+
+				for (uint32_t nSubinterpolationIndex = 0; nSubinterpolationIndex < nSubinterpolationCount; nSubinterpolationIndex++)
+				{
+
+					if (nTotalSubinterpolations >= nOverrideInterpolationDataBufferSize)
+						throw CNMRException(NMR_ERROR_TOOLPATH_SUBINTERPOLATIONBUFFEROVERFLOW);
+
+
+					auto pInfo = &pOverrideInterpolationDataBuffer[nTotalSubinterpolations];
+
+					std::string sParameter = std::to_string(pInfo->m_Parameter);
+					std::string sFactorF = std::to_string(pInfo->m_Factor);
+
+					m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_OVERRIDEINTERPOLATION, nullptr);
+					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARAMETERVALUE, nullptr, sParameter.c_str ());
+					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sFactorF.c_str ());
+					m_pXmlWriter->WriteEndElement();
+
+
+					nTotalSubinterpolations++;
+				}
+
+
 			}
-			if (binaryKeyScalingH2 != 0) {
-				std::string sKeyScalingH2 = std::to_string(binaryKeyScalingH2);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH2, nullptr, sKeyScalingH2.c_str());
-			}
+
 			m_pXmlWriter->WriteEndElement();
-
-
-		}
-		else { 
-
-			// TODO: make fast!
-			uint32_t nIndex;
-			for (nIndex = 0; nIndex < nHatchCount; nIndex++) {
-				std::string sX1 = std::to_string(pX1Buffer[nIndex]);
-				std::string sY1 = std::to_string(pY1Buffer[nIndex]);
-				std::string sX2 = std::to_string(pX2Buffer[nIndex]);
-				std::string sY2 = std::to_string(pY2Buffer[nIndex]);
-
-				m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_HATCH, nullptr);
-				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X1, nullptr, sX1.c_str());
-				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sY1.c_str());
-				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X2, nullptr, sX2.c_str());
-				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y2, nullptr, sY2.c_str());
-
-				if (pTagBuffer != nullptr) {
-					int32_t nTag = pTagBuffer[nIndex];
-					if (nTag != 0) {
-						std::string sTag = std::to_string(nTag);
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TAG, nullptr, sTag.c_str());
-					}
-				}
-
-				if (pScalingDataF1Buffer != nullptr) {
-
-					double dScalingValueF1 = pScalingDataF1Buffer[nIndex];
-					double dScalingValueF2 = dScalingValueF1;
-
-					if (pScalingDataF2Buffer != nullptr) {
-						dScalingValueF2 = pScalingDataF2Buffer[nIndex];
-					}
-
-					if (abs (dScalingValueF1 - dScalingValueF2) < dDiscretizationUnits) {
-						if (abs (dScalingValueF1) > dDiscretizationUnits) {
-							std::string sScalingValueF = std::to_string(dScalingValueF1);
-							m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sScalingValueF.c_str());
-						}
-					}
-					else {
-						std::string sScalingValueF1 = std::to_string(dScalingValueF1);
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF1, nullptr, sScalingValueF1.c_str());
-
-						std::string sScalingValueF2 = std::to_string(dScalingValueF2);
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF2, nullptr, sScalingValueF2.c_str());
-
-					}
-
-
-				}
-				else {
-					if (pScalingDataF2Buffer != nullptr) {
-						throw CNMRException(NMR_ERROR_TOOLPATH_INVALIDPROFILESCALINGBUFFER);
-					}
-
-				}
-
-
-				/*
-					if (pScalingDataG1Buffer != nullptr) {
-
-					int32_t nScalingValueG1 = pScalingDataG1Buffer[nIndex];
-					int32_t nScalingValueG2 = nScalingValueG1;
-
-					if (pScalingDataG2Buffer != nullptr) {
-						nScalingValueG2 = pScalingDataG2Buffer[nIndex];
-					}
-
-					if (nScalingValueG1 == nScalingValueG2) {
-						if (nScalingValueG1 != 0) {
-							std::string sScalingValueG = std::to_string(nScalingValueG1);
-							m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG, nullptr, sScalingValueG.c_str());
-						}
-					}
-					else {
-						if (nScalingValueG1 != 0) {
-							std::string sScalingValueG1 = std::to_string(nScalingValueG1);
-							m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG1, nullptr, sScalingValueG1.c_str());
-						}
-						if (nScalingValueG2 != 0) {
-							std::string sScalingValueG2 = std::to_string(nScalingValueG2);
-							m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG2, nullptr, sScalingValueG2.c_str());
-						}
-
-					}
-
-
-				}
-				else {				
-					if (pScalingDataG2Buffer != nullptr) {
-						throw CNMRException(NMR_ERROR_TOOLPATH_INVALIDPROFILESCALINGBUFFER);
-					}
-
-				}
-
-
-				if (pScalingDataH1Buffer != nullptr) {
-
-					int32_t nScalingValueH1 = pScalingDataH1Buffer[nIndex];
-					int32_t nScalingValueH2 = nScalingValueH1;
-
-					if (pScalingDataH2Buffer != nullptr) {
-						nScalingValueH2 = pScalingDataH2Buffer[nIndex];
-					}
-
-					if (nScalingValueH1 == nScalingValueH2) {
-						if (nScalingValueH1 != 0) {
-							std::string sScalingValueH = std::to_string(nScalingValueH1);
-							m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH, nullptr, sScalingValueH.c_str());
-						}
-					}
-					else {
-						if (nScalingValueH1 != 0) {
-							std::string sScalingValueH1 = std::to_string(nScalingValueH1);
-							m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH1, nullptr, sScalingValueH1.c_str());
-						}
-						if (nScalingValueH2 != 0) {
-
-
-							std::string sScalingValueH2 = std::to_string(nScalingValueH2);
-							m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH2, nullptr, sScalingValueH2.c_str());
-						}
-
-					}
-
-
-				}
-				else {
-					if (pScalingDataH2Buffer != nullptr) {
-						throw CNMRException(NMR_ERROR_TOOLPATH_INVALIDPROFILESCALINGBUFFER);
-					}
-
-				} */
-
-				if (pSubinterpolationCountBuffer != nullptr) {
-
-					uint32_t nSubinterpolationCount = pSubinterpolationCountBuffer[nIndex];
-					if ((nSubinterpolationCount > 0) && (pOverrideInterpolationDataBuffer == nullptr))
-						throw CNMRException(NMR_ERROR_TOOLPATH_NOSUBINTERPOLATIONINFORMATION);
-
-					for (uint32_t nSubinterpolationIndex = 0; nSubinterpolationIndex < nSubinterpolationCount; nSubinterpolationIndex++)
-					{
-
-						if (nTotalSubinterpolations >= nOverrideInterpolationDataBufferSize)
-							throw CNMRException(NMR_ERROR_TOOLPATH_SUBINTERPOLATIONBUFFEROVERFLOW);
-
-
-						auto pInfo = &pOverrideInterpolationDataBuffer[nTotalSubinterpolations];
-
-						std::string sParameter = std::to_string(pInfo->m_Parameter);
-						std::string sFactorF = std::to_string(pInfo->m_Factor);
-
-						m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_OVERRIDEINTERPOLATION, nullptr);
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARAMETERVALUE, nullptr, sParameter.c_str ());
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sFactorF.c_str ());
-						m_pXmlWriter->WriteEndElement();
-
-
-						nTotalSubinterpolations++;
-					}
-
-
-				}
-
-				m_pXmlWriter->WriteEndElement();
-
-			}
 
 		}
 
@@ -443,9 +325,6 @@ namespace NMR {
 		if (pYBuffer == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		std::string sPath;
-		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
-
 		if (m_bWritingHeader)
 			finishHeader();
 		if (!m_bWritingData)
@@ -455,107 +334,56 @@ namespace NMR {
 
 		writeSegmentStartElement(XML_3MF_TOOLPATHTYPE_LOOP, nProfileID, nPartID);
 
-		if (pStreamWriter != nullptr) {
-			uint32_t binaryKeyX = pStreamWriter->addIntArray(pXBuffer, nPointCount, eChunkedBinaryPredictionType::eptDeltaPredicition);
-			uint32_t binaryKeyY = pStreamWriter->addIntArray(pYBuffer, nPointCount, eChunkedBinaryPredictionType::eptDeltaPredicition);
-			uint32_t binaryKeyTag = 0;
-			uint32_t binaryKeyScalingF = 0;
-			uint32_t binaryKeyScalingG = 0;
-			uint32_t binaryKeyScalingH = 0;
+		uint32_t nIndex;
+		for (nIndex = 0; nIndex < nPointCount; nIndex++) {
+			std::string sX = std::to_string(pXBuffer[nIndex]);
+			std::string sY = std::to_string(pYBuffer[nIndex]);
 
-			if (pTagDataBuffer != nullptr)
-				binaryKeyTag = pStreamWriter->addIntArray(pTagDataBuffer, nPointCount, eChunkedBinaryPredictionType::eptDeltaPredicition);
-			if (pScalingFDataBuffer != nullptr)
-				binaryKeyScalingF = pStreamWriter->addDoubleArray(pScalingFDataBuffer, nPointCount, eChunkedBinaryPredictionType::eptDeltaPredicition, dDiscretizationUnits);
-			if (pScalingGDataBuffer != nullptr)
-				binaryKeyScalingG = pStreamWriter->addDoubleArray(pScalingGDataBuffer, nPointCount, eChunkedBinaryPredictionType::eptDeltaPredicition, dDiscretizationUnits);
-			if (pScalingHDataBuffer != nullptr)
-				binaryKeyScalingH = pStreamWriter->addDoubleArray(pScalingHDataBuffer, nPointCount, eChunkedBinaryPredictionType::eptDeltaPredicition, dDiscretizationUnits);
+			m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X, nullptr, sX.c_str());
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y, nullptr, sY.c_str());
 
+			if (pTagDataBuffer != nullptr) {
 
-			std::string sKeyX = std::to_string(binaryKeyX);
-			std::string sKeyY = std::to_string(binaryKeyY);
+				int32_t nTagValue = pTagDataBuffer[nIndex];
+				if (nTagValue != 0) {
+					std::string sTagValue = std::to_string(nTagValue);
 
-			m_pXmlWriter->WriteStartElement(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_X1, nullptr, sKeyX.c_str());
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sKeyY.c_str());
-
-			if (binaryKeyTag != 0) {
-				std::string sKeyTag = std::to_string(binaryKeyTag);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_TAG, nullptr, sKeyTag.c_str());
-			}
-			if (binaryKeyScalingF != 0) {
-				std::string sKeyScalingF = std::to_string(binaryKeyScalingF);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sKeyScalingF.c_str());
-			}
-			if (binaryKeyScalingG != 0) {
-				std::string sKeyScalingG = std::to_string(binaryKeyScalingG);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG, nullptr, sKeyScalingG.c_str());
-			}
-			if (binaryKeyScalingH != 0) {
-				std::string sKeyScalingH = std::to_string(binaryKeyScalingH);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH, nullptr, sKeyScalingH.c_str());
+					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TAG, nullptr, sTagValue.c_str());
+				}
 			}
 
+			if (pScalingFDataBuffer != nullptr) {
+
+				double dScalingValueF = pScalingFDataBuffer[nIndex];
+				if (abs (dScalingValueF) > dDiscretizationUnits) {
+					std::string sScalingValueF = std::to_string(dScalingValueF);
+
+					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sScalingValueF.c_str());
+				}
+			}
+
+			if (pScalingGDataBuffer != nullptr) {
+
+				double dScalingValueG = pScalingGDataBuffer[nIndex];
+				if (abs (dScalingValueG) > dDiscretizationUnits) {
+					std::string sScalingValueG = std::to_string(dScalingValueG);
+
+					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG, nullptr, sScalingValueG.c_str());
+				}
+			}
+
+			if (pScalingHDataBuffer != nullptr) {
+
+				double dScalingValueH = pScalingHDataBuffer[nIndex];
+				if (abs (dScalingValueH) > dDiscretizationUnits) {
+					std::string sScalingValueH = std::to_string(dScalingValueH);
+
+					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH, nullptr, sScalingValueH.c_str());
+				}
+			}
 
 			m_pXmlWriter->WriteEndElement();
-
-		}
-		else {
-
-		
-			uint32_t nIndex;
-			for (nIndex = 0; nIndex < nPointCount; nIndex++) {
-				std::string sX = std::to_string(pXBuffer[nIndex]);
-				std::string sY = std::to_string(pYBuffer[nIndex]);
-
-				m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
-				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X, nullptr, sX.c_str());
-				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y, nullptr, sY.c_str());
-
-				if (pTagDataBuffer != nullptr) {
-
-					int32_t nTagValue = pTagDataBuffer[nIndex];
-					if (nTagValue != 0) {
-						std::string sTagValue = std::to_string(nTagValue);
-
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TAG, nullptr, sTagValue.c_str());
-					}
-				}
-
-				if (pScalingFDataBuffer != nullptr) {
-
-					double dScalingValueF = pScalingFDataBuffer[nIndex];
-					if (abs (dScalingValueF) > dDiscretizationUnits) {
-						std::string sScalingValueF = std::to_string(dScalingValueF);
-
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sScalingValueF.c_str());
-					}
-				}
-
-				if (pScalingGDataBuffer != nullptr) {
-
-					double dScalingValueG = pScalingGDataBuffer[nIndex];
-					if (abs (dScalingValueG) > dDiscretizationUnits) {
-						std::string sScalingValueG = std::to_string(dScalingValueG);
-
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG, nullptr, sScalingValueG.c_str());
-					}
-				}
-
-				if (pScalingHDataBuffer != nullptr) {
-
-					double dScalingValueH = pScalingHDataBuffer[nIndex];
-					if (abs (dScalingValueH) > dDiscretizationUnits) {
-						std::string sScalingValueH = std::to_string(dScalingValueH);
-
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH, nullptr, sScalingValueH.c_str());
-					}
-				}
-
-				m_pXmlWriter->WriteEndElement();
-			}
-
 		}
 
 		m_pXmlWriter->WriteFullEndElement();
@@ -564,14 +392,11 @@ namespace NMR {
 
 	void CModelToolpathLayerWriteData::WritePolyline(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32* pXBuffer, const nfInt32* pYBuffer, const int32_t* pTagDataBuffer, const double* pScalingFDataBuffer, const double* pScalingGDataBuffer, const double* pScalingHDataBuffer)
 	{
-		std::string sPath;
-
 		if (pXBuffer == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if (pYBuffer == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
 		if (m_bWritingHeader)
 			finishHeader();
 		if (!m_bWritingData)
@@ -581,105 +406,54 @@ namespace NMR {
 
 		writeSegmentStartElement(XML_3MF_TOOLPATHTYPE_POLYLINE, nProfileID, nPartID);
 
-		if (pStreamWriter != nullptr) {
+		uint32_t nIndex;
+		for (nIndex = 0; nIndex < nPointCount; nIndex++) {
+			std::string sX = std::to_string(pXBuffer[nIndex]);
+			std::string sY = std::to_string(pYBuffer[nIndex]);
 
-			uint32_t binaryKeyX = pStreamWriter->addIntArray(pXBuffer, nPointCount, eChunkedBinaryPredictionType::eptDeltaPredicition);
-			uint32_t binaryKeyY = pStreamWriter->addIntArray(pYBuffer, nPointCount, eChunkedBinaryPredictionType::eptDeltaPredicition);
-			uint32_t binaryKeyTag = 0;
-			uint32_t binaryKeyScalingF = 0;
-			uint32_t binaryKeyScalingG = 0;
-			uint32_t binaryKeyScalingH = 0;
+			m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X, nullptr, sX.c_str());
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y, nullptr, sY.c_str());
 
-			if (pTagDataBuffer != nullptr)
-				binaryKeyTag = pStreamWriter->addIntArray(pTagDataBuffer, nPointCount, eChunkedBinaryPredictionType::eptDeltaPredicition);
-			if (pScalingFDataBuffer != nullptr)
-				binaryKeyScalingF = pStreamWriter->addDoubleArray(pScalingFDataBuffer, nPointCount, eChunkedBinaryPredictionType::eptDeltaPredicition, dDiscretizationUnits);
-			if (pScalingGDataBuffer != nullptr)
-				binaryKeyScalingG = pStreamWriter->addDoubleArray(pScalingGDataBuffer, nPointCount, eChunkedBinaryPredictionType::eptDeltaPredicition, dDiscretizationUnits);
-			if (pScalingHDataBuffer != nullptr)
-				binaryKeyScalingH = pStreamWriter->addDoubleArray(pScalingHDataBuffer, nPointCount, eChunkedBinaryPredictionType::eptDeltaPredicition, dDiscretizationUnits);
-
-
-			std::string sKeyX = std::to_string(binaryKeyX);
-			std::string sKeyY = std::to_string(binaryKeyY);
-
-			m_pXmlWriter->WriteStartElement(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_X1, nullptr, sKeyX.c_str());
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_Y1, nullptr, sKeyY.c_str());
-
-			if (binaryKeyTag != 0) {
-				std::string sKeyTag = std::to_string(binaryKeyTag);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_TAG, nullptr, sKeyTag.c_str());
-			}
-			if (binaryKeyScalingF != 0) {
-				std::string sKeyScalingF = std::to_string(binaryKeyScalingF);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sKeyScalingF.c_str());
-			}
-			if (binaryKeyScalingG != 0) {
-				std::string sKeyScalingG = std::to_string(binaryKeyScalingG);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG, nullptr, sKeyScalingG.c_str());
-			}
-			if (binaryKeyScalingH != 0) {
-				std::string sKeyScalingH = std::to_string(binaryKeyScalingH);
-				m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH, nullptr, sKeyScalingH.c_str());
+			if (pTagDataBuffer != nullptr) {
+				int32_t nTag = pTagDataBuffer[nIndex];
+				if (nTag != 0) {
+					std::string sTag = std::to_string(nTag);
+					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TAG, nullptr, sTag.c_str());
+				}
 			}
 
+			if (pScalingFDataBuffer != nullptr) {
+
+				double dScalingValueF = pScalingFDataBuffer[nIndex];
+				if (abs (dScalingValueF) > dDiscretizationUnits) {
+					std::string sScalingValueF = std::to_string(dScalingValueF);
+
+					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sScalingValueF.c_str());
+				}
+			}
+
+			if (pScalingGDataBuffer != nullptr) {
+
+				double dScalingValueG = pScalingGDataBuffer[nIndex];
+				if (abs (dScalingValueG) > dDiscretizationUnits) {
+					std::string sScalingValueG = std::to_string(dScalingValueG);
+
+					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG, nullptr, sScalingValueG.c_str());
+				}
+			}
+
+			if (pScalingHDataBuffer != nullptr) {
+
+				double dScalingValueH = pScalingHDataBuffer[nIndex];
+				if (abs (dScalingValueH) > dDiscretizationUnits) {
+					std::string sScalingValueH = std::to_string(dScalingValueH);
+
+					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH, nullptr, sScalingValueH.c_str());
+				}
+			}
 
 			m_pXmlWriter->WriteEndElement();
-
-		}
-		else { 
-
-			uint32_t nIndex;
-			for (nIndex = 0; nIndex < nPointCount; nIndex++) {
-				std::string sX = std::to_string(pXBuffer[nIndex]);
-				std::string sY = std::to_string(pYBuffer[nIndex]);
-
-				m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
-				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X, nullptr, sX.c_str());
-				m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y, nullptr, sY.c_str());
-
-				if (pTagDataBuffer != nullptr) {
-					int32_t nTag = pTagDataBuffer[nIndex];
-					if (nTag != 0) {
-						std::string sTag = std::to_string(nTag);
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TAG, nullptr, sTag.c_str());
-					}
-				}
-
-				if (pScalingFDataBuffer != nullptr) {
-
-					double dScalingValueF = pScalingFDataBuffer[nIndex];
-					if (abs (dScalingValueF) > dDiscretizationUnits) {
-						std::string sScalingValueF = std::to_string(dScalingValueF);
-
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sScalingValueF.c_str());
-					}
-				}
-
-				if (pScalingGDataBuffer != nullptr) {
-
-					double dScalingValueG = pScalingGDataBuffer[nIndex];
-					if (abs (dScalingValueG) > dDiscretizationUnits) {
-						std::string sScalingValueG = std::to_string(dScalingValueG);
-
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG, nullptr, sScalingValueG.c_str());
-					}
-				}
-
-				if (pScalingHDataBuffer != nullptr) {
-
-					double dScalingValueH = pScalingHDataBuffer[nIndex];
-					if (abs (dScalingValueH) > dDiscretizationUnits) {
-						std::string sScalingValueH = std::to_string(dScalingValueH);
-
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH, nullptr, sScalingValueH.c_str());
-					}
-				}
-
-				m_pXmlWriter->WriteEndElement();
-			}
-
 		}
 
 		m_pXmlWriter->WriteFullEndElement();
@@ -714,10 +488,6 @@ namespace NMR {
 
 	void CModelToolpathLayerWriteData::finishHeader()
 	{
-		std::string sPath;
-
-		NMR::CChunkedBinaryStreamWriter * pStreamWriter = getStreamWriter(sPath);
-
 		if (!m_bWritingHeader)
 			throw CNMRException(NMR_ERROR_TOOLPATH_NOTWRITINGHEADER);
 
@@ -764,9 +534,6 @@ namespace NMR {
 
 		m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_SEGMENTS, nullptr);
 
-		if (pStreamWriter != nullptr)
-			m_pXmlWriter->WriteAttributeString(XML_3MF_NAMESPACEPREFIX_BINARY, XML_3MF_TOOLPATHATTRIBUTE_BINARYSOURCE, nullptr, sPath.c_str());
-
 		m_bWritingData = true;
 
 
@@ -795,13 +562,6 @@ namespace NMR {
 		// TODO: Do not copy but use Pipe-based importexportstream!
 		NMR::CImportStream_Shared_Memory pImportStream(m_pExportStream->getData(), m_pExportStream->getDataSize());
 		return pImportStream.copyToMemory();
-
-	}
-
-	NMR::CChunkedBinaryStreamWriter * CModelToolpathLayerWriteData::getStreamWriter(std::string & sPath)
-	{
-	
-		return m_pModelWriter->findBinaryStream (m_sUUID, sPath);
 
 	}
 
@@ -909,4 +669,3 @@ namespace NMR {
 
 
 }
-

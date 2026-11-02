@@ -231,57 +231,6 @@ public class Writer extends Base {
 	}
 
 	/**
-	 * Creates a binary stream object. Only applicable for 3MF Writers.
-	 *
-	 * @param indexPath Package path to write the index into
-	 * @param binaryPath Package path to write raw binary data into
-	 * @return Returns a package path.
-	 * @throws Lib3MFException
-	 */
-	public BinaryStream createBinaryStream(String indexPath, String binaryPath) throws Lib3MFException {
-		byte[] bytesIndexPath = indexPath.getBytes(StandardCharsets.UTF_8);
-		Memory bufferIndexPath = new Memory(bytesIndexPath.length + 1);
-		bufferIndexPath.write(0, bytesIndexPath, 0, bytesIndexPath.length);
-		bufferIndexPath.setByte(bytesIndexPath.length, (byte)0);
-		byte[] bytesBinaryPath = binaryPath.getBytes(StandardCharsets.UTF_8);
-		Memory bufferBinaryPath = new Memory(bytesBinaryPath.length + 1);
-		bufferBinaryPath.write(0, bytesBinaryPath, 0, bytesBinaryPath.length);
-		bufferBinaryPath.setByte(bytesBinaryPath.length, (byte)0);
-		Pointer bufferBinaryStream = new Memory(8);
-		mWrapper.checkError(this, mWrapper.lib3mf_writer_createbinarystream.invokeInt(new java.lang.Object[]{mHandle, bufferIndexPath, bufferBinaryPath, bufferBinaryStream}));
-		Pointer valueBinaryStream = bufferBinaryStream.getPointer(0);
-		BinaryStream binaryStream = null;
-		if (valueBinaryStream == Pointer.NULL) {
-		  throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "BinaryStream was a null pointer");
-		}
-		binaryStream = mWrapper.PolymorphicFactory(valueBinaryStream, BinaryStream.class);
-		return binaryStream;
-	}
-
-	/**
-	 * Sets a binary stream for an object. Currently supported objects are Meshes and Toolpath layers.
-	 *
-	 * @param instance Object instance to assign Binary stream to.
-	 * @param binaryStream Binary stream object to use for this layer.
-	 * @throws Lib3MFException
-	 */
-	public void assignBinaryStream(Base instance, BinaryStream binaryStream) throws Lib3MFException {
-		Pointer instanceHandle = null;
-		if (instance != null) {
-			instanceHandle = instance.getHandle();
-		} else {
-			throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "Instance is a null value.");
-		}
-		Pointer binaryStreamHandle = null;
-		if (binaryStream != null) {
-			binaryStreamHandle = binaryStream.getHandle();
-		} else {
-			throw new Lib3MFException(Lib3MFException.LIB3MF_ERROR_INVALIDPARAM, "BinaryStream is a null value.");
-		}
-		mWrapper.checkError(this, mWrapper.lib3mf_writer_assignbinarystream.invokeInt(new java.lang.Object[]{mHandle, instanceHandle, binaryStreamHandle}));
-	}
-
-	/**
 	 * Registers a custom 3MF Namespace. Fails if Prefix is already registered. The namespace will not be required by default.
 	 *
 	 * @param prefix Prefix to be used. MUST NOT be empty. MUST be alphanumeric, not starting with a number

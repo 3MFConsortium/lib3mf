@@ -88,31 +88,6 @@ public:
 };
 
 /*************************************************************************************************************************
- Class CLib3MFBinaryStream 
-**************************************************************************************************************************/
-class CLib3MFBinaryStream : public CLib3MFBaseClass {
-private:
-	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static v8::Persistent<v8::Function> constructor;
-	static void GetBinaryPath(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetIndexPath(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void GetUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void DisableDiscretizedArrayCompression(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void EnableDiscretizedArrayCompression(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void EnableLZ4(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void EnableZLib(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void EnableZstd(const v8::FunctionCallbackInfo<v8::Value>& args);
-
-public:
-	CLib3MFBinaryStream();
-	~CLib3MFBinaryStream();
-	
-	static void Init();
-	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
-	
-};
-
-/*************************************************************************************************************************
  Class CLib3MFWriter 
 **************************************************************************************************************************/
 class CLib3MFWriter : public CLib3MFBaseClass {
@@ -132,8 +107,6 @@ private:
 	static void GetWarningCount(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddKeyWrappingCallback(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetContentEncryptionCallback(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void CreateBinaryStream(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void AssignBinaryStream(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RegisterCustomNamespace(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetCustomNamespaceRequired(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetCustomNamespaceRequired(const v8::FunctionCallbackInfo<v8::Value>& args);

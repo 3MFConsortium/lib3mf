@@ -30,8 +30,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Model/ToolpathReader/NMR_ToolpathReaderNode_Segment.h" 
 #include "Model/ToolpathReader/NMR_ToolpathReaderNode_Hatch.h" 
 #include "Model/ToolpathReader/NMR_ToolpathReaderNode_Point.h" 
-#include "Model/ToolpathReader/NMR_ToolpathReaderNode_ZHatch.h" 
-#include "Model/ToolpathReader/NMR_ToolpathReaderNode_ZPoint.h" 
 
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Common/3MF_ProgressMonitor.h"
@@ -45,14 +43,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace NMR {
 
-	CToolpathReaderNode_Segment::CToolpathReaderNode_Segment(_In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, CModelToolpathLayerReadData * pReadData, _In_ std::string sBinaryIndexStreamPath)
+	CToolpathReaderNode_Segment::CToolpathReaderNode_Segment(_In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, CModelToolpathLayerReadData * pReadData)
 		: CModelReaderNode(pWarnings, pProgressMonitor), 
 		m_pReadData(pReadData), 
 		m_nPartID (0), 
 		m_nProfileID (0),
 		m_bHasSegmentType (false),
 		m_eSegmentType (eModelToolpathSegmentType::HatchSegment),
-		m_sBinaryIndexStreamPath(sBinaryIndexStreamPath),
 		m_StandardAttributes ()
 	{
 		if (pReadData == nullptr)
@@ -235,128 +232,6 @@ namespace NMR {
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
-
-/*		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_BINARYSPEC) == 0) {
-
-			if (strcmp(pChildName, XML_3MF_TOOLPATHELEMENT_POINT) == 0) {
-				if ((m_eSegmentType != eModelToolpathSegmentType::LoopSegment) && (m_eSegmentType != eModelToolpathSegmentType::PolylineSegment))
-					throw CNMRException(NMR_ERROR_INVALIDTYPEATTRIBUTE);
-
-				PToolpathReaderNode_ZPoint pXMLNode = std::make_shared<CToolpathReaderNode_ZPoint>(m_pWarnings, m_pProgressMonitor, m_pReadData);
-				pXMLNode->parseXML(pXMLReader);
-
-				nfInt32 nXID, nYID;
-				pXMLNode->getBinaryIDs(nXID, nYID);
-
-				if ((m_pBinaryStreamCollection.get() == nullptr) || (m_sBinaryIndexStreamPath.empty()))
-					throw CNMRException(NMR_ERROR_NOBINARYSTREAMAVAILABLE);
-
-			/*if (strcmp(pChildName, XML_3MF_TOOLPATHELEMENT_HATCH) == 0) {
-				if (m_eSegmentType != eModelToolpathSegmentType::HatchSegment)
-					throw CNMRException(NMR_ERROR_INVALIDTYPEATTRIBUTE);
-
-				PToolpathReaderNode_ZHatch pXMLNode = std::make_shared<CToolpathReaderNode_ZHatch>(m_pWarnings, m_pProgressMonitor, m_pReadData);
-				pXMLNode->parseXML(pXMLReader);
-
-				nfInt32 nX1ID, nY1ID, nX2ID, nY2ID;
-				pXMLNode->getBinaryIDs(nX1ID, nY1ID, nX2ID, nY2ID);
-
-				if ((m_pBinaryStreamCollection.get() == nullptr) || (m_sBinaryStreamPath.empty()))
-					throw CNMRException(NMR_ERROR_NOBINARYSTREAMAVAILABLE);
-
-				auto pReader = m_pBinaryStreamCollection->findReader(m_sBinaryStreamPath);
-				if (pReader == nullptr)
-					throw CNMRException(NMR_ERROR_BINARYSTREAMNOTFOUND);
-
-				nfUint32 nX1Count = pReader->getTypedChunkEntryCount(nX1ID, edtFloatArray);
-				nfUint32 nY1Count = pReader->getTypedChunkEntryCount(nY1ID, edtFloatArray);
-				nfUint32 nX2Count = pReader->getTypedChunkEntryCount(nX2ID, edtFloatArray);
-				nfUint32 nY2Count = pReader->getTypedChunkEntryCount(nY2ID, edtFloatArray);
-
-				if ((nX1Count != nY1Count) || (nX1Count != nX2Count) || (nX1Count != nY1Count) || (nX1Count != nY2Count))
-					throw CNMRException(NMR_ERROR_INCONSISTENTBINARYSTREAMCOUNT);
-				nfUint32 nCount = nX1Count;
-
-				if (nCount > 0) {
-
-					std::vector<nfFloat> X1Values;
-					std::vector<nfFloat> Y1Values;
-					std::vector<nfFloat> X2Values;
-					std::vector<nfFloat> Y2Values;
-
-					X1Values.resize(nCount);
-					Y1Values.resize(nCount);
-					X2Values.resize(nCount);
-					Y2Values.resize(nCount);
-
-					nfFloat * pX1 = X1Values.data();
-					nfFloat * pY1 = Y1Values.data();
-					nfFloat * pX2 = X2Values.data();
-					nfFloat * pY2 = Y2Values.data();
-
-					pReader->readFloatArray(nX1ID, pX1, nCount);
-					pReader->readFloatArray(nY1ID, pY1, nCount);
-					pReader->readFloatArray(nX2ID, pX2, nCount);
-					pReader->readFloatArray(nY2ID, pY2, nCount);
-
-					for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
-						m_pReadData->addPoint(*pX1, *pY1);
-						m_pReadData->addPoint(*pX2, *pY2);
-
-						pX1++; pY1++; pX2++; pY2++;
-					}
-				}
-
-			} 
-
-			if (strcmp(pChildName, XML_3MF_TOOLPATHELEMENT_POINT) == 0) {
-				if ((m_eSegmentType != eModelToolpathSegmentType::LoopSegment) && (m_eSegmentType != eModelToolpathSegmentType::PolylineSegment))
-					throw CNMRException(NMR_ERROR_INVALIDTYPEATTRIBUTE);
-
-				PToolpathReaderNode_ZPoint pXMLNode = std::make_shared<CToolpathReaderNode_ZPoint>(m_pWarnings, m_pProgressMonitor, m_pReadData);
-				pXMLNode->parseXML(pXMLReader);
-
-				nfInt32 nXID, nYID;
-				pXMLNode->getBinaryIDs(nXID, nYID);
-
-				if ((m_pBinaryStreamCollection.get() == nullptr) || (m_sBinaryStreamPath.empty()))
-					throw CNMRException(NMR_ERROR_NOBINARYSTREAMAVAILABLE);
-
-				auto pReader = m_pBinaryStreamCollection->findReader(m_sBinaryStreamPath);
-				if (pReader == nullptr)
-					throw CNMRException(NMR_ERROR_BINARYSTREAMNOTFOUND);
-
-				nfUint32 nXCount = pReader->getTypedChunkEntryCount(nXID, edtFloatArray);
-				nfUint32 nYCount = pReader->getTypedChunkEntryCount(nYID, edtFloatArray);
-
-				if (nXCount != nYCount)
-					throw CNMRException(NMR_ERROR_INCONSISTENTBINARYSTREAMCOUNT);
-				nfUint32 nCount = nXCount;
-
-				if (nCount > 0) {
-
-					std::vector<nfFloat> XValues;
-					std::vector<nfFloat> YValues;
-
-					XValues.resize(nCount);
-					YValues.resize(nCount);
-
-					nfFloat * pX = XValues.data();
-					nfFloat * pY = YValues.data();
-
-					pReader->readFloatArray(nXID, pX, nCount);
-					pReader->readFloatArray(nYID, pY, nCount);
-
-					for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
-						m_pReadData->addPoint(*pX, *pY);
-
-						pX++; pY++;
-					}
-				}
-
-			}  
-
-		} */
 
 	}
 

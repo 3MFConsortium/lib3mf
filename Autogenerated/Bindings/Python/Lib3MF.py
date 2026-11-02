@@ -485,14 +485,6 @@ class FunctionTable:
 	lib3mf_getscaletransform = None
 	lib3mf_gettranslationtransform = None
 	lib3mf_base_classtypeid = None
-	lib3mf_binarystream_getbinarypath = None
-	lib3mf_binarystream_getindexpath = None
-	lib3mf_binarystream_getuuid = None
-	lib3mf_binarystream_disablediscretizedarraycompression = None
-	lib3mf_binarystream_enablediscretizedarraycompression = None
-	lib3mf_binarystream_enablelz4 = None
-	lib3mf_binarystream_enablezlib = None
-	lib3mf_binarystream_enablezstd = None
 	lib3mf_writer_writetofile = None
 	lib3mf_writer_getstreamsize = None
 	lib3mf_writer_writetobuffer = None
@@ -506,8 +498,6 @@ class FunctionTable:
 	lib3mf_writer_getwarningcount = None
 	lib3mf_writer_addkeywrappingcallback = None
 	lib3mf_writer_setcontentencryptioncallback = None
-	lib3mf_writer_createbinarystream = None
-	lib3mf_writer_assignbinarystream = None
 	lib3mf_writer_registercustomnamespace = None
 	lib3mf_writer_setcustomnamespacerequired = None
 	lib3mf_writer_getcustomnamespacerequired = None
@@ -1425,11 +1415,6 @@ class BeamLatticeBallMode(CTypesEnum):
 	BeamLatticeBallModeNone = 0
 	Mixed = 1
 	All = 2
-'''Definition of BinaryStreamPredictionType
-'''
-class BinaryStreamPredictionType(CTypesEnum):
-	NoPrediction = 0
-	DeltaPrediction = 1
 '''Definition of ProgressIdentifier
 '''
 class ProgressIdentifier(CTypesEnum):
@@ -1962,54 +1947,6 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint64))
 			self.lib.lib3mf_base_classtypeid = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_getbinarypath")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
-			self.lib.lib3mf_binarystream_getbinarypath = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_getindexpath")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
-			self.lib.lib3mf_binarystream_getindexpath = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_getuuid")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
-			self.lib.lib3mf_binarystream_getuuid = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_disablediscretizedarraycompression")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
-			self.lib.lib3mf_binarystream_disablediscretizedarraycompression = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_enablediscretizedarraycompression")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double, BinaryStreamPredictionType)
-			self.lib.lib3mf_binarystream_enablediscretizedarraycompression = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_enablelz4")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
-			self.lib.lib3mf_binarystream_enablelz4 = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_enablezlib")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
-			self.lib.lib3mf_binarystream_enablezlib = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_binarystream_enablezstd")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
-			self.lib.lib3mf_binarystream_enablezstd = methodType(int(methodAddress.value))
-			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_writer_writetofile")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -2087,18 +2024,6 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ContentEncryptionCallback, ctypes.c_void_p)
 			self.lib.lib3mf_writer_setcontentencryptioncallback = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_writer_createbinarystream")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_writer_createbinarystream = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_writer_assignbinarystream")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)
-			self.lib.lib3mf_writer_assignbinarystream = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_writer_registercustomnamespace")), methodAddress)
 			if err != 0:
@@ -7163,30 +7088,6 @@ class Wrapper:
 			self.lib.lib3mf_base_classtypeid.restype = ctypes.c_int32
 			self.lib.lib3mf_base_classtypeid.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint64)]
 			
-			self.lib.lib3mf_binarystream_getbinarypath.restype = ctypes.c_int32
-			self.lib.lib3mf_binarystream_getbinarypath.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
-			
-			self.lib.lib3mf_binarystream_getindexpath.restype = ctypes.c_int32
-			self.lib.lib3mf_binarystream_getindexpath.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
-			
-			self.lib.lib3mf_binarystream_getuuid.restype = ctypes.c_int32
-			self.lib.lib3mf_binarystream_getuuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
-			
-			self.lib.lib3mf_binarystream_disablediscretizedarraycompression.restype = ctypes.c_int32
-			self.lib.lib3mf_binarystream_disablediscretizedarraycompression.argtypes = [ctypes.c_void_p]
-			
-			self.lib.lib3mf_binarystream_enablediscretizedarraycompression.restype = ctypes.c_int32
-			self.lib.lib3mf_binarystream_enablediscretizedarraycompression.argtypes = [ctypes.c_void_p, ctypes.c_double, BinaryStreamPredictionType]
-			
-			self.lib.lib3mf_binarystream_enablelz4.restype = ctypes.c_int32
-			self.lib.lib3mf_binarystream_enablelz4.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
-			
-			self.lib.lib3mf_binarystream_enablezlib.restype = ctypes.c_int32
-			self.lib.lib3mf_binarystream_enablezlib.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
-			
-			self.lib.lib3mf_binarystream_enablezstd.restype = ctypes.c_int32
-			self.lib.lib3mf_binarystream_enablezstd.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
-			
 			self.lib.lib3mf_writer_writetofile.restype = ctypes.c_int32
 			self.lib.lib3mf_writer_writetofile.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 			
@@ -7225,12 +7126,6 @@ class Wrapper:
 			
 			self.lib.lib3mf_writer_setcontentencryptioncallback.restype = ctypes.c_int32
 			self.lib.lib3mf_writer_setcontentencryptioncallback.argtypes = [ctypes.c_void_p, ContentEncryptionCallback, ctypes.c_void_p]
-			
-			self.lib.lib3mf_writer_createbinarystream.restype = ctypes.c_int32
-			self.lib.lib3mf_writer_createbinarystream.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
-			
-			self.lib.lib3mf_writer_assignbinarystream.restype = ctypes.c_int32
-			self.lib.lib3mf_writer_assignbinarystream.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]
 			
 			self.lib.lib3mf_writer_registercustomnamespace.restype = ctypes.c_int32
 			self.lib.lib3mf_writer_registercustomnamespace.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
@@ -9939,8 +9834,6 @@ class Wrapper:
 				return method(handle, wrapper)
 			def getObjectById_856632D0BAF1D8B7(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Base"
 				return Base(handle, wrapper)
-			def getObjectById_A0EB26254C981E1A(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::BinaryStream"
-				return BinaryStream(handle, wrapper)
 			def getObjectById_E76F642F363FD7E9(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::Writer"
 				return Writer(handle, wrapper)
 			def getObjectById_BE46884397CE1319(self, handle, wrapper): # First 64 bits of SHA1 of a string: "Lib3MF::PersistentReaderSource"
@@ -10226,70 +10119,6 @@ class Base:
 	
 
 
-''' Class Implementation for BinaryStream
-'''
-class BinaryStream(Base):
-	def __init__(self, handle, wrapper):
-		Base.__init__(self, handle, wrapper)
-	def GetBinaryPath(self):
-		nPathBufferSize = ctypes.c_uint64(0)
-		nPathNeededChars = ctypes.c_uint64(0)
-		pPathBuffer = ctypes.c_char_p(None)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getbinarypath(self._handle, nPathBufferSize, nPathNeededChars, pPathBuffer))
-		nPathBufferSize = ctypes.c_uint64(nPathNeededChars.value)
-		pPathBuffer = (ctypes.c_char * (nPathNeededChars.value))()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getbinarypath(self._handle, nPathBufferSize, nPathNeededChars, pPathBuffer))
-		
-		return pPathBuffer.value.decode()
-	
-	def GetIndexPath(self):
-		nPathBufferSize = ctypes.c_uint64(0)
-		nPathNeededChars = ctypes.c_uint64(0)
-		pPathBuffer = ctypes.c_char_p(None)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getindexpath(self._handle, nPathBufferSize, nPathNeededChars, pPathBuffer))
-		nPathBufferSize = ctypes.c_uint64(nPathNeededChars.value)
-		pPathBuffer = (ctypes.c_char * (nPathNeededChars.value))()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getindexpath(self._handle, nPathBufferSize, nPathNeededChars, pPathBuffer))
-		
-		return pPathBuffer.value.decode()
-	
-	def GetUUID(self):
-		nUUIDBufferSize = ctypes.c_uint64(0)
-		nUUIDNeededChars = ctypes.c_uint64(0)
-		pUUIDBuffer = ctypes.c_char_p(None)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getuuid(self._handle, nUUIDBufferSize, nUUIDNeededChars, pUUIDBuffer))
-		nUUIDBufferSize = ctypes.c_uint64(nUUIDNeededChars.value)
-		pUUIDBuffer = (ctypes.c_char * (nUUIDNeededChars.value))()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_getuuid(self._handle, nUUIDBufferSize, nUUIDNeededChars, pUUIDBuffer))
-		
-		return pUUIDBuffer.value.decode()
-	
-	def DisableDiscretizedArrayCompression(self):
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_disablediscretizedarraycompression(self._handle))
-		
-	
-	def EnableDiscretizedArrayCompression(self, Units, PredictionType):
-		dUnits = ctypes.c_double(Units)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_enablediscretizedarraycompression(self._handle, dUnits, PredictionType))
-		
-	
-	def EnableLZ4(self, CompressionLevel):
-		nCompressionLevel = ctypes.c_uint32(CompressionLevel)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_enablelz4(self._handle, nCompressionLevel))
-		
-	
-	def EnableZLib(self, CompressionLevel):
-		nCompressionLevel = ctypes.c_uint32(CompressionLevel)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_enablezlib(self._handle, nCompressionLevel))
-		
-	
-	def EnableZstd(self, CompressionLevel):
-		nCompressionLevel = ctypes.c_uint32(CompressionLevel)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_binarystream_enablezstd(self._handle, nCompressionLevel))
-		
-	
-
-
 ''' Class Implementation for Writer
 '''
 class Writer(Base):
@@ -10377,32 +10206,6 @@ class Writer(Base):
 	def SetContentEncryptionCallback(self, TheCallbackFunc, UserData):
 		pUserData = ctypes.c_void_p(UserData)
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_writer_setcontentencryptioncallback(self._handle, TheCallbackFunc, pUserData))
-		
-	
-	def CreateBinaryStream(self, IndexPath, BinaryPath):
-		pIndexPath = ctypes.c_char_p(str.encode(IndexPath))
-		pBinaryPath = ctypes.c_char_p(str.encode(BinaryPath))
-		BinaryStreamHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_writer_createbinarystream(self._handle, pIndexPath, pBinaryPath, BinaryStreamHandle))
-		if BinaryStreamHandle:
-			BinaryStreamObject = self._wrapper._polymorphicFactory(BinaryStreamHandle)
-		else:
-			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
-		
-		return BinaryStreamObject
-	
-	def AssignBinaryStream(self, InstanceObject, BinaryStreamObject):
-		InstanceHandle = None
-		if InstanceObject:
-			InstanceHandle = InstanceObject._handle
-		else:
-			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
-		BinaryStreamHandle = None
-		if BinaryStreamObject:
-			BinaryStreamHandle = BinaryStreamObject._handle
-		else:
-			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_writer_assignbinarystream(self._handle, InstanceHandle, BinaryStreamHandle))
 		
 	
 	def RegisterCustomNamespace(self, Prefix, NameSpace):

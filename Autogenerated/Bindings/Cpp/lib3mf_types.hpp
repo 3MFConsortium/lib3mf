@@ -252,7 +252,6 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
 **************************************************************************************************************************/
 
 typedef Lib3MFHandle Lib3MF_Base;
-typedef Lib3MFHandle Lib3MF_BinaryStream;
 typedef Lib3MFHandle Lib3MF_Writer;
 typedef Lib3MFHandle Lib3MF_PersistentReaderSource;
 typedef Lib3MFHandle Lib3MF_Reader;
@@ -460,11 +459,6 @@ namespace Lib3MF {
     BeamLatticeBallModeNone = 0,
     Mixed = 1,
     All = 2
-  };
-  
-  enum class eBinaryStreamPredictionType : Lib3MF_int32 {
-    NoPrediction = 0,
-    DeltaPrediction = 1
   };
   
   enum class eProgressIdentifier : Lib3MF_int32 {
@@ -854,7 +848,6 @@ typedef Lib3MF::eTextureFilter eLib3MFTextureFilter;
 typedef Lib3MF::eBeamLatticeCapMode eLib3MFBeamLatticeCapMode;
 typedef Lib3MF::eBeamLatticeClipMode eLib3MFBeamLatticeClipMode;
 typedef Lib3MF::eBeamLatticeBallMode eLib3MFBeamLatticeBallMode;
-typedef Lib3MF::eBinaryStreamPredictionType eLib3MFBinaryStreamPredictionType;
 typedef Lib3MF::eProgressIdentifier eLib3MFProgressIdentifier;
 typedef Lib3MF::eBlendMethod eLib3MFBlendMethod;
 typedef Lib3MF::eToolpathSegmentType eLib3MFToolpathSegmentType;

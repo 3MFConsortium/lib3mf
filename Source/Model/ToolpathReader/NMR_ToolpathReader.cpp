@@ -47,8 +47,7 @@ NMR_ToolpathReader.cpp implements the Toolpath Reader Class.
 
 namespace NMR {
 
-	CToolpathReader::CToolpathReader(PModelToolpath pModelToolpath, _In_ nfBool bAllowBinaryStreams)
-		: m_bAllowBinaryStreams (bAllowBinaryStreams)
+	CToolpathReader::CToolpathReader(PModelToolpath pModelToolpath)
 	{
 		if (!pModelToolpath.get())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);

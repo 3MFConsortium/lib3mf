@@ -33,7 +33,6 @@ Abstract: This is a stub class definition of CWriter
 // Include custom headers here.
 #include "lib3mf_interfaceexception.hpp"
 #include "lib3mf_accessright.hpp"
-#include "lib3mf_binarystream.hpp"
 #include "lib3mf_contentencryptionparams.hpp"
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/Platform/NMR_ExportStream_Callback.h"
@@ -277,41 +276,6 @@ NMR::PModelWriter CWriter::getModelWriter()
 	return m_pWriter;
 
 }
-
-IBinaryStream* CWriter::CreateBinaryStream(const std::string& sIndexPath, const std::string& sBinaryPath)
-{
-	m_pWriter->allowBinaryStreams();
-
-	NMR::PExportStreamMemory pExportStream = std::make_shared<NMR::CExportStreamMemory>();
-	NMR::PChunkedBinaryStreamWriter pStreamWriter = std::make_shared<NMR::CChunkedBinaryStreamWriter>(sIndexPath, sBinaryPath, pExportStream);
-
-	std::unique_ptr<CBinaryStream> pBinaryStream(new CBinaryStream(sIndexPath, sBinaryPath, pStreamWriter));
-
-	m_pWriter->registerBinaryStream(sIndexPath, pBinaryStream->GetUUID(), pStreamWriter);
-
-	return pBinaryStream.release();
-}
-
-void CWriter::AssignBinaryStream(IBase* pInstance, IBinaryStream* pBinaryStream)
-{
-	if (pBinaryStream == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-
-	IToolpathLayerData* pLayerData = dynamic_cast<IToolpathLayerData*> (pInstance);
-	if (pLayerData != nullptr)
-		m_pWriter->assignBinaryStream(pLayerData->GetLayerDataUUID(), pBinaryStream->GetUUID());
-
-	IObject* pObject = dynamic_cast<IObject*> (pInstance);
-	if (pObject != nullptr) {
-		bool bHasUUID;
-		std::string sUUID = pObject->GetUUID(bHasUUID);
-		if (bHasUUID) {
-			m_pWriter->assignBinaryStream(sUUID, pBinaryStream->GetUUID());
-		}
-	} 
-}
-
-
 
 void CWriter::RegisterCustomNamespace(const std::string& sPrefix, const std::string& sNameSpace)
 {

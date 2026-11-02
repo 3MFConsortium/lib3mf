@@ -49,14 +49,6 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	
 	pWrapperTable->m_LibraryHandle = NULL;
 	pWrapperTable->m_Base_ClassTypeId = NULL;
-	pWrapperTable->m_BinaryStream_GetBinaryPath = NULL;
-	pWrapperTable->m_BinaryStream_GetIndexPath = NULL;
-	pWrapperTable->m_BinaryStream_GetUUID = NULL;
-	pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression = NULL;
-	pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression = NULL;
-	pWrapperTable->m_BinaryStream_EnableLZ4 = NULL;
-	pWrapperTable->m_BinaryStream_EnableZLib = NULL;
-	pWrapperTable->m_BinaryStream_EnableZstd = NULL;
 	pWrapperTable->m_Writer_WriteToFile = NULL;
 	pWrapperTable->m_Writer_GetStreamSize = NULL;
 	pWrapperTable->m_Writer_WriteToBuffer = NULL;
@@ -70,8 +62,6 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Writer_GetWarningCount = NULL;
 	pWrapperTable->m_Writer_AddKeyWrappingCallback = NULL;
 	pWrapperTable->m_Writer_SetContentEncryptionCallback = NULL;
-	pWrapperTable->m_Writer_CreateBinaryStream = NULL;
-	pWrapperTable->m_Writer_AssignBinaryStream = NULL;
 	pWrapperTable->m_Writer_RegisterCustomNamespace = NULL;
 	pWrapperTable->m_Writer_SetCustomNamespaceRequired = NULL;
 	pWrapperTable->m_Writer_GetCustomNamespaceRequired = NULL;
@@ -988,78 +978,6 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_BinaryStream_GetBinaryPath = (PLib3MFBinaryStream_GetBinaryPathPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_getbinarypath");
-	#else // _WIN32
-	pWrapperTable->m_BinaryStream_GetBinaryPath = (PLib3MFBinaryStream_GetBinaryPathPtr) dlsym(hLibrary, "lib3mf_binarystream_getbinarypath");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_BinaryStream_GetBinaryPath == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_BinaryStream_GetIndexPath = (PLib3MFBinaryStream_GetIndexPathPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_getindexpath");
-	#else // _WIN32
-	pWrapperTable->m_BinaryStream_GetIndexPath = (PLib3MFBinaryStream_GetIndexPathPtr) dlsym(hLibrary, "lib3mf_binarystream_getindexpath");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_BinaryStream_GetIndexPath == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_BinaryStream_GetUUID = (PLib3MFBinaryStream_GetUUIDPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_getuuid");
-	#else // _WIN32
-	pWrapperTable->m_BinaryStream_GetUUID = (PLib3MFBinaryStream_GetUUIDPtr) dlsym(hLibrary, "lib3mf_binarystream_getuuid");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_BinaryStream_GetUUID == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression = (PLib3MFBinaryStream_DisableDiscretizedArrayCompressionPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_disablediscretizedarraycompression");
-	#else // _WIN32
-	pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression = (PLib3MFBinaryStream_DisableDiscretizedArrayCompressionPtr) dlsym(hLibrary, "lib3mf_binarystream_disablediscretizedarraycompression");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_BinaryStream_DisableDiscretizedArrayCompression == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression = (PLib3MFBinaryStream_EnableDiscretizedArrayCompressionPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_enablediscretizedarraycompression");
-	#else // _WIN32
-	pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression = (PLib3MFBinaryStream_EnableDiscretizedArrayCompressionPtr) dlsym(hLibrary, "lib3mf_binarystream_enablediscretizedarraycompression");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_BinaryStream_EnableDiscretizedArrayCompression == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_BinaryStream_EnableLZ4 = (PLib3MFBinaryStream_EnableLZ4Ptr) GetProcAddress(hLibrary, "lib3mf_binarystream_enablelz4");
-	#else // _WIN32
-	pWrapperTable->m_BinaryStream_EnableLZ4 = (PLib3MFBinaryStream_EnableLZ4Ptr) dlsym(hLibrary, "lib3mf_binarystream_enablelz4");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_BinaryStream_EnableLZ4 == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_BinaryStream_EnableZLib = (PLib3MFBinaryStream_EnableZLibPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_enablezlib");
-	#else // _WIN32
-	pWrapperTable->m_BinaryStream_EnableZLib = (PLib3MFBinaryStream_EnableZLibPtr) dlsym(hLibrary, "lib3mf_binarystream_enablezlib");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_BinaryStream_EnableZLib == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_BinaryStream_EnableZstd = (PLib3MFBinaryStream_EnableZstdPtr) GetProcAddress(hLibrary, "lib3mf_binarystream_enablezstd");
-	#else // _WIN32
-	pWrapperTable->m_BinaryStream_EnableZstd = (PLib3MFBinaryStream_EnableZstdPtr) dlsym(hLibrary, "lib3mf_binarystream_enablezstd");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_BinaryStream_EnableZstd == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
 	pWrapperTable->m_Writer_WriteToFile = (PLib3MFWriter_WriteToFilePtr) GetProcAddress(hLibrary, "lib3mf_writer_writetofile");
 	#else // _WIN32
 	pWrapperTable->m_Writer_WriteToFile = (PLib3MFWriter_WriteToFilePtr) dlsym(hLibrary, "lib3mf_writer_writetofile");
@@ -1174,24 +1092,6 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Writer_SetContentEncryptionCallback == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_Writer_CreateBinaryStream = (PLib3MFWriter_CreateBinaryStreamPtr) GetProcAddress(hLibrary, "lib3mf_writer_createbinarystream");
-	#else // _WIN32
-	pWrapperTable->m_Writer_CreateBinaryStream = (PLib3MFWriter_CreateBinaryStreamPtr) dlsym(hLibrary, "lib3mf_writer_createbinarystream");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_Writer_CreateBinaryStream == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_Writer_AssignBinaryStream = (PLib3MFWriter_AssignBinaryStreamPtr) GetProcAddress(hLibrary, "lib3mf_writer_assignbinarystream");
-	#else // _WIN32
-	pWrapperTable->m_Writer_AssignBinaryStream = (PLib3MFWriter_AssignBinaryStreamPtr) dlsym(hLibrary, "lib3mf_writer_assignbinarystream");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_Writer_AssignBinaryStream == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

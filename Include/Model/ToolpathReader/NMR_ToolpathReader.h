@@ -44,8 +44,6 @@ namespace NMR {
 
 	class CToolpathReader {
 	protected:
-		nfBool m_bAllowBinaryStreams;
-
 		PProgressMonitor m_pProgressMonitor;
 		PModelWarnings m_pWarnings;
 
@@ -53,7 +51,7 @@ namespace NMR {
 
 	public:
 		CToolpathReader() = delete;
-		CToolpathReader(PModelToolpath pModelToolpath, nfBool bAllowBinaryStreams);
+		CToolpathReader(PModelToolpath pModelToolpath);
 
 		void readStream(_In_ PImportStream pStream);
 

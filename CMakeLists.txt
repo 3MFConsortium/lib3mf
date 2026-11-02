@@ -205,14 +205,6 @@ else()
     target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
 endif()
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/lz4)
-
-if (WIN32)
-else()
-target_compile_options(${PROJECT_NAME} PRIVATE "-DZSTD_DISABLE_ASM")
-endif()
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zstd)
-
 if (USE_INCLUDED_ZLIB)
     target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zlib/Include)
 else()

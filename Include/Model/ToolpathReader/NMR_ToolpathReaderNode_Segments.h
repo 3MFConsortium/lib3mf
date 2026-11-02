@@ -40,7 +40,6 @@ namespace NMR {
 	protected:
 
 		CModelToolpathLayerReadData * m_pReadData;
-		std::string m_sBinaryStreamPath;
 
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
