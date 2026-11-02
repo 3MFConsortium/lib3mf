@@ -31,6 +31,7 @@ Abstract: This is a stub class definition of CToolpath
 #include "lib3mf_toolpath.hpp"
 #include "lib3mf_toolpathprofile.hpp"
 #include "lib3mf_toolpathlasersource.hpp"
+#include "lib3mf_toolpathsyncgroup.hpp"
 #include "lib3mf_toolpathlayerdata.hpp"
 #include "lib3mf_attachment.hpp"
 #include "lib3mf_interfaceexception.hpp"

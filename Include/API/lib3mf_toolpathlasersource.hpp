@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CToolpathLaserSource and CToolpathSyncGroup
+Abstract: This is the class declaration of CToolpathLaserSource
 
 */
 
@@ -42,7 +42,6 @@ Abstract: This is the class declaration of CToolpathLaserSource and CToolpathSyn
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelToolpath.h"
 #include "Model/Classes/NMR_ModelToolpathLaserSource.h"
 
 namespace Lib3MF {
@@ -91,30 +90,6 @@ public:
 	void SetCornerRadius(const Lib3MF_uint32 nCornerRadius) override;
 
 	void ClearCornerRadius() override;
-
-};
-
-
-/*************************************************************************************************************************
- Class declaration of CToolpathSyncGroup
-**************************************************************************************************************************/
-
-class CToolpathSyncGroup : public virtual IToolpathSyncGroup, public virtual CBase {
-protected:
-
-	// The toolpath validates laser indices against its laser sources.
-	NMR::PModelToolpath m_pToolpath;
-	NMR::PModelToolpathSyncGroup m_pSyncGroup;
-
-public:
-
-	CToolpathSyncGroup(NMR::PModelToolpath pToolpath, NMR::PModelToolpathSyncGroup pSyncGroup);
-
-	Lib3MF_uint32 GetSyncGroupID() override;
-
-	void GetLaserIndices(Lib3MF_uint64 nLaserIndicesBufferSize, Lib3MF_uint64 * pLaserIndicesNeededCount, Lib3MF_uint32 * pLaserIndicesBuffer) override;
-
-	void SetLaserIndices(const Lib3MF_uint64 nLaserIndicesBufferSize, const Lib3MF_uint32 * pLaserIndicesBuffer) override;
 
 };
 

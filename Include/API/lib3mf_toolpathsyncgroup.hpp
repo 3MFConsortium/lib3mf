@@ -42,7 +42,8 @@ Abstract: This is the class declaration of CToolpathSyncGroup
 #endif
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelToolpath.h"
+#include "Model/Classes/NMR_ModelToolpathLaserSource.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -53,32 +54,19 @@ namespace Impl {
 **************************************************************************************************************************/
 
 class CToolpathSyncGroup : public virtual IToolpathSyncGroup, public virtual CBase {
-private:
-
-	/**
-	* Put private members here.
-	*/
-
 protected:
 
-	/**
-	* Put protected members here.
-	*/
+	// The toolpath validates laser indices against its laser sources.
+	NMR::PModelToolpath m_pToolpath;
+	NMR::PModelToolpathSyncGroup m_pSyncGroup;
 
 public:
 
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-
-
-	/**
-	* Public member functions to implement.
-	*/
+	CToolpathSyncGroup(NMR::PModelToolpath pToolpath, NMR::PModelToolpathSyncGroup pSyncGroup);
 
 	Lib3MF_uint32 GetSyncGroupID() override;
 
-	void GetLaserIndices(Lib3MF_uint64 nLaserIndicesBufferSize, Lib3MF_uint64* pLaserIndicesNeededCount, Lib3MF_uint32 * pLaserIndicesBuffer) override;
+	void GetLaserIndices(Lib3MF_uint64 nLaserIndicesBufferSize, Lib3MF_uint64 * pLaserIndicesNeededCount, Lib3MF_uint32 * pLaserIndicesBuffer) override;
 
 	void SetLaserIndices(const Lib3MF_uint64 nLaserIndicesBufferSize, const Lib3MF_uint32 * pLaserIndicesBuffer) override;
 

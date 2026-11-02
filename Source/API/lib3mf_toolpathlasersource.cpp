@@ -24,15 +24,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class definition of CToolpathLaserSource and CToolpathSyncGroup
+Abstract: This is the class definition of CToolpathLaserSource
 
 */
 
 #include "lib3mf_toolpathlasersource.hpp"
 #include "lib3mf_interfaceexception.hpp"
-
-#include "Common/NMR_Exception.h"
-#include "Common/NMR_StringUtils.h"
 
 using namespace Lib3MF::Impl;
 
@@ -120,47 +117,4 @@ void CToolpathLaserSource::SetCornerRadius(const Lib3MF_uint32 nCornerRadius)
 void CToolpathLaserSource::ClearCornerRadius()
 {
 	m_pLaserSource->clearCornerRadius();
-}
-
-
-/*************************************************************************************************************************
- Class definition of CToolpathSyncGroup
-**************************************************************************************************************************/
-
-CToolpathSyncGroup::CToolpathSyncGroup(NMR::PModelToolpath pToolpath, NMR::PModelToolpathSyncGroup pSyncGroup)
-	: m_pToolpath(pToolpath), m_pSyncGroup(pSyncGroup)
-{
-	if ((pToolpath.get() == nullptr) || (pSyncGroup.get() == nullptr))
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-}
-
-Lib3MF_uint32 CToolpathSyncGroup::GetSyncGroupID()
-{
-	return m_pSyncGroup->getSyncGroupID();
-}
-
-void CToolpathSyncGroup::GetLaserIndices(Lib3MF_uint64 nLaserIndicesBufferSize, Lib3MF_uint64 * pLaserIndicesNeededCount, Lib3MF_uint32 * pLaserIndicesBuffer)
-{
-	const std::vector<NMR::nfUint32> & LaserIndices = m_pSyncGroup->getLaserIndices();
-	Lib3MF_uint64 nCount = LaserIndices.size();
-	if (pLaserIndicesNeededCount)
-		*pLaserIndicesNeededCount = nCount;
-
-	if ((nLaserIndicesBufferSize >= nCount) && (pLaserIndicesBuffer != nullptr)) {
-		for (Lib3MF_uint64 nIndex = 0; nIndex < nCount; nIndex++)
-			pLaserIndicesBuffer[nIndex] = LaserIndices[(size_t)nIndex];
-	}
-}
-
-void CToolpathSyncGroup::SetLaserIndices(const Lib3MF_uint64 nLaserIndicesBufferSize, const Lib3MF_uint32 * pLaserIndicesBuffer)
-{
-	if ((nLaserIndicesBufferSize > 0) && (pLaserIndicesBuffer == nullptr))
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-
-	NMR::nfUint32 nSyncGroupID = m_pSyncGroup->getSyncGroupID();
-	if (m_pToolpath->findSyncGroup(nSyncGroupID) != m_pSyncGroup)
-		throw NMR::CNMRException(NMR_ERROR_TOOLPATHSYNCGROUPNOTFOUND, "sync group " + NMR::fnUint32ToString(nSyncGroupID) + " has been removed from the toolpath");
-
-	std::vector<NMR::nfUint32> LaserIndices(pLaserIndicesBuffer, pLaserIndicesBuffer + nLaserIndicesBufferSize);
-	m_pToolpath->setSyncGroupLaserIndices(nSyncGroupID, LaserIndices);
 }
