@@ -67,6 +67,7 @@ namespace NMR {
 		~COpcPackageWriter();
 
 		POpcPackagePart addPart(_In_ std::string sPath) override;
+		POpcPackagePart addUncompressedPart(_In_ std::string sPath) override;
 
 		void addContentType(_In_ std::string sExtension, _In_ std::string sContentType) override;
 		void addContentType(_In_ POpcPackagePart pOpcPackagePart, _In_ std::string sContentType) override;
