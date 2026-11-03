@@ -35,6 +35,7 @@ set(SRCS_UNITTEST
 	./Source/Writer.cpp
 	./Source/TextureProperty.cpp
 	./Source/TextureResources.cpp
+	./Source/ToolpathPointOverrides.cpp
 	./Source/UnitTest_Utilities.cpp
 	./Source/v093.cpp
 	./Source/Volumetric.cpp
