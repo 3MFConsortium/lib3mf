@@ -92,6 +92,14 @@ namespace NMR {
 
 		void writeSegmentStartElement(const char * pszSegmentType, const nfUint32 nProfileID, const nfUint32 nPartID);
 
+		// Writes the modifier factor attributes (constant "x" or linear "x1"/"x2") for one element.
+		// If bForceLinear is set, the linear pair is always written (required when <sub> elements follow).
+		void writeModifierFactorAttributes(Lib3MF::eToolpathProfileModificationFactor eModificationFactor, double dValue1, double dValue2, bool bForceLinear);
+
+		// Writes nSubCount <sub> elements for one element, validating ordering and range.
+		// nRunningSubIndex is advanced by nSubCount; nOverrideInterpolationDataBufferSize bounds the aggregate buffer.
+		void writeSubInterpolations(Lib3MF::eToolpathProfileModificationFactor eModificationFactor, uint32_t nSubCount, uint32_t & nRunningSubIndex, uint64_t nOverrideInterpolationDataBufferSize, const Lib3MF::sHatchModificationInterpolationData* pOverrideInterpolationDataBuffer);
+
 	public:
 		CModelToolpathLayerWriteData() = delete;
 		CModelToolpathLayerWriteData(CModelToolpath * pModelToolpath, NMR::PModelWriter_3MF pModelWriter, const std::string & sPackagePath, std::map<std::string, PModelWriter_CustomNameSpace> PrefixToNameSpaceMap);
@@ -109,6 +117,9 @@ namespace NMR {
 		void WriteLoop(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer, const int32_t* pTagDataBuffer, const double* pScalingFDataBuffer, const double* pScalingGDataBuffer, const double* pScalingHDataBuffer);
 
 		void WritePolyline(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer, const int32_t* pTagDataBuffer, const double* pScalingFDataBuffer, const double* pScalingGDataBuffer, const double* pScalingHDataBuffer);
+
+		// Writes a loop or polyline segment whose points carry linear and/or non-linear (sub) modification factors for a single modification factor (E/F/G/H).
+		void WritePointSegment(const char * pszSegmentType, const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32 * pXBuffer, const nfInt32 * pYBuffer, const int32_t* pTagDataBuffer, Lib3MF::eToolpathProfileModificationFactor eModificationFactor, const double* pFactor1Buffer, const double* pFactor2Buffer, const uint32_t * pSubinterpolationCountBuffer, uint64_t nOverrideInterpolationDataBufferSize, const Lib3MF::sHatchModificationInterpolationData* pOverrideInterpolationDataBuffer);
 
 		void finishHeader();
 

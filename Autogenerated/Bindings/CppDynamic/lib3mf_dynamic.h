@@ -6769,6 +6769,70 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentNonlinearHatchModifi
 */
 typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentAllNonlinearHatchesModificationInterpolationPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, Lib3MF::eToolpathProfileModificationFactor eModificationFactor, const Lib3MF_uint64 nCountArrayBufferSize, Lib3MF_uint64* pCountArrayNeededCount, Lib3MF_uint32 * pCountArrayBuffer, const Lib3MF_uint64 nFactorValuesBufferSize, Lib3MF_uint64* pFactorValuesNeededCount, Lib3MF::sHatchModificationInterpolationData * pFactorValuesBuffer);
 
+/**
+* Checks if the segment has any linear (per-point ramped) point modification factors. Returns false, if segment type is not loop or polyline.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+* @param[in] eModificationFactor - Which modification factor value to query (E, F, G or H).
+* @param[out] pHasLinearModificationFactors - Returns true, if the segment has any linear point modification factors of the given type.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_SegmentHasLinearPointModificationFactorsPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, Lib3MF::eToolpathProfileModificationFactor eModificationFactor, bool * pHasLinearModificationFactors);
+
+/**
+* Retrieves the assigned segment point modification factors as start/end pairs. Fails if segment type is not loop or polyline. Constant points return identical start and end values.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+* @param[in] eModificationFactor - Which modification factor value to retrieve (E, F, G or H). Returns an array of 0.0, if modification factor type is unknown or not given.
+* @param[in] nFactorValuesBufferSize - Number of elements in buffer
+* @param[out] pFactorValuesNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pFactorValuesBuffer - Hatch2DFactors  buffer of Start (Point1Factor) and end (Point2Factor) modification factor for each point of the segment.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetLinearSegmentPointModificationFactorsPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, Lib3MF::eToolpathProfileModificationFactor eModificationFactor, const Lib3MF_uint64 nFactorValuesBufferSize, Lib3MF_uint64* pFactorValuesNeededCount, Lib3MF::sHatch2DFactors * pFactorValuesBuffer);
+
+/**
+* Checks if the segment has any sub-point modification interpolation values. Returns false, if segment type is not loop or polyline.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+* @param[out] pHasModificationInterpolation - Returns true, if the segment has non-linear interpolation modifications.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_SegmentHasNonlinearPointModificationInterpolationPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, bool * pHasModificationInterpolation);
+
+/**
+* Retrieves the sub-point modification interpolation values for a single point. Fails if segment type is not loop or polyline.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+* @param[in] nPointIndex - Point Index in Segment. Must be between 0 and PointCount - 1.
+* @param[in] eModificationFactor - Which modification factor value to retrieve (E, F, G or H).
+* @param[in] nFactorValuesBufferSize - Number of elements in buffer
+* @param[out] pFactorValuesNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pFactorValuesBuffer - HatchModificationInterpolationData  buffer of Array of interpolation data for the point.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentNonlinearPointModificationInterpolationPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, Lib3MF_uint32 nPointIndex, Lib3MF::eToolpathProfileModificationFactor eModificationFactor, const Lib3MF_uint64 nFactorValuesBufferSize, Lib3MF_uint64* pFactorValuesNeededCount, Lib3MF::sHatchModificationInterpolationData * pFactorValuesBuffer);
+
+/**
+* Retrieves the sub-point modification interpolation values for all points of a segment. Fails if segment type is not loop or polyline.
+*
+* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+* @param[in] eModificationFactor - Which modification factor value to retrieve (E, F, G or H).
+* @param[in] nCountArrayBufferSize - Number of elements in buffer
+* @param[out] pCountArrayNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pCountArrayBuffer - uint32  buffer of Array how many Interpolation values exist for each point. Will contain number of points elements.
+* @param[in] nFactorValuesBufferSize - Number of elements in buffer
+* @param[out] pFactorValuesNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pFactorValuesBuffer - HatchModificationInterpolationData  buffer of Array of interpolation data for the full segment, in point order. Will contain the sum of CountArray elements.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerReader_GetSegmentAllNonlinearPointsModificationInterpolationPtr) (Lib3MF_ToolpathLayerReader pToolpathLayerReader, Lib3MF_uint32 nSegmentIndex, Lib3MF::eToolpathProfileModificationFactor eModificationFactor, const Lib3MF_uint64 nCountArrayBufferSize, Lib3MF_uint64* pCountArrayNeededCount, Lib3MF_uint32 * pCountArrayBuffer, const Lib3MF_uint64 nFactorValuesBufferSize, Lib3MF_uint64* pFactorValuesNeededCount, Lib3MF::sHatchModificationInterpolationData * pFactorValuesBuffer);
+
 /*************************************************************************************************************************
  Class definition for ToolpathLayerData
 **************************************************************************************************************************/
@@ -7135,6 +7199,158 @@ typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineDiscretePtr) (Lib3M
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineDiscreteWithFactorsPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer, Lib3MF_uint64 nFactorDataBufferSize, const Lib3MF_double * pFactorDataBuffer);
+
+/**
+* writes loop data to the layer in model units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point also closes the loop.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
+* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+* @param[in] nFactorData1BufferSize - Number of elements in buffer
+* @param[in] pFactorData1Buffer - double buffer of The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+* @param[in] nFactorData2BufferSize - Number of elements in buffer
+* @param[in] pFactorData2Buffer - double buffer of The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopInModelUnitsWithLinearFactorsPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer, Lib3MF::eToolpathProfileModificationFactor eModificationFactor, Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double * pFactorData1Buffer, Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double * pFactorData2Buffer);
+
+/**
+* writes loop data to the layer in model units with non-linearly ramped profile modification factors per point.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
+* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+* @param[in] nFactorData1BufferSize - Number of elements in buffer
+* @param[in] pFactorData1Buffer - double buffer of The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+* @param[in] nFactorData2BufferSize - Number of elements in buffer
+* @param[in] pFactorData2Buffer - double buffer of The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+* @param[in] nSubInterpolationCountsBufferSize - Number of elements in buffer
+* @param[in] pSubInterpolationCountsBuffer - uint32 buffer of Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData.
+* @param[in] nModificationInterpolationDataBufferSize - Number of elements in buffer
+* @param[in] pModificationInterpolationDataBuffer - HatchModificationInterpolationData buffer of Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopInModelUnitsWithNonlinearFactorsPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer, Lib3MF::eToolpathProfileModificationFactor eModificationFactor, Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double * pFactorData1Buffer, Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double * pFactorData2Buffer, Lib3MF_uint64 nSubInterpolationCountsBufferSize, const Lib3MF_uint32 * pSubInterpolationCountsBuffer, Lib3MF_uint64 nModificationInterpolationDataBufferSize, const Lib3MF::sHatchModificationInterpolationData * pModificationInterpolationDataBuffer);
+
+/**
+* writes loop data to the layer in toolpath units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point also closes the loop.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
+* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+* @param[in] nFactorData1BufferSize - Number of elements in buffer
+* @param[in] pFactorData1Buffer - double buffer of The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+* @param[in] nFactorData2BufferSize - Number of elements in buffer
+* @param[in] pFactorData2Buffer - double buffer of The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopDiscreteWithLinearFactorsPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer, Lib3MF::eToolpathProfileModificationFactor eModificationFactor, Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double * pFactorData1Buffer, Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double * pFactorData2Buffer);
+
+/**
+* writes loop data to the layer in toolpath units with non-linearly ramped profile modification factors per point.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
+* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+* @param[in] nFactorData1BufferSize - Number of elements in buffer
+* @param[in] pFactorData1Buffer - double buffer of The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+* @param[in] nFactorData2BufferSize - Number of elements in buffer
+* @param[in] pFactorData2Buffer - double buffer of The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+* @param[in] nSubInterpolationCountsBufferSize - Number of elements in buffer
+* @param[in] pSubInterpolationCountsBuffer - uint32 buffer of Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData.
+* @param[in] nModificationInterpolationDataBufferSize - Number of elements in buffer
+* @param[in] pModificationInterpolationDataBuffer - HatchModificationInterpolationData buffer of Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WriteLoopDiscreteWithNonlinearFactorsPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer, Lib3MF::eToolpathProfileModificationFactor eModificationFactor, Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double * pFactorData1Buffer, Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double * pFactorData2Buffer, Lib3MF_uint64 nSubInterpolationCountsBufferSize, const Lib3MF_uint32 * pSubInterpolationCountsBuffer, Lib3MF_uint64 nModificationInterpolationDataBufferSize, const Lib3MF::sHatchModificationInterpolationData * pModificationInterpolationDataBuffer);
+
+/**
+* writes polyline data to the layer in model units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point's factors are unused.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
+* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+* @param[in] nFactorData1BufferSize - Number of elements in buffer
+* @param[in] pFactorData1Buffer - double buffer of The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+* @param[in] nFactorData2BufferSize - Number of elements in buffer
+* @param[in] pFactorData2Buffer - double buffer of The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithLinearFactorsPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer, Lib3MF::eToolpathProfileModificationFactor eModificationFactor, Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double * pFactorData1Buffer, Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double * pFactorData2Buffer);
+
+/**
+* writes polyline data to the layer in model units with non-linearly ramped profile modification factors per point.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - Position2D buffer of The point data in model units. Array MUST NOT be empty.
+* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+* @param[in] nFactorData1BufferSize - Number of elements in buffer
+* @param[in] pFactorData1Buffer - double buffer of The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+* @param[in] nFactorData2BufferSize - Number of elements in buffer
+* @param[in] pFactorData2Buffer - double buffer of The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+* @param[in] nSubInterpolationCountsBufferSize - Number of elements in buffer
+* @param[in] pSubInterpolationCountsBuffer - uint32 buffer of Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData.
+* @param[in] nModificationInterpolationDataBufferSize - Number of elements in buffer
+* @param[in] pModificationInterpolationDataBuffer - HatchModificationInterpolationData buffer of Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithNonlinearFactorsPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer, Lib3MF::eToolpathProfileModificationFactor eModificationFactor, Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double * pFactorData1Buffer, Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double * pFactorData2Buffer, Lib3MF_uint64 nSubInterpolationCountsBufferSize, const Lib3MF_uint32 * pSubInterpolationCountsBuffer, Lib3MF_uint64 nModificationInterpolationDataBufferSize, const Lib3MF::sHatchModificationInterpolationData * pModificationInterpolationDataBuffer);
+
+/**
+* writes polyline data to the layer in toolpath units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point's factors are unused.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
+* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+* @param[in] nFactorData1BufferSize - Number of elements in buffer
+* @param[in] pFactorData1Buffer - double buffer of The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+* @param[in] nFactorData2BufferSize - Number of elements in buffer
+* @param[in] pFactorData2Buffer - double buffer of The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineDiscreteWithLinearFactorsPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer, Lib3MF::eToolpathProfileModificationFactor eModificationFactor, Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double * pFactorData1Buffer, Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double * pFactorData2Buffer);
+
+/**
+* writes polyline data to the layer in toolpath units with non-linearly ramped profile modification factors per point.
+*
+* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+* @param[in] nProfileID - The toolpath profile to use.
+* @param[in] nPartID - The toolpath part to use
+* @param[in] nPointDataBufferSize - Number of elements in buffer
+* @param[in] pPointDataBuffer - DiscretePosition2D buffer of The point data in toolpath units. Array MUST NOT be empty.
+* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+* @param[in] nFactorData1BufferSize - Number of elements in buffer
+* @param[in] pFactorData1Buffer - double buffer of The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+* @param[in] nFactorData2BufferSize - Number of elements in buffer
+* @param[in] pFactorData2Buffer - double buffer of The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+* @param[in] nSubInterpolationCountsBufferSize - Number of elements in buffer
+* @param[in] pSubInterpolationCountsBuffer - uint32 buffer of Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData.
+* @param[in] nModificationInterpolationDataBufferSize - Number of elements in buffer
+* @param[in] pModificationInterpolationDataBuffer - HatchModificationInterpolationData buffer of Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFToolpathLayerData_WritePolylineDiscreteWithNonlinearFactorsPtr) (Lib3MF_ToolpathLayerData pToolpathLayerData, Lib3MF_uint32 nProfileID, Lib3MF_uint32 nPartID, Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D * pPointDataBuffer, Lib3MF::eToolpathProfileModificationFactor eModificationFactor, Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double * pFactorData1Buffer, Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double * pFactorData2Buffer, Lib3MF_uint64 nSubInterpolationCountsBufferSize, const Lib3MF_uint32 * pSubInterpolationCountsBuffer, Lib3MF_uint64 nModificationInterpolationDataBufferSize, const Lib3MF::sHatchModificationInterpolationData * pModificationInterpolationDataBuffer);
 
 /**
 * Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
@@ -9889,6 +10105,11 @@ typedef struct {
 	PLib3MFToolpathLayerReader_SegmentHasNonlinearHatchModificationInterpolationPtr m_ToolpathLayerReader_SegmentHasNonlinearHatchModificationInterpolation;
 	PLib3MFToolpathLayerReader_GetSegmentNonlinearHatchModificationInterpolationPtr m_ToolpathLayerReader_GetSegmentNonlinearHatchModificationInterpolation;
 	PLib3MFToolpathLayerReader_GetSegmentAllNonlinearHatchesModificationInterpolationPtr m_ToolpathLayerReader_GetSegmentAllNonlinearHatchesModificationInterpolation;
+	PLib3MFToolpathLayerReader_SegmentHasLinearPointModificationFactorsPtr m_ToolpathLayerReader_SegmentHasLinearPointModificationFactors;
+	PLib3MFToolpathLayerReader_GetLinearSegmentPointModificationFactorsPtr m_ToolpathLayerReader_GetLinearSegmentPointModificationFactors;
+	PLib3MFToolpathLayerReader_SegmentHasNonlinearPointModificationInterpolationPtr m_ToolpathLayerReader_SegmentHasNonlinearPointModificationInterpolation;
+	PLib3MFToolpathLayerReader_GetSegmentNonlinearPointModificationInterpolationPtr m_ToolpathLayerReader_GetSegmentNonlinearPointModificationInterpolation;
+	PLib3MFToolpathLayerReader_GetSegmentAllNonlinearPointsModificationInterpolationPtr m_ToolpathLayerReader_GetSegmentAllNonlinearPointsModificationInterpolation;
 	PLib3MFToolpathLayerData_GetLayerDataUUIDPtr m_ToolpathLayerData_GetLayerDataUUID;
 	PLib3MFToolpathLayerData_RegisterProfilePtr m_ToolpathLayerData_RegisterProfile;
 	PLib3MFToolpathLayerData_RegisterBuildItemPtr m_ToolpathLayerData_RegisterBuildItem;
@@ -9920,6 +10141,14 @@ typedef struct {
 	PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithFactorsPtr m_ToolpathLayerData_WritePolylineInModelUnitsWithFactors;
 	PLib3MFToolpathLayerData_WritePolylineDiscretePtr m_ToolpathLayerData_WritePolylineDiscrete;
 	PLib3MFToolpathLayerData_WritePolylineDiscreteWithFactorsPtr m_ToolpathLayerData_WritePolylineDiscreteWithFactors;
+	PLib3MFToolpathLayerData_WriteLoopInModelUnitsWithLinearFactorsPtr m_ToolpathLayerData_WriteLoopInModelUnitsWithLinearFactors;
+	PLib3MFToolpathLayerData_WriteLoopInModelUnitsWithNonlinearFactorsPtr m_ToolpathLayerData_WriteLoopInModelUnitsWithNonlinearFactors;
+	PLib3MFToolpathLayerData_WriteLoopDiscreteWithLinearFactorsPtr m_ToolpathLayerData_WriteLoopDiscreteWithLinearFactors;
+	PLib3MFToolpathLayerData_WriteLoopDiscreteWithNonlinearFactorsPtr m_ToolpathLayerData_WriteLoopDiscreteWithNonlinearFactors;
+	PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithLinearFactorsPtr m_ToolpathLayerData_WritePolylineInModelUnitsWithLinearFactors;
+	PLib3MFToolpathLayerData_WritePolylineInModelUnitsWithNonlinearFactorsPtr m_ToolpathLayerData_WritePolylineInModelUnitsWithNonlinearFactors;
+	PLib3MFToolpathLayerData_WritePolylineDiscreteWithLinearFactorsPtr m_ToolpathLayerData_WritePolylineDiscreteWithLinearFactors;
+	PLib3MFToolpathLayerData_WritePolylineDiscreteWithNonlinearFactorsPtr m_ToolpathLayerData_WritePolylineDiscreteWithNonlinearFactors;
 	PLib3MFToolpathLayerData_AddCustomDataPtr m_ToolpathLayerData_AddCustomData;
 	PLib3MFToolpathLayerData_FinishPtr m_ToolpathLayerData_Finish;
 	PLib3MFToolpathViewable_GetLayerIndexPtr m_ToolpathViewable_GetLayerIndex;

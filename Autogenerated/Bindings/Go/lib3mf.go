@@ -583,6 +583,7 @@ const LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHHATCHDATA = 5013;
 const LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA = 5014;
 const LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEHATCH = 5015;
 const LIB3MF_ERROR_TOOLPATH_MODIFIERNOTFOUND = 5016;
+const LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEPOINTS = 5017;
 
 // WrappedError is an error that wraps a Lib3MF error.
 type WrappedError struct {
@@ -738,6 +739,8 @@ func errorMessage(errorcode uint32) string {
 		return "Segment is not of type hatch";
 	case LIB3MF_ERROR_TOOLPATH_MODIFIERNOTFOUND:
 		return "Toolpath modifier not found";
+	case LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEPOINTS:
+		return "Segment is not of type loop or polyline";
 	default:
 		return "unknown";
 	}
@@ -8794,6 +8797,81 @@ func (inst ToolpathLayerReader) GetSegmentAllNonlinearHatchesModificationInterpo
 	return countArray[:int(neededforcountArray)], factorValues[:int(neededforfactorValues)], nil
 }
 
+// SegmentHasLinearPointModificationFactors checks if the segment has any linear (per-point ramped) point modification factors. Returns false, if segment type is not loop or polyline.
+func (inst ToolpathLayerReader) SegmentHasLinearPointModificationFactors(segmentIndex uint32, modificationFactor ToolpathProfileModificationFactor) (bool, error) {
+	var hasLinearModificationFactors C.bool
+	ret := C.CCall_lib3mf_toolpathlayerreader_segmenthaslinearpointmodificationfactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), C.eLib3MFToolpathProfileModificationFactor(modificationFactor), &hasLinearModificationFactors)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(hasLinearModificationFactors), nil
+}
+
+// GetLinearSegmentPointModificationFactors retrieves the assigned segment point modification factors as start/end pairs. Fails if segment type is not loop or polyline. Constant points return identical start and end values.
+func (inst ToolpathLayerReader) GetLinearSegmentPointModificationFactors(segmentIndex uint32, modificationFactor ToolpathProfileModificationFactor, factorValues []Hatch2DFactors) ([]Hatch2DFactors, error) {
+	var neededforfactorValues C.uint64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getlinearsegmentpointmodificationfactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), C.eLib3MFToolpathProfileModificationFactor(modificationFactor), 0, &neededforfactorValues, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(factorValues) < int(neededforfactorValues) {
+	 factorValues = append(factorValues, make([]Hatch2DFactors, int(neededforfactorValues)-len(factorValues))...)
+	}
+	ret = C.CCall_lib3mf_toolpathlayerreader_getlinearsegmentpointmodificationfactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), C.eLib3MFToolpathProfileModificationFactor(modificationFactor), neededforfactorValues, nil, (*C.sLib3MFHatch2DFactors)(unsafe.Pointer(&factorValues[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return factorValues[:int(neededforfactorValues)], nil
+}
+
+// SegmentHasNonlinearPointModificationInterpolation checks if the segment has any sub-point modification interpolation values. Returns false, if segment type is not loop or polyline.
+func (inst ToolpathLayerReader) SegmentHasNonlinearPointModificationInterpolation(segmentIndex uint32) (bool, error) {
+	var hasModificationInterpolation C.bool
+	ret := C.CCall_lib3mf_toolpathlayerreader_segmenthasnonlinearpointmodificationinterpolation(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), &hasModificationInterpolation)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(hasModificationInterpolation), nil
+}
+
+// GetSegmentNonlinearPointModificationInterpolation retrieves the sub-point modification interpolation values for a single point. Fails if segment type is not loop or polyline.
+func (inst ToolpathLayerReader) GetSegmentNonlinearPointModificationInterpolation(segmentIndex uint32, pointIndex uint32, modificationFactor ToolpathProfileModificationFactor, factorValues []HatchModificationInterpolationData) ([]HatchModificationInterpolationData, error) {
+	var neededforfactorValues C.uint64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentnonlinearpointmodificationinterpolation(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), C.uint32_t(pointIndex), C.eLib3MFToolpathProfileModificationFactor(modificationFactor), 0, &neededforfactorValues, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(factorValues) < int(neededforfactorValues) {
+	 factorValues = append(factorValues, make([]HatchModificationInterpolationData, int(neededforfactorValues)-len(factorValues))...)
+	}
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentnonlinearpointmodificationinterpolation(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), C.uint32_t(pointIndex), C.eLib3MFToolpathProfileModificationFactor(modificationFactor), neededforfactorValues, nil, (*C.sLib3MFHatchModificationInterpolationData)(unsafe.Pointer(&factorValues[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return factorValues[:int(neededforfactorValues)], nil
+}
+
+// GetSegmentAllNonlinearPointsModificationInterpolation retrieves the sub-point modification interpolation values for all points of a segment. Fails if segment type is not loop or polyline.
+func (inst ToolpathLayerReader) GetSegmentAllNonlinearPointsModificationInterpolation(segmentIndex uint32, modificationFactor ToolpathProfileModificationFactor, countArray []uint32, factorValues []HatchModificationInterpolationData) ([]uint32, []HatchModificationInterpolationData, error) {
+	var neededforcountArray C.uint64_t
+	var neededforfactorValues C.uint64_t
+	ret := C.CCall_lib3mf_toolpathlayerreader_getsegmentallnonlinearpointsmodificationinterpolation(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), C.eLib3MFToolpathProfileModificationFactor(modificationFactor), 0, &neededforcountArray, nil, 0, &neededforfactorValues, nil)
+	if ret != 0 {
+		return nil, nil, makeError(uint32(ret))
+	}
+	if len(countArray) < int(neededforcountArray) {
+	 countArray = append(countArray, make([]uint32, int(neededforcountArray)-len(countArray))...)
+	}
+	if len(factorValues) < int(neededforfactorValues) {
+	 factorValues = append(factorValues, make([]HatchModificationInterpolationData, int(neededforfactorValues)-len(factorValues))...)
+	}
+	ret = C.CCall_lib3mf_toolpathlayerreader_getsegmentallnonlinearpointsmodificationinterpolation(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(segmentIndex), C.eLib3MFToolpathProfileModificationFactor(modificationFactor), neededforcountArray, nil, (*C.uint32_t)(unsafe.Pointer(&countArray[0])), neededforfactorValues, nil, (*C.sLib3MFHatchModificationInterpolationData)(unsafe.Pointer(&factorValues[0])))
+	if ret != 0 {
+		return nil, nil, makeError(uint32(ret))
+	}
+	return countArray[:int(neededforcountArray)], factorValues[:int(neededforfactorValues)], nil
+}
+
 
 // ToolpathLayerData represents a Lib3MF class.
 type ToolpathLayerData struct {
@@ -9087,6 +9165,78 @@ func (inst ToolpathLayerData) WritePolylineDiscrete(profileID uint32, partID uin
 // WritePolylineDiscreteWithFactors writes polyline data to the layer with profile modification factors.
 func (inst ToolpathLayerData) WritePolylineDiscreteWithFactors(profileID uint32, partID uint32, pointData []DiscretePosition2D, factorData []float64) error {
 	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylinediscretewithfactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])), C.uint64_t(len(factorData)), (*C.double)(unsafe.Pointer(&factorData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WriteLoopInModelUnitsWithLinearFactors writes loop data to the layer in model units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point also closes the loop.
+func (inst ToolpathLayerData) WriteLoopInModelUnitsWithLinearFactors(profileID uint32, partID uint32, pointData []Position2D, modificationFactor ToolpathProfileModificationFactor, factorData1 []float64, factorData2 []float64) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writeloopinmodelunitswithlinearfactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])), C.eLib3MFToolpathProfileModificationFactor(modificationFactor), C.uint64_t(len(factorData1)), (*C.double)(unsafe.Pointer(&factorData1[0])), C.uint64_t(len(factorData2)), (*C.double)(unsafe.Pointer(&factorData2[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WriteLoopInModelUnitsWithNonlinearFactors writes loop data to the layer in model units with non-linearly ramped profile modification factors per point.
+func (inst ToolpathLayerData) WriteLoopInModelUnitsWithNonlinearFactors(profileID uint32, partID uint32, pointData []Position2D, modificationFactor ToolpathProfileModificationFactor, factorData1 []float64, factorData2 []float64, subInterpolationCounts []uint32, modificationInterpolationData []HatchModificationInterpolationData) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writeloopinmodelunitswithnonlinearfactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])), C.eLib3MFToolpathProfileModificationFactor(modificationFactor), C.uint64_t(len(factorData1)), (*C.double)(unsafe.Pointer(&factorData1[0])), C.uint64_t(len(factorData2)), (*C.double)(unsafe.Pointer(&factorData2[0])), C.uint64_t(len(subInterpolationCounts)), (*C.uint32_t)(unsafe.Pointer(&subInterpolationCounts[0])), C.uint64_t(len(modificationInterpolationData)), (*C.sLib3MFHatchModificationInterpolationData)(unsafe.Pointer(&modificationInterpolationData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WriteLoopDiscreteWithLinearFactors writes loop data to the layer in toolpath units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point also closes the loop.
+func (inst ToolpathLayerData) WriteLoopDiscreteWithLinearFactors(profileID uint32, partID uint32, pointData []DiscretePosition2D, modificationFactor ToolpathProfileModificationFactor, factorData1 []float64, factorData2 []float64) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writeloopdiscretewithlinearfactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])), C.eLib3MFToolpathProfileModificationFactor(modificationFactor), C.uint64_t(len(factorData1)), (*C.double)(unsafe.Pointer(&factorData1[0])), C.uint64_t(len(factorData2)), (*C.double)(unsafe.Pointer(&factorData2[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WriteLoopDiscreteWithNonlinearFactors writes loop data to the layer in toolpath units with non-linearly ramped profile modification factors per point.
+func (inst ToolpathLayerData) WriteLoopDiscreteWithNonlinearFactors(profileID uint32, partID uint32, pointData []DiscretePosition2D, modificationFactor ToolpathProfileModificationFactor, factorData1 []float64, factorData2 []float64, subInterpolationCounts []uint32, modificationInterpolationData []HatchModificationInterpolationData) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writeloopdiscretewithnonlinearfactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])), C.eLib3MFToolpathProfileModificationFactor(modificationFactor), C.uint64_t(len(factorData1)), (*C.double)(unsafe.Pointer(&factorData1[0])), C.uint64_t(len(factorData2)), (*C.double)(unsafe.Pointer(&factorData2[0])), C.uint64_t(len(subInterpolationCounts)), (*C.uint32_t)(unsafe.Pointer(&subInterpolationCounts[0])), C.uint64_t(len(modificationInterpolationData)), (*C.sLib3MFHatchModificationInterpolationData)(unsafe.Pointer(&modificationInterpolationData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WritePolylineInModelUnitsWithLinearFactors writes polyline data to the layer in model units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point's factors are unused.
+func (inst ToolpathLayerData) WritePolylineInModelUnitsWithLinearFactors(profileID uint32, partID uint32, pointData []Position2D, modificationFactor ToolpathProfileModificationFactor, factorData1 []float64, factorData2 []float64) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylineinmodelunitswithlinearfactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])), C.eLib3MFToolpathProfileModificationFactor(modificationFactor), C.uint64_t(len(factorData1)), (*C.double)(unsafe.Pointer(&factorData1[0])), C.uint64_t(len(factorData2)), (*C.double)(unsafe.Pointer(&factorData2[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WritePolylineInModelUnitsWithNonlinearFactors writes polyline data to the layer in model units with non-linearly ramped profile modification factors per point.
+func (inst ToolpathLayerData) WritePolylineInModelUnitsWithNonlinearFactors(profileID uint32, partID uint32, pointData []Position2D, modificationFactor ToolpathProfileModificationFactor, factorData1 []float64, factorData2 []float64, subInterpolationCounts []uint32, modificationInterpolationData []HatchModificationInterpolationData) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylineinmodelunitswithnonlinearfactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFPosition2D)(unsafe.Pointer(&pointData[0])), C.eLib3MFToolpathProfileModificationFactor(modificationFactor), C.uint64_t(len(factorData1)), (*C.double)(unsafe.Pointer(&factorData1[0])), C.uint64_t(len(factorData2)), (*C.double)(unsafe.Pointer(&factorData2[0])), C.uint64_t(len(subInterpolationCounts)), (*C.uint32_t)(unsafe.Pointer(&subInterpolationCounts[0])), C.uint64_t(len(modificationInterpolationData)), (*C.sLib3MFHatchModificationInterpolationData)(unsafe.Pointer(&modificationInterpolationData[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WritePolylineDiscreteWithLinearFactors writes polyline data to the layer in toolpath units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point's factors are unused.
+func (inst ToolpathLayerData) WritePolylineDiscreteWithLinearFactors(profileID uint32, partID uint32, pointData []DiscretePosition2D, modificationFactor ToolpathProfileModificationFactor, factorData1 []float64, factorData2 []float64) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylinediscretewithlinearfactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])), C.eLib3MFToolpathProfileModificationFactor(modificationFactor), C.uint64_t(len(factorData1)), (*C.double)(unsafe.Pointer(&factorData1[0])), C.uint64_t(len(factorData2)), (*C.double)(unsafe.Pointer(&factorData2[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// WritePolylineDiscreteWithNonlinearFactors writes polyline data to the layer in toolpath units with non-linearly ramped profile modification factors per point.
+func (inst ToolpathLayerData) WritePolylineDiscreteWithNonlinearFactors(profileID uint32, partID uint32, pointData []DiscretePosition2D, modificationFactor ToolpathProfileModificationFactor, factorData1 []float64, factorData2 []float64, subInterpolationCounts []uint32, modificationInterpolationData []HatchModificationInterpolationData) error {
+	ret := C.CCall_lib3mf_toolpathlayerdata_writepolylinediscretewithnonlinearfactors(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(profileID), C.uint32_t(partID), C.uint64_t(len(pointData)), (*C.sLib3MFDiscretePosition2D)(unsafe.Pointer(&pointData[0])), C.eLib3MFToolpathProfileModificationFactor(modificationFactor), C.uint64_t(len(factorData1)), (*C.double)(unsafe.Pointer(&factorData1[0])), C.uint64_t(len(factorData2)), (*C.double)(unsafe.Pointer(&factorData2[0])), C.uint64_t(len(subInterpolationCounts)), (*C.uint32_t)(unsafe.Pointer(&subInterpolationCounts[0])), C.uint64_t(len(modificationInterpolationData)), (*C.sLib3MFHatchModificationInterpolationData)(unsafe.Pointer(&modificationInterpolationData[0])))
 	if ret != 0 {
 		return makeError(uint32(ret))
 	}

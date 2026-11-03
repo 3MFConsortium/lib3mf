@@ -42,14 +42,37 @@ namespace NMR {
 		nfInt32 m_nX;
 		nfInt32 m_nY;
 		nfInt32 m_nTag;
-		nfDouble m_dFactorF;
-		nfDouble m_dFactorG;
-		nfDouble m_dFactorH;
-		nfDouble m_dFactorE;
-		bool m_bHasFactorF;
-		bool m_bHasFactorG;
-		bool m_bHasFactorH;
-		bool m_bHasFactorE;
+
+		// Factor values. For constant factors, the start and end value are identical.
+		// For linear factors (x1/x2), the start value is the first and the end value the second.
+		nfDouble m_dFactorF1;
+		nfDouble m_dFactorG1;
+		nfDouble m_dFactorH1;
+		nfDouble m_dFactorE1;
+		nfDouble m_dFactorF2;
+		nfDouble m_dFactorG2;
+		nfDouble m_dFactorH2;
+		nfDouble m_dFactorE2;
+
+		// Constant-factor presence (x).
+		bool m_bHasConstantFactorF;
+		bool m_bHasConstantFactorG;
+		bool m_bHasConstantFactorH;
+		bool m_bHasConstantFactorE;
+
+		// Linear-factor presence (x1/x2 individually, for completeness validation).
+		bool m_bHasFactorF1;
+		bool m_bHasFactorF2;
+		bool m_bHasFactorG1;
+		bool m_bHasFactorG2;
+		bool m_bHasFactorH1;
+		bool m_bHasFactorH2;
+		bool m_bHasFactorE1;
+		bool m_bHasFactorE2;
+
+		// Tracks the last parsed <sub> parameter for strictly-increasing validation.
+		bool m_bHasOverrideInterpolation;
+		nfDouble m_dLastSubParameter;
 
 		nfBool m_bHasX;
 		nfBool m_bHasY;
@@ -59,6 +82,9 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
+
+		// Validates that every linear factor has both x1 and x2.
+		void validateLinearFactors();
 	public:
 		CToolpathReaderNode_Point() = delete;
 		CToolpathReaderNode_Point(_In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, CModelToolpathLayerReadData * pReadData);
@@ -68,15 +94,28 @@ namespace NMR {
 		nfInt32 getX() const;
 		nfInt32 getY() const;
 		nfInt32 getTag() const;
-		nfDouble getFactorF() const;
-		nfDouble getFactorG() const;
-		nfDouble getFactorH() const;
-		nfDouble getFactorE() const;
+
+		// Start (first) and end (second) factor values.
+		nfDouble getStartFactorF() const;
+		nfDouble getStartFactorG() const;
+		nfDouble getStartFactorH() const;
+		nfDouble getStartFactorE() const;
+		nfDouble getEndFactorF() const;
+		nfDouble getEndFactorG() const;
+		nfDouble getEndFactorH() const;
+		nfDouble getEndFactorE() const;
 
 		bool hasFactorF() const;
 		bool hasFactorG() const;
 		bool hasFactorH() const;
 		bool hasFactorE() const;
+
+		bool isLinearFactorF() const;
+		bool isLinearFactorG() const;
+		bool isLinearFactorH() const;
+		bool isLinearFactorE() const;
+
+		bool hasOverrideInterpolation() const;
 
 
 	};

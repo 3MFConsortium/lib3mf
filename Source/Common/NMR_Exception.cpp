@@ -727,6 +727,8 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATETOOLPATHSYNCGROUPID: return "Toolpath sync group id is not unique within the toolpath";
 		case NMR_ERROR_TOOLPATHSYNCGROUPNOTFOUND: return "Sync group id does not reference a declared toolpath sync group";
 		case NMR_ERROR_TOOLPATHLASERSOURCEINUSE: return "Toolpath laser source is referenced by the default laser index or a sync group";
+		case NMR_ERROR_INVALIDOVERRIDESUBPARAMETER: return "Override support point parameter is out of range or not strictly increasing";
+		case NMR_ERROR_INCOMPLETELINEARSCALEFACTOR: return "Linear scale factor is incomplete (only one of x1/x2 is given)";
 
 		default:
 			return "unknown error";

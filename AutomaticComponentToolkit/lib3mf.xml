@@ -142,6 +142,7 @@
 		<error name="TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA" code="5014" description="Scaling data needs to match point data" />
 		<error name="TOOLPATH_SEGMENTISNOTOFTYPEHATCH" code="5015" description="Segment is not of type hatch" />
 		<error name="TOOLPATH_MODIFIERNOTFOUND" code="5016" description="Toolpath modifier not found" />
+		<error name="TOOLPATH_SEGMENTISNOTOFTYPEPOINTS" code="5017" description="Segment is not of type loop or polyline" />
 		
 		
 		
@@ -4411,6 +4412,39 @@
 	    <param name="FactorValues" type="structarray" class="HatchModificationInterpolationData" pass="out" description="Array of interpolation data for the full segment, in hatch order. Will contain the sum of CountArray elements." />
 	</method>
 
+	<!-- Methods for retrieving linear and non-linear point override information for loop and polyline segments. -->
+
+	<method name="SegmentHasLinearPointModificationFactors" description="Checks if the segment has any linear (per-point ramped) point modification factors. Returns false, if segment type is not loop or polyline.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
+		<param name="ModificationFactor" type="enum" class="ToolpathProfileModificationFactor" pass="in" description="Which modification factor value to query (E, F, G or H)." />
+		<param name="HasLinearModificationFactors" type="bool" pass="return" description="Returns true, if the segment has any linear point modification factors of the given type." />
+	</method>
+
+	<method name="GetLinearSegmentPointModificationFactors" description="Retrieves the assigned segment point modification factors as start/end pairs. Fails if segment type is not loop or polyline. Constant points return identical start and end values.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
+		<param name="ModificationFactor" type="enum" class="ToolpathProfileModificationFactor" pass="in" description="Which modification factor value to retrieve (E, F, G or H). Returns an array of 0.0, if modification factor type is unknown or not given." />
+	    <param name="FactorValues" type="structarray" class="Hatch2DFactors" pass="out" description="Start (Point1Factor) and end (Point2Factor) modification factor for each point of the segment." />
+	</method>
+
+	<method name="SegmentHasNonlinearPointModificationInterpolation" description="Checks if the segment has any sub-point modification interpolation values. Returns false, if segment type is not loop or polyline.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
+		<param name="HasModificationInterpolation" type="bool" pass="return" description="Returns true, if the segment has non-linear interpolation modifications." />
+	</method>
+
+	<method name="GetSegmentNonlinearPointModificationInterpolation" description="Retrieves the sub-point modification interpolation values for a single point. Fails if segment type is not loop or polyline.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
+		<param name="PointIndex" type="uint32" pass="in" description="Point Index in Segment. Must be between 0 and PointCount - 1." />
+		<param name="ModificationFactor" type="enum" class="ToolpathProfileModificationFactor" pass="in" description="Which modification factor value to retrieve (E, F, G or H)." />
+	    <param name="FactorValues" type="structarray" class="HatchModificationInterpolationData" pass="out" description="Array of interpolation data for the point." />
+	</method>
+
+	<method name="GetSegmentAllNonlinearPointsModificationInterpolation" description="Retrieves the sub-point modification interpolation values for all points of a segment. Fails if segment type is not loop or polyline.">
+		<param name="SegmentIndex" type="uint32" pass="in" description="Segment Index. Must be between 0 and SegmentCount - 1." />
+		<param name="ModificationFactor" type="enum" class="ToolpathProfileModificationFactor" pass="in" description="Which modification factor value to retrieve (E, F, G or H)." />
+	    <param name="CountArray" type="basicarray" class="uint32" pass="out" description="Array how many Interpolation values exist for each point. Will contain number of points elements." />
+	    <param name="FactorValues" type="structarray" class="HatchModificationInterpolationData" pass="out" description="Array of interpolation data for the full segment, in point order. Will contain the sum of CountArray elements." />
+	</method>
+
   </class>
 	
 	
@@ -4589,7 +4623,87 @@
       <param name="PointData" type="structarray" class="DiscretePosition2D" pass="in" description="The point data in toolpath units. Array MUST NOT be empty." />
       <param name="FactorData" type="basicarray" class="double" pass="in" description="The profile modification scale factors. If empty, no factors are written. MUST otherwise have the same cardinality as PointData." /> 
     </method>	
-	
+
+    <method name="WriteLoopInModelUnitsWithLinearFactors" description="writes loop data to the layer in model units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point also closes the loop.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use." />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data in model units. Array MUST NOT be empty." />
+      <param name="ModificationFactor" type="enum" class="ToolpathProfileModificationFactor" pass="in" description="Which modification factor value to write (E, F, G or H)." />
+      <param name="FactorData1" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData." />
+      <param name="FactorData2" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData." />
+    </method>
+
+    <method name="WriteLoopInModelUnitsWithNonlinearFactors" description="writes loop data to the layer in model units with non-linearly ramped profile modification factors per point.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use." />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data in model units. Array MUST NOT be empty." />
+      <param name="ModificationFactor" type="enum" class="ToolpathProfileModificationFactor" pass="in" description="Which modification factor value to write (E, F, G or H)." />
+      <param name="FactorData1" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData." />
+      <param name="FactorData2" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData." />
+      <param name="SubInterpolationCounts" type="basicarray" class="uint32" pass="in" description="Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData." />
+      <param name="ModificationInterpolationData" type="structarray" class="HatchModificationInterpolationData" pass="in" description="Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1." />
+    </method>
+
+    <method name="WriteLoopDiscreteWithLinearFactors" description="writes loop data to the layer in toolpath units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point also closes the loop.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use." />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="DiscretePosition2D" pass="in" description="The point data in toolpath units. Array MUST NOT be empty." />
+      <param name="ModificationFactor" type="enum" class="ToolpathProfileModificationFactor" pass="in" description="Which modification factor value to write (E, F, G or H)." />
+      <param name="FactorData1" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData." />
+      <param name="FactorData2" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData." />
+    </method>
+
+    <method name="WriteLoopDiscreteWithNonlinearFactors" description="writes loop data to the layer in toolpath units with non-linearly ramped profile modification factors per point.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use." />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="DiscretePosition2D" pass="in" description="The point data in toolpath units. Array MUST NOT be empty." />
+      <param name="ModificationFactor" type="enum" class="ToolpathProfileModificationFactor" pass="in" description="Which modification factor value to write (E, F, G or H)." />
+      <param name="FactorData1" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData." />
+      <param name="FactorData2" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData." />
+      <param name="SubInterpolationCounts" type="basicarray" class="uint32" pass="in" description="Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData." />
+      <param name="ModificationInterpolationData" type="structarray" class="HatchModificationInterpolationData" pass="in" description="Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1." />
+    </method>
+
+    <method name="WritePolylineInModelUnitsWithLinearFactors" description="writes polyline data to the layer in model units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point's factors are unused.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use." />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data in model units. Array MUST NOT be empty." />
+      <param name="ModificationFactor" type="enum" class="ToolpathProfileModificationFactor" pass="in" description="Which modification factor value to write (E, F, G or H)." />
+      <param name="FactorData1" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData." />
+      <param name="FactorData2" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData." />
+    </method>
+
+    <method name="WritePolylineInModelUnitsWithNonlinearFactors" description="writes polyline data to the layer in model units with non-linearly ramped profile modification factors per point.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use." />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data in model units. Array MUST NOT be empty." />
+      <param name="ModificationFactor" type="enum" class="ToolpathProfileModificationFactor" pass="in" description="Which modification factor value to write (E, F, G or H)." />
+      <param name="FactorData1" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData." />
+      <param name="FactorData2" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData." />
+      <param name="SubInterpolationCounts" type="basicarray" class="uint32" pass="in" description="Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData." />
+      <param name="ModificationInterpolationData" type="structarray" class="HatchModificationInterpolationData" pass="in" description="Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1." />
+    </method>
+
+    <method name="WritePolylineDiscreteWithLinearFactors" description="writes polyline data to the layer in toolpath units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point's factors are unused.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use." />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="DiscretePosition2D" pass="in" description="The point data in toolpath units. Array MUST NOT be empty." />
+      <param name="ModificationFactor" type="enum" class="ToolpathProfileModificationFactor" pass="in" description="Which modification factor value to write (E, F, G or H)." />
+      <param name="FactorData1" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData." />
+      <param name="FactorData2" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData." />
+    </method>
+
+    <method name="WritePolylineDiscreteWithNonlinearFactors" description="writes polyline data to the layer in toolpath units with non-linearly ramped profile modification factors per point.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use." />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="DiscretePosition2D" pass="in" description="The point data in toolpath units. Array MUST NOT be empty." />
+      <param name="ModificationFactor" type="enum" class="ToolpathProfileModificationFactor" pass="in" description="Which modification factor value to write (E, F, G or H)." />
+      <param name="FactorData1" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData." />
+      <param name="FactorData2" type="basicarray" class="double" pass="in" description="The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData." />
+      <param name="SubInterpolationCounts" type="basicarray" class="uint32" pass="in" description="Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData." />
+      <param name="ModificationInterpolationData" type="structarray" class="HatchModificationInterpolationData" pass="in" description="Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1." />
+    </method>
+
 	<method name="AddCustomData" description="Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.">
 		<param name="NameSpace" type="string" pass="in" description="Namespace of the custom data tree. MUST not be empty." />
 		<param name="DataName" type="string" pass="in" description="Root name of the data tree. MUST not be empty. MUST be a valid XML name string." />

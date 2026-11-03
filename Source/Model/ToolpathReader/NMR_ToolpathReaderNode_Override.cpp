@@ -170,4 +170,24 @@ namespace NMR {
 		return m_dValueE;
 	}
 
+	bool CToolpathReaderNode_Override::hasValueF() const
+	{
+		return m_bHasValueF;
+	}
+
+	bool CToolpathReaderNode_Override::hasValueG() const
+	{
+		return m_bHasValueG;
+	}
+
+	bool CToolpathReaderNode_Override::hasValueH() const
+	{
+		return m_bHasValueH;
+	}
+
+	bool CToolpathReaderNode_Override::hasValueE() const
+	{
+		return m_bHasValueE;
+	}
+
 }

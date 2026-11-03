@@ -146,6 +146,16 @@ public:
 
 	void GetSegmentAllNonlinearHatchesModificationInterpolation(const Lib3MF_uint32 nSegmentIndex, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor, Lib3MF_uint64 nCountArrayBufferSize, Lib3MF_uint64* pCountArrayNeededCount, Lib3MF_uint32* pCountArrayBuffer, Lib3MF_uint64 nFactorValuesBufferSize, Lib3MF_uint64* pFactorValuesNeededCount, Lib3MF::sHatchModificationInterpolationData* pFactorValuesBuffer) override;
 
+	bool SegmentHasLinearPointModificationFactors(const Lib3MF_uint32 nSegmentIndex, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor) override;
+
+	void GetLinearSegmentPointModificationFactors(const Lib3MF_uint32 nSegmentIndex, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor, Lib3MF_uint64 nFactorValuesBufferSize, Lib3MF_uint64* pFactorValuesNeededCount, Lib3MF::sHatch2DFactors* pFactorValuesBuffer) override;
+
+	bool SegmentHasNonlinearPointModificationInterpolation(const Lib3MF_uint32 nSegmentIndex) override;
+
+	void GetSegmentNonlinearPointModificationInterpolation(const Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint32 nPointIndex, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor, Lib3MF_uint64 nFactorValuesBufferSize, Lib3MF_uint64* pFactorValuesNeededCount, Lib3MF::sHatchModificationInterpolationData* pFactorValuesBuffer) override;
+
+	void GetSegmentAllNonlinearPointsModificationInterpolation(const Lib3MF_uint32 nSegmentIndex, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor, Lib3MF_uint64 nCountArrayBufferSize, Lib3MF_uint64* pCountArrayNeededCount, Lib3MF_uint32* pCountArrayBuffer, Lib3MF_uint64 nFactorValuesBufferSize, Lib3MF_uint64* pFactorValuesNeededCount, Lib3MF::sHatchModificationInterpolationData* pFactorValuesBuffer) override;
+
 
 };
 

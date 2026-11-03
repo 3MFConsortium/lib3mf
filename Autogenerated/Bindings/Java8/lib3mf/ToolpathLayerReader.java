@@ -877,6 +877,118 @@ public class ToolpathLayerReader extends Base {
 		public HatchModificationInterpolationData[] FactorValues;
 
 	}
+	/**
+	 * Checks if the segment has any linear (per-point ramped) point modification factors. Returns false, if segment type is not loop or polyline.
+	 *
+	 * @param segmentIndex Segment Index. Must be between 0 and SegmentCount - 1.
+	 * @param modificationFactor Which modification factor value to query (E, F, G or H).
+	 * @return Returns true, if the segment has any linear point modification factors of the given type.
+	 * @throws Lib3MFException
+	 */
+	public boolean segmentHasLinearPointModificationFactors(int segmentIndex, Lib3MFWrapper.ToolpathProfileModificationFactor modificationFactor) throws Lib3MFException {
+		Pointer bufferHasLinearModificationFactors = new Memory(1);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerreader_segmenthaslinearpointmodificationfactors.invokeInt(new java.lang.Object[]{mHandle, segmentIndex, Lib3MFWrapper.EnumConversion.convertToolpathProfileModificationFactorToConst(modificationFactor), bufferHasLinearModificationFactors}));
+		return bufferHasLinearModificationFactors.getByte(0) != 0;
+	}
+
+	/**
+	 * Retrieves the assigned segment point modification factors as start/end pairs. Fails if segment type is not loop or polyline. Constant points return identical start and end values.
+	 *
+	 * @param segmentIndex Segment Index. Must be between 0 and SegmentCount - 1.
+	 * @param modificationFactor Which modification factor value to retrieve (E, F, G or H). Returns an array of 0.0, if modification factor type is unknown or not given.
+	 * @return Start (Point1Factor) and end (Point2Factor) modification factor for each point of the segment.
+	 * @throws Lib3MFException
+	 */
+	public Hatch2DFactors[] getLinearSegmentPointModificationFactors(int segmentIndex, Lib3MFWrapper.ToolpathProfileModificationFactor modificationFactor) throws Lib3MFException {
+		Pointer countNeededFactorValues = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerreader_getlinearsegmentpointmodificationfactors.invokeInt(new java.lang.Object[]{mHandle, segmentIndex, Lib3MFWrapper.EnumConversion.convertToolpathProfileModificationFactorToConst(modificationFactor), 0L, countNeededFactorValues, null}));
+		long countFactorValues = countNeededFactorValues.getLong(0);
+		Pointer bufferFactorValues = new Memory(Math.max(1, countFactorValues * Hatch2DFactors.SIZE));
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerreader_getlinearsegmentpointmodificationfactors.invokeInt(new java.lang.Object[]{mHandle, segmentIndex, Lib3MFWrapper.EnumConversion.convertToolpathProfileModificationFactorToConst(modificationFactor), countFactorValues, countNeededFactorValues, bufferFactorValues}));
+		Hatch2DFactors factorValues[] = new Hatch2DFactors[(int)countFactorValues];
+		for (int i = 0; i < (int)countFactorValues; i++) {
+		  factorValues[i] = new Hatch2DFactors();
+		  factorValues[i].readFromPointer(bufferFactorValues, i * Hatch2DFactors.SIZE);
+		}
+		return factorValues;
+	}
+
+	/**
+	 * Checks if the segment has any sub-point modification interpolation values. Returns false, if segment type is not loop or polyline.
+	 *
+	 * @param segmentIndex Segment Index. Must be between 0 and SegmentCount - 1.
+	 * @return Returns true, if the segment has non-linear interpolation modifications.
+	 * @throws Lib3MFException
+	 */
+	public boolean segmentHasNonlinearPointModificationInterpolation(int segmentIndex) throws Lib3MFException {
+		Pointer bufferHasModificationInterpolation = new Memory(1);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerreader_segmenthasnonlinearpointmodificationinterpolation.invokeInt(new java.lang.Object[]{mHandle, segmentIndex, bufferHasModificationInterpolation}));
+		return bufferHasModificationInterpolation.getByte(0) != 0;
+	}
+
+	/**
+	 * Retrieves the sub-point modification interpolation values for a single point. Fails if segment type is not loop or polyline.
+	 *
+	 * @param segmentIndex Segment Index. Must be between 0 and SegmentCount - 1.
+	 * @param pointIndex Point Index in Segment. Must be between 0 and PointCount - 1.
+	 * @param modificationFactor Which modification factor value to retrieve (E, F, G or H).
+	 * @return Array of interpolation data for the point.
+	 * @throws Lib3MFException
+	 */
+	public HatchModificationInterpolationData[] getSegmentNonlinearPointModificationInterpolation(int segmentIndex, int pointIndex, Lib3MFWrapper.ToolpathProfileModificationFactor modificationFactor) throws Lib3MFException {
+		Pointer countNeededFactorValues = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerreader_getsegmentnonlinearpointmodificationinterpolation.invokeInt(new java.lang.Object[]{mHandle, segmentIndex, pointIndex, Lib3MFWrapper.EnumConversion.convertToolpathProfileModificationFactorToConst(modificationFactor), 0L, countNeededFactorValues, null}));
+		long countFactorValues = countNeededFactorValues.getLong(0);
+		Pointer bufferFactorValues = new Memory(Math.max(1, countFactorValues * HatchModificationInterpolationData.SIZE));
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerreader_getsegmentnonlinearpointmodificationinterpolation.invokeInt(new java.lang.Object[]{mHandle, segmentIndex, pointIndex, Lib3MFWrapper.EnumConversion.convertToolpathProfileModificationFactorToConst(modificationFactor), countFactorValues, countNeededFactorValues, bufferFactorValues}));
+		HatchModificationInterpolationData factorValues[] = new HatchModificationInterpolationData[(int)countFactorValues];
+		for (int i = 0; i < (int)countFactorValues; i++) {
+		  factorValues[i] = new HatchModificationInterpolationData();
+		  factorValues[i].readFromPointer(bufferFactorValues, i * HatchModificationInterpolationData.SIZE);
+		}
+		return factorValues;
+	}
+
+	/**
+	 * Retrieves the sub-point modification interpolation values for all points of a segment. Fails if segment type is not loop or polyline.
+	 *
+	 * @param segmentIndex Segment Index. Must be between 0 and SegmentCount - 1.
+	 * @param modificationFactor Which modification factor value to retrieve (E, F, G or H).
+	 * @return GetSegmentAllNonlinearPointsModificationInterpolation Result Tuple
+	 * @throws Lib3MFException
+	 */
+	public GetSegmentAllNonlinearPointsModificationInterpolationResult getSegmentAllNonlinearPointsModificationInterpolation(int segmentIndex, Lib3MFWrapper.ToolpathProfileModificationFactor modificationFactor) throws Lib3MFException {
+		Pointer countNeededCountArray = new Memory(8);
+		Pointer countNeededFactorValues = new Memory(8);
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerreader_getsegmentallnonlinearpointsmodificationinterpolation.invokeInt(new java.lang.Object[]{mHandle, segmentIndex, Lib3MFWrapper.EnumConversion.convertToolpathProfileModificationFactorToConst(modificationFactor), 0L, countNeededCountArray, Pointer.NULL, 0L, countNeededFactorValues, null}));
+		long countCountArray = countNeededCountArray.getLong(0);
+		Pointer bufferCountArray = new Memory(Math.max(1, 4 * countCountArray));
+		long countFactorValues = countNeededFactorValues.getLong(0);
+		Pointer bufferFactorValues = new Memory(Math.max(1, countFactorValues * HatchModificationInterpolationData.SIZE));
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerreader_getsegmentallnonlinearpointsmodificationinterpolation.invokeInt(new java.lang.Object[]{mHandle, segmentIndex, Lib3MFWrapper.EnumConversion.convertToolpathProfileModificationFactorToConst(modificationFactor), countCountArray, countNeededCountArray, bufferCountArray, countFactorValues, countNeededFactorValues, bufferFactorValues}));
+		HatchModificationInterpolationData factorValues[] = new HatchModificationInterpolationData[(int)countFactorValues];
+		for (int i = 0; i < (int)countFactorValues; i++) {
+		  factorValues[i] = new HatchModificationInterpolationData();
+		  factorValues[i].readFromPointer(bufferFactorValues, i * HatchModificationInterpolationData.SIZE);
+		}
+		GetSegmentAllNonlinearPointsModificationInterpolationResult returnTuple = new GetSegmentAllNonlinearPointsModificationInterpolationResult();
+		returnTuple.CountArray = bufferCountArray.getIntArray(0, (int)countCountArray);
+		returnTuple.FactorValues = factorValues;
+		return returnTuple;
+	}
+
+	public static class GetSegmentAllNonlinearPointsModificationInterpolationResult {
+		/**
+		 * Array how many Interpolation values exist for each point. Will contain number of points elements.
+		 */
+		public int[] CountArray;
+
+		/**
+		 * Array of interpolation data for the full segment, in point order. Will contain the sum of CountArray elements.
+		 */
+		public HatchModificationInterpolationData[] FactorValues;
+
+	}
 
 }
 

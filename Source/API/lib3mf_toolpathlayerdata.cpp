@@ -56,6 +56,78 @@ using namespace Lib3MF::Impl;
 #define LIB3MF_MAXTOOLPATHHATCHCOUNT 1024*1024*1024
 #define LIB3MF_MAXTOOLPATHPOINTCOUNT 1024*1024*1024
 
+namespace {
+
+	// Converts point data given in model units into discrete toolpath coordinates.
+	void convertModelPointsToDiscrete(double dUnits, unsigned int nPointCount, const Lib3MF::sPosition2D* pPointDataBuffer, std::vector<int32_t>& XValues, std::vector<int32_t>& YValues)
+	{
+		XValues.resize(nPointCount);
+		YValues.resize(nPointCount);
+
+		const Lib3MF::sPosition2D* pPointData = pPointDataBuffer;
+		for (unsigned int nIndex = 0; nIndex < nPointCount; nIndex++) {
+			double dX = pPointData->m_Coordinates[0] / dUnits;
+			double dY = pPointData->m_Coordinates[1] / dUnits;
+
+			if ((dX < (double)LIB3MF_MINDISCRETECOORDINATE) || (dX > (double)LIB3MF_MAXDISCRETECOORDINATE))
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE, "invalid point coordinate: " + std::to_string(pPointData->m_Coordinates[0]) + "/" + std::to_string(pPointData->m_Coordinates[1]));
+			if ((dY < (double)LIB3MF_MINDISCRETECOORDINATE) || (dY > (double)LIB3MF_MAXDISCRETECOORDINATE))
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE, "invalid point coordinate: " + std::to_string(pPointData->m_Coordinates[0]) + "/" + std::to_string(pPointData->m_Coordinates[1]));
+
+			XValues[nIndex] = (int32_t)round(dX);
+			YValues[nIndex] = (int32_t)round(dY);
+			pPointData++;
+		}
+	}
+
+	// Copies and validates point data already given in discrete toolpath coordinates.
+	void convertDiscretePoints(unsigned int nPointCount, const Lib3MF::sDiscretePosition2D* pPointDataBuffer, std::vector<int32_t>& XValues, std::vector<int32_t>& YValues)
+	{
+		XValues.resize(nPointCount);
+		YValues.resize(nPointCount);
+
+		const Lib3MF::sDiscretePosition2D* pPointData = pPointDataBuffer;
+		for (unsigned int nIndex = 0; nIndex < nPointCount; nIndex++) {
+			int32_t nX = pPointData->m_Coordinates[0];
+			int32_t nY = pPointData->m_Coordinates[1];
+
+			if ((nX < LIB3MF_MINDISCRETECOORDINATE) || (nX > LIB3MF_MAXDISCRETECOORDINATE))
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE, "invalid point coordinate: " + std::to_string(nX) + "/" + std::to_string(nY));
+			if ((nY < LIB3MF_MINDISCRETECOORDINATE) || (nY > LIB3MF_MAXDISCRETECOORDINATE))
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOORDINATE, "invalid point coordinate: " + std::to_string(nX) + "/" + std::to_string(nY));
+
+			XValues[nIndex] = nX;
+			YValues[nIndex] = nY;
+			pPointData++;
+		}
+	}
+
+	// Normalizes empty factor/sub buffers to null and validates their cardinality against the point count.
+	void preparePointFactorBuffers(unsigned int nPointCount,
+		Lib3MF_uint64 & nFactorData1BufferSize, const Lib3MF_double* & pFactorData1Buffer,
+		Lib3MF_uint64 & nFactorData2BufferSize, const Lib3MF_double* & pFactorData2Buffer,
+		Lib3MF_uint64 & nSubInterpolationCountsBufferSize, const Lib3MF_uint32* & pSubInterpolationCountsBuffer,
+		Lib3MF_uint64 & nModificationInterpolationDataBufferSize, const Lib3MF::sHatchModificationInterpolationData* & pModificationInterpolationDataBuffer)
+	{
+		if (nFactorData1BufferSize == 0)
+			pFactorData1Buffer = nullptr;
+		if (nFactorData2BufferSize == 0)
+			pFactorData2Buffer = nullptr;
+		if (nSubInterpolationCountsBufferSize == 0)
+			pSubInterpolationCountsBuffer = nullptr;
+		if (nModificationInterpolationDataBufferSize == 0)
+			pModificationInterpolationDataBuffer = nullptr;
+
+		if ((pFactorData1Buffer != nullptr) && (nFactorData1BufferSize != nPointCount))
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA);
+		if ((pFactorData2Buffer != nullptr) && (nFactorData2BufferSize != nPointCount))
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA);
+		if ((pSubInterpolationCountsBuffer != nullptr) && (nSubInterpolationCountsBufferSize != nPointCount))
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA);
+	}
+
+}
+
 CToolpathLayerData::CToolpathLayerData(NMR::PModelToolpathLayerWriteData pLayerData)
 	: m_pLayerData(pLayerData)
 {
@@ -528,11 +600,93 @@ void CToolpathLayerData::WritePolylineDiscreteWithFactors(const Lib3MF_uint32 nP
 }
 
 
+void CToolpathLayerData::WriteLoopInModelUnitsWithLinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D* pPointDataBuffer, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor, const Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double* pFactorData1Buffer, const Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double* pFactorData2Buffer)
+{
+	WriteLoopInModelUnitsWithNonlinearFactors(nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, eModificationFactor, nFactorData1BufferSize, pFactorData1Buffer, nFactorData2BufferSize, pFactorData2Buffer, 0, nullptr, 0, nullptr);
+}
 
+void CToolpathLayerData::WriteLoopInModelUnitsWithNonlinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D* pPointDataBuffer, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor, const Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double* pFactorData1Buffer, const Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double* pFactorData2Buffer, const Lib3MF_uint64 nSubInterpolationCountsBufferSize, const Lib3MF_uint32* pSubInterpolationCountsBuffer, const Lib3MF_uint64 nModificationInterpolationDataBufferSize, const Lib3MF::sHatchModificationInterpolationData* pModificationInterpolationDataBuffer)
+{
+	if ((nPointDataBufferSize == 0) || (nPointDataBufferSize > LIB3MF_MAXTOOLPATHPOINTCOUNT))
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT);
 
+	unsigned int nPointCount = (unsigned int)nPointDataBufferSize;
+	Lib3MF_uint64 nF1Size = nFactorData1BufferSize, nF2Size = nFactorData2BufferSize, nSubSize = nSubInterpolationCountsBufferSize, nModSize = nModificationInterpolationDataBufferSize;
+	const Lib3MF_double* pF1 = pFactorData1Buffer; const Lib3MF_double* pF2 = pFactorData2Buffer;
+	const Lib3MF_uint32* pSub = pSubInterpolationCountsBuffer; const Lib3MF::sHatchModificationInterpolationData* pMod = pModificationInterpolationDataBuffer;
+	preparePointFactorBuffers(nPointCount, nF1Size, pF1, nF2Size, pF2, nSubSize, pSub, nModSize, pMod);
 
+	std::vector<int32_t> XValues, YValues;
+	convertModelPointsToDiscrete(m_pLayerData->getUnits(), nPointCount, pPointDataBuffer, XValues, YValues);
 
+	m_pLayerData->WritePointSegment(XML_3MF_TOOLPATHTYPE_LOOP, nProfileID, nPartID, nPointCount, XValues.data(), YValues.data(), nullptr, eModificationFactor, pF1, pF2, pSub, nModSize, pMod);
+}
 
+void CToolpathLayerData::WriteLoopDiscreteWithLinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D* pPointDataBuffer, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor, const Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double* pFactorData1Buffer, const Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double* pFactorData2Buffer)
+{
+	WriteLoopDiscreteWithNonlinearFactors(nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, eModificationFactor, nFactorData1BufferSize, pFactorData1Buffer, nFactorData2BufferSize, pFactorData2Buffer, 0, nullptr, 0, nullptr);
+}
+
+void CToolpathLayerData::WriteLoopDiscreteWithNonlinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D* pPointDataBuffer, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor, const Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double* pFactorData1Buffer, const Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double* pFactorData2Buffer, const Lib3MF_uint64 nSubInterpolationCountsBufferSize, const Lib3MF_uint32* pSubInterpolationCountsBuffer, const Lib3MF_uint64 nModificationInterpolationDataBufferSize, const Lib3MF::sHatchModificationInterpolationData* pModificationInterpolationDataBuffer)
+{
+	if ((nPointDataBufferSize == 0) || (nPointDataBufferSize > LIB3MF_MAXTOOLPATHPOINTCOUNT))
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT);
+
+	unsigned int nPointCount = (unsigned int)nPointDataBufferSize;
+	Lib3MF_uint64 nF1Size = nFactorData1BufferSize, nF2Size = nFactorData2BufferSize, nSubSize = nSubInterpolationCountsBufferSize, nModSize = nModificationInterpolationDataBufferSize;
+	const Lib3MF_double* pF1 = pFactorData1Buffer; const Lib3MF_double* pF2 = pFactorData2Buffer;
+	const Lib3MF_uint32* pSub = pSubInterpolationCountsBuffer; const Lib3MF::sHatchModificationInterpolationData* pMod = pModificationInterpolationDataBuffer;
+	preparePointFactorBuffers(nPointCount, nF1Size, pF1, nF2Size, pF2, nSubSize, pSub, nModSize, pMod);
+
+	std::vector<int32_t> XValues, YValues;
+	convertDiscretePoints(nPointCount, pPointDataBuffer, XValues, YValues);
+
+	m_pLayerData->WritePointSegment(XML_3MF_TOOLPATHTYPE_LOOP, nProfileID, nPartID, nPointCount, XValues.data(), YValues.data(), nullptr, eModificationFactor, pF1, pF2, pSub, nModSize, pMod);
+}
+
+void CToolpathLayerData::WritePolylineInModelUnitsWithLinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D* pPointDataBuffer, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor, const Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double* pFactorData1Buffer, const Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double* pFactorData2Buffer)
+{
+	WritePolylineInModelUnitsWithNonlinearFactors(nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, eModificationFactor, nFactorData1BufferSize, pFactorData1Buffer, nFactorData2BufferSize, pFactorData2Buffer, 0, nullptr, 0, nullptr);
+}
+
+void CToolpathLayerData::WritePolylineInModelUnitsWithNonlinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D* pPointDataBuffer, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor, const Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double* pFactorData1Buffer, const Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double* pFactorData2Buffer, const Lib3MF_uint64 nSubInterpolationCountsBufferSize, const Lib3MF_uint32* pSubInterpolationCountsBuffer, const Lib3MF_uint64 nModificationInterpolationDataBufferSize, const Lib3MF::sHatchModificationInterpolationData* pModificationInterpolationDataBuffer)
+{
+	if ((nPointDataBufferSize == 0) || (nPointDataBufferSize > LIB3MF_MAXTOOLPATHPOINTCOUNT))
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT);
+
+	unsigned int nPointCount = (unsigned int)nPointDataBufferSize;
+	Lib3MF_uint64 nF1Size = nFactorData1BufferSize, nF2Size = nFactorData2BufferSize, nSubSize = nSubInterpolationCountsBufferSize, nModSize = nModificationInterpolationDataBufferSize;
+	const Lib3MF_double* pF1 = pFactorData1Buffer; const Lib3MF_double* pF2 = pFactorData2Buffer;
+	const Lib3MF_uint32* pSub = pSubInterpolationCountsBuffer; const Lib3MF::sHatchModificationInterpolationData* pMod = pModificationInterpolationDataBuffer;
+	preparePointFactorBuffers(nPointCount, nF1Size, pF1, nF2Size, pF2, nSubSize, pSub, nModSize, pMod);
+
+	std::vector<int32_t> XValues, YValues;
+	convertModelPointsToDiscrete(m_pLayerData->getUnits(), nPointCount, pPointDataBuffer, XValues, YValues);
+
+	m_pLayerData->WritePointSegment(XML_3MF_TOOLPATHTYPE_POLYLINE, nProfileID, nPartID, nPointCount, XValues.data(), YValues.data(), nullptr, eModificationFactor, pF1, pF2, pSub, nModSize, pMod);
+}
+
+void CToolpathLayerData::WritePolylineDiscreteWithLinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D* pPointDataBuffer, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor, const Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double* pFactorData1Buffer, const Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double* pFactorData2Buffer)
+{
+	WritePolylineDiscreteWithNonlinearFactors(nProfileID, nPartID, nPointDataBufferSize, pPointDataBuffer, eModificationFactor, nFactorData1BufferSize, pFactorData1Buffer, nFactorData2BufferSize, pFactorData2Buffer, 0, nullptr, 0, nullptr);
+}
+
+void CToolpathLayerData::WritePolylineDiscreteWithNonlinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sDiscretePosition2D* pPointDataBuffer, const Lib3MF::eToolpathProfileModificationFactor eModificationFactor, const Lib3MF_uint64 nFactorData1BufferSize, const Lib3MF_double* pFactorData1Buffer, const Lib3MF_uint64 nFactorData2BufferSize, const Lib3MF_double* pFactorData2Buffer, const Lib3MF_uint64 nSubInterpolationCountsBufferSize, const Lib3MF_uint32* pSubInterpolationCountsBuffer, const Lib3MF_uint64 nModificationInterpolationDataBufferSize, const Lib3MF::sHatchModificationInterpolationData* pModificationInterpolationDataBuffer)
+{
+	if ((nPointDataBufferSize == 0) || (nPointDataBufferSize > LIB3MF_MAXTOOLPATHPOINTCOUNT))
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT);
+
+	unsigned int nPointCount = (unsigned int)nPointDataBufferSize;
+	Lib3MF_uint64 nF1Size = nFactorData1BufferSize, nF2Size = nFactorData2BufferSize, nSubSize = nSubInterpolationCountsBufferSize, nModSize = nModificationInterpolationDataBufferSize;
+	const Lib3MF_double* pF1 = pFactorData1Buffer; const Lib3MF_double* pF2 = pFactorData2Buffer;
+	const Lib3MF_uint32* pSub = pSubInterpolationCountsBuffer; const Lib3MF::sHatchModificationInterpolationData* pMod = pModificationInterpolationDataBuffer;
+	preparePointFactorBuffers(nPointCount, nF1Size, pF1, nF2Size, pF2, nSubSize, pSub, nModSize, pMod);
+
+	std::vector<int32_t> XValues, YValues;
+	convertDiscretePoints(nPointCount, pPointDataBuffer, XValues, YValues);
+
+	m_pLayerData->WritePointSegment(XML_3MF_TOOLPATHTYPE_POLYLINE, nProfileID, nPartID, nPointCount, XValues.data(), YValues.data(), nullptr, eModificationFactor, pF1, pF2, pSub, nModSize, pMod);
+}
 
 
 std::string CToolpathLayerData::GetLayerDataUUID()

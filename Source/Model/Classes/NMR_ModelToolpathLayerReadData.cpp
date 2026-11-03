@@ -104,6 +104,21 @@ namespace NMR {
 
 	void CModelToolpathLayerReadData::addDiscretePoint(nfInt32 nX, nfInt32 nY, nfInt32 nTag, bool bHasFactorF, nfDouble nFactorF, bool bHasFactorG, nfDouble nFactorG, bool bHasFactorH, nfDouble nFactorH, bool bHasFactorE, nfDouble nFactorE, uint32_t nOverrideStart, uint32_t nOverrideCount)
 	{
+		addDiscretePointWithLinearFactors(nX, nY, nTag,
+			bHasFactorF, false, nFactorF, nFactorF,
+			bHasFactorG, false, nFactorG, nFactorG,
+			bHasFactorH, false, nFactorH, nFactorH,
+			bHasFactorE, false, nFactorE, nFactorE,
+			nOverrideStart, nOverrideCount);
+	}
+
+	void CModelToolpathLayerReadData::addDiscretePointWithLinearFactors(nfInt32 nX, nfInt32 nY, nfInt32 nTag,
+		bool bHasFactorF, bool bLinearF, nfDouble nStartFactorF, nfDouble nEndFactorF,
+		bool bHasFactorG, bool bLinearG, nfDouble nStartFactorG, nfDouble nEndFactorG,
+		bool bHasFactorH, bool bLinearH, nfDouble nStartFactorH, nfDouble nEndFactorH,
+		bool bHasFactorE, bool bLinearE, nfDouble nStartFactorE, nfDouble nEndFactorE,
+		uint32_t nOverrideStart, uint32_t nOverrideCount)
+	{
 		if (m_pCurrentSegment == nullptr)
 			throw CNMRException(NMR_ERROR_LAYERSEGMENTNOTOPEN);
 
@@ -112,10 +127,11 @@ namespace NMR {
 		pVec->m_nY = nY;
 		pVec->m_nTag = nTag;
 		pVec->m_nFlags = 0;
-		pVec->m_nFactorF = nFactorF;
-		pVec->m_nFactorG = nFactorG;
-		pVec->m_nFactorH = nFactorH;
-		pVec->m_nFactorE = nFactorE;
+		pVec->m_nFactorF = nEndFactorF;
+		pVec->m_nFactorG = nEndFactorG;
+		pVec->m_nFactorH = nEndFactorH;
+		pVec->m_nFactorE = nEndFactorE;
+		pVec->m_nLinearFactorIndex = TOOLPATHREAD_NOLINEARFACTOR;
 		pVec->m_nOverrideStart = nOverrideStart;
 		pVec->m_nOverrideCount = nOverrideCount;
 
@@ -139,6 +155,41 @@ namespace NMR {
 			m_pCurrentSegment->m_nFlags |= TOOLPATHREADSEGMENTFLAG_HASFACTORE;
 		}
 
+		// Allocate a side-table entry only if any factor is actually linear.
+		if (bLinearF || bLinearG || bLinearH || bLinearE) {
+			uint32_t nLinearIndex = m_LinearFactors.getCount();
+			TOOLPATHREADLINEARFACTORS* pLinear = m_LinearFactors.allocData();
+			pLinear->m_dStartFactorF = nStartFactorF;
+			pLinear->m_dStartFactorG = nStartFactorG;
+			pLinear->m_dStartFactorH = nStartFactorH;
+			pLinear->m_dStartFactorE = nStartFactorE;
+			pVec->m_nLinearFactorIndex = nLinearIndex;
+
+			if (bLinearF) {
+				pVec->m_nFlags |= TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORF;
+				m_pCurrentSegment->m_nFlags |= TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORF;
+			}
+			if (bLinearG) {
+				pVec->m_nFlags |= TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORG;
+				m_pCurrentSegment->m_nFlags |= TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORG;
+			}
+			if (bLinearH) {
+				pVec->m_nFlags |= TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORH;
+				m_pCurrentSegment->m_nFlags |= TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORH;
+			}
+			if (bLinearE) {
+				pVec->m_nFlags |= TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORE;
+				m_pCurrentSegment->m_nFlags |= TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORE;
+			}
+		}
+
+	}
+
+	const TOOLPATHREADLINEARFACTORS * CModelToolpathLayerReadData::getPointLinearFactors(const TOOLPATHREADPOINT & point)
+	{
+		if (point.m_nLinearFactorIndex == TOOLPATHREAD_NOLINEARFACTOR)
+			return nullptr;
+		return &m_LinearFactors.getDataRef(point.m_nLinearFactorIndex);
 	}
 
 	uint32_t CModelToolpathLayerReadData::getGlobalOverrideInterpolationCount()
@@ -151,7 +202,7 @@ namespace NMR {
 		return m_OverrideInterpolations.getDataRef(nGlobalIndex);
 	}
 
-	void CModelToolpathLayerReadData::addOverrideInterpolation(double dParameter, double dFactorF, double dFactorG, double dFactorH, double dFactorE)
+	void CModelToolpathLayerReadData::addOverrideInterpolation(double dParameter, bool bHasFactorF, double dFactorF, bool bHasFactorG, double dFactorG, bool bHasFactorH, double dFactorH, bool bHasFactorE, double dFactorE)
 	{
 		if (m_pCurrentSegment == nullptr)
 			throw CNMRException(NMR_ERROR_LAYERSEGMENTNOTOPEN);
@@ -162,6 +213,10 @@ namespace NMR {
 		pOverride->m_dFactorG = dFactorG;
 		pOverride->m_dFactorH = dFactorH;
 		pOverride->m_dFactorE = dFactorE;
+		pOverride->m_bHasFactorF = bHasFactorF;
+		pOverride->m_bHasFactorG = bHasFactorG;
+		pOverride->m_bHasFactorH = bHasFactorH;
+		pOverride->m_bHasFactorE = bHasFactorE;
 
 		m_pCurrentSegment->m_nOverrideInterpolationCount++;
 	}
@@ -212,6 +267,19 @@ namespace NMR {
 
 	}
 
+	void CModelToolpathLayerReadData::getSegmentPointOverrideInterpolationIndices(nfUint32 nSegmentIndex, nfUint32 nPointIndex, nfUint32& nOverrideStartIndex, nfUint32& nOverrideCount)
+	{
+		TOOLPATHREADSEGMENT* pSegment = m_Segments.getData(nSegmentIndex);
+		__NMRASSERT(pSegment != nullptr);
+		if (nPointIndex >= pSegment->m_nPointCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		auto & dataRef = m_Points.getDataRef(pSegment->m_nStartPoint + nPointIndex);
+
+		nOverrideStartIndex = dataRef.m_nOverrideStart;
+		nOverrideCount = dataRef.m_nOverrideCount;
+	}
+
 	uint32_t CModelToolpathLayerReadData::getSegmentOverrideInterpolationCount(uint32_t nSegmentIndex)
 	{
 		TOOLPATHREADSEGMENT* pSegment = m_Segments.getData(nSegmentIndex);
@@ -247,6 +315,30 @@ namespace NMR {
 
 		
 
+	}
+
+	bool CModelToolpathLayerReadData::segmentHasLinearModificationFactors(nfUint32 nSegmentIndex, Lib3MF::eToolpathProfileModificationFactor modificationFactor)
+	{
+		TOOLPATHREADSEGMENT* pSegment = m_Segments.getData(nSegmentIndex);
+		__NMRASSERT(pSegment != nullptr);
+
+		switch (modificationFactor)
+		{
+		case Lib3MF::eToolpathProfileModificationFactor::FactorF:
+			return ((pSegment->m_nFlags & TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORF) != 0);
+
+		case Lib3MF::eToolpathProfileModificationFactor::FactorG:
+			return ((pSegment->m_nFlags & TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORG) != 0);
+
+		case Lib3MF::eToolpathProfileModificationFactor::FactorH:
+			return ((pSegment->m_nFlags & TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORH) != 0);
+
+		case Lib3MF::eToolpathProfileModificationFactor::FactorE:
+			return ((pSegment->m_nFlags & TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORE) != 0);
+
+		default:
+			return false;
+		}
 	}
 
 

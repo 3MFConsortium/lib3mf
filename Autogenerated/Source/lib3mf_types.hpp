@@ -164,6 +164,7 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA 5014 /** Scaling data needs to match point data */
 #define LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEHATCH 5015 /** Segment is not of type hatch */
 #define LIB3MF_ERROR_TOOLPATH_MODIFIERNOTFOUND 5016 /** Toolpath modifier not found */
+#define LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEPOINTS 5017 /** Segment is not of type loop or polyline */
 
 /*************************************************************************************************************************
  Error strings for Lib3MF
@@ -243,6 +244,7 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA: return "Scaling data needs to match point data";
     case LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEHATCH: return "Segment is not of type hatch";
     case LIB3MF_ERROR_TOOLPATH_MODIFIERNOTFOUND: return "Toolpath modifier not found";
+    case LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEPOINTS: return "Segment is not of type loop or polyline";
     default: return "unknown error";
   }
 }

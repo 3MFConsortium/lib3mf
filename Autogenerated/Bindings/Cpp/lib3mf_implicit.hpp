@@ -740,6 +740,7 @@ public:
 			case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA: return "TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA";
 			case LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEHATCH: return "TOOLPATH_SEGMENTISNOTOFTYPEHATCH";
 			case LIB3MF_ERROR_TOOLPATH_MODIFIERNOTFOUND: return "TOOLPATH_MODIFIERNOTFOUND";
+			case LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEPOINTS: return "TOOLPATH_SEGMENTISNOTOFTYPEPOINTS";
 		}
 		return "UNKNOWN";
 	}
@@ -819,6 +820,7 @@ public:
 			case LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA: return "Scaling data needs to match point data";
 			case LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEHATCH: return "Segment is not of type hatch";
 			case LIB3MF_ERROR_TOOLPATH_MODIFIERNOTFOUND: return "Toolpath modifier not found";
+			case LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEPOINTS: return "Segment is not of type loop or polyline";
 		}
 		return "unknown error";
 	}
@@ -3595,6 +3597,11 @@ public:
 	inline bool SegmentHasNonlinearHatchModificationInterpolation(const Lib3MF_uint32 nSegmentIndex);
 	inline void GetSegmentNonlinearHatchModificationInterpolation(const Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint32 nHatchIndex, const eToolpathProfileModificationFactor eModificationFactor, std::vector<sHatchModificationInterpolationData> & FactorValuesBuffer);
 	inline void GetSegmentAllNonlinearHatchesModificationInterpolation(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileModificationFactor eModificationFactor, std::vector<Lib3MF_uint32> & CountArrayBuffer, std::vector<sHatchModificationInterpolationData> & FactorValuesBuffer);
+	inline bool SegmentHasLinearPointModificationFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileModificationFactor eModificationFactor);
+	inline void GetLinearSegmentPointModificationFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileModificationFactor eModificationFactor, std::vector<sHatch2DFactors> & FactorValuesBuffer);
+	inline bool SegmentHasNonlinearPointModificationInterpolation(const Lib3MF_uint32 nSegmentIndex);
+	inline void GetSegmentNonlinearPointModificationInterpolation(const Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint32 nPointIndex, const eToolpathProfileModificationFactor eModificationFactor, std::vector<sHatchModificationInterpolationData> & FactorValuesBuffer);
+	inline void GetSegmentAllNonlinearPointsModificationInterpolation(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileModificationFactor eModificationFactor, std::vector<Lib3MF_uint32> & CountArrayBuffer, std::vector<sHatchModificationInterpolationData> & FactorValuesBuffer);
 };
 	
 /*************************************************************************************************************************
@@ -3642,6 +3649,14 @@ public:
 	inline void WritePolylineInModelUnitsWithFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const CInputVector<Lib3MF_double> & FactorDataBuffer);
 	inline void WritePolylineDiscrete(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer);
 	inline void WritePolylineDiscreteWithFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const CInputVector<Lib3MF_double> & FactorDataBuffer);
+	inline void WriteLoopInModelUnitsWithLinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer);
+	inline void WriteLoopInModelUnitsWithNonlinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer, const CInputVector<Lib3MF_uint32> & SubInterpolationCountsBuffer, const CInputVector<sHatchModificationInterpolationData> & ModificationInterpolationDataBuffer);
+	inline void WriteLoopDiscreteWithLinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer);
+	inline void WriteLoopDiscreteWithNonlinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer, const CInputVector<Lib3MF_uint32> & SubInterpolationCountsBuffer, const CInputVector<sHatchModificationInterpolationData> & ModificationInterpolationDataBuffer);
+	inline void WritePolylineInModelUnitsWithLinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer);
+	inline void WritePolylineInModelUnitsWithNonlinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer, const CInputVector<Lib3MF_uint32> & SubInterpolationCountsBuffer, const CInputVector<sHatchModificationInterpolationData> & ModificationInterpolationDataBuffer);
+	inline void WritePolylineDiscreteWithLinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer);
+	inline void WritePolylineDiscreteWithNonlinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer, const CInputVector<Lib3MF_uint32> & SubInterpolationCountsBuffer, const CInputVector<sHatchModificationInterpolationData> & ModificationInterpolationDataBuffer);
 	inline PCustomDOMTree AddCustomData(const std::string & sNameSpace, const std::string & sDataName);
 	inline void Finish();
 };
@@ -13131,6 +13146,83 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 	}
 	
 	/**
+	* CToolpathLayerReader::SegmentHasLinearPointModificationFactors - Checks if the segment has any linear (per-point ramped) point modification factors. Returns false, if segment type is not loop or polyline.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] eModificationFactor - Which modification factor value to query (E, F, G or H).
+	* @return Returns true, if the segment has any linear point modification factors of the given type.
+	*/
+	bool CToolpathLayerReader::SegmentHasLinearPointModificationFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileModificationFactor eModificationFactor)
+	{
+		bool resultHasLinearModificationFactors = 0;
+		CheckError(lib3mf_toolpathlayerreader_segmenthaslinearpointmodificationfactors(m_pHandle, nSegmentIndex, eModificationFactor, &resultHasLinearModificationFactors));
+		
+		return resultHasLinearModificationFactors;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetLinearSegmentPointModificationFactors - Retrieves the assigned segment point modification factors as start/end pairs. Fails if segment type is not loop or polyline. Constant points return identical start and end values.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] eModificationFactor - Which modification factor value to retrieve (E, F, G or H). Returns an array of 0.0, if modification factor type is unknown or not given.
+	* @param[out] FactorValuesBuffer - Start (Point1Factor) and end (Point2Factor) modification factor for each point of the segment.
+	*/
+	void CToolpathLayerReader::GetLinearSegmentPointModificationFactors(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileModificationFactor eModificationFactor, std::vector<sHatch2DFactors> & FactorValuesBuffer)
+	{
+		Lib3MF_uint64 elementsNeededFactorValues = 0;
+		Lib3MF_uint64 elementsWrittenFactorValues = 0;
+		CheckError(lib3mf_toolpathlayerreader_getlinearsegmentpointmodificationfactors(m_pHandle, nSegmentIndex, eModificationFactor, 0, &elementsNeededFactorValues, nullptr));
+		FactorValuesBuffer.resize((size_t) elementsNeededFactorValues);
+		CheckError(lib3mf_toolpathlayerreader_getlinearsegmentpointmodificationfactors(m_pHandle, nSegmentIndex, eModificationFactor, elementsNeededFactorValues, &elementsWrittenFactorValues, FactorValuesBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerReader::SegmentHasNonlinearPointModificationInterpolation - Checks if the segment has any sub-point modification interpolation values. Returns false, if segment type is not loop or polyline.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @return Returns true, if the segment has non-linear interpolation modifications.
+	*/
+	bool CToolpathLayerReader::SegmentHasNonlinearPointModificationInterpolation(const Lib3MF_uint32 nSegmentIndex)
+	{
+		bool resultHasModificationInterpolation = 0;
+		CheckError(lib3mf_toolpathlayerreader_segmenthasnonlinearpointmodificationinterpolation(m_pHandle, nSegmentIndex, &resultHasModificationInterpolation));
+		
+		return resultHasModificationInterpolation;
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentNonlinearPointModificationInterpolation - Retrieves the sub-point modification interpolation values for a single point. Fails if segment type is not loop or polyline.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] nPointIndex - Point Index in Segment. Must be between 0 and PointCount - 1.
+	* @param[in] eModificationFactor - Which modification factor value to retrieve (E, F, G or H).
+	* @param[out] FactorValuesBuffer - Array of interpolation data for the point.
+	*/
+	void CToolpathLayerReader::GetSegmentNonlinearPointModificationInterpolation(const Lib3MF_uint32 nSegmentIndex, const Lib3MF_uint32 nPointIndex, const eToolpathProfileModificationFactor eModificationFactor, std::vector<sHatchModificationInterpolationData> & FactorValuesBuffer)
+	{
+		Lib3MF_uint64 elementsNeededFactorValues = 0;
+		Lib3MF_uint64 elementsWrittenFactorValues = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentnonlinearpointmodificationinterpolation(m_pHandle, nSegmentIndex, nPointIndex, eModificationFactor, 0, &elementsNeededFactorValues, nullptr));
+		FactorValuesBuffer.resize((size_t) elementsNeededFactorValues);
+		CheckError(lib3mf_toolpathlayerreader_getsegmentnonlinearpointmodificationinterpolation(m_pHandle, nSegmentIndex, nPointIndex, eModificationFactor, elementsNeededFactorValues, &elementsWrittenFactorValues, FactorValuesBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerReader::GetSegmentAllNonlinearPointsModificationInterpolation - Retrieves the sub-point modification interpolation values for all points of a segment. Fails if segment type is not loop or polyline.
+	* @param[in] nSegmentIndex - Segment Index. Must be between 0 and SegmentCount - 1.
+	* @param[in] eModificationFactor - Which modification factor value to retrieve (E, F, G or H).
+	* @param[out] CountArrayBuffer - Array how many Interpolation values exist for each point. Will contain number of points elements.
+	* @param[out] FactorValuesBuffer - Array of interpolation data for the full segment, in point order. Will contain the sum of CountArray elements.
+	*/
+	void CToolpathLayerReader::GetSegmentAllNonlinearPointsModificationInterpolation(const Lib3MF_uint32 nSegmentIndex, const eToolpathProfileModificationFactor eModificationFactor, std::vector<Lib3MF_uint32> & CountArrayBuffer, std::vector<sHatchModificationInterpolationData> & FactorValuesBuffer)
+	{
+		Lib3MF_uint64 elementsNeededCountArray = 0;
+		Lib3MF_uint64 elementsWrittenCountArray = 0;
+		Lib3MF_uint64 elementsNeededFactorValues = 0;
+		Lib3MF_uint64 elementsWrittenFactorValues = 0;
+		CheckError(lib3mf_toolpathlayerreader_getsegmentallnonlinearpointsmodificationinterpolation(m_pHandle, nSegmentIndex, eModificationFactor, 0, &elementsNeededCountArray, nullptr, 0, &elementsNeededFactorValues, nullptr));
+		CountArrayBuffer.resize((size_t) elementsNeededCountArray);
+		FactorValuesBuffer.resize((size_t) elementsNeededFactorValues);
+		CheckError(lib3mf_toolpathlayerreader_getsegmentallnonlinearpointsmodificationinterpolation(m_pHandle, nSegmentIndex, eModificationFactor, elementsNeededCountArray, &elementsWrittenCountArray, CountArrayBuffer.data(), elementsNeededFactorValues, &elementsWrittenFactorValues, FactorValuesBuffer.data()));
+	}
+	
+	/**
 	 * Method definitions for class CToolpathLayerData
 	 */
 	
@@ -13507,6 +13599,158 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 		Lib3MF_uint64 nPointDataSize = PointDataBuffer.size();
 		Lib3MF_uint64 nFactorDataSize = FactorDataBuffer.size();
 		CheckError(lib3mf_toolpathlayerdata_writepolylinediscretewithfactors(m_pHandle, nProfileID, nPartID, nPointDataSize, PointDataBuffer.data(), nFactorDataSize, FactorDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteLoopInModelUnitsWithLinearFactors - writes loop data to the layer in model units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point also closes the loop.
+	* @param[in] nProfileID - The toolpath profile to use.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in model units. Array MUST NOT be empty.
+	* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+	* @param[in] FactorData1Buffer - The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	* @param[in] FactorData2Buffer - The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	*/
+	void CToolpathLayerData::WriteLoopInModelUnitsWithLinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer)
+	{
+		Lib3MF_uint64 nPointDataSize = PointDataBuffer.size();
+		Lib3MF_uint64 nFactorData1Size = FactorData1Buffer.size();
+		Lib3MF_uint64 nFactorData2Size = FactorData2Buffer.size();
+		CheckError(lib3mf_toolpathlayerdata_writeloopinmodelunitswithlinearfactors(m_pHandle, nProfileID, nPartID, nPointDataSize, PointDataBuffer.data(), eModificationFactor, nFactorData1Size, FactorData1Buffer.data(), nFactorData2Size, FactorData2Buffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteLoopInModelUnitsWithNonlinearFactors - writes loop data to the layer in model units with non-linearly ramped profile modification factors per point.
+	* @param[in] nProfileID - The toolpath profile to use.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in model units. Array MUST NOT be empty.
+	* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+	* @param[in] FactorData1Buffer - The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	* @param[in] FactorData2Buffer - The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	* @param[in] SubInterpolationCountsBuffer - Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData.
+	* @param[in] ModificationInterpolationDataBuffer - Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1.
+	*/
+	void CToolpathLayerData::WriteLoopInModelUnitsWithNonlinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer, const CInputVector<Lib3MF_uint32> & SubInterpolationCountsBuffer, const CInputVector<sHatchModificationInterpolationData> & ModificationInterpolationDataBuffer)
+	{
+		Lib3MF_uint64 nPointDataSize = PointDataBuffer.size();
+		Lib3MF_uint64 nFactorData1Size = FactorData1Buffer.size();
+		Lib3MF_uint64 nFactorData2Size = FactorData2Buffer.size();
+		Lib3MF_uint64 nSubInterpolationCountsSize = SubInterpolationCountsBuffer.size();
+		Lib3MF_uint64 nModificationInterpolationDataSize = ModificationInterpolationDataBuffer.size();
+		CheckError(lib3mf_toolpathlayerdata_writeloopinmodelunitswithnonlinearfactors(m_pHandle, nProfileID, nPartID, nPointDataSize, PointDataBuffer.data(), eModificationFactor, nFactorData1Size, FactorData1Buffer.data(), nFactorData2Size, FactorData2Buffer.data(), nSubInterpolationCountsSize, SubInterpolationCountsBuffer.data(), nModificationInterpolationDataSize, ModificationInterpolationDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteLoopDiscreteWithLinearFactors - writes loop data to the layer in toolpath units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point also closes the loop.
+	* @param[in] nProfileID - The toolpath profile to use.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
+	* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+	* @param[in] FactorData1Buffer - The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	* @param[in] FactorData2Buffer - The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	*/
+	void CToolpathLayerData::WriteLoopDiscreteWithLinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer)
+	{
+		Lib3MF_uint64 nPointDataSize = PointDataBuffer.size();
+		Lib3MF_uint64 nFactorData1Size = FactorData1Buffer.size();
+		Lib3MF_uint64 nFactorData2Size = FactorData2Buffer.size();
+		CheckError(lib3mf_toolpathlayerdata_writeloopdiscretewithlinearfactors(m_pHandle, nProfileID, nPartID, nPointDataSize, PointDataBuffer.data(), eModificationFactor, nFactorData1Size, FactorData1Buffer.data(), nFactorData2Size, FactorData2Buffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WriteLoopDiscreteWithNonlinearFactors - writes loop data to the layer in toolpath units with non-linearly ramped profile modification factors per point.
+	* @param[in] nProfileID - The toolpath profile to use.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
+	* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+	* @param[in] FactorData1Buffer - The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	* @param[in] FactorData2Buffer - The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	* @param[in] SubInterpolationCountsBuffer - Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData.
+	* @param[in] ModificationInterpolationDataBuffer - Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1.
+	*/
+	void CToolpathLayerData::WriteLoopDiscreteWithNonlinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer, const CInputVector<Lib3MF_uint32> & SubInterpolationCountsBuffer, const CInputVector<sHatchModificationInterpolationData> & ModificationInterpolationDataBuffer)
+	{
+		Lib3MF_uint64 nPointDataSize = PointDataBuffer.size();
+		Lib3MF_uint64 nFactorData1Size = FactorData1Buffer.size();
+		Lib3MF_uint64 nFactorData2Size = FactorData2Buffer.size();
+		Lib3MF_uint64 nSubInterpolationCountsSize = SubInterpolationCountsBuffer.size();
+		Lib3MF_uint64 nModificationInterpolationDataSize = ModificationInterpolationDataBuffer.size();
+		CheckError(lib3mf_toolpathlayerdata_writeloopdiscretewithnonlinearfactors(m_pHandle, nProfileID, nPartID, nPointDataSize, PointDataBuffer.data(), eModificationFactor, nFactorData1Size, FactorData1Buffer.data(), nFactorData2Size, FactorData2Buffer.data(), nSubInterpolationCountsSize, SubInterpolationCountsBuffer.data(), nModificationInterpolationDataSize, ModificationInterpolationDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WritePolylineInModelUnitsWithLinearFactors - writes polyline data to the layer in model units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point's factors are unused.
+	* @param[in] nProfileID - The toolpath profile to use.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in model units. Array MUST NOT be empty.
+	* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+	* @param[in] FactorData1Buffer - The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	* @param[in] FactorData2Buffer - The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	*/
+	void CToolpathLayerData::WritePolylineInModelUnitsWithLinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer)
+	{
+		Lib3MF_uint64 nPointDataSize = PointDataBuffer.size();
+		Lib3MF_uint64 nFactorData1Size = FactorData1Buffer.size();
+		Lib3MF_uint64 nFactorData2Size = FactorData2Buffer.size();
+		CheckError(lib3mf_toolpathlayerdata_writepolylineinmodelunitswithlinearfactors(m_pHandle, nProfileID, nPartID, nPointDataSize, PointDataBuffer.data(), eModificationFactor, nFactorData1Size, FactorData1Buffer.data(), nFactorData2Size, FactorData2Buffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WritePolylineInModelUnitsWithNonlinearFactors - writes polyline data to the layer in model units with non-linearly ramped profile modification factors per point.
+	* @param[in] nProfileID - The toolpath profile to use.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in model units. Array MUST NOT be empty.
+	* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+	* @param[in] FactorData1Buffer - The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	* @param[in] FactorData2Buffer - The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	* @param[in] SubInterpolationCountsBuffer - Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData.
+	* @param[in] ModificationInterpolationDataBuffer - Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1.
+	*/
+	void CToolpathLayerData::WritePolylineInModelUnitsWithNonlinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sPosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer, const CInputVector<Lib3MF_uint32> & SubInterpolationCountsBuffer, const CInputVector<sHatchModificationInterpolationData> & ModificationInterpolationDataBuffer)
+	{
+		Lib3MF_uint64 nPointDataSize = PointDataBuffer.size();
+		Lib3MF_uint64 nFactorData1Size = FactorData1Buffer.size();
+		Lib3MF_uint64 nFactorData2Size = FactorData2Buffer.size();
+		Lib3MF_uint64 nSubInterpolationCountsSize = SubInterpolationCountsBuffer.size();
+		Lib3MF_uint64 nModificationInterpolationDataSize = ModificationInterpolationDataBuffer.size();
+		CheckError(lib3mf_toolpathlayerdata_writepolylineinmodelunitswithnonlinearfactors(m_pHandle, nProfileID, nPartID, nPointDataSize, PointDataBuffer.data(), eModificationFactor, nFactorData1Size, FactorData1Buffer.data(), nFactorData2Size, FactorData2Buffer.data(), nSubInterpolationCountsSize, SubInterpolationCountsBuffer.data(), nModificationInterpolationDataSize, ModificationInterpolationDataBuffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WritePolylineDiscreteWithLinearFactors - writes polyline data to the layer in toolpath units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point's factors are unused.
+	* @param[in] nProfileID - The toolpath profile to use.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
+	* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+	* @param[in] FactorData1Buffer - The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	* @param[in] FactorData2Buffer - The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	*/
+	void CToolpathLayerData::WritePolylineDiscreteWithLinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer)
+	{
+		Lib3MF_uint64 nPointDataSize = PointDataBuffer.size();
+		Lib3MF_uint64 nFactorData1Size = FactorData1Buffer.size();
+		Lib3MF_uint64 nFactorData2Size = FactorData2Buffer.size();
+		CheckError(lib3mf_toolpathlayerdata_writepolylinediscretewithlinearfactors(m_pHandle, nProfileID, nPartID, nPointDataSize, PointDataBuffer.data(), eModificationFactor, nFactorData1Size, FactorData1Buffer.data(), nFactorData2Size, FactorData2Buffer.data()));
+	}
+	
+	/**
+	* CToolpathLayerData::WritePolylineDiscreteWithNonlinearFactors - writes polyline data to the layer in toolpath units with non-linearly ramped profile modification factors per point.
+	* @param[in] nProfileID - The toolpath profile to use.
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointDataBuffer - The point data in toolpath units. Array MUST NOT be empty.
+	* @param[in] eModificationFactor - Which modification factor value to write (E, F, G or H).
+	* @param[in] FactorData1Buffer - The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	* @param[in] FactorData2Buffer - The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	* @param[in] SubInterpolationCountsBuffer - Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData.
+	* @param[in] ModificationInterpolationDataBuffer - Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1.
+	*/
+	void CToolpathLayerData::WritePolylineDiscreteWithNonlinearFactors(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const CInputVector<sDiscretePosition2D> & PointDataBuffer, const eToolpathProfileModificationFactor eModificationFactor, const CInputVector<Lib3MF_double> & FactorData1Buffer, const CInputVector<Lib3MF_double> & FactorData2Buffer, const CInputVector<Lib3MF_uint32> & SubInterpolationCountsBuffer, const CInputVector<sHatchModificationInterpolationData> & ModificationInterpolationDataBuffer)
+	{
+		Lib3MF_uint64 nPointDataSize = PointDataBuffer.size();
+		Lib3MF_uint64 nFactorData1Size = FactorData1Buffer.size();
+		Lib3MF_uint64 nFactorData2Size = FactorData2Buffer.size();
+		Lib3MF_uint64 nSubInterpolationCountsSize = SubInterpolationCountsBuffer.size();
+		Lib3MF_uint64 nModificationInterpolationDataSize = ModificationInterpolationDataBuffer.size();
+		CheckError(lib3mf_toolpathlayerdata_writepolylinediscretewithnonlinearfactors(m_pHandle, nProfileID, nPartID, nPointDataSize, PointDataBuffer.data(), eModificationFactor, nFactorData1Size, FactorData1Buffer.data(), nFactorData2Size, FactorData2Buffer.data(), nSubInterpolationCountsSize, SubInterpolationCountsBuffer.data(), nModificationInterpolationDataSize, ModificationInterpolationDataBuffer.data()));
 	}
 	
 	/**

@@ -2132,4 +2132,10 @@ Toolpath errors (0xBXXX)
 // Toolpath laser source is referenced by the default laser index or a sync group
 #define NMR_ERROR_TOOLPATHLASERSOURCEINUSE 0xB06E
 
+// Override support point parameter is out of range or not strictly increasing
+#define NMR_ERROR_INVALIDOVERRIDESUBPARAMETER 0xB06F
+
+// Linear scale factor is incomplete (only one of x1/x2 is given)
+#define NMR_ERROR_INCOMPLETELINEARSCALEFACTOR 0xB070
+
 #endif // __NMR_ERRORCONST

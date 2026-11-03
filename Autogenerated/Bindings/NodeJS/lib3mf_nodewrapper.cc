@@ -24354,6 +24354,11 @@ void CLib3MFToolpathLayerReader::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SegmentHasNonlinearHatchModificationInterpolation", SegmentHasNonlinearHatchModificationInterpolation);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentNonlinearHatchModificationInterpolation", GetSegmentNonlinearHatchModificationInterpolation);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentAllNonlinearHatchesModificationInterpolation", GetSegmentAllNonlinearHatchesModificationInterpolation);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SegmentHasLinearPointModificationFactors", SegmentHasLinearPointModificationFactors);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetLinearSegmentPointModificationFactors", GetLinearSegmentPointModificationFactors);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SegmentHasNonlinearPointModificationInterpolation", SegmentHasNonlinearPointModificationInterpolation);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentNonlinearPointModificationInterpolation", GetSegmentNonlinearPointModificationInterpolation);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetSegmentAllNonlinearPointsModificationInterpolation", GetSegmentAllNonlinearPointsModificationInterpolation);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -25518,6 +25523,152 @@ void CLib3MFToolpathLayerReader::GetSegmentAllNonlinearHatchesModificationInterp
 		}
 }
 
+
+void CLib3MFToolpathLayerReader::SegmentHasLinearPointModificationFactors(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SegmentIndex)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 1 (ModificationFactor)");
+        }
+        unsigned int nSegmentIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eModificationFactor = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        bool bReturnHasLinearModificationFactors = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SegmentHasLinearPointModificationFactors.");
+        if (wrapperTable->m_ToolpathLayerReader_SegmentHasLinearPointModificationFactors == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::SegmentHasLinearPointModificationFactors.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_SegmentHasLinearPointModificationFactors(instanceHandle, nSegmentIndex, (eLib3MFToolpathProfileModificationFactor) eModificationFactor, &bReturnHasLinearModificationFactors);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasLinearModificationFactors));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetLinearSegmentPointModificationFactors(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SegmentIndex)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 1 (ModificationFactor)");
+        }
+        unsigned int nSegmentIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eModificationFactor = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetLinearSegmentPointModificationFactors.");
+        if (wrapperTable->m_ToolpathLayerReader_GetLinearSegmentPointModificationFactors == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetLinearSegmentPointModificationFactors.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetLinearSegmentPointModificationFactors(instanceHandle, nSegmentIndex, (eLib3MFToolpathProfileModificationFactor) eModificationFactor, 0, nullptr, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::SegmentHasNonlinearPointModificationInterpolation(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SegmentIndex)");
+        }
+        unsigned int nSegmentIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        bool bReturnHasModificationInterpolation = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SegmentHasNonlinearPointModificationInterpolation.");
+        if (wrapperTable->m_ToolpathLayerReader_SegmentHasNonlinearPointModificationInterpolation == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::SegmentHasNonlinearPointModificationInterpolation.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_SegmentHasNonlinearPointModificationInterpolation(instanceHandle, nSegmentIndex, &bReturnHasModificationInterpolation);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasModificationInterpolation));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetSegmentNonlinearPointModificationInterpolation(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SegmentIndex)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PointIndex)");
+        }
+        if (!args[2]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 2 (ModificationFactor)");
+        }
+        unsigned int nSegmentIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPointIndex = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eModificationFactor = (unsigned int) args[2]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentNonlinearPointModificationInterpolation.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentNonlinearPointModificationInterpolation == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentNonlinearPointModificationInterpolation.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentNonlinearPointModificationInterpolation(instanceHandle, nSegmentIndex, nPointIndex, (eLib3MFToolpathProfileModificationFactor) eModificationFactor, 0, nullptr, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerReader::GetSegmentAllNonlinearPointsModificationInterpolation(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (SegmentIndex)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 1 (ModificationFactor)");
+        }
+        Local<Object> outObject = Object::New(isolate);
+        unsigned int nSegmentIndex = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eModificationFactor = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetSegmentAllNonlinearPointsModificationInterpolation.");
+        if (wrapperTable->m_ToolpathLayerReader_GetSegmentAllNonlinearPointsModificationInterpolation == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerReader::GetSegmentAllNonlinearPointsModificationInterpolation.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerReader_GetSegmentAllNonlinearPointsModificationInterpolation(instanceHandle, nSegmentIndex, (eLib3MFToolpathProfileModificationFactor) eModificationFactor, 0, nullptr, nullptr, 0, nullptr, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(outObject);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
 /*************************************************************************************************************************
  Class CLib3MFToolpathLayerData Implementation
 **************************************************************************************************************************/
@@ -25572,6 +25723,14 @@ void CLib3MFToolpathLayerData::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "WritePolylineInModelUnitsWithFactors", WritePolylineInModelUnitsWithFactors);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "WritePolylineDiscrete", WritePolylineDiscrete);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "WritePolylineDiscreteWithFactors", WritePolylineDiscreteWithFactors);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteLoopInModelUnitsWithLinearFactors", WriteLoopInModelUnitsWithLinearFactors);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteLoopInModelUnitsWithNonlinearFactors", WriteLoopInModelUnitsWithNonlinearFactors);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteLoopDiscreteWithLinearFactors", WriteLoopDiscreteWithLinearFactors);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WriteLoopDiscreteWithNonlinearFactors", WriteLoopDiscreteWithNonlinearFactors);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WritePolylineInModelUnitsWithLinearFactors", WritePolylineInModelUnitsWithLinearFactors);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WritePolylineInModelUnitsWithNonlinearFactors", WritePolylineInModelUnitsWithNonlinearFactors);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WritePolylineDiscreteWithLinearFactors", WritePolylineDiscreteWithLinearFactors);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "WritePolylineDiscreteWithNonlinearFactors", WritePolylineDiscreteWithNonlinearFactors);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddCustomData", AddCustomData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "Finish", Finish);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
@@ -26409,6 +26568,262 @@ void CLib3MFToolpathLayerData::WritePolylineDiscreteWithFactors(const FunctionCa
             throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WritePolylineDiscreteWithFactors.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithFactors(instanceHandle, nProfileID, nPartID, 0, nullptr, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WriteLoopInModelUnitsWithLinearFactors(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        if (!args[3]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 3 (ModificationFactor)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eModificationFactor = (unsigned int) args[3]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteLoopInModelUnitsWithLinearFactors.");
+        if (wrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithLinearFactors == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteLoopInModelUnitsWithLinearFactors.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithLinearFactors(instanceHandle, nProfileID, nPartID, 0, nullptr, (eLib3MFToolpathProfileModificationFactor) eModificationFactor, 0, nullptr, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WriteLoopInModelUnitsWithNonlinearFactors(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        if (!args[3]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 3 (ModificationFactor)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eModificationFactor = (unsigned int) args[3]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteLoopInModelUnitsWithNonlinearFactors.");
+        if (wrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithNonlinearFactors == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteLoopInModelUnitsWithNonlinearFactors.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteLoopInModelUnitsWithNonlinearFactors(instanceHandle, nProfileID, nPartID, 0, nullptr, (eLib3MFToolpathProfileModificationFactor) eModificationFactor, 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WriteLoopDiscreteWithLinearFactors(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        if (!args[3]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 3 (ModificationFactor)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eModificationFactor = (unsigned int) args[3]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteLoopDiscreteWithLinearFactors.");
+        if (wrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithLinearFactors == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteLoopDiscreteWithLinearFactors.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithLinearFactors(instanceHandle, nProfileID, nPartID, 0, nullptr, (eLib3MFToolpathProfileModificationFactor) eModificationFactor, 0, nullptr, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WriteLoopDiscreteWithNonlinearFactors(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        if (!args[3]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 3 (ModificationFactor)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eModificationFactor = (unsigned int) args[3]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WriteLoopDiscreteWithNonlinearFactors.");
+        if (wrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithNonlinearFactors == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WriteLoopDiscreteWithNonlinearFactors.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WriteLoopDiscreteWithNonlinearFactors(instanceHandle, nProfileID, nPartID, 0, nullptr, (eLib3MFToolpathProfileModificationFactor) eModificationFactor, 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WritePolylineInModelUnitsWithLinearFactors(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        if (!args[3]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 3 (ModificationFactor)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eModificationFactor = (unsigned int) args[3]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WritePolylineInModelUnitsWithLinearFactors.");
+        if (wrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithLinearFactors == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WritePolylineInModelUnitsWithLinearFactors.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithLinearFactors(instanceHandle, nProfileID, nPartID, 0, nullptr, (eLib3MFToolpathProfileModificationFactor) eModificationFactor, 0, nullptr, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WritePolylineInModelUnitsWithNonlinearFactors(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        if (!args[3]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 3 (ModificationFactor)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eModificationFactor = (unsigned int) args[3]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WritePolylineInModelUnitsWithNonlinearFactors.");
+        if (wrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithNonlinearFactors == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WritePolylineInModelUnitsWithNonlinearFactors.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WritePolylineInModelUnitsWithNonlinearFactors(instanceHandle, nProfileID, nPartID, 0, nullptr, (eLib3MFToolpathProfileModificationFactor) eModificationFactor, 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WritePolylineDiscreteWithLinearFactors(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        if (!args[3]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 3 (ModificationFactor)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eModificationFactor = (unsigned int) args[3]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WritePolylineDiscreteWithLinearFactors.");
+        if (wrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithLinearFactors == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WritePolylineDiscreteWithLinearFactors.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithLinearFactors(instanceHandle, nProfileID, nPartID, 0, nullptr, (eLib3MFToolpathProfileModificationFactor) eModificationFactor, 0, nullptr, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFToolpathLayerData::WritePolylineDiscreteWithNonlinearFactors(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (ProfileID)");
+        }
+        if (!args[1]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 1 (PartID)");
+        }
+        if (!args[3]->IsUint32()) {
+            throw std::runtime_error("Expected enum parameter 3 (ModificationFactor)");
+        }
+        unsigned int nProfileID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int nPartID = (unsigned int) args[1]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        unsigned int eModificationFactor = (unsigned int) args[3]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method WritePolylineDiscreteWithNonlinearFactors.");
+        if (wrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithNonlinearFactors == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ToolpathLayerData::WritePolylineDiscreteWithNonlinearFactors.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ToolpathLayerData_WritePolylineDiscreteWithNonlinearFactors(instanceHandle, nProfileID, nPartID, 0, nullptr, (eLib3MFToolpathProfileModificationFactor) eModificationFactor, 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {

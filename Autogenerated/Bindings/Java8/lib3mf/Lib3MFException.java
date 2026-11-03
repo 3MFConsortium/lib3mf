@@ -113,6 +113,7 @@ public class Lib3MFException extends Exception {
 	public static final int LIB3MF_ERROR_TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA = 5014;
 	public static final int LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEHATCH = 5015;
 	public static final int LIB3MF_ERROR_TOOLPATH_MODIFIERNOTFOUND = 5016;
+	public static final int LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEPOINTS = 5017;
 
 	public static final Map<Integer, String> ErrorCodeMap = new HashMap<Integer, String>();
 	public static final Map<Integer, String> ErrorDescriptionMap = new HashMap<Integer, String>();
@@ -260,6 +261,8 @@ public class Lib3MFException extends Exception {
 		ErrorDescriptionMap.put(LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEHATCH, "Segment is not of type hatch");
 		ErrorCodeMap.put(LIB3MF_ERROR_TOOLPATH_MODIFIERNOTFOUND, "LIB3MF_ERROR_TOOLPATH_MODIFIERNOTFOUND");
 		ErrorDescriptionMap.put(LIB3MF_ERROR_TOOLPATH_MODIFIERNOTFOUND, "Toolpath modifier not found");
+		ErrorCodeMap.put(LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEPOINTS, "LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEPOINTS");
+		ErrorDescriptionMap.put(LIB3MF_ERROR_TOOLPATH_SEGMENTISNOTOFTYPEPOINTS, "Segment is not of type loop or polyline");
 	}
 
 	protected int mErrorCode;

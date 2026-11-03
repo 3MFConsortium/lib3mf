@@ -69,7 +69,9 @@ namespace NMR {
 		m_bHasFactorH1(false),
 		m_bHasFactorH2(false),
 		m_bHasFactorE1(false),
-		m_bHasFactorE2(false)
+		m_bHasFactorE2(false),
+		m_bHasOverrideInterpolation(false),
+		m_dLastSubParameter(0.0)
 
 
 	{
@@ -242,7 +244,22 @@ namespace NMR {
 
 				xmlNode.parseXML(pXMLReader);
 
-				m_pReadData->addOverrideInterpolation(xmlNode.getParameter (), xmlNode.getValueF (false), xmlNode.getValueG(false), xmlNode.getValueH(false), xmlNode.getValueE(false));
+				nfDouble dParameter = xmlNode.getParameter();
+
+				// Support point parameters must be strictly within (0,1) and strictly increasing.
+				if ((dParameter <= 0.0) || (dParameter >= 1.0))
+					m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDOVERRIDESUBPARAMETER), mrwInvalidOptionalValue);
+				else if (m_bHasOverrideInterpolation && (dParameter <= m_dLastSubParameter))
+					m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDOVERRIDESUBPARAMETER), mrwInvalidOptionalValue);
+
+				m_dLastSubParameter = dParameter;
+				m_bHasOverrideInterpolation = true;
+
+				m_pReadData->addOverrideInterpolation(dParameter,
+					xmlNode.hasValueF(), xmlNode.getValueF(false),
+					xmlNode.hasValueG(), xmlNode.getValueG(false),
+					xmlNode.hasValueH(), xmlNode.getValueH(false),
+					xmlNode.hasValueE(), xmlNode.getValueE(false));
 
 			}
 		}

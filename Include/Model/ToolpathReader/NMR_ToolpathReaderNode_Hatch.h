@@ -66,6 +66,10 @@ namespace NMR {
 		bool m_bHasFactorE1;
 		bool m_bHasFactorE2;
 
+		// Tracks the last parsed <sub> parameter for strictly-increasing validation.
+		bool m_bHasOverrideInterpolation;
+		nfDouble m_dLastSubParameter;
+
 		CModelToolpathLayerReadData * m_pReadData;
 
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);

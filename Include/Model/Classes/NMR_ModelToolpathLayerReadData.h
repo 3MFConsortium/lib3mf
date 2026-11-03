@@ -54,6 +54,14 @@ NMR_ModelToolpath.h defines the Model Toolpath Layer Data.
 #define TOOLPATHREADSEGMENTFLAG_HASFACTORH 0x04
 #define TOOLPATHREADSEGMENTFLAG_HASFACTORE 0x08
 
+#define TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORF 0x10
+#define TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORG 0x20
+#define TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORH 0x40
+#define TOOLPATHREADSEGMENTFLAG_HASLINEARFACTORE 0x80
+
+// Sentinel in TOOLPATHREADPOINT::m_nLinearFactorIndex meaning "no linear start factors".
+#define TOOLPATHREAD_NOLINEARFACTOR 0xFFFFFFFF
+
 namespace NMR {
 
 	class CModelToolpath;
@@ -91,13 +99,24 @@ namespace NMR {
 		nfInt32 m_nY;
 		nfInt32 m_nTag;
 		nfUint32 m_nFlags;
+		// For linear factors, these hold the end (second) value. For constant factors, start == end.
 		nfDouble m_nFactorF;
 		nfDouble m_nFactorG;
 		nfDouble m_nFactorH;
 		nfDouble m_nFactorE;
+		// Index into the linear start-factor side table, or TOOLPATHREAD_NOLINEARFACTOR if none.
+		uint32_t m_nLinearFactorIndex;
 		uint32_t m_nOverrideStart;
 		uint32_t m_nOverrideCount;
 	} TOOLPATHREADPOINT;
+
+	// Lazily-filled start (first) values for linear point factors.
+	typedef struct {
+		nfDouble m_dStartFactorF;
+		nfDouble m_dStartFactorG;
+		nfDouble m_dStartFactorH;
+		nfDouble m_dStartFactorE;
+	} TOOLPATHREADLINEARFACTORS;
 
 	typedef struct {
 		nfDouble m_dParameter;
@@ -105,6 +124,10 @@ namespace NMR {
 		nfDouble m_dFactorG;
 		nfDouble m_dFactorH;
 		nfDouble m_dFactorE;
+		bool m_bHasFactorF;
+		bool m_bHasFactorG;
+		bool m_bHasFactorH;
+		bool m_bHasFactorE;
 	} TOOLPATHREADOVERRIDE;
 
 
@@ -130,6 +153,7 @@ namespace NMR {
 		int64_t* allocAttributeBuffer(uint32_t nEntryCount);
 
 		CPagedVector<TOOLPATHREADPOINT> m_Points;
+		CPagedVector<TOOLPATHREADLINEARFACTORS> m_LinearFactors;
 		CPagedVector<TOOLPATHREADOVERRIDE> m_OverrideInterpolations;
 		TOOLPATHREADSEGMENT * m_pCurrentSegment;
 
@@ -152,9 +176,20 @@ namespace NMR {
 		void endSegment();
 		void addDiscretePoint (nfInt32 nX, nfInt32 nY, nfInt32 nTag, bool bHasFactorF, nfDouble nFactorF, bool bHasFactorG, nfDouble nFactorG, bool bHasFactorH, nfDouble nFactorH, bool bHasFactorE, nfDouble nFactorE, uint32_t nOverrideStart, uint32_t nOverrideCount);
 
+		// Adds a point that may carry linear (start/end) factors. For a constant factor, pass the same value as start and end with bLinear false.
+		void addDiscretePointWithLinearFactors (nfInt32 nX, nfInt32 nY, nfInt32 nTag,
+			bool bHasFactorF, bool bLinearF, nfDouble nStartFactorF, nfDouble nEndFactorF,
+			bool bHasFactorG, bool bLinearG, nfDouble nStartFactorG, nfDouble nEndFactorG,
+			bool bHasFactorH, bool bLinearH, nfDouble nStartFactorH, nfDouble nEndFactorH,
+			bool bHasFactorE, bool bLinearE, nfDouble nStartFactorE, nfDouble nEndFactorE,
+			uint32_t nOverrideStart, uint32_t nOverrideCount);
+
+		// Returns the start-factor record for a point, or nullptr if the point has no linear factors.
+		const TOOLPATHREADLINEARFACTORS * getPointLinearFactors(const TOOLPATHREADPOINT & point);
+
 		TOOLPATHREADOVERRIDE& getOverrideInterpolationData(uint32_t nGlobalIndex);
 		uint32_t getGlobalOverrideInterpolationCount();
-		void addOverrideInterpolation (double dParameter, double dFactorF, double dFactorG, double dFactorH, double dFactorE);
+		void addOverrideInterpolation (double dParameter, bool bHasFactorF, double dFactorF, bool bHasFactorG, double dFactorG, bool bHasFactorH, double dFactorH, bool bHasFactorE, double dFactorE);
 
 		nfUint32 getSegmentCount();
 		void getSegmentInfo (nfUint32 nSegmentIndex, eModelToolpathSegmentType & eType, nfUint32 & nProfileID, nfUint32 & nPartID, nfUint32 & nPointCount);
@@ -162,8 +197,10 @@ namespace NMR {
 		const TOOLPATHSEGMENTATTRIBUTES & getSegmentStandardAttributes(nfUint32 nSegmentIndex);
 		TOOLPATHREADPOINT & getSegmentPoint (nfUint32 nSegmentIndex, nfUint32 nPointIndex);
 		void getSegmentHatchOverrideInterpolationIndices(nfUint32 nSegmentIndex, nfUint32 nHatchIndex, nfUint32 & nOverrideStartIndex, nfUint32 & nOverrideCount);
+		void getSegmentPointOverrideInterpolationIndices(nfUint32 nSegmentIndex, nfUint32 nPointIndex, nfUint32 & nOverrideStartIndex, nfUint32 & nOverrideCount);
 		uint32_t getSegmentOverrideInterpolationCount(uint32_t nSegmentIndex);
         bool segmentHasModificationFactors(nfUint32 nSegmentIndex, Lib3MF::eToolpathProfileModificationFactor modificationFactor);
+        bool segmentHasLinearModificationFactors(nfUint32 nSegmentIndex, Lib3MF::eToolpathProfileModificationFactor modificationFactor);
 
 		uint32_t getPartCount();
 

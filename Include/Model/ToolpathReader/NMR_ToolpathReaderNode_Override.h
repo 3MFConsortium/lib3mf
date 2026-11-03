@@ -67,6 +67,11 @@ namespace NMR {
 		nfDouble getValueG(bool bMustExist);
 		nfDouble getValueH(bool bMustExist);
 		nfDouble getValueE(bool bMustExist);
+
+		bool hasValueF() const;
+		bool hasValueG() const;
+		bool hasValueH() const;
+		bool hasValueE() const;
 	};
 
 	typedef std::shared_ptr <CToolpathReaderNode_Override> PToolpathReaderNode_Override;

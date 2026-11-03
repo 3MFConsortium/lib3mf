@@ -226,7 +226,12 @@ namespace NMR {
 
 				uint32_t nOverrideInterpolationCount = nOverrideInterpolationEnd - nOverrideInterpolationStart;
 
-				m_pReadData->addDiscretePoint(xmlNode.getX(), xmlNode.getY(), xmlNode.getTag(), xmlNode.hasFactorF (), xmlNode.getFactorF (), xmlNode.hasFactorG(), xmlNode.getFactorG (), xmlNode.hasFactorH(), xmlNode.getFactorH (), xmlNode.hasFactorE(), xmlNode.getFactorE (), nOverrideInterpolationStart, nOverrideInterpolationCount);
+				m_pReadData->addDiscretePointWithLinearFactors(xmlNode.getX(), xmlNode.getY(), xmlNode.getTag(),
+					xmlNode.hasFactorF(), xmlNode.isLinearFactorF(), xmlNode.getStartFactorF(), xmlNode.getEndFactorF(),
+					xmlNode.hasFactorG(), xmlNode.isLinearFactorG(), xmlNode.getStartFactorG(), xmlNode.getEndFactorG(),
+					xmlNode.hasFactorH(), xmlNode.isLinearFactorH(), xmlNode.getStartFactorH(), xmlNode.getEndFactorH(),
+					xmlNode.hasFactorE(), xmlNode.isLinearFactorE(), xmlNode.getStartFactorE(), xmlNode.getEndFactorE(),
+					nOverrideInterpolationStart, nOverrideInterpolationCount);
 
 			}
 			else

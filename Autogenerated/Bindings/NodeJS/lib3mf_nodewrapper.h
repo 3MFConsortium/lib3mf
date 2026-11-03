@@ -2671,6 +2671,11 @@ private:
 	static void SegmentHasNonlinearHatchModificationInterpolation(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentNonlinearHatchModificationInterpolation(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetSegmentAllNonlinearHatchesModificationInterpolation(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SegmentHasLinearPointModificationFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetLinearSegmentPointModificationFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SegmentHasNonlinearPointModificationInterpolation(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentNonlinearPointModificationInterpolation(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetSegmentAllNonlinearPointsModificationInterpolation(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFToolpathLayerReader();
@@ -2719,6 +2724,14 @@ private:
 	static void WritePolylineInModelUnitsWithFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WritePolylineDiscrete(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void WritePolylineDiscreteWithFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WriteLoopInModelUnitsWithLinearFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WriteLoopInModelUnitsWithNonlinearFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WriteLoopDiscreteWithLinearFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WriteLoopDiscreteWithNonlinearFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WritePolylineInModelUnitsWithLinearFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WritePolylineInModelUnitsWithNonlinearFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WritePolylineDiscreteWithLinearFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void WritePolylineDiscreteWithNonlinearFactors(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddCustomData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void Finish(const v8::FunctionCallbackInfo<v8::Value>& args);
 

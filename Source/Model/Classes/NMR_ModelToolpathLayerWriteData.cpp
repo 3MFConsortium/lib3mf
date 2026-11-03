@@ -47,6 +47,34 @@ NMR_ModelToolpathLayer.cpp defines the Model Toolpath Layer.
 
 namespace NMR {
 
+	// Resolves the XML attribute names for a modification factor: constant ("x"), linear start ("x1") and end ("x2").
+	static void getModifierFactorAttributeNames(Lib3MF::eToolpathProfileModificationFactor eModificationFactor, const char *& pszConstant, const char *& pszLinear1, const char *& pszLinear2)
+	{
+		switch (eModificationFactor) {
+		case Lib3MF::eToolpathProfileModificationFactor::FactorE:
+			pszConstant = XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORE;
+			pszLinear1 = XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORE1;
+			pszLinear2 = XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORE2;
+			break;
+		case Lib3MF::eToolpathProfileModificationFactor::FactorG:
+			pszConstant = XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG;
+			pszLinear1 = XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG1;
+			pszLinear2 = XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG2;
+			break;
+		case Lib3MF::eToolpathProfileModificationFactor::FactorH:
+			pszConstant = XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH;
+			pszLinear1 = XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH1;
+			pszLinear2 = XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH2;
+			break;
+		case Lib3MF::eToolpathProfileModificationFactor::FactorF:
+		default:
+			pszConstant = XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF;
+			pszLinear1 = XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF1;
+			pszLinear2 = XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF2;
+			break;
+		}
+	}
+
 	CModelToolpathLayerWriteData::CModelToolpathLayerWriteData(CModelToolpath * pModelToolpath, NMR::PModelWriter_3MF pModelWriter, const std::string & sPackagePath, std::map<std::string, PModelWriter_CustomNameSpace> PrefixToNameSpaceMap)
 		: m_pModelToolpath (pModelToolpath), m_pModelWriter (pModelWriter), m_sPackagePath (sPackagePath), m_PrefixToNameSpaceMap (PrefixToNameSpaceMap),
 		m_CurrentSegmentAttributes ()
@@ -126,6 +154,72 @@ namespace NMR {
 	}
 
 
+	void CModelToolpathLayerWriteData::writeModifierFactorAttributes(Lib3MF::eToolpathProfileModificationFactor eModificationFactor, double dValue1, double dValue2, bool bForceLinear)
+	{
+		const double dDiscretizationUnits = 0.001;
+
+		const char * pszConstant = nullptr;
+		const char * pszLinear1 = nullptr;
+		const char * pszLinear2 = nullptr;
+		getModifierFactorAttributeNames(eModificationFactor, pszConstant, pszLinear1, pszLinear2);
+
+		if (!bForceLinear && (std::abs(dValue1 - dValue2) < dDiscretizationUnits)) {
+			// Constant factor: only emit the attribute if it is non-zero.
+			if (std::abs(dValue1) > dDiscretizationUnits) {
+				std::string sValue = std::to_string(dValue1);
+				m_pXmlWriter->WriteAttributeString(nullptr, pszConstant, nullptr, sValue.c_str());
+			}
+		}
+		else {
+			// Linear factor: emit both start and end value.
+			std::string sValue1 = std::to_string(dValue1);
+			m_pXmlWriter->WriteAttributeString(nullptr, pszLinear1, nullptr, sValue1.c_str());
+
+			std::string sValue2 = std::to_string(dValue2);
+			m_pXmlWriter->WriteAttributeString(nullptr, pszLinear2, nullptr, sValue2.c_str());
+		}
+	}
+
+	void CModelToolpathLayerWriteData::writeSubInterpolations(Lib3MF::eToolpathProfileModificationFactor eModificationFactor, uint32_t nSubCount, uint32_t & nRunningSubIndex, uint64_t nOverrideInterpolationDataBufferSize, const Lib3MF::sHatchModificationInterpolationData* pOverrideInterpolationDataBuffer)
+	{
+		if (nSubCount == 0)
+			return;
+
+		if (pOverrideInterpolationDataBuffer == nullptr)
+			throw CNMRException(NMR_ERROR_TOOLPATH_NOSUBINTERPOLATIONINFORMATION);
+
+		const char * pszConstant = nullptr;
+		const char * pszLinear1 = nullptr;
+		const char * pszLinear2 = nullptr;
+		getModifierFactorAttributeNames(eModificationFactor, pszConstant, pszLinear1, pszLinear2);
+
+		double dLastParameter = 0.0;
+		for (uint32_t nSubinterpolationIndex = 0; nSubinterpolationIndex < nSubCount; nSubinterpolationIndex++) {
+			if (nRunningSubIndex >= nOverrideInterpolationDataBufferSize)
+				throw CNMRException(NMR_ERROR_TOOLPATH_SUBINTERPOLATIONBUFFEROVERFLOW);
+
+			auto pInfo = &pOverrideInterpolationDataBuffer[nRunningSubIndex];
+
+			// Support point parameters must lie strictly within (0,1) and be strictly increasing.
+			if ((pInfo->m_Parameter <= 0.0) || (pInfo->m_Parameter >= 1.0))
+				throw CNMRException(NMR_ERROR_INVALIDOVERRIDESUBPARAMETER);
+			if ((nSubinterpolationIndex > 0) && (pInfo->m_Parameter <= dLastParameter))
+				throw CNMRException(NMR_ERROR_INVALIDOVERRIDESUBPARAMETER);
+			dLastParameter = pInfo->m_Parameter;
+
+			std::string sParameter = std::to_string(pInfo->m_Parameter);
+			std::string sFactor = std::to_string(pInfo->m_Factor);
+
+			m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_OVERRIDEINTERPOLATION, nullptr);
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARAMETERVALUE, nullptr, sParameter.c_str());
+			m_pXmlWriter->WriteAttributeString(nullptr, pszConstant, nullptr, sFactor.c_str());
+			m_pXmlWriter->WriteEndElement();
+
+			nRunningSubIndex++;
+		}
+	}
+
+
 	void CModelToolpathLayerWriteData::WriteHatchData(const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nHatchCount, const nfInt32* pX1Buffer, const nfInt32* pY1Buffer, const nfInt32* pX2Buffer, const nfInt32* pY2Buffer, const nfInt32* pTagBuffer, const double* pScalingDataF1Buffer, const double* pScalingDataF2Buffer, const uint32_t * pSubinterpolationCountBuffer, uint64_t nOverrideInterpolationDataBufferSize, const Lib3MF::sHatchModificationInterpolationData* pOverrideInterpolationDataBuffer)
 	{
 		uint32_t nTotalSubinterpolations = 0;
@@ -138,8 +232,6 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if (pY2Buffer == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		double dDiscretizationUnits = 0.001;
 
 		if (m_bWritingHeader)
 			finishHeader();
@@ -170,6 +262,11 @@ namespace NMR {
 				}
 			}
 
+			// Determine how many sub-interpolation points this hatch carries.
+			uint32_t nSubinterpolationCount = 0;
+			if (pSubinterpolationCountBuffer != nullptr)
+				nSubinterpolationCount = pSubinterpolationCountBuffer[nIndex];
+
 			if (pScalingDataF1Buffer != nullptr) {
 
 				double dScalingValueF1 = pScalingDataF1Buffer[nIndex];
@@ -179,22 +276,8 @@ namespace NMR {
 					dScalingValueF2 = pScalingDataF2Buffer[nIndex];
 				}
 
-				if (abs (dScalingValueF1 - dScalingValueF2) < dDiscretizationUnits) {
-					if (abs (dScalingValueF1) > dDiscretizationUnits) {
-						std::string sScalingValueF = std::to_string(dScalingValueF1);
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sScalingValueF.c_str());
-					}
-				}
-				else {
-					std::string sScalingValueF1 = std::to_string(dScalingValueF1);
-					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF1, nullptr, sScalingValueF1.c_str());
-
-					std::string sScalingValueF2 = std::to_string(dScalingValueF2);
-					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF2, nullptr, sScalingValueF2.c_str());
-
-				}
-
-
+				// With <sub> support points present, the linear form MUST be written (spec rule).
+				writeModifierFactorAttributes(Lib3MF::eToolpathProfileModificationFactor::FactorF, dScalingValueF1, dScalingValueF2, nSubinterpolationCount > 0);
 			}
 			else {
 				if (pScalingDataF2Buffer != nullptr) {
@@ -203,112 +286,7 @@ namespace NMR {
 
 			}
 
-
-			/*
-				if (pScalingDataG1Buffer != nullptr) {
-
-				int32_t nScalingValueG1 = pScalingDataG1Buffer[nIndex];
-				int32_t nScalingValueG2 = nScalingValueG1;
-
-				if (pScalingDataG2Buffer != nullptr) {
-					nScalingValueG2 = pScalingDataG2Buffer[nIndex];
-				}
-
-				if (nScalingValueG1 == nScalingValueG2) {
-					if (nScalingValueG1 != 0) {
-						std::string sScalingValueG = std::to_string(nScalingValueG1);
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG, nullptr, sScalingValueG.c_str());
-					}
-				}
-				else {
-					if (nScalingValueG1 != 0) {
-						std::string sScalingValueG1 = std::to_string(nScalingValueG1);
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG1, nullptr, sScalingValueG1.c_str());
-					}
-					if (nScalingValueG2 != 0) {
-						std::string sScalingValueG2 = std::to_string(nScalingValueG2);
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORG2, nullptr, sScalingValueG2.c_str());
-					}
-
-				}
-
-
-			}
-			else {				
-				if (pScalingDataG2Buffer != nullptr) {
-					throw CNMRException(NMR_ERROR_TOOLPATH_INVALIDPROFILESCALINGBUFFER);
-				}
-
-			}
-
-
-			if (pScalingDataH1Buffer != nullptr) {
-
-				int32_t nScalingValueH1 = pScalingDataH1Buffer[nIndex];
-				int32_t nScalingValueH2 = nScalingValueH1;
-
-				if (pScalingDataH2Buffer != nullptr) {
-					nScalingValueH2 = pScalingDataH2Buffer[nIndex];
-				}
-
-				if (nScalingValueH1 == nScalingValueH2) {
-					if (nScalingValueH1 != 0) {
-						std::string sScalingValueH = std::to_string(nScalingValueH1);
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH, nullptr, sScalingValueH.c_str());
-					}
-				}
-				else {
-					if (nScalingValueH1 != 0) {
-						std::string sScalingValueH1 = std::to_string(nScalingValueH1);
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH1, nullptr, sScalingValueH1.c_str());
-					}
-					if (nScalingValueH2 != 0) {
-
-
-						std::string sScalingValueH2 = std::to_string(nScalingValueH2);
-						m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORH2, nullptr, sScalingValueH2.c_str());
-					}
-
-				}
-
-
-			}
-			else {
-				if (pScalingDataH2Buffer != nullptr) {
-					throw CNMRException(NMR_ERROR_TOOLPATH_INVALIDPROFILESCALINGBUFFER);
-				}
-
-			} */
-
-			if (pSubinterpolationCountBuffer != nullptr) {
-
-				uint32_t nSubinterpolationCount = pSubinterpolationCountBuffer[nIndex];
-				if ((nSubinterpolationCount > 0) && (pOverrideInterpolationDataBuffer == nullptr))
-					throw CNMRException(NMR_ERROR_TOOLPATH_NOSUBINTERPOLATIONINFORMATION);
-
-				for (uint32_t nSubinterpolationIndex = 0; nSubinterpolationIndex < nSubinterpolationCount; nSubinterpolationIndex++)
-				{
-
-					if (nTotalSubinterpolations >= nOverrideInterpolationDataBufferSize)
-						throw CNMRException(NMR_ERROR_TOOLPATH_SUBINTERPOLATIONBUFFEROVERFLOW);
-
-
-					auto pInfo = &pOverrideInterpolationDataBuffer[nTotalSubinterpolations];
-
-					std::string sParameter = std::to_string(pInfo->m_Parameter);
-					std::string sFactorF = std::to_string(pInfo->m_Factor);
-
-					m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_OVERRIDEINTERPOLATION, nullptr);
-					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_PARAMETERVALUE, nullptr, sParameter.c_str ());
-					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_SCALEFACTORF, nullptr, sFactorF.c_str ());
-					m_pXmlWriter->WriteEndElement();
-
-
-					nTotalSubinterpolations++;
-				}
-
-
-			}
+			writeSubInterpolations(Lib3MF::eToolpathProfileModificationFactor::FactorF, nSubinterpolationCount, nTotalSubinterpolations, nOverrideInterpolationDataBufferSize, pOverrideInterpolationDataBuffer);
 
 			m_pXmlWriter->WriteEndElement();
 
@@ -458,6 +436,68 @@ namespace NMR {
 
 		m_pXmlWriter->WriteFullEndElement();
 
+	}
+
+	void CModelToolpathLayerWriteData::WritePointSegment(const char * pszSegmentType, const nfUint32 nProfileID, const nfUint32 nPartID, const nfUint32 nPointCount, const nfInt32* pXBuffer, const nfInt32* pYBuffer, const int32_t* pTagDataBuffer, Lib3MF::eToolpathProfileModificationFactor eModificationFactor, const double* pFactor1Buffer, const double* pFactor2Buffer, const uint32_t * pSubinterpolationCountBuffer, uint64_t nOverrideInterpolationDataBufferSize, const Lib3MF::sHatchModificationInterpolationData* pOverrideInterpolationDataBuffer)
+	{
+		if (pXBuffer == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (pYBuffer == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (pszSegmentType == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		// A second (end) factor buffer only makes sense together with a start buffer.
+		if ((pFactor1Buffer == nullptr) && (pFactor2Buffer != nullptr))
+			throw CNMRException(NMR_ERROR_TOOLPATH_INVALIDPROFILESCALINGBUFFER);
+
+		if (m_bWritingHeader)
+			finishHeader();
+		if (!m_bWritingData)
+			throw CNMRException(NMR_ERROR_TOOLPATH_NOTWRITINGDATA);
+
+		writeSegmentStartElement(pszSegmentType, nProfileID, nPartID);
+
+		uint32_t nTotalSubinterpolations = 0;
+
+		uint32_t nIndex;
+		for (nIndex = 0; nIndex < nPointCount; nIndex++) {
+			std::string sX = std::to_string(pXBuffer[nIndex]);
+			std::string sY = std::to_string(pYBuffer[nIndex]);
+
+			m_pXmlWriter->WriteStartElement(nullptr, XML_3MF_TOOLPATHELEMENT_POINT, nullptr);
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_X, nullptr, sX.c_str());
+			m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_Y, nullptr, sY.c_str());
+
+			if (pTagDataBuffer != nullptr) {
+				int32_t nTag = pTagDataBuffer[nIndex];
+				if (nTag != 0) {
+					std::string sTag = std::to_string(nTag);
+					m_pXmlWriter->WriteAttributeString(nullptr, XML_3MF_TOOLPATHATTRIBUTE_TAG, nullptr, sTag.c_str());
+				}
+			}
+
+			// Determine how many sub-interpolation points this point carries.
+			uint32_t nSubinterpolationCount = 0;
+			if (pSubinterpolationCountBuffer != nullptr)
+				nSubinterpolationCount = pSubinterpolationCountBuffer[nIndex];
+
+			if (pFactor1Buffer != nullptr) {
+				double dValue1 = pFactor1Buffer[nIndex];
+				double dValue2 = dValue1;
+				if (pFactor2Buffer != nullptr)
+					dValue2 = pFactor2Buffer[nIndex];
+
+				// With <sub> support points present, the linear form MUST be written (spec rule).
+				writeModifierFactorAttributes(eModificationFactor, dValue1, dValue2, nSubinterpolationCount > 0);
+			}
+
+			writeSubInterpolations(eModificationFactor, nSubinterpolationCount, nTotalSubinterpolations, nOverrideInterpolationDataBufferSize, pOverrideInterpolationDataBuffer);
+
+			m_pXmlWriter->WriteEndElement();
+		}
+
+		m_pXmlWriter->WriteFullEndElement();
 	}
 
 	void CModelToolpathLayerWriteData::writeCustomXMLDataNode(PCustomXMLNode pXMLNode, const std::string& sNameSpace)

@@ -579,6 +579,262 @@ public class ToolpathLayerData extends Base {
 	}
 
 	/**
+	 * writes loop data to the layer in model units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point also closes the loop.
+	 *
+	 * @param profileID The toolpath profile to use.
+	 * @param partID The toolpath part to use
+	 * @param pointData The point data in model units. Array MUST NOT be empty.
+	 * @param modificationFactor Which modification factor value to write (E, F, G or H).
+	 * @param factorData1 The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	 * @param factorData2 The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	 * @throws Lib3MFException
+	 */
+	public void writeLoopInModelUnitsWithLinearFactors(int profileID, int partID, Position2D[] pointData, Lib3MFWrapper.ToolpathProfileModificationFactor modificationFactor, double[] factorData1, double[] factorData2) throws Lib3MFException {
+		Pointer bufferPointData = new Memory(Math.max(1, Position2D.SIZE * pointData.length));
+		for (int i = 0; i < pointData.length; i++) {
+		  pointData[i].writeToPointer(bufferPointData, i * Position2D.SIZE);
+		}
+		Pointer bufferFactorData1 = new Memory(Math.max(1, 8 * factorData1.length));
+		for (int i = 0; i < factorData1.length; i++) {
+		  bufferFactorData1.setDouble(8 * i, factorData1[i]);
+		}
+		Pointer bufferFactorData2 = new Memory(Math.max(1, 8 * factorData2.length));
+		for (int i = 0; i < factorData2.length; i++) {
+		  bufferFactorData2.setDouble(8 * i, factorData2[i]);
+		}
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_writeloopinmodelunitswithlinearfactors.invokeInt(new java.lang.Object[]{mHandle, profileID, partID, (long) pointData.length, bufferPointData, Lib3MFWrapper.EnumConversion.convertToolpathProfileModificationFactorToConst(modificationFactor), (long) factorData1.length, bufferFactorData1, (long) factorData2.length, bufferFactorData2}));
+	}
+
+	/**
+	 * writes loop data to the layer in model units with non-linearly ramped profile modification factors per point.
+	 *
+	 * @param profileID The toolpath profile to use.
+	 * @param partID The toolpath part to use
+	 * @param pointData The point data in model units. Array MUST NOT be empty.
+	 * @param modificationFactor Which modification factor value to write (E, F, G or H).
+	 * @param factorData1 The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	 * @param factorData2 The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	 * @param subInterpolationCounts Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData.
+	 * @param modificationInterpolationData Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1.
+	 * @throws Lib3MFException
+	 */
+	public void writeLoopInModelUnitsWithNonlinearFactors(int profileID, int partID, Position2D[] pointData, Lib3MFWrapper.ToolpathProfileModificationFactor modificationFactor, double[] factorData1, double[] factorData2, int[] subInterpolationCounts, HatchModificationInterpolationData[] modificationInterpolationData) throws Lib3MFException {
+		Pointer bufferPointData = new Memory(Math.max(1, Position2D.SIZE * pointData.length));
+		for (int i = 0; i < pointData.length; i++) {
+		  pointData[i].writeToPointer(bufferPointData, i * Position2D.SIZE);
+		}
+		Pointer bufferFactorData1 = new Memory(Math.max(1, 8 * factorData1.length));
+		for (int i = 0; i < factorData1.length; i++) {
+		  bufferFactorData1.setDouble(8 * i, factorData1[i]);
+		}
+		Pointer bufferFactorData2 = new Memory(Math.max(1, 8 * factorData2.length));
+		for (int i = 0; i < factorData2.length; i++) {
+		  bufferFactorData2.setDouble(8 * i, factorData2[i]);
+		}
+		Pointer bufferSubInterpolationCounts = new Memory(Math.max(1, 4 * subInterpolationCounts.length));
+		for (int i = 0; i < subInterpolationCounts.length; i++) {
+		  bufferSubInterpolationCounts.setInt(4 * i, subInterpolationCounts[i]);
+		}
+		Pointer bufferModificationInterpolationData = new Memory(Math.max(1, HatchModificationInterpolationData.SIZE * modificationInterpolationData.length));
+		for (int i = 0; i < modificationInterpolationData.length; i++) {
+		  modificationInterpolationData[i].writeToPointer(bufferModificationInterpolationData, i * HatchModificationInterpolationData.SIZE);
+		}
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_writeloopinmodelunitswithnonlinearfactors.invokeInt(new java.lang.Object[]{mHandle, profileID, partID, (long) pointData.length, bufferPointData, Lib3MFWrapper.EnumConversion.convertToolpathProfileModificationFactorToConst(modificationFactor), (long) factorData1.length, bufferFactorData1, (long) factorData2.length, bufferFactorData2, (long) subInterpolationCounts.length, bufferSubInterpolationCounts, (long) modificationInterpolationData.length, bufferModificationInterpolationData}));
+	}
+
+	/**
+	 * writes loop data to the layer in toolpath units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point also closes the loop.
+	 *
+	 * @param profileID The toolpath profile to use.
+	 * @param partID The toolpath part to use
+	 * @param pointData The point data in toolpath units. Array MUST NOT be empty.
+	 * @param modificationFactor Which modification factor value to write (E, F, G or H).
+	 * @param factorData1 The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	 * @param factorData2 The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	 * @throws Lib3MFException
+	 */
+	public void writeLoopDiscreteWithLinearFactors(int profileID, int partID, DiscretePosition2D[] pointData, Lib3MFWrapper.ToolpathProfileModificationFactor modificationFactor, double[] factorData1, double[] factorData2) throws Lib3MFException {
+		Pointer bufferPointData = new Memory(Math.max(1, DiscretePosition2D.SIZE * pointData.length));
+		for (int i = 0; i < pointData.length; i++) {
+		  pointData[i].writeToPointer(bufferPointData, i * DiscretePosition2D.SIZE);
+		}
+		Pointer bufferFactorData1 = new Memory(Math.max(1, 8 * factorData1.length));
+		for (int i = 0; i < factorData1.length; i++) {
+		  bufferFactorData1.setDouble(8 * i, factorData1[i]);
+		}
+		Pointer bufferFactorData2 = new Memory(Math.max(1, 8 * factorData2.length));
+		for (int i = 0; i < factorData2.length; i++) {
+		  bufferFactorData2.setDouble(8 * i, factorData2[i]);
+		}
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_writeloopdiscretewithlinearfactors.invokeInt(new java.lang.Object[]{mHandle, profileID, partID, (long) pointData.length, bufferPointData, Lib3MFWrapper.EnumConversion.convertToolpathProfileModificationFactorToConst(modificationFactor), (long) factorData1.length, bufferFactorData1, (long) factorData2.length, bufferFactorData2}));
+	}
+
+	/**
+	 * writes loop data to the layer in toolpath units with non-linearly ramped profile modification factors per point.
+	 *
+	 * @param profileID The toolpath profile to use.
+	 * @param partID The toolpath part to use
+	 * @param pointData The point data in toolpath units. Array MUST NOT be empty.
+	 * @param modificationFactor Which modification factor value to write (E, F, G or H).
+	 * @param factorData1 The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	 * @param factorData2 The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	 * @param subInterpolationCounts Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData.
+	 * @param modificationInterpolationData Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1.
+	 * @throws Lib3MFException
+	 */
+	public void writeLoopDiscreteWithNonlinearFactors(int profileID, int partID, DiscretePosition2D[] pointData, Lib3MFWrapper.ToolpathProfileModificationFactor modificationFactor, double[] factorData1, double[] factorData2, int[] subInterpolationCounts, HatchModificationInterpolationData[] modificationInterpolationData) throws Lib3MFException {
+		Pointer bufferPointData = new Memory(Math.max(1, DiscretePosition2D.SIZE * pointData.length));
+		for (int i = 0; i < pointData.length; i++) {
+		  pointData[i].writeToPointer(bufferPointData, i * DiscretePosition2D.SIZE);
+		}
+		Pointer bufferFactorData1 = new Memory(Math.max(1, 8 * factorData1.length));
+		for (int i = 0; i < factorData1.length; i++) {
+		  bufferFactorData1.setDouble(8 * i, factorData1[i]);
+		}
+		Pointer bufferFactorData2 = new Memory(Math.max(1, 8 * factorData2.length));
+		for (int i = 0; i < factorData2.length; i++) {
+		  bufferFactorData2.setDouble(8 * i, factorData2[i]);
+		}
+		Pointer bufferSubInterpolationCounts = new Memory(Math.max(1, 4 * subInterpolationCounts.length));
+		for (int i = 0; i < subInterpolationCounts.length; i++) {
+		  bufferSubInterpolationCounts.setInt(4 * i, subInterpolationCounts[i]);
+		}
+		Pointer bufferModificationInterpolationData = new Memory(Math.max(1, HatchModificationInterpolationData.SIZE * modificationInterpolationData.length));
+		for (int i = 0; i < modificationInterpolationData.length; i++) {
+		  modificationInterpolationData[i].writeToPointer(bufferModificationInterpolationData, i * HatchModificationInterpolationData.SIZE);
+		}
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_writeloopdiscretewithnonlinearfactors.invokeInt(new java.lang.Object[]{mHandle, profileID, partID, (long) pointData.length, bufferPointData, Lib3MFWrapper.EnumConversion.convertToolpathProfileModificationFactorToConst(modificationFactor), (long) factorData1.length, bufferFactorData1, (long) factorData2.length, bufferFactorData2, (long) subInterpolationCounts.length, bufferSubInterpolationCounts, (long) modificationInterpolationData.length, bufferModificationInterpolationData}));
+	}
+
+	/**
+	 * writes polyline data to the layer in model units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point's factors are unused.
+	 *
+	 * @param profileID The toolpath profile to use.
+	 * @param partID The toolpath part to use
+	 * @param pointData The point data in model units. Array MUST NOT be empty.
+	 * @param modificationFactor Which modification factor value to write (E, F, G or H).
+	 * @param factorData1 The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	 * @param factorData2 The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	 * @throws Lib3MFException
+	 */
+	public void writePolylineInModelUnitsWithLinearFactors(int profileID, int partID, Position2D[] pointData, Lib3MFWrapper.ToolpathProfileModificationFactor modificationFactor, double[] factorData1, double[] factorData2) throws Lib3MFException {
+		Pointer bufferPointData = new Memory(Math.max(1, Position2D.SIZE * pointData.length));
+		for (int i = 0; i < pointData.length; i++) {
+		  pointData[i].writeToPointer(bufferPointData, i * Position2D.SIZE);
+		}
+		Pointer bufferFactorData1 = new Memory(Math.max(1, 8 * factorData1.length));
+		for (int i = 0; i < factorData1.length; i++) {
+		  bufferFactorData1.setDouble(8 * i, factorData1[i]);
+		}
+		Pointer bufferFactorData2 = new Memory(Math.max(1, 8 * factorData2.length));
+		for (int i = 0; i < factorData2.length; i++) {
+		  bufferFactorData2.setDouble(8 * i, factorData2[i]);
+		}
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_writepolylineinmodelunitswithlinearfactors.invokeInt(new java.lang.Object[]{mHandle, profileID, partID, (long) pointData.length, bufferPointData, Lib3MFWrapper.EnumConversion.convertToolpathProfileModificationFactorToConst(modificationFactor), (long) factorData1.length, bufferFactorData1, (long) factorData2.length, bufferFactorData2}));
+	}
+
+	/**
+	 * writes polyline data to the layer in model units with non-linearly ramped profile modification factors per point.
+	 *
+	 * @param profileID The toolpath profile to use.
+	 * @param partID The toolpath part to use
+	 * @param pointData The point data in model units. Array MUST NOT be empty.
+	 * @param modificationFactor Which modification factor value to write (E, F, G or H).
+	 * @param factorData1 The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	 * @param factorData2 The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	 * @param subInterpolationCounts Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData.
+	 * @param modificationInterpolationData Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1.
+	 * @throws Lib3MFException
+	 */
+	public void writePolylineInModelUnitsWithNonlinearFactors(int profileID, int partID, Position2D[] pointData, Lib3MFWrapper.ToolpathProfileModificationFactor modificationFactor, double[] factorData1, double[] factorData2, int[] subInterpolationCounts, HatchModificationInterpolationData[] modificationInterpolationData) throws Lib3MFException {
+		Pointer bufferPointData = new Memory(Math.max(1, Position2D.SIZE * pointData.length));
+		for (int i = 0; i < pointData.length; i++) {
+		  pointData[i].writeToPointer(bufferPointData, i * Position2D.SIZE);
+		}
+		Pointer bufferFactorData1 = new Memory(Math.max(1, 8 * factorData1.length));
+		for (int i = 0; i < factorData1.length; i++) {
+		  bufferFactorData1.setDouble(8 * i, factorData1[i]);
+		}
+		Pointer bufferFactorData2 = new Memory(Math.max(1, 8 * factorData2.length));
+		for (int i = 0; i < factorData2.length; i++) {
+		  bufferFactorData2.setDouble(8 * i, factorData2[i]);
+		}
+		Pointer bufferSubInterpolationCounts = new Memory(Math.max(1, 4 * subInterpolationCounts.length));
+		for (int i = 0; i < subInterpolationCounts.length; i++) {
+		  bufferSubInterpolationCounts.setInt(4 * i, subInterpolationCounts[i]);
+		}
+		Pointer bufferModificationInterpolationData = new Memory(Math.max(1, HatchModificationInterpolationData.SIZE * modificationInterpolationData.length));
+		for (int i = 0; i < modificationInterpolationData.length; i++) {
+		  modificationInterpolationData[i].writeToPointer(bufferModificationInterpolationData, i * HatchModificationInterpolationData.SIZE);
+		}
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_writepolylineinmodelunitswithnonlinearfactors.invokeInt(new java.lang.Object[]{mHandle, profileID, partID, (long) pointData.length, bufferPointData, Lib3MFWrapper.EnumConversion.convertToolpathProfileModificationFactorToConst(modificationFactor), (long) factorData1.length, bufferFactorData1, (long) factorData2.length, bufferFactorData2, (long) subInterpolationCounts.length, bufferSubInterpolationCounts, (long) modificationInterpolationData.length, bufferModificationInterpolationData}));
+	}
+
+	/**
+	 * writes polyline data to the layer in toolpath units with linearly ramped profile modification factors per point. Each point's factors apply to the line segment the point closes; the first point's factors are unused.
+	 *
+	 * @param profileID The toolpath profile to use.
+	 * @param partID The toolpath part to use
+	 * @param pointData The point data in toolpath units. Array MUST NOT be empty.
+	 * @param modificationFactor Which modification factor value to write (E, F, G or H).
+	 * @param factorData1 The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	 * @param factorData2 The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	 * @throws Lib3MFException
+	 */
+	public void writePolylineDiscreteWithLinearFactors(int profileID, int partID, DiscretePosition2D[] pointData, Lib3MFWrapper.ToolpathProfileModificationFactor modificationFactor, double[] factorData1, double[] factorData2) throws Lib3MFException {
+		Pointer bufferPointData = new Memory(Math.max(1, DiscretePosition2D.SIZE * pointData.length));
+		for (int i = 0; i < pointData.length; i++) {
+		  pointData[i].writeToPointer(bufferPointData, i * DiscretePosition2D.SIZE);
+		}
+		Pointer bufferFactorData1 = new Memory(Math.max(1, 8 * factorData1.length));
+		for (int i = 0; i < factorData1.length; i++) {
+		  bufferFactorData1.setDouble(8 * i, factorData1[i]);
+		}
+		Pointer bufferFactorData2 = new Memory(Math.max(1, 8 * factorData2.length));
+		for (int i = 0; i < factorData2.length; i++) {
+		  bufferFactorData2.setDouble(8 * i, factorData2[i]);
+		}
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_writepolylinediscretewithlinearfactors.invokeInt(new java.lang.Object[]{mHandle, profileID, partID, (long) pointData.length, bufferPointData, Lib3MFWrapper.EnumConversion.convertToolpathProfileModificationFactorToConst(modificationFactor), (long) factorData1.length, bufferFactorData1, (long) factorData2.length, bufferFactorData2}));
+	}
+
+	/**
+	 * writes polyline data to the layer in toolpath units with non-linearly ramped profile modification factors per point.
+	 *
+	 * @param profileID The toolpath profile to use.
+	 * @param partID The toolpath part to use
+	 * @param pointData The point data in toolpath units. Array MUST NOT be empty.
+	 * @param modificationFactor Which modification factor value to write (E, F, G or H).
+	 * @param factorData1 The profile modification scale factors for the start point of each segment. MUST have the same cardinality as PointData.
+	 * @param factorData2 The profile modification scale factors for the end point of each segment. MUST have the same cardinality as PointData.
+	 * @param subInterpolationCounts Determines the number of subinterpolation points per point. MUST have the same cardinality as PointData.
+	 * @param modificationInterpolationData Aggregate Array of interpolation points for all points. Sequentially in order of the points. For each point, the parameter values MUST be strictly increasing, and cannot be 0 or 1.
+	 * @throws Lib3MFException
+	 */
+	public void writePolylineDiscreteWithNonlinearFactors(int profileID, int partID, DiscretePosition2D[] pointData, Lib3MFWrapper.ToolpathProfileModificationFactor modificationFactor, double[] factorData1, double[] factorData2, int[] subInterpolationCounts, HatchModificationInterpolationData[] modificationInterpolationData) throws Lib3MFException {
+		Pointer bufferPointData = new Memory(Math.max(1, DiscretePosition2D.SIZE * pointData.length));
+		for (int i = 0; i < pointData.length; i++) {
+		  pointData[i].writeToPointer(bufferPointData, i * DiscretePosition2D.SIZE);
+		}
+		Pointer bufferFactorData1 = new Memory(Math.max(1, 8 * factorData1.length));
+		for (int i = 0; i < factorData1.length; i++) {
+		  bufferFactorData1.setDouble(8 * i, factorData1[i]);
+		}
+		Pointer bufferFactorData2 = new Memory(Math.max(1, 8 * factorData2.length));
+		for (int i = 0; i < factorData2.length; i++) {
+		  bufferFactorData2.setDouble(8 * i, factorData2[i]);
+		}
+		Pointer bufferSubInterpolationCounts = new Memory(Math.max(1, 4 * subInterpolationCounts.length));
+		for (int i = 0; i < subInterpolationCounts.length; i++) {
+		  bufferSubInterpolationCounts.setInt(4 * i, subInterpolationCounts[i]);
+		}
+		Pointer bufferModificationInterpolationData = new Memory(Math.max(1, HatchModificationInterpolationData.SIZE * modificationInterpolationData.length));
+		for (int i = 0; i < modificationInterpolationData.length; i++) {
+		  modificationInterpolationData[i].writeToPointer(bufferModificationInterpolationData, i * HatchModificationInterpolationData.SIZE);
+		}
+		mWrapper.checkError(this, mWrapper.lib3mf_toolpathlayerdata_writepolylinediscretewithnonlinearfactors.invokeInt(new java.lang.Object[]{mHandle, profileID, partID, (long) pointData.length, bufferPointData, Lib3MFWrapper.EnumConversion.convertToolpathProfileModificationFactorToConst(modificationFactor), (long) factorData1.length, bufferFactorData1, (long) factorData2.length, bufferFactorData2, (long) subInterpolationCounts.length, bufferSubInterpolationCounts, (long) modificationInterpolationData.length, bufferModificationInterpolationData}));
+	}
+
+	/**
 	 * Adds a custom data DOM tree to the layer. Layer MUST not be finished when changing the DOM tree.
 	 *
 	 * @param nameSpace Namespace of the custom data tree. MUST not be empty.

@@ -207,6 +207,8 @@ class ELib3MFException(Exception):
 			return 'TOOLPATH_SEGMENTISNOTOFTYPEHATCH'
 		elif self._code == ErrorCodes.TOOLPATH_MODIFIERNOTFOUND:
 			return 'TOOLPATH_MODIFIERNOTFOUND'
+		elif self._code == ErrorCodes.TOOLPATH_SEGMENTISNOTOFTYPEPOINTS:
+			return 'TOOLPATH_SEGMENTISNOTOFTYPEPOINTS'
 		else:
 			return 'UNKNOWN'
 	
@@ -356,6 +358,8 @@ class ELib3MFException(Exception):
 			return 'Segment is not of type hatch'
 		elif self._code == ErrorCodes.TOOLPATH_MODIFIERNOTFOUND:
 			return 'Toolpath modifier not found'
+		elif self._code == ErrorCodes.TOOLPATH_SEGMENTISNOTOFTYPEPOINTS:
+			return 'Segment is not of type loop or polyline'
 		else:
 			return 'unknown error'
 	
@@ -461,6 +465,7 @@ class ErrorCodes(enum.IntEnum):
 	TOOLPATH_SCALINGDATANEEDSTOMATCHPOINTDATA = 5014
 	TOOLPATH_SEGMENTISNOTOFTYPEHATCH = 5015
 	TOOLPATH_MODIFIERNOTFOUND = 5016
+	TOOLPATH_SEGMENTISNOTOFTYPEPOINTS = 5017
 
 '''Definition of Function Table
 '''
@@ -1107,6 +1112,11 @@ class FunctionTable:
 	lib3mf_toolpathlayerreader_segmenthasnonlinearhatchmodificationinterpolation = None
 	lib3mf_toolpathlayerreader_getsegmentnonlinearhatchmodificationinterpolation = None
 	lib3mf_toolpathlayerreader_getsegmentallnonlinearhatchesmodificationinterpolation = None
+	lib3mf_toolpathlayerreader_segmenthaslinearpointmodificationfactors = None
+	lib3mf_toolpathlayerreader_getlinearsegmentpointmodificationfactors = None
+	lib3mf_toolpathlayerreader_segmenthasnonlinearpointmodificationinterpolation = None
+	lib3mf_toolpathlayerreader_getsegmentnonlinearpointmodificationinterpolation = None
+	lib3mf_toolpathlayerreader_getsegmentallnonlinearpointsmodificationinterpolation = None
 	lib3mf_toolpathlayerdata_getlayerdatauuid = None
 	lib3mf_toolpathlayerdata_registerprofile = None
 	lib3mf_toolpathlayerdata_registerbuilditem = None
@@ -1138,6 +1148,14 @@ class FunctionTable:
 	lib3mf_toolpathlayerdata_writepolylineinmodelunitswithfactors = None
 	lib3mf_toolpathlayerdata_writepolylinediscrete = None
 	lib3mf_toolpathlayerdata_writepolylinediscretewithfactors = None
+	lib3mf_toolpathlayerdata_writeloopinmodelunitswithlinearfactors = None
+	lib3mf_toolpathlayerdata_writeloopinmodelunitswithnonlinearfactors = None
+	lib3mf_toolpathlayerdata_writeloopdiscretewithlinearfactors = None
+	lib3mf_toolpathlayerdata_writeloopdiscretewithnonlinearfactors = None
+	lib3mf_toolpathlayerdata_writepolylineinmodelunitswithlinearfactors = None
+	lib3mf_toolpathlayerdata_writepolylineinmodelunitswithnonlinearfactors = None
+	lib3mf_toolpathlayerdata_writepolylinediscretewithlinearfactors = None
+	lib3mf_toolpathlayerdata_writepolylinediscretewithnonlinearfactors = None
 	lib3mf_toolpathlayerdata_addcustomdata = None
 	lib3mf_toolpathlayerdata_finish = None
 	lib3mf_toolpathviewable_getlayerindex = None
@@ -5679,6 +5697,36 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(HatchModificationInterpolationData))
 			self.lib.lib3mf_toolpathlayerreader_getsegmentallnonlinearhatchesmodificationinterpolation = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_segmenthaslinearpointmodificationfactors")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ToolpathProfileModificationFactor, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpathlayerreader_segmenthaslinearpointmodificationfactors = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getlinearsegmentpointmodificationfactors")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Hatch2DFactors))
+			self.lib.lib3mf_toolpathlayerreader_getlinearsegmentpointmodificationfactors = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_segmenthasnonlinearpointmodificationinterpolation")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpathlayerreader_segmenthasnonlinearpointmodificationinterpolation = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentnonlinearpointmodificationinterpolation")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(HatchModificationInterpolationData))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentnonlinearpointmodificationinterpolation = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentallnonlinearpointsmodificationinterpolation")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(HatchModificationInterpolationData))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentallnonlinearpointsmodificationinterpolation = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_getlayerdatauuid")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -5864,6 +5912,54 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(DiscretePosition2D), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double))
 			self.lib.lib3mf_toolpathlayerdata_writepolylinediscretewithfactors = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_writeloopinmodelunitswithlinearfactors")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_toolpathlayerdata_writeloopinmodelunitswithlinearfactors = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_writeloopinmodelunitswithnonlinearfactors")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(HatchModificationInterpolationData))
+			self.lib.lib3mf_toolpathlayerdata_writeloopinmodelunitswithnonlinearfactors = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_writeloopdiscretewithlinearfactors")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(DiscretePosition2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_toolpathlayerdata_writeloopdiscretewithlinearfactors = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_writeloopdiscretewithnonlinearfactors")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(DiscretePosition2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(HatchModificationInterpolationData))
+			self.lib.lib3mf_toolpathlayerdata_writeloopdiscretewithnonlinearfactors = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_writepolylineinmodelunitswithlinearfactors")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_toolpathlayerdata_writepolylineinmodelunitswithlinearfactors = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_writepolylineinmodelunitswithnonlinearfactors")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(HatchModificationInterpolationData))
+			self.lib.lib3mf_toolpathlayerdata_writepolylineinmodelunitswithnonlinearfactors = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_writepolylinediscretewithlinearfactors")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(DiscretePosition2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_toolpathlayerdata_writepolylinediscretewithlinearfactors = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_writepolylinediscretewithnonlinearfactors")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(DiscretePosition2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(HatchModificationInterpolationData))
+			self.lib.lib3mf_toolpathlayerdata_writepolylinediscretewithnonlinearfactors = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_addcustomdata")), methodAddress)
 			if err != 0:
@@ -8954,6 +9050,21 @@ class Wrapper:
 			self.lib.lib3mf_toolpathlayerreader_getsegmentallnonlinearhatchesmodificationinterpolation.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerreader_getsegmentallnonlinearhatchesmodificationinterpolation.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(HatchModificationInterpolationData)]
 			
+			self.lib.lib3mf_toolpathlayerreader_segmenthaslinearpointmodificationfactors.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_segmenthaslinearpointmodificationfactors.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ToolpathProfileModificationFactor, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getlinearsegmentpointmodificationfactors.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getlinearsegmentpointmodificationfactors.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Hatch2DFactors)]
+			
+			self.lib.lib3mf_toolpathlayerreader_segmenthasnonlinearpointmodificationinterpolation.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_segmenthasnonlinearpointmodificationinterpolation.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentnonlinearpointmodificationinterpolation.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentnonlinearpointmodificationinterpolation.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(HatchModificationInterpolationData)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentallnonlinearpointsmodificationinterpolation.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentallnonlinearpointsmodificationinterpolation.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(HatchModificationInterpolationData)]
+			
 			self.lib.lib3mf_toolpathlayerdata_getlayerdatauuid.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerdata_getlayerdatauuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
@@ -9046,6 +9157,30 @@ class Wrapper:
 			
 			self.lib.lib3mf_toolpathlayerdata_writepolylinediscretewithfactors.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerdata_writepolylinediscretewithfactors.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(DiscretePosition2D), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_toolpathlayerdata_writeloopinmodelunitswithlinearfactors.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_writeloopinmodelunitswithlinearfactors.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_toolpathlayerdata_writeloopinmodelunitswithnonlinearfactors.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_writeloopinmodelunitswithnonlinearfactors.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(HatchModificationInterpolationData)]
+			
+			self.lib.lib3mf_toolpathlayerdata_writeloopdiscretewithlinearfactors.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_writeloopdiscretewithlinearfactors.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(DiscretePosition2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_toolpathlayerdata_writeloopdiscretewithnonlinearfactors.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_writeloopdiscretewithnonlinearfactors.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(DiscretePosition2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(HatchModificationInterpolationData)]
+			
+			self.lib.lib3mf_toolpathlayerdata_writepolylineinmodelunitswithlinearfactors.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_writepolylineinmodelunitswithlinearfactors.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_toolpathlayerdata_writepolylineinmodelunitswithnonlinearfactors.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_writepolylineinmodelunitswithnonlinearfactors.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(HatchModificationInterpolationData)]
+			
+			self.lib.lib3mf_toolpathlayerdata_writepolylinediscretewithlinearfactors.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_writepolylinediscretewithlinearfactors.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(DiscretePosition2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_toolpathlayerdata_writepolylinediscretewithnonlinearfactors.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_writepolylinediscretewithnonlinearfactors.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(DiscretePosition2D), ToolpathProfileModificationFactor, ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_double), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(HatchModificationInterpolationData)]
 			
 			self.lib.lib3mf_toolpathlayerdata_addcustomdata.restype = ctypes.c_int32
 			self.lib.lib3mf_toolpathlayerdata_addcustomdata.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -16171,6 +16306,62 @@ class ToolpathLayerReader(Base):
 		
 		return list(pCountArrayBuffer), list(pFactorValuesBuffer)
 	
+	def SegmentHasLinearPointModificationFactors(self, SegmentIndex, ModificationFactor):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		pHasLinearModificationFactors = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_segmenthaslinearpointmodificationfactors(self._handle, nSegmentIndex, ModificationFactor, pHasLinearModificationFactors))
+		
+		return pHasLinearModificationFactors.value
+	
+	def GetLinearSegmentPointModificationFactors(self, SegmentIndex, ModificationFactor, FactorValues = None):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		nFactorValuesCount = ctypes.c_uint64(len(FactorValues) if FactorValues else 0)
+		nFactorValuesNeededCount = ctypes.c_uint64(0)
+		pFactorValuesBuffer = (Hatch2DFactors*(len(FactorValues) if FactorValues else 0))(*FactorValues if FactorValues else [])
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getlinearsegmentpointmodificationfactors(self._handle, nSegmentIndex, ModificationFactor, nFactorValuesCount, nFactorValuesNeededCount, pFactorValuesBuffer))
+		nFactorValuesCount = ctypes.c_uint64(nFactorValuesNeededCount.value)
+		pFactorValuesBuffer = (Hatch2DFactors * nFactorValuesNeededCount.value)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getlinearsegmentpointmodificationfactors(self._handle, nSegmentIndex, ModificationFactor, nFactorValuesCount, nFactorValuesNeededCount, pFactorValuesBuffer))
+		
+		return list(pFactorValuesBuffer)
+	
+	def SegmentHasNonlinearPointModificationInterpolation(self, SegmentIndex):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		pHasModificationInterpolation = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_segmenthasnonlinearpointmodificationinterpolation(self._handle, nSegmentIndex, pHasModificationInterpolation))
+		
+		return pHasModificationInterpolation.value
+	
+	def GetSegmentNonlinearPointModificationInterpolation(self, SegmentIndex, PointIndex, ModificationFactor, FactorValues = None):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		nPointIndex = ctypes.c_uint32(PointIndex)
+		nFactorValuesCount = ctypes.c_uint64(len(FactorValues) if FactorValues else 0)
+		nFactorValuesNeededCount = ctypes.c_uint64(0)
+		pFactorValuesBuffer = (HatchModificationInterpolationData*(len(FactorValues) if FactorValues else 0))(*FactorValues if FactorValues else [])
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentnonlinearpointmodificationinterpolation(self._handle, nSegmentIndex, nPointIndex, ModificationFactor, nFactorValuesCount, nFactorValuesNeededCount, pFactorValuesBuffer))
+		nFactorValuesCount = ctypes.c_uint64(nFactorValuesNeededCount.value)
+		pFactorValuesBuffer = (HatchModificationInterpolationData * nFactorValuesNeededCount.value)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentnonlinearpointmodificationinterpolation(self._handle, nSegmentIndex, nPointIndex, ModificationFactor, nFactorValuesCount, nFactorValuesNeededCount, pFactorValuesBuffer))
+		
+		return list(pFactorValuesBuffer)
+	
+	def GetSegmentAllNonlinearPointsModificationInterpolation(self, SegmentIndex, ModificationFactor, CountArray = None, FactorValues = None):
+		nSegmentIndex = ctypes.c_uint32(SegmentIndex)
+		nCountArrayCount = ctypes.c_uint64(len(CountArray) if CountArray else 0)
+		nCountArrayNeededCount = ctypes.c_uint64(0)
+		pCountArrayBuffer = (ctypes.c_uint32*(len(CountArray) if CountArray else 0))(*CountArray if CountArray else [])
+		nFactorValuesCount = ctypes.c_uint64(len(FactorValues) if FactorValues else 0)
+		nFactorValuesNeededCount = ctypes.c_uint64(0)
+		pFactorValuesBuffer = (HatchModificationInterpolationData*(len(FactorValues) if FactorValues else 0))(*FactorValues if FactorValues else [])
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentallnonlinearpointsmodificationinterpolation(self._handle, nSegmentIndex, ModificationFactor, nCountArrayCount, nCountArrayNeededCount, pCountArrayBuffer, nFactorValuesCount, nFactorValuesNeededCount, pFactorValuesBuffer))
+		nCountArrayCount = ctypes.c_uint64(nCountArrayNeededCount.value)
+		pCountArrayBuffer = (ctypes.c_uint32 * nCountArrayNeededCount.value)()
+		nFactorValuesCount = ctypes.c_uint64(nFactorValuesNeededCount.value)
+		pFactorValuesBuffer = (HatchModificationInterpolationData * nFactorValuesNeededCount.value)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentallnonlinearpointsmodificationinterpolation(self._handle, nSegmentIndex, ModificationFactor, nCountArrayCount, nCountArrayNeededCount, pCountArrayBuffer, nFactorValuesCount, nFactorValuesNeededCount, pFactorValuesBuffer))
+		
+		return list(pCountArrayBuffer), list(pFactorValuesBuffer)
+	
 
 
 ''' Class Implementation for ToolpathLayerData
@@ -16429,6 +16620,118 @@ class ToolpathLayerData(Base):
 		nFactorDataCount = ctypes.c_uint64(len(FactorData))
 		pFactorDataBuffer = (ctypes.c_double*len(FactorData))(*FactorData)
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_writepolylinediscretewithfactors(self._handle, nProfileID, nPartID, nPointDataCount, pPointDataBuffer, nFactorDataCount, pFactorDataBuffer))
+		
+	
+	def WriteLoopInModelUnitsWithLinearFactors(self, ProfileID, PartID, PointData, ModificationFactor, FactorData1, FactorData2):
+		nProfileID = ctypes.c_uint32(ProfileID)
+		nPartID = ctypes.c_uint32(PartID)
+		nPointDataCount = ctypes.c_uint64(len(PointData))
+		pPointDataBuffer = (Position2D*len(PointData))(*PointData)
+		nFactorData1Count = ctypes.c_uint64(len(FactorData1))
+		pFactorData1Buffer = (ctypes.c_double*len(FactorData1))(*FactorData1)
+		nFactorData2Count = ctypes.c_uint64(len(FactorData2))
+		pFactorData2Buffer = (ctypes.c_double*len(FactorData2))(*FactorData2)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_writeloopinmodelunitswithlinearfactors(self._handle, nProfileID, nPartID, nPointDataCount, pPointDataBuffer, ModificationFactor, nFactorData1Count, pFactorData1Buffer, nFactorData2Count, pFactorData2Buffer))
+		
+	
+	def WriteLoopInModelUnitsWithNonlinearFactors(self, ProfileID, PartID, PointData, ModificationFactor, FactorData1, FactorData2, SubInterpolationCounts, ModificationInterpolationData):
+		nProfileID = ctypes.c_uint32(ProfileID)
+		nPartID = ctypes.c_uint32(PartID)
+		nPointDataCount = ctypes.c_uint64(len(PointData))
+		pPointDataBuffer = (Position2D*len(PointData))(*PointData)
+		nFactorData1Count = ctypes.c_uint64(len(FactorData1))
+		pFactorData1Buffer = (ctypes.c_double*len(FactorData1))(*FactorData1)
+		nFactorData2Count = ctypes.c_uint64(len(FactorData2))
+		pFactorData2Buffer = (ctypes.c_double*len(FactorData2))(*FactorData2)
+		nSubInterpolationCountsCount = ctypes.c_uint64(len(SubInterpolationCounts))
+		pSubInterpolationCountsBuffer = (ctypes.c_uint32*len(SubInterpolationCounts))(*SubInterpolationCounts)
+		nModificationInterpolationDataCount = ctypes.c_uint64(len(ModificationInterpolationData))
+		pModificationInterpolationDataBuffer = (HatchModificationInterpolationData*len(ModificationInterpolationData))(*ModificationInterpolationData)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_writeloopinmodelunitswithnonlinearfactors(self._handle, nProfileID, nPartID, nPointDataCount, pPointDataBuffer, ModificationFactor, nFactorData1Count, pFactorData1Buffer, nFactorData2Count, pFactorData2Buffer, nSubInterpolationCountsCount, pSubInterpolationCountsBuffer, nModificationInterpolationDataCount, pModificationInterpolationDataBuffer))
+		
+	
+	def WriteLoopDiscreteWithLinearFactors(self, ProfileID, PartID, PointData, ModificationFactor, FactorData1, FactorData2):
+		nProfileID = ctypes.c_uint32(ProfileID)
+		nPartID = ctypes.c_uint32(PartID)
+		nPointDataCount = ctypes.c_uint64(len(PointData))
+		pPointDataBuffer = (DiscretePosition2D*len(PointData))(*PointData)
+		nFactorData1Count = ctypes.c_uint64(len(FactorData1))
+		pFactorData1Buffer = (ctypes.c_double*len(FactorData1))(*FactorData1)
+		nFactorData2Count = ctypes.c_uint64(len(FactorData2))
+		pFactorData2Buffer = (ctypes.c_double*len(FactorData2))(*FactorData2)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_writeloopdiscretewithlinearfactors(self._handle, nProfileID, nPartID, nPointDataCount, pPointDataBuffer, ModificationFactor, nFactorData1Count, pFactorData1Buffer, nFactorData2Count, pFactorData2Buffer))
+		
+	
+	def WriteLoopDiscreteWithNonlinearFactors(self, ProfileID, PartID, PointData, ModificationFactor, FactorData1, FactorData2, SubInterpolationCounts, ModificationInterpolationData):
+		nProfileID = ctypes.c_uint32(ProfileID)
+		nPartID = ctypes.c_uint32(PartID)
+		nPointDataCount = ctypes.c_uint64(len(PointData))
+		pPointDataBuffer = (DiscretePosition2D*len(PointData))(*PointData)
+		nFactorData1Count = ctypes.c_uint64(len(FactorData1))
+		pFactorData1Buffer = (ctypes.c_double*len(FactorData1))(*FactorData1)
+		nFactorData2Count = ctypes.c_uint64(len(FactorData2))
+		pFactorData2Buffer = (ctypes.c_double*len(FactorData2))(*FactorData2)
+		nSubInterpolationCountsCount = ctypes.c_uint64(len(SubInterpolationCounts))
+		pSubInterpolationCountsBuffer = (ctypes.c_uint32*len(SubInterpolationCounts))(*SubInterpolationCounts)
+		nModificationInterpolationDataCount = ctypes.c_uint64(len(ModificationInterpolationData))
+		pModificationInterpolationDataBuffer = (HatchModificationInterpolationData*len(ModificationInterpolationData))(*ModificationInterpolationData)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_writeloopdiscretewithnonlinearfactors(self._handle, nProfileID, nPartID, nPointDataCount, pPointDataBuffer, ModificationFactor, nFactorData1Count, pFactorData1Buffer, nFactorData2Count, pFactorData2Buffer, nSubInterpolationCountsCount, pSubInterpolationCountsBuffer, nModificationInterpolationDataCount, pModificationInterpolationDataBuffer))
+		
+	
+	def WritePolylineInModelUnitsWithLinearFactors(self, ProfileID, PartID, PointData, ModificationFactor, FactorData1, FactorData2):
+		nProfileID = ctypes.c_uint32(ProfileID)
+		nPartID = ctypes.c_uint32(PartID)
+		nPointDataCount = ctypes.c_uint64(len(PointData))
+		pPointDataBuffer = (Position2D*len(PointData))(*PointData)
+		nFactorData1Count = ctypes.c_uint64(len(FactorData1))
+		pFactorData1Buffer = (ctypes.c_double*len(FactorData1))(*FactorData1)
+		nFactorData2Count = ctypes.c_uint64(len(FactorData2))
+		pFactorData2Buffer = (ctypes.c_double*len(FactorData2))(*FactorData2)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_writepolylineinmodelunitswithlinearfactors(self._handle, nProfileID, nPartID, nPointDataCount, pPointDataBuffer, ModificationFactor, nFactorData1Count, pFactorData1Buffer, nFactorData2Count, pFactorData2Buffer))
+		
+	
+	def WritePolylineInModelUnitsWithNonlinearFactors(self, ProfileID, PartID, PointData, ModificationFactor, FactorData1, FactorData2, SubInterpolationCounts, ModificationInterpolationData):
+		nProfileID = ctypes.c_uint32(ProfileID)
+		nPartID = ctypes.c_uint32(PartID)
+		nPointDataCount = ctypes.c_uint64(len(PointData))
+		pPointDataBuffer = (Position2D*len(PointData))(*PointData)
+		nFactorData1Count = ctypes.c_uint64(len(FactorData1))
+		pFactorData1Buffer = (ctypes.c_double*len(FactorData1))(*FactorData1)
+		nFactorData2Count = ctypes.c_uint64(len(FactorData2))
+		pFactorData2Buffer = (ctypes.c_double*len(FactorData2))(*FactorData2)
+		nSubInterpolationCountsCount = ctypes.c_uint64(len(SubInterpolationCounts))
+		pSubInterpolationCountsBuffer = (ctypes.c_uint32*len(SubInterpolationCounts))(*SubInterpolationCounts)
+		nModificationInterpolationDataCount = ctypes.c_uint64(len(ModificationInterpolationData))
+		pModificationInterpolationDataBuffer = (HatchModificationInterpolationData*len(ModificationInterpolationData))(*ModificationInterpolationData)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_writepolylineinmodelunitswithnonlinearfactors(self._handle, nProfileID, nPartID, nPointDataCount, pPointDataBuffer, ModificationFactor, nFactorData1Count, pFactorData1Buffer, nFactorData2Count, pFactorData2Buffer, nSubInterpolationCountsCount, pSubInterpolationCountsBuffer, nModificationInterpolationDataCount, pModificationInterpolationDataBuffer))
+		
+	
+	def WritePolylineDiscreteWithLinearFactors(self, ProfileID, PartID, PointData, ModificationFactor, FactorData1, FactorData2):
+		nProfileID = ctypes.c_uint32(ProfileID)
+		nPartID = ctypes.c_uint32(PartID)
+		nPointDataCount = ctypes.c_uint64(len(PointData))
+		pPointDataBuffer = (DiscretePosition2D*len(PointData))(*PointData)
+		nFactorData1Count = ctypes.c_uint64(len(FactorData1))
+		pFactorData1Buffer = (ctypes.c_double*len(FactorData1))(*FactorData1)
+		nFactorData2Count = ctypes.c_uint64(len(FactorData2))
+		pFactorData2Buffer = (ctypes.c_double*len(FactorData2))(*FactorData2)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_writepolylinediscretewithlinearfactors(self._handle, nProfileID, nPartID, nPointDataCount, pPointDataBuffer, ModificationFactor, nFactorData1Count, pFactorData1Buffer, nFactorData2Count, pFactorData2Buffer))
+		
+	
+	def WritePolylineDiscreteWithNonlinearFactors(self, ProfileID, PartID, PointData, ModificationFactor, FactorData1, FactorData2, SubInterpolationCounts, ModificationInterpolationData):
+		nProfileID = ctypes.c_uint32(ProfileID)
+		nPartID = ctypes.c_uint32(PartID)
+		nPointDataCount = ctypes.c_uint64(len(PointData))
+		pPointDataBuffer = (DiscretePosition2D*len(PointData))(*PointData)
+		nFactorData1Count = ctypes.c_uint64(len(FactorData1))
+		pFactorData1Buffer = (ctypes.c_double*len(FactorData1))(*FactorData1)
+		nFactorData2Count = ctypes.c_uint64(len(FactorData2))
+		pFactorData2Buffer = (ctypes.c_double*len(FactorData2))(*FactorData2)
+		nSubInterpolationCountsCount = ctypes.c_uint64(len(SubInterpolationCounts))
+		pSubInterpolationCountsBuffer = (ctypes.c_uint32*len(SubInterpolationCounts))(*SubInterpolationCounts)
+		nModificationInterpolationDataCount = ctypes.c_uint64(len(ModificationInterpolationData))
+		pModificationInterpolationDataBuffer = (HatchModificationInterpolationData*len(ModificationInterpolationData))(*ModificationInterpolationData)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_writepolylinediscretewithnonlinearfactors(self._handle, nProfileID, nPartID, nPointDataCount, pPointDataBuffer, ModificationFactor, nFactorData1Count, pFactorData1Buffer, nFactorData2Count, pFactorData2Buffer, nSubInterpolationCountsCount, pSubInterpolationCountsBuffer, nModificationInterpolationDataCount, pModificationInterpolationDataBuffer))
 		
 	
 	def AddCustomData(self, NameSpace, DataName):
