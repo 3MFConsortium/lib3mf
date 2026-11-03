@@ -44,6 +44,7 @@ namespace Lib3MF
 		PToolpath toolpath;
 		PToolpathLayerData layer;
 		PWriter writer;
+		PPersistentReaderSource readSource;
 		Lib3MF_uint32 profileID = 0;
 		Lib3MF_uint32 partID = 0;
 
@@ -69,13 +70,16 @@ namespace Lib3MF
 		}
 
 		// Writes the model to a buffer, re-reads it and returns the layer reader of the first toolpath.
+		// Note: a persistent reader source is used (and kept alive as a fixture member) so that the
+		// data source stays valid for lazily-loaded toolpath layer attachments.
 		PToolpathLayerReader roundtrip(PModel & readModelOut) {
 			std::vector<Lib3MF_uint8> buffer;
 			writer->WriteToBuffer(buffer);
 
 			readModelOut = wrapper->CreateModel();
+			readSource = readModelOut->CreatePersistentSourceFromBuffer(buffer);
 			auto reader = readModelOut->QueryReader("3mf");
-			reader->ReadFromBuffer(buffer);
+			reader->ReadFromPersistentSource(readSource.get());
 
 			auto iterator = readModelOut->GetToolpaths();
 			EXPECT_TRUE(iterator->MoveNext());
