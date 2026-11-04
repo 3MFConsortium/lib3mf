@@ -168,8 +168,8 @@ namespace NMR {
 		putTriangleSetRefString(MODELWRITERMESH100_TRIANGLESETS_REFLINESTART);
 	}
 
-	bool stringRepresentationsDiffer(double a, double b, nfInt64 putFactor) {
-		return  fabs(a - b) * putFactor > 0.1;
+	bool areValuesDifferent(double a, double b) {
+		return a != b;
 	}
 
 	std::string capModeToString(eModelBeamLatticeCapMode eCapMode) {
@@ -399,7 +399,7 @@ namespace NMR {
 						// Check if any balls do not use dDefaultBallRadius
 						bWriteBallsElement = false;
 						for (nfUint32 iBall = 0; iBall < nBallCount; iBall++) {
-							if (stringRepresentationsDiffer(pMesh->getBall(iBall)->m_radius, dDefaultBallRadius, m_nPutDoubleFactor)) {
+							if (areValuesDifferent(pMesh->getBall(iBall)->m_radius, dDefaultBallRadius)) {
 								bWriteBallsElement = true;
 								break;
 							}
@@ -791,8 +791,8 @@ namespace NMR {
 		putBeamString(sV2.c_str());
 		putBeamUInt32(pBeam->m_nodeindices[1]);
 
-		nfBool bWriteR2 = stringRepresentationsDiffer(pBeam->m_radius[0], pBeam->m_radius[1], m_nPutDoubleFactor);
-		nfBool bWriteR1 = bWriteR2 || stringRepresentationsDiffer(pBeam->m_radius[0], dRadius, m_nPutDoubleFactor);
+		nfBool bWriteR2 = areValuesDifferent(pBeam->m_radius[0], pBeam->m_radius[1]);
+		nfBool bWriteR1 = bWriteR2 || areValuesDifferent(pBeam->m_radius[0], dRadius);
 		if (bWriteR1) {
 			const std::string sR1 = "\" " + std::string(XML_3MF_ATTRIBUTE_BEAMLATTICE_R1) + "=\"";
 			putBeamString(sR1.c_str());
@@ -823,7 +823,7 @@ namespace NMR {
 	{
 		__NMRASSERT(pBall);
 
-		nfBool bWriteR = stringRepresentationsDiffer(pBall->m_radius, dRadius, m_nPutDoubleFactor);
+		nfBool bWriteR = areValuesDifferent(pBall->m_radius, dRadius);
 		if (!bWriteR && eBallMode == eModelBeamLatticeBallMode::MODELBEAMLATTICEBALLMODE_ALL) {
 			return;
 		}

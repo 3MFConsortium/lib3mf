@@ -291,6 +291,55 @@ namespace Lib3MF
 		EXPECT_NEAR(readBeamLattice->GetBall(0).m_Radius, ballRadius, 1e-12);
 	}
 
+	TEST_F(Writer, BeamAndBallRadiiRoundTripAcrossRoundingBoundary)
+	{
+		std::vector<sPosition> vertices = {
+			fnCreateVertex(0.0f, 0.0f, 0.0f),
+			fnCreateVertex(1.0f, 0.0f, 0.0f),
+			fnCreateVertex(0.0f, 1.0f, 0.0f)
+		};
+		std::vector<sTriangle> triangles = { fnCreateTriangle(0, 1, 2) };
+		auto mesh = model->AddMeshObject();
+		mesh->SetGeometry(vertices, triangles);
+
+		const double radius1 = 1.23456749;
+		const double radius2 = 1.23456751;
+		auto beamLattice = mesh->BeamLattice();
+		beamLattice->SetBallOptions(eBeamLatticeBallMode::Mixed, radius1);
+
+		sBeam beam = {};
+		beam.m_CapModes[0] = eBeamLatticeCapMode::HemiSphere;
+		beam.m_CapModes[1] = eBeamLatticeCapMode::Butt;
+		beam.m_Indices[0] = 0;
+		beam.m_Indices[1] = 1;
+		beam.m_Radii[0] = radius1;
+		beam.m_Radii[1] = radius2;
+		beamLattice->AddBeam(beam);
+
+		sBall ball = {};
+		ball.m_Index = 0;
+		ball.m_Radius = radius2;
+		beamLattice->AddBall(ball);
+		writer3MF->SetDecimalPrecision(6);
+
+		std::vector<Lib3MF_uint8> buffer;
+		writer3MF->WriteToBuffer(buffer);
+
+		auto readModel = wrapper->CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->ReadFromBuffer(buffer);
+		auto readMesh = readModel->GetMeshObjectByID(mesh->GetResourceID());
+		ASSERT_TRUE(readMesh);
+		auto readBeamLattice = readMesh->BeamLattice();
+		ASSERT_EQ(readBeamLattice->GetBeamCount(), 1u);
+		ASSERT_EQ(readBeamLattice->GetBallCount(), 1u);
+
+		const auto readBeam = readBeamLattice->GetBeam(0);
+		EXPECT_EQ(readBeam.m_Radii[0], 1.234567);
+		EXPECT_EQ(readBeam.m_Radii[1], 1.234568);
+		EXPECT_EQ(readBeamLattice->GetBall(0).m_Radius, 1.234568);
+	}
+
 	TEST_F(Writer, STLCompare)
 	{
 		// This test is atleast functional
